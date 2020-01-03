@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd" version="7">
+  <description>siniestro-agricola: EAR Module</description>
+  <display-name>siniestro-agricola-ear</display-name>
+  <module>
+    <web>
+      <web-uri>siniestro-agricola-rest.war</web-uri>
+      <context-root>/test-siniestro-agricola-rest</context-root>
+    </web>
+  </module>
+  <module>
+    <ejb>siniestro-agricola-service-ejb.jar</ejb>
+  </module>
+  <module>
+    <ejb>siniestro-agricola-repository-ejb.jar</ejb>
+  </module>
+  <module>
+    <ejb>siniestro-agricola-datamodel-ejb.jar</ejb>
+  </module>
+  <library-directory>lib</library-directory>
+</application>
