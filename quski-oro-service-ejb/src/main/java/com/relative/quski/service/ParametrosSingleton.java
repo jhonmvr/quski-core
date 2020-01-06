@@ -30,7 +30,7 @@ public class ParametrosSingleton {
 	Logger log;
 	
 	@Inject
-	private MidasOroService sas;
+	private QuskiOroService sas;
 	
     /**
      * Default constructor. 

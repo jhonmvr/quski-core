@@ -27,7 +27,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbMiParametro;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.util.MidasOroUtil;
 
@@ -48,7 +48,7 @@ public class ParametroRestController extends BaseRestController implements CrudR
 	Logger log;
 	
 	@Inject
-	MidasOroService sas;
+	QuskiOroService sas;
 	
 	@Inject
 	ParametrosSingleton ps;

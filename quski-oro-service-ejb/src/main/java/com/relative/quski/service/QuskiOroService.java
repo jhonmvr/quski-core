@@ -1,20 +1,24 @@
 package com.relative.quski.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.itextpdf.text.pdf.StringUtils;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.ParametroRepository;
+import com.relative.quski.repository.VariableCrediticiaRepository;
 
 @Stateless
-public class MidasOroService {
+public class QuskiOroService {
 	@Inject
 	Logger log;
 	
@@ -24,6 +28,9 @@ public class MidasOroService {
 
 	@Inject
 	private ParametroRepository parametroRepository;
+	
+	@Inject
+	private VariableCrediticiaRepository variableCrediticiaRepository;
 
 	
 	/**
@@ -233,6 +240,81 @@ public class MidasOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Parametros no encontrados por nombre o tipo " + e.getMessage());
+		}
+	}
+
+	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
+		try {
+			return variableCrediticiaRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+
+	public List<TbQoVariableCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
+		if (pw == null) {
+			return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getSortFields(),
+						pw.getSortDirections());
+			}
+		}
+	}
+
+	public Long countVariablesCrediticias() throws RelativeException {
+			try {
+				return variableCrediticiaRepository.countAll(TbQoVariableCrediticia.class);
+			} catch (RelativeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
+			}
+	}
+
+	public TbQoVariableCrediticia manageVariableCrediticia(TbQoVariableCrediticia send) throws RelativeException {
+		try {
+			log.info("==> entra a manage variableCrediticia");
+			TbQoVariableCrediticia persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.findVariableCrediticiaById(send.getId());
+				return this.updateVariableCrediticia(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
+				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				return variableCrediticiaRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando la Agencia " + e.getMessage());
+		}
+	}
+
+	private TbQoVariableCrediticia updateVariableCrediticia(TbQoVariableCrediticia send, TbQoVariableCrediticia persisted) throws RelativeException {
+		try {
+			persisted.setNombre(send.getNombre());
+			persisted.setValor(send.getValor());
+			persisted.setTbQoCotizador(send.getTbQoCotizador());
+			persisted.setTqQoNegociacion(send.getTqQoNegociacion());
+			persisted.setFechaActualizacion(new Date());
+			persisted.setEstado(send.getEstado());
+			
+			return this.variableCrediticiaRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Agencia " + e.getMessage());
 		}
 	}
 
