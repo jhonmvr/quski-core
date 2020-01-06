@@ -56,7 +56,4 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		return null;
 	}
 
-
-	
-	
 }

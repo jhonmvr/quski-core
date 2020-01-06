@@ -40,9 +40,9 @@ public class TbQoTipoOro implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 	
-	//bi-directional many-to-one association to TbMiMovimientoCaja
-		@OneToMany(mappedBy="tbQoTipoOro")
-		private List<TbQoPrecioOro> tbQoPrecioOro;
+//bi-directional many-to-one association to TbMiMovimientoCaja
+	@OneToMany(mappedBy="tbQoTipoOro")
+	private List<TbQoPrecioOro> tbQoPrecioOro;
 
 	public Long getId() {
 		return id;

@@ -6,14 +6,20 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 @Entity
 @Table(name="TB_QO_CLIENTE")
 
 public class TbQoCliente implements Serializable {
 	private static final Long serialVersionUID=1L;
+
 	@Id
+	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_CLIENTE",allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
 	
 	@Column(name="CEDULA_CLIENTE")

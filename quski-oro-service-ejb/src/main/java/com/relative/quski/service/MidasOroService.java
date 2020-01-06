@@ -304,6 +304,32 @@ public class MidasOroService {
 		}
 	}
 
+
+	
+	/**
+	 * Metodo que actualiza la entidad
+	 * 
+	 * @authorSAUL MENDEZ- Relative Engine
+	 * @param send      informacion enviada para update
+	 * @param persisted entidad existente sobre la que se actualiza
+	 * @return Entidad actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoCotizador updateCotizador(TbQoCotizador send, TbQoCotizador persisted) throws RelativeException {
+		try {
+			persisted.setAprobacionMupi(send.getAprobacionMupi());
+			persisted.setGradoInteres(send.getGradoInteres());
+			persisted.setMotivoDesestimiento(send.getMotivoDesestimiento());
+			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(send.getEstado());
+			return cotizadorRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Abono " + e.getMessage());
+		}
+	}
 	/**
 	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
 	 * 
@@ -333,31 +359,6 @@ public class MidasOroService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
-		}
-	}
-	
-	/**
-	 * Metodo que actualiza la entidad
-	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
-	 * @param send      informacion enviada para update
-	 * @param persisted entidad existente sobre la que se actualiza
-	 * @return Entidad actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoCotizador updateCotizador(TbQoCotizador send, TbQoCotizador persisted) throws RelativeException {
-		try {
-			persisted.setAprobacionMupi(send.getAprobacionMupi());
-			persisted.setGradoInteres(send.getGradoInteres());
-			persisted.setMotivoDesestimiento(send.getMotivoDesestimiento());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado(send.getEstado());
-			return cotizadorRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Abono " + e.getMessage());
 		}
 	}
 	/**

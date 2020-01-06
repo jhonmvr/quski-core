@@ -47,6 +47,13 @@ public class TbQoCotizador implements Serializable{
 	@Column(name="estado")
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
+//bi-directional many-to-one association to TbQoCliente
+	@ManyToOne
+	@JoinColumn(name="id_cliente")
+	private TbQoCliente tbQoCliente;
+
+		
 	public Long getId() {
 		return id;
 	}
