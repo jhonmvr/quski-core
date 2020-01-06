@@ -19,12 +19,8 @@ private String nombre;
 		this.nombre = nombre;
 	}
 
-
-
-
 	@Override
 	public boolean isSatisfiedBy(TbMiParametro arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

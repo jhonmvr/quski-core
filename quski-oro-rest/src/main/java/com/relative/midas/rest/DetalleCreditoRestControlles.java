@@ -1,6 +1,7 @@
 package com.relative.midas.rest;
 
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -10,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -17,7 +19,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoDetalleCredito;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +36,7 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 	}
 
 	@Inject
-	MidasOroService mis;
+	QuskiOroService qos;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
@@ -47,7 +49,7 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 	@ApiOperation(value = "GenericWrapper<TbQoDetalleCredito>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoDetalleCredito", response = GenericWrapper.class)
 	public GenericWrapper<TbQoDetalleCredito> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoDetalleCredito> loc = new GenericWrapper<>();
-		TbQoDetalleCredito a = this.mis.findDetalleCreditoById(Long.valueOf(id));
+		TbQoDetalleCredito a = this.qos.findDetalleCreditoById(Long.valueOf(id));
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -69,9 +71,9 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 
 	private PaginatedListWrapper<TbQoDetalleCredito> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoDetalleCredito> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoDetalleCredito> actions = this.mis.findAllDetalleCredito(pw);
+		List<TbQoDetalleCredito> actions = this.qos.findAllDetalleCredito(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.mis.countDetalleCredito().intValue());
+			plw.setTotalResults(this.qos.countDetalleCredito().intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -83,7 +85,7 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 	@ApiOperation(value = "GenericWrapper<TbQoDetalleCredito>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoDetalleCredito", response = GenericWrapper.class)
 	public GenericWrapper<TbQoDetalleCredito> persistEntity(GenericWrapper<TbQoDetalleCredito> wp) throws RelativeException {
 		GenericWrapper<TbQoDetalleCredito> loc = new GenericWrapper<>();
-		loc.setEntidad(this.mis.manageDetalleCredito(wp.getEntidad()));
+		loc.setEntidad(this.qos.manageDetalleCredito(wp.getEntidad()));
 		return loc;
 	}	
 }

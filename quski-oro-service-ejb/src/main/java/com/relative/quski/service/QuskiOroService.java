@@ -796,8 +796,14 @@ public class QuskiOroService {
 		}
 
 	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
-		try {
-			return variableCrediticiaRepository.findById(id);
+	
+			try {
+				return variableCrediticiaRepository.findById(id);
+			} catch (RelativeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			}
 		}
 
 	public List<TbQoVariableCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
@@ -838,6 +844,14 @@ public class QuskiOroService {
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando la Agencia " + e.getMessage());
+		}
 	}
 
 	private TbQoVariableCrediticia updateVariableCrediticia(TbQoVariableCrediticia send, TbQoVariableCrediticia persisted) throws RelativeException {

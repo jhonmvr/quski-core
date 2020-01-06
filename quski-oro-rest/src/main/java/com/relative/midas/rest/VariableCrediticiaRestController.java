@@ -36,13 +36,10 @@ public class VariableCrediticiaRestController extends BaseRestController
 	
 	public VariableCrediticiaRestController() throws RelativeException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -71,7 +68,6 @@ public class VariableCrediticiaRestController extends BaseRestController
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated) throws RelativeException {
-		// TODO Auto-generated method stub
 		 return findAll(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
 				sortDirections, isPaginated));
 	}

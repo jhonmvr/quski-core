@@ -2,6 +2,7 @@ package com.relative.midas.rest;
 
 
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -11,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -18,7 +20,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoTipoOro;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +40,7 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 
 
 	@Inject
-	MidasOroService mis;
+	QuskiOroService qos;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
@@ -51,7 +53,7 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTipoOro", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTipoOro> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
-		TbQoTipoOro a = this.mis.findTipoOroById(Long.valueOf(id));
+		TbQoTipoOro a = this.qos.findTipoOroById(Long.valueOf(id));
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -73,9 +75,9 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 
 	private PaginatedListWrapper<TbQoTipoOro> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoTipoOro> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoTipoOro> actions = this.mis.findAllTipoOro(pw);
+		List<TbQoTipoOro> actions = this.qos.findAllTipoOro(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.mis.countTipoOro().intValue());
+			plw.setTotalResults(this.qos.countTipoOro().intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -88,7 +90,7 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTipoOro", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTipoOro> persistEntity(GenericWrapper<TbQoTipoOro> wp) throws RelativeException {
 		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
-		loc.setEntidad(this.mis.manageTipoOro(wp.getEntidad()));
+		loc.setEntidad(this.qos.manageTipoOro(wp.getEntidad()));
 		return loc;
 	}	
 }

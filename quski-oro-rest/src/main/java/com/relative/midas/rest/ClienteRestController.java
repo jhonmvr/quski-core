@@ -4,13 +4,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 
@@ -28,7 +29,7 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 	}
 
 	@Inject
-	MidasOroService mis;
+	QuskiOroService qos;
 	
 
 	@Override
