@@ -1,108 +1,84 @@
 package com.relative.quski.model;
-
 import java.io.Serializable;
-import javax.persistence.*;
-
-import com.relative.quski.model.TbQoPrecioOro;
-
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import com.relative.quski.enums.EstadoEnum;
 
 /**
- * The persistent class for the tb_qo_tipo_oro database table.
+ * The persistent class for the tb_mi_tipo_oro database table.
  * 
  */
 @Entity
 @Table(name="tb_qo_tipo_oro")
-@NamedQuery(name="TbQoTipoOro.findAll", query="SELECT t FROM TbQoTipoOro t")
 public class TbQoTipoOro implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_ORO_ID_GENERATOR", sequenceName="SEQ_TIPO_ORO" , allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_TIPO_ORO_ID_GENERATOR", sequenceName="SEQ_TIPO_ORO",allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_ORO_ID_GENERATOR")
-	private long id;
-
-	private String estado;
-
+	private Long id;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
+	private String quilate;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-
-	private String quilate;
-
-	//bi-directional many-to-one association to TbQoPrecioOro
+	
+//bi-directional many-to-one association to TbMiMovimientoCaja
 	@OneToMany(mappedBy="tbQoTipoOro")
-	private List<TbQoPrecioOro> tbQoPrecioOros;
+	private List<TbQoPrecioOro> tbQoPrecioOro;
 
-	public TbQoTipoOro() {
+	public Long getId() {
+		return id;
 	}
-
-	public long getId() {
-		return this.id;
-	}
-
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getEstado() {
-		return this.estado;
+	public EstadoEnum getEstado() {
+		return estado;
 	}
-
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
-
-	public Date getFechaActualizacion() {
-		return this.fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Date getFechaCreacion() {
-		return this.fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
 	public String getQuilate() {
-		return this.quilate;
+		return quilate;
 	}
-
 	public void setQuilate(String quilate) {
 		this.quilate = quilate;
 	}
-
-	public List<TbQoPrecioOro> getTbQoPrecioOros() {
-		return this.tbQoPrecioOros;
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
-
-	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {
-		this.tbQoPrecioOros = tbQoPrecioOros;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
-
-	public TbQoPrecioOro addTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
-		getTbQoPrecioOros().add(tbQoPrecioOro);
-		tbQoPrecioOro.setTbQoTipoOro(this);
-
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+	public List<TbQoPrecioOro> getTbQoPrecioOro() {
 		return tbQoPrecioOro;
 	}
-
-	public TbQoPrecioOro removeTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
-		getTbQoPrecioOros().remove(tbQoPrecioOro);
-		tbQoPrecioOro.setTbQoTipoOro(null);
-
-		return tbQoPrecioOro;
+	public void setTbQoPrecioOro(List<TbQoPrecioOro> tbQoPrecioOro) {
+		this.tbQoPrecioOro = tbQoPrecioOro;
 	}
-
+	
 }

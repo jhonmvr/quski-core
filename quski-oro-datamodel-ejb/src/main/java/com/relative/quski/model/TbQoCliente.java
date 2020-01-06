@@ -1,214 +1,96 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
 
-import com.relative.quski.model.TqQoNegociacion;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-
-/**
- * The persistent class for the tb_qo_cliente database table.
- * 
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 @Entity
-@Table(name="tb_qo_cliente")
-@NamedQuery(name="TbQoCliente.findAll", query="SELECT t FROM TbQoCliente t")
+@Table(name="TB_QO_CLIENTE")
+
 public class TbQoCliente implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID=1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ__CLIENTE" , allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_CLIENTE",allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
-
-	@Column(name="actividad_economica")
-	private String actividadEconomica;
-
-	@Column(name="apellido_paterno")
-	private String apellidoPaterno;
-
-	@Column(name="cargas_familiares")
-	private BigDecimal cargasFamiliares;
-
-	@Column(name="cedula_cliente")
+	
+	@Column(name="CEDULA_CLIENTE")
 	private String cedulaCliente;
-
-	private BigDecimal edad;
-
+	
+	@Column(name="PRIMER_NOMBRE")
+	private String primerNombre;
+	
+	@Column(name="SEGUNDO_NOMBRE")
+	private String segundoNombre;
+	
+	@Column(name="APELLIDO_PATERNO")
+	private String apellidoPaterno;
+	
+	@Column(name="APELLIDO_MATERNO")
+	private String apellidoMaterno;
+	
+	@Column(name="GENERO")
+	 private String genero;
+	
+	@Column(name="ESTADO_CIVIL")
+	private String estadoCivil;
+	
+	@Column(name="CARGAS_FAMILIARES")
+	private Number cargasFamiliares;
+	
+	@Column(name="FECHA_NACIMIENTO")
+	private Date fechaNacimiento;
+	
+	@Column(name="LUGAR_NACIMIENTO")
+	private String lugarNacimiento;
+	
+	@Column(name="NACIONALIDAD")
+	private String nacionalidad;
+	
+	@Column(name="NIVEL_EDUCACION")
+	private String nivelEducacion;
+	
+	@Column(name="ACTIVIDAD_ECONOMICA")
+	private String actividadEconomica;
+	
+	@Column(name="EDAD")
+	private Number edad;
+	
+	@Column(name="FECHA_CREACION")
+	private Timestamp fechaCreacion;
+	
+	@Column(name="FECHA_ACTUALIZACION")
+	private Timestamp fechaActualizacion;
+	
+	@Column(name="ESTADO")
 	private String estado;
 
-	@Column(name="estado_civil")
-	private String estadoCivil;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
-	private Date fechaActualizacion;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
-	private Date fechaCreacion;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_nacimiento")
-	private Date fechaNacimiento;
-
-	private String genero;
-
-	@Column(name="lugar_nacimiento")
-	private String lugarNacimiento;
-
-	private String nacionalidad;
-
-	@Column(name="nivel_educacion")
-	private String nivelEducacion;
-
-	@Column(name="primer_nombre")
-	private String primerNombre;
-
-	@Column(name="segundo_nombre")
-	private String segundoNombre;
-
-	//bi-directional many-to-one association to TbQoCotizador
-	@OneToMany(mappedBy="tbQoCliente")
-	private List<TbQoCotizador> tbQoCotizadors;
-
-	//bi-directional many-to-one association to TbQoRiesgoAcumulado
-	@OneToMany(mappedBy="tbQoCliente")
-	private List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados;
-
-	//bi-directional many-to-one association to TqQoNegociacion
-	@OneToMany(mappedBy="tbQoCliente")
-	private List<TqQoNegociacion> tqQoNegociacions;
-
-	public TbQoCliente() {
+	public Long getId() {
+		return id;
 	}
 
-	public long getId() {
-		return this.id;
-	}
-
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getActividadEconomica() {
-		return this.actividadEconomica;
-	}
-
-	public void setActividadEconomica(String actividadEconomica) {
-		this.actividadEconomica = actividadEconomica;
-	}
-
-	public String getApellidoPaterno() {
-		return this.apellidoPaterno;
-	}
-
-	public void setApellidoPaterno(String apellidoPaterno) {
-		this.apellidoPaterno = apellidoPaterno;
-	}
-
-	public BigDecimal getCargasFamiliares() {
-		return this.cargasFamiliares;
-	}
-
-	public void setCargasFamiliares(BigDecimal cargasFamiliares) {
-		this.cargasFamiliares = cargasFamiliares;
-	}
-
 	public String getCedulaCliente() {
-		return this.cedulaCliente;
+		return cedulaCliente;
 	}
 
 	public void setCedulaCliente(String cedulaCliente) {
 		this.cedulaCliente = cedulaCliente;
 	}
 
-	public BigDecimal getEdad() {
-		return this.edad;
-	}
-
-	public void setEdad(BigDecimal edad) {
-		this.edad = edad;
-	}
-
-	public String getEstado() {
-		return this.estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getEstadoCivil() {
-		return this.estadoCivil;
-	}
-
-	public void setEstadoCivil(String estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
-
-	public Date getFechaActualizacion() {
-		return this.fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Date getFechaCreacion() {
-		return this.fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaNacimiento() {
-		return this.fechaNacimiento;
-	}
-
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
-	public String getGenero() {
-		return this.genero;
-	}
-
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-
-	public String getLugarNacimiento() {
-		return this.lugarNacimiento;
-	}
-
-	public void setLugarNacimiento(String lugarNacimiento) {
-		this.lugarNacimiento = lugarNacimiento;
-	}
-
-	public String getNacionalidad() {
-		return this.nacionalidad;
-	}
-
-	public void setNacionalidad(String nacionalidad) {
-		this.nacionalidad = nacionalidad;
-	}
-
-	public String getNivelEducacion() {
-		return this.nivelEducacion;
-	}
-
-	public void setNivelEducacion(String nivelEducacion) {
-		this.nivelEducacion = nivelEducacion;
-	}
-
 	public String getPrimerNombre() {
-		return this.primerNombre;
+		return primerNombre;
 	}
 
 	public void setPrimerNombre(String primerNombre) {
@@ -216,77 +98,122 @@ public class TbQoCliente implements Serializable {
 	}
 
 	public String getSegundoNombre() {
-		return this.segundoNombre;
+		return segundoNombre;
 	}
 
-	public void setSegundoNombre(String segundoNombre) {
-		this.segundoNombre = segundoNombre;
+	public void setSegundoNombre(String segundoNombe) {
+		this.segundoNombre = segundoNombe;
 	}
 
-	public List<TbQoCotizador> getTbQoCotizadors() {
-		return this.tbQoCotizadors;
+	public String getApellidoPaterno() {
+		return apellidoPaterno;
 	}
 
-	public void setTbQoCotizadors(List<TbQoCotizador> tbQoCotizadors) {
-		this.tbQoCotizadors = tbQoCotizadors;
+	public void setApellidoPaterno(String apellidoPaterno) {
+		this.apellidoPaterno = apellidoPaterno;
 	}
 
-	public TbQoCotizador addTbQoCotizador(TbQoCotizador tbQoCotizador) {
-		getTbQoCotizadors().add(tbQoCotizador);
-		tbQoCotizador.setTbQoCliente(this);
-
-		return tbQoCotizador;
+	public String getApellidoMaterno() {
+		return apellidoMaterno;
 	}
 
-	public TbQoCotizador removeTbQoCotizador(TbQoCotizador tbQoCotizador) {
-		getTbQoCotizadors().remove(tbQoCotizador);
-		tbQoCotizador.setTbQoCliente(null);
-
-		return tbQoCotizador;
+	public void setApellidoMaterno(String apellidoMaterno) {
+		this.apellidoMaterno = apellidoMaterno;
 	}
 
-	public List<TbQoRiesgoAcumulado> getTbQoRiesgoAcumulados() {
-		return this.tbQoRiesgoAcumulados;
+	public String getGenero() {
+		return genero;
 	}
 
-	public void setTbQoRiesgoAcumulados(List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados) {
-		this.tbQoRiesgoAcumulados = tbQoRiesgoAcumulados;
+	public void setGenero(String genero) {
+		this.genero = genero;
 	}
 
-	public TbQoRiesgoAcumulado addTbQoRiesgoAcumulado(TbQoRiesgoAcumulado tbQoRiesgoAcumulado) {
-		getTbQoRiesgoAcumulados().add(tbQoRiesgoAcumulado);
-		tbQoRiesgoAcumulado.setTbQoCliente(this);
-
-		return tbQoRiesgoAcumulado;
+	public String getEstadoCivil() {
+		return estadoCivil;
 	}
 
-	public TbQoRiesgoAcumulado removeTbQoRiesgoAcumulado(TbQoRiesgoAcumulado tbQoRiesgoAcumulado) {
-		getTbQoRiesgoAcumulados().remove(tbQoRiesgoAcumulado);
-		tbQoRiesgoAcumulado.setTbQoCliente(null);
-
-		return tbQoRiesgoAcumulado;
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
 	}
 
-	public List<TqQoNegociacion> getTqQoNegociacions() {
-		return this.tqQoNegociacions;
+	public Number getCargasFamiliares() {
+		return cargasFamiliares;
 	}
 
-	public void setTqQoNegociacions(List<TqQoNegociacion> tqQoNegociacions) {
-		this.tqQoNegociacions = tqQoNegociacions;
+	public void setCargasFamiliares(Number cargasFamiliares) {
+		this.cargasFamiliares = cargasFamiliares;
 	}
 
-	public TqQoNegociacion addTqQoNegociacion(TqQoNegociacion tqQoNegociacion) {
-		getTqQoNegociacions().add(tqQoNegociacion);
-		tqQoNegociacion.setTbQoCliente(this);
-
-		return tqQoNegociacion;
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
-	public TqQoNegociacion removeTqQoNegociacion(TqQoNegociacion tqQoNegociacion) {
-		getTqQoNegociacions().remove(tqQoNegociacion);
-		tqQoNegociacion.setTbQoCliente(null);
-
-		return tqQoNegociacion;
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
+	public String getLugarNacimiento() {
+		return lugarNacimiento;
+	}
+
+	public void setLugarNacimiento(String lugarNacimiento) {
+		this.lugarNacimiento = lugarNacimiento;
+	}
+
+	public String getNacionalidad() {
+		return nacionalidad;
+	}
+
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
+
+	public String getNivelEducacion() {
+		return nivelEducacion;
+	}
+
+	public void setNivelEducacion(String nivelEducacion) {
+		this.nivelEducacion = nivelEducacion;
+	}
+
+	public String getActividadEconomica() {
+		return actividadEconomica;
+	}
+
+	public void setActividadEconomica(String actividadEconomica) {
+		this.actividadEconomica = actividadEconomica;
+	}
+
+	public Number getEdad() {
+		return edad;
+	}
+
+	public void setEdad(Number edad) {
+		this.edad = edad;
+	}
+
+	public Timestamp getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Timestamp timestamp) {
+		this.fechaCreacion = timestamp;
+	}
+
+	public Timestamp getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Timestamp timestamp) {
+		this.fechaActualizacion = timestamp;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 }

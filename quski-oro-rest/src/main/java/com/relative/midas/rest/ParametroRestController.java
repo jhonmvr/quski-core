@@ -1,6 +1,7 @@
 package com.relative.midas.rest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.PaisesEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ParametrosSingleton;
@@ -250,6 +252,20 @@ public class ParametroRestController extends BaseRestController implements CrudR
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController getEntityByNombre, " + e.getMessage());
 		}
 		
+	}
+	@GET
+	@Path("/getPaises")
+	@ApiOperation(
+			value = "GenericWrapper<String>", 
+			notes = "Retorna una lista de paises String.class",
+			response = GenericWrapper.class) 
+	public  GenericWrapper<String> getPaises()throws RelativeException{
+		GenericWrapper<String> w = new GenericWrapper<>();
+		List<PaisesEnum> enumPaises = Arrays.asList(PaisesEnum.values());
+		List<String> stringsPaises = new ArrayList<String>();
+		enumPaises.forEach(f -> stringsPaises.add(f.toString().replace('_', ' ')));
+		w.setEntidades(stringsPaises);
+		return w;
 	}
 	
 	@GET
