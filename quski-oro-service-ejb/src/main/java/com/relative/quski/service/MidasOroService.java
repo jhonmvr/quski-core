@@ -12,10 +12,12 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTipoOro;
+import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.ParametroRepository;
@@ -38,6 +40,8 @@ public class MidasOroService {
 	private DetalleCreditoRepository detalleCreditoRepository;
 	@Inject
 	private PrecioOroRepository precioOroRepository;
+	@Inject
+	private ClienteRepository clienteRepository;
 	/**
 	 * PARAMETRO
 	 */
@@ -752,4 +756,34 @@ public class MidasOroService {
 		}
 	}
 	
+	/**
+	 * Cliente
+	 */
+
+		public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
+			try {
+				persisted.setId(send.getId());
+				persisted.setCedulaCliente(send.getCedulaCliente());;
+				persisted.setPrimerNombre(send.getPrimerNombre());
+				persisted.setSegundoNombre(send.getSegundoNombre());
+				persisted.setApellidoPaterno(send.getApellidoPaterno());
+				persisted.setApellidoMaterno(send.getApellidoMaterno());
+				persisted.setGenero(send.getGenero());
+				persisted.setEstadoCivil(send.getEstadoCivil());
+				persisted.setCargasFamiliares(send.getCargasFamiliares());
+				persisted.setFechaNacimiento(send.getFechaNacimiento());
+				persisted.setLugarNacimiento(send.getLugarNacimiento());
+				persisted.setNacionalidad(send.getNacionalidad());
+				persisted.setNivelEducacion(send.getNivelEducacion());
+				persisted.setActividadEconomica(send.getActividadEconomica());
+				persisted.setEdad(send.getEdad());
+
+				return clienteRepository.update(persisted);
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+			}
+		}
+
+	
+
 }
