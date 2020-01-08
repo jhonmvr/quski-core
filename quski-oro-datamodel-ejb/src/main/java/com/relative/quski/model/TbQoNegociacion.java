@@ -25,8 +25,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name="tq_qo_negociacion")
-@NamedQuery(name="TqQoNegociacion.findAll", query="SELECT t FROM TqQoNegociacion t")
-public class TqQoNegociacion implements Serializable {
+
+public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -45,7 +45,7 @@ public class TqQoNegociacion implements Serializable {
 	private Date fechaCreacion;
 
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
-	@OneToMany(mappedBy="tqQoNegociacion")
+	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
 
 	//bi-directional many-to-one association to TbQoCliente
@@ -53,7 +53,7 @@ public class TqQoNegociacion implements Serializable {
 	@JoinColumn(name="tb_qo_cliente_id")
 	private TbQoCliente tbQoCliente;
 
-	public TqQoNegociacion() {
+	public TbQoNegociacion() {
 	}
 
 	public Long getId() {
@@ -98,14 +98,14 @@ public class TqQoNegociacion implements Serializable {
 
 	public TbQoVariableCrediticia addTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTqQoNegociacion(this);
+		tbQoVariablesCrediticia.setTbQoNegociacion(this);
 
 		return tbQoVariablesCrediticia;
 	}
 
 	public TbQoVariableCrediticia removeTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTqQoNegociacion(null);
+		tbQoVariablesCrediticia.setTbQoNegociacion(null);
 
 		return tbQoVariablesCrediticia;
 	}

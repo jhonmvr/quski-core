@@ -56,11 +56,6 @@ public class VariableCrediticiaRestController extends BaseRestController
 		loc.setEntidad(vc);
 		return loc;
 	}
-
-	
-	
-	
-	
 	
 	@Override
 	public PaginatedListWrapper<TbQoVariableCrediticia> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,

@@ -20,6 +20,7 @@ import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
+import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.repository.ClienteRepository;
@@ -859,7 +860,7 @@ public class QuskiOroService {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
 			persisted.setTbQoCotizador(send.getTbQoCotizador());
-			persisted.setTqQoNegociacion(send.getTqQoNegociacion());
+			persisted.setTbQoNegociacion(send.getTbQoNegociacion());
 			persisted.setFechaActualizacion(new Date());
 			persisted.setEstado(send.getEstado());
 			
@@ -869,6 +870,26 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Agencia " + e.getMessage());
 		}
+	}
+
+	public TbQoNegociacion findNegociacionById(Long valueOf) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<TbQoNegociacion> findAllNegociacion(PaginatedWrapper pw) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Long countNegociacion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public TbQoNegociacion manageNegociacion(TbQoNegociacion entidad) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 				
 	
