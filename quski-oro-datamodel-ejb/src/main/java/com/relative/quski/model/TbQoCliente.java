@@ -1,16 +1,23 @@
 package com.relative.quski.model;
-
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Timestamp;
-
+import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import com.relative.quski.enums.EstadoEnum;
+
+import com.relative.quski.enums.EstadoEnum;
 @Entity
 @Table(name="TB_QO_CLIENTE")
 
@@ -44,7 +51,7 @@ public class TbQoCliente implements Serializable {
 	private String estadoCivil;
 	
 	@Column(name="CARGAS_FAMILIARES")
-	private Number cargasFamiliares;
+	private BigDecimal cargasFamiliares;
 	
 	@Column(name="FECHA_NACIMIENTO")
 	private Date fechaNacimiento;
@@ -62,17 +69,25 @@ public class TbQoCliente implements Serializable {
 	private String actividadEconomica;
 	
 	@Column(name="EDAD")
-	private Number edad;
+	private BigDecimal edad;
 	
-	@Column(name="FECHA_CREACION")
-	private Timestamp fechaCreacion;
-	
-	@Column(name="FECHA_ACTUALIZACION")
-	private Timestamp fechaActualizacion;
-	
-	@Column(name="ESTADO")
-	private String estado;
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_actualizacion")
+	private Date fechaActualizacion;
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_creacion")
+	private Date fechaCreacion;
 
+	@Column(name="ESTADO")
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
+	@Column(name="telefono_movil")
+	private String telefonoMovil;
+	@Column(name="telefono_fijo")
+	private String telefonoFijo;
+	private String publicidad;
+	private String campania;
+	private String email;
 	public Long getId() {
 		return id;
 	}
@@ -137,14 +152,7 @@ public class TbQoCliente implements Serializable {
 		this.estadoCivil = estadoCivil;
 	}
 
-	public Number getCargasFamiliares() {
-		return cargasFamiliares;
-	}
-
-	public void setCargasFamiliares(Number cargasFamiliares) {
-		this.cargasFamiliares = cargasFamiliares;
-	}
-
+	
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
@@ -185,35 +193,88 @@ public class TbQoCliente implements Serializable {
 		this.actividadEconomica = actividadEconomica;
 	}
 
-	public Number getEdad() {
-		return edad;
-	}
 
-	public void setEdad(Number edad) {
-		this.edad = edad;
-	}
 
-	public Timestamp getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Timestamp timestamp) {
-		this.fechaCreacion = timestamp;
-	}
-
-	public Timestamp getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Timestamp timestamp) {
-		this.fechaActualizacion = timestamp;
-	}
-
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
+
+	public BigDecimal getCargasFamiliares() {
+		return cargasFamiliares;
+	}
+
+	public void setCargasFamiliares(BigDecimal cargasFamiliares) {
+		this.cargasFamiliares = cargasFamiliares;
+	}
+
+	public BigDecimal getEdad() {
+		return edad;
+	}
+
+	public void setEdad(BigDecimal edad) {
+		this.edad = edad;
+	}
+
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getTelefonoMovil() {
+		return telefonoMovil;
+	}
+
+	public void setTelefonoMovil(String telefonoMovil) {
+		this.telefonoMovil = telefonoMovil;
+	}
+
+	public String getTelefonoFijo() {
+		return telefonoFijo;
+	}
+
+	public void setTelefonoFijo(String telefonoFijo) {
+		this.telefonoFijo = telefonoFijo;
+	}
+
+	public String getPublicidad() {
+		return publicidad;
+	}
+
+	public void setPublicidad(String publicidad) {
+		this.publicidad = publicidad;
+	}
+
+	public String getCampania() {
+		return campania;
+	}
+
+	public void setCampania(String campania) {
+		this.campania = campania;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
+
 }

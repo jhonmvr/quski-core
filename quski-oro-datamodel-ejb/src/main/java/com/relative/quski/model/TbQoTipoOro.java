@@ -1,5 +1,6 @@
 package com.relative.quski.model;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class TbQoTipoOro implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
+	private BigDecimal precio;
 	
 //bi-directional many-to-one association to TbMiMovimientoCaja
 	@OneToMany(mappedBy="tbQoTipoOro")
@@ -80,5 +82,12 @@ public class TbQoTipoOro implements Serializable {
 	public void setTbQoPrecioOro(List<TbQoPrecioOro> tbQoPrecioOro) {
 		this.tbQoPrecioOro = tbQoPrecioOro;
 	}
+	public BigDecimal getPrecio() {
+		return precio;
+	}
+	public void setPrecio(BigDecimal precio) {
+		this.precio = precio;
+	}
+
 	
 }

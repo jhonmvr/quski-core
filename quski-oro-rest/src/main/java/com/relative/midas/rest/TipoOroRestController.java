@@ -17,6 +17,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.service.MidasOroService;
 
@@ -90,5 +91,24 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
 		loc.setEntidad(this.mis.manageTipoOro(wp.getEntidad()));
 		return loc;
-	}	
+	}
+	
+	@GET
+	@Path("/tipoOroByQuilate")
+	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo tipoOroByQuilate Retorna lista de entidades encontradas de TbQoTipoOro", response = GenericWrapper.class)
+	public GenericWrapper<TbQoTipoOro> tipoOroByQuilate(@QueryParam("quilate") String quilate)
+			throws RelativeException {
+		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
+		TbQoTipoOro  a = this.findTipoOro(quilate);
+		loc.setEntidad(a);
+		return loc;
+	}
+	public TbQoTipoOro findTipoOro(String quilate) throws RelativeException {
+		List<TbQoTipoOro> tmp = this.mis.findTipoOroByQuilate(quilate);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
+	
 }
