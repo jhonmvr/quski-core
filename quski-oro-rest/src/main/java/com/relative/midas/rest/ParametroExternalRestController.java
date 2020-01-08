@@ -18,7 +18,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.quski.model.TbMiParametro;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.util.MidasOroConstantes;
 import com.relative.quski.util.MidasOroUtil;
@@ -40,7 +40,7 @@ public class ParametroExternalRestController extends BaseRestController {
 	Logger log;
 	
 	@Inject
-	MidasOroService sas;
+	QuskiOroService sas;
 	
 	@Inject
 	ParametrosSingleton ps;

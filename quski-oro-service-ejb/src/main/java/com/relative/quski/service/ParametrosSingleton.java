@@ -21,7 +21,7 @@ import com.relative.quski.model.TbMiParametro;
  */
 @Singleton
 @Startup
-@DependsOn({"MidasOroService"}) 
+@DependsOn({"QuskiOroService"}) 
 public class ParametrosSingleton {
 	
 	private final Map<String,TbMiParametro> parametros= new HashMap<>();
@@ -30,7 +30,7 @@ public class ParametrosSingleton {
 	Logger log;
 	
 	@Inject
-	private MidasOroService sas;
+	private QuskiOroService sas;
 	
     /**
      * Default constructor. 

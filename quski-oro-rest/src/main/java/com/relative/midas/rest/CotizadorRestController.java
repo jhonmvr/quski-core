@@ -19,7 +19,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +38,7 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 
 
 	@Inject
-	MidasOroService mis;
+	QuskiOroService qos;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
@@ -51,7 +51,7 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
-		TbQoCotizador a = this.mis.findCotizadorById(Long.valueOf(id));
+		TbQoCotizador a = this.qos.findCotizadorById(Long.valueOf(id));
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -73,9 +73,9 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 
 	private PaginatedListWrapper<TbQoCotizador> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoCotizador> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoCotizador> actions = this.mis.findAllCotizador(pw);
+		List<TbQoCotizador> actions = this.qos.findAllCotizador(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.mis.countCotizador().intValue());
+			plw.setTotalResults(this.qos.countCotizador().intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -88,7 +88,7 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> persistEntity(GenericWrapper<TbQoCotizador> wp) throws RelativeException {
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
-		loc.setEntidad(this.mis.manageCotizador(wp.getEntidad()));
+		loc.setEntidad(this.qos.manageCotizador(wp.getEntidad()));
 		return loc;
 	}	
 }

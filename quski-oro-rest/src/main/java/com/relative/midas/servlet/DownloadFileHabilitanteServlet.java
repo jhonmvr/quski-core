@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.ManagePropertiesFile;
-import com.relative.quski.service.MidasOroService;
+import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.MidasOroConstantes;
 
 
@@ -32,7 +32,7 @@ public class DownloadFileHabilitanteServlet extends HttpServlet {
 	private static final Log log = LogFactory.getLog(DownloadFileHabilitanteServlet.class);
 	
 	@Inject
-	private MidasOroService sas;
+	private QuskiOroService sas;
 	
     /**
      * @see HttpServlet#HttpServlet()
