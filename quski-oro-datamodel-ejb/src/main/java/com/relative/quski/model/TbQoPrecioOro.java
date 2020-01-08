@@ -51,6 +51,10 @@ private static final long serialVersionUID = 1L;
 	@ManyToOne
 	@JoinColumn(name="id_tipo_oro")
 	private TbQoTipoOro tbQoTipoOro;
+	@ManyToOne
+	@JoinColumn(name="id_cotizador")
+	private TbQoCotizador tbQoCotizador;
+	
 	
 	public Long getId() {
 		return id;
@@ -107,5 +111,15 @@ private static final long serialVersionUID = 1L;
 
 	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
 		this.tbQoTipoOro = tbQoTipoOro;
-	}	
+	}
+
+	public TbQoCotizador getTbQoCotizador() {
+		return tbQoCotizador;
+	}
+
+	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
+	}
+
+	
 }

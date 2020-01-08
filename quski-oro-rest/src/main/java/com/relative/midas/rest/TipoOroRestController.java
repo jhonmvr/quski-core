@@ -92,5 +92,24 @@ implements CrudRestControllerInterface<TbQoTipoOro, GenericWrapper<TbQoTipoOro>>
 		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageTipoOro(wp.getEntidad()));
 		return loc;
-	}	
+	}
+	
+	@GET
+	@Path("/tipoOroByQuilate")
+	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo tipoOroByQuilate Retorna lista de entidades encontradas de TbQoTipoOro", response = GenericWrapper.class)
+	public GenericWrapper<TbQoTipoOro> tipoOroByQuilate(@QueryParam("quilate") String quilate)
+			throws RelativeException {
+		GenericWrapper<TbQoTipoOro> loc = new GenericWrapper<>();
+		TbQoTipoOro  a = this.findTipoOro(quilate);
+		loc.setEntidad(a);
+		return loc;
+	}
+	public TbQoTipoOro findTipoOro(String quilate) throws RelativeException {
+		List<TbQoTipoOro> tmp = this.qos.findTipoOroByQuilate(quilate);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
+	
 }

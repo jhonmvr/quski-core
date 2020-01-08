@@ -30,6 +30,8 @@ import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
+import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
+import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 
 @Stateless
 public class QuskiOroService {
@@ -39,8 +41,6 @@ public class QuskiOroService {
 	private ParametrosSingleton parametrosSingleton;
 	@Inject
 	private ParametroRepository parametroRepository;
-	@Inject
-	private VariableCrediticiaRepository variableCrediticiaRepository;
 	@Inject 
 	private CotizadorRepository cotizadorRepository;
 	@Inject 
@@ -55,6 +55,10 @@ public class QuskiOroService {
 	private NegociacionRepository negociacionRepository;
 	@Inject
 	private TasacionRepository tasacionRepository;
+	@Inject
+	private VariableCrediticiaRepository variableCrediticiaRepository;
+
+
 	/**
 	 * PARAMETRO
 	 */
@@ -515,6 +519,29 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "TipoOro no encontrado " + e.getMessage());
 		}
 	}
+	
+	/**
+	 * Metodo que busca por el quilate del tipo de oro
+	 * 
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public List<TbQoTipoOro> findTipoOroByQuilate(String quilate) throws RelativeException {
+		List<TbQoTipoOro> tmp;
+		try {
+			tmp = this.tipoOroRepository.findAllBySpecification(new TipoOroByQuilateSpec(quilate));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: AL BUSCAR tipo oro por quilate: " + quilate);
+		}
+		return null;
+
+	}
 	/**
 	 * Detalle Credito
 	 */
@@ -772,7 +799,30 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Detalle Credito no encontrado " + e.getMessage());
 		}
 	}
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param idCotizador
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @throws RelativeException
+	 */
 	
+	public List<TbQoPrecioOro> listByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return precioOroRepository.findByIdCotizador(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),idCotizador );
+		} else {
+			return precioOroRepository.findByIdCotizador(idCotizador);
+		}
+	}
+	public Long countByIdCotizador(
+			String idCotizador) throws RelativeException {
+
+		return precioOroRepository.countByIdCotizador(idCotizador);
+	}
+
+
+
 	/**
 	 * Cliente
 	 */
@@ -800,6 +850,30 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 			}
 		}
+		/**
+		 * Metodo que busca por el numero de cedula del cliente
+		 * 
+		 * @author SAUL MENDEZ - Relative Engine
+		 * @return Cantidad de entidades encontradas
+		 * @throws RelativeException
+		 */
+		public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
+			List<TbQoCliente> tmp;
+			try {
+				tmp = this.clienteRepository.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+				if (tmp != null && !tmp.isEmpty()) {
+					return tmp;
+				}
+			} catch (Exception e) {
+
+
+				throw new RelativeException(Constantes.ERROR_CODE_READ,
+						"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+			}
+			return null;
+
+		}
+		
 
 	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
 	

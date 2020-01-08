@@ -17,6 +17,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.service.QuskiOroService;
 
@@ -85,10 +86,37 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoPrecioOro", response = GenericWrapper.class)
+	
+	
 	public GenericWrapper<TbQoPrecioOro> persistEntity(GenericWrapper<TbQoPrecioOro> wp) throws RelativeException {
 		GenericWrapper<TbQoPrecioOro> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.managePrecioOro(wp.getEntidad()));
 		return loc;
 	}	
 	
+	
+	@GET
+	@Path("/precioOroByIdCotizador")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo precioOroByIdCotizador Retorna wrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoPrecioOro> precioOroByIdCotizador(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("idCotizador") String idCotizador
+			) throws RelativeException {
+		return findPendienteByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),idCotizador);
+	}
+	
+	private PaginatedListWrapper<TbQoPrecioOro> findPendienteByIdentificacion(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+		PaginatedListWrapper<TbQoPrecioOro> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoPrecioOro> actions = this.qos.listByIdCotizador(pw, idCotizador);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countByIdCotizador(idCotizador).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}	
 }
