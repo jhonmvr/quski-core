@@ -60,7 +60,11 @@ public class TbQoDetalleCredito implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-
+	@ManyToOne
+	@JoinColumn(name="id_cotizador")
+	private TbQoCotizador tbQoCotizador;
+	
+	
 	
 	public Long getId() {
 		return id;
@@ -151,6 +155,12 @@ public class TbQoDetalleCredito implements Serializable {
 	}
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+	public TbQoCotizador getTbQoCotizador() {
+		return tbQoCotizador;
+	}
+	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
 	}
 
 	

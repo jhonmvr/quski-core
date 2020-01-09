@@ -6,85 +6,85 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 
 public class DetalleCreditoWrapper implements Serializable {
-
+	private static final long serialVersionUID = 1L;
 	public DetalleCreditoWrapper() {
 		
 	}
 	private String plazoCredito;
-	private BigDecimal montoPreaprobado;
-	private BigDecimal recibirCliente;
-	private BigDecimal costoNuevaOperacion;
-	private BigDecimal costoCustodia;
-	private BigDecimal costoTransporte;
-	private BigDecimal costoCredito;
-	private BigDecimal costoSeguro;
-	private BigDecimal costoResguardo;
-	private BigDecimal costoEstimado;
-	private BigDecimal valorCuota;
+	private Double montoPreaprobado;
+	private Double recibirCliente;
+	private Double costoNuevaOperacion;
+	private Double costoCustodia;
+	private Double costoTransporte;
+	private Double costoCredito;
+	private Double costoSeguro;
+	private Double costoResguardo;
+	private Double costoEstimado;
+	private Double valorCuota;
 	public String getPlazoCredito() {
 		return plazoCredito;
 	}
 	public void setPlazoCredito(String plazoCredito) {
 		this.plazoCredito = plazoCredito;
 	}
-	public BigDecimal getMontoPreaprobado() {
+	public Double getMontoPreaprobado() {
 		return montoPreaprobado;
 	}
-	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
+	public void setMontoPreaprobado(Double montoPreaprobado) {
 		this.montoPreaprobado = montoPreaprobado;
 	}
-	public BigDecimal getRecibirCliente() {
+	public Double getRecibirCliente() {
 		return recibirCliente;
 	}
-	public void setRecibirCliente(BigDecimal recibirCliente) {
+	public void setRecibirCliente(Double recibirCliente) {
 		this.recibirCliente = recibirCliente;
 	}
-	public BigDecimal getCostoNuevaOperacion() {
+	public Double getCostoNuevaOperacion() {
 		return costoNuevaOperacion;
 	}
-	public void setCostoNuevaOperacion(BigDecimal costoNuevaOperacion) {
+	public void setCostoNuevaOperacion(Double costoNuevaOperacion) {
 		this.costoNuevaOperacion = costoNuevaOperacion;
 	}
-	public BigDecimal getCostoCustodia() {
+	public Double getCostoCustodia() {
 		return costoCustodia;
 	}
-	public void setCostoCustodia(BigDecimal costoCustodia) {
+	public void setCostoCustodia(Double costoCustodia) {
 		this.costoCustodia = costoCustodia;
 	}
-	public BigDecimal getCostoTransporte() {
+	public Double getCostoTransporte() {
 		return costoTransporte;
 	}
-	public void setCostoTransporte(BigDecimal costoTransporte) {
+	public void setCostoTransporte(Double costoTransporte) {
 		this.costoTransporte = costoTransporte;
 	}
-	public BigDecimal getCostoCredito() {
+	public Double getCostoCredito() {
 		return costoCredito;
 	}
-	public void setCostoCredito(BigDecimal costoCredito) {
+	public void setCostoCredito(Double costoCredito) {
 		this.costoCredito = costoCredito;
 	}
-	public BigDecimal getCostoSeguro() {
+	public Double getCostoSeguro() {
 		return costoSeguro;
 	}
-	public void setCostoSeguro(BigDecimal costoSeguro) {
+	public void setCostoSeguro(Double costoSeguro) {
 		this.costoSeguro = costoSeguro;
 	}
-	public BigDecimal getCostoResguardo() {
+	public Double getCostoResguardo() {
 		return costoResguardo;
 	}
-	public void setCostoResguardo(BigDecimal costoResguardo) {
+	public void setCostoResguardo(Double costoResguardo) {
 		this.costoResguardo = costoResguardo;
 	}
-	public BigDecimal getCostoEstimado() {
+	public Double getCostoEstimado() {
 		return costoEstimado;
 	}
-	public void setCostoEstimado(BigDecimal costoEstimado) {
+	public void setCostoEstimado(Double costoEstimado) {
 		this.costoEstimado = costoEstimado;
 	}
-	public BigDecimal getValorCuota() {
+	public Double getValorCuota() {
 		return valorCuota;
 	}
-	public void setValorCuota(BigDecimal valorCuota) {
+	public void setValorCuota(Double valorCuota) {
 		this.valorCuota = valorCuota;
 	}
 	
