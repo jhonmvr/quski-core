@@ -52,8 +52,8 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTasacion", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTasacion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
-		TbQoTasacion a = this.qos.findTasacionById(Long.valueOf(id));
-		loc.setEntidad(a);
+		//TbQoTasacion a = this.qos.findTasacionById(Long.valueOf(id));
+		//loc.setEntidad(a);
 		return loc;
 	}
 	
@@ -74,11 +74,11 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 
 	private PaginatedListWrapper<TbQoTasacion> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoTasacion> actions = this.qos.findAllTasacion(pw);
+		/*List<TbQoTasacion> actions = this.qos.findAllTasacion(pw);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countNegociacion().intValue());
 			plw.setList(actions);
-		}
+		}*/
 		return plw;
 	}
 
@@ -89,7 +89,7 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTasacion> persistEntity(GenericWrapper<TbQoTasacion> wp) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
+		//loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
 		return loc;
 	}	
 }

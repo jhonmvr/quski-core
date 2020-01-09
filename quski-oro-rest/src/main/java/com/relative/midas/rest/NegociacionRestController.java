@@ -63,8 +63,8 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoNegociacion> getEntity(String id) throws RelativeException {
 		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
-		TbQoNegociacion ng =this.qos.findNegociacionById(Long.valueOf(id));
-		loc.setEntidad(ng);
+		//TbQoNegociacion ng =this.qos.findNegociacionById(Long.valueOf(id));
+		//loc.setEntidad(ng);
 		return loc;
 	}
 
@@ -80,12 +80,12 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	
 	private PaginatedListWrapper<TbQoNegociacion> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoNegociacion> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoNegociacion> actions = this.qos.findAllNegociacion(pw);
-		if (actions != null && !actions.isEmpty()) {
+		//List<TbQoNegociacion> actions = this.qos.findAllNegociacion(pw);
+		// (actions != null && !actions.isEmpty()) {
 			
-			plw.setTotalResults(this.qos.countNegociacion().intValue());
-			plw.setList(actions);
-		}
+			//plw.setTotalResults(this.qos.countNegociacion().intValue());
+			//plw.setList(actions);
+		//}
 		return plw;
 	}
 	
@@ -99,7 +99,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 			throws RelativeException {
 		try {
 			GenericWrapper<TbQoNegociacion> ng= new GenericWrapper<>();
-			ng.setEntidad(this.qos.manageNegociacion( ng.getEntidad() ));
+			//ng.setEntidad(this.qos.manageNegociacion( ng.getEntidad() ));
 			return ng;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR negociacion persistEntity, " + e.getMessage());

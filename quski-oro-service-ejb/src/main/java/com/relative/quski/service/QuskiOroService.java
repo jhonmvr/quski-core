@@ -53,10 +53,7 @@ public class QuskiOroService {
 	private PrecioOroRepository precioOroRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
-	@Inject
-	private NegociacionRepository negociacionRepository;
-	@Inject
-	private TasacionRepository tasacionRepository;
+
 	@Inject
 	private VariableCrediticiaRepository variableCrediticiaRepository;
 
@@ -270,6 +267,134 @@ public class QuskiOroService {
 					"Parametros no encontrados por nombre o tipo " + e.getMessage());
 		}
 	}
+	
+	
+
+	/**
+	 * CLIENTE
+	 */
+
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoCliente findClienteById(Long id) throws RelativeException {
+		try {
+			return clienteRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoCliente> findAllCliente(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.clienteRepository.findAll(TbQoCliente.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.clienteRepository.findAll(TbQoCliente.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.clienteRepository.findAll(TbQoCliente.class, pw.getSortFields(), pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error al buscar todos los Abonos " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countCliente() throws RelativeException {
+		try {
+			return clienteRepository.countAll(TbQoCliente.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Cliente no encontrado " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
+		try {
+			log.info("==> entra a manage Abono");
+			TbQoCliente persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.clienteRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updateCliente(send, persisted);
+			} else if (send != null && send.getId() == null) {
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return clienteRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+		}
+	}
+	public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
+		try {
+			persisted.setId(send.getId());
+			persisted.setCedulaCliente(send.getCedulaCliente());;
+			persisted.setPrimerNombre(send.getPrimerNombre());
+			persisted.setSegundoNombre(send.getSegundoNombre());
+			persisted.setApellidoPaterno(send.getApellidoPaterno());
+			persisted.setApellidoMaterno(send.getApellidoMaterno());
+			persisted.setGenero(send.getGenero());
+			persisted.setEstadoCivil(send.getEstadoCivil());
+			persisted.setCargasFamiliares(send.getCargasFamiliares());
+			persisted.setFechaNacimiento(send.getFechaNacimiento());
+			persisted.setLugarNacimiento(send.getLugarNacimiento());
+			persisted.setNacionalidad(send.getNacionalidad());
+			persisted.setNivelEducacion(send.getNivelEducacion());
+			persisted.setActividadEconomica(send.getActividadEconomica());
+			persisted.setEdad(send.getEdad());
+
+			return clienteRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+		}
+	}
+
 	/**
 	 * COTIZADOR
 	 */
@@ -631,7 +756,7 @@ public class QuskiOroService {
 	/**
 	 * Metodo que actualiza la entidad
 	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
+	 
 	 * @param send      informacion enviada para update
 	 * @param persisted entidad existente sobre la que se actualiza
 	 * @return Entidad actualizada
@@ -829,29 +954,7 @@ public class QuskiOroService {
 	 * Cliente
 	 */
 
-		public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
-			try {
-				persisted.setId(send.getId());
-				persisted.setCedulaCliente(send.getCedulaCliente());;
-				persisted.setPrimerNombre(send.getPrimerNombre());
-				persisted.setSegundoNombre(send.getSegundoNombre());
-				persisted.setApellidoPaterno(send.getApellidoPaterno());
-				persisted.setApellidoMaterno(send.getApellidoMaterno());
-				persisted.setGenero(send.getGenero());
-				persisted.setEstadoCivil(send.getEstadoCivil());
-				persisted.setCargasFamiliares(send.getCargasFamiliares());
-				persisted.setFechaNacimiento(send.getFechaNacimiento());
-				persisted.setLugarNacimiento(send.getLugarNacimiento());
-				persisted.setNacionalidad(send.getNacionalidad());
-				persisted.setNivelEducacion(send.getNivelEducacion());
-				persisted.setActividadEconomica(send.getActividadEconomica());
-				persisted.setEdad(send.getEdad());
 
-				return clienteRepository.update(persisted);
-			} catch (Exception e) {
-				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
-			}
-		}
 		/**
 		 * Metodo que busca por el numero de cedula del cliente
 		 * 
@@ -875,7 +978,7 @@ public class QuskiOroService {
 			return null;
 
 		}
-		
+
 
 	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
 	
@@ -953,7 +1056,7 @@ public class QuskiOroService {
 		}
 	}
 
-	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException  {
+
 		try {
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
@@ -1113,21 +1216,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente) throws RelativeException {
 		
 		
