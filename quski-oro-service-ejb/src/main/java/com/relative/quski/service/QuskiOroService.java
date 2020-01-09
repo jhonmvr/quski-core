@@ -32,6 +32,8 @@ import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
+import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -51,14 +53,12 @@ public class QuskiOroService {
 	private PrecioOroRepository precioOroRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
-	//@Inject
-	//private NegociacionRepository negociacionRepository;
-	//@Inject
-	//private TasacionRepository tasacionRepository;
+	@Inject
+	private NegociacionRepository negociacionRepository;
+	@Inject
+	private TasacionRepository tasacionRepository;
 	@Inject
 	private VariableCrediticiaRepository variableCrediticiaRepository;
-
-
 	/**
 	 * PARAMETRO
 	 */
@@ -757,7 +757,7 @@ public class QuskiOroService {
 	/**
 	 * Metodo que actualiza la entidad
 	 * 
-	 * @author SAUL MENDEZ- Relative Engine
+	 
 	 * @param send      informacion enviada para update
 	 * @param persisted entidad existente sobre la que se actualiza
 	 * @return Entidad actualizada
@@ -935,7 +935,6 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	
-
 	public List<TbQoPrecioOro> listByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return precioOroRepository.findByIdCotizador(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
@@ -956,7 +955,7 @@ public class QuskiOroService {
 	 * Cliente
 	 */
 
-	
+
 		/**
 		 * Metodo que busca por el numero de cedula del cliente
 		 * 
@@ -980,6 +979,7 @@ public class QuskiOroService {
 			return null;
 
 		}
+
 
 	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
 	
@@ -1057,7 +1057,7 @@ public class QuskiOroService {
 		}
 	}
 
-	/*public TbQoNegociacion findNegociacionById(Long id) throws RelativeException  {
+	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 		try {
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
@@ -1216,5 +1216,23 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
-	}*/
+	}
+
+	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente) throws RelativeException {
+		
+		
+		AutorizacionBuroWrapper autorizacion = new AutorizacionBuroWrapper();
+		autorizacion.setNombreCliente(QuskiOroUtil.dateToFullString(new Date()));
+		return autorizacion;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

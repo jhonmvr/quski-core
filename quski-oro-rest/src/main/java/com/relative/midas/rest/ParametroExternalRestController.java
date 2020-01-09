@@ -21,7 +21,7 @@ import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.util.MidasOroConstantes;
-import com.relative.quski.util.MidasOroUtil;
+import com.relative.quski.util.QuskiOroUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -144,7 +144,7 @@ public class ParametroExternalRestController extends BaseRestController {
 	}
 	
 	private String modifyParametro(TbMiParametro p, String key ) throws RelativeException{
-		return  MidasOroUtil.encodeBase64( p.getValor()+  key);
+		return  QuskiOroUtil.encodeBase64( p.getValor()+  key);
 	}
 	
 	private void setParameterOro(Map<String,String> ext, String keyUnencrypt) throws RelativeException {
