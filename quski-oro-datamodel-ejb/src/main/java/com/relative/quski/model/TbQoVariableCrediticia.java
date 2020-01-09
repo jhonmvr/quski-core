@@ -28,7 +28,6 @@ import com.relative.quski.enums.EstadoEnum;
  */
 @Entity
 @Table(name="tb_qo_variables_crediticias")
-@NamedQuery(name="TbQoVariablesCrediticia.findAll", query="SELECT t FROM TbQoVariablesCrediticia t")
 public class TbQoVariableCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
