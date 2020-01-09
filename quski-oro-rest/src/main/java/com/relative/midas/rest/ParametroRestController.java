@@ -31,7 +31,7 @@ import com.relative.quski.enums.PaisesEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ParametrosSingleton;
-import com.relative.quski.util.MidasOroUtil;
+import com.relative.quski.util.QuskiOroUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -201,18 +201,18 @@ public class ParametroRestController extends BaseRestController implements CrudR
 			GenericWrapper<String> sd= new GenericWrapper<String>();
 			Date local= new Date();
 			if( fecha != null && !fecha.isEmpty() ) {
-				local =MidasOroUtil.formatSringToDate(fecha, format);
+				local =QuskiOroUtil.formatSringToDate(fecha, format);
 				log.info("====>ingresa a addDaysToDate fecha convertida " + local );
 				local=FechaUtil.sumarRestarDiasFecha( local , Integer.valueOf(dias));
 				log.info("====>ingresa a addDaysToDate fecha calculada " + local );
-				sd.setEntidad( MidasOroUtil.dateToString( local, format ) );
+				sd.setEntidad( QuskiOroUtil.dateToString( local, format ) );
 				log.info("====>ingresa a addDaysToDate fecha retrono " + sd.getEntidad( ) );
 			} else {
 				local = new Date( System.currentTimeMillis() );
 				log.info("====>ingresa a addDaysToDate sysdate fecha convertida " + local );
 				local=FechaUtil.sumarRestarDiasFecha( local , Integer.valueOf(dias));
 				log.info("====>ingresa a addDaysToDate sysdate fecha calculada " + local );
-				sd.setEntidad( MidasOroUtil.dateToString( local, format ) );
+				sd.setEntidad( QuskiOroUtil.dateToString( local, format ) );
 				log.info("====>ingresa a addDaysToDate sysdate fecha retrono " + sd.getEntidad( ) );
 			}
 			return sd;
@@ -238,11 +238,11 @@ public class ParametroRestController extends BaseRestController implements CrudR
 			Date localIni=null;
 			Date localFin=null;
 			if( fechaIni != null && !fechaIni.isEmpty() &&  fechaFin != null && !fechaFin.isEmpty() ) {
-				localIni =MidasOroUtil.formatSringToDate(fechaIni, format);
+				localIni =QuskiOroUtil.formatSringToDate(fechaIni, format);
 				log.info("====>ingresa a countDaysBetweenDate fecha ini " + localIni );
-				localFin =MidasOroUtil.formatSringToDate(fechaFin, format);
+				localFin =QuskiOroUtil.formatSringToDate(fechaFin, format);
 				log.info("====>ingresa a countDaysBetweenDate fecha fin " + localFin );
-				sd.setEntidad( MidasOroUtil.diasFecha(localIni, localFin) );
+				sd.setEntidad( QuskiOroUtil.diasFecha(localIni, localFin) );
 				log.info("====>ingresa a countDaysBetweenDate dias retrono " + sd.getEntidad( ) );
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,"DEBE INGRESAR LA FECHA DE INICIO Y FINALIZACION PARA CALCULAR LOS DIAS ");
@@ -311,11 +311,11 @@ public class ParametroRestController extends BaseRestController implements CrudR
 			String caracteristicaDos,PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbMiParametro> plw = new PaginatedListWrapper<>(pw);
 		List<TbMiParametro> actions = this.sas.findParametroByParam(nombre, tipo, 
-				estado != null && !estado.isEmpty()?MidasOroUtil.getEnumFromString(EstadoEnum.class, estado):null
+				estado != null && !estado.isEmpty()?QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado):null
 				, caracteristicaUno, caracteristicaDos, pw);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.sas.countParametros( nombre, tipo, 
-					estado != null && !estado.isEmpty()?MidasOroUtil.getEnumFromString(EstadoEnum.class, estado):null
+					estado != null && !estado.isEmpty()?QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado):null
 							, caracteristicaUno, caracteristicaDos ).intValue());
 			plw.setList(actions);
 		}

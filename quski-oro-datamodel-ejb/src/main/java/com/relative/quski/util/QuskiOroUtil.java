@@ -19,7 +19,7 @@ import java.util.UUID;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 
-public class MidasOroUtil {
+public class QuskiOroUtil {
 	
 	public final static String DATE_FORMAT = "yyyy-MM-dd";
 	public final static String DATE_FORMAT_FULL = "yyyy-MM-dd HH:mm:ss";

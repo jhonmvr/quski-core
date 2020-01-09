@@ -32,6 +32,8 @@ import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
+import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -1111,4 +1113,36 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente) throws RelativeException {
+		
+		
+		AutorizacionBuroWrapper autorizacion = new AutorizacionBuroWrapper();
+		autorizacion.setNombreCliente(QuskiOroUtil.dateToFullString(new Date()));
+		return autorizacion;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
