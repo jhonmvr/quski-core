@@ -53,11 +53,12 @@ public class QuskiOroService {
 	private PrecioOroRepository precioOroRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
-
+	@Inject
+	private NegociacionRepository negociacionRepository;
+	@Inject
+	private TasacionRepository tasacionRepository;
 	@Inject
 	private VariableCrediticiaRepository variableCrediticiaRepository;
-
-
 	/**
 	 * PARAMETRO
 	 */
@@ -1056,7 +1057,7 @@ public class QuskiOroService {
 		}
 	}
 
-
+	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 		try {
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
