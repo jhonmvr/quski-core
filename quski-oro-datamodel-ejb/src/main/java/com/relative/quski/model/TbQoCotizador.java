@@ -53,6 +53,10 @@ public class TbQoCotizador implements Serializable{
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
 
+//bi-directional many-to-one association to TbMiMovimientoCaja
+	@OneToMany(mappedBy="tbQoCotizador")
+	private List<TbQoPrecioOro> tbQoPrecioOro;
+
 		
 	public Long getId() {
 		return id;
@@ -95,6 +99,18 @@ public class TbQoCotizador implements Serializable{
 	}
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
+	}
+	public TbQoCliente getTbQoCliente() {
+		return tbQoCliente;
+	}
+	public void setTbQoCliente(TbQoCliente tbQoCliente) {
+		this.tbQoCliente = tbQoCliente;
+	}
+	public List<TbQoPrecioOro> getTbQoPrecioOro() {
+		return tbQoPrecioOro;
+	}
+	public void setTbQoPrecioOro(List<TbQoPrecioOro> tbQoPrecioOro) {
+		this.tbQoPrecioOro = tbQoPrecioOro;
 	}
 
 

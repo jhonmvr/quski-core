@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.relative.quski.enums.EstadoEnum;
+
 
 /**
  * The persistent class for the tq_qo_negociacion database table.
@@ -25,8 +29,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name="tq_qo_negociacion")
-@NamedQuery(name="TqQoNegociacion.findAll", query="SELECT t FROM TqQoNegociacion t")
-public class TqQoNegociacion implements Serializable {
+
+public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -34,7 +38,9 @@ public class TqQoNegociacion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TQ_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	private String estado;
+	@Column(name="estado")
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -45,7 +51,7 @@ public class TqQoNegociacion implements Serializable {
 	private Date fechaCreacion;
 
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
-	@OneToMany(mappedBy="tqQoNegociacion")
+	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
 
 	//bi-directional many-to-one association to TbQoCliente
@@ -53,7 +59,7 @@ public class TqQoNegociacion implements Serializable {
 	@JoinColumn(name="tb_qo_cliente_id")
 	private TbQoCliente tbQoCliente;
 
-	public TqQoNegociacion() {
+	public TbQoNegociacion() {
 	}
 
 	public Long getId() {
@@ -63,12 +69,12 @@ public class TqQoNegociacion implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getEstado() {
-		return this.estado;
+	
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -98,14 +104,14 @@ public class TqQoNegociacion implements Serializable {
 
 	public TbQoVariableCrediticia addTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTqQoNegociacion(this);
+		tbQoVariablesCrediticia.setTbQoNegociacion(this);
 
 		return tbQoVariablesCrediticia;
 	}
 
 	public TbQoVariableCrediticia removeTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTqQoNegociacion(null);
+		tbQoVariablesCrediticia.setTbQoNegociacion(null);
 
 		return tbQoVariablesCrediticia;
 	}

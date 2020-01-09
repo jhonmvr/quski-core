@@ -1,12 +1,12 @@
 package com.relative.midas.rest;
 
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -90,5 +90,22 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		return loc;
 	}	
 
+	@GET
+	@Path("/clienteByIdentificacion")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> clienteByIdentificacion(@QueryParam("identificacion") String identificacion)
+			throws RelativeException {
+		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		TbQoCliente  a = this.findClienteByIdentificacion(identificacion);
+		loc.setEntidad(a);
+		return loc;
+	}
+	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
+		List<TbQoCliente> tmp = this.qos.findClienteByIdentifiacion(identificacion);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
 }
 

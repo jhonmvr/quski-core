@@ -28,6 +28,8 @@ import com.relative.quski.enums.EstadoEnum;
  */
 @Entity
 @Table(name="tb_qo_variables_crediticias")
+
+
 public class TbQoVariableCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -60,7 +62,7 @@ public class TbQoVariableCrediticia implements Serializable {
 	//bi-directional many-to-one association to TqQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
-	private TqQoNegociacion tqQoNegociacion;
+	private TbQoNegociacion tbQoNegociacion;
 
 	public TbQoVariableCrediticia() {
 	}
@@ -123,12 +125,14 @@ public class TbQoVariableCrediticia implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
-	public TqQoNegociacion getTqQoNegociacion() {
-		return this.tqQoNegociacion;
+	public TbQoNegociacion getTbQoNegociacion() {
+		return tbQoNegociacion;
 	}
 
-	public void setTqQoNegociacion(TqQoNegociacion tqQoNegociacion) {
-		this.tqQoNegociacion = tqQoNegociacion;
+	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
+		this.tbQoNegociacion = tbQoNegociacion;
 	}
+
+	
 
 }
