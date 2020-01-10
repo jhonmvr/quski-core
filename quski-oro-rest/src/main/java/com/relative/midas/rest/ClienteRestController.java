@@ -116,8 +116,19 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 			throws RelativeException {
 		GenericWrapper<ClienteWrapper> loc = new GenericWrapper<>();
 		ClienteWrapper gestion = new ClienteWrapper();
-		gestion.setNombreCompleto("ESTEBAN PAUL JAMI LOPEZ");
+		//gestion.setNombresCompletos("ESTEBAN PAUL JAMI LOPEZ");
+		gestion.setCedulaCliente("1708764053");
+		gestion.setPrimerNombre("ESTEBAN");
+		gestion.setSegundoNombre("PAUL");
+		gestion.setApellidoPaterno("JAMI");
+		gestion.setApellidoMaterno("LOPEZ");
 		gestion.setEdad("32");
+		gestion.setNacionalidad("ECUADOR");
+		gestion.setTelefonoFijo("3262055");
+		gestion.setTelefonoMovil("0998569332");
+		gestion.setEmail("XXXXX@XXX.COM");
+		gestion.setPublicidad("FACEBOOK");
+		gestion.setCampania("INBOUND");
 		loc.setEntidad(gestion);
 		return loc;
 	}

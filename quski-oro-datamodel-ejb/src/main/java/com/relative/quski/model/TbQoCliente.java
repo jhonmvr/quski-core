@@ -88,6 +88,8 @@ public class TbQoCliente implements Serializable {
 	private String publicidad;
 	private String campania;
 	private String email;
+	
+	
 	public Long getId() {
 		return id;
 	}
