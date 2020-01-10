@@ -65,20 +65,20 @@ implements CrudRestControllerInterface<VariableCrediticiaWrapper, GenericWrapper
 		List<VariableCrediticiaWrapper> l = new ArrayList<>();
 		VariableCrediticiaWrapper variable1 = new VariableCrediticiaWrapper();
 		variable1.setOrden(1);
-		variable1.setVariable("Tipo Cliente");
+		variable1.setNombre("Tipo Cliente");
 		variable1.setValor("C1");
 		
 	
 		l.add(variable1);    
 		VariableCrediticiaWrapper variable2 = new VariableCrediticiaWrapper();
 		variable2.setOrden(2);
-		variable2.setVariable("Perfil externo");
+		variable2.setNombre("Perfil externo");
 		variable2.setValor("3");
 		
 		l.add(variable2);
 		VariableCrediticiaWrapper variable3 = new VariableCrediticiaWrapper();
 		variable3.setOrden(3);
-		variable3.setVariable("Cart. Vencida");
+		variable3.setNombre("Cart. Vencida");
 		variable3.setValor("0.00");
 		
 		l.add(variable3);

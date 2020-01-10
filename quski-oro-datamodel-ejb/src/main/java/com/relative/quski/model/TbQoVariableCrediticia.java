@@ -34,25 +34,21 @@ public class TbQoVariableCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName="SEQ_VARIABLES_CREDITICIAS" , allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_VARIABLE_CREDITICIA_ID_GENERATOR", sequenceName="SEQ_VARIABLE_CREDITICIA" , allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLE_CREDITICIA_ID_GENERATOR")
 	private Long id;
-
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
-
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-
-	private BigDecimal valor;
-
+	private String valor;
 	@Column(name="nombre")
 	private String nombre;
+	private String orden;
 
 	//bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
@@ -101,11 +97,13 @@ public class TbQoVariableCrediticia implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public BigDecimal getValor() {
-		return this.valor;
+	
+
+	public String getValor() {
+		return valor;
 	}
 
-	public void setValor(BigDecimal valor) {
+	public void setValor(String valor) {
 		this.valor = valor;
 	}
 
@@ -131,6 +129,14 @@ public class TbQoVariableCrediticia implements Serializable {
 
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
+	}
+
+	public String getOrden() {
+		return orden;
+	}
+
+	public void setOrden(String orden) {
+		this.orden = orden;
 	}
 
 	
