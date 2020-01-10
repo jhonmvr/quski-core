@@ -57,6 +57,11 @@ public class TbQoCotizador implements Serializable{
 	@OneToMany(mappedBy="tbQoCotizador")
 	private List<TbQoPrecioOro> tbQoPrecioOro;
 
+//bi-directional many-to-one association to TbMiMovimientoCaja
+	@OneToMany(mappedBy="tbQoCotizador")
+	private List<TbQoVariableCrediticia> tbQoVariableCrediticia;
+
+		
 		
 	public Long getId() {
 		return id;
@@ -111,6 +116,12 @@ public class TbQoCotizador implements Serializable{
 	}
 	public void setTbQoPrecioOro(List<TbQoPrecioOro> tbQoPrecioOro) {
 		this.tbQoPrecioOro = tbQoPrecioOro;
+	}
+	public List<TbQoVariableCrediticia> getTbQoVariableCrediticia() {
+		return tbQoVariableCrediticia;
+	}
+	public void setTbQoVariableCrediticia(List<TbQoVariableCrediticia> tbQoVariableCrediticia) {
+		this.tbQoVariableCrediticia = tbQoVariableCrediticia;
 	}
 
 

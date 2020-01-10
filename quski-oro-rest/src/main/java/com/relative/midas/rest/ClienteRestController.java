@@ -19,6 +19,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.ClienteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -106,6 +107,19 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 			return tmp.get(0);
 		}
 		return null;
+	}
+	@GET
+	@Path("/obtenerCliente")
+	@ApiOperation(value = "GenericWrapper<DetalleCreditoWrapper>", notes = "Metodo DetalleCreditoWrapper Retorna wrapper de entidades encontradas en DetalleCreditoWrapper", response = GenericWrapper.class)
+	
+	public GenericWrapper<ClienteWrapper> obtenerCliente()
+			throws RelativeException {
+		GenericWrapper<ClienteWrapper> loc = new GenericWrapper<>();
+		ClienteWrapper gestion = new ClienteWrapper();
+		gestion.setNombreCompleto("ESTEBAN PAUL JAMI LOPEZ");
+		gestion.setEdad("32");
+		loc.setEntidad(gestion);
+		return loc;
 	}
 }
 
