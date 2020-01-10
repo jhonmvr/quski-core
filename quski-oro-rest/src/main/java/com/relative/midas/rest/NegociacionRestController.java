@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiResponses;
 @Path("/negociacionRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "CotizadorRestController - REST CRUD")
+@Api(value = "NegociacionController - REST CRUD")
 public class NegociacionRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegociacion>> {
 
@@ -61,7 +61,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoNegociacion> getEntity(String id) throws RelativeException {
+	public GenericWrapper<TbQoNegociacion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
 		//TbQoNegociacion ng =this.qos.findNegociacionById(Long.valueOf(id));
 		//loc.setEntidad(ng);
