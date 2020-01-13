@@ -12,6 +12,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
@@ -35,6 +36,7 @@ import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
+import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
@@ -1417,6 +1419,67 @@ public class QuskiOroService {
 	}
 	
 	
+	public TbQoDocumentoHabilitante generateDocumentoHabilitante(FileWrapper fw) throws RelativeException {
+		TbQoDocumentoHabilitante dhs = null;
+		TbQoCliente cl = null;
+		TbQoCotizador cz = null;
+		TbQoNegociacion ng = null;	
+		TbQoTipoDocumento td = null;
+		TbQoDocumentoHabilitante da = null;
+		try {
+			if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
+				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(fw.getRelatedIdStr(),
+						Long.valueOf(fw.getTypeAction()), null, null);
+			} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
+				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(
+						null, null,null, Long.valueOf(fw.getTypeAction()));
+			} else if (fw.getProcess().equalsIgnoreCase("NEGOCIACION")) {
+				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(null,
+						Long.valueOf(fw.getRelatedIdStr()), null,null);
+			} 
+		} catch (NumberFormatException e) {
+			// e.printStackTrace();
+			dhs = null;
+			log.info("===================: error no existe datos para contrato y accion " + fw.getRelatedIdStr() + "  "
+					+ fw.getTypeAction());
+		}
+		da = new TbQoDocumentoHabilitante();
+		if (dhs != null) {
+			da.setId(dhs.getId());
+		}
+		td = this.findTipoDocumentoById(Long.valueOf(fw.getTypeAction()));
+		da.setTbQoTipoDocumento(td);
+		if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
+			// mc = this.findContratoByCodigo(fw.getRelatedIdStr());
+			cl = this.findClienteByIdentifiacion(fw.getRelatedIdStr()).get(0);
+			da.setTbQoCliente(cl);
+		} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
+			cz = this.findCotizadorById(Long.valueOf(fw.getRelatedIdStr()));
+			da.setTbQoCotizador(cz);
+		} else if (fw.getProcess().equalsIgnoreCase("NEGOCIACION")) {
+			ng = this.findNegociacionById(Long.valueOf(fw.getRelatedIdStr()));
+			da.setTbQoNegociacion(ng);
+		} 
+		da.setArchivo(fw.getFile());
+		da.setEstado(EstadoEnum.ACT);
+		da.setFechaCreacion(new Date(System.currentTimeMillis()));
+		da.setNombreArchivo(fw.getName());
+		return this.manageDocumentoHabilitante(da);
+	}
+
+	
+
 	
 	
+	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(String identificacionCliente,
+			Long idCotizador, Long idNegociacion, Long idTipoDocumento) throws RelativeException {
+		DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();
+		
+		try {
+			return documentoHabilitanteRepository.findByTipoDocumentoAndCliAndCotAndNeg(idTipoDocumento, identificacionCliente, idCotizador, idNegociacion);
+					
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
 }

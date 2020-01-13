@@ -6,5 +6,7 @@ import com.relative.quski.model.TbQoDocumentoHabilitante;
 
 @Local
 public interface DocumentoHabilitanteRepository extends CrudRepository<Long, TbQoDocumentoHabilitante>{
+	
+	 public TbQoDocumentoHabilitante findByTipoDocumentoAndCliAndCotAndNeg( Long idTipoDocumento, String identificacionCliente, Long idCotizador, Long idNegociacion) ;
 
 }
