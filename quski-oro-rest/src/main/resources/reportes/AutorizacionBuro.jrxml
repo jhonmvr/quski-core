@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizacionBuro" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="56" bottomMargin="56" uuid="e9104228-bc97-4a9c-9043-a6fbd33bad01">
+	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.AutorizacionBuroWrapper"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaActual" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaActual]]></fieldDescription>
+	</field>
+	<field name="nombreCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCliente]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="cedulaCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
+	</field>
+	<title>
+		<band height="300" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="170" height="20" uuid="a565b226-57b1-4e30-855f-c7e70689d4d2"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Autorización de Buró]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="130" width="483" height="90" uuid="3262b2b2-606f-4d2c-82ac-72f08dabffd9"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Yo" + $P{BEAN_DS}.getNombreCliente()   + " con CI"+ $P{BEAN_DS}.getCedulaCliente() + " autorizo expresamente a Quski C.A.  o a quien a futuro sea el acreedor del crédito para que obtenga de cualquier fuente de información incluido los burós de crédito o la Dirección Nacional de Datos Públicos, información cobre mi comportamiento crediticio, manejo de cuentas, tarjetas de crédito, inversiones  y en general sobre el cumplimiento de mis obligaciones y demás activos, pasivos y datos personales.<br><br><br>Atentamente," 
+
+
+]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="1" y="270" width="180" height="1" uuid="238eb198-2796-4bab-8fb2-fa3aa04ca3eb"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="30" width="100" height="20" uuid="47b7aea6-7535-4668-a4fe-ca16bbda7d75"/>
+				<textFieldExpression><![CDATA["Quito " + $P{BEAN_DS}.getFechaActual()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="50" width="170" height="20" uuid="253edce6-2b85-405c-a401-2478141ace45"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Señores:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="68" width="170" height="20" uuid="1b909e1f-0f56-4b80-b35f-d4e193401ffd"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Quski C.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="170" height="20" uuid="40d0bc3f-c0d3-4940-b9a9-862f3491b153"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Presente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="280" width="170" height="20" uuid="0b83f789-e57f-4ff3-a0e1-c682abe73c98"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>
