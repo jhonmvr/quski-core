@@ -5,7 +5,7 @@ package com.relative.quski.util;
  * @author LUIS TAMAYO - RELATIVE ENGINE
  *
  */
-public class MidasOroConstantes {
+public class QuskiOroConstantes {
 	
 	/**
 	 * Archivo de configuraciones con informacion general de notificaciones

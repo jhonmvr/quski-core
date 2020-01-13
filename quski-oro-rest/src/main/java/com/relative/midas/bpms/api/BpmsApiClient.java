@@ -15,7 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoBpmsEnum;
-import com.relative.quski.util.MidasOroConstantes;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.EnvioWrapper;
 import com.relative.quski.wrapper.ProcessInputWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
@@ -114,7 +114,7 @@ public class BpmsApiClient {
         .replace("--bpmprocessid--",bpmProcessId);
         log.info("===> callBpmsInitProcesss con servcio " + service);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , content, RestClientWrapper.METHOD_POST, 
-    		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+    		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
     		   Boolean.FALSE,Boolean.TRUE, service,  String.class );
             log.info("===> REspuesta de servicio "  + response);
         return String.valueOf(response.get(ReRestClient.RETURN_OBJECT));    
@@ -163,8 +163,8 @@ public class BpmsApiClient {
         log.info("===> callBpmsStateTask con CONTENT " + content);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,
         		authorization , content, RestClientWrapper.METHOD_PUT, 
-     		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-     		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+     		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+     		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
      		   Boolean.FALSE,Boolean.TRUE, service,  String.class );
              log.info("===> REspuesta de servicio "  + response);
        return String.valueOf( response.get(ReRestClient.RETURN_STATUS) );     
@@ -195,8 +195,8 @@ public class BpmsApiClient {
         log.info("===> callBpmsFindPotencialOwnerTask con servcio " + service);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		empty, RestClientWrapper.METHOD_GET, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE, Boolean.TRUE,service,  TaskSummaryWrapper.class );
         return (TaskSummaryWrapper)response.get(ReRestClient.RETURN_OBJECT);
     }
@@ -229,8 +229,8 @@ public class BpmsApiClient {
         log.info("===> callBpmsFindPotencialOwnerTaskByProcessInstanceAndStatus con servcio " + service);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		empty, RestClientWrapper.METHOD_GET, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE,Boolean.TRUE, service,  TaskSummaryWrapper.class );
         log.info("===> callBpmsFindPotencialOwnerTaskByProcessInstanceAndStatus parametroa generados " + response);
         TaskSummaryWrapper sw=(TaskSummaryWrapper)response.get(ReRestClient.RETURN_OBJECT);
@@ -258,8 +258,8 @@ public class BpmsApiClient {
         		.replace("--idprocessinstace--",String.valueOf(idProcessInstance )) + "?" + param.toString();
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		empty, RestClientWrapper.METHOD_GET, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE, Boolean.TRUE,service,  TaskSummaryWrapper.class );
         log.info("===> callBpmsFindTasksByProcessInstance parametroa generados " + response);
         return (TaskSummaryWrapper)response.get(ReRestClient.RETURN_OBJECT);
@@ -279,8 +279,8 @@ public class BpmsApiClient {
         .replace("--taskid--",taskId)+"?"+param.toString();
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		empty, RestClientWrapper.METHOD_GET, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE,Boolean.TRUE, service,  TaskItemWrapper.class );
         log.info("===> callBpmsFindTasksByProcessInstance parametroa generados " + response);
         return (TaskItemWrapper)response.get(ReRestClient.RETURN_OBJECT);
@@ -295,8 +295,8 @@ public class BpmsApiClient {
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
         		RestClientWrapper.CONTENT_TYPE_X_WWW_FORM,authorization , 
         		empty, RestClientWrapper.METHOD_POST, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE,Boolean.TRUE, service,  TokenWrapper.class );
         log.info("===> getToken wraooer generados " + response);
         if( response != null && response.get("message") != null && response.get("message").toString().indexOf( "Unsuccessful" ) <0 ) {
@@ -332,20 +332,20 @@ public class BpmsApiClient {
         	Long status = Long.valueOf( callBpmsStateTask(bpmsUrlService, authorizationBpm, 
         		bpmProject, bpmProjectVersion, 
         		tsw.getTaskSummary().get(0).getTaskId() , EstadoBpmsEnum.claimed.toString(), 
-        		actor != null && !actor.isEmpty() ?actor:MidasOroConstantes.BPMS_DEFAULT_USER, null,null) );
+        		actor != null && !actor.isEmpty() ?actor:QuskiOroConstantes.BPMS_DEFAULT_USER, null,null) );
         	log.info("!!!!!!!!!!!!!!!!!!===>  tomo tarea con status: " + status);
         	if( status >= 200 && status < 300 ) {
         		status = Long.valueOf( callBpmsStateTask(bpmsUrlService, authorizationBpm, 
 		        		bpmProject, bpmProjectVersion, 
 		        		tsw.getTaskSummary().get(0).getTaskId() , EstadoBpmsEnum.started.toString(), 
-		        		actor != null && !actor.isEmpty()?actor:MidasOroConstantes.BPMS_DEFAULT_USER, 
+		        		actor != null && !actor.isEmpty()?actor:QuskiOroConstantes.BPMS_DEFAULT_USER, 
 		        		null,piw) );
 	        	log.info("!!!!!!!!!!!!!!!!!!===>  inicio tarea  con status: " + status);
 	        	if( status >= 200 && status < 300 ) {
 	        		status = Long.valueOf(callBpmsStateTask(bpmsUrlService, authorizationBpm, 
 			        		bpmProject, bpmProjectVersion, 
 			        		tsw.getTaskSummary().get(0).getTaskId() , EstadoBpmsEnum.completed.toString(), 
-			        		actor != null && !actor.isEmpty()?actor:MidasOroConstantes.BPMS_DEFAULT_USER, 
+			        		actor != null && !actor.isEmpty()?actor:QuskiOroConstantes.BPMS_DEFAULT_USER, 
 			        		envio,null) );
 	        		log.info("===>  completo tarea con estatus: " + status);
 	        		if( status >= 200 && status < 300 ) {
@@ -384,8 +384,8 @@ public class BpmsApiClient {
         .replace("--processid--",processId);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		empty, RestClientWrapper.METHOD_DELETE, 
-      		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
-      		   MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+      		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   Boolean.FALSE,Boolean.TRUE, service,  TaskItemWrapper.class );
         log.info("===> callBpmsFindTasksByProcessInstance parametroa generados " + response);
         return (TaskItemWrapper)response.get(ReRestClient.RETURN_OBJECT);
@@ -411,7 +411,7 @@ public class BpmsApiClient {
         String service = bpmsUrlService + urlInstanceProcess.replace("--containerid--",containerId).replace("--bpmprocessid--",bpmProcessId);
         log.info("===> callBpmsDroolProcesss con servcio " + service);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , content, RestClientWrapper.METHOD_POST, 
-    		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+    		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
     		   Boolean.FALSE, Boolean.FALSE,service,  String.class );
         log.info("===> REspuesta de servicio "  + response);
         return String.valueOf( response.get(ReRestClient.RETURN_OBJECT) );
@@ -436,7 +436,7 @@ public class BpmsApiClient {
         log.info("===> getBpmsProcesssVariable con servcio " + service);
         Map<String,Object> response= ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,RestClientWrapper.CONTENT_TYPE_JSON,authorization , 
         		content, RestClientWrapper.METHOD_GET, 
-    		   null, null, null, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, MidasOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+    		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
     		   Boolean.FALSE, Boolean.FALSE,service,  String.class );
         log.info("===> REspuesta de servicio "  + response);
         gson = new Gson();

@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.ManagePropertiesFile;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.util.MidasOroConstantes;
+import com.relative.quski.util.QuskiOroConstantes;
 
 
 
@@ -60,10 +60,10 @@ public class DownloadFileHabilitanteServlet extends HttpServlet {
 		log.info("=========>PARAMETRO idSiniestro " + idSiniestro);
 		log.info("=========>PARAMETRO tipo " + tipo);
 		try {
-			Properties props = ManagePropertiesFile.loadProperties(MidasOroConstantes.FILE_NAME_NOTIFICACION_FILE_PROPS,
+			Properties props = ManagePropertiesFile.loadProperties(QuskiOroConstantes.FILE_NAME_NOTIFICACION_FILE_PROPS,
 					System.getProperty(
-					MidasOroConstantes.JBOSS_CONFIG_DIR_PROPS) + 
-					MidasOroConstantes.SINIESTRO_AGRICOLA_CONF_DIR 
+					QuskiOroConstantes.JBOSS_CONFIG_DIR_PROPS) + 
+					QuskiOroConstantes.SINIESTRO_AGRICOLA_CONF_DIR 
 					 );
 			log.info("=========>ENTRA EN SERVELT DOWNLOAD SINIESTRO PDF PDF 7");
 			/*

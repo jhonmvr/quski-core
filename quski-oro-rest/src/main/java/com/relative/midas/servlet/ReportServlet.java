@@ -21,7 +21,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
-import com.relative.quski.util.MidasOroConstantes;
+import com.relative.quski.util.QuskiOroConstantes;
 
 /**
  * Servlet implementation class ReporteTicketsServlet
@@ -85,7 +85,7 @@ public class ReportServlet extends HttpServlet {
 		String format=request.getParameter( "format" );
 		String usuario=request.getParameter( "usuario" );
 		Boolean isConsulta=request.getParameter( "consulta" )!= null && !request.getParameter( "consulta" ).isEmpty()?true:false;
-		String path= this.ps.getParametros().get(MidasOroConstantes.PATH_REPORTE).getValor();
+		String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("=========>Es consulta " + isConsulta);
 	
 		try {
@@ -104,7 +104,7 @@ public class ReportServlet extends HttpServlet {
 			log.info("=========>ENTRA EN SERVELT REPORTE PDF 8 1" + path+subReportOneName );
 			log.info("=========>ENTRA EN SERVELT REPORTE PDF 8 2" + path+subReportTwoName );
 			log.info("=========>ENTRA EN SERVELT REPORTE PDF 8 3" + path+subReportThreeName );
-			log.info("=========>ENTRA EN SERVELT REPORTE PDF 8.1 " + MidasOroConstantes.PREFIX_REPORT_MAIN_PATH +mainReportName );
+			log.info("=========>ENTRA EN SERVELT REPORTE PDF 8.1 " + QuskiOroConstantes.PREFIX_REPORT_MAIN_PATH +mainReportName );
 			if( Constantes.PDF_FILE_TYPE_EXTENSION.equalsIgnoreCase(format.trim()) ) {
 				//reportFile = this.reportService.generateReporteFromBeanPDF(sins , map,
 				reportFile = this.reportService.generateReporteFromBeanPDF(null , map, 

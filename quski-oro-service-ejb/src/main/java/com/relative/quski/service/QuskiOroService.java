@@ -16,18 +16,22 @@ import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
+import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
+import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.TasacionRepository;
+import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
@@ -59,6 +63,10 @@ public class QuskiOroService {
 	private TasacionRepository tasacionRepository;
 	@Inject
 	private VariableCrediticiaRepository variableCrediticiaRepository;
+	@Inject
+	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
+	@Inject
+	private TipoDocumentoRepository tipoDocumentoRepository;
 	/**
 	 * PARAMETRO
 	 */
@@ -1214,23 +1222,199 @@ public class QuskiOroService {
 		
 			return tasacionRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tasacion " + e.getMessage());
 		}
 	}
 
-	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente) throws RelativeException {
+	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente, String nombreCliente) throws RelativeException {
 		
 		
 		AutorizacionBuroWrapper autorizacion = new AutorizacionBuroWrapper();
-		autorizacion.setNombreCliente(QuskiOroUtil.dateToFullString(new Date()));
+		autorizacion.setCedulaCliente(identificacionCliente);
+		autorizacion.setNombreCliente(nombreCliente);
+		autorizacion.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
 		return autorizacion;
+	}
+
+	public TbQoDocumentoHabilitante findDocumentoHabilitanteById(Long id) throws RelativeException  {
+		try {
+			return documentoHabilitanteRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+
+	public List<TbQoDocumentoHabilitante> findAllDocumentoHabilitante(PaginatedWrapper pw) throws RelativeException {
+		if (pw == null) {
+			return this.documentoHabilitanteRepository.findAll(TbQoDocumentoHabilitante.class);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.documentoHabilitanteRepository.findAll(TbQoDocumentoHabilitante.class, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.documentoHabilitanteRepository.findAll(TbQoDocumentoHabilitante.class, pw.getSortFields(),
+						pw.getSortDirections());
+			}
+		}
+	}
+
+	public Long countDocumentoHabilitante() throws RelativeException {
+		try {
+			return documentoHabilitanteRepository.countAll(TbQoDocumentoHabilitante.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
+		}
+	}
+	
+	public TbQoDocumentoHabilitante manageDocumentoHabilitante(TbQoDocumentoHabilitante send) throws RelativeException {
+		try {
+			log.info("==> entra a manage TbQoDocumentoHabilitante");
+			TbQoDocumentoHabilitante persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.findDocumentoHabilitanteById(send.getId());
+				return this.updateDocumentoHabilitante(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return documentoHabilitanteRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando la HistoricoJoya " + e.getMessage());
+		}
 	}
 	
 	
+	public TbQoDocumentoHabilitante updateDocumentoHabilitante(TbQoDocumentoHabilitante send,
+			TbQoDocumentoHabilitante persisted) throws RelativeException {
+		try {
+			persisted.setArchivo(send.getArchivo());
+			persisted.setEstado(send.getEstado());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setNombreArchivo(send.getNombreArchivo());
+			persisted.setTbQoTipoDocumento(send.getTbQoTipoDocumento());
+			if (send.getTbQoCotizador() != null) {
+				persisted.setTbQoCotizador(send.getTbQoCotizador());
+			}
+			if (send.getTbQoNegociacion() != null) {
+				persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+			}
+			if (send.getTbQoCliente() != null) {
+				persisted.setTbQoCliente(send.getTbQoCliente());
+			}
+			return documentoHabilitanteRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando documentoHabilitanteRepository " + e.getMessage());
+		}
+	}
 	
 	
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id Pk de la entidad
+	 * @return Entidad encontrada
+	 * @throws RelativeException
+	 */
+	public TbQoTipoDocumento findTipoDocumentoById(Long id) throws RelativeException {
+		try {
+			return tipoDocumentoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
 	
-	
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countdocumento() throws RelativeException {
+		try {
+			return tipoDocumentoRepository.countAll(TbQoTipoDocumento.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "documento no encontrado " + e.getMessage());
+		}
+	}
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 
+	 * @throws RelativeException
+	 */
+	public List<TbQoTipoDocumento> findAllDocumento(PaginatedWrapper pw) throws RelativeException {
+		if (pw == null) {
+			return this.tipoDocumentoRepository.findAll(TbQoTipoDocumento.class);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.tipoDocumentoRepository.findAll(TbQoTipoDocumento.class, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.tipoDocumentoRepository.findAll(TbQoTipoDocumento.class, pw.getSortFields(),
+						pw.getSortDirections());
+			}
+		}
+	}
+	public TbQoTipoDocumento manageDocumento(TbQoTipoDocumento send) throws RelativeException {
+		try {
+			log.info("==> entra a manage Documento");
+			TbQoTipoDocumento persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.findTipoDocumentoById(send.getId());
+				return this.updateDocumento(send, persisted);
+			} else if (send != null && send.getId() == null) {
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return tipoDocumentoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando la Documento " + e.getMessage());
+		}
+	}
+	public TbQoTipoDocumento updateDocumento(TbQoTipoDocumento send, TbQoTipoDocumento persisted)
+			throws RelativeException {
+		try {
+
+			persisted.setDescripcion(send.getDescripcion());
+			persisted.setEstado(send.getEstado());
+			persisted.setTipoDocumento(send.getTipoDocumento());
+			persisted.setFechaCreacion(send.getFechaCreacion());
+			persisted.setPlantilla(send.getPlantilla());
+
+			return tipoDocumentoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Documento " + e.getMessage());
+		}
+	}
 	
 	
 	

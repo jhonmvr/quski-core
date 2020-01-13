@@ -45,7 +45,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.util.MidasOroConstantes;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.RestClientWrapper;
 
 public class ReRestClient<T> {
@@ -163,7 +163,7 @@ public class ReRestClient<T> {
 		try {
 			logger.info("==>Ingreaa a callRestApi "); 
 			RestClientWrapper cw= new RestClientWrapper();
-			cw.setAcceptCharset( MidasOroConstantes.BPMS_REST_DEFAULT_CHARSET );
+			cw.setAcceptCharset( QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET );
 			setContentTypeAccept(contentTypeAccept,cw);
 			setContentType(contentType,cw);
 			cw.setAuthorization(athorization);
