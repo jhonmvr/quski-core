@@ -138,8 +138,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
 		
-		String path= "C:\\Users\\jukis\\JaspersoftWorkspace\\PrjMidasReportes\\";
-		//String path= this.ps.getParametros().get(MidasOroConstantes.PATH_REPORTE).getValor();
+		//String path= "C:\\Users\\jukis\\JaspersoftWorkspace\\PrjMidasReportes\\";
+		String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		/*
 		TbMiContrato ccc = null;

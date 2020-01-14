@@ -8,6 +8,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
+import com.relative.quski.repository.spec.DetalleCotizacionByIdSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -52,6 +53,47 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		try {
 			return countBySpecification(
 					new PrecioOroByIdCotizacionSpec(idCotizador));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+		}
+	}
+	
+	@Override
+	public List<TbQoPrecioOro> findByIdCotizacion(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, Long idCotizador)
+			throws RelativeException {
+		try {
+			return findAllBySpecificationPaged(
+					new DetalleCotizacionByIdSpec(idCotizador), startRecord,
+					pageSize, sortFields, sortDirections);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+		}
+	}
+
+	@Override
+	public List<TbQoPrecioOro> findByIdCotizacion(
+			Long idCotizador) throws RelativeException {
+		try {
+			return findAllBySpecification(
+					new DetalleCotizacionByIdSpec( idCotizador));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+		}
+	}
+	@Override
+	public Long countfindByIdCotizacion(Long idCotizador)
+			throws RelativeException {
+
+		try {
+			return countBySpecification(
+					new DetalleCotizacionByIdSpec(idCotizador));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

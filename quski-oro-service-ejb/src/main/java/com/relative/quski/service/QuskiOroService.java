@@ -427,7 +427,29 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param idCotizador
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoPrecioOro> findByIdCotizacion(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return precioOroRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),idCotizador );
+		} else {
+			return precioOroRepository.findByIdCotizacion(idCotizador);
+		}
+	}
+	public Long countByIdCotizacion(
+			Long idCotizador) throws RelativeException {
 
+		return precioOroRepository.countfindByIdCotizacion(idCotizador);
+	}
+
+	
 	
 	/**
 	 * Metodo que lista la informacion de las entidades encontradas
@@ -462,6 +484,27 @@ public class QuskiOroService {
 
 
 
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param idCotizador
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoCotizador> listByCliente(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return cotizadorRepository.findByCliente(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),idCotizador );
+		} else {
+			return cotizadorRepository.findByCliente(idCotizador);
+		}
+	}
+	public Long countByCliente(
+			String idCotizador) throws RelativeException {
+
+		return cotizadorRepository.countByCliente(idCotizador);
+	}
 
 	
 	/**
