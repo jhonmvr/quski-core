@@ -20,6 +20,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.service.QuskiOroService;
@@ -102,5 +103,30 @@ public class VariableCrediticiaRestController extends BaseRestController
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController persistEntity, " + e.getMessage());
 		}
 	}
+	
+	@GET
+	@Path("/variableCrediticiaByIdCotizador")
+	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoVariableCrediticia> variableCrediticiaByIdCotizador(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("idCotizador") String idCotizador
+			) throws RelativeException {
+		return findPendienteByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),idCotizador);
+	}
+	
+	private PaginatedListWrapper<TbQoVariableCrediticia> findPendienteByIdentificacion(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+		PaginatedListWrapper<TbQoVariableCrediticia> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoVariableCrediticia> actions = this.qos.listaByIdCotizador(pw, idCotizador);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countByIdCotizador(idCotizador).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}	
 
 }

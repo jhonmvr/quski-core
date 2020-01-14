@@ -11,7 +11,7 @@ import com.relative.quski.repository.VariableCrediticiaRepository;
  */
 @Stateless(mappedName = "variableCrediticiaRepository")
 public class VariableCrediticiaRepositoryImp extends GeneralRepositoryImp<Long, TbQoVariableCrediticia>
-		implements VariableCrediticiaRepository {
+		 {
 
 
 }

@@ -1525,4 +1525,29 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
+	
+	
+	/**
+	 * Variables Crediticias
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param idCotizador
+	 * @author Brayan Monge - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoVariableCrediticia> listaByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return variableCrediticiaRepository.findByIdCotizador(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),idCotizador );
+		} else {
+			return variableCrediticiaRepository.findByIdCotizador(idCotizador);
+		}
+	}
+	public Long contarByIdCotizador(
+			String idCotizador) throws RelativeException {
+
+		return variableCrediticiaRepository.countByIdCotizador(idCotizador);
+	}
+
 }
