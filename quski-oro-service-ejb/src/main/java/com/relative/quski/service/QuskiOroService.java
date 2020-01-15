@@ -66,9 +66,10 @@ public class QuskiOroService {
 	@Inject
 	private NegociacionRepository negociacionRepository;
 	@Inject
-	private TasacionRepository tasacionRepository;
-	@Inject
 	private VariableCrediticiaRepository variableCrediticiaRepository;
+	@Inject
+	private TasacionRepository tasacionRepository;
+	
 	@Inject
 	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
 	@Inject
@@ -1037,9 +1038,32 @@ public class QuskiOroService {
 
 		}
 
+		
+		/**
+		 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+		 * @param pw
+		 * @param idCotizador
+		 * @author SAUL MENDEZ - Relative Engine
+		 * @throws RelativeException
+		 */
+		
+		public List<TbQoVariableCrediticia> findVariableCrediticiaByIdCotizacion(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return variableCrediticiaRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+						pw.getSortDirections(),idCotizador );
+			} else {
+				return variableCrediticiaRepository.findByIdCotizacion(idCotizador);
+			}
+		}
+		public Long countVariblesCrediticiaByIdCotizacion(
+				Long idCotizador) throws RelativeException {
 
-	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
-	
+			return variableCrediticiaRepository.countByIdCotizacion(idCotizador);
+		}
+		
+
+		public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
+			
 			try {
 				return variableCrediticiaRepository.findById(id);
 			} catch (RelativeException e) {
@@ -1048,7 +1072,7 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 			}
 		}
-
+	
 	public List<TbQoVariableCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
 			return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class);
@@ -1188,6 +1212,9 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
 	}
+	
+	
+	
 	
 	public TbQoTasacion findTasacionById(Long id) throws RelativeException  {
 		try {
@@ -1498,15 +1525,7 @@ public class QuskiOroService {
 		da.setTbQoTipoDocumento(td);
 		if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
 			// mc = this.findContratoByCodigo(fw.getRelatedIdStr());
-			List<TbQoCliente> clientes = this.findClienteByIdentifiacion(fw.getRelatedIdStr());
-			if(clientes != null && !clientes.isEmpty()) {
-				cl = clientes.get(0);
-			}else {
-				cl = new TbQoCliente();
-				cl.setCedulaCliente(fw.getRelatedIdStr());
-				cl= this.manageCliente(cl);
-			}
-			
+			cl = this.findClienteByIdentifiacion(fw.getRelatedIdStr()).get(0);
 			da.setTbQoCliente(cl);
 		} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
 			cz = this.findCotizadorById(Long.valueOf(fw.getRelatedIdStr()));
@@ -1538,13 +1557,12 @@ public class QuskiOroService {
 		}
 	}
 	
-	
 	/**
-	 * Variables Crediticias
-	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
-	 * @param pw
-	 * @param idCotizador
+	 * Variable Crediticia
+	 * Metodo que busca por el IdCotizador en las variables crediticias  
+	 * 
 	 * @author Brayan Monge - Relative Engine
+	 * @return Cantidad de entidades encontradas
 	 * @throws RelativeException
 	 */
 	/*
@@ -1554,11 +1572,23 @@ public class QuskiOroService {
 					pw.getSortDirections(),idCotizador );
 		} else {
 			return variableCrediticiaRepository.findByIdCotizador(idCotizador);
-		}
-	}
-	public Long contarByIdCotizador(
-			String idCotizador) throws RelativeException {
+=======
+public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idCotizador) throws RelativeException {
+		List<TbQoVariableCrediticia> tmp;
+		try {
+			tmp = this.variableCrediticiaRepository.findAllBySpecification(new VariablesCrediticiasByIdCotizacionSpec(idCotizador));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
 
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: AL BUSCAR variable crediticia: " + idCotizador);
+>>>>>>> 013f20b21d1f4d10371a9c59544c974751b8a20b
+		}
+		return null;
+
+<<<<<<< HEAD
 		return variableCrediticiaRepository.countByIdCotizador(idCotizador);
 	}
 	*/
@@ -1616,4 +1646,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tipo oro " + e.getMessage());
 		}
 	}
+
 }
+	

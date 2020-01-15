@@ -4,31 +4,27 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCotizador;
+
 import com.relative.quski.model.TbQoVariableCrediticia;
 
 public class VariablesCrediticiasByIdCotizacionSpec extends AbstractSpecification<TbQoVariableCrediticia> {
-	private Long cedulaCliente;
+	private Long idCotizador;
 
-	public VariablesCrediticiasByIdCotizacionSpec(Long cedulaCliente){
-		this.cedulaCliente=cedulaCliente;
+	public VariablesCrediticiasByIdCotizacionSpec(Long idCotizador) {
+
+		this.idCotizador=idCotizador;
+	}
+	public VariablesCrediticiasByIdCotizacionSpec() {
 	}
 	@Override
-	public boolean isSatisfiedBy(TbQoVariableCrediticia t) {
+	public boolean isSatisfiedBy(TbQoVariableCrediticia arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Predicate toPredicate(Root<TbQoVariableCrediticia> poll, CriteriaBuilder cb) {
-		Join<TbQoVariableCrediticia, TbQoCotizador> joinAgenciaContrato = poll.join("tbQoCotizador");
-		Join<TbQoCotizador, TbQoCliente> joinContratoJoya = joinAgenciaContrato.join("tbQoCliente");
-		return cb.and(joinContratoJoya.get("cedulaCliente").in(this.cedulaCliente));
-		//return cb.and( cb.equal(poll.get("tbQoCotizador").get("id"), idCotizador));
-		
+		return cb.and(cb.equal(poll.get("tbQoCotizador").<Long>get("id"), this.idCotizador));
 	}
-
 }
