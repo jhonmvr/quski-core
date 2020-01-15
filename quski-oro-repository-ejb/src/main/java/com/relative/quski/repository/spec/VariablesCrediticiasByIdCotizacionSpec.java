@@ -11,9 +11,9 @@ import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoVariableCrediticia;
 
 public class VariablesCrediticiasByIdCotizacionSpec extends AbstractSpecification<TbQoVariableCrediticia> {
-	private String cedulaCliente;
+	private Long cedulaCliente;
 
-	public VariablesCrediticiasByIdCotizacionSpec(String cedulaCliente){
+	public VariablesCrediticiasByIdCotizacionSpec(Long cedulaCliente){
 		this.cedulaCliente=cedulaCliente;
 	}
 	@Override

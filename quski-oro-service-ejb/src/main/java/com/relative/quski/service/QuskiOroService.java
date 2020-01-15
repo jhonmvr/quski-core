@@ -14,6 +14,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoCalculoNegociacion;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
@@ -24,6 +25,7 @@ import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
+import com.relative.quski.repository.CalculoNegociacionRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
@@ -57,6 +59,8 @@ public class QuskiOroService {
 	private DetalleCreditoRepository detalleCreditoRepository;
 	@Inject
 	private PrecioOroRepository precioOroRepository;
+	@Inject
+	private CalculoNegociacionRepository calculoNegociacionRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
 	@Inject
@@ -1260,7 +1264,7 @@ public class QuskiOroService {
 			persisted.setValorOro(send.getValorOro());
 			persisted.setValorRealizacion(send.getValorRealizacion());
 			persisted.setTbQoTipoOro(send.getTbQoTipoOro());
-			persisted.setTbTipoJoya(send.getTbTipoJoya());
+			//persisted.setTbTipoJoya(send.getTbTipoJoya());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setTbQoNegociacion(send.getTbQoNegociacion());
@@ -1543,7 +1547,7 @@ public class QuskiOroService {
 	 * @author Brayan Monge - Relative Engine
 	 * @throws RelativeException
 	 */
-	
+	/*
 	public List<TbQoVariableCrediticia> listaByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return variableCrediticiaRepository.findByIdCotizador(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
@@ -1557,5 +1561,59 @@ public class QuskiOroService {
 
 		return variableCrediticiaRepository.countByIdCotizador(idCotizador);
 	}
+	*/
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoCalculoNegociacion manageCalculoNegociacion(TbQoCalculoNegociacion send) throws RelativeException {
+		try {
+			log.info("==> entra a manage TbQoCalculoNegociacion");
+			TbQoCalculoNegociacion persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.calculoNegociacionRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updateCalculoNegociacion(send, persisted);
+			} else if (send != null && send.getId() == null) {
 
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return calculoNegociacionRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que actualiza la entidad
+	 * 
+	 * @authorSAUL MENDEZ- Relative Engine
+	 * @param send      informacion enviada para update
+	 * @param persisted entidad existente sobre la que se actualiza
+	 * @return Entidad actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoCalculoNegociacion updateCalculoNegociacion(TbQoCalculoNegociacion send, TbQoCalculoNegociacion persisted) throws RelativeException {
+		try {
+			/*persisted.setQuilate(send.getQuilate());
+			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(send.getEstado());*/
+			return calculoNegociacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tipo oro " + e.getMessage());
+		}
+	}
 }

@@ -33,9 +33,9 @@ public class TbTipoJoya implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	//bi-directional many-to-one association to TqQoTasacion
+/*	//bi-directional many-to-one association to TqQoTasacion
 	@OneToMany(mappedBy="tbTipoJoya")
-	private List<TbQoTasacion> tqQoTasacions;
+	private List<TbQoTasacion> tqQoTasacions;*/
 
 	public TbTipoJoya() {
 	}
@@ -80,26 +80,5 @@ public class TbTipoJoya implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public List<TbQoTasacion> getTqQoTasacions() {
-		return this.tqQoTasacions;
-	}
-
-	public void setTqQoTasacions(List<TbQoTasacion> tqQoTasacions) {
-		this.tqQoTasacions = tqQoTasacions;
-	}
-
-	public TbQoTasacion addTqQoTasacion(TbQoTasacion tqQoTasacion) {
-		getTqQoTasacions().add(tqQoTasacion);
-		tqQoTasacion.setTbTipoJoya(this);
-
-		return tqQoTasacion;
-	}
-
-	public TbQoTasacion removeTqQoTasacion(TbQoTasacion tqQoTasacion) {
-		getTqQoTasacions().remove(tqQoTasacion);
-		tqQoTasacion.setTbTipoJoya(null);
-
-		return tqQoTasacion;
-	}
-
+	
 }

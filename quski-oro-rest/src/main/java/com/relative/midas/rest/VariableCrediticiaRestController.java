@@ -103,7 +103,7 @@ public class VariableCrediticiaRestController extends BaseRestController
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController persistEntity, " + e.getMessage());
 		}
 	}
-	
+	/*
 	@GET
 	@Path("/variableCrediticiaByIdCotizador")
 	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
@@ -127,6 +127,6 @@ public class VariableCrediticiaRestController extends BaseRestController
 			plw.setList(actions);
 		}
 		return plw;
-	}	
+	}	*/
 
 }

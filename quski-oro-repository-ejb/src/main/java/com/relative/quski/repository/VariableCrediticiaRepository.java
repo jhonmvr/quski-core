@@ -11,10 +11,10 @@ import com.relative.quski.model.TbQoVariableCrediticia;
 
 @Local
 public interface VariableCrediticiaRepository extends CrudRepository<Long, TbQoVariableCrediticia> {
-	public List<TbQoVariableCrediticia> findByIdCotizador(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections,  Long idCotizador) throws RelativeException ;
+	/*public List<TbQoVariableCrediticia> findByIdCotizador(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections,  String idCotizador) throws RelativeException ;
 
-	public List<TbQoVariableCrediticia> findByIdCotizador(Long idCotizador) throws RelativeException ;
+	public List<TbQoVariableCrediticia> findByIdCotizador(String idCotizador) throws RelativeException ;
 
 	public Long countByIdCotizador(String idCotizador) throws RelativeException ;
 
@@ -23,5 +23,5 @@ public interface VariableCrediticiaRepository extends CrudRepository<Long, TbQoV
 	public List<TbQoVariableCrediticia> findByIdCotizacion(Long idCotizador) throws RelativeException ;
 
 	public Long countfindByIdCotizacion(Long idCotizador) throws RelativeException ;
-	
+	*/
 }
