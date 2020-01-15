@@ -118,15 +118,15 @@ implements CrudRestControllerInterface<TasacionWrapper, GenericWrapper<TasacionW
 			) throws RelativeException {
 		TasacionWrapper calculosTasacion = new TasacionWrapper();
 		if(tipoOro.equals("14K") ) {
-			multiplicador = 1.25;
+			multiplicador = 1.00;
 		} else if(tipoOro.equals("18K")) {
 			multiplicador =  1.50;
 		}
-		calculosTasacion.setDescuentoPesoPiedra(1.3 *multiplicador);
-		calculosTasacion.setDescuentoSuelda(1 * multiplicador);
+		calculosTasacion.setDescuentoPesoPiedra(new BigDecimal(1.3 *multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+		calculosTasacion.setDescuentoSuelda(new BigDecimal(1 * multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
 		calculosTasacion.setDescripcion("lo que sea");
-		calculosTasacion.setPesoNeto(Double.valueOf(pesoBruto) *multiplicador);
-		calculosTasacion.setValorAvaluo(1000.00* multiplicador);
+		calculosTasacion.setPesoNeto(new BigDecimal(Double.valueOf(pesoBruto) *multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+		calculosTasacion.setValorAvaluo(new BigDecimal(1000.00* multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
 		calculosTasacion.setValorComercial(10.22+ multiplicador);
 		calculosTasacion.setValorRealizacion(10.22+ multiplicador);
 		calculosTasacion.setValorOro(50*multiplicador);
