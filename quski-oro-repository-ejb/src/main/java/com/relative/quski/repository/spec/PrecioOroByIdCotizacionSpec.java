@@ -30,8 +30,6 @@ private String cedulaCliente;
 		Join<TbQoCotizador, TbQoCliente> joinContratoJoya = joinAgenciaContrato.join("tbQoCliente");
 		return cb.and(joinContratoJoya.get("cedulaCliente").in(this.cedulaCliente));
 		//return cb.and( cb.equal(poll.get("tbQoCotizador").get("id"), idCotizador));
-		
-
-		
+			
 	}
 }

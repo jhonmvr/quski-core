@@ -34,42 +34,33 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="estado_joya")
 	private String estadoJoya;
+	
+	@Column(name="tipo_joya")
+	private String tipoJoya;
 
 	@Column(name="numero_piezas")
 	private Integer numeroPiezas;
-
 	@Column(name="peso_bruto")
 	private BigDecimal pesoBruto;
-
 	@Column(name="peso_neto")
 	private BigDecimal pesoNeto;
-
 	@Column(name="valor_avaluo")
 	private BigDecimal valorAvaluo;
-
 	@Column(name="valor_comercial")
 	private BigDecimal valorComercial;
-
 	@Column(name="valor_oro")
 	private BigDecimal valorOro;
-
 	@Column(name="valor_realizacion")
 	private BigDecimal valorRealizacion;
-
-	@Column(name="estado")
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
-	
 	//bi-directional many-to-one association to TbQoTipoOro
 	@ManyToOne
-	@JoinColumn(name="tipo_oro")
+	@JoinColumn(name="id_tipo_oro")
 	private TbQoTipoOro tbQoTipoOro;
-
-	//bi-directional many-to-one association to TbTipoJoya
+	/*//bi-directional many-to-one association to TbTipoJoya
 	@ManyToOne
 	@JoinColumn(name="tipo_joya")
 	private TbTipoJoya tbTipoJoya;
-
+*/
 	
 	
 	@Temporal(TemporalType.DATE)
@@ -87,7 +78,17 @@ public class TbQoTasacion implements Serializable {
 	private TbQoNegociacion tbQoNegociacion;
 
 	public TbQoTasacion() {
+	}	
+	
+	public String getTipoJoya() {
+		return tipoJoya;
 	}
+
+	public void setTipoJoya(String tipoJoya) {
+		this.tipoJoya = tipoJoya;
+	}
+
+
 
 	public Long getId() {
 		return this.id;
@@ -121,13 +122,8 @@ public class TbQoTasacion implements Serializable {
 		this.descuentoSuelda = descuentoSuelda;
 	}
 
-	public EstadoEnum getEstado() {
-		return estado;
-	}
+	
 
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
-	}
 
 	public String getEstadoJoya() {
 		return this.estadoJoya;
@@ -193,8 +189,10 @@ public class TbQoTasacion implements Serializable {
 		this.valorRealizacion = valorRealizacion;
 	}
 
+
+
 	public TbQoTipoOro getTbQoTipoOro() {
-		return this.tbQoTipoOro;
+		return tbQoTipoOro;
 	}
 
 	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
@@ -209,13 +207,6 @@ public class TbQoTasacion implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public TbTipoJoya getTbTipoJoya() {
-		return this.tbTipoJoya;
-	}
-
-	public void setTbTipoJoya(TbTipoJoya tbTipoJoya) {
-		this.tbTipoJoya = tbTipoJoya;
-	}
 
 	public TbQoNegociacion getTbQoNegociacion() {
 		return tbQoNegociacion;
@@ -232,5 +223,6 @@ public class TbQoTasacion implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
+	
 
 }

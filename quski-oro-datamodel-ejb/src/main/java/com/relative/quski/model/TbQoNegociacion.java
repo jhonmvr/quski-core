@@ -28,14 +28,14 @@ import com.relative.quski.enums.EstadoEnum;
  * 
  */
 @Entity
-@Table(name="tq_qo_negociacion")
+@Table(name="tb_qo_negociacion")
 
 public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TQ_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TQ_QO_NEGOCIACION_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
 	@Column(name="estado")
@@ -53,10 +53,13 @@ public class TbQoNegociacion implements Serializable {
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
+	//bi-directional many-to-one association to TbQoVariablesCrediticia
+	@OneToMany(mappedBy="tbQoNegociacion")
+	private List<TbQoTasacion> tbQoTasacion;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
-	@JoinColumn(name="tb_qo_cliente_id")
+	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
 
 	public TbQoNegociacion() {

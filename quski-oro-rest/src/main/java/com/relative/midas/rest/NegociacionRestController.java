@@ -90,20 +90,15 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	
 
+	@Override
 	@POST
 	@Path("/persistEntity")
-	@Override
-	@ApiOperation(value = "GenericWrapper<TbQoNegociacion> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbQoNegociacion", 
-	response = GenericWrapper.class)
-	public GenericWrapper<TbQoNegociacion> persistEntity(GenericWrapper<TbQoNegociacion> arg0)
-			throws RelativeException {
-		try {
-			GenericWrapper<TbQoNegociacion> ng= new GenericWrapper<>();
-			//ng.setEntidad(this.qos.manageNegociacion( ng.getEntidad() ));
-			return ng;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR negociacion persistEntity, " + e.getMessage());
-		}
-
-	}
+	@ApiOperation(value = "GenericWrapper<TbQoNegociacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	public GenericWrapper<TbQoNegociacion> persistEntity(GenericWrapper<TbQoNegociacion> wp) throws RelativeException {
+		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.manageNegociacion(wp.getEntidad()));
+		return loc;
+	}	
+	
+	
 }

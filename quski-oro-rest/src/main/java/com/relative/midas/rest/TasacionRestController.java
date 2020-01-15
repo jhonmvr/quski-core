@@ -20,7 +20,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-
+import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
 
@@ -81,15 +81,14 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		}*/
 		return plw;
 	}
-
-
+	
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTasacion", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTasacion> persistEntity(GenericWrapper<TbQoTasacion> wp) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
-		//loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
+		loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
 		return loc;
 	}	
 }

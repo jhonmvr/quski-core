@@ -1,7 +1,6 @@
 package com.relative.midas.rest;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,15 +19,12 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+
 
 
 @Path("/variableCrediticiaRestController")
@@ -38,8 +34,6 @@ import io.swagger.annotations.ApiResponses;
 public class VariableCrediticiaRestController extends BaseRestController
 		implements CrudRestControllerInterface<TbQoVariableCrediticia, GenericWrapper<TbQoVariableCrediticia>> {
 	
-	@Inject
-	Logger log;
 	
 	@Inject
 	QuskiOroService qos;
@@ -103,9 +97,8 @@ public class VariableCrediticiaRestController extends BaseRestController
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController persistEntity, " + e.getMessage());
 		}
 	}
-	
 	@GET
-	@Path("/variableCrediticiaByIdCotizador")
+	@Path("/variableCrediticiaByIdCotizacion")
 	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
 	public PaginatedListWrapper<TbQoVariableCrediticia> variableCrediticiaByIdCotizador(
 			@QueryParam("page") @DefaultValue("1") String page,
@@ -115,18 +108,19 @@ public class VariableCrediticiaRestController extends BaseRestController
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
 			@QueryParam("idCotizador") String idCotizador
 			) throws RelativeException {
-		return findPendienteByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
-				sortDirections, isPaginated),idCotizador);
+		return variableCrediticiaByIdCotizador(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),Long.valueOf(idCotizador));
 	}
 	
-	private PaginatedListWrapper<TbQoVariableCrediticia> findPendienteByIdentificacion(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+	private PaginatedListWrapper<TbQoVariableCrediticia> variableCrediticiaByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
 		PaginatedListWrapper<TbQoVariableCrediticia> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoVariableCrediticia> actions = this.qos.listaByIdCotizador(pw, idCotizador);
+		List<TbQoVariableCrediticia> actions = this.qos.findVariableCrediticiaByIdCotizacion(pw, idCotizador);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countByIdCotizador(idCotizador).intValue());
+			plw.setTotalResults(this.qos.countVariblesCrediticiaByIdCotizacion(idCotizador).intValue());
 			plw.setList(actions);
 		}
 		return plw;
-	}	
+	}
+}	
+	
 
-}
