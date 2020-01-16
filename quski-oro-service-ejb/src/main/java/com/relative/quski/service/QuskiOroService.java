@@ -14,22 +14,24 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
-import com.relative.quski.model.TbQoCalculoNegociacion;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoNegociacion;
+import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
-import com.relative.quski.repository.CalculoNegociacionRepository;
+import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.PrecioOroRepository;
@@ -60,7 +62,9 @@ public class QuskiOroService {
 	@Inject
 	private PrecioOroRepository precioOroRepository;
 	@Inject
-	private CalculoNegociacionRepository calculoNegociacionRepository;
+	private CreditoNegociacionRepository creditoNegociacionRepository;
+	@Inject
+	private NegociacionCalculoRepository negociacionCalculoRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
 	@Inject
@@ -1294,7 +1298,7 @@ public class QuskiOroService {
 			//persisted.setTbTipoJoya(send.getTbTipoJoya());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
 		
 			return tasacionRepository.update(persisted);
 		} catch (Exception e) {
@@ -1600,18 +1604,18 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 * @return Entidad modificada o actualizada
 	 * @throws RelativeException
 	 */
-	public TbQoCalculoNegociacion manageCalculoNegociacion(TbQoCalculoNegociacion send) throws RelativeException {
+	public TbQoCreditoNegociacion manageCalculoNegociacion(TbQoCreditoNegociacion send) throws RelativeException {
 		try {
 			log.info("==> entra a manage TbQoCalculoNegociacion");
-			TbQoCalculoNegociacion persisted = null;
+			TbQoCreditoNegociacion persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.calculoNegociacionRepository.findById(send.getId());
+				persisted = this.creditoNegociacionRepository.findById(send.getId());
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateCalculoNegociacion(send, persisted);
 			} else if (send != null && send.getId() == null) {
 
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return calculoNegociacionRepository.add(send);
+				return creditoNegociacionRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
@@ -1633,13 +1637,13 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 * @return Entidad actualizada
 	 * @throws RelativeException
 	 */
-	public TbQoCalculoNegociacion updateCalculoNegociacion(TbQoCalculoNegociacion send, TbQoCalculoNegociacion persisted) throws RelativeException {
+	public TbQoCreditoNegociacion updateCalculoNegociacion(TbQoCreditoNegociacion send, TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
 			/*persisted.setQuilate(send.getQuilate());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(send.getEstado());*/
-			return calculoNegociacionRepository.update(persisted);
+			return creditoNegociacionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1647,5 +1651,63 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		}
 	}
 
+	
+	
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoNegociacionCalculo manageNegociacionCalculo(TbQoNegociacionCalculo send) throws RelativeException {
+		try {
+			log.info("==> entra a manage TbQoNegociacionCalculo");
+			TbQoNegociacionCalculo persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.negociacionCalculoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updateNegociacionCalculo(send, persisted);
+			} else if (send != null && send.getId() == null) {
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return negociacionCalculoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que actualiza la entidad
+	 * 
+	 * @authorSAUL MENDEZ- Relative Engine
+	 * @param send      informacion enviada para update
+	 * @param persisted entidad existente sobre la que se actualiza
+	 * @return Entidad actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoNegociacionCalculo updateNegociacionCalculo(TbQoNegociacionCalculo send, TbQoNegociacionCalculo persisted) throws RelativeException {
+		try {
+			/*persisted.setQuilate(send.getQuilate());
+			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(send.getEstado());*/
+			return negociacionCalculoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tipo oro " + e.getMessage());
+		}
+	}
+	
+	
 }
 	

@@ -53,10 +53,6 @@ public class TbQoNegociacion implements Serializable {
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
-	//bi-directional many-to-one association to TbQoVariablesCrediticia
-	@OneToMany(mappedBy="tbQoNegociacion")
-	private List<TbQoTasacion> tbQoTasacion;
-
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
