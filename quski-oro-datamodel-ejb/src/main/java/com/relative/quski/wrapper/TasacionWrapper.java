@@ -16,9 +16,9 @@ public class TasacionWrapper implements Serializable {
 	private String descripcion;
 	private BigDecimal pesoNeto;
 	private BigDecimal valorAvaluo;
-	private Double valorComercial;
-	private Double valorRealizacion;
-	private Double valorOro;
+	private BigDecimal valorComercial;
+	private BigDecimal valorRealizacion;
+	private BigDecimal valorOro;
 	
 	
 	
@@ -53,25 +53,25 @@ public class TasacionWrapper implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
-	public Double getValorComercial() {
+	public BigDecimal getValorComercial() {
 		return valorComercial;
 	}
-	public void setValorComercial(Double valorComercial) {
+	public void setValorComercial(BigDecimal valorComercial) {
 		this.valorComercial = valorComercial;
 	}
-	public Double getValorRealizacion() {
+	public BigDecimal getValorRealizacion() {
 		return valorRealizacion;
 	}
-	public void setValorRealizacion(Double valorRealizacion) {
+	public void setValorRealizacion(BigDecimal valorRealizacion) {
 		this.valorRealizacion = valorRealizacion;
 	}
-	public Double getValorOro() {
+	public BigDecimal getValorOro() {
 		return valorOro;
 	}
-	public void setValorOro(Double valorOro) {
+	public void setValorOro(BigDecimal valorOro) {
 		this.valorOro = valorOro;
 	}
+	
 	
 	
 }
