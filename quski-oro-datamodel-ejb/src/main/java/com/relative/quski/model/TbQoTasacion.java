@@ -74,8 +74,8 @@ public class TbQoTasacion implements Serializable {
 
 	//bi-directional many-to-one association to TqQoNegociacion
 	@ManyToOne
-	@JoinColumn(name="id_negociacion")
-	private TbQoNegociacion tbQoNegociacion;
+	@JoinColumn(name="id_credito_negociacion")
+	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 
 	public TbQoTasacion() {
 	}	
@@ -207,13 +207,12 @@ public class TbQoTasacion implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-
-	public TbQoNegociacion getTbQoNegociacion() {
-		return tbQoNegociacion;
+	public TbQoCreditoNegociacion getTbQoCreditoNegociacion() {
+		return tbQoCreditoNegociacion;
 	}
 
-	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
-		this.tbQoNegociacion = tbQoNegociacion;
+	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
+		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
 	}
 
 	public Date getFechaCreacion() {
