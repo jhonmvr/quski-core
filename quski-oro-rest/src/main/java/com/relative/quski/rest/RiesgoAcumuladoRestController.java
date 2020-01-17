@@ -72,27 +72,27 @@ implements CrudRestControllerInterface<RiesgoAcumuladoWrapper, GenericWrapper<Ri
 		riesgo1.setNroPrestamo("564");
 		riesgo1.setCuentaIndividual("Ahorros");
 		riesgo1.setTipoCredito("OPERACIÓN CREDITO");
-		riesgo1.setCapitalInicial(1000.00);
-		riesgo1.setSaldoCapital(1000.00);
+		riesgo1.setCapitalInicial(1000.35);
+		riesgo1.setSaldoCapital(1000.55);
 		riesgo1.setPlazo(2);
-		riesgo1.setFechaAprobacion("20-08-1981");
-		riesgo1.setFechaFinalCredito("3-5-2019");
+		riesgo1.setFechaAprobacion("20-08-2018");
+		riesgo1.setFechaFinalCredito("03-01-2020");
 		riesgo1.setCoberturaAnterior("Corto plazo");
 		riesgo1.setCoberturaActual("Cobertura Actual");
-		riesgo1.setEstatusCredito("activo");
+		riesgo1.setEstatusCredito("Activo");
 		riesgo1.setMotivoBloqueo("Motivo Credito");
 		riesgo1.setDiasMora(5);
 		riesgo1.setEstadoMediacion("Estado Mediacion");
 		riesgo1.setRetanqueo("Retanqueo");
-		riesgo1.setCuota(143.00);
-		riesgo1.setCapitalCuotaAtrasada(98.00);
-		riesgo1.setInteresesCuotaAtrasada(10.20);
-		riesgo1.setMora(2.0);
-		riesgo1.setGestionCobranza(5.00);
-		riesgo1.setCustodia(3.00);
-		riesgo1.setTotalDeuda(350.00);
+		riesgo1.setCuota(143.50);
+		riesgo1.setCapitalCuotaAtrasada(98.55);
+		riesgo1.setInteresesCuotaAtrasada(10.25);
+		riesgo1.setMora(2);
+		riesgo1.setGestionCobranza(50.55);
+		riesgo1.setCustodia(3.65);
+		riesgo1.setTotalDeuda(350.55);
 		riesgo1.setNroCuotaImpagas(3);
-		riesgo1.setUltDivPagado(23.00);
+		riesgo1.setUltDivPagado(23.55);
 		
 	
 		l.add(riesgo1);    
@@ -105,8 +105,8 @@ implements CrudRestControllerInterface<RiesgoAcumuladoWrapper, GenericWrapper<Ri
 		riesgo2.setCapitalInicial(300.00);
 		riesgo2.setSaldoCapital(1000.00);
 		riesgo2.setPlazo(2);
-		riesgo2.setFechaAprobacion("20-08-1981");
-		riesgo2.setFechaFinalCredito("3-5-2019");
+		riesgo2.setFechaAprobacion("20-08-2019");
+		riesgo2.setFechaFinalCredito("03-01-2020");
 		riesgo2.setCoberturaAnterior("Corto plazo");
 		riesgo2.setCoberturaActual("Cobertura Actual");
 		riesgo2.setEstatusCredito("activo");
@@ -114,15 +114,15 @@ implements CrudRestControllerInterface<RiesgoAcumuladoWrapper, GenericWrapper<Ri
 		riesgo2.setDiasMora(2);
 		riesgo2.setEstadoMediacion("Estado Mediacion");
 		riesgo2.setRetanqueo("Retanqueo");
-		riesgo2.setCuota(143.00);
-		riesgo2.setCapitalCuotaAtrasada(98.00);
-		riesgo2.setInteresesCuotaAtrasada(10.20);
-		riesgo2.setMora(2.0);
-		riesgo2.setGestionCobranza(5.00);
-		riesgo2.setCustodia(3.00);
-		riesgo2.setTotalDeuda(350.00);
+		riesgo2.setCuota(143.75);
+		riesgo2.setCapitalCuotaAtrasada(98.25);
+		riesgo2.setInteresesCuotaAtrasada(10.25);
+		riesgo2.setMora(2.55);
+		riesgo2.setGestionCobranza(5.75);
+		riesgo2.setCustodia(3.75);
+		riesgo2.setTotalDeuda(350.25);
 		riesgo2.setNroCuotaImpagas(3);
-		riesgo2.setUltDivPagado(23.00);
+		riesgo2.setUltDivPagado(23.75);
 		l.add(riesgo2);
 		
 

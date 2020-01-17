@@ -122,11 +122,11 @@ implements CrudRestControllerInterface<TasacionWrapper, GenericWrapper<TasacionW
 		} else if(tipoOro.equals("18K")) {
 			multiplicador =  BigDecimal.valueOf(Double.valueOf("1.50"));
 		}
-		calculosTasacion.setDescuentoPesoPiedra(BigDecimal.valueOf(Double.valueOf("1.00")).multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+		calculosTasacion.setDescuentoPesoPiedra(BigDecimal.valueOf(Double.valueOf("1.75")).multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
 		calculosTasacion.setDescuentoSuelda(new BigDecimal(1).multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
-		calculosTasacion.setDescripcion("lo que sea");
+		calculosTasacion.setDescripcion("Oro");
 		calculosTasacion.setPesoNeto(new BigDecimal(pesoBruto).multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
-		calculosTasacion.setValorAvaluo(new BigDecimal("1000.00").multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+		calculosTasacion.setValorAvaluo(new BigDecimal("1000.35").multiply(multiplicador).setScale(2,BigDecimal.ROUND_HALF_EVEN));
 		calculosTasacion.setValorComercial(new BigDecimal(10.22).add(multiplicador));
 		calculosTasacion.setValorRealizacion(new BigDecimal(10.22).add(multiplicador));
 		calculosTasacion.setValorOro(new BigDecimal("50").multiply(multiplicador));
