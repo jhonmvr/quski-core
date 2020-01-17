@@ -1529,8 +1529,16 @@ public class QuskiOroService {
 		da.setTbQoTipoDocumento(td);
 		if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
 			// mc = this.findContratoByCodigo(fw.getRelatedIdStr());
-			cl = this.findClienteByIdentifiacion(fw.getRelatedIdStr()).get(0);
-			da.setTbQoCliente(cl);
+			List<TbQoCliente> clientes = this.findClienteByIdentifiacion(fw.getRelatedIdStr());
+			
+			if(clientes != null && !clientes.isEmpty()) {
+				da.setTbQoCliente(clientes.get(0));
+			}else {
+				cl= new TbQoCliente();
+				cl.setCedulaCliente(fw.getRelatedIdStr());
+				da.setTbQoCliente(this.manageCliente(cl));
+			}
+			
 		} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
 			cz = this.findCotizadorById(Long.valueOf(fw.getRelatedIdStr()));
 			da.setTbQoCotizador(cz);
