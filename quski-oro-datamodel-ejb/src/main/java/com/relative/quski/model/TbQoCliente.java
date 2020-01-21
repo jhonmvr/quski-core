@@ -51,8 +51,9 @@ public class TbQoCliente implements Serializable {
 	private String estadoCivil;
 	
 	@Column(name="CARGAS_FAMILIARES")
-	private BigDecimal cargasFamiliares;
+	private String cargasFamiliares;
 	
+	@Temporal(TemporalType.DATE)
 	@Column(name="FECHA_NACIMIENTO")
 	private Date fechaNacimiento;
 	
@@ -205,11 +206,11 @@ public class TbQoCliente implements Serializable {
 		this.estado = estado;
 	}
 
-	public BigDecimal getCargasFamiliares() {
+	public String getCargasFamiliares() {
 		return cargasFamiliares;
 	}
 
-	public void setCargasFamiliares(BigDecimal cargasFamiliares) {
+	public void setCargasFamiliares(String cargasFamiliares) {
 		this.cargasFamiliares = cargasFamiliares;
 	}
 
