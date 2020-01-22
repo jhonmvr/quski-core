@@ -14,6 +14,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
@@ -28,6 +29,7 @@ import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.CreditoNegociacionRepository;
+import com.relative.quski.repository.CatalogoRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
@@ -82,6 +84,9 @@ public class QuskiOroService {
 	private TipoDocumentoRepository tipoDocumentoRepository;
 	@Inject
 	private ReferenciaPersonalRepository referenciaPersonalRepository;
+	@Inject
+	private CatalogoRepository catalogoRepository;
+	
 	
 	/**
 	 * PARAMETRO
@@ -1837,6 +1842,121 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
 	}
+	/**
+	 * CATALOGO
+	 */
+
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoCatalogo findCatalogoById(Long id) throws RelativeException {
+		try {
+			return catalogoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoCatalogo> findAllCatalogo(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.catalogoRepository.findAll(TbQoCatalogo.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.catalogoRepository.findAll(TbQoCatalogo.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.catalogoRepository.findAll(TbQoCatalogo.class, pw.getSortFields(), pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error al buscar todos los Abonos " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countCatalogo() throws RelativeException {
+		try {
+			return catalogoRepository.countAll(TbQoCatalogo.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Catalogo no encontrado " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoCatalogo manageCatalogo(TbQoCatalogo send) throws RelativeException {
+		try {
+			log.info("==> entra a manage Abono");
+			TbQoCatalogo persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.catalogoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updateCatalogo(send, persisted);
+			} else if (send != null && send.getId() == null) {
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return catalogoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+		}
+	}
+	public TbQoCatalogo updateCatalogo(TbQoCatalogo send, TbQoCatalogo persisted) throws RelativeException {
+		try {
+			persisted.setId(send.getId());
+			persisted.setNombreCatalogo(send.getNombreCatalogo());;
+			persisted.setTipoCatalogo(send.getTipoCatalogo());
+			persisted.setValorCatalogo(send.getValorCatalogo());
+			
+
+			return catalogoRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+		}
+	}
+
 	
 	
 
