@@ -45,6 +45,36 @@ implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoAr
 
 
 	@Override
+	public void deleteEntity(String arg0) throws RelativeException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public GenericWrapper<TbQoArchivoCliente> getEntity(String arg0) throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public PaginatedListWrapper<TbQoArchivoCliente> listAllEntities(String arg0, String arg1, String arg2, String arg3,
+			String arg4) throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public GenericWrapper<TbQoArchivoCliente> persistEntity(GenericWrapper<TbQoArchivoCliente> arg0)
+			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+/*
+	@Override
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoArchivoCliente", response = GenericWrapper.class)

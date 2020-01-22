@@ -1957,5 +1957,5 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Patrimonio " + e.getMessage());
 		}
 	}
-}}
+}
 	

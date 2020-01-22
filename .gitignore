@@ -1,0 +1,10 @@
+*/*.project
+*/*.settings
+*/*.classpath
+*/target
+
+/*.project
+/.settings
+.metadata/
+.recommenders/caches/identified-project-coordinates.json
+.recommenders/caches/manual-mappings.json
