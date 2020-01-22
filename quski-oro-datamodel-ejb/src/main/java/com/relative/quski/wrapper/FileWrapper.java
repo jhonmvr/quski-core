@@ -1,4 +1,4 @@
-package com.relative.quski.model;
+package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 

@@ -12,10 +12,10 @@ import javax.ws.rs.core.MediaType;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.web.util.BaseRestController;
-import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.FileWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
