@@ -12,30 +12,29 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
-import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
+import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
-import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
-import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
 import com.relative.quski.repository.TasacionRepository;
@@ -47,7 +46,6 @@ import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndC
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
-import com.relative.quski.wrapper.FileWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -83,10 +81,9 @@ public class QuskiOroService {
 	@Inject
 	private TipoDocumentoRepository tipoDocumentoRepository;
 	@Inject
-	private ReferenciaPersonalRepository referenciaPersonalRepository;	
-	@Inject
-
-	private PatrimonioRepository patrimonioRepository;	/**
+	private ReferenciaPersonalRepository referenciaPersonalRepository;
+	
+	/**
 	 * PARAMETRO
 	 */
 
@@ -1826,6 +1823,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
 		}
 	}
+	
 	public TbQoReferenciaPersonal updateReferenciaPersonal(TbQoReferenciaPersonal send, TbQoReferenciaPersonal persisted) throws RelativeException {
 		try {
 			persisted.setId(send.getId());
@@ -1838,124 +1836,11 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
 		}
-	}/**
-	 * PATRIMONIO
-	 */
-
-	/**
-	 * Metodo que busca la entidad por su PK
-	 * 
-	 * @param id Pk de la entidad
-	 * @return Entidad encontrada
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @throws RelativeException
-	 */
-	public TbQoPatrimonio findPatrimonioById(Long id) throws RelativeException {
-		try {
-			return patrimonioRepository.findById(id);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
-		}
 	}
 	
-	/**
-	 * Metodo que lista la informacion de las entidades encontradas
-	 * 
-	 * @param pw Objeto generico que tiene la informacion que determina si el
-	 *           resultado es total o paginado
-	 * @return Listado de entidades encontradas
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @throws RelativeException
-	 */
-	public List<TbQoPatrimonio> findAllPatrimonio(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.patrimonioRepository.findAll(TbQoPatrimonio.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.patrimonioRepository.findAll(TbQoPatrimonio.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return this.patrimonioRepository.findAll(TbQoPatrimonio.class, pw.getSortFields(), pw.getSortDirections());
-				}
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
-		}
-	}
 	
-	/**
-	 * Metodo que cuenta la cantidad de entidades existentes
-	 * 
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public Long countPatrimonio() throws RelativeException {
-		try {
-			return patrimonioRepository.countAll(TbQoPatrimonio.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Patrimonio no encontrado " + e.getMessage());
-		}
-	}
+
 	
-	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
-	 * 
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @param send entidad con la informacion de creacion o actualizacion
-	 * @return Entidad modificada o actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoPatrimonio managePatrimonio(TbQoPatrimonio send) throws RelativeException {
-		try {
-			log.info("==> entra a manage Patrimonio");
-			TbQoPatrimonio persisted = null;
-			if (send != null && send.getId() != null) {
-				persisted = this.patrimonioRepository.findById(send.getId());
-				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-				return this.updatePatrimonio(send, persisted);
-			} else if (send != null && send.getId() == null) {
-
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return patrimonioRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
-		}
-	}
-	public TbQoPatrimonio updatePatrimonio(TbQoPatrimonio send, TbQoPatrimonio persisted) throws RelativeException {
-		try {
-			persisted.setId(send.getId());
-			persisted.setActivo(send.getActivo());
-			persisted.setAvaluo(send.getAvaluo());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setPasivos(send.getPasivos());
-			persisted.setIfis(send.getIfis());
-			persisted.setInfocorp(send.getInfocorp());
-			
-			persisted.setTbQoCliente(send.getTbQoCliente());
-
-			return patrimonioRepository.update(persisted);
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Patrimonio " + e.getMessage());
-		}
-	}
+	
 }
 	
