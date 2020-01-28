@@ -24,7 +24,7 @@ import com.relative.quski.service.QuskiOroService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/catalgoRestController")
+@Path("/catalogoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "catalogoRestController - REST CRUD")

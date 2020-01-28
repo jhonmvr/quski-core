@@ -21,7 +21,10 @@ import com.relative.quski.enums.EstadoEnum;
 @Table(name="TB_QO_CATALOGO")
 
 public class TbQoCatalogo implements Serializable  {
-	private static final Long serialVersionUID=1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@SequenceGenerator(name="TB_QO_CATALOGO_ID_GENERATOR", sequenceName="SEQ_CATALOGO",allocationSize=1)

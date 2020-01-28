@@ -1922,7 +1922,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 */
 	public TbQoCatalogo manageCatalogo(TbQoCatalogo send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a Catalogo");
 			TbQoCatalogo persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.catalogoRepository.findById(send.getId());
@@ -1940,7 +1940,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando al actualizar el catalogo " + e.getMessage());
 		}
 	}
 	public TbQoCatalogo updateCatalogo(TbQoCatalogo send, TbQoCatalogo persisted) throws RelativeException {
@@ -1953,7 +1953,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 
 			return catalogoRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando catalogo " + e.getMessage());
 		}
 	}
 
