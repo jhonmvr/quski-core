@@ -31,6 +31,10 @@ public class TbQoCatalogo implements Serializable  {
 	@Column(name="NOMBRE_CATALOGO")
 	private String nombreCatalogo;
 	
+	@Column(name="DESCRIPCION_CATALOGO")
+	private String descripcionCatalogo;
+	
+	
 	@Column(name="TIPO_CATALOGO")
 	private String tipoCatalogo;
 	
@@ -90,6 +94,12 @@ public class TbQoCatalogo implements Serializable  {
 	}
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+	public String getDescripcionCatalogo() {
+		return descripcionCatalogo;
+	}
+	public void setDescripcionCatalogo(String descripcionCatalogo) {
+		this.descripcionCatalogo = descripcionCatalogo;
 	}
 
 
