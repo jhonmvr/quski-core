@@ -12,7 +12,6 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.FileWrapper;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.model.TbQoCreditoNegociacion;
@@ -48,6 +47,7 @@ import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndC
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
+import com.relative.quski.wrapper.FileWrapper;
 
 @Stateless
 public class QuskiOroService {
