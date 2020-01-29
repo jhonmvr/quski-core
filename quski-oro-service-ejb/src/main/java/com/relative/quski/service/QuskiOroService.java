@@ -1982,6 +1982,28 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 
 	}
 
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param idCotizador
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoCatalogo> findNombreByCatalogo(PaginatedWrapper pw, String nombre) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return catalogoRepository.findByNombreCatalogo(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),nombre );
+		} else {
+			return catalogoRepository.findByNombreCatalogo(nombre);
+		}
+	}
+	public Long countNombreByCatalogo(
+			String nombre) throws RelativeException {
+
+		return catalogoRepository.countByNombreCatalogo(nombre);
+	}
+
 	
 
 	

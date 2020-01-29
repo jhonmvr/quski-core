@@ -18,6 +18,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.ClienteWrapper;
 
@@ -112,5 +113,29 @@ implements CrudRestControllerInterface<TbQoCatalogo, GenericWrapper<TbQoCatalogo
 		}
 		return null;
 	}
+	@GET
+	@Path("/CatalogoByNombres")
+	@ApiOperation(value = "GenericWrapper<TbQoCatalogo>", notes = "Metodo CotizadorByIdCotizador Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoCatalogo> catalogoByNombres(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("id") String nombre
+			) throws RelativeException {
+		return catalogoByNombres(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),nombre);
+	}
+	
+	private PaginatedListWrapper<TbQoCatalogo> catalogoByNombres(PaginatedWrapper pw, String nombre) throws RelativeException {
+		PaginatedListWrapper<TbQoCatalogo> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoCatalogo> actions = this.qos.findNombreByCatalogo(pw, nombre);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countNombreByCatalogo(nombre).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}	
 
 }
