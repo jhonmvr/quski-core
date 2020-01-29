@@ -115,14 +115,14 @@ implements CrudRestControllerInterface<TbQoCatalogo, GenericWrapper<TbQoCatalogo
 	}
 	@GET
 	@Path("/CatalogoByNombres")
-	@ApiOperation(value = "GenericWrapper<TbQoCatalogo>", notes = "Metodo CotizadorByIdCotizador Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoCatalogo>", notes = "Metodo CatalogoByNombres Retorna wrapper de entidades encontradas en TbQoCatalogo", response = GenericWrapper.class)
 	public PaginatedListWrapper<TbQoCatalogo> catalogoByNombres(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("id") String nombre
+			@QueryParam("nombre") String nombre
 			) throws RelativeException {
 		return catalogoByNombres(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
 				sortDirections, isPaginated),nombre);

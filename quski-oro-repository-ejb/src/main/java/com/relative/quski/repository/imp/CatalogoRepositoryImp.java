@@ -10,7 +10,6 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.repository.CatalogoRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
-import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
 @Stateless(mappedName = "catalogoRepository")
 public class CatalogoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCatalogo> implements CatalogoRepository{
 

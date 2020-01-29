@@ -1991,6 +1991,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 */
 	
 	public List<TbQoCatalogo> findNombreByCatalogo(PaginatedWrapper pw, String nombre) throws RelativeException {
+		log.info("ENTRA A BUSCAR CATALOGO CON NOMBRE :"+nombre);
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return catalogoRepository.findByNombreCatalogo(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
 					pw.getSortDirections(),nombre );
