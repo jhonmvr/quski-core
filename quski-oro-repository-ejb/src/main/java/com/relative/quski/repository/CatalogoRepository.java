@@ -17,11 +17,6 @@ public interface CatalogoRepository extends CrudRepository<Long, TbQoCatalogo> {
 
 	public Long countByNombreCatalogo(String nombre) throws RelativeException ;
 
-	public List<TbQoCatalogo> findByNombreCatalogo(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections,  Long idCotizador) throws RelativeException ;
-	public List<TbQoCatalogo> findByIdCotizacion(Long idCotizador) throws RelativeException ;
-
-	public Long countfindByIdCotizacion(Long idCotizador) throws RelativeException ;
 	
 
 }

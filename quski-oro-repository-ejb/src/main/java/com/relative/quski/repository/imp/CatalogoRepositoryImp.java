@@ -10,15 +10,14 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.repository.CatalogoRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
-import com.relative.quski.repository.spec.DetalleCotizacionByIdSpec;
-
+import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
 @Stateless(mappedName = "catalogoRepository")
 public class CatalogoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCatalogo> implements CatalogoRepository{
 
 	@Override
 	public List<TbQoCatalogo> findByNombreCatalogo(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections, String nombre)
-			throws RelativeException {
+			String sortDirections, String nombre) throws RelativeException {
+	
 		try {
 			return findAllBySpecificationPaged(
 					new CatalogoByNombreSpec(nombre), startRecord,
@@ -26,31 +25,16 @@ public class CatalogoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCatalo
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR catalogo de oro por cotizador");
-		}
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error al buscar catalogo");
+		
 
+	}
 	}
 
 	@Override
-	public List<TbQoCatalogo> findByNombreCatalogo(
-			String nombre) throws RelativeException {
+	public List<TbQoCatalogo> findByNombreCatalogo(String nombre) throws RelativeException {
 		try {
 			return findAllBySpecification(
-					new CatalogoByNombreSpec( nombre));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR catalogo");
-		}
-	}
-
-
-	@Override
-	public Long countByNombreCatalogo(String nombre)
-			throws RelativeException {
-
-		try {
-			return countBySpecification(
 					new CatalogoByNombreSpec(nombre));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -58,34 +42,18 @@ public class CatalogoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCatalo
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
 	}
-	
-	@Override
-	public Long countfindByIdCotizacion(Long idCotizador)
-			throws RelativeException {
 
+	@Override
+	public Long countByNombreCatalogo(String nombre) throws RelativeException {
 		try {
 			return countBySpecification(
-					new DetalleCotizacionByIdSpec(idCotizador));
+					new CatalogoByNombreSpec(nombre));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR catalogo");
 		}
 	}
 
-	@Override
-	public List<TbQoCatalogo> findByNombreCatalogo(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections, Long idCotizador) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<TbQoCatalogo> findByIdCotizacion(Long idCotizador) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
-
 }
