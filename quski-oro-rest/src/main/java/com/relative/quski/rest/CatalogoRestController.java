@@ -1,23 +1,28 @@
 package com.relative.quski.rest;
 
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.ClienteWrapper;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.service.QuskiOroService;
 
