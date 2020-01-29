@@ -42,6 +42,7 @@ import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
+import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
@@ -1957,7 +1958,30 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		}
 	}
 
-	
+	/**
+	 * Metodo que busca por el nombre a catalogo
+	 * 
+	 * @author Brayan Monge - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public List<TbQoCatalogo> findCatalogoByNombre(String nombre) throws RelativeException {
+		List<TbQoCatalogo> tmp;
+		try {
+			tmp = this.catalogoRepository.findAllBySpecification(new CatalogoByNombreSpec(nombre));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + nombre);
+		}
+		return null;
+
+	}
+
 	
 
 	

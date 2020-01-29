@@ -94,5 +94,23 @@ implements CrudRestControllerInterface<TbQoCatalogo, GenericWrapper<TbQoCatalogo
 		loc.setEntidad(this.qos.manageCatalogo(wp.getEntidad()));
 		return loc;
 	}	
+	
+	@GET
+	@Path("/catalogoByNombre")
+	@ApiOperation(value = "GenericWrapper<TbQoCatalogo>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCatalogo", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCatalogo> catalogoByNombre(@QueryParam("nombre") String nombre)
+			throws RelativeException {
+		GenericWrapper<TbQoCatalogo> loc = new GenericWrapper<>();
+		TbQoCatalogo  a = this.findCatalogoByNombre(nombre);
+		loc.setEntidad(a);
+		return loc;
+	}
+	public TbQoCatalogo findCatalogoByNombre(String nombre) throws RelativeException {
+		List<TbQoCatalogo> tmp = this.qos.findCatalogoByNombre(nombre);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
 
 }
