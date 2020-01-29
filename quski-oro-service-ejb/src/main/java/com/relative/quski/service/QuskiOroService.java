@@ -1985,8 +1985,8 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	/**
 	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
 	 * @param pw
-	 * @param idCotizador
-	 * @author SAUL MENDEZ - Relative Engine
+	 * @param nombre
+	 * @author BRAYAN MONGE - Relative Engine
 	 * @throws RelativeException
 	 */
 	
@@ -2003,6 +2003,29 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			String nombre) throws RelativeException {
 
 		return catalogoRepository.countByNombreCatalogo(nombre);
+	}
+	
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param tipo
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoCatalogo> findTipoByCatalogo(PaginatedWrapper pw, String tipo) throws RelativeException {
+		log.info("ENTRA A BUSCAR CATALOGO CON NOMBRE :"+tipo);
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return catalogoRepository.findByTipoCatalogo(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),tipo );
+		} else {
+			return catalogoRepository.findByTipoCatalogo(tipo);
+		}
+	}
+	public Long countTipoByCatalogo(
+			String nombre) throws RelativeException {
+
+		return catalogoRepository.countByTipoCatalogo(nombre);
 	}
 
 	

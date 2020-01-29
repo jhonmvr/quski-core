@@ -137,5 +137,32 @@ implements CrudRestControllerInterface<TbQoCatalogo, GenericWrapper<TbQoCatalogo
 		}
 		return plw;
 	}	
+	
+	@GET
+	@Path("/CatalogoByTipo")
+	@ApiOperation(value = "GenericWrapper<TbQoCatalogo>", notes = "Metodo CatalogoByNombres Retorna wrapper de entidades encontradas en TbQoCatalogo", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoCatalogo> catalogoByTipo(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("tipo") String tipo
+			) throws RelativeException {
+		return catalogoByTipo(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),tipo);
+	}
+	
+	private PaginatedListWrapper<TbQoCatalogo> catalogoByTipo(PaginatedWrapper pw, String tipo) throws RelativeException {
+		PaginatedListWrapper<TbQoCatalogo> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoCatalogo> actions = this.qos.findTipoByCatalogo(pw, tipo);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTipoByCatalogo(tipo).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}	
+	
+	
 
 }
