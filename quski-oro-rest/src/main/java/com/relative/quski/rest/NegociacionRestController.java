@@ -52,7 +52,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		// TODO Auto-generated method stub
 		
 	}
-
+/*
 	@Override
 	@GET
 	@Path("/getEntity")
@@ -66,7 +66,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		//TbQoNegociacion ng =this.qos.findNegociacionById(Long.valueOf(id));
 		//loc.setEntidad(ng);
 		return loc;
-	}
+	}*/
 
 	@Override
 	public PaginatedListWrapper<TbQoNegociacion> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
@@ -100,5 +100,17 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		return loc;
 	}	
 	
+	@Override
+	@GET
+	@Path("/getEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoNegociacion>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoNegociacion", response = GenericWrapper.class)
+	public GenericWrapper<TbQoNegociacion> getEntity(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
+		TbQoNegociacion a = this.qos.findNegociacionById(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
+	}
 	
+	
+
 }

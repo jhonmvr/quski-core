@@ -1162,6 +1162,12 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
+	
+
+	
+	
+	
+	
 
 	public List<TbQoNegociacion> findAllNegociacion(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
@@ -1948,6 +1954,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		try {
 			persisted.setId(send.getId());
 			persisted.setNombreCatalogo(send.getNombreCatalogo());;
+			persisted.setDescripcionCatalogo(send.getDescripcionCatalogo());
 			persisted.setTipoCatalogo(send.getTipoCatalogo());
 			persisted.setValorCatalogo(send.getValorCatalogo());
 			
