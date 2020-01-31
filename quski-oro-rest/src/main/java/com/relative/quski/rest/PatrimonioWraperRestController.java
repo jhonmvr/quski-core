@@ -18,7 +18,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.wrapper.DetalleCreditoNegociacionWrapper;
 import com.relative.quski.wrapper.PatrimonioWrapper;
 
 import io.swagger.annotations.Api;

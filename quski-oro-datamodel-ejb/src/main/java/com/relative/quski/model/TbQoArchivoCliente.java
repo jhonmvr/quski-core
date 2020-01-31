@@ -36,6 +36,11 @@ public class TbQoArchivoCliente implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
+	
+	@ManyToOne
+	@JoinColumn(name="id_tipo_archivo")
+	private TbQoTipoArchivo tbQoTipoArchivo;
+	
 
 	@Column(name="nombre_archivo")
 	private String nombreArchivo;
@@ -99,4 +104,15 @@ public class TbQoArchivoCliente implements Serializable {
 		this.nombreArchivo = nombreArchivo;
 	}
 
+	public TbQoTipoArchivo getTbQoTipoArchivo() {
+		return tbQoTipoArchivo;
+	}
+
+	public void setTbQoTipoArchivo(TbQoTipoArchivo tbQoTipoArchivo) {
+		this.tbQoTipoArchivo = tbQoTipoArchivo;
+	}
+
+	
+	
+	
 }

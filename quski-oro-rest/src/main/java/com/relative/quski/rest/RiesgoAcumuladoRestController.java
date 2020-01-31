@@ -17,7 +17,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.wrapper.RiesgoAcumuladoWrapper;
 
 import io.swagger.annotations.Api;

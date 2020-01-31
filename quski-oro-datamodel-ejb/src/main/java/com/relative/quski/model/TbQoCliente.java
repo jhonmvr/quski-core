@@ -82,10 +82,13 @@ public class TbQoCliente implements Serializable {
 	@Column(name="ESTADO")
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
 	@Column(name="telefono_movil")
 	private String telefonoMovil;
+	
 	@Column(name="telefono_fijo")
 	private String telefonoFijo;
+	
 	private String publicidad;
 	private String campania;
 	private String email;
