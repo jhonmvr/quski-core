@@ -1,13 +1,10 @@
 package com.relative.quski.service;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -17,14 +14,14 @@ import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
+import com.relative.quski.model.TbQoCatalogo;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
-import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoTasacion;
@@ -34,9 +31,10 @@ import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.ArchivoClienteRepository;
 import com.relative.quski.repository.CantonRepository;
+import com.relative.quski.repository.CreditoNegociacionRepository;
+import com.relative.quski.repository.CatalogoRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
-import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.NegociacionCalculoRepository;
@@ -52,6 +50,7 @@ import com.relative.quski.repository.TipoArchivoRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
+import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
@@ -105,7 +104,9 @@ public class QuskiOroService {
 	private CantonRepository cantonRepository;
 	@Inject
 	private ParroquiaRepository parroquiaRepository;
-
+	@Inject
+	private CatalogoRepository catalogoRepository;
+	
 	
 	/**
 	 * PARAMETRO
@@ -1647,7 +1648,6 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		}
 		return null;
 
-<<<<<<< HEAD
 		return variableCrediticiaRepository.countByIdCotizador(idCotizador);
 	}
 	*/
@@ -1880,245 +1880,23 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		}
 	}
 
-
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * PATRIMONIO
-	 */
+	/** 
+	Catalogo
+	*/
 
 	/**
 	 * Metodo que busca la entidad por su PK
 	 * 
 	 * @param id Pk de la entidad
 	 * @return Entidad encontrada
-	 * @author DIEGO SERRANO - Relative Engine
+	 * @author BRAYAN MONGE - Relative Engine
 	 * @throws RelativeException
 	 */
-	public TbQoPatrimonio findPatrimonioById(Long id) throws RelativeException {
+	public TbQoCatalogo findCatalogoById(Long id) throws RelativeException {
 		try {
-			return patrimonioRepository.findById(id);
+			return catalogoRepository.findById(id);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -2132,22 +1910,24 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 * @param pw Objeto generico que tiene la informacion que determina si el
 	 *           resultado es total o paginado
 	 * @return Listado de entidades encontradas
+
 	 * @author DIEGO SERRANO - Relative Engine
 	 * Archivos Cliente
 	 * @param id
 	 * @return
+	 * @author BRAYAN MONGE - Relative Engine
 	 * @throws RelativeException
 	 */
-	public List<TbQoPatrimonio> findAllPatrimonio(PaginatedWrapper pw) throws RelativeException {
+	public List<TbQoCatalogo> findAllCatalogo(PaginatedWrapper pw) throws RelativeException {
 		try {
 			if (pw == null) {
-				return this.patrimonioRepository.findAll(TbQoPatrimonio.class);
+				return this.catalogoRepository.findAll(TbQoCatalogo.class);
 			} else {
 				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.patrimonioRepository.findAll(TbQoPatrimonio.class, pw.getStartRecord(), pw.getPageSize(),
+					return this.catalogoRepository.findAll(TbQoCatalogo.class, pw.getStartRecord(), pw.getPageSize(),
 							pw.getSortFields(), pw.getSortDirections());
 				} else {
-					return this.patrimonioRepository.findAll(TbQoPatrimonio.class, pw.getSortFields(), pw.getSortDirections());
+					return this.catalogoRepository.findAll(TbQoCatalogo.class, pw.getSortFields(), pw.getSortDirections());
 				}
 			}
 		} catch (RelativeException e) {
@@ -2163,40 +1943,40 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	/**
 	 * Metodo que cuenta la cantidad de entidades existentes
 	 * 
-	 * @author DIEGO SERRANO - Relative Engine
+	 * @author BRAYAN MONGE - Relative Engine
 	 * @return Cantidad de entidades encontradas
 	 * @throws RelativeException
 	 */
-	public Long countPatrimonio() throws RelativeException {
+	public Long countCatalogo() throws RelativeException {
 		try {
-			return patrimonioRepository.countAll(TbQoPatrimonio.class);
+			return catalogoRepository.countAll(TbQoCatalogo.class);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Patrimonio no encontrado " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Catalogo no encontrado " + e.getMessage());
 		}
 	}
 	
 	/**
 	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
 	 * 
-	 * @author DIEGO SERRANO - Relative Engine
+	 * @author BRAYAN MONGE - Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
 	 * @return Entidad modificada o actualizada
 	 * @throws RelativeException
 	 */
-	public TbQoPatrimonio managePatrimonio(TbQoPatrimonio send) throws RelativeException {
+	public TbQoCatalogo manageCatalogo(TbQoCatalogo send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Patrimonio");
-			TbQoPatrimonio persisted = null;
+			log.info("==> entra a Catalogo");
+			TbQoCatalogo persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.patrimonioRepository.findById(send.getId());
+				persisted = this.catalogoRepository.findById(send.getId());
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-				return this.updatePatrimonio(send, persisted);
+				return this.updateCatalogo(send, persisted);
 			} else if (send != null && send.getId() == null) {
 
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return patrimonioRepository.add(send);
+				return catalogoRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
@@ -2205,25 +1985,21 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando al actualizar el catalogo " + e.getMessage());
 		}
 	}
-	public TbQoPatrimonio updatePatrimonio(TbQoPatrimonio send, TbQoPatrimonio persisted) throws RelativeException {
+	public TbQoCatalogo updateCatalogo(TbQoCatalogo send, TbQoCatalogo persisted) throws RelativeException {
 		try {
 			persisted.setId(send.getId());
-			persisted.setActivo(send.getActivo());
-			persisted.setAvaluo(send.getAvaluo());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setPasivos(send.getPasivos());
-			persisted.setIfis(send.getIfis());
-			persisted.setInfocorp(send.getInfocorp());
+			persisted.setNombreCatalogo(send.getNombreCatalogo());;
+			persisted.setDescripcionCatalogo(send.getDescripcionCatalogo());
+			persisted.setTipoCatalogo(send.getTipoCatalogo());
+			persisted.setValorCatalogo(send.getValorCatalogo());
 			
-			persisted.setTbQoCliente(send.getTbQoCliente());
 
-			return patrimonioRepository.update(persisted);
+			return catalogoRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Patrimonio " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando catalogo " + e.getMessage());
 		}
 	}
 	
@@ -2543,7 +2319,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 }
 
 	/**
-<<<<<<< HEAD
+
 	 * Metodo que lista la informacion de las entidades encontradas
 	 * 
 	 * @param pw Objeto generico que tiene la informacion que determina si el
@@ -2648,5 +2424,78 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	public List<Parroquia> finAllUbicacion(String nombre) throws RelativeException{
 		return parroquiaRepository.findByCantonProvincia(nombre);
 	}
+
+	/**
+	 * Metodo que busca por el nombre a catalogo
+	 * 
+	 * @author Brayan Monge - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public List<TbQoCatalogo> findCatalogoByNombre(String nombre) throws RelativeException {
+		List<TbQoCatalogo> tmp;
+		try {
+			tmp = this.catalogoRepository.findAllBySpecification(new CatalogoByNombreSpec(nombre));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + nombre);
+		}
+		return null;
+
+	}
+
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param nombre
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoCatalogo> findNombreByCatalogo(PaginatedWrapper pw, String nombre) throws RelativeException {
+		log.info("ENTRA A BUSCAR CATALOGO CON NOMBRE :"+nombre);
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return catalogoRepository.findByNombreCatalogo(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),nombre );
+		} else {
+			return catalogoRepository.findByNombreCatalogo(nombre);
+		}
+	}
+	public Long countNombreByCatalogo(
+			String nombre) throws RelativeException {
+
+		return catalogoRepository.countByNombreCatalogo(nombre);
+	}
+	
+	/**
+	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
+	 * @param pw
+	 * @param tipo
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	
+	public List<TbQoCatalogo> findTipoByCatalogo(PaginatedWrapper pw, String tipo) throws RelativeException {
+		log.info("ENTRA A BUSCAR CATALOGO CON NOMBRE :"+tipo);
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return catalogoRepository.findByTipoCatalogo(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(),tipo );
+		} else {
+			return catalogoRepository.findByTipoCatalogo(tipo);
+		}
+	}
+	public Long countTipoByCatalogo(
+			String nombre) throws RelativeException {
+
+		return catalogoRepository.countByTipoCatalogo(nombre);
+	}
+
+
+	
 }
 	
