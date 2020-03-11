@@ -3,6 +3,7 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -10,42 +11,48 @@ import java.math.BigDecimal;
  * 
  */
 @Entity
-
+@Table(name="parroquia")
 public class Parroquia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEQ_PARROQUIA")
+	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEQ_PARROQUIA",allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PARROQUIA_ID_GENERATOR")
-	private long id;
+	@Column(unique=true, nullable=false, precision=8)
+	private Long id;
 
-	@Column(name="codigo_canton")
+	@Column(name="codigo_canton", nullable=false, length=5)
 	private String codigoCanton;
 
-	@Column(name="codigo_parroquia")
+	@Column(name="codigo_parroquia", precision=8)
 	private BigDecimal codigoParroquia;
 
-	@Column(name="codigo_provincia")
+	@Column(name="codigo_provincia", nullable=false, length=3)
 	private String codigoProvincia;
 
+	@Column(length=20)
 	private String estado;
 
-	@Column(name="nombre_parroquia")
+	@Column(name="nombre_parroquia", length=80)
 	private String nombreParroquia;
 
 	//bi-directional many-to-one association to Canton
 	@ManyToOne
-	@JoinColumn(name="id_canton")
+	@JoinColumn(name="id_canton", nullable=false)
 	private Canton canton;
+
+	//bi-directional many-to-one association to TbQoAgencia
+	@OneToMany(mappedBy="parroquia")
+	private List<TbQoAgencia> tbQoAgencia;
 
 	public Parroquia() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -96,5 +103,15 @@ public class Parroquia implements Serializable {
 	public void setCanton(Canton canton) {
 		this.canton = canton;
 	}
+
+	public List<TbQoAgencia> getTbQoAgencia() {
+		return this.tbQoAgencia;
+	}
+
+	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencia) {
+		this.tbQoAgencia = tbQoAgencia;
+	}
+
+
 
 }

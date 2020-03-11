@@ -1688,7 +1688,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	/**
 	 * Metodo que actualiza la entidad
 	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
+	 * @author SAUL MENDEZ- Relative Engine
 	 * @param send      informacion enviada para update
 	 * @param persisted entidad existente sobre la que se actualiza
 	 * @return Entidad actualizada
@@ -2495,6 +2495,25 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			String nombre) throws RelativeException {
 
 		return catalogoRepository.countByTipoCatalogo(nombre);
+	}
+	/**
+	 *  METODO QUE BUSCA LAS ASIGNACIONES PENDIENTES DE APROBACION 
+	 * @param pw
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) throws RelativeException {
+		try {
+			return this.creditoNegociacionRepository.findAsignacionByParams(
+					codigoProceso, 
+					nombreAgencia, 
+					nombreProceso, 
+					cedula);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.MSG_ERROR_BUSQUEDA, "ERROR AL BUSCAR PENDIENTES DE ASIGNACION CON LOS PARAMETROS: "
+					+ codigoProceso+", "+nombreAgencia+", "+nombreProceso+" y "+cedula);
+			}
+		
 	}
 
 
