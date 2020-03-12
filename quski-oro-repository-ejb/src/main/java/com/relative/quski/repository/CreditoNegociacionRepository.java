@@ -27,5 +27,8 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 
 	
 
+	List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoOperacion, String nombreAgencia, String nombreProceso,
+			int cedula);
+
 }
 

@@ -10,26 +10,32 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Provincia.findAll", query="SELECT p FROM Provincia p")
+@Table(name="provincia")
 public class Provincia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PROVINCIA_ID_GENERATOR", sequenceName="SEQ_PROVINCIA")
+	@SequenceGenerator(name="PROVINCIA_ID_GENERATOR", sequenceName="SEQ_PROVINCIA",allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROVINCIA_ID_GENERATOR")
+	@Column(unique=true, nullable=false, precision=3)
 	private long id;
 
-	@Column(name="codigo_provincia")
+	@Column(name="codigo_provincia", length=2)
 	private String codigoProvincia;
 
+	@Column(length=20)
 	private String estado;
 
-	@Column(name="nombre_provincia")
+	@Column(name="nombre_provincia", length=60)
 	private String nombreProvincia;
 
 	//bi-directional many-to-one association to Canton
 	@OneToMany(mappedBy="provincia")
 	private List<Canton> cantons;
+
+	//bi-directional many-to-one association to TbQoAgencia
+	@OneToMany(mappedBy="provincia")
+	private List<TbQoAgencia> tbQoAgencias;
 
 	public Provincia() {
 	}
@@ -86,6 +92,14 @@ public class Provincia implements Serializable {
 		canton.setProvincia(null);
 
 		return canton;
+	}
+
+	public List<TbQoAgencia> getTbQoAgencias() {
+		return this.tbQoAgencias;
+	}
+
+	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencias) {
+		this.tbQoAgencias = tbQoAgencias;
 	}
 
 }

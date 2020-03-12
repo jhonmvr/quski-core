@@ -13,6 +13,7 @@ import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
+import com.relative.quski.repository.spec.AsignacionByParamsSpec;
 /**
  * Session Bean implementation class ParametrosRepositoryImp
  */
@@ -81,4 +82,10 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 	}
 
 */
+	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) {
+			return 	findAllBySpecification(
+						new AsignacionByParamsSpec(codigoProceso, nombreAgencia, nombreProceso, cedula)
+					);
+	}
+
 }

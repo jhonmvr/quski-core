@@ -16,6 +16,7 @@ import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
 import com.relative.quski.model.TbMiParametro;
+import com.relative.quski.model.TbQoAgencia;
 import com.relative.quski.model.TbQoArchivoCliente;
 import com.relative.quski.model.TbQoCatalogo;
 import com.relative.quski.model.TbQoCliente;
@@ -26,12 +27,14 @@ import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.model.TbQoPrecioOro;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoVariableCrediticia;
+import com.relative.quski.repository.AgenciaRepository;
 import com.relative.quski.repository.ArchivoClienteRepository;
 import com.relative.quski.repository.CantonRepository;
 import com.relative.quski.repository.CatalogoRepository;
@@ -46,6 +49,7 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ParroquiaRepository;
 import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
+import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ProvinciaRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
 import com.relative.quski.repository.TasacionRepository;
@@ -110,7 +114,10 @@ public class QuskiOroService {
 	private ParroquiaRepository parroquiaRepository;
 	@Inject
 	private CatalogoRepository catalogoRepository;
-	
+	@Inject
+	private AgenciaRepository agenciaRepository;
+	@Inject
+	private ProcesoRepository procesoRepository;
 	
 	/**
 	 * PARAMETRO
@@ -1690,7 +1697,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	/**
 	 * Metodo que actualiza la entidad
 	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
+	 * @author SAUL MENDEZ- Relative Engine
 	 * @param send      informacion enviada para update
 	 * @param persisted entidad existente sobre la que se actualiza
 	 * @return Entidad actualizada
@@ -2543,6 +2550,55 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			String nombre) throws RelativeException {
 
 		return catalogoRepository.countByTipoCatalogo(nombre);
+	}
+	/**
+	 *  METODO QUE BUSCA LAS ASIGNACIONES PENDIENTES DE APROBACION 
+	 * @param pw
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) throws RelativeException {
+		try {
+			return this.creditoNegociacionRepository.findAsignacionByParams(
+					codigoProceso, 
+					nombreAgencia, 
+					nombreProceso, 
+					cedula);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.MSG_ERROR_BUSQUEDA, "ERROR AL BUSCAR PENDIENTES DE ASIGNACION CON LOS PARAMETROS: "
+					+ codigoProceso+", "+nombreAgencia+", "+nombreProceso+" y "+cedula);
+			}
+		
+	}
+	/**
+	 *  METODO QUE BUSCA LAS AGENCIAS  
+	 * @param id
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoAgencia> findAgenciaByid(long id) throws RelativeException {
+		try {
+			return this.agenciaRepository.findById( id );
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.MSG_ERROR_BUSQUEDA, "ERROR AL BUSCAR AGENCIA CON EL PARAMETRO: "
+					+ id);
+			}
+		
+	}
+	/**
+	 *  METODO QUE BUSCA LOS PROCESOS  
+	 * @param id
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoProceso> findProcesoByid(long id) throws RelativeException {
+		try {
+			return this.procesoRepository.findById( id );
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.MSG_ERROR_BUSQUEDA, "ERROR AL BUSCAR PROCESO CON EL PARAMETRO: "
+					+ id);
+			}
+		
 	}
 
 

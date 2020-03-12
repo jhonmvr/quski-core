@@ -10,34 +10,40 @@ import java.util.List;
  * 
  */
 @Entity
-
+@Table(name="canton")
 public class Canton implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEQ_CANTON")
+	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEQ_CANTON",allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CANTON_ID_GENERATOR")
+	@Column(unique=true, nullable=false, precision=5)
 	private long id;
 
-	@Column(name="codigo_canton")
+	@Column(name="codigo_canton", nullable=false, length=6)
 	private String codigoCanton;
 
-	@Column(name="codigo_provincia")
+	@Column(name="codigo_provincia", nullable=false, length=3)
 	private String codigoProvincia;
 
+	@Column(length=20)
 	private String estado;
 
-	@Column(name="nombre_canton")
+	@Column(name="nombre_canton", nullable=false, length=80)
 	private String nombreCanton;
 
 	//bi-directional many-to-one association to Provincia
 	@ManyToOne
-	@JoinColumn(name="id_provincia")
+	@JoinColumn(name="id_provincia", nullable=false)
 	private Provincia provincia;
 
 	//bi-directional many-to-one association to Parroquia
 	@OneToMany(mappedBy="canton")
 	private List<Parroquia> parroquias;
+
+	//bi-directional many-to-one association to TbQoAgencia
+	@OneToMany(mappedBy="canton")
+	private List<TbQoAgencia> tbQoAgencia;
 
 	public Canton() {
 	}
@@ -110,6 +116,14 @@ public class Canton implements Serializable {
 		parroquia.setCanton(null);
 
 		return parroquia;
+	}
+
+	public List<TbQoAgencia> getTbQoAgencias() {
+		return this.tbQoAgencia;
+	}
+
+	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencia) {
+		this.tbQoAgencia = tbQoAgencia;
 	}
 
 }
