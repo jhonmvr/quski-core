@@ -1,5 +1,6 @@
 package com.relative.quski.model;
 
+import java.math.BigDecimal;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
@@ -23,13 +24,13 @@ public class TbQoAgencia implements Serializable {
 	private String direccionAgencia;
 
 	@Column(name="id_canton")
-	private java.math.BigDecimal idCanton;
+	private BigDecimal idCanton;
 
 	@Column(name="id_parroquia")
-	private java.math.BigDecimal idParroquia;
+	private BigDecimal idParroquia;
 
 	@Column(name="id_provincia")
-	private java.math.BigDecimal idProvincia;
+	private BigDecimal idProvincia;
 
 	@Column(name="nombre_agencia")
 	private String nombreAgencia;
@@ -57,27 +58,27 @@ public class TbQoAgencia implements Serializable {
 		this.direccionAgencia = direccionAgencia;
 	}
 
-	public java.math.BigDecimal getIdCanton() {
+	public BigDecimal getIdCanton() {
 		return this.idCanton;
 	}
 
-	public void setIdCanton(java.math.BigDecimal idCanton) {
+	public void setIdCanton(BigDecimal idCanton) {
 		this.idCanton = idCanton;
 	}
 
-	public java.math.BigDecimal getIdParroquia() {
+	public BigDecimal getIdParroquia() {
 		return this.idParroquia;
 	}
 
-	public void setIdParroquia(java.math.BigDecimal idParroquia) {
+	public void setIdParroquia(BigDecimal idParroquia) {
 		this.idParroquia = idParroquia;
 	}
 
-	public java.math.BigDecimal getIdProvincia() {
+	public BigDecimal getIdProvincia() {
 		return this.idProvincia;
 	}
 
-	public void setIdProvincia(java.math.BigDecimal idProvincia) {
+	public void setIdProvincia(BigDecimal idProvincia) {
 		this.idProvincia = idProvincia;
 	}
 

@@ -8,6 +8,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoAgencia;
 import com.relative.quski.repository.AgenciaRepository;
+import com.relative.quski.repository.spec.AgenciaByIdSpec;
 import com.relative.quski.repository.spec.AgenciaByParamsSpec;
 
 /**
@@ -20,7 +21,6 @@ public class AgenciaRepositoryImp extends GeneralRepositoryImp<Long, TbQoAgencia
      * Default constructor. 
      */
     public AgenciaRepositoryImp() {
-        // TODO Auto-generated constructor stub
     }
     
     public List<TbQoAgencia> findByParams(String nombreAgencia, String direccionAgencia) throws RelativeException{
@@ -32,4 +32,15 @@ public class AgenciaRepositoryImp extends GeneralRepositoryImp<Long, TbQoAgencia
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Al buscar agencia por parametros");
     	}
     }
+
+	@Override
+	public List<TbQoAgencia> findById(long id) throws RelativeException {
+		try {
+        	return findAllBySpecification(
+        			new AgenciaByIdSpec(id));
+    	} catch (Exception e) {
+    		e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Al buscar agencia por id");
+    	}
+	}
 }
