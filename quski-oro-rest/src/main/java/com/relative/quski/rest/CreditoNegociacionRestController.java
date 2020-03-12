@@ -73,7 +73,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	
-	
+	/*
 	@GET
 	@Path("/creditoNegociacionByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
@@ -95,8 +95,8 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 						isPaginated),
 				fechaDesde, fechaHasta, codigoOperacion, estado, identificacion);
 		
-	}
-/*
+	}*/
+	/*
 	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, Date fechaDesde, Date fechaHasta,
 			String codigoOperacion ,String estado, String identificacion) throws RelativeException {
 		List<EstadoOperacionEnum> estados = new ArrayList<EstadoOperacionEnum>();
