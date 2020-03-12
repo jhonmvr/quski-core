@@ -11,6 +11,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -54,6 +55,7 @@ import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
+import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
@@ -1741,6 +1743,52 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
 		}
 	}
+	
+	/**
+	 * Metodo q lista todos los Creditos.
+	 * 
+	 * @param paguinatedWrapper
+	 * @param fecha desde
+	 * @param fecha hasta
+	 * @param codigoOperacion
+	 * @param estado
+	 * @param identificación Cliente
+	 * @return Lista de Creditos
+	 * @throws RelativeException
+	 * @author Diego Serrano
+	 */
+	/*
+	public List<TbQoCreditoNegociacion> findCreditoNegociacionByParams(PaginatedWrapper pw, Date fechaDesde, Date fechaHasta,
+			String codigoOperacion, EstadoOperacionEnum estado , String identificacion) throws RelativeException {
+
+		if (pw == null) {
+			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
+					fechaHasta, codigoOperacion, estado, identificacion));
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.creditoNegociacionRepository.findPorCustomFilterContratos(pw, fechaDesde, fechaHasta, codigoOperacion, estado,
+						identificacion);
+			} else {
+				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
+						fechaHasta, codigoOperacion, estado, identificacion));
+			}
+		}
+
+	}
+
+	public Long countCreditoNegociacionByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion, EstadoEnum estado, String identificacion) throws RelativeException {
+		try {
+			return creditoNegociacionRepository.countByParams(fechaDesde, fechaHasta, codigoOperacion, estado, identificacion);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Agente no encontrado " + e.getMessage());
+		}
+	}
+	
+	
+	*/
+	
 	
 	/**
 	 * Metodo que actualiza la entidad

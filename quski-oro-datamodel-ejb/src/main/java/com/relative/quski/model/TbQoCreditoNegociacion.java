@@ -58,6 +58,8 @@ private static final long serialVersionUID = 1L;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
+	@Column(name = "fecha_vencimiento")
+	private Date fechaVencimiento;
 	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;
 	@ManyToOne
