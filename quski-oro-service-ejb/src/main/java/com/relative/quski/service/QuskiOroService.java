@@ -2528,7 +2528,7 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 * @author JEROHAM CADENAS - Relative Engine
 	 * @throws RelativeException
 	 */
-	public List<TbQoAgencia> findAgenciaByid(long id) throws RelativeException {
+	public TbQoAgencia findAgenciaById(Long id) throws RelativeException {
 		try {
 			return this.agenciaRepository.findById( id );
 		} catch (Exception e) {
@@ -2536,6 +2536,37 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 					+ id);
 			}
 		
+	}
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoAgencia> findAllAgencia(PaginatedWrapper pw) throws RelativeException {
+		if (pw == null) {
+			return this.agenciaRepository.findAll(TbQoAgencia.class);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.agenciaRepository.findAll(TbQoAgencia.class, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.agenciaRepository.findAll(TbQoAgencia.class, pw.getSortFields(),
+						pw.getSortDirections());
+			}
+		}
+	}
+	public Long countAgencias() throws RelativeException {
+		try {
+			return agenciaRepository.countAll(TbQoAgencia.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Agencias no encontradas " + e.getMessage());
+		}
 	}
 	/**
 	 *  METODO QUE BUSCA LOS PROCESOS  
