@@ -15,7 +15,7 @@ public class Provincia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PROVINCIA_ID_GENERATOR", sequenceName="SEQ_PROVINCIA")
+	@SequenceGenerator(name="PROVINCIA_ID_GENERATOR", sequenceName="SEG_PROVINCIA")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROVINCIA_ID_GENERATOR")
 	private long id;
 

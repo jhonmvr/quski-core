@@ -10,14 +10,13 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Canton.findAll", query="SELECT c FROM Canton c")
 public class Canton implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEQ_CANTON")
+	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEG_CANTON")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CANTON_ID_GENERATOR")
-	private long id;
+	private Long id;
 
 	@Column(name="codigo_canton")
 	private String codigoCanton;
@@ -46,11 +45,11 @@ public class Canton implements Serializable {
 	public Canton() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

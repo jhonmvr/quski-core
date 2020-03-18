@@ -11,14 +11,13 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Parroquia.findAll", query="SELECT p FROM Parroquia p")
 public class Parroquia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEQ_PARROQUIA")
+	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEG_PARROQUIA")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PARROQUIA_ID_GENERATOR")
-	private long id;
+	private Long id;
 
 	@Column(name="codigo_canton")
 	private String codigoCanton;
@@ -46,11 +45,11 @@ public class Parroquia implements Serializable {
 	public Parroquia() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -3,22 +3,20 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 
 /**
- * The persistent class for the tb_tipo_joya database table.
+ * The persistent class for the tb_qo_tipo_joya database table.
  * 
  */
 @Entity
-@Table(name="tb_tipo_joya")
-//@NamedQuery(name="TbTipoJoya.findAll", query="SELECT t FROM TbTipoJoya t")
-public class TbTipoJoya implements Serializable {
+@Table(name="tb_qo_tipo_joya")
+public class TbQoTipoJoya implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_TIPO_JOYA_ID_GENERATOR", sequenceName="SEQ_JOYA", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_TIPO_JOYA_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_TIPO_JOYA_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_JOYA")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_JOYA_ID_GENERATOR")
 	private Long id;
 
 	private String codigo;
@@ -33,18 +31,14 @@ public class TbTipoJoya implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-/*	//bi-directional many-to-one association to TqQoTasacion
-	@OneToMany(mappedBy="tbTipoJoya")
-	private List<TbQoTasacion> tqQoTasacions;*/
-
-	public TbTipoJoya() {
+	public TbQoTipoJoya() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -80,5 +74,4 @@ public class TbTipoJoya implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	
 }

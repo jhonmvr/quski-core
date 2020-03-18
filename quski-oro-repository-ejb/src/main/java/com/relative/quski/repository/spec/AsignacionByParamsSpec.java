@@ -16,19 +16,21 @@ public class AsignacionByParamsSpec extends AbstractSpecification<TbQoCreditoNeg
 	private String codigoProceso;
 	private String nombreAgencia;
 	private String nombreProceso;
-	private int cedula;
+	private String cedula;
+
 	
 
-	public AsignacionByParamsSpec(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) {
+	public AsignacionByParamsSpec(String codigoProceso, String nombreAgencia, String nombreProceso, String cedula) {
 		super();
+
 		this.codigoProceso = codigoProceso;
 		this.nombreAgencia = nombreAgencia;
 		this.nombreProceso = nombreProceso;
 		this.cedula = cedula;
+		
 	}
 	@Override
 	public boolean isSatisfiedBy(TbQoCreditoNegociacion arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -36,7 +38,7 @@ public class AsignacionByParamsSpec extends AbstractSpecification<TbQoCreditoNeg
 	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		if (StringUtils.isNotBlank(this.codigoProceso)) {
-			where.add(cb.equal(poll.get("tbQoProceso").get("codigoProceso"), this.codigoProceso));			
+			where.add(cb.equal(poll.get("tbQoProceso").get("codigoProceso"), this.codigoProceso));
 		}
 		if (StringUtils.isNotBlank(this.nombreAgencia)) {
 			where.add(cb.equal(poll.get("tbQoAgencia").get("nombreAgencia"), this.nombreAgencia));
@@ -44,10 +46,10 @@ public class AsignacionByParamsSpec extends AbstractSpecification<TbQoCreditoNeg
 		if (StringUtils.isNotBlank(this.nombreProceso)) {
 			where.add(cb.equal(poll.get("tbQoProceso").get("nombreProceso"), this.nombreProceso));
 		}
-		if (this.cedula != 0) {
+		if (StringUtils.isNotBlank(this.cedula)) {
 			where.add(cb.equal(poll.get("tbQoNegociacion").get("tbQoCliente").get("cedulaCliente"), this.cedula));
 		}
-		return cb.and(where.toArray(new Predicate[0]));
+		return cb.and(where.toArray(new Predicate[]{}));
 	}
 
 }

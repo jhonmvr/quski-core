@@ -11,15 +11,14 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_qo_archivo_cliente")
-
 public class TbQoArchivoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_ARCHIVO_CLIENTE", allocationSize=1)
+	@SequenceGenerator(name="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR", sequenceName="SEG_TB_QO_ARCHIVO_CLIENTE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR")
 	private Long id;
-
+	
 	@Lob
 	private byte[] archivo;
 
@@ -33,17 +32,18 @@ public class TbQoArchivoCliente implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
+	@Column(name="nombre_archivo")
+	private String nombreArchivo;
+
+	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
-	
+
+	//bi-directional many-to-one association to TbQoTipoArchivo
 	@ManyToOne
 	@JoinColumn(name="id_tipo_archivo")
 	private TbQoTipoArchivo tbQoTipoArchivo;
-	
-
-	@Column(name="nombre_archivo")
-	private String nombreArchivo;
 
 	public TbQoArchivoCliente() {
 	}
@@ -57,7 +57,7 @@ public class TbQoArchivoCliente implements Serializable {
 	}
 
 	public byte[] getArchivo() {
-		return archivo;
+		return this.archivo;
 	}
 
 	public void setArchivo(byte[] archivo) {
@@ -88,14 +88,6 @@ public class TbQoArchivoCliente implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public TbQoCliente getTbQoCliente() {
-		return tbQoCliente;
-	}
-
-	public void setTbQoCliente(TbQoCliente tbQoCliente) {
-		this.tbQoCliente = tbQoCliente;
-	}
-
 	public String getNombreArchivo() {
 		return this.nombreArchivo;
 	}
@@ -104,15 +96,20 @@ public class TbQoArchivoCliente implements Serializable {
 		this.nombreArchivo = nombreArchivo;
 	}
 
+	public TbQoCliente getTbQoCliente() {
+		return this.tbQoCliente;
+	}
+
+	public void setTbQoCliente(TbQoCliente tbQoCliente) {
+		this.tbQoCliente = tbQoCliente;
+	}
+
 	public TbQoTipoArchivo getTbQoTipoArchivo() {
-		return tbQoTipoArchivo;
+		return this.tbQoTipoArchivo;
 	}
 
 	public void setTbQoTipoArchivo(TbQoTipoArchivo tbQoTipoArchivo) {
 		this.tbQoTipoArchivo = tbQoTipoArchivo;
 	}
 
-	
-	
-	
 }

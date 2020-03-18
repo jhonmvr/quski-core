@@ -12,12 +12,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_qo_patrimonio")
-
 public class TbQoPatrimonio implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_PATRIMONIO_ID_GENERATOR", sequenceName="SEQ_PATRIMONIO", allocationSize=1)
+	@SequenceGenerator(name="TB_QO_PATRIMONIO_ID_GENERATOR", sequenceName="SEG_TB_QO_PATRIMONIO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_PATRIMONIO_ID_GENERATOR")
 	private Long id;
 
@@ -33,16 +32,16 @@ public class TbQoPatrimonio implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
+	private BigDecimal ifis;
+
+	private BigDecimal infocorp;
+
+	private String pasivos;
+
+	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
-
-	private BigDecimal ifis;
-
-	@Temporal(TemporalType.DATE)
-	private Date infocorp;
-
-	private String pasivos;
 
 	public TbQoPatrimonio() {
 	}
@@ -87,15 +86,6 @@ public class TbQoPatrimonio implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-
-	public TbQoCliente getTbQoCliente() {
-		return tbQoCliente;
-	}
-
-	public void setTbQoCliente(TbQoCliente tbQoCliente) {
-		this.tbQoCliente = tbQoCliente;
-	}
-
 	public BigDecimal getIfis() {
 		return this.ifis;
 	}
@@ -104,11 +94,11 @@ public class TbQoPatrimonio implements Serializable {
 		this.ifis = ifis;
 	}
 
-	public Date getInfocorp() {
+	public BigDecimal getInfocorp() {
 		return this.infocorp;
 	}
 
-	public void setInfocorp(Date infocorp) {
+	public void setInfocorp(BigDecimal infocorp) {
 		this.infocorp = infocorp;
 	}
 
@@ -118,6 +108,14 @@ public class TbQoPatrimonio implements Serializable {
 
 	public void setPasivos(String pasivos) {
 		this.pasivos = pasivos;
+	}
+
+	public TbQoCliente getTbQoCliente() {
+		return this.tbQoCliente;
+	}
+
+	public void setTbQoCliente(TbQoCliente tbQoCliente) {
+		this.tbQoCliente = tbQoCliente;
 	}
 
 }

@@ -15,15 +15,15 @@ public class TbQoProceso implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_PROCESO_ID_GENERATOR", sequenceName="SEG_QO_PROCESO")
+	@SequenceGenerator(name="TB_QO_PROCESO_ID_GENERATOR", sequenceName="SEG_TB_QO_PROCESO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_PROCESO_ID_GENERATOR")
-	private long id;
+	private Long id;
+
+	@Column(name="codigo_proceso")
+	private String codigoProceso;
 
 	@Column(name="nombre_proceso")
 	private String nombreProceso;
-	
-	@Column(name="codigo_proceso")
-	private String codigoProceso;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoProceso")
@@ -32,12 +32,20 @@ public class TbQoProceso implements Serializable {
 	public TbQoProceso() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getCodigoProceso() {
+		return this.codigoProceso;
+	}
+
+	public void setCodigoProceso(String codigoProceso) {
+		this.codigoProceso = codigoProceso;
 	}
 
 	public String getNombreProceso() {
@@ -46,14 +54,6 @@ public class TbQoProceso implements Serializable {
 
 	public void setNombreProceso(String nombreProceso) {
 		this.nombreProceso = nombreProceso;
-	}
-	
-	public String getCodigoProceso() {
-		return this.codigoProceso;
-	}
-
-	public void setCodigoProceso(String codigoProceso) {
-		this.codigoProceso = codigoProceso;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {

@@ -1,53 +1,46 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
-import com.relative.quski.enums.EstadoEnum;
-
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
 
 
 /**
- * The persistent class for the TB_SA_PARAMETRO database table.
+ * The persistent class for the tb_mi_parametro database table.
  * 
  */
 @Entity
-@Table(name="TB_MI_PARAMETRO")
-//@NamedQuery(name="TbSaParametro.findAll", query="SELECT t FROM TbSaParametro t")
+@Table(name="tb_mi_parametro")
 public class TbMiParametro implements Serializable {
-	private static final Long serialVersionUID = 1L;
-	@Id
-	
-	@SequenceGenerator(name="TB_SA_PARAMETRO_ID_GENERATOR", sequenceName="SEQ_PARAMETRO",allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_SA_PARAMETRO_ID_GENERATOR")
+	private static final long serialVersionUID = 1L;
 
+	@Id
+	@SequenceGenerator(name="TB_MI_PARAMETRO_ID_GENERATOR", sequenceName="SEG_TB_MI_PARAMETRO")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_MI_PARAMETRO_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="CARACTERISTICA_DOS")
+	private byte[] archivo;
+
+	@Column(name="caracteristica_dos")
 	private String caracteristicaDos;
 
-	@Column(name="CARACTERITICA_UNO")
+	@Column(name="caracteritica_uno")
 	private String caracteriticaUno;
 
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
+	private String estado;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_creacion")
+	private Date fechaCreacion;
 
 	private String nombre;
+
+	private BigDecimal orden;
 
 	private String tipo;
 
 	private String valor;
-	
-	private Long orden;
 
 	public TbMiParametro() {
 	}
@@ -58,6 +51,14 @@ public class TbMiParametro implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public byte[] getArchivo() {
+		return this.archivo;
+	}
+
+	public void setArchivo(byte[] archivo) {
+		this.archivo = archivo;
 	}
 
 	public String getCaracteristicaDos() {
@@ -76,12 +77,20 @@ public class TbMiParametro implements Serializable {
 		this.caracteriticaUno = caracteriticaUno;
 	}
 
-	public EstadoEnum getEstado() {
+	public String getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(EstadoEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public String getNombre() {
@@ -90,6 +99,14 @@ public class TbMiParametro implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public BigDecimal getOrden() {
+		return this.orden;
+	}
+
+	public void setOrden(BigDecimal orden) {
+		this.orden = orden;
 	}
 
 	public String getTipo() {
@@ -107,15 +124,5 @@ public class TbMiParametro implements Serializable {
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
-
-	public Long getOrden() {
-		return orden;
-	}
-
-	public void setOrden(Long orden) {
-		this.orden = orden;
-	}
-	
-	
 
 }

@@ -2,25 +2,21 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-import com.relative.quski.enums.EstadoEnum;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 
 /**
- * The persistent class for the tq_qo_tasacion database table.
+ * The persistent class for the tb_qo_tasacion database table.
  * 
  */
 @Entity
 @Table(name="tb_qo_tasacion")
-//@NamedQuery(name="TqQoTasacion.findAll", query="SELECT t FROM TqQoTasacion t")
 public class TbQoTasacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEQ_TASACION", allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEG_TB_QO_TASACION")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TASACION_ID_GENERATOR")
 	private Long id;
 
@@ -29,66 +25,80 @@ public class TbQoTasacion implements Serializable {
 	@Column(name="descuento_peso_piedra")
 	private BigDecimal descuentoPesoPiedra;
 
+	@Column(name="descuento_peso_piedra_retasacion")
+	private BigDecimal descuentoPesoPiedraRetasacion;
+
 	@Column(name="descuento_suelda")
 	private BigDecimal descuentoSuelda;
 
+	@Column(name="descuento_suelda_retasacion")
+	private BigDecimal descuentoSueldaRetasacion;
+
 	@Column(name="estado_joya")
 	private String estadoJoya;
-	
-	@Column(name="tipo_joya")
-	private String tipoJoya;
 
-	@Column(name="numero_piezas")
-	private Integer numeroPiezas;
-	@Column(name="peso_bruto")
-	private BigDecimal pesoBruto;
-	@Column(name="peso_neto")
-	private BigDecimal pesoNeto;
-	@Column(name="valor_avaluo")
-	private BigDecimal valorAvaluo;
-	@Column(name="valor_comercial")
-	private BigDecimal valorComercial;
-	@Column(name="valor_oro")
-	private BigDecimal valorOro;
-	@Column(name="valor_realizacion")
-	private BigDecimal valorRealizacion;
-	//bi-directional many-to-one association to TbQoTipoOro
-	@ManyToOne
-	@JoinColumn(name="id_tipo_oro")
-	private TbQoTipoOro tbQoTipoOro;
-	/*//bi-directional many-to-one association to TbTipoJoya
-	@ManyToOne
-	@JoinColumn(name="tipo_joya")
-	private TbTipoJoya tbTipoJoya;
-*/
-	
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-	
-	
 
-	//bi-directional many-to-one association to TqQoNegociacion
+	@Column(name="numero_piezas")
+	private Integer numeroPiezas;
+
+	@Column(name="peso_bruto")
+	private BigDecimal pesoBruto;
+
+	@Column(name="peso_bruto_retasacion")
+	private BigDecimal pesoBrutoRetasacion;
+
+	@Column(name="peso_neto")
+	private BigDecimal pesoNeto;
+
+	@Column(name="peso_neto_retasacion")
+	private BigDecimal pesoNetoRetasacion;
+
+	@Column(name="tipo_joya")
+	private String tipoJoya;
+
+	@Column(name="valor_avaluo")
+	private BigDecimal valorAvaluo;
+
+	@Column(name="valor_avaluo_retasacion")
+	private BigDecimal valorAvaluoRetasacion;
+
+	@Column(name="valor_comercial")
+	private BigDecimal valorComercial;
+
+	@Column(name="valor_comercial_retasacion")
+	private BigDecimal valorComercialRetasacion;
+
+	@Column(name="valor_oro")
+	private BigDecimal valorOro;
+
+	@Column(name="valor_oro_retasacion")
+	private BigDecimal valorOroRetasacion;
+
+	@Column(name="valor_realizacion")
+	private BigDecimal valorRealizacion;
+
+	@Column(name="valor_realizacion_retasacion")
+	private BigDecimal valorRealizacionRetasacion;
+
+	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_credito_negociacion")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 
+	//bi-directional many-to-one association to TbQoTipoOro
+	@ManyToOne
+	@JoinColumn(name="id_tipo_oro")
+	private TbQoTipoOro tbQoTipoOro;
+
 	public TbQoTasacion() {
-	}	
-	
-	public String getTipoJoya() {
-		return tipoJoya;
 	}
-
-	public void setTipoJoya(String tipoJoya) {
-		this.tipoJoya = tipoJoya;
-	}
-
-
 
 	public Long getId() {
 		return this.id;
@@ -114,6 +124,14 @@ public class TbQoTasacion implements Serializable {
 		this.descuentoPesoPiedra = descuentoPesoPiedra;
 	}
 
+	public BigDecimal getDescuentoPesoPiedraRetasacion() {
+		return this.descuentoPesoPiedraRetasacion;
+	}
+
+	public void setDescuentoPesoPiedraRetasacion(BigDecimal descuentoPesoPiedraRetasacion) {
+		this.descuentoPesoPiedraRetasacion = descuentoPesoPiedraRetasacion;
+	}
+
 	public BigDecimal getDescuentoSuelda() {
 		return this.descuentoSuelda;
 	}
@@ -122,8 +140,13 @@ public class TbQoTasacion implements Serializable {
 		this.descuentoSuelda = descuentoSuelda;
 	}
 
-	
+	public BigDecimal getDescuentoSueldaRetasacion() {
+		return this.descuentoSueldaRetasacion;
+	}
 
+	public void setDescuentoSueldaRetasacion(BigDecimal descuentoSueldaRetasacion) {
+		this.descuentoSueldaRetasacion = descuentoSueldaRetasacion;
+	}
 
 	public String getEstadoJoya() {
 		return this.estadoJoya;
@@ -131,6 +154,22 @@ public class TbQoTasacion implements Serializable {
 
 	public void setEstadoJoya(String estadoJoya) {
 		this.estadoJoya = estadoJoya;
+	}
+
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Integer getNumeroPiezas() {
@@ -149,12 +188,36 @@ public class TbQoTasacion implements Serializable {
 		this.pesoBruto = pesoBruto;
 	}
 
+	public BigDecimal getPesoBrutoRetasacion() {
+		return this.pesoBrutoRetasacion;
+	}
+
+	public void setPesoBrutoRetasacion(BigDecimal pesoBrutoRetasacion) {
+		this.pesoBrutoRetasacion = pesoBrutoRetasacion;
+	}
+
 	public BigDecimal getPesoNeto() {
 		return this.pesoNeto;
 	}
 
 	public void setPesoNeto(BigDecimal pesoNeto) {
 		this.pesoNeto = pesoNeto;
+	}
+
+	public BigDecimal getPesoNetoRetasacion() {
+		return this.pesoNetoRetasacion;
+	}
+
+	public void setPesoNetoRetasacion(BigDecimal pesoNetoRetasacion) {
+		this.pesoNetoRetasacion = pesoNetoRetasacion;
+	}
+
+	public String getTipoJoya() {
+		return this.tipoJoya;
+	}
+
+	public void setTipoJoya(String tipoJoya) {
+		this.tipoJoya = tipoJoya;
 	}
 
 	public BigDecimal getValorAvaluo() {
@@ -165,12 +228,28 @@ public class TbQoTasacion implements Serializable {
 		this.valorAvaluo = valorAvaluo;
 	}
 
+	public BigDecimal getValorAvaluoRetasacion() {
+		return this.valorAvaluoRetasacion;
+	}
+
+	public void setValorAvaluoRetasacion(BigDecimal valorAvaluoRetasacion) {
+		this.valorAvaluoRetasacion = valorAvaluoRetasacion;
+	}
+
 	public BigDecimal getValorComercial() {
 		return this.valorComercial;
 	}
 
 	public void setValorComercial(BigDecimal valorComercial) {
 		this.valorComercial = valorComercial;
+	}
+
+	public BigDecimal getValorComercialRetasacion() {
+		return this.valorComercialRetasacion;
+	}
+
+	public void setValorComercialRetasacion(BigDecimal valorComercialRetasacion) {
+		this.valorComercialRetasacion = valorComercialRetasacion;
 	}
 
 	public BigDecimal getValorOro() {
@@ -181,6 +260,14 @@ public class TbQoTasacion implements Serializable {
 		this.valorOro = valorOro;
 	}
 
+	public BigDecimal getValorOroRetasacion() {
+		return this.valorOroRetasacion;
+	}
+
+	public void setValorOroRetasacion(BigDecimal valorOroRetasacion) {
+		this.valorOroRetasacion = valorOroRetasacion;
+	}
+
 	public BigDecimal getValorRealizacion() {
 		return this.valorRealizacion;
 	}
@@ -189,39 +276,28 @@ public class TbQoTasacion implements Serializable {
 		this.valorRealizacion = valorRealizacion;
 	}
 
-
-
-	public TbQoTipoOro getTbQoTipoOro() {
-		return tbQoTipoOro;
+	public BigDecimal getValorRealizacionRetasacion() {
+		return this.valorRealizacionRetasacion;
 	}
 
-	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
-		this.tbQoTipoOro = tbQoTipoOro;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
+	public void setValorRealizacionRetasacion(BigDecimal valorRealizacionRetasacion) {
+		this.valorRealizacionRetasacion = valorRealizacionRetasacion;
 	}
 
 	public TbQoCreditoNegociacion getTbQoCreditoNegociacion() {
-		return tbQoCreditoNegociacion;
+		return this.tbQoCreditoNegociacion;
 	}
 
 	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
 	}
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	public TbQoTipoOro getTbQoTipoOro() {
+		return this.tbQoTipoOro;
 	}
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
+	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
+		this.tbQoTipoOro = tbQoTipoOro;
 	}
-	
 
 }

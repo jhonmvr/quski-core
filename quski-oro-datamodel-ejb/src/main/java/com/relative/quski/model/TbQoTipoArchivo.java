@@ -3,6 +3,7 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -11,12 +12,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_qo_tipo_archivo")
-
 public class TbQoTipoArchivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_ARCHIVO_ID_GENERATOR", sequenceName="SEQ_TIPO_ARCHIVO")
+	@SequenceGenerator(name="TB_QO_TIPO_ARCHIVO_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_ARCHIVO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_ARCHIVO_ID_GENERATOR")
 	private Long id;
 
@@ -44,6 +44,10 @@ public class TbQoTipoArchivo implements Serializable {
 
 	@Column(name="tipo_plantilla")
 	private String tipoPlantilla;
+
+	//bi-directional many-to-one association to TbQoArchivoCliente
+	@OneToMany(mappedBy="tbQoTipoArchivo")
+	private List<TbQoArchivoCliente> tbQoArchivoClientes;
 
 	public TbQoTipoArchivo() {
 	}
@@ -126,6 +130,28 @@ public class TbQoTipoArchivo implements Serializable {
 
 	public void setTipoPlantilla(String tipoPlantilla) {
 		this.tipoPlantilla = tipoPlantilla;
+	}
+
+	public List<TbQoArchivoCliente> getTbQoArchivoClientes() {
+		return this.tbQoArchivoClientes;
+	}
+
+	public void setTbQoArchivoClientes(List<TbQoArchivoCliente> tbQoArchivoClientes) {
+		this.tbQoArchivoClientes = tbQoArchivoClientes;
+	}
+
+	public TbQoArchivoCliente addTbQoArchivoCliente(TbQoArchivoCliente tbQoArchivoCliente) {
+		getTbQoArchivoClientes().add(tbQoArchivoCliente);
+		tbQoArchivoCliente.setTbQoTipoArchivo(this);
+
+		return tbQoArchivoCliente;
+	}
+
+	public TbQoArchivoCliente removeTbQoArchivoCliente(TbQoArchivoCliente tbQoArchivoCliente) {
+		getTbQoArchivoClientes().remove(tbQoArchivoCliente);
+		tbQoArchivoCliente.setTbQoTipoArchivo(null);
+
+		return tbQoArchivoCliente;
 	}
 
 }
