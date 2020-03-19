@@ -37,10 +37,7 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 		return null;
 	}
 
-	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) {
-			return 	findAllBySpecification(
-						new AsignacionByParamsSpec(codigoProceso, nombreAgencia, nombreProceso, cedula)
-					);
+	
 	public List<TbQoCreditoNegociacion> findByParams(String codigoProceso,  String nombreProceso, String nombreAgencia,
 			String cedula) throws RelativeException {
 			try {
@@ -129,6 +126,14 @@ public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, Str
 	} catch (Exception e) {
 		throw new RelativeException("" + e);
 	}
+}
+
+
+@Override
+public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoOperacion, String nombreAgencia,
+		String nombreProceso, int cedula) throws RelativeException {
+	// TODO Auto-generated method stub
+	return null;
 }
 
 

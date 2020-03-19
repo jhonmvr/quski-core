@@ -21,8 +21,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
+	
 
 	@Column(name="costo_credito")
 	private BigDecimal costoCredito;

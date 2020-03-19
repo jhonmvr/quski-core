@@ -26,9 +26,10 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia,
 			String proceso, String cedula) throws RelativeException;
 	
-	List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoOperacion, String nombreAgencia, String nombreProceso,
-			int cedula);
-	List<TbQoCreditoNegociacion> findByParams(String codigoProceso, String nombreAgencia, String nombreProceso,
+	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoOperacion, String nombreAgencia, String nombreProceso,
+			int cedula) throws RelativeException;
+	
+	public List<TbQoCreditoNegociacion> findByParams(String codigoProceso, String nombreAgencia, String nombreProceso,
 			String cedula)throws RelativeException;
 
 }
