@@ -12,12 +12,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_qo_riesgo_acumulado")
-@NamedQuery(name="TbQoRiesgoAcumulado.findAll", query="SELECT t FROM TbQoRiesgoAcumulado t")
 public class TbQoRiesgoAcumulado implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName="SEQ_ACUMULADO" , allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName="SEG_TB_QO_RIESGO_ACUMULADO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR")
 	private Long id;
 

@@ -1,23 +1,12 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.relative.quski.enums.TipoPlantillaEnum;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -26,12 +15,11 @@ import com.relative.quski.enums.TipoPlantillaEnum;
  */
 @Entity
 @Table(name="tb_qo_tipo_documento")
-//@NamedQuery(name="TbQoTipoDocumento.findAll", query="SELECT t FROM TbQoTipoDocumento t")
 public class TbQoTipoDocumento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEQ_DOCUMENTO" , allocationSize=1)
+	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_DOCUMENTO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR")
 	private Long id;
 
@@ -58,7 +46,6 @@ public class TbQoTipoDocumento implements Serializable {
 	private String tipoDocumento;
 
 	@Column(name="tipo_plantilla")
-	@Enumerated(EnumType.STRING)
 	private TipoPlantillaEnum tipoPlantilla;
 
 	//bi-directional many-to-one association to TbQoDocumentoHabilitante
@@ -139,8 +126,6 @@ public class TbQoTipoDocumento implements Serializable {
 	public void setTipoDocumento(String tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
-
-	
 
 	public TipoPlantillaEnum getTipoPlantilla() {
 		return tipoPlantilla;

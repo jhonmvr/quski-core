@@ -10,31 +10,28 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="canton")
 public class Canton implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEQ_CANTON",allocationSize = 1)
+	@SequenceGenerator(name="CANTON_ID_GENERATOR", sequenceName="SEG_CANTON")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CANTON_ID_GENERATOR")
-	@Column(unique=true, nullable=false, precision=5)
-	private long id;
+	private Long id;
 
-	@Column(name="codigo_canton", nullable=false, length=6)
+	@Column(name="codigo_canton")
 	private String codigoCanton;
 
-	@Column(name="codigo_provincia", nullable=false, length=3)
+	@Column(name="codigo_provincia")
 	private String codigoProvincia;
 
-	@Column(length=20)
 	private String estado;
 
-	@Column(name="nombre_canton", nullable=false, length=80)
+	@Column(name="nombre_canton")
 	private String nombreCanton;
 
 	//bi-directional many-to-one association to Provincia
 	@ManyToOne
-	@JoinColumn(name="id_provincia", nullable=false)
+	@JoinColumn(name="id_provincia")
 	private Provincia provincia;
 
 	//bi-directional many-to-one association to Parroquia
@@ -43,16 +40,16 @@ public class Canton implements Serializable {
 
 	//bi-directional many-to-one association to TbQoAgencia
 	@OneToMany(mappedBy="canton")
-	private List<TbQoAgencia> tbQoAgencia;
+	private List<TbQoAgencia> tbQoAgencias;
 
 	public Canton() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -119,11 +116,25 @@ public class Canton implements Serializable {
 	}
 
 	public List<TbQoAgencia> getTbQoAgencias() {
-		return this.tbQoAgencia;
+		return this.tbQoAgencias;
 	}
 
-	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencia) {
-		this.tbQoAgencia = tbQoAgencia;
+	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencias) {
+		this.tbQoAgencias = tbQoAgencias;
+	}
+
+	public TbQoAgencia addTbQoAgencia(TbQoAgencia tbQoAgencia) {
+		getTbQoAgencias().add(tbQoAgencia);
+		tbQoAgencia.setCanton(this);
+
+		return tbQoAgencia;
+	}
+
+	public TbQoAgencia removeTbQoAgencia(TbQoAgencia tbQoAgencia) {
+		getTbQoAgencias().remove(tbQoAgencia);
+		tbQoAgencia.setCanton(null);
+
+		return tbQoAgencia;
 	}
 
 }

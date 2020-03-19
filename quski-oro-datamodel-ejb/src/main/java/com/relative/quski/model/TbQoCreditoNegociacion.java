@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -16,7 +17,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_QO_CREDITO_NEGOCIACION")
+	@SequenceGenerator(name="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName="SEG_QO_CREDITO_NEGOCIACION")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
@@ -61,9 +62,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
-	@Column(name="id_negociacion")
-	private BigDecimal idNegociacion;
-
 	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;
 
@@ -78,24 +76,31 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
-	
-	//bi-directional many-to-one association to TbQoCliente
-	@ManyToOne
-	@JoinColumn(name="id_cliente")
-	private TbQoNegociacion tbQoNegociacion;
-	
+
 	//bi-directional many-to-one association to TbQoAgencia
 	@ManyToOne
 	@JoinColumn(name="id_agencia")
 	private TbQoAgencia tbQoAgencia;
+
+	//bi-directional many-to-one association to TbQoNegociacion
+	@ManyToOne
+	@JoinColumn(name="id_negociacion")
+	private TbQoNegociacion tbQoNegociacion;
 
 	//bi-directional many-to-one association to TbQoProceso
 	@ManyToOne
 	@JoinColumn(name="id_proceso")
 	private TbQoProceso tbQoProceso;
 
+	//bi-directional many-to-one association to TbQoNegociacionCalculo
+	@OneToMany(mappedBy="tbQoCreditoNegociacion")
+	private List<TbQoNegociacionCalculo> tbQoNegociacionCalculos;
+
+	//bi-directional many-to-one association to TbQoTasacion
+	@OneToMany(mappedBy="tbQoCreditoNegociacion")
+	private List<TbQoTasacion> tbQoTasacions;
+
 	public TbQoCreditoNegociacion() {
-		super();
 	}
 
 	public Long getId() {
@@ -104,6 +109,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getCodigoOperacion() {
+		return this.codigoOperacion;
+	}
+
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
 	}
 
 	public BigDecimal getCostoCredito() {
@@ -194,14 +207,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
-	public BigDecimal getIdNegociacion() {
-		return this.idNegociacion;
-	}
-
-	public void setIdNegociacion(BigDecimal idNegociacion) {
-		this.idNegociacion = idNegociacion;
-	}
-
 	public String getJoyasSeleccionadas() {
 		return this.joyasSeleccionadas;
 	}
@@ -250,12 +255,64 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.tbQoAgencia = tbQoAgencia;
 	}
 
+	public TbQoNegociacion getTbQoNegociacion() {
+		return this.tbQoNegociacion;
+	}
+
+	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
+		this.tbQoNegociacion = tbQoNegociacion;
+	}
+
 	public TbQoProceso getTbQoProceso() {
 		return this.tbQoProceso;
 	}
 
 	public void setTbQoProceso(TbQoProceso tbQoProceso) {
 		this.tbQoProceso = tbQoProceso;
+	}
+
+	public List<TbQoNegociacionCalculo> getTbQoNegociacionCalculos() {
+		return this.tbQoNegociacionCalculos;
+	}
+
+	public void setTbQoNegociacionCalculos(List<TbQoNegociacionCalculo> tbQoNegociacionCalculos) {
+		this.tbQoNegociacionCalculos = tbQoNegociacionCalculos;
+	}
+
+	public TbQoNegociacionCalculo addTbQoNegociacionCalculo(TbQoNegociacionCalculo tbQoNegociacionCalculo) {
+		getTbQoNegociacionCalculos().add(tbQoNegociacionCalculo);
+		tbQoNegociacionCalculo.setTbQoCreditoNegociacion(this);
+
+		return tbQoNegociacionCalculo;
+	}
+
+	public TbQoNegociacionCalculo removeTbQoNegociacionCalculo(TbQoNegociacionCalculo tbQoNegociacionCalculo) {
+		getTbQoNegociacionCalculos().remove(tbQoNegociacionCalculo);
+		tbQoNegociacionCalculo.setTbQoCreditoNegociacion(null);
+
+		return tbQoNegociacionCalculo;
+	}
+
+	public List<TbQoTasacion> getTbQoTasacions() {
+		return this.tbQoTasacions;
+	}
+
+	public void setTbQoTasacions(List<TbQoTasacion> tbQoTasacions) {
+		this.tbQoTasacions = tbQoTasacions;
+	}
+
+	public TbQoTasacion addTbQoTasacion(TbQoTasacion tbQoTasacion) {
+		getTbQoTasacions().add(tbQoTasacion);
+		tbQoTasacion.setTbQoCreditoNegociacion(this);
+
+		return tbQoTasacion;
+	}
+
+	public TbQoTasacion removeTbQoTasacion(TbQoTasacion tbQoTasacion) {
+		getTbQoTasacions().remove(tbQoTasacion);
+		tbQoTasacion.setTbQoCreditoNegociacion(null);
+
+		return tbQoTasacion;
 	}
 
 }

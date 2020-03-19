@@ -21,39 +21,36 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="parroquia")
 public class Parroquia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEQ_PARROQUIA",allocationSize = 1)
+	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEG_PARROQUIA")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PARROQUIA_ID_GENERATOR")
-	@Column(unique=true, nullable=false, precision=8)
 	private Long id;
 
-	@Column(name="codigo_canton", nullable=false, length=5)
+	@Column(name="codigo_canton")
 	private String codigoCanton;
 
-	@Column(name="codigo_parroquia", precision=8)
+	@Column(name="codigo_parroquia")
 	private BigDecimal codigoParroquia;
 
-	@Column(name="codigo_provincia", nullable=false, length=3)
+	@Column(name="codigo_provincia")
 	private String codigoProvincia;
 
-	@Column(length=20)
 	private String estado;
 
-	@Column(name="nombre_parroquia", length=80)
+	@Column(name="nombre_parroquia")
 	private String nombreParroquia;
 
 	//bi-directional many-to-one association to Canton
 	@ManyToOne
-	@JoinColumn(name="id_canton", nullable=false)
+	@JoinColumn(name="id_canton")
 	private Canton canton;
 
 	//bi-directional many-to-one association to TbQoAgencia
 	@OneToMany(mappedBy="parroquia")
-	private List<TbQoAgencia> tbQoAgencia;
+	private List<TbQoAgencia> tbQoAgencias;
 
 	public Parroquia() {
 	}
@@ -114,14 +111,26 @@ public class Parroquia implements Serializable {
 		this.canton = canton;
 	}
 
-	public List<TbQoAgencia> getTbQoAgencia() {
-		return this.tbQoAgencia;
+	public List<TbQoAgencia> getTbQoAgencias() {
+		return this.tbQoAgencias;
 	}
 
-	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencia) {
-		this.tbQoAgencia = tbQoAgencia;
+	public void setTbQoAgencias(List<TbQoAgencia> tbQoAgencias) {
+		this.tbQoAgencias = tbQoAgencias;
 	}
 
+	public TbQoAgencia addTbQoAgencia(TbQoAgencia tbQoAgencia) {
+		getTbQoAgencias().add(tbQoAgencia);
+		tbQoAgencia.setParroquia(this);
 
+		return tbQoAgencia;
+	}
+
+	public TbQoAgencia removeTbQoAgencia(TbQoAgencia tbQoAgencia) {
+		getTbQoAgencias().remove(tbQoAgencia);
+		tbQoAgencia.setParroquia(null);
+
+		return tbQoAgencia;
+	}
 
 }

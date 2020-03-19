@@ -1,25 +1,8 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -28,39 +11,41 @@ import com.relative.quski.enums.EstadoEnum;
  */
 @Entity
 @Table(name="tb_qo_variables_crediticias")
-
-
-public class TbQoVariableCrediticia implements Serializable {
+public class TbQoVariablesCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_VARIABLE_CREDITICIA_ID_GENERATOR", sequenceName="SEQ_VARIABLE_CREDITICIA" , allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLE_CREDITICIA_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName="SEG_TB_QO_VARIABLES_CREDITICIAS")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
 	private Long id;
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
+
+	private String estado;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-	private String valor;
-	@Column(name="nombre")
+
 	private String nombre;
+
 	private String orden;
+
+	private String valor;
 
 	//bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
 	@JoinColumn(name="id_cotizador")
 	private TbQoCotizador tbQoCotizador;
 
-	//bi-directional many-to-one association to TqQoNegociacion
+	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	public TbQoVariableCrediticia() {
+	public TbQoVariablesCrediticia() {
 	}
 
 	public Long getId() {
@@ -71,11 +56,11 @@ public class TbQoVariableCrediticia implements Serializable {
 		this.id = id;
 	}
 
-	public EstadoEnum getEstado() {
-		return estado;
+	public String getEstado() {
+		return this.estado;
 	}
 
-	public void setEstado(EstadoEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 
@@ -87,8 +72,6 @@ public class TbQoVariableCrediticia implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	
-	
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -97,22 +80,28 @@ public class TbQoVariableCrediticia implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	
-
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
 	public String getNombre() {
-		return nombre;
+		return this.nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getOrden() {
+		return this.orden;
+	}
+
+	public void setOrden(String orden) {
+		this.orden = orden;
+	}
+
+	public String getValor() {
+		return this.valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
 	}
 
 	public TbQoCotizador getTbQoCotizador() {
@@ -124,21 +113,11 @@ public class TbQoVariableCrediticia implements Serializable {
 	}
 
 	public TbQoNegociacion getTbQoNegociacion() {
-		return tbQoNegociacion;
+		return this.tbQoNegociacion;
 	}
 
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
-
-	public String getOrden() {
-		return orden;
-	}
-
-	public void setOrden(String orden) {
-		this.orden = orden;
-	}
-
-	
 
 }

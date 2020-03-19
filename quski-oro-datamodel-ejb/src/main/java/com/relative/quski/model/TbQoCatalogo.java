@@ -1,110 +1,111 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import com.relative.quski.enums.EstadoEnum;
-
+/**
+ * The persistent class for the tb_qo_catalogo database table.
+ * 
+ */
 @Entity
-@Table(name="TB_QO_CATALOGO")
-
-public class TbQoCatalogo implements Serializable  {
-	/**
-	 * 
-	 */
+@Table(name="tb_qo_catalogo")
+public class TbQoCatalogo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@SequenceGenerator(name="TB_QO_CATALOGO_ID_GENERATOR", sequenceName="SEQ_CATALOGO",allocationSize=1)
+	@SequenceGenerator(name="TB_QO_CATALOGO_ID_GENERATOR", sequenceName="SEG_TB_QO_CATALOGO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CATALOGO_ID_GENERATOR")
 	private Long id;
-	
-	@Column(name="NOMBRE_CATALOGO")
-	private String nombreCatalogo;
-	
-	@Column(name="DESCRIPCION_CATALOGO")
+
+	@Column(name="descripcion_catalogo")
 	private String descripcionCatalogo;
-	
-	
-	@Column(name="TIPO_CATALOGO")
-	private String tipoCatalogo;
-	
-	@Column(name="VALOR_CATALOGO")
-	private String valorCatalogo;
-	
-	@Column(name="ESTADO")
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
-	
+
+	private String estado;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-	
-	public Long getId() {
-		return id;
+
+	@Column(name="nombre_catalogo")
+	private String nombreCatalogo;
+
+	@Column(name="tipo_catalogo")
+	private String tipoCatalogo;
+
+	@Column(name="valor_catalogo")
+	private String valorCatalogo;
+
+	public TbQoCatalogo() {
 	}
+
+	public Long getId() {
+		return this.id;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public String getNombreCatalogo() {
-		return nombreCatalogo;
-	}
-	public void setNombreCatalogo(String nombreCatalogo) {
-		this.nombreCatalogo = nombreCatalogo;
-	}
-	public String getTipoCatalogo() {
-		return tipoCatalogo;
-	}
-	public void setTipoCatalogo(String tipoCatalogo) {
-		this.tipoCatalogo = tipoCatalogo;
-	}
-	public String getValorCatalogo() {
-		return valorCatalogo;
-	}
-	public void setValorCatalogo(String valorCatalogo) {
-		this.valorCatalogo = valorCatalogo;
-	}
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-	public EstadoEnum getEstado() {
-		return estado;
-	}
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
-	}
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+
 	public String getDescripcionCatalogo() {
-		return descripcionCatalogo;
+		return this.descripcionCatalogo;
 	}
+
 	public void setDescripcionCatalogo(String descripcionCatalogo) {
 		this.descripcionCatalogo = descripcionCatalogo;
 	}
 
+	public String getEstado() {
+		return this.estado;
+	}
 
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getNombreCatalogo() {
+		return this.nombreCatalogo;
+	}
+
+	public void setNombreCatalogo(String nombreCatalogo) {
+		this.nombreCatalogo = nombreCatalogo;
+	}
+
+	public String getTipoCatalogo() {
+		return this.tipoCatalogo;
+	}
+
+	public void setTipoCatalogo(String tipoCatalogo) {
+		this.tipoCatalogo = tipoCatalogo;
+	}
+
+	public String getValorCatalogo() {
+		return this.valorCatalogo;
+	}
+
+	public void setValorCatalogo(String valorCatalogo) {
+		this.valorCatalogo = valorCatalogo;
+	}
 
 }

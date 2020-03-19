@@ -1,29 +1,13 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
-
 
 /**
- * The persistent class for the tq_qo_negociacion database table.
+ * The persistent class for the tb_qo_negociacion database table.
  * 
  */
 @Entity
@@ -32,13 +16,11 @@ public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION", allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEG_TB_QO_NEGOCIACION")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="estado")
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
+	private String estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -48,13 +30,22 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	//bi-directional many-to-one association to TbQoVariablesCrediticia
+	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
-	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
+	private List<TbQoCreditoNegociacion> tbQoCreditoNegociacions;
+
+	//bi-directional many-to-one association to TbQoDocumentoHabilitante
+	@OneToMany(mappedBy="tbQoNegociacion")
+	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
+
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
+
+	//bi-directional many-to-one association to TbQoVariablesCrediticia
+	@OneToMany(mappedBy="tbQoNegociacion")
+	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
 
 	public TbQoNegociacion() {
 	}
@@ -66,12 +57,12 @@ public class TbQoNegociacion implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public EstadoEnum getEstado() {
-		return estado;
+
+	public String getEstado() {
+		return this.estado;
 	}
 
-	public void setEstado(EstadoEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 
@@ -91,26 +82,48 @@ public class TbQoNegociacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public List<TbQoVariableCrediticia> getTbQoVariablesCrediticias() {
-		return this.tbQoVariablesCrediticias;
+	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
+		return this.tbQoCreditoNegociacions;
 	}
 
-	public void setTbQoVariablesCrediticias(List<TbQoVariableCrediticia> tbQoVariablesCrediticias) {
-		this.tbQoVariablesCrediticias = tbQoVariablesCrediticias;
+	public void setTbQoCreditoNegociacions(List<TbQoCreditoNegociacion> tbQoCreditoNegociacions) {
+		this.tbQoCreditoNegociacions = tbQoCreditoNegociacions;
 	}
 
-	public TbQoVariableCrediticia addTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
-		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTbQoNegociacion(this);
+	public TbQoCreditoNegociacion addTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
+		getTbQoCreditoNegociacions().add(tbQoCreditoNegociacion);
+		tbQoCreditoNegociacion.setTbQoNegociacion(this);
 
-		return tbQoVariablesCrediticia;
+		return tbQoCreditoNegociacion;
 	}
 
-	public TbQoVariableCrediticia removeTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
-		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
-		tbQoVariablesCrediticia.setTbQoNegociacion(null);
+	public TbQoCreditoNegociacion removeTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
+		getTbQoCreditoNegociacions().remove(tbQoCreditoNegociacion);
+		tbQoCreditoNegociacion.setTbQoNegociacion(null);
 
-		return tbQoVariablesCrediticia;
+		return tbQoCreditoNegociacion;
+	}
+
+	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {
+		return this.tbQoDocumentoHabilitantes;
+	}
+
+	public void setTbQoDocumentoHabilitantes(List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes) {
+		this.tbQoDocumentoHabilitantes = tbQoDocumentoHabilitantes;
+	}
+
+	public TbQoDocumentoHabilitante addTbQoDocumentoHabilitante(TbQoDocumentoHabilitante tbQoDocumentoHabilitante) {
+		getTbQoDocumentoHabilitantes().add(tbQoDocumentoHabilitante);
+		tbQoDocumentoHabilitante.setTbQoNegociacion(this);
+
+		return tbQoDocumentoHabilitante;
+	}
+
+	public TbQoDocumentoHabilitante removeTbQoDocumentoHabilitante(TbQoDocumentoHabilitante tbQoDocumentoHabilitante) {
+		getTbQoDocumentoHabilitantes().remove(tbQoDocumentoHabilitante);
+		tbQoDocumentoHabilitante.setTbQoNegociacion(null);
+
+		return tbQoDocumentoHabilitante;
 	}
 
 	public TbQoCliente getTbQoCliente() {
@@ -119,6 +132,28 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
+	}
+
+	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {
+		return this.tbQoVariablesCrediticias;
+	}
+
+	public void setTbQoVariablesCrediticias(List<TbQoVariablesCrediticia> tbQoVariablesCrediticias) {
+		this.tbQoVariablesCrediticias = tbQoVariablesCrediticias;
+	}
+
+	public TbQoVariablesCrediticia addTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
+		tbQoVariablesCrediticia.setTbQoNegociacion(this);
+
+		return tbQoVariablesCrediticia;
+	}
+
+	public TbQoVariablesCrediticia removeTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
+		tbQoVariablesCrediticia.setTbQoNegociacion(null);
+
+		return tbQoVariablesCrediticia;
 	}
 
 }

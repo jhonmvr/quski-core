@@ -1,128 +1,218 @@
 package com.relative.quski.model;
+
 import java.io.Serializable;
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import com.relative.quski.enums.EstadoEnum;
-
-
+/**
+ * The persistent class for the tb_qo_cotizador database table.
+ * 
+ */
 @Entity
 @Table(name="tb_qo_cotizador")
-public class TbQoCotizador implements Serializable{
+public class TbQoCotizador implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_COTIZADOR_ID_GENERATOR", sequenceName="SEQ_COTIZADOR",allocationSize=1)
+	@SequenceGenerator(name="TB_QO_COTIZADOR_ID_GENERATOR", sequenceName="SEG_TB_QO_COTIZADOR")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_COTIZADOR_ID_GENERATOR")
 	private Long id;
-	@Column(name="grado_interes")
-	private String gradoInteres;
-	@Column(name="motivo_de_desestimiento")
-	private String motivoDesestimiento;
+
 	@Column(name="aprobacion_mupi")
 	private String aprobacionMupi;
+
+	private String estado;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-	@Column(name="estado")
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
-	
-//bi-directional many-to-one association to TbQoCliente
+
+	@Column(name="grado_interes")
+	private String gradoInteres;
+
+	@Column(name="motivo_de_desestimiento")
+	private String motivoDeDesestimiento;
+
+	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
 
-//bi-directional many-to-one association to TbMiMovimientoCaja
+	//bi-directional many-to-one association to TbQoDetalleCredito
 	@OneToMany(mappedBy="tbQoCotizador")
-	private List<TbQoPrecioOro> tbQoPrecioOro;
+	private List<TbQoDetalleCredito> tbQoDetalleCreditos;
 
-//bi-directional many-to-one association to TbMiMovimientoCaja
+	//bi-directional many-to-one association to TbQoDocumentoHabilitante
 	@OneToMany(mappedBy="tbQoCotizador")
-	private List<TbQoVariableCrediticia> tbQoVariableCrediticia;
+	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-		
-		
-	public Long getId() {
-		return id;
+	//bi-directional many-to-one association to TbQoPrecioOro
+	@OneToMany(mappedBy="tbQoCotizador")
+	private List<TbQoPrecioOro> tbQoPrecioOros;
+
+	//bi-directional many-to-one association to TbQoVariablesCrediticia
+	@OneToMany(mappedBy="tbQoCotizador")
+	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
+
+	public TbQoCotizador() {
 	}
+
+	public Long getId() {
+		return this.id;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getGradoInteres() {
-		return gradoInteres;
-	}
-	public void setGradoInteres(String gradoInteres) {
-		this.gradoInteres = gradoInteres;
-	}
-	public String getMotivoDesestimiento() {
-		return motivoDesestimiento;
-	}
-	public void setMotivoDesestimiento(String motivoDesestimiento) {
-		this.motivoDesestimiento = motivoDesestimiento;
-	}
+
 	public String getAprobacionMupi() {
-		return aprobacionMupi;
+		return this.aprobacionMupi;
 	}
+
 	public void setAprobacionMupi(String aprobacionMupi) {
 		this.aprobacionMupi = aprobacionMupi;
 	}
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
+
+	public String getEstado() {
+		return this.estado;
 	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
+	}
+
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
 	}
+
 	public Date getFechaCreacion() {
-		return fechaCreacion;
+		return this.fechaCreacion;
 	}
+
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	public EstadoEnum getEstado() {
-		return estado;
+
+	public String getGradoInteres() {
+		return this.gradoInteres;
 	}
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
+
+	public void setGradoInteres(String gradoInteres) {
+		this.gradoInteres = gradoInteres;
 	}
+
+	public String getMotivoDeDesestimiento() {
+		return this.motivoDeDesestimiento;
+	}
+
+	public void setMotivoDeDesestimiento(String motivoDeDesestimiento) {
+		this.motivoDeDesestimiento = motivoDeDesestimiento;
+	}
+
 	public TbQoCliente getTbQoCliente() {
-		return tbQoCliente;
+		return this.tbQoCliente;
 	}
+
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
 	}
-	public List<TbQoPrecioOro> getTbQoPrecioOro() {
-		return tbQoPrecioOro;
-	}
-	public void setTbQoPrecioOro(List<TbQoPrecioOro> tbQoPrecioOro) {
-		this.tbQoPrecioOro = tbQoPrecioOro;
-	}
-	public List<TbQoVariableCrediticia> getTbQoVariableCrediticia() {
-		return tbQoVariableCrediticia;
-	}
-	public void setTbQoVariableCrediticia(List<TbQoVariableCrediticia> tbQoVariableCrediticia) {
-		this.tbQoVariableCrediticia = tbQoVariableCrediticia;
+
+	public List<TbQoDetalleCredito> getTbQoDetalleCreditos() {
+		return this.tbQoDetalleCreditos;
 	}
 
+	public void setTbQoDetalleCreditos(List<TbQoDetalleCredito> tbQoDetalleCreditos) {
+		this.tbQoDetalleCreditos = tbQoDetalleCreditos;
+	}
+
+	public TbQoDetalleCredito addTbQoDetalleCredito(TbQoDetalleCredito tbQoDetalleCredito) {
+		getTbQoDetalleCreditos().add(tbQoDetalleCredito);
+		tbQoDetalleCredito.setTbQoCotizador(this);
+
+		return tbQoDetalleCredito;
+	}
+
+	public TbQoDetalleCredito removeTbQoDetalleCredito(TbQoDetalleCredito tbQoDetalleCredito) {
+		getTbQoDetalleCreditos().remove(tbQoDetalleCredito);
+		tbQoDetalleCredito.setTbQoCotizador(null);
+
+		return tbQoDetalleCredito;
+	}
+
+	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {
+		return this.tbQoDocumentoHabilitantes;
+	}
+
+	public void setTbQoDocumentoHabilitantes(List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes) {
+		this.tbQoDocumentoHabilitantes = tbQoDocumentoHabilitantes;
+	}
+
+	public TbQoDocumentoHabilitante addTbQoDocumentoHabilitante(TbQoDocumentoHabilitante tbQoDocumentoHabilitante) {
+		getTbQoDocumentoHabilitantes().add(tbQoDocumentoHabilitante);
+		tbQoDocumentoHabilitante.setTbQoCotizador(this);
+
+		return tbQoDocumentoHabilitante;
+	}
+
+	public TbQoDocumentoHabilitante removeTbQoDocumentoHabilitante(TbQoDocumentoHabilitante tbQoDocumentoHabilitante) {
+		getTbQoDocumentoHabilitantes().remove(tbQoDocumentoHabilitante);
+		tbQoDocumentoHabilitante.setTbQoCotizador(null);
+
+		return tbQoDocumentoHabilitante;
+	}
+
+	public List<TbQoPrecioOro> getTbQoPrecioOros() {
+		return this.tbQoPrecioOros;
+	}
+
+	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {
+		this.tbQoPrecioOros = tbQoPrecioOros;
+	}
+
+	public TbQoPrecioOro addTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
+		getTbQoPrecioOros().add(tbQoPrecioOro);
+		tbQoPrecioOro.setTbQoCotizador(this);
+
+		return tbQoPrecioOro;
+	}
+
+	public TbQoPrecioOro removeTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
+		getTbQoPrecioOros().remove(tbQoPrecioOro);
+		tbQoPrecioOro.setTbQoCotizador(null);
+
+		return tbQoPrecioOro;
+	}
+
+	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {
+		return this.tbQoVariablesCrediticias;
+	}
+
+	public void setTbQoVariablesCrediticias(List<TbQoVariablesCrediticia> tbQoVariablesCrediticias) {
+		this.tbQoVariablesCrediticias = tbQoVariablesCrediticias;
+	}
+
+	public TbQoVariablesCrediticia addTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
+		tbQoVariablesCrediticia.setTbQoCotizador(this);
+
+		return tbQoVariablesCrediticia;
+	}
+
+	public TbQoVariablesCrediticia removeTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
+		tbQoVariablesCrediticia.setTbQoCotizador(null);
+
+		return tbQoVariablesCrediticia;
+	}
 
 }

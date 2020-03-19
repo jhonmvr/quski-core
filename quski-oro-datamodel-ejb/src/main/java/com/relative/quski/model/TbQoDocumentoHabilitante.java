@@ -1,25 +1,11 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+
+import java.util.Date;
 
 
 /**
@@ -28,19 +14,17 @@ import com.relative.quski.enums.EstadoEnum;
  */
 @Entity
 @Table(name="tb_qo_documento_habilitante")
-@NamedQuery(name="TbQoDocumentoHabilitante.findAll", query="SELECT t FROM TbQoDocumentoHabilitante t")
 public class TbQoDocumentoHabilitante implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR", sequenceName="SEQ_HABILITANTE", allocationSize=1)
+	@SequenceGenerator(name="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR", sequenceName="SEG_TB_QO_DOCUMENTO_HABILITANTE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR")
 	private Long id;
 
 	@Lob
 	private byte[] archivo;
 
-	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
@@ -51,22 +35,23 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	
-	@ManyToOne
-	@JoinColumn(name="id_cotizacion")
-	private TbQoCotizador tbQoCotizador;
-	
-	@ManyToOne
-	@JoinColumn(name="id_negociacion")
-	private TbQoNegociacion tbQoNegociacion;
-	
+	@Column(name="nombre_archivo")
+	private String nombreArchivo;
+
+	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
-	
 
-	@Column(name="nombre_archivo")
-	private String nombreArchivo;
+	//bi-directional many-to-one association to TbQoCotizador
+	@ManyToOne
+	@JoinColumn(name="id_cotizacion")
+	private TbQoCotizador tbQoCotizador;
+
+	//bi-directional many-to-one association to TbQoNegociacion
+	@ManyToOne
+	@JoinColumn(name="id_negociacion")
+	private TbQoNegociacion tbQoNegociacion;
 
 	//bi-directional many-to-one association to TbQoTipoDocumento
 	@ManyToOne
@@ -85,20 +70,19 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	}
 
 	public byte[] getArchivo() {
-		return archivo;
+		return this.archivo;
 	}
 
 	public void setArchivo(byte[] archivo) {
 		this.archivo = archivo;
 	}
 
-
 	public EstadoEnum getEstado() {
-		return estado;
+		return this.estado;
 	}
 
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
+	public void setEstado(EstadoEnum act) {
+		this.estado = act;
 	}
 
 	public Date getFechaActualizacion() {
@@ -125,6 +109,30 @@ public class TbQoDocumentoHabilitante implements Serializable {
 		this.nombreArchivo = nombreArchivo;
 	}
 
+	public TbQoCliente getTbQoCliente() {
+		return this.tbQoCliente;
+	}
+
+	public void setTbQoCliente(TbQoCliente tbQoCliente) {
+		this.tbQoCliente = tbQoCliente;
+	}
+
+	public TbQoCotizador getTbQoCotizador() {
+		return this.tbQoCotizador;
+	}
+
+	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
+	}
+
+	public TbQoNegociacion getTbQoNegociacion() {
+		return this.tbQoNegociacion;
+	}
+
+	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
+		this.tbQoNegociacion = tbQoNegociacion;
+	}
+
 	public TbQoTipoDocumento getTbQoTipoDocumento() {
 		return this.tbQoTipoDocumento;
 	}
@@ -133,30 +141,4 @@ public class TbQoDocumentoHabilitante implements Serializable {
 		this.tbQoTipoDocumento = tbQoTipoDocumento;
 	}
 
-	public TbQoCotizador getTbQoCotizador() {
-		return tbQoCotizador;
-	}
-
-	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
-		this.tbQoCotizador = tbQoCotizador;
-	}
-
-	public TbQoNegociacion getTbQoNegociacion() {
-		return tbQoNegociacion;
-	}
-
-	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
-		this.tbQoNegociacion = tbQoNegociacion;
-	}
-
-	public TbQoCliente getTbQoCliente() {
-		return tbQoCliente;
-	}
-
-	public void setTbQoCliente(TbQoCliente tbQoCliente) {
-		this.tbQoCliente = tbQoCliente;
-	}
-
-	
-	
 }
