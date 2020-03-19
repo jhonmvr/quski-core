@@ -23,21 +23,22 @@ public class TbQoAgencia implements Serializable {
 	@Column(name="direccion_agencia")
 	private String direccionAgencia;
 
-	@Column(name="id_canton")
-	private BigDecimal idCanton;
-
-	@Column(name="id_parroquia")
-	private BigDecimal idParroquia;
-
-	@Column(name="id_provincia")
-	private BigDecimal idProvincia;
 
 	@Column(name="nombre_agencia")
 	private String nombreAgencia;
 
-	//bi-directional many-to-one association to TbQoCreditoNegociacion
-	@OneToMany(mappedBy="tbQoAgencia")
-	private List<TbQoCreditoNegociacion> tbQoCreditoNegociacions;
+	//bi-directional many-to-one association to Parroquia
+	@ManyToOne
+	@JoinColumn(name="id_parroquia")
+	private Parroquia parroquia;
+	
+	@ManyToOne
+	@JoinColumn(name="id_canton")
+	private Canton canton;
+	
+	@ManyToOne
+	@JoinColumn(name="id_provincia")
+	private Provincia provincia;
 
 	public TbQoAgencia() {
 	}
@@ -58,28 +59,30 @@ public class TbQoAgencia implements Serializable {
 		this.direccionAgencia = direccionAgencia;
 	}
 
-	public BigDecimal getIdCanton() {
-		return this.idCanton;
+	
+	
+	public Parroquia getParroquia() {
+		return parroquia;
 	}
 
-	public void setIdCanton(BigDecimal idCanton) {
-		this.idCanton = idCanton;
+	public void setParroquia(Parroquia parroquia) {
+		this.parroquia = parroquia;
 	}
 
-	public BigDecimal getIdParroquia() {
-		return this.idParroquia;
+	public Canton getCanton() {
+		return canton;
 	}
 
-	public void setIdParroquia(BigDecimal idParroquia) {
-		this.idParroquia = idParroquia;
+	public void setCanton(Canton canton) {
+		this.canton = canton;
 	}
 
-	public BigDecimal getIdProvincia() {
-		return this.idProvincia;
+	public Provincia getProvincia() {
+		return provincia;
 	}
 
-	public void setIdProvincia(BigDecimal idProvincia) {
-		this.idProvincia = idProvincia;
+	public void setProvincia(Provincia provincia) {
+		this.provincia = provincia;
 	}
 
 	public String getNombreAgencia() {
@@ -90,26 +93,7 @@ public class TbQoAgencia implements Serializable {
 		this.nombreAgencia = nombreAgencia;
 	}
 
-	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
-		return this.tbQoCreditoNegociacions;
-	}
-
-	public void setTbQoCreditoNegociacions(List<TbQoCreditoNegociacion> tbQoCreditoNegociacions) {
-		this.tbQoCreditoNegociacions = tbQoCreditoNegociacions;
-	}
-
-	public TbQoCreditoNegociacion addTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
-		getTbQoCreditoNegociacions().add(tbQoCreditoNegociacion);
-		tbQoCreditoNegociacion.setTbQoAgencia(this);
-
-		return tbQoCreditoNegociacion;
-	}
-
-	public TbQoCreditoNegociacion removeTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
-		getTbQoCreditoNegociacions().remove(tbQoCreditoNegociacion);
-		tbQoCreditoNegociacion.setTbQoAgencia(null);
-
-		return tbQoCreditoNegociacion;
-	}
+	
+	
 
 }

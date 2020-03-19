@@ -11,7 +11,6 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -65,6 +64,7 @@ import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -1764,38 +1764,47 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 * @throws RelativeException
 	 * @author Diego Serrano
 	 */
-	/*
-	public List<TbQoCreditoNegociacion> findCreditoNegociacionByParams(PaginatedWrapper pw, Date fechaDesde, Date fechaHasta,
-			String codigoOperacion, EstadoOperacionEnum estado , String identificacion) throws RelativeException {
+	
+	public List<TbQoCreditoNegociacion> findCreditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde, String fechaHasta,
+			String codigoOperacion, String proceso , String identificacion, String agencia) throws RelativeException {
 
 		if (pw == null) {
 			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
-					fechaHasta, codigoOperacion, estado, identificacion));
+					fechaHasta, codigoOperacion,  proceso, identificacion, agencia));
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.creditoNegociacionRepository.findPorCustomFilterContratos(pw, fechaDesde, fechaHasta, codigoOperacion, estado,
-						identificacion);
+				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta, codigoOperacion, proceso,
+						identificacion, agencia);
 			} else {
 				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
-						fechaHasta, codigoOperacion, estado, identificacion));
+						fechaHasta, codigoOperacion,  proceso, identificacion, agencia));
 			}
 		}
 
 	}
-
-	public Long countCreditoNegociacionByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion, EstadoEnum estado, String identificacion) throws RelativeException {
-		try {
-			return creditoNegociacionRepository.countByParams(fechaDesde, fechaHasta, codigoOperacion, estado, identificacion);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Agente no encontrado " + e.getMessage());
-		}
+	
+	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
+			String agencia, String proceso, String cedula) throws RelativeException {
+		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
 	}
 	
 	
-	*/
+	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
+			String proceso, String identificacion,  String agencia)
+			throws RelativeException {
+		
+		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
+				fechaHasta, codigoOperacion,  proceso, identificacion, agencia)).intValue();
+	}
 	
+	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo,
+			String agencia, String proceso, String cedula) throws RelativeException {
+		try {
+			return this.creditoNegociacionRepository.countOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+		} catch (Exception e) {
+			throw new RelativeException("" + e);
+		}
+	}
 	
 	/**
 	 * Metodo que actualiza la entidad

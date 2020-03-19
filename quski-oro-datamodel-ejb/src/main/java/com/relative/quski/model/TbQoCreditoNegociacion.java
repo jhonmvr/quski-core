@@ -38,9 +38,15 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="costo_seguro")
 	private BigDecimal costoSeguro;
 
+	@Column(name="codigo_operacion")
+	private String codigoOperacion;
+	
+	@Column(name="codigo_softbank")
+	private String codigoSoftbank;
+
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
-
+	
 	private String estado;
 
 	@Temporal(TemporalType.DATE)

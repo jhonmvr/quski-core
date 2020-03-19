@@ -26,6 +26,7 @@ import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,7 +74,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	
-	/*
+	
 	@GET
 	@Path("/creditoNegociacionByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
@@ -84,43 +85,78 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("fechaDesde") Date fechaDesde, @QueryParam("fechaHasta") Date fechaHasta,
-			@QueryParam("codigoOperacion") String codigoOperacion,
-			@QueryParam("estado") String estado,
-			@QueryParam("identificacion") String identificacion
+			@QueryParam("fechaDesde") String fechaDesde, @QueryParam("fechaHasta") String fechaHasta,
+			@QueryParam("codigoOperacion") String codigoOperacion, 
+			@QueryParam("proceso") String proceso,
+			@QueryParam("identificacion") String identificacion,
+			@QueryParam("agencia") String agencia
 			) throws RelativeException {
 		
 		return creditoNegociacionByParams(
 				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
 						isPaginated),
-				fechaDesde, fechaHasta, codigoOperacion, estado, identificacion);
+				fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion,  agencia);
 		
-	}*/
-	/*
-	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, Date fechaDesde, Date fechaHasta,
-			String codigoOperacion ,String estado, String identificacion) throws RelativeException {
-		List<EstadoOperacionEnum> estados = new ArrayList<EstadoOperacionEnum>();
-		if(StringUtils.isNotBlank(estado)) {
-			String[] listEstados = estado.split(",");
-			if(listEstados.length > 1) {
-				for(String l : listEstados) {
-					estados.add(QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class, l));
-				}
-			}else {
-				estados.add(QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class, estado));
-			}
-		}
+	}
+	
+	
+	
+	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde, String fechaHasta,
+			String codigoOperacion ,String proceso, String identificacion, String agencia) throws RelativeException {
+		
 		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoCreditoNegociacion> actions = this.qos.findCreditoNegociacionByParams(pw, fechaDesde, fechaHasta, codigoOperacion,
-				estados,
-				identificacion);
+				proceso, identificacion, agencia);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countCreditoNegociacionByParams(fechaDesde, fechaHasta, codigoOperacion,
-					estados, identificacion));
+					proceso, identificacion, agencia));
 			plw.setList(actions);
 		}
 		return plw;
 	}
-	*/
+
+	/**
+	 * Lista contratos por agencia y dos estado en clase personalizada
+	 * 
+	 * @param page
+	 * @param pageSize
+	 * @param sortFields
+	 * @param sortDirections
+	 * @param isPaginated
+	 * @param idAgencia
+	 * @param estado1
+	 * @param estado2
+	 * @return
+	 * @throws RelativeException
+	 */
+	@GET
+	@Path("/getOperacionesDevueltas")
+	@ApiOperation(value = "PaginatedListWrapper<ContratosPerfecionados>", notes = "Metodo que retorna contratos por agencia y dos estado en clase personalizada ContratosPerfecionados", response = GenericWrapper.class)
+	public PaginatedListWrapper<ListadoOperacionDevueltaWrapper> getOperacionesDevueltasByParams(
+			@QueryParam("page") @DefaultValue("0") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("codigo") String codigo, @QueryParam("agencia") String agencia,
+			@QueryParam("proceso") String proceso, @QueryParam("cedula") String cedula) throws RelativeException {
+		
+		return getOperacionesDevueltasByParams(
+				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
+						isPaginated),
+				codigo, agencia,
+				proceso, cedula);
+	}
+
 	
+	
+	private PaginatedListWrapper<ListadoOperacionDevueltaWrapper> getOperacionesDevueltasByParams(PaginatedWrapper pw, String codigo, String agencia, String proceso, String cedula) throws RelativeException {
+		PaginatedListWrapper<ListadoOperacionDevueltaWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<ListadoOperacionDevueltaWrapper> actions = this.qos.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countOperacionesDevueltas(pw, codigo, agencia, proceso, cedula));
+			plw.setList(actions);
+		}
+		return plw;
+	}
 }

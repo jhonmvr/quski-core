@@ -18,52 +18,67 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 
 public class CreditoNegociacionByParamsSpec extends AbstractSpecification<TbQoCreditoNegociacion> {
 	
-	private Date fechaDesde;
-	private Date fechaHasta;
+	private String fechaDesde;
+	private String fechaHasta;
 	private String codigoOperacion;
-	private EstadoOperacionEnum estado;
+	private String proceso;
 	private String identificacion;
+	private String agencia;
 	
-
-	
-	
-	public CreditoNegociacionByParamsSpec(Date fechaDesde, Date fechaHasta, String codigoOperacion, EstadoOperacionEnum estado, String identificacion) {
+	public CreditoNegociacionByParamsSpec(String fechaDesde, String fechaHasta, String codigoOperacion,
+			String proceso, String identificacion,  String agencia) {
 		super();
+		
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 		this.codigoOperacion = codigoOperacion;
+		this.proceso = proceso;
 		this.identificacion = identificacion;
-		this.estado = estado;
+		this.agencia = agencia;
+		
 	}
 
-	public boolean isSatisfiedBy(TbQoCreditoNegociacion tb) {
+	@Override
+	public boolean isSatisfiedBy(TbQoCreditoNegociacion arg0) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
-		List<Predicate> where = new ArrayList<Predicate>();
-		if(StringUtils.isNotBlank(this.identificacion)) {
-			where.add(cb.like(poll.<String>get("identificacion"), "%" + this.identificacion + "%"));
+	public Predicate toPredicate(Root<TbQoCreditoNegociacion> credito, CriteriaBuilder cb) {
+		
+		List<Predicate> patientLevelPredicates = new ArrayList<Predicate>();
+		
+		this.codigoOperacion = this.codigoOperacion.trim();
+		this.identificacion = this.identificacion.trim();
+		
+		if(StringUtils.isNotBlank(this.fechaDesde)) {
+			@SuppressWarnings("deprecation")
+			Date fecha = new Date(this.fechaDesde);
+			patientLevelPredicates.add(cb.greaterThanOrEqualTo(credito.<Date>get("fechaCreacion"), fecha));
 		}
-		if(StringUtils.isNotBlank((CharSequence) this.fechaDesde)) {
-			where.add(cb.like(poll.<String>get("fechaDesde"), "%" + this.fechaDesde + "%"));
+		
+		if(StringUtils.isNotBlank(this.fechaHasta)) {
+			@SuppressWarnings("deprecation")
+			Date fecha = new Date(this.fechaHasta);
+			patientLevelPredicates.add(cb.lessThanOrEqualTo(credito.<Date>get("fechaCreacion"), fecha));
 		}
-		if(StringUtils.isNotBlank((CharSequence) this.fechaHasta)) {
-			where.add(cb.like(poll.<String>get("fechaHasta"), "%" + this.fechaHasta + "%"));
-		}
+		
 		if(StringUtils.isNotBlank(this.codigoOperacion)) {
-			where.add(cb.like(poll.<String>get("codigoOperacion"), "%" + this.codigoOperacion + "%"));
+			patientLevelPredicates.add(cb.like(credito.<String>get("codigo"), "%" + this.codigoOperacion + "%"));
+		}
+		if(StringUtils.isNotBlank(this.proceso)) {
+			patientLevelPredicates.add(cb.equal(credito.get("tbQoProceso").<String>get("id"), this.proceso));
 		}
 		if(StringUtils.isNotBlank(this.identificacion)) {
-			where.add(cb.like(poll.<String>get("identificacion"), "%" + this.identificacion + "%"));
+			patientLevelPredicates.add(cb.like(credito.<TbQoCliente>get("tbQoCliente").<String>get("identificacion"), "%" + this.identificacion + "%"));
+		}
+	
+		if(StringUtils.isNotBlank(this.agencia)) {
+			patientLevelPredicates.add(cb.equal(credito.get("tbQoAgencia").get("nombreAgencia"), this.agencia));
 		}
 		
-		
-		if(this.estado != null) {
-			where.add(cb.equal(poll.<EstadoEnum>get("estado"), this.estado));
-		}
-		return cb.and(where.toArray(new Predicate[]{}));
+		return cb.and(patientLevelPredicates.toArray(new Predicate[]{}));
 	}
 
 }
