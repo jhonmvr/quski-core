@@ -77,6 +77,8 @@ public class TbQoAgencia implements Serializable {
 		this.canton = canton;
 	}
 
+	
+
 	public Parroquia getParroquia() {
 		return this.parroquia;
 	}

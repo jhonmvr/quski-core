@@ -36,43 +36,22 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 		// TODO Auto-generated method stub
 		return null;
 	}
-/*
-	@Override
-	public List<TbQoCreditoNegociacion> findByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion,
-			EstadoEnum estado, String identificacion, int startRecord, Integer pageSize, String sortFields,
-			String sortDirections) throws RelativeException {
-		try {
-			return this.findAllBySpecificationPaged(new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, codigoOperacion, estado, identificacion),
-					startRecord, pageSize, sortFields, sortDirections);
 
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Busqueda de credito por parametros");
-		}
-	}
-
-	@Override
-	public List<TbQoCreditoNegociacion> findByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion,
-			EstadoEnum estado, String identificacion) throws RelativeException {
-		try {
-			return this.findAllBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, codigoOperacion, estado, identificacion));
-
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Busqueda de credito por parametros");
-		}
-	}
-
-	@Override
-	public Long countByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion, EstadoEnum estado,
-			String identificacion) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-*/
 	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoProceso, String nombreAgencia, String nombreProceso, int cedula) {
 			return 	findAllBySpecification(
 						new AsignacionByParamsSpec(codigoProceso, nombreAgencia, nombreProceso, cedula)
 					);
+	public List<TbQoCreditoNegociacion> findByParams(String codigoProceso,  String nombreProceso, String nombreAgencia,
+			String cedula) throws RelativeException {
+			try {
+				return 	findAllBySpecification(
+							new AsignacionByParamsSpec(codigoProceso,  nombreProceso, nombreAgencia, cedula)
+						);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR CREDITONEGOCIACION POR PARAMETROS");
+			}
 	}
 @Override
 public List<TbQoCreditoNegociacion> findPorCustomFilterCreditos(PaginatedWrapper pw, String fechaDesde,
