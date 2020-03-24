@@ -62,6 +62,7 @@ import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
@@ -2560,16 +2561,17 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 
 		return catalogoRepository.countByTipoCatalogo(nombre);
 	}
+
 	/**
-	 *  METODO QUE BUSCA LAS ASIGNACIONES PENDIENTES DE APROBACION 
-	 * @param pw
+	 *  METODO QUE BUSCA LAS ASIGNACIONES PENDIENTES DE APROBACION PAGINADO
+	 * @param 
 	 * @author JEROHAM CADENAS - Relative Engine
 	 * @throws RelativeException
 	 */
-	public List<TbQoCreditoNegociacion> findByParams(String codigoProceso, String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
-			return this.creditoNegociacionRepository.findByParams(codigoProceso, nombreAgencia, nombreProceso, cedula);
-	}
-	/**
+	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion, String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
+		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw, codigoOperacion, nombreAgencia, nombreProceso, cedula);
+}
+	/** 
 	 *  METODO QUE BUSCA LAS AGENCIAS  
 	 * @param id
 	 * @author JEROHAM CADENAS - Relative Engine
