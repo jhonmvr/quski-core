@@ -1,8 +1,9 @@
 package com.relative.quski.enums;
 
 public enum EstadoOperacionEnum {
-	
+	VIGENTE,
 	CANCELADO,
-	NOVADO
+	NOVADO,
+	PENDIENTE_APROBACION,
 	
 }

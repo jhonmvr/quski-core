@@ -9,6 +9,7 @@ import com.relative.core.persistence.CrudRepository;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 @Local
 public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoCreditoNegociacion>{
@@ -25,12 +26,10 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 	
 	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia,
 			String proceso, String cedula) throws RelativeException;
-	
-	public List<TbQoCreditoNegociacion> findAsignacionByParams(String codigoOperacion, String nombreAgencia, String nombreProceso,
-			int cedula) throws RelativeException;
-	
-	public List<TbQoCreditoNegociacion> findByParams(String codigoProceso, String nombreAgencia, String nombreProceso,
-			String cedula)throws RelativeException;
+
+
+	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion, String nombreAgencia,
+			String nombreProceso, String cedula) throws RelativeException;
 
 }
 
