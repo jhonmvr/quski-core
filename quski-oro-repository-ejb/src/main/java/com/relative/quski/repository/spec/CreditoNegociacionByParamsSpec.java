@@ -11,8 +11,6 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 

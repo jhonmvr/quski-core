@@ -8,7 +8,6 @@ import javax.persistence.criteria.Root;
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoPrecioOro;
 
 public class CotizadorByIdentificacionClienteSpec extends AbstractSpecification<TbQoCotizador> {
 

@@ -1,15 +1,14 @@
 package com.relative.quski.repository.spec;
 
-import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoPrecioOro;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.bouncycastle.crypto.paddings.TBCPadding;
+import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoCotizador;
+import com.relative.quski.model.TbQoPrecioOro;
 
 public class PrecioOroByIdCotizacionSpec extends AbstractSpecification<TbQoPrecioOro> {
 
