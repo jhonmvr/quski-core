@@ -45,26 +45,6 @@ public class AsignacionesPendientesRestController extends BaseRestController imp
 	public void deleteEntity(String arg0) throws RelativeException {
 		//Auto-generated
 	}
-
-//	@GET
-//	@Path("/findByParams")
-//	@ApiOperation(value = "GenericWrapper<AsignacionesWrapper>", notes = "Metodo que retorna la lista de operaciones pendientes",
-//	response = GenericWrapper.class)
-//	@ApiResponses (value = {
-//			@ApiResponse(code = 200, message = "Retorno exitoso de informacion", response = GenericWrapper.class),
-//			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = GenericWrapper.class)
-//	})
-//	public GenericWrapper<AsignacionesWrapper> findByParams (
-//			@QueryParam("codigoProceso") String codigoProceso,
-//			@QueryParam("nombreAgencia") String nombreAgencia,
-//			@QueryParam("nombreProceso") String nombreProceso,
-//			@QueryParam("cedula") String cedula) throws RelativeException {
-//		GenericWrapper<AsignacionesWrapper> plw = new GenericWrapper<>();
-//		List<AsignacionesWrapper> actions = this.qos.findAsignacionesByParams(codigoProceso, nombreAgencia, nombreProceso, cedula);
-//		if (actions != null) {
-//			plw.setEntidades(actions);
-//		}return plw;	
-//	}
 	@GET
 	@Path("/findByParamsPaginated")
 	@ApiOperation(value = "PaginatedListWrapper<AsignacionesWrapper>", notes = "Metodo Get findByParamsPaginated Retorna wrapper de informacion de paginacion y Asignaciones encontradas encontradas", 
@@ -97,19 +77,16 @@ public class AsignacionesPendientesRestController extends BaseRestController imp
 	}
 	@Override
 	public GenericWrapper<AsignacionesWrapper> getEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public PaginatedListWrapper<AsignacionesWrapper> listAllEntities(String arg0, String arg1, String arg2, String arg3,
 			String arg4) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public GenericWrapper<AsignacionesWrapper> persistEntity(GenericWrapper<AsignacionesWrapper> arg0)
 			throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

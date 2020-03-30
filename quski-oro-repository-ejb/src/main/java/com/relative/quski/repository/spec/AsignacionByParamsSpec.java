@@ -52,7 +52,6 @@ public class AsignacionByParamsSpec extends AbstractSpecification<AsignacionesWr
 		if (StringUtils.isNotBlank(this.cedula)) {
 			where.add(cb.equal(poll.get("negociacionWrapper").get("tbQoCliente").get("cedulaCliente"), this.cedula));
 		}
-		
 		return cb.and(where.toArray(new Predicate[]{}));
 	}
 
