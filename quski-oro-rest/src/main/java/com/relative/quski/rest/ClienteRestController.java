@@ -24,6 +24,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.ClienteWrapper;
 
 import io.swagger.annotations.Api;
@@ -179,6 +180,23 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		gestion.setCampania("INBOUND");
 		loc.setEntidad(gestion);
 		return loc;
+	}
+	@GET
+	@Path("/getClienteByCodigoOperacion")
+	@ApiOperation(value = "GenericWrapper<AsignacionesWrapper>", notes = "Metodo getEntity Retorna wrapper de entidad encontrada en AsignacionesWrapper", response = GenericWrapper.class)
+	public GenericWrapper<AsignacionesWrapper> getClienteByCodigoOperacion(@QueryParam("codigoOperacion") String codigoOperacion)
+			throws RelativeException {
+		GenericWrapper<AsignacionesWrapper> loc = new GenericWrapper<>();
+		AsignacionesWrapper  a = this.findClienteBycodigoOperacion(codigoOperacion);
+		loc.setEntidad(a);
+		return loc;
+	}
+	private AsignacionesWrapper findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
+		List<AsignacionesWrapper> tmp = this.qos.findClienteBycodigoOperacion(codigoOperacion);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
 	}
 }
 

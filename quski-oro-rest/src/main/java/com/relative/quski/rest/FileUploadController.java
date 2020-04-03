@@ -64,7 +64,7 @@ public class FileUploadController extends BaseRestController {
 			throw e;
 		}  
 		 catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERRORException REGISTRO DE ARCHIVO");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR Exception REGISTRO DE ARCHIVO");
 		} 
 	}
 	

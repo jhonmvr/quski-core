@@ -9,6 +9,7 @@ import com.relative.core.persistence.CrudRepository;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.wrapper.AsignacionesWrapper;
 
 @Local
 public interface ClienteRepository extends CrudRepository<Long, TbQoCliente> {
@@ -19,4 +20,6 @@ public interface ClienteRepository extends CrudRepository<Long, TbQoCliente> {
 	
 	public Long countByParams(String identificacion, String primerNombre, String segundoNombre, String apellidoPaterno, String apellidoMaterno, 
 			String telefono, String celular, String correo,  EstadoEnum estado) throws RelativeException;
+	
+	public List<AsignacionesWrapper> clienteBycodigoOperacion(String codigoOperacion) throws RelativeException;
 }

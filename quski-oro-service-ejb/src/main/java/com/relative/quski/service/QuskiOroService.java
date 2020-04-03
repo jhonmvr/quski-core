@@ -46,7 +46,6 @@ import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ParroquiaRepository;
-import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ProvinciaRepository;
@@ -101,8 +100,6 @@ public class QuskiOroService {
 	private TipoDocumentoRepository tipoDocumentoRepository;
 	@Inject
 	private ReferenciaPersonalRepository referenciaPersonalRepository;
-	@Inject
-	private PatrimonioRepository patrimonioRepository;	
 	@Inject
 	private ArchivoClienteRepository archivoClienteRepository;	
 	@Inject
@@ -2653,6 +2650,10 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Procesos no encontrados " + e.getMessage());
 		}
+	}
+
+	public List<AsignacionesWrapper> findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
+		return this.clienteRepository.clienteBycodigoOperacion(codigoOperacion);		
 	}
 
 	
