@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.cache.CacheUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
@@ -71,8 +72,7 @@ import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 public class QuskiOroService {
 	@Inject
 	Logger log;
-	@Inject
-	private ParametrosSingleton parametrosSingleton;
+	
 	@Inject
 	private ParametroRepository parametroRepository;
 	@Inject 
@@ -160,7 +160,17 @@ public class QuskiOroService {
 			List<TbMiParametro> tmp = parametroRepository.findByParamPaged(nombre, tipo, estado, caracteriticaUno,
 					caracteristicaDos, pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
 					pw.getSortDirections());
-			parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+			//parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+			List<TbMiParametro> listCache=this.parametroRepository.findAll(TbMiParametro.class);
+			if( listCache != null && !listCache.isEmpty() ) {
+				listCache.forEach(lc->{
+					try {
+						CacheUtil.actionMap( CacheUtil.ACCION_UPDATE , lc.getNombre() , lc, CacheUtil.DEFAULT_MAP);
+					} catch (RelativeException e) {
+						e.printStackTrace();
+					}
+				});
+			}
 			return tmp;
 		} catch (RelativeException e) {
 			throw e;
@@ -233,13 +243,15 @@ public class QuskiOroService {
 			if (send != null && send.getId() != null) {
 				persisted = this.findParametroById(send.getId());
 				persisted = this.updateParametro(send, persisted);
-				parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				//parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				CacheUtil.actionMap( CacheUtil.ACCION_UPDATE , persisted.getNombre() , persisted, CacheUtil.DEFAULT_MAP);
 				return persisted;
 			} else if (send != null && send.getId() == null) {
 				// send.setFechaActualizacion( new Timestamp(System.currentTimeMillis()) );
 				// send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
 				persisted = parametroRepository.add(send);
-				parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				//parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				CacheUtil.actionMap( CacheUtil.ACCION_UPDATE , persisted.getNombre() , persisted, CacheUtil.DEFAULT_MAP);
 				return persisted;
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");

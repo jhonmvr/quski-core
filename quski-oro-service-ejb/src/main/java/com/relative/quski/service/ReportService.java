@@ -24,7 +24,7 @@ public class ReportService {
 	@Inject
 	Logger log;
 	
-	@Resource(lookup="java:/datasources/midasDS")
+	//@Resource(lookup="java:/datasources/midasDS")
     private DataSource sassDS;
 	
     /**

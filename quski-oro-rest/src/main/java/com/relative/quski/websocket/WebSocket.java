@@ -62,11 +62,10 @@ public class WebSocket {
 				MessageWrapper message = new MessageWrapper();
 				Gson gson = new Gson();
 				message.setCodigo("Server");
-				message.setMensaje("%s left the chat room" + (String) session.getUserProperties().get("user"));
+				message.setMensaje("%s left the in websocket " + (String) session.getUserProperties().get("user"));
 				message.setFecha(new Date());
 				peer.getBasicRemote().sendText(gson.toJson(message));
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

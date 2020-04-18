@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.cache.CacheUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.FechaUtil;
 import com.relative.core.util.main.PaginatedListWrapper;
@@ -164,7 +165,17 @@ public class ParametroRestController extends BaseRestController implements CrudR
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public Map<String,TbMiParametro> getParametrosSingleton() throws RelativeException {
 		try {
-			return ps.getParametros();
+			List<TbMiParametro> params= this.sas.findAllParametro(null);
+			if( params != null ) {
+				params.forEach( p->{
+					try {
+						CacheUtil.actionMap( CacheUtil.ACCION_UPDATE , p.getNombre() , p , CacheUtil.DEFAULT_MAP );
+					} catch (RelativeException e) {
+						e.printStackTrace();
+					}
+				} );
+			}
+			return CacheUtil.getMap( TbMiParametro.class , CacheUtil.DEFAULT_MAP);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController getEntityByNombre, " + e.getMessage());
 		}
