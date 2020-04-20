@@ -18,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -35,8 +34,6 @@ public class ReportServlet extends HttpServlet {
 	@Inject
 	private ReportService reportService;
 
-	@Inject
-	private ParametrosSingleton ps;
 
 	@Inject
 	private QuskiOroService mos;
@@ -85,7 +82,7 @@ public class ReportServlet extends HttpServlet {
 		String format=request.getParameter( "format" );
 		String usuario=request.getParameter( "usuario" );
 		Boolean isConsulta=request.getParameter( "consulta" )!= null && !request.getParameter( "consulta" ).isEmpty()?true:false;
-		String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
+		String path= "";//this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("=========>Es consulta " + isConsulta);
 	
 		try {

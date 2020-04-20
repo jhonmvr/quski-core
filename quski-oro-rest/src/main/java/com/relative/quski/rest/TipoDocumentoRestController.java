@@ -28,7 +28,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.TipoPlantillaEnum;
 import com.relative.quski.model.TbQoTipoDocumento;
-import com.relative.quski.service.ParametrosSingleton;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -47,8 +46,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	Logger log;
 	@Inject
 	QuskiOroService qos;
-	@Inject
-	ParametrosSingleton ps;
+	
 	
 	@Inject 
 	ReportService rs;

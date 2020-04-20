@@ -4,8 +4,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
-import com.relative.quski.rest.ParametroRestController;
-
 import io.swagger.jaxrs.config.BeanConfig;
 
 @WebServlet(
@@ -24,7 +22,7 @@ public class SwaggerServlet extends HttpServlet {
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/midas-oro-rest/resources/");
-        beanConfig.setResourcePackage(ParametroRestController.class.getPackage().getName());
+        beanConfig.setResourcePackage(ReportServlet.class.getPackage().getName());
         beanConfig.setTitle("MIDAS ORO - API REFERENCES");
         beanConfig.setDescription("MODULO PARA MIDAS ORO");
         beanConfig.setScan(true);
