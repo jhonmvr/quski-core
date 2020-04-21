@@ -11,7 +11,6 @@ import com.relative.core.persistence.Repository;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoOperacionEnum;
-
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoReasignacionActividad;
 import com.relative.quski.repository.CreditoNegociacionRepository;

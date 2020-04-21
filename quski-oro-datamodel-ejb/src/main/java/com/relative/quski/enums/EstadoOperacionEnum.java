@@ -7,5 +7,5 @@ public enum EstadoOperacionEnum {
 	PENDIENTE_APROBACION,
 	DISPONIBLE,
 	EN_EJECUCION
-	
+
 }
