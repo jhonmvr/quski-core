@@ -22,8 +22,8 @@ import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.AsignacionByParamsSpec;
-import com.relative.quski.repository.spec.ClienteByParamsSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
+import com.relative.quski.repository.spec.ReasignacionByCodigoAndEstadoParamSpec;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 /**
@@ -137,6 +137,58 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Asignaciones, " + e.getMessage());
 		}
+	}
+
+
+	@Override
+	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado, int startRecord,
+			Integer pageSize, String sortFields, String sortDirections) throws RelativeException {
+		List<TbQoCreditoNegociacion> tmp;
+		try {
+			tmp = this.findAllBySpecificationPaged(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado), startRecord, pageSize, sortFields, sortDirections);
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+			// log.info("NO EXISTE REGISTROS PARA PROVEEDOR" +e);
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: NO EXISTE INFORMACION DE tipo Joya PARA ID " + estado);
+
+		}
+		return null;
+
+	}
+
+	@Override
+	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado) throws RelativeException {
+		List<TbQoCreditoNegociacion> tmp;
+		try {
+			tmp = this.findAllBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+			// log.info("NO EXISTE REGISTROS PARA PROVEEDOR" +e);
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: NO EXISTE INFORMACION DE tipo Joya PARA ID " + estado);
+
+		}
+		return null;
+
+	}
+
+	@Override
+	public Long countfindBycodigOpEstado(String codigOp, EstadoOperacionEnum estado) throws RelativeException {
+		try {
+			return this.countBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado));
+
+		} catch (Exception e) {
+			// log.info("NO EXISTE REGISTROS PARA cotizacion " +e);
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: NO EXISTE INFORMACION TIPO JOYA PARA ID " + estado);
+
+		}
+
 	}
 
 

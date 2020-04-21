@@ -30,6 +30,10 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 
 	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion, String nombreAgencia,
 			String nombreProceso, String cedula) throws RelativeException;
+	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado, int startRecord,
+			Integer pageSize, String sortFields, String sortDirections)throws RelativeException;
+	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado)throws RelativeException;
+	public Long countfindBycodigOpEstado(String codigOp, EstadoOperacionEnum estado)throws RelativeException;
 
 }
 

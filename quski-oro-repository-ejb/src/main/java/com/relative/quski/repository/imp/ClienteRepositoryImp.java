@@ -11,9 +11,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.repository.ClienteRepository;
-import com.relative.quski.repository.spec.AsignacionByParamsSpec;
 import com.relative.quski.repository.spec.ClienteByParamsSpec;
-import com.relative.quski.repository.spec.ClienteBycodigoOperacionSpec;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -60,11 +58,7 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 
 	@Override
 	public List<AsignacionesWrapper> clienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
-		try {
-				return findAllBySpecification(new ClienteBycodigoOperacionSpec(codigoOperacion));
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer clientes, " + e.getMessage());
-		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
