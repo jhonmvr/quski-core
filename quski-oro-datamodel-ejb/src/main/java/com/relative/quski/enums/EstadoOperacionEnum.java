@@ -5,5 +5,7 @@ public enum EstadoOperacionEnum {
 	CANCELADO,
 	NOVADO,
 	PENDIENTE_APROBACION,
+	DISPONIBLE,
+	EN_EJECUCIÓN
 	
 }

@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoOperacionEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -43,15 +46,19 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
-	
-	@Column(name="codigo_softbank")
-	private String codigoSoftbank;
+		
+	/*@Column(name="codigo_softbank")
+	private String codigoSoftbank;*/
 
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
 	
-	private String estado;
-
+	@Enumerated(EnumType.STRING)
+	private EstadoOperacionEnum estado;
+	
+	@Column(name="id_usuario")
+	private String idUsuario;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
@@ -104,6 +111,20 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public TbQoCreditoNegociacion() {
 	}
+	
+	
+
+	public String getIdUsuario() {
+		return idUsuario;
+	}
+
+
+
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+
 
 	public Long getId() {
 		return this.id;
@@ -177,13 +198,19 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.costoTransporte = costoTransporte;
 	}
 
-	public String getEstado() {
-		return this.estado;
+
+
+	public EstadoOperacionEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+
+
+	public void setEstado(EstadoOperacionEnum estado) {
 		this.estado = estado;
 	}
+
+
 
 	public Date getFechaActualizacion() {
 		return this.fechaActualizacion;
