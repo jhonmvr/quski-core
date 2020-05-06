@@ -1,7 +1,20 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -26,6 +39,9 @@ public class TbQoReasignacionActividad implements Serializable {
 	private String idUsuarioNuevo;
 
 	private String observacion;
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
@@ -69,6 +85,18 @@ public class TbQoReasignacionActividad implements Serializable {
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
+	
+	 
+
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+
 
 	public TbQoCreditoNegociacion getTbQoCreditoNegociacion() {
 		return this.tbQoCreditoNegociacion;

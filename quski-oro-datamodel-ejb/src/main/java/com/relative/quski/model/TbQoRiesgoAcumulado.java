@@ -1,9 +1,24 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -42,7 +57,8 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@Column(name="dias_mora")
 	private BigDecimal diasMora;
 
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Column(name="estatus_credito")
 	private BigDecimal estatusCredito;
@@ -178,11 +194,13 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.diasMora = diasMora;
 	}
 
-	public String getEstado() {
-		return this.estado;
+ 
+
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

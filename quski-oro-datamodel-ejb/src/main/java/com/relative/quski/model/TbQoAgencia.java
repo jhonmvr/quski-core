@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.util.List;
 
 
@@ -39,6 +42,9 @@ public class TbQoAgencia implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_provincia")
 	private Provincia provincia;
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	
 
@@ -94,6 +100,16 @@ public class TbQoAgencia implements Serializable {
 	public void setProvincia(Provincia provincia) {
 		this.provincia = provincia;
 	}
+
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+	
+	
 
 	
 	

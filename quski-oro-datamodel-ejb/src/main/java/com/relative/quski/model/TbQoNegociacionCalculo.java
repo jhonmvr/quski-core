@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -35,6 +38,9 @@ public class TbQoNegociacionCalculo implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_cedito_negociacion")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	public TbQoNegociacionCalculo() {
 	}

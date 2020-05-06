@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +52,8 @@ public class TbQoCliente implements Serializable {
 
 	private String email;
 
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Column(name="estado_civil")
 	private String estadoCivil;
@@ -212,11 +216,13 @@ public class TbQoCliente implements Serializable {
 		this.email = email;
 	}
 
-	public String getEstado() {
-		return this.estado;
+ 
+
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

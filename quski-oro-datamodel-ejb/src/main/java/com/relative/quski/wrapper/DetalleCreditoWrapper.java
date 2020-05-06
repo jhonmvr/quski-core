@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 
+import com.relative.quski.enums.EstadoEnum;
+
 public class DetalleCreditoWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public DetalleCreditoWrapper() {
@@ -21,6 +23,7 @@ public class DetalleCreditoWrapper implements Serializable {
 	private Double costoResguardo;
 	private Double costoEstimado;
 	private Double valorCuota;
+	private EstadoEnum estado;
 	public String getPlazoCredito() {
 		return plazoCredito;
 	}
@@ -87,6 +90,13 @@ public class DetalleCreditoWrapper implements Serializable {
 	public void setValorCuota(Double valorCuota) {
 		this.valorCuota = valorCuota;
 	}
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+	
 	
 
 }
