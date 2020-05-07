@@ -21,7 +21,7 @@ public class TbQoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEG_TB_QO_CLIENTE")
+	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_CLIENTE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
 

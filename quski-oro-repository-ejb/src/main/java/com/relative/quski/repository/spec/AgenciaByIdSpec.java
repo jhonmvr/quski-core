@@ -11,6 +11,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoAgencia;
 
 /**
@@ -19,11 +20,11 @@ import com.relative.quski.model.TbQoAgencia;
  */
 public class AgenciaByIdSpec extends AbstractSpecification<TbQoAgencia> {
 	private long id;
-	
+
 	public AgenciaByIdSpec(long id) {
-		super();
+
 		this.id = id;
-		
+
 	}
 
 	@Override
@@ -34,10 +35,13 @@ public class AgenciaByIdSpec extends AbstractSpecification<TbQoAgencia> {
 	@Override
 	public Predicate toPredicate(Root<TbQoAgencia> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
+	
 		Integer a = new Integer((int) this.id);
 		if (a != null && a != 0) {
-			where.add(cb.equal(poll.get("id"), this.id));			
-		}
+			where.add(cb.equal(poll.get("id"), this.id));
+			where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
+		}	
+
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 

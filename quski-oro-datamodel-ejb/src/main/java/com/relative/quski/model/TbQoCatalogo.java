@@ -3,6 +3,8 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.jfree.util.Log;
+
 import com.relative.quski.enums.EstadoEnum;
 
 import java.util.Date;
@@ -18,7 +20,7 @@ public class TbQoCatalogo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CATALOGO_ID_GENERATOR", sequenceName="SEG_TB_QO_CATALOGO")
+	@SequenceGenerator(name="TB_QO_CATALOGO_ID_GENERATOR", sequenceName="SEQ_CATALOGO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CATALOGO_ID_GENERATOR")
 	private Long id;
 
@@ -49,6 +51,7 @@ public class TbQoCatalogo implements Serializable {
 	}
 
 	public Long getId() {
+		
 		return this.id;
 	}
 
