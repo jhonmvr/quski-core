@@ -10,16 +10,15 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoAgencia;
 
 public class AgenciaByParamsSpec extends AbstractSpecification<TbQoAgencia> {
 	private String nombreAgencia;
 	private String direccionAgencia;
-	
-	
 
 	public AgenciaByParamsSpec(String nombreAgencia, String nombreProvincia) {
-		super();
+
 		this.nombreAgencia = nombreAgencia;
 		this.direccionAgencia = nombreProvincia;
 	}
@@ -32,12 +31,13 @@ public class AgenciaByParamsSpec extends AbstractSpecification<TbQoAgencia> {
 	@Override
 	public Predicate toPredicate(Root<TbQoAgencia> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-		if(StringUtils.isNotBlank(this.nombreAgencia)) {
+		if (StringUtils.isNotBlank(this.nombreAgencia)) {
 			where.add(cb.equal(poll.get("nombreAgencia"), this.nombreAgencia));
 		}
-		if(StringUtils.isNotBlank(this.direccionAgencia)) {
+		if (StringUtils.isNotBlank(this.direccionAgencia)) {
 			where.add(cb.equal(poll.get("direccionAgencia"), this.direccionAgencia));
-		}	
+		}
+		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 

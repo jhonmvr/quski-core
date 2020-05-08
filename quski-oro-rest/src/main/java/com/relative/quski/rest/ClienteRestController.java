@@ -181,6 +181,8 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		loc.setEntidad(gestion);
 		return loc;
 	}
+	
+	
 	@GET
 	@Path("/getClienteByCodigoOperacion")
 	@ApiOperation(value = "GenericWrapper<AsignacionesWrapper>", notes = "Metodo getEntity Retorna wrapper de entidad encontrada en AsignacionesWrapper", response = GenericWrapper.class)

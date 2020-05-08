@@ -15,4 +15,6 @@ import com.relative.quski.model.TbQoAgencia;
 @Local
 public interface AgenciaRepository extends CrudRepository<Long, TbQoAgencia> {
 	public List<TbQoAgencia> findById(long id)throws RelativeException;
+	public List<TbQoAgencia> findByParams(String nombreAgencia, String direccionAgencia) throws RelativeException;
+	
 	}

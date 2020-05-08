@@ -23,6 +23,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.service.QuskiOroService;
 import io.swagger.annotations.Api;
@@ -57,11 +58,20 @@ public class NegociacionCalculoRestController extends BaseRestController impleme
 		// TODO Auto-generated method stub
 		
 	}
+	
+
 
 	@Override
-	public GenericWrapper<TbQoNegociacionCalculo> getEntity(String arg0) throws RelativeException {
+	@GET
+	@Path("/getEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoNegociacionCalculo>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoNegociacionCalculo", response = GenericWrapper.class)
+	public GenericWrapper<TbQoNegociacionCalculo> getEntity(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoNegociacionCalculo> loc =new GenericWrapper<>();
+		TbQoNegociacionCalculo a =this.qos.findNegociacionCalculoById(Long.valueOf(id));
+		loc.setEntidad(a);
+		
 		// TODO Auto-generated method stub
-		return null;
+		return loc;
 	}
 
 	@Override

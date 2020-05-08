@@ -8,37 +8,36 @@ import com.relative.quski.enums.EstadoEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
 /**
  * The persistent class for the tb_qo_negociacion_calculo database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_negociacion_calculo")
+@Table(name = "tb_qo_negociacion_calculo")
 public class TbQoNegociacionCalculo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_NEGOCIACION_CALCULO_ID_GENERATOR", sequenceName="SEG_TB_QO_NEGOCIACION_CALCULO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_CALCULO_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_NEGOCIACION_CALCULO_ID_GENERATOR", sequenceName = "SEQ_NEGOCIACION_CALCULO", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_NEGOCIACION_CALCULO_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="costo_custodia")
+	@Column(name = "costo_custodia")
 	private BigDecimal costoCustodia;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	//bi-directional many-to-one association to TbQoCreditoNegociacion
+	// bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
-	@JoinColumn(name="id_cedito_negociacion")
+	@JoinColumn(name = "id_cedito_negociacion")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
-	
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -83,6 +82,14 @@ public class TbQoNegociacionCalculo implements Serializable {
 
 	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
+	}
+
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
 	}
 
 }

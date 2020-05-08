@@ -76,8 +76,9 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 	
 		
 		if(this.estado != null) {
-			where.add(cb.equal(poll.<EstadoEnum>get("estado"), this.estado));
+			where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		}
+		
 		return cb.and(where.toArray(new Predicate[]{}));
 	}
 

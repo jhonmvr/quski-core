@@ -28,7 +28,7 @@ public class TbQoReasignacionActividad implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_REASIGNACION_ACTIVIDAD_ID_GENERATOR", sequenceName="SEQ_REASIGNACION")
+	@SequenceGenerator(name="TB_QO_REASIGNACION_ACTIVIDAD_ID_GENERATOR", sequenceName="SEQ_REASIGNACION",initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REASIGNACION_ACTIVIDAD_ID_GENERATOR")
 	private Long id;
 
