@@ -1,4 +1,5 @@
 package com.relative.quski.service;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -617,10 +618,12 @@ public class QuskiOroService {
 	 */
 	public TbQoDetalleCredito manageDetalleCredito(TbQoDetalleCredito send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a manage Abono>>>>>>>>>>>>>>>>>" +send.getId());
 			TbQoDetalleCredito persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.detalleCreditoRepository.findById(send.getId());
+				
+				persisted = this.findDetalleCreditoById(send.getId());
+				
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateDetalleCredito(send, persisted);
 			} else if (send != null && send.getId() == null) {
@@ -1020,7 +1023,7 @@ public class QuskiOroService {
 
 	public TbQoNegociacion manageNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
-			log.info("==> entra a manage variableCrediticia");
+			log.info("==> entra a manage Negociacion");
 			TbQoNegociacion persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findNegociacionById(send.getId());
@@ -1496,6 +1499,21 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw e;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tipo oro " + e.getMessage());
+		}
+	}
+	/**
+	 * Metodo que realiza la busqueda de la negociacionCalculo por ID
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoNegociacionCalculo findNegociacionCalculoById(Long id) throws RelativeException {
+		try {
+			return negociacionCalculoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
 

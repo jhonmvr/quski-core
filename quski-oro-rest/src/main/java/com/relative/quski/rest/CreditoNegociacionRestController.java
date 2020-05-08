@@ -85,7 +85,8 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("fechaDesde") String fechaDesde, @QueryParam("fechaHasta") String fechaHasta,
+			@QueryParam("fechaDesde") String fechaDesde, 
+			@QueryParam("fechaHasta") String fechaHasta,
 			@QueryParam("codigoOperacion") String codigoOperacion, 
 			@QueryParam("proceso") String proceso,
 			@QueryParam("identificacion") String identificacion,
@@ -95,7 +96,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return creditoNegociacionByParams(
 				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
 						isPaginated),
-				fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion,  agencia);
+				fechaDesde, fechaHasta, StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null, proceso, identificacion,  agencia);
 		
 	}
 	
@@ -105,7 +106,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			String codigoOperacion ,String proceso, String identificacion, String agencia) throws RelativeException {
 		
 		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoCreditoNegociacion> actions = this.qos.findCreditoNegociacionByParams(pw, fechaDesde, fechaHasta, codigoOperacion,
+		
+		List<TbQoCreditoNegociacion> actions =null; 
+				actions=this.qos.findCreditoNegociacionByParams(pw, fechaDesde, fechaHasta, codigoOperacion,
 				proceso, identificacion, agencia);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countCreditoNegociacionByParams(fechaDesde, fechaHasta, codigoOperacion,

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.core.persistence.Specification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 
@@ -35,6 +36,7 @@ public class ClienteBycodigoOperacionSpec extends AbstractSpecification<Asignaci
 		if (StringUtils.isNotBlank(this.codigoOperacion)) {
 			where.add(cb.equal(poll.get("codigoOperacion"), this.codigoOperacion));
 		}
+		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[]{}));
 	}
 
