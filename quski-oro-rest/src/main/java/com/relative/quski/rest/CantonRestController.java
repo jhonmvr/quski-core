@@ -62,6 +62,7 @@ public class CantonRestController extends BaseRestController implements CrudRest
 		return loc;
 	}
 	
+	
 	@Override
 	public GenericWrapper<Canton> getEntity( String  id) throws RelativeException {
 		return null;

@@ -5,8 +5,6 @@ import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
 
-import java.util.List;
-
 
 /**
  * The persistent class for the tb_qo_agencia database table.

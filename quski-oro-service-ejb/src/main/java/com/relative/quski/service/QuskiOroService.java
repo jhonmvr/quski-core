@@ -321,23 +321,23 @@ public class QuskiOroService {
 	/**
 	 *  METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION 
 	 * @param pw
-	 * @param idCotizador
+	 * @param cedulaCliente
 	 * @author SAUL MENDEZ - Relative Engine
 	 * @throws RelativeException
 	 */
 	
-	public List<TbQoCotizador> listByCliente(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+	public List<TbQoCotizador> listByCliente(PaginatedWrapper pw, String cedulaCliente) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return cotizadorRepository.findByCliente(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections(),idCotizador );
+					pw.getSortDirections(),cedulaCliente );
 		} else {
-			return cotizadorRepository.findByCliente(idCotizador);
+			return cotizadorRepository.findByCliente(cedulaCliente);
 		}
 	}
 	public Long countByCliente(
-			String idCotizador) throws RelativeException {
+			String cedulaCliente) throws RelativeException {
 
-		return cotizadorRepository.countByCliente(idCotizador);
+		return cotizadorRepository.countByCliente(cedulaCliente);
 	}
 
 	
@@ -375,14 +375,12 @@ public class QuskiOroService {
 	 */
 	public TbQoCotizador manageCotizador(TbQoCotizador send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
 			TbQoCotizador persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.cotizadorRepository.findById(send.getId());
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateCotizador(send, persisted);
 			} else if (send != null && send.getId() == null) {
-
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return cotizadorRepository.add(send);
 			} else {

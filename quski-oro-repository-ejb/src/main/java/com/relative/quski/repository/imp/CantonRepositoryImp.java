@@ -16,6 +16,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.Canton;
 import com.relative.quski.repository.CantonRepository;
+import com.relative.quski.repository.spec.AgenciaByParamsSpec;
 
 
 /**
@@ -35,7 +36,7 @@ public class CantonRepositoryImp extends GeneralRepositoryImp<Long, Canton> impl
 	public List<Canton> findByProvincia( String provincia, String order ) throws RelativeException{
     	try {
 			Query q = this.getEntityManager().createNativeQuery( "select * from canton  "+
-					" where trim(provinciaid)=:provincia and trim(cantonestado)=:estado ORDER BY CANTONNOM "+order, Canton.class);
+					" where trim(codigo_provincia)=:provincia and trim(estado)=:estado ORDER BY CANTON "+order, Canton.class);
 			q.setParameter( "provincia" , provincia.trim());
 			q.setParameter( "estado" , "A");
 			return q.getResultList();

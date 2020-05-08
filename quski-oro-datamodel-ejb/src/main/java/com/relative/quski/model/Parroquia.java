@@ -21,9 +21,11 @@ import javax.persistence.Table;
  * 
  */
 @Entity
+@Table(name="parroquia")
 public class Parroquia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	
 	@Id
 	@SequenceGenerator(name="PARROQUIA_ID_GENERATOR", sequenceName="SEG_PARROQUIA")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PARROQUIA_ID_GENERATOR")

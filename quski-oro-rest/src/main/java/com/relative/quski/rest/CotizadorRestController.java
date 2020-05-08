@@ -95,24 +95,24 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 
 	@GET
 	@Path("/cotizadorByCliente")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo CotizadorByIdCotizador Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo CotizadorBycedulaCliente Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
 	public PaginatedListWrapper<TbQoCotizador> cotizadorByIdCotizador(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("idCotizador") String idCotizador
+			@QueryParam("cedulaCliente") String cedulaCliente
 			) throws RelativeException {
 		return findCotizadorByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
-				sortDirections, isPaginated),idCotizador);
+				sortDirections, isPaginated),cedulaCliente);
 	}
 	
-	private PaginatedListWrapper<TbQoCotizador> findCotizadorByIdentificacion(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+	private PaginatedListWrapper<TbQoCotizador> findCotizadorByIdentificacion(PaginatedWrapper pw, String cedulaCliente) throws RelativeException {
 		PaginatedListWrapper<TbQoCotizador> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoCotizador> actions = this.qos.listByCliente(pw, idCotizador);
+		List<TbQoCotizador> actions = this.qos.listByCliente(pw, cedulaCliente);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countByCliente(idCotizador).intValue());
+			plw.setTotalResults(this.qos.countByCliente(cedulaCliente).intValue());
 			plw.setList(actions);
 		}
 		return plw;
