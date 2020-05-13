@@ -19,8 +19,7 @@ public class TbQoProceso implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_PROCESO_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="codigo_proceso")
-	private String codigoProceso;
+	private String estado;
 
 	@Column(name="nombre_proceso")
 	private String nombreProceso;
@@ -40,12 +39,12 @@ public class TbQoProceso implements Serializable {
 		this.id = id;
 	}
 
-	public String getCodigoProceso() {
-		return this.codigoProceso;
+	public String getEstado() {
+		return this.estado;
 	}
 
-	public void setCodigoProceso(String codigoProceso) {
-		this.codigoProceso = codigoProceso;
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 	public String getNombreProceso() {

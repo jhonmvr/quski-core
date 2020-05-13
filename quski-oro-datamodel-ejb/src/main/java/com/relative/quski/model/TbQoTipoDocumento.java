@@ -46,8 +46,7 @@ public class TbQoTipoDocumento implements Serializable {
 	private String tipoDocumento;
 
 	@Column(name="tipo_plantilla")
-	@Enumerated(EnumType.STRING)
-	private TipoPlantillaEnum tipoPlantilla;
+	private String tipoPlantilla;
 
 	//bi-directional many-to-one association to TbQoDocumentoHabilitante
 	@OneToMany(mappedBy="tbQoTipoDocumento")
@@ -128,12 +127,12 @@ public class TbQoTipoDocumento implements Serializable {
 		this.tipoDocumento = tipoDocumento;
 	}
 
-	public TipoPlantillaEnum getTipoPlantilla() {
-		return tipoPlantilla;
+	public Tip	public String getTipoPlantilla() {
+poPlantilla;
 	}
 
-	public void setTipoPlantilla(TipoPlantillaEnum tipoPlantilla) {
-		this.tipoPlantilla = tipoPlantilla;
+	public void setTipoPl	public void setTipoPlantilla(String tipoPlantilla) {
+ tipoPlantilla;
 	}
 
 	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {

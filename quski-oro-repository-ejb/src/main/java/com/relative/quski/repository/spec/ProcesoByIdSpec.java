@@ -8,6 +8,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoProceso;
 
 public class ProcesoByIdSpec extends AbstractSpecification<TbQoProceso> {
@@ -23,7 +24,9 @@ public class ProcesoByIdSpec extends AbstractSpecification<TbQoProceso> {
 	@Override
 	public Predicate toPredicate(Root<TbQoProceso> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
+		String e = EstadoEnum.ACT.toString();
 		if (this.id != 0) {
+			where.add(cb.equal(poll.get("estado"), e));
 			where.add(cb.equal(poll.get("id"), this.id));			
 		}
 		return cb.and(where.toArray(new Predicate[0]));
