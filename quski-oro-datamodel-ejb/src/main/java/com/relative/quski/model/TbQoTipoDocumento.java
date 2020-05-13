@@ -46,6 +46,7 @@ public class TbQoTipoDocumento implements Serializable {
 	private String tipoDocumento;
 
 	@Column(name="tipo_plantilla")
+	@Enumerated(EnumType.STRING)
 	private TipoPlantillaEnum tipoPlantilla;
 
 	//bi-directional many-to-one association to TbQoDocumentoHabilitante

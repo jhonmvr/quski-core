@@ -136,8 +136,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
 		
-		String path= "C:\\WORKSPACE\\QUSKI-BPM-ORO\\Habilitante\\";
+		String path= "/home/relative/WORKSPACE/QUSKI/QUSKI_ORO/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
+		log.info("================s===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		/*
 		TbMiContrato ccc = null;
