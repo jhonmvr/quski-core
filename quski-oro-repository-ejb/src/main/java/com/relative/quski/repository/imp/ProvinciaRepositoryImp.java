@@ -10,11 +10,8 @@ import com.relative.quski.repository.ProvinciaRepository;
  */
 @Stateless(mappedName = "provinciaRepository")
 public class ProvinciaRepositoryImp extends GeneralRepositoryImp<Long, Provincia> implements ProvinciaRepository  {
-	 /**
-     * Default constructor. 
-     */
+
     public ProvinciaRepositoryImp() {
-        // TODO Auto-generated constructor stub
     }
 }
 
