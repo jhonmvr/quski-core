@@ -1196,15 +1196,21 @@ public class QuskiOroService {
 	
 	public TbQoDocumentoHabilitante manageDocumentoHabilitante(TbQoDocumentoHabilitante send) throws RelativeException {
 		try {
-			log.info("==> entra a manage TbQoDocumentoHabilitante");
-			TbQoDocumentoHabilitante persisted = null;
+			log.info("==> entra a manage TbQoDocumentoHabilitante"+send);
+			TbQoDocumentoHabilitante persisted = new TbQoDocumentoHabilitante();
+			log.info("ANTES DE PERDERSE");
+			
+			
 			if (send != null && send.getId() != null) {
+				log.info("Ingresa al findDocumento ****findDocumentoHabilitanteById"+send.getId());
 				persisted = this.findDocumentoHabilitanteById(send.getId());
 				return this.updateDocumentoHabilitante(send, persisted);
 			} else if (send != null && send.getId() == null) {
+				log.info("INGRESO AL ELSE");
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return documentoHabilitanteRepository.add(send);
 			} else {
+				log.info("INGRESA AL ERRRORRRRR");
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
 		} catch (RelativeException e) {
@@ -1220,12 +1226,15 @@ public class QuskiOroService {
 	
 	public TbQoDocumentoHabilitante updateDocumentoHabilitante(TbQoDocumentoHabilitante send,
 			TbQoDocumentoHabilitante persisted) throws RelativeException {
+		log.info("INGRESA A+++++++++++++ updateDocumentoHabilitante ");
 		try {
 			persisted.setArchivo(send.getArchivo());
 			persisted.setEstado(send.getEstado());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setNombreArchivo(send.getNombreArchivo());
 			persisted.setTbQoTipoDocumento(send.getTbQoTipoDocumento());
+			
+			log.info("ANTES DEL IF EN updateDocumentoHabilitante "+send.getNombreArchivo());
 			if (send.getTbQoCotizador() != null) {
 				persisted.setTbQoCotizador(send.getTbQoCotizador());
 			}
@@ -1350,6 +1359,7 @@ public class QuskiOroService {
 		TbQoDocumentoHabilitante da = null;
 		try {
 			if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
+				log.info("Ingreso en GENERAR DOCUMENTO ");
 				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(fw.getRelatedIdStr(),
 						Long.valueOf(fw.getTypeAction()), null, null);
 			} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
@@ -1384,6 +1394,7 @@ public class QuskiOroService {
 			}
 			
 		} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
+			log.info("CUANDO ES COTIZADOR");
 			cz = this.findCotizadorById(Long.valueOf(fw.getRelatedIdStr()));
 			da.setTbQoCotizador(cz);
 		} else if (fw.getProcess().equalsIgnoreCase("NEGOCIACION")) {
@@ -1400,7 +1411,15 @@ public class QuskiOroService {
 	
 
 	
-	
+	/**
+	 * 
+	 * @param identificacionCliente
+	 * @param idCotizador
+	 * @param idNegociacion
+	 * @param idTipoDocumento
+	 * @return
+	 * @throws RelativeException
+	 */
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(String identificacionCliente,
 			Long idCotizador, Long idNegociacion, Long idTipoDocumento) throws RelativeException {
 		DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();

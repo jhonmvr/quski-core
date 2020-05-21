@@ -55,8 +55,9 @@ public class FileUploadController extends BaseRestController {
 			if( fw.getFileBase64() == null || fw.getFileBase64().isEmpty() ) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO LLEGA ARCHIVO");
 			}
-			//log.info("===============>loadFile " + fw.getFileBase64() );
+			
 			fw.setFile(  QuskiOroUtil.convertBase64ToByteArray( fw.getFileBase64() ));
+			log.info("===============>GENERADO " + fw.getFileBase64() );
 			TbQoDocumentoHabilitante da= this.qos.generateDocumentoHabilitante(fw);
 			log.info("===============>loadedeFile " + da.getId() );
 			return fw;

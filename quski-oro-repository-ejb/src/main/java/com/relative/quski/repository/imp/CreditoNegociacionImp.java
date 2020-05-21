@@ -71,7 +71,7 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 			Join<TbQoNegociacion, TbQoCliente> joinNegociacionCliente = joinCreditoNegociacion.join("tbQoCliente");
 			// ~~> WHERE
 			Predicate where = cb.and(cb.like(joinContratoAgencia.get("nombreAgencia"), agencia),
-					cb.like(joinCreditoProceso.get("nombre_proceso"), proceso),
+					cb.like(joinCreditoProceso.get("nombreproceso"), proceso),
 					cb.like(joinNegociacionCliente.get("cedulaCliente"), cedula));
 			query.where(where);
 			// ~~> SELECT
