@@ -1,0 +1,772 @@
+From 7bb5e0fbf1b29e79db75cf4d530ba3db53193bd4 Mon Sep 17 00:00:00 2001
+From: developer-four <developer-four@relative-engine.com>
+Date: Mon, 20 Apr 2020 20:11:33 -0500
+Subject: [PATCH] Reasignacion Actividades
+
+---
+ .../quski/enums/EstadoOperacionEnum.java      |   2 +
+ .../quski/model/TbQoCreditoNegociacion.java   |  43 +++++-
+ .../model/TbQoReasignacionActividad.java      |  81 +++++++++++
+ .../repository/ReasignacionRepository.java    |  20 +++
+ .../imp/ReasignacionRepositoryImp.java        |  60 ++++++++
+ ...easignacionByCodigoAndEstadoParamSpec.java |  43 ++++++
+ .../spec/ReasignacionByCodigoParamSpec.java   |  44 ++++++
+ .../rest/ReasignacionRestController.java      |  78 ++++++++++
+ .../rest/ReasignacionesRestController.java    | 135 +++++++++++++++++
+ .../quski/service/ProcesoService.java         | 137 ++++++++++++++++++
+ 10 files changed, 635 insertions(+), 8 deletions(-)
+ create mode 100644 quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoReasignacionActividad.java
+ create mode 100644 quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/ReasignacionRepository.java
+ create mode 100644 quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/imp/ReasignacionRepositoryImp.java
+ create mode 100644 quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoAndEstadoParamSpec.java
+ create mode 100644 quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoParamSpec.java
+ create mode 100644 quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionRestController.java
+ create mode 100644 quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionesRestController.java
+ create mode 100644 quski-oro-service-ejb/src/main/java/com/relative/quski/service/ProcesoService.java
+
+diff --git a/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/enums/EstadoOperacionEnum.java b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/enums/EstadoOperacionEnum.java
+index 19265bd..b29c419 100644
+--- a/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/enums/EstadoOperacionEnum.java
++++ b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/enums/EstadoOperacionEnum.java
+@@ -5,5 +5,7 @@ public enum EstadoOperacionEnum {
+ 	CANCELADO,
+ 	NOVADO,
+ 	PENDIENTE_APROBACION,
++	DISPONIBLE,
++	EN_EJECUCIÓN
+ 	
+ }
+diff --git a/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoCreditoNegociacion.java b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoCreditoNegociacion.java
+index a55cf21..4ae250b 100644
+--- a/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoCreditoNegociacion.java
++++ b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoCreditoNegociacion.java
+@@ -2,6 +2,9 @@ package com.relative.quski.model;
+ 
+ import java.io.Serializable;
+ import javax.persistence.*;
++
++import com.relative.quski.enums.EstadoOperacionEnum;
++
+ import java.math.BigDecimal;
+ import java.util.Date;
+ import java.util.List;
+@@ -43,15 +46,19 @@ public class TbQoCreditoNegociacion implements Serializable {
+ 
+ 	@Column(name="codigo_operacion")
+ 	private String codigoOperacion;
+-	
+-	@Column(name="codigo_softbank")
+-	private String codigoSoftbank;
++		
++	/*@Column(name="codigo_softbank")
++	private String codigoSoftbank;*/
+ 
+ 	@Column(name="costo_transporte")
+ 	private BigDecimal costoTransporte;
+ 	
+-	private String estado;
+-
++	@Enumerated(EnumType.STRING)
++	private EstadoOperacionEnum estado;
++	
++	@Column(name="id_usuario")
++	private String idUsuario;
++	
+ 	@Temporal(TemporalType.DATE)
+ 	@Column(name="fecha_actualizacion")
+ 	private Date fechaActualizacion;
+@@ -104,6 +111,20 @@ public class TbQoCreditoNegociacion implements Serializable {
+ 
+ 	public TbQoCreditoNegociacion() {
+ 	}
++	
++	
++
++	public String getIdUsuario() {
++		return idUsuario;
++	}
++
++
++
++	public void setIdUsuario(String idUsuario) {
++		this.idUsuario = idUsuario;
++	}
++
++
+ 
+ 	public Long getId() {
+ 		return this.id;
+@@ -177,14 +198,20 @@ public class TbQoCreditoNegociacion implements Serializable {
+ 		this.costoTransporte = costoTransporte;
+ 	}
+ 
+-	public String getEstado() {
+-		return this.estado;
++
++
++	public EstadoOperacionEnum getEstado() {
++		return estado;
+ 	}
+ 
+-	public void setEstado(String estado) {
++
++
++	public void setEstado(EstadoOperacionEnum estado) {
+ 		this.estado = estado;
+ 	}
+ 
++
++
+ 	public Date getFechaActualizacion() {
+ 		return this.fechaActualizacion;
+ 	}
+diff --git a/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoReasignacionActividad.java b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoReasignacionActividad.java
+new file mode 100644
+index 0000000..7980016
+--- /dev/null
++++ b/quski-oro-datamodel-ejb/src/main/java/com/relative/quski/model/TbQoReasignacionActividad.java
+@@ -0,0 +1,81 @@
++package com.relative.quski.model;
++
++import java.io.Serializable;
++import javax.persistence.*;
++
++
++/**
++ * The persistent class for the tb_qo_reasignacion_actividad database table.
++ * 
++ */
++@Entity
++@Table(name="tb_qo_reasignacion_actividad")
++
++public class TbQoReasignacionActividad implements Serializable {
++	private static final long serialVersionUID = 1L;
++
++	@Id
++	@SequenceGenerator(name="TB_QO_REASIGNACION_ACTIVIDAD_ID_GENERATOR", sequenceName="SEQ_REASIGNACION")
++	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REASIGNACION_ACTIVIDAD_ID_GENERATOR")
++	private Long id;
++
++	@Column(name="id_usuario_antiguo")
++	private String idUsuarioAntiguo;
++
++	@Column(name="id_usuario_nuevo")
++	private String idUsuarioNuevo;
++
++	private String observacion;
++
++	//bi-directional many-to-one association to TbQoCreditoNegociacion
++	@ManyToOne
++	@JoinColumn(name="id_credito_negociacion")
++	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
++
++	public TbQoReasignacionActividad() {
++	}
++
++	 
++	public Long getId() {
++		return id;
++	}
++
++
++	public void setId(Long id) {
++		this.id = id;
++	}
++
++
++	public String getIdUsuarioAntiguo() {
++		return this.idUsuarioAntiguo;
++	}
++
++	public void setIdUsuarioAntiguo(String idUsuarioAntiguo) {
++		this.idUsuarioAntiguo = idUsuarioAntiguo;
++	}
++
++	public String getIdUsuarioNuevo() {
++		return this.idUsuarioNuevo;
++	}
++
++	public void setIdUsuarioNuevo(String idUsuarioNuevo) {
++		this.idUsuarioNuevo = idUsuarioNuevo;
++	}
++
++	public String getObservacion() {
++		return this.observacion;
++	}
++
++	public void setObservacion(String observacion) {
++		this.observacion = observacion;
++	}
++
++	public TbQoCreditoNegociacion getTbQoCreditoNegociacion() {
++		return this.tbQoCreditoNegociacion;
++	}
++
++	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
++		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
++	}
++
++}
+\ No newline at end of file
+diff --git a/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/ReasignacionRepository.java b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/ReasignacionRepository.java
+new file mode 100644
+index 0000000..03e920d
+--- /dev/null
++++ b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/ReasignacionRepository.java
+@@ -0,0 +1,20 @@
++package com.relative.quski.repository;
++
++import java.util.List;
++
++import com.relative.core.exception.RelativeException;
++import com.relative.core.persistence.CrudRepository;
++import com.relative.core.util.main.PaginatedWrapper;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++import com.relative.quski.model.TbQoReasignacionActividad;
++
++public interface ReasignacionRepository extends CrudRepository<Long, TbQoReasignacionActividad> {
++	
++	
++	public List<TbQoReasignacionActividad> findBycodigoReasignacion(String id, int startRecord,
++			Integer pageSize, String sortFields, String sortDirections) throws RelativeException;
++
++	public Long countByParamPaged(String id) throws RelativeException;
++
++}
+diff --git a/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/imp/ReasignacionRepositoryImp.java b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/imp/ReasignacionRepositoryImp.java
+new file mode 100644
+index 0000000..373abc7
+--- /dev/null
++++ b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/imp/ReasignacionRepositoryImp.java
+@@ -0,0 +1,60 @@
++package com.relative.quski.repository.imp;
++
++import java.util.List;
++
++import javax.ejb.Stateless;
++
++import com.relative.core.exception.RelativeException;
++import com.relative.core.persistence.GeneralRepositoryImp;
++import com.relative.core.util.main.Constantes;
++import com.relative.core.util.main.PaginatedWrapper;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++import com.relative.quski.model.TbQoReasignacionActividad;
++import com.relative.quski.repository.ReasignacionRepository;
++import com.relative.quski.repository.spec.ReasignacionByCodigoAndEstadoParamSpec;
++import com.relative.quski.repository.spec.ReasignacionByCodigoParamSpec;
++@Stateless(mappedName = "reasignacionRepository")
++public class ReasignacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoReasignacionActividad> implements ReasignacionRepository {
++
++	public ReasignacionRepositoryImp() {
++	
++		// TODO Auto-generated constructor stub
++	}
++
++	@Override
++	public List<TbQoReasignacionActividad> findBycodigoReasignacion(String id, int startRecord, Integer pageSize,
++			String sortFields, String sortDirections) throws RelativeException {List<TbQoReasignacionActividad> tmp;
++			try {
++				tmp = this.findAllBySpecification(new ReasignacionByCodigoParamSpec(id));
++				if (tmp != null && !tmp.isEmpty()) {
++					return tmp;
++				}
++			} catch (Exception e) {
++				// log.info("NO EXISTE REGISTROS BUSCADOS POR EL PARAMETRO " +e);
++				throw new RelativeException(Constantes.ERROR_CODE_READ,
++						"ERROR: NO EXISTE INFORMACION DE REASIGNACION POR ID " + id);
++
++			}
++			return null;
++	}
++
++	@Override
++	public Long countByParamPaged(String id) throws RelativeException {
++		try {
++			return this.countBySpecification(new ReasignacionByCodigoParamSpec(id));
++
++		} catch (Exception e) {
++			// log.info("NO EXISTE REGISTROS PARA EL PARAMETRO " +e);
++			throw new RelativeException(Constantes.ERROR_CODE_READ,
++					"ERROR: NO EXISTE INFORMACION DE REASIGNACION POR ID" + id);
++
++		}
++	}
++
++
++
++ 
++
++	
++}
+diff --git a/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoAndEstadoParamSpec.java b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoAndEstadoParamSpec.java
+new file mode 100644
+index 0000000..64ee004
+--- /dev/null
++++ b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoAndEstadoParamSpec.java
+@@ -0,0 +1,43 @@
++package com.relative.quski.repository.spec;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import javax.persistence.criteria.CriteriaBuilder;
++import javax.persistence.criteria.Predicate;
++import javax.persistence.criteria.Root;
++
++import org.apache.commons.lang3.StringUtils;
++
++import com.relative.core.persistence.AbstractSpecification;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++
++public class ReasignacionByCodigoAndEstadoParamSpec extends AbstractSpecification<TbQoCreditoNegociacion> {
++	private String codigOp;
++	private EstadoOperacionEnum estado;
++
++	public ReasignacionByCodigoAndEstadoParamSpec(String codigOp, EstadoOperacionEnum estado) {
++		this.codigOp = codigOp;
++		this.estado = estado;
++	}
++
++	@Override
++	public boolean isSatisfiedBy(TbQoCreditoNegociacion arg0) {
++
++		return false;
++	}
++
++	@Override
++	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
++		List<Predicate> patientLevelPredicates = new ArrayList<Predicate>();
++		if (this.estado != null) {
++			patientLevelPredicates.add(cb.equal(poll.get("estado"), estado));
++		}
++		if (this.codigOp != null) {
++			patientLevelPredicates.add(cb.like(poll.get("codigoOperacion"), "%" + codigOp + "%"));
++		}
++		return cb.and(patientLevelPredicates.toArray(new Predicate[] {}));
++	}
++
++}
+diff --git a/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoParamSpec.java b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoParamSpec.java
+new file mode 100644
+index 0000000..6cd6613
+--- /dev/null
++++ b/quski-oro-repository-ejb/src/main/java/com/relative/quski/repository/spec/ReasignacionByCodigoParamSpec.java
+@@ -0,0 +1,44 @@
++package com.relative.quski.repository.spec;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import javax.persistence.criteria.CriteriaBuilder;
++import javax.persistence.criteria.Predicate;
++import javax.persistence.criteria.Root;
++
++import org.apache.commons.lang3.StringUtils;
++
++import com.relative.core.persistence.AbstractSpecification;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++import com.relative.quski.model.TbQoReasignacionActividad;
++
++public class ReasignacionByCodigoParamSpec extends AbstractSpecification<TbQoReasignacionActividad> {
++	private String id;
++	
++
++	public ReasignacionByCodigoParamSpec(String id) {
++		this.id = id;
++	
++	}
++
++
++	@Override
++	public boolean isSatisfiedBy(TbQoReasignacionActividad arg0) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++
++	@Override
++	public Predicate toPredicate(Root<TbQoReasignacionActividad> poll, CriteriaBuilder cb) {
++		List<Predicate> patientLevelPredicates = new ArrayList<Predicate>();
++		if (this.id != null) {
++			patientLevelPredicates.add(cb.like(poll.get("id"), "%" + id + "%"));
++		}
++		return null;
++	}
++
++	
++}
+diff --git a/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionRestController.java b/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionRestController.java
+new file mode 100644
+index 0000000..e5f100f
+--- /dev/null
++++ b/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionRestController.java
+@@ -0,0 +1,78 @@
++package com.relative.quski.rest;
++
++import java.util.logging.Logger;
++
++import javax.inject.Inject;
++import javax.ws.rs.Consumes;
++import javax.ws.rs.GET;
++import javax.ws.rs.POST;
++import javax.ws.rs.Path;
++import javax.ws.rs.Produces;
++import javax.ws.rs.QueryParam;
++import javax.ws.rs.core.MediaType;
++
++import com.relative.core.exception.RelativeException;
++import com.relative.core.util.main.PaginatedListWrapper;
++import com.relative.core.web.util.BaseRestController;
++import com.relative.core.web.util.CrudRestControllerInterface;
++import com.relative.core.web.util.GenericWrapper;
++import com.relative.quski.model.TbQoNegociacion;
++import com.relative.quski.model.TbQoNegociacionCalculo;
++import com.relative.quski.model.TbQoReasignacionActividad;
++import com.relative.quski.service.ProcesoService;
++
++import io.swagger.annotations.Api;
++import io.swagger.annotations.ApiOperation;
++
++@Path("/reasignacionesRestController")
++@Consumes(MediaType.APPLICATION_JSON)
++@Produces(MediaType.APPLICATION_JSON)
++@Api(value = " Reasignación Bajo Demanda - REST CRUD")
++public class ReasignacionRestController extends BaseRestController
++		implements CrudRestControllerInterface<TbQoReasignacionActividad, GenericWrapper<TbQoReasignacionActividad>> {
++	@Inject
++	ProcesoService procesoService;
++	@Inject
++	Logger log;
++
++	public ReasignacionRestController() throws RelativeException {
++		super();
++		// TODO Auto-generated constructor stub
++	}
++
++	@Override
++	public void deleteEntity(String arg0) throws RelativeException {
++		// TODO Auto-generated method stub
++
++	}
++
++	@Override
++	@GET
++	@Path("/getEntity")
++	@ApiOperation(value = "GenericWrapper<TbQoReasignacionActividad>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoReasignacionActividad", response = GenericWrapper.class)
++	public GenericWrapper<TbQoReasignacionActividad> getEntity(@QueryParam("id") String id) throws RelativeException {
++		GenericWrapper<TbQoReasignacionActividad> loc = new GenericWrapper<>();
++		TbQoReasignacionActividad a = this.procesoService.findParametroById(Long.valueOf(id));
++		loc.setEntidad(a);
++		return loc;
++	}
++
++	@Override
++	public PaginatedListWrapper<TbQoReasignacionActividad> listAllEntities(String arg0, String arg1, String arg2,
++			String arg3, String arg4) throws RelativeException {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++	@Override
++	@POST
++	@Path("/persistEntity")
++	@ApiOperation(value = "GenericWrapper<TbQoReasignacionActividad>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoReasignacionActividad", response = GenericWrapper.class)
++	public GenericWrapper<TbQoReasignacionActividad> persistEntity(GenericWrapper<TbQoReasignacionActividad> wp)
++			throws RelativeException {
++		GenericWrapper<TbQoReasignacionActividad> loc = new GenericWrapper<>();
++		loc.setEntidad(this.procesoService.manageReasignacion(wp.getEntidad()));
++		return loc;
++	}
++
++}
+diff --git a/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionesRestController.java b/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionesRestController.java
+new file mode 100644
+index 0000000..0dfe28c
+--- /dev/null
++++ b/quski-oro-rest/src/main/java/com/relative/quski/rest/ReasignacionesRestController.java
+@@ -0,0 +1,135 @@
++package com.relative.quski.rest;
++
++import java.util.List;
++import java.util.logging.Logger;
++
++import javax.inject.Inject;
++import javax.ws.rs.Consumes;
++import javax.ws.rs.DefaultValue;
++import javax.ws.rs.GET;
++import javax.ws.rs.Path;
++import javax.ws.rs.Produces;
++import javax.ws.rs.QueryParam;
++import javax.ws.rs.core.MediaType;
++
++import org.apache.commons.lang3.StringUtils;
++
++import com.relative.core.exception.RelativeException;
++import com.relative.core.util.main.PaginatedListWrapper;
++import com.relative.core.util.main.PaginatedWrapper;
++import com.relative.core.web.util.BaseRestController;
++import com.relative.core.web.util.CrudRestControllerInterface;
++import com.relative.core.web.util.GenericWrapper;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbMiParametro;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++import com.relative.quski.service.ProcesoService;
++import com.relative.quski.service.QuskiOroService;
++import com.relative.quski.util.QuskiOroUtil;
++import com.relative.quski.wrapper.AsignacionesWrapper;
++
++import io.swagger.annotations.Api;
++import io.swagger.annotations.ApiOperation;
++import io.swagger.annotations.ApiResponse;
++import io.swagger.annotations.ApiResponses;
++
++@Path("/reasignacionRestController")
++@Consumes(MediaType.APPLICATION_JSON)
++@Produces(MediaType.APPLICATION_JSON)
++@Api(value = " Asignacion Bajo Demanda - REST CRUD")
++public class ReasignacionesRestController extends BaseRestController
++		implements CrudRestControllerInterface<AsignacionesWrapper, GenericWrapper<AsignacionesWrapper>> {
++	@Inject
++	QuskiOroService qos;
++	@Inject
++	ProcesoService procesoService;
++	@Inject
++	Logger log;
++
++	public ReasignacionesRestController() throws RelativeException {
++		super();
++	}
++
++	@Override
++	public void deleteEntity(String arg0) throws RelativeException {
++		// Auto-generated
++	}
++
++	@GET
++	@Path("/findReasignacionByParamsPaginated")
++	@ApiOperation(value = "PaginatedListWrapper<AsignacionesWrapper>", notes = "Metodo Get findByParamsPaginated Retorna wrapper de informacion de paginacion y operaciones activas encontradas", response = PaginatedListWrapper.class)
++	@ApiResponses(value = {
++			@ApiResponse(code = 200, message = "Retorno exitoso de informacion", response = GenericWrapper.class),
++			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = GenericWrapper.class) })
++	public PaginatedListWrapper<TbQoCreditoNegociacion> findByParamsPaginated(
++			@QueryParam("page") @DefaultValue("1") String page,
++			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
++			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
++			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
++			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
++			@QueryParam("codigoOperacion") String codigoOperacion, @QueryParam("estado") String estado)
++			throws RelativeException {
++
++		return findByParams(
++				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
++						isPaginated),
++				StringUtils.isNotBlank(codigoOperacion) ? codigoOperacion : null,
++				StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class, estado)
++						: null);
++	}
++
++	private PaginatedListWrapper<TbQoCreditoNegociacion> findByParams(PaginatedWrapper pw, String codigoOperacion,
++			EstadoOperacionEnum estado) throws RelativeException {
++		log.info("===================> getPlantilla" + estado);
++		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
++		List<TbQoCreditoNegociacion> actions = null;
++
++		actions = this.procesoService.findByCreditoNegociacion(pw, codigoOperacion, estado);
++		if (actions != null && !actions.isEmpty()) {
++			plw.setTotalResults(
++					this.procesoService.countfindBycodigOperacionEstado(codigoOperacion, estado).intValue());
++			plw.setList(actions);
++		}
++
++		return plw;
++	}
++	
++	/*
++	 * @Override
++	@GET
++	@Path("/getEntity")
++	@ApiOperation(value = "GenericWrapper<TbMiParametro> ", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiParametro", 
++	response = GenericWrapper.class)
++	@ApiResponses(value = {
++			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
++			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
++	public GenericWrapper<TbMiParametro> getEntity(
++			@QueryParam("id") String id) throws RelativeException {
++		GenericWrapper<TbMiParametro> loc = new GenericWrapper<>();
++		TbMiParametro a =this.sas.findParametroById(Long.valueOf(id));
++		loc.setEntidad(a);
++		return loc;
++	}
++	 */
++	
++	@Override
++	public GenericWrapper<AsignacionesWrapper> getEntity(String arg0) throws RelativeException {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++	@Override
++	public PaginatedListWrapper<AsignacionesWrapper> listAllEntities(String arg0, String arg1, String arg2, String arg3,
++			String arg4) throws RelativeException {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++	@Override
++	public GenericWrapper<AsignacionesWrapper> persistEntity(GenericWrapper<AsignacionesWrapper> arg0)
++			throws RelativeException {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++}
+diff --git a/quski-oro-service-ejb/src/main/java/com/relative/quski/service/ProcesoService.java b/quski-oro-service-ejb/src/main/java/com/relative/quski/service/ProcesoService.java
+new file mode 100644
+index 0000000..82b3098
+--- /dev/null
++++ b/quski-oro-service-ejb/src/main/java/com/relative/quski/service/ProcesoService.java
+@@ -0,0 +1,137 @@
++package com.relative.quski.service;
++
++import java.util.List;
++import java.util.logging.Logger;
++
++import javax.ejb.Stateless;
++import javax.inject.Inject;
++
++import com.relative.core.exception.RelativeException;
++import com.relative.core.persistence.Repository;
++import com.relative.core.util.main.Constantes;
++import com.relative.core.util.main.PaginatedWrapper;
++import com.relative.quski.enums.EstadoOperacionEnum;
++import com.relative.quski.model.TbMiParametro;
++import com.relative.quski.model.TbQoCreditoNegociacion;
++import com.relative.quski.model.TbQoReasignacionActividad;
++import com.relative.quski.repository.CreditoNegociacionRepository;
++import com.relative.quski.repository.ReasignacionRepository;
++
++@Stateless
++public class ProcesoService {
++	@Inject
++	Logger log;
++	@Inject
++	CreditoNegociacionRepository creditoNegociacionRepository;
++	@Inject
++	ReasignacionRepository reasignacionRepository;
++
++	/**
++	 * Metodo que realiza la busqueda por Código Operacion y EstadoOperacion
++	 * 
++	 * @param pw
++	 * @param codigOperacion
++	 * @param estado
++	 * @return
++	 * @throws RelativeException
++	 */
++	public List<TbQoCreditoNegociacion> findByCreditoNegociacion(PaginatedWrapper pw, String codigOperacion,
++			EstadoOperacionEnum estado) throws RelativeException {
++
++		if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
++			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado, pw.getStartRecord(),
++					pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
++		} else {
++			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado);
++		}
++	}
++
++	public Long countfindBycodigOperacionEstado(String codigOperacion, EstadoOperacionEnum estado)
++			throws RelativeException {
++		try {
++			return creditoNegociacionRepository.countfindBycodigOpEstado(codigOperacion, estado);
++		} catch (RelativeException e) {
++			throw e;
++		} catch (Exception e) {
++			throw new RelativeException(Constantes.ERROR_CODE_READ,
++					"codigOperacion y estado no encontrado " + e.getMessage());
++		}
++	}
++
++	/**
++	 * Metodo que realiza la busqueda de las reasignaciones por id
++	 */
++	public TbQoReasignacionActividad findParametroById(Long id) throws RelativeException {
++		try {
++			return reasignacionRepository.findById(id);
++		} catch (RelativeException e) {
++			throw e;
++		} catch (Exception e) {
++			throw new RelativeException(Constantes.ERROR_CODE_READ, "Reasignacion no encontrada " + e.getMessage());
++		}
++	}
++
++	/**
++	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
++	 * 
++	 * @param send entidad con la informacion de creacion o actualizacion
++	 * @return Entidad modificada o actualizada
++	 * @throws RelativeException
++	 */
++	public TbQoReasignacionActividad manageReasignacion(TbQoReasignacionActividad send) throws RelativeException {
++		try {
++			log.info("INGRESA A "+send.getId());
++			TbQoReasignacionActividad persisted = null;
++			if (send != null && send.getId()!= null  ) {
++				persisted = this.findParametroById(send.getId());
++				persisted = this.updateParametro(send, persisted);
++				return persisted;
++			} else if (send != null && send.getId() == null) {
++				// send.setFechaActualizacion( new Timestamp(System.currentTimeMillis()) );
++				// send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
++				persisted = reasignacionRepository.add(send);
++				return persisted;
++			} else {
++				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo reasignacion");
++			}
++		} catch (RelativeException e) {
++			e.printStackTrace();
++			throw e;
++		} catch (Exception e) {
++			e.printStackTrace();
++			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
++					"Error actualizando la CausaNegativa " + e.getMessage());
++		}
++	}
++
++	/**
++	 * Metodo que actualiza la entidad
++	 * 
++	 * @param send      informacion enviada para update
++	 * @param persisted entidad existente sobre la que se actualiza
++	 * @return Entidad actualizada
++	 * @throws RelativeException
++	 */
++	public TbQoReasignacionActividad updateParametro(TbQoReasignacionActividad send,
++			TbQoReasignacionActividad persisted) throws RelativeException {
++		try {
++			if (send.getIdUsuarioAntiguo() != null)
++				persisted.setIdUsuarioAntiguo(send.getIdUsuarioAntiguo());
++			if (send.getIdUsuarioNuevo() != null)
++				persisted.setIdUsuarioNuevo(send.getIdUsuarioAntiguo());
++			if (send.getObservacion() != null)
++				persisted.setObservacion(send.getObservacion());
++		
++			return reasignacionRepository.update(persisted);
++
++		} catch (RelativeException e) {
++			throw e;
++		} catch (Exception e) {
++			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
++					"Error actualizando CausaNegativa " + e.getMessage());
++		}
++	}
++
++
++
++}
+-- 
+2.17.1
+
