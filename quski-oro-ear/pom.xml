@@ -48,6 +48,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			 <groupId>com.relative</groupId>
+			  <artifactId>integracion-soap</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.relative</groupId>
 			<artifactId>quski-oro-datamodel-ejb</artifactId>
 			<version>1.0-SNAPSHOT</version>
