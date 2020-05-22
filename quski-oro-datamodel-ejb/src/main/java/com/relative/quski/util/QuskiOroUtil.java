@@ -1,5 +1,9 @@
 package com.relative.quski.util;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MONTHS;
+import static java.time.temporal.ChronoUnit.YEARS;
+
 import java.lang.reflect.Constructor;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +22,8 @@ import java.util.UUID;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.wrapper.YearMonthDay;
+
 
 public class QuskiOroUtil {
 	
@@ -301,5 +307,16 @@ public class QuskiOroUtil {
 		Period periodo = Period.between(fechaNacTemp, ahora);
 		return periodo.getYears();
 	}
+	
+	public static YearMonthDay countDaysBetweenDates(Date dateInicio) throws RelativeException {
+        try {
+        	LocalDate startLocalDate = convertDateToLocalDate(dateInicio);
+            LocalDate endLocalDate = LocalDate.now();
+            Period periodo = Period.between(startLocalDate, endLocalDate);
+            return new YearMonthDay(periodo.get(YEARS),periodo.get(MONTHS),periodo.get(DAYS));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, e.getMessage());
+		}
+    }
 	
 }
