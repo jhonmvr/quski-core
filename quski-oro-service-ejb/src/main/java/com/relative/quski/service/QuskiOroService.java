@@ -3,6 +3,7 @@ package com.relative.quski.service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -32,6 +33,7 @@ import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
+import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.AgenciaRepository;
 import com.relative.quski.repository.ArchivoClienteRepository;
@@ -53,6 +55,7 @@ import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
+import com.relative.quski.repository.TrackingRepository;
 import com.relative.quski.repository.VariableCrediticiaRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
@@ -113,6 +116,8 @@ public class QuskiOroService {
 	private AgenciaRepository agenciaRepository;
 	@Inject
 	private ProcesoRepository procesoRepository;
+	@Inject
+	private TrackingRepository trackingRepository;
 	
 	
 
@@ -196,7 +201,6 @@ public class QuskiOroService {
 	 */
 	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
 			TbQoCliente persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.clienteRepository.findById(send.getId());
@@ -1529,7 +1533,6 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 	 */
 	public TbQoNegociacionCalculo manageNegociacionCalculo(TbQoNegociacionCalculo send) throws RelativeException {
 		try {
-			log.info("==> entra a manage TbQoNegociacionCalculo");
 			TbQoNegociacionCalculo persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.negociacionCalculoRepository.findById(send.getId());
@@ -2453,12 +2456,141 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Procesos no encontrados " + e.getMessage());
 		}
 	}
+	
 
 	public List<AsignacionesWrapper> findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
 		return this.clienteRepository.clienteBycodigoOperacion(codigoOperacion);		
 	}
-
 	
+	/**
+	 * Tracking
+	 */
+	
+	/**
+	 * 
+	 * @param pw
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public List<TbQoTracking> findAllTracking(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return trackingRepository.findAll(TbQoTracking.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return trackingRepository.findAll(TbQoTracking.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return trackingRepository.findAll(TbQoTracking.class, pw.getSortFields(), pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error al buscar todos los tracking " + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoTracking findTrackingById(Long id) throws RelativeException {
+		try {
+			return this.trackingRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public Long countTracking() throws RelativeException {
+		try {
+			return trackingRepository.countAll(TbQoTracking.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error. No se puede contar registros" + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @param entidad
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoTracking manageTracking(TbQoTracking send) throws RelativeException {
+		try {
+			TbQoTracking persisted = null; 
+			if (send != null && send.getId() != null) {
+				try {
+					persisted = this.trackingRepository.findById(send.getId());
+				}catch(RelativeException e) {
+					String mensaje="ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
+				log.log(Level.SEVERE, mensaje,e);
+				}
+				return this.updateTracking(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				return this.trackingRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo Operacion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 * "id": 1,
+        "actividad": "Busqueda de cliente",
+        "codigoRegistro": 1,
+        "estado": "Ingresado",
+        "fechaAsignacion": 1593972500000,
+        "fechaFin": 1593973060000,
+        "fechaInicio": 1593972500000,
+        "fechaInicioAtencion": 1593972500000,
+        "observacion": "",
+        "proceso": "Cotizacion",
+        "tiempoTotal": "00:09:00",
+        "usuario": "Asesor"
+	 */
+	public TbQoTracking updateTracking(TbQoTracking send, TbQoTracking persisted) throws RelativeException {
+		try {
+			persisted.setId(send.getId());
+			persisted.setActividad(send.getActividad());
+			persisted.setEstado(send.getEstado());
+			persisted.setFechaAsignacion(send.getFechaAsignacion());
+			persisted.setFechaFin(send.getFechaFin());
+			persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
+			persisted.setObservacion(send.getObservacion());
+			persisted.setTiempoTotal(send.getTiempoTotal());
+			persisted.setUsuario(send.getUsuario());
+			return this.trackingRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
 
 	
 }

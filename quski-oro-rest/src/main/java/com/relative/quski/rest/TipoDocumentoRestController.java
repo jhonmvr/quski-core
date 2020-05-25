@@ -179,7 +179,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 		
 		if( !StringUtils.isEmpty( identificacionCliente )  ) {
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB.toString() )==0  )  {
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB )==0  )  {
 				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
 			} 
 			

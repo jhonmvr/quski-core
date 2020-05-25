@@ -15,9 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.relative.quski.model.TbQoAgencia;
-import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
+
 
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.

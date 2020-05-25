@@ -136,6 +136,7 @@ public class RestClientWrapper implements Serializable {
 	public void setTransform(Boolean transform) {
 		this.transform = transform;
 	}
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("==============");
 		sb.append("\n");

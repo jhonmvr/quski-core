@@ -16,8 +16,6 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.Canton;
 import com.relative.quski.repository.CantonRepository;
-import com.relative.quski.repository.spec.AgenciaByParamsSpec;
-
 
 /**
  * Session Bean implementation class CantonRepositoryImp
