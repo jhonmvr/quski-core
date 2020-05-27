@@ -18,13 +18,14 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR", sequenceName="SEG_TB_QO_DOCUMENTO_HABILITANTE")
+	@SequenceGenerator(name="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR", sequenceName="SEQ_HABILITANTE",initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_DOCUMENTO_HABILITANTE_ID_GENERATOR")
 	private Long id;
 
 	@Lob
 	private byte[] archivo;
-
+	
+	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
