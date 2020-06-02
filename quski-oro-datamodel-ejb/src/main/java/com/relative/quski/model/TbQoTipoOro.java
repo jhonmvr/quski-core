@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +23,8 @@ public class TbQoTipoOro implements Serializable {
 	@SequenceGenerator(name="TB_QO_TIPO_ORO_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_ORO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_ORO_ID_GENERATOR")
 	private Long id;
-
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -32,6 +35,8 @@ public class TbQoTipoOro implements Serializable {
 	private Date fechaCreacion;
 
 	private BigDecimal precio;
+	
+	
 
 	private String quilate;
 
@@ -54,11 +59,13 @@ public class TbQoTipoOro implements Serializable {
 		this.id = id;
 	}
 
-	public String getEstado() {
-		return this.estado;
+
+
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -87,7 +94,7 @@ public class TbQoTipoOro implements Serializable {
 	}
 
 	public String getQuilate() {
-		return this.quilate;
+		return quilate;
 	}
 
 	public void setQuilate(String quilate) {

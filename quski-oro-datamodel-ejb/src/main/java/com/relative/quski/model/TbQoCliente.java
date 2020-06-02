@@ -44,7 +44,7 @@ public class TbQoCliente implements Serializable {
 
 	@Column(name="cargas_familiares")
 	private BigDecimal cargasFamiliares;
-
+	
 	@Column(name="cedula_cliente")
 	private String cedulaCliente;
 
