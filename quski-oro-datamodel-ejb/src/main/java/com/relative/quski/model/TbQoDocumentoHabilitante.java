@@ -1,11 +1,25 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
-
-import java.util.Date;
+import com.relative.quski.enums.ProcessEnum;
 
 
 /**
@@ -27,6 +41,18 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
+	@Enumerated(EnumType.STRING)
+	private ProcessEnum proceso;
+	
+	@Column(name="id_referencia")
+	private Long idReferencia;
+	
+	@Column(name="object_id")
+	private String objectId;
+	
+	@Column(name="estado_operacion")
+	private String estadoOperacion;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -58,6 +84,10 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_tipo_documento")
 	private TbQoTipoDocumento tbQoTipoDocumento;
+	
+	
+	
+	
 
 	public TbQoDocumentoHabilitante() {
 	}
@@ -108,6 +138,40 @@ public class TbQoDocumentoHabilitante implements Serializable {
 
 	public void setNombreArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
+	}
+	
+	
+
+	public ProcessEnum getProceso() {
+		return proceso;
+	}
+
+	public void setProceso(ProcessEnum proceso) {
+		this.proceso = proceso;
+	}
+
+	public Long getIdReferencia() {
+		return idReferencia;
+	}
+
+	public void setIdReferencia(Long idReferencia) {
+		this.idReferencia = idReferencia;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+	public String getEstadoOperacion() {
+		return estadoOperacion;
+	}
+
+	public void setEstadoOperacion(String estadoOperacion) {
+		this.estadoOperacion = estadoOperacion;
 	}
 
 	public TbQoCliente getTbQoCliente() {
