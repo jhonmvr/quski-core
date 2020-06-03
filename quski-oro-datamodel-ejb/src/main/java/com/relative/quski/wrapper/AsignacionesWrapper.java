@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.relative.quski.model.TbQoProceso;
 
+
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 

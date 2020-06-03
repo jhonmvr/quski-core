@@ -3,8 +3,6 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import org.jfree.util.Log;
-
 import com.relative.quski.enums.EstadoEnum;
 
 import java.util.Date;
