@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+
 import com.relative.quski.enums.EstadoEnum;
 
 public class DetalleCreditoWrapper implements Serializable {

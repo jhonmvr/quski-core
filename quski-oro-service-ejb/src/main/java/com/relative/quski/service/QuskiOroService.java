@@ -3,11 +3,12 @@ package com.relative.quski.service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
@@ -207,10 +208,12 @@ public class QuskiOroService {
 		try {
 			TbQoCliente persisted = null;
 			if (send != null && send.getId() != null) {
+				log.info("ingresa a actualizacion");
 				persisted = this.clienteRepository.findById(send.getId());
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
+				log.info("INGRESA A CREACION");
 
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return clienteRepository.add(send);
@@ -228,22 +231,74 @@ public class QuskiOroService {
 
 	public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
 		try {
-			persisted.setId(send.getId());
-			persisted.setCedulaCliente(send.getCedulaCliente());
-			;
-			persisted.setPrimerNombre(send.getPrimerNombre());
-			persisted.setSegundoNombre(send.getSegundoNombre());
-			persisted.setApellidoPaterno(send.getApellidoPaterno());
-			persisted.setApellidoMaterno(send.getApellidoMaterno());
-			persisted.setGenero(send.getGenero());
-			persisted.setEstadoCivil(send.getEstadoCivil());
-			persisted.setCargasFamiliares(send.getCargasFamiliares());
-			persisted.setFechaNacimiento(send.getFechaNacimiento());
-			persisted.setLugarNacimiento(send.getLugarNacimiento());
-			persisted.setNacionalidad(send.getNacionalidad());
-			persisted.setNivelEducacion(send.getNivelEducacion());
-			persisted.setActividadEconomica(send.getActividadEconomica());
-			persisted.setEdad(send.getEdad());
+			
+			if (!StringUtils.isEmpty(send.getCedulaCliente())) {
+				persisted.setCedulaCliente(send.getCedulaCliente());
+			}
+
+			if (!StringUtils.isEmpty(send.getActividadEconomica())) {
+				persisted.setActividadEconomica(send.getActividadEconomica());
+			}
+			if (!StringUtils.isEmpty(send.getApellidoMaterno())) {
+				persisted.setApellidoMaterno(send.getApellidoMaterno());
+			}
+			if (!StringUtils.isEmpty(send.getApellidoPaterno())) {
+				persisted.setApellidoPaterno(send.getApellidoPaterno());
+			}
+			if (!StringUtils.isEmpty(send.getPrimerNombre())) {
+				persisted.setPrimerNombre(send.getPrimerNombre());
+			}
+			if (!StringUtils.isEmpty(send.getSegundoNombre())) {
+				persisted.setSegundoNombre(send.getSegundoNombre());
+			}
+			if (!StringUtils.isEmpty(send.getApoderadoCliente())) {
+				persisted.setApoderadoCliente(send.getApoderadoCliente());
+			}
+			if (!StringUtils.isEmpty(send.getCampania())) {
+				persisted.setCampania(send.getCampania());
+			}
+			if (!StringUtils.isEmpty(send.getCanalContacto())) {
+				persisted.setCanalContacto(send.getCanalContacto());
+			}
+			if (!StringUtils.isEmpty(send.getEmail())) {
+				persisted.setEmail(send.getEmail());
+			}
+			if (!StringUtils.isEmpty(send.getEstadoCivil())) {
+				persisted.setEstadoCivil(send.getEstadoCivil());
+			}
+			if (!StringUtils.isEmpty(send.getGenero())) {
+				persisted.setGenero(send.getGenero());
+			}
+			if (!StringUtils.isEmpty(send.getLugarNacimiento())) {
+				persisted.setLugarNacimiento(send.getLugarNacimiento());
+			}
+			if (!StringUtils.isEmpty(send.getNacionalidad())) {
+				persisted.setNacionalidad(send.getNacionalidad());
+			}
+			if (!StringUtils.isEmpty(send.getNivelEducacion())) {
+				persisted.setNivelEducacion(send.getNivelEducacion());
+			}
+			if (!StringUtils.isEmpty(send.getPublicidad())) {
+				persisted.setPublicidad(send.getPublicidad());
+			}
+			if (!StringUtils.isEmpty(send.getSeparacionBienes())) {
+				persisted.setSeparacionBienes(send.getSeparacionBienes());
+			}
+			if (!StringUtils.isEmpty(send.getTelefonoFijo())) {
+				persisted.setTelefonoFijo(send.getTelefonoFijo());
+			}
+			if (!StringUtils.isEmpty(send.getTelefonoMovil())) {
+				persisted.setTelefonoMovil(send.getTelefonoMovil());
+			}
+			if( send.getFechaNacimiento() != null ) {
+				persisted.setFechaNacimiento(send.getFechaNacimiento());
+			}
+			// pon las validaciones par ESTOS CAMPOS Y PRUE OK YA DE NACIONALIDAD YA ESTA YA LE PONGO EL DE EDAD
+			if (send.getEdad()!=null) {
+				persisted.setEdad(send.getEdad());
+			}
+			 
+		
 
 			return clienteRepository.update(persisted);
 		} catch (Exception e) {
@@ -2497,21 +2552,22 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Procesos no encontrados " + e.getMessage());
 		}
 	}
-	
 
 	public List<AsignacionesWrapper> findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
 		return this.clienteRepository.clienteBycodigoOperacion(codigoOperacion);
 	}
-	
 	/**
 	 * * * * * * *** * * ** ** * *@Tracking
 	 */
-	
+
 	/**
 	 * 
 	 * @param pw PaginatedWrapper
 	 * @return List<TbQoTracking>
 	 * @throws RelativeException 
+	 * @param pw
+	 * @return
+	 * @throws RelativeException
 	 */
 	public List<TbQoTracking> findAllTracking(PaginatedWrapper pw) throws RelativeException {
 		try {
@@ -2535,13 +2591,14 @@ public class QuskiOroService {
 		}
 	}
 
-	
-
 	/**
 	 * 
 	 * @param id Long
 	 * @return TbQoTracking
 	 * @throws RelativeException 
+	 * @param id
+	 * @return
+	 * @throws RelativeException
 	 */
 	public TbQoTracking findTrackingById(Long id) throws RelativeException {
 		try {
@@ -2552,12 +2609,11 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
 		}
 	}
-	
-
 	/**
 	 * 
 	 * @return Long
 	 * @throws RelativeException 
+	 * 
 	 */
 	public Long countTracking() throws RelativeException {
 		try {
@@ -2568,7 +2624,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error. No se puede contar registros" + e.getMessage());
 		}
 	}
-			
 
 	/**
 	 * 
@@ -2578,17 +2633,14 @@ public class QuskiOroService {
 	 */
 	public TbQoTracking manageTracking(TbQoTracking send) throws RelativeException {
 		try {
-			log.info("===>>> Entrando a MANAGE TRACKING ===========> " + send);
-
-			TbQoTracking persisted = null; 
+			TbQoTracking persisted = null;
 			if (send != null && send.getId() != null) {
 				try {
 					persisted = this.trackingRepository.findById(send.getId());
-					log.info("===>>> CREANDO PERSISTED ===========> " + persisted);
-
-				}catch(RelativeException e) {
-					String mensaje="ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
-				log.log(Level.SEVERE, mensaje,e);
+				} catch (RelativeException e) {
+					@SuppressWarnings("unused")
+					String mensaje = "ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
+					// log.log(Level.SEVERE, mensaje,e);
 				}
 				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
 				return this.updateTracking(send, persisted);
@@ -2657,6 +2709,10 @@ public class QuskiOroService {
 		}
 	}
 	/**
+=======
+
+	/**
+>>>>>>> a6648385b36308fd5bb6c7c30ba6c715fb58c169
 	 * Metodo que lista la informacion de las entidades encontradas
 	 * 
 	 * @param pw Objeto generico que tiene la informacion que determina si el
@@ -2679,42 +2735,41 @@ public class QuskiOroService {
 		}
 	}
 
-	  /**
-     * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
-     * 
-     * @param send entidad con la informacion de creacion o actualizacion
-     * @return Entidad modificada o actualizada
-     * @throws RelativeException
-     */
-    public TbMiParametro manageParametro(TbMiParametro send) throws RelativeException {
-        try {
- 
-            TbMiParametro persisted = null;
-        
-            if (send != null && send.getId() != null) {
-                persisted = this.findParametroById(send.getId());
-                persisted = this.updateParametro(send, persisted);
-                parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
-                return persisted;
-            } else if (send != null && send.getId() == null) {
-                // send.setFechaActualizacion( new Timestamp(System.currentTimeMillis()) );
-                // send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
-                persisted = parametroRepository.add(send);
-                parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
-                return persisted;
-            } else {
-                throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
-            }
-        } catch (RelativeException e) {
-            e.printStackTrace();
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-                    "Error actualizando la CausaNegativa " + e.getMessage());
-        }
-    }
- 
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbMiParametro manageParametro(TbMiParametro send) throws RelativeException {
+		try {
+
+			TbMiParametro persisted = null;
+
+			if (send != null && send.getId() != null) {
+				persisted = this.findParametroById(send.getId());
+				persisted = this.updateParametro(send, persisted);
+				parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				return persisted;
+			} else if (send != null && send.getId() == null) {
+				// send.setFechaActualizacion( new Timestamp(System.currentTimeMillis()) );
+				// send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
+				persisted = parametroRepository.add(send);
+				parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+				return persisted;
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando la CausaNegativa " + e.getMessage());
+		}
+	}
 
 	/**
 	 * Metodo que actualiza la entidad
@@ -2767,6 +2822,22 @@ public class QuskiOroService {
 
 	
 	/**
+	 * 
+	 * 
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException "id": 1, "actividad": "Busqueda de cliente",
+	 *                           "codigoRegistro": 1, "estado": "Ingresado",
+	 *                           "fechaAsignacion": 1593972500000, "fechaFin":
+	 *                           1593973060000, "fechaInicio": 1593972500000,
+	 *                           "fechaInicioAtencion": 1593972500000,
+	 *                           "observacion": "", "proceso": "Cotizacion",
+	 *                           "tiempoTotal": "00:09:00", "usuario": "Asesor"
+	 */
+
+
+	/**
 	 * Busca los parametros por nombre, tipo o los dos parametros, si se envia
 	 * ordenar se ordena por el campo orden
 	 * 
@@ -2776,6 +2847,7 @@ public class QuskiOroService {
 	 * @return
 	 * @throws RelativeException
 	 */
+
 	public List<TbMiParametro> findByNombreTipoOrdered(String nombre, String tipo, Boolean ordered)
 			throws RelativeException {
 		try {
