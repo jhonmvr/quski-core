@@ -96,6 +96,12 @@ public class TbQoCliente implements Serializable {
 
 	@Column(name="telefono_movil")
 	private String telefonoMovil;
+	
+	@Column(name="telefono_trabajo")
+	private String telefonoTrabajo;
+
+	@Column(name="telefono_adicional")
+	private String telefonoAdicional;
 
 	//bi-directional many-to-one association to TbQoArchivoCliente
 	@OneToMany(mappedBy="tbQoCliente")
@@ -336,6 +342,20 @@ public class TbQoCliente implements Serializable {
 
 	public void setTelefonoMovil(String telefonoMovil) {
 		this.telefonoMovil = telefonoMovil;
+	}
+	public String getTelefonoTrabajo() {
+		return this.telefonoTrabajo;
+	}
+
+	public void setTelefonoTrabajo(String telefonoTrabajo) {
+		this.telefonoTrabajo = telefonoTrabajo;
+	}
+	public String getTelefonoAdicional() {
+		return this.telefonoAdicional;
+	}
+
+	public void setTelefonoAdicional(String telefonoAdicional) {
+		this.telefonoAdicional = telefonoAdicional;
 	}
 
 	public List<TbQoArchivoCliente> getTbQoArchivoClientes() {

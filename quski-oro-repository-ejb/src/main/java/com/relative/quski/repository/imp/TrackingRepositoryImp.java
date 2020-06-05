@@ -12,10 +12,6 @@ import com.relative.quski.repository.TrackingRepository;
 @Stateless(mappedName = "trackingRepository")
 public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracking> implements TrackingRepository  {
 
-    /**
-     * Default constructor. 
-     */
-    public TrackingRepositoryImp() {
-    }
+
    
 }

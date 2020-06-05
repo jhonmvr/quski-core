@@ -118,16 +118,11 @@ public class QuskiOroService {
 	@Inject
 	private ProcesoRepository procesoRepository;
 	@Inject
-<<<<<<< HEAD
 	private TrackingRepository trackingRepository;
-	
-	
-=======
+	@Inject
 	private ParametrosSingleton parametrosSingleton;
-
 	@Inject
 	private ParametroRepository parametroRepository;
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
 
 	/**
 	 * CLIENTE
@@ -2507,16 +2502,15 @@ public class QuskiOroService {
 	public List<AsignacionesWrapper> findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
 		return this.clienteRepository.clienteBycodigoOperacion(codigoOperacion);
 	}
-<<<<<<< HEAD
 	
 	/**
-	 * Tracking
+	 * * * * * * *** * * ** ** * *@Tracking
 	 */
 	
 	/**
 	 * 
-	 * @param pw
-	 * @return
+	 * @param pw PaginatedWrapper
+	 * @return List<TbQoTracking>
 	 * @throws RelativeException 
 	 */
 	public List<TbQoTracking> findAllTracking(PaginatedWrapper pw) throws RelativeException {
@@ -2538,8 +2532,109 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					"Error al buscar todos los tracking " + e.getMessage());
-=======
+		}
+	}
 
+	
+
+	/**
+	 * 
+	 * @param id Long
+	 * @return TbQoTracking
+	 * @throws RelativeException 
+	 */
+	public TbQoTracking findTrackingById(Long id) throws RelativeException {
+		try {
+			return this.trackingRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
+		}
+	}
+	
+
+	/**
+	 * 
+	 * @return Long
+	 * @throws RelativeException 
+	 */
+	public Long countTracking() throws RelativeException {
+		try {
+			return trackingRepository.countAll(TbQoTracking.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error. No se puede contar registros" + e.getMessage());
+		}
+	}
+			
+
+	/**
+	 * 
+	 * @param TbQoTracking send
+	 * @return TbQoTracking
+	 * @throws RelativeException 
+	 */
+	public TbQoTracking manageTracking(TbQoTracking send) throws RelativeException {
+		try {
+			log.info("===>>> Entrando a MANAGE TRACKING ===========> " + send);
+
+			TbQoTracking persisted = null; 
+			if (send != null && send.getId() != null) {
+				try {
+					persisted = this.trackingRepository.findById(send.getId());
+					log.info("===>>> CREANDO PERSISTED ===========> " + persisted);
+
+				}catch(RelativeException e) {
+					String mensaje="ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
+				log.log(Level.SEVERE, mensaje,e);
+				}
+				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
+				return this.updateTracking(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				log.info("===>>> NO SE ACTUALIZA, VA A CREAR ===========> " + send);
+				send.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				return this.trackingRepository.add(send);
+				
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo Operacion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param TbQoTracking send
+	 * @param TbQoTracking persisted
+	 * @return TbQoTracking
+	 * @throws RelativeException
+	 */
+	public TbQoTracking updateTracking(TbQoTracking send, TbQoTracking persisted) throws RelativeException {
+		try {
+			log.info("===>>> Entrando a Update Tracking ===========>2 " + send + " " +  persisted);
+			persisted.setActividad(send.getActividad());
+			persisted.setEstado(send.getEstado());
+			persisted.setFechaAsignacion(send.getFechaAsignacion());
+			persisted.setFechaFin(send.getFechaFin());
+			persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
+			persisted.setObservacion(send.getObservacion());
+			persisted.setTotalTiempo(send.getTotalTiempo());
+			persisted.setUsuario(send.getUsuario());
+			log.info("===>>> datos guardados a persisted ===========>2 " + send + " " +  persisted);
+			return this.trackingRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
+	
+	
+	
 	/**
 	 * PARAMETRO
 	 */
@@ -2559,123 +2654,9 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
 		}
 	}
-
 	/**
-<<<<<<< HEAD
-	 * 
-	 * @param id
-	 * @return
-	 * @throws RelativeException 
-	 */
-	public TbQoTracking findTrackingById(Long id) throws RelativeException {
-		try {
-			return this.trackingRepository.findById(id);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
-=======
-	 * Buscar parametros por parametros
-	 * 
-	 * @param nombre
-	 * @param tipo
-	 * @param estado
-	 * @param caracteriticaUno
-	 * @param caracteristicaDos
-	 * @param pw
-	 * @return
-	 * @throws RelativeException
-	 */
-	public List<TbMiParametro> findParametroByParam(String nombre, String tipo, EstadoEnum estado,
-			String caracteriticaUno, String caracteristicaDos, PaginatedWrapper pw) throws RelativeException {
-		try {
-			List<TbMiParametro> tmp = parametroRepository.findByParamPaged(nombre, tipo, estado, caracteriticaUno,
-					caracteristicaDos, pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections());
-			parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
-			return tmp;
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
-		}
-	}
-
-	/**
-<<<<<<< HEAD
-	 * 
-	 * @return
-	 * @throws RelativeException 
-	 */
-	public Long countTracking() throws RelativeException {
-		try {
-			return trackingRepository.countAll(TbQoTracking.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error. No se puede contar registros" + e.getMessage());
-=======
-	 * Metodo que cuenta la cantidad de entidades existentes
-	 * 
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public Long countParametros(String nombre, String tipo, EstadoEnum estado, String caracteriticaUno,
-			String caracteristicaDos) throws RelativeException {
-		try {
-			return parametroRepository.countByParamPaged(nombre, tipo, estado, caracteriticaUno, caracteristicaDos);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
-		}
-	}
-
-	public Long countParametros() throws RelativeException {
-		try {
-			return parametroRepository.countAll(TbMiParametro.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
-		}
-	}
-
-	/**
-<<<<<<< HEAD
-	 * 
-	 * @param entidad
-	 * @return
-	 * @throws RelativeException 
-	 */
-	public TbQoTracking manageTracking(TbQoTracking send) throws RelativeException {
-		try {
-			TbQoTracking persisted = null; 
-			if (send != null && send.getId() != null) {
-				try {
-					persisted = this.trackingRepository.findById(send.getId());
-				}catch(RelativeException e) {
-					String mensaje="ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
-				log.log(Level.SEVERE, mensaje,e);
-				}
-				return this.updateTracking(send, persisted);
-			} else if (send != null && send.getId() == null) {
-				return this.trackingRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo Operacion");
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
-=======
 	 * Metodo que lista la informacion de las entidades encontradas
 	 * 
 	 * @param pw Objeto generico que tiene la informacion que determina si el
@@ -2781,45 +2762,11 @@ public class QuskiOroService {
 
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "en la busqueda TbMiParametro " + e.getMessage());
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
 		}
 	}
 
+	
 	/**
-<<<<<<< HEAD
-	 * 
-	 * @param send
-	 * @param persisted
-	 * @return
-	 * @throws RelativeException
-	 * "id": 1,
-        "actividad": "Busqueda de cliente",
-        "codigoRegistro": 1,
-        "estado": "Ingresado",
-        "fechaAsignacion": 1593972500000,
-        "fechaFin": 1593973060000,
-        "fechaInicio": 1593972500000,
-        "fechaInicioAtencion": 1593972500000,
-        "observacion": "",
-        "proceso": "Cotizacion",
-        "tiempoTotal": "00:09:00",
-        "usuario": "Asesor"
-	 */
-	public TbQoTracking updateTracking(TbQoTracking send, TbQoTracking persisted) throws RelativeException {
-		try {
-			persisted.setId(send.getId());
-			persisted.setActividad(send.getActividad());
-			persisted.setEstado(send.getEstado());
-			persisted.setFechaAsignacion(send.getFechaAsignacion());
-			persisted.setFechaFin(send.getFechaFin());
-			persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
-			persisted.setObservacion(send.getObservacion());
-			persisted.setTiempoTotal(send.getTiempoTotal());
-			persisted.setUsuario(send.getUsuario());
-			return this.trackingRepository.update(persisted);
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
-=======
 	 * Busca los parametros por nombre, tipo o los dos parametros, si se envia
 	 * ordenar se ordena por el campo orden
 	 * 
@@ -2843,7 +2790,58 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Parametros no encontrados por nombre o tipo " + e.getMessage());
->>>>>>> bf4fbda60db1ffdae009a9eda37c87c713d6392f
+		}
+	}
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countParametros(String nombre, String tipo, EstadoEnum estado, String caracteriticaUno,
+		String caracteristicaDos) throws RelativeException {
+		try {
+			return parametroRepository.countByParamPaged(nombre, tipo, estado, caracteriticaUno, caracteristicaDos);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
+		}
+	}
+
+	public Long countParametros() throws RelativeException {
+		try {
+			return parametroRepository.countAll(TbMiParametro.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Parametros no encontrado " + e.getMessage());
+		}
+	}
+	/**		
+	 * Buscar parametros por parametros
+	 * 
+	 * @param nombre
+	 * @param tipo
+	 * @param estado
+	 * @param caracteriticaUno
+	 * @param caracteristicaDos
+	 * @param pw
+	 * @return
+	 * @throws RelativeException
+	 */
+	public List<TbMiParametro> findParametroByParam(String nombre, String tipo, EstadoEnum estado,
+			String caracteriticaUno, String caracteristicaDos, PaginatedWrapper pw) throws RelativeException {
+		try {
+			List<TbMiParametro> tmp = parametroRepository.findByParamPaged(nombre, tipo, estado, caracteriticaUno,
+					caracteristicaDos, pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections());
+			parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
+			return tmp;
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
 

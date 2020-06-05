@@ -2,9 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 
 /**
@@ -15,10 +15,9 @@ import java.util.Date;
 @Table(name="tb_qo_tracking")
 public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public TbQoTracking() {}
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TRACKING_ID_GENERATOR", sequenceName="TB_QO_TRACKING")
+	@SequenceGenerator(name="TB_QO_TRACKING_ID_GENERATOR", sequenceName="SEQ_TRACKING", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TRACKING_ID_GENERATOR")
 	private Long id;
 
@@ -29,33 +28,29 @@ public class TbQoTracking implements Serializable {
 
 	private String estado;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_asignacion")
-	private Date fechaAsignacion;
+	private Timestamp fechaAsignacion;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_fin")
-	private Date fechaFin;
+	private Timestamp fechaFin;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_inicio")
-	private Date fechaInicio;
+	private Timestamp fechaInicio;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_inicio_atencion")
-	private Date fechaInicioAtencion;
+	private Timestamp fechaInicioAtencion;
 
 	private String observacion;
 
 	private String proceso;
 
-	@Temporal(TemporalType.TIME)
 	@Column(name="total_tiempo")
-	private Date tiempoTotal;
+	private Time totalTiempo;
 
 	private String usuario;
 
-	
+	public TbQoTracking() {
+	}
 
 	public Long getId() {
 		return this.id;
@@ -89,35 +84,35 @@ public class TbQoTracking implements Serializable {
 		this.estado = estado;
 	}
 
-	public Date getFechaAsignacion() {
+	public Timestamp getFechaAsignacion() {
 		return this.fechaAsignacion;
 	}
 
-	public void setFechaAsignacion(Date fechaAsignacion) {
+	public void setFechaAsignacion(Timestamp fechaAsignacion) {
 		this.fechaAsignacion = fechaAsignacion;
 	}
 
-	public Date getFechaFin() {
+	public Timestamp getFechaFin() {
 		return this.fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(Timestamp fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
-	public Date getFechaInicio() {
+	public Timestamp getFechaInicio() {
 		return this.fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(Timestamp fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaInicioAtencion() {
+	public Timestamp getFechaInicioAtencion() {
 		return this.fechaInicioAtencion;
 	}
 
-	public void setFechaInicioAtencion(Date fechaInicioAtencion) {
+	public void setFechaInicioAtencion(Timestamp fechaInicioAtencion) {
 		this.fechaInicioAtencion = fechaInicioAtencion;
 	}
 
@@ -137,12 +132,12 @@ public class TbQoTracking implements Serializable {
 		this.proceso = proceso;
 	}
 
-	public Date getTiempoTotal() {
-		return this.tiempoTotal;
+	public Time getTotalTiempo() {
+		return this.totalTiempo;
 	}
 
-	public void setTiempoTotal(Date tiempoTotal) {
-		this.tiempoTotal = tiempoTotal;
+	public void setTotalTiempo(Time totalTiempo) {
+		this.totalTiempo = totalTiempo;
 	}
 
 	public String getUsuario() {
