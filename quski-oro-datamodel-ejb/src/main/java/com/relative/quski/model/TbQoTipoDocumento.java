@@ -46,6 +46,8 @@ public class TbQoTipoDocumento implements Serializable {
 
 	@Column(name="tipo_documento")
 	private String tipoDocumento;
+	
+	private String servicio;
 
 	@Column(name="tipo_plantilla")
 	@Enumerated(EnumType.STRING)
@@ -159,6 +161,16 @@ public class TbQoTipoDocumento implements Serializable {
 
 	public void setEstadoOperacion(EstadoOperacionEnum estadoOperacion) {
 		this.estadoOperacion = estadoOperacion;
+	}
+	
+	
+
+	public String getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(String servicio) {
+		this.servicio = servicio;
 	}
 
 	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {

@@ -38,7 +38,7 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 				queryStr.append("dh.id as idDocumentoHabilitante ,dh.idReferencia,dh.objectId,dh.tipoDocumento,"); 
 			} 
 			queryStr.append( "td.descripcion,td.estadoOperacion, td.proceso, "); 
-			queryStr.append("td.plantilla ) " ); 
+			queryStr.append("td.plantilla, td.servicio ) " ); 
 			queryStr.append(" FROM TbQoTipoDocumento AS td "); 
 			if( idReferencia != null ) {
 				queryStr.append("inner join td.tbQoDocumentoHabilitantes dh "); 
