@@ -3,6 +3,10 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
+import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.model.TbQoRolTipoDocumento;
+
 public class DocumentoHabilitanteWrapper implements Serializable {
 	
 	
@@ -13,18 +17,21 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	private static final long serialVersionUID = -8940327911305978824L;
 	
 	private Long idTipoDocumento;
+	private Long idDocumentoHabilitante;
 	private Long idReferencia;
 	private String descripcionTipoDocumento;
-	private String estadoOperacion;
-	private String proceso;
+	private String objectId;
+	private String mimeType;
+	private EstadoOperacionEnum estadoOperacion;
+	private ProcessEnum proceso;
 	private String pantilla;
 	private Boolean estaCargado;
-	private List<Long> roles;
+	private List<TbQoRolTipoDocumento> roles;
 	
 	
 	
-	public DocumentoHabilitanteWrapper(Long idTipoDocumento, Long idReferencia, String descripcionTipoDocumento,
-			String estadoOperacion, String proceso, String pantilla, Boolean estaCargado, List<Long> roles) {
+	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, Long idReferencia, String descripcionTipoDocumento,
+			EstadoOperacionEnum estadoOperacion, ProcessEnum proceso, String pantilla, Boolean estaCargado, List<TbQoRolTipoDocumento> roles) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
 		this.idReferencia = idReferencia;
@@ -34,6 +41,32 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 		this.pantilla = pantilla;
 		this.estaCargado = estaCargado;
 		this.roles = roles;
+		this.idDocumentoHabilitante=idDocumentoHabilitante;
+		
+	}
+	
+	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, Long idReferencia, String objectId,String mimeType, String descripcionTipoDocumento,
+			EstadoOperacionEnum estadoOperacion, ProcessEnum proceso, String pantilla) {
+		super();
+		this.idTipoDocumento = idTipoDocumento;
+		this.idReferencia = idReferencia;
+		this.descripcionTipoDocumento = descripcionTipoDocumento;
+		this.estadoOperacion = estadoOperacion;
+		this.proceso = proceso;
+		this.pantilla = pantilla;
+		this.idDocumentoHabilitante=idDocumentoHabilitante;
+		this.objectId=objectId;
+		this.mimeType=mimeType;
+	}
+	
+	public DocumentoHabilitanteWrapper(Long idTipoDocumento,  String descripcionTipoDocumento,
+			EstadoOperacionEnum estadoOperacion, ProcessEnum proceso, String pantilla) {
+		super();
+		this.idTipoDocumento = idTipoDocumento;
+		this.descripcionTipoDocumento = descripcionTipoDocumento;
+		this.estadoOperacion = estadoOperacion;
+		this.proceso = proceso;
+		this.pantilla = pantilla;
 	}
 	
 	public Long getIdTipoDocumento() {
@@ -54,16 +87,16 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	public void setDescripcionTipoDocumento(String descripcionTipoDocumento) {
 		this.descripcionTipoDocumento = descripcionTipoDocumento;
 	}
-	public String getEstadoOperacion() {
+	public EstadoOperacionEnum getEstadoOperacion() {
 		return estadoOperacion;
 	}
-	public void setEstadoOperacion(String estadoOperacion) {
+	public void setEstadoOperacion(EstadoOperacionEnum estadoOperacion) {
 		this.estadoOperacion = estadoOperacion;
 	}
-	public String getProceso() {
+	public ProcessEnum getProceso() {
 		return proceso;
 	}
-	public void setProceso(String proceso) {
+	public void setProceso(ProcessEnum proceso) {
 		this.proceso = proceso;
 	}
 	public String getPantilla() {
@@ -78,25 +111,59 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	public void setEstaCargado(Boolean estaCargado) {
 		this.estaCargado = estaCargado;
 	}
-	public List<Long> getRoles() {
+	public List<TbQoRolTipoDocumento> getRoles() {
 		return roles;
 	}
-	public void setRoles(List<Long> roles) {
+	public void setRoles(List<TbQoRolTipoDocumento> roles) {
 		this.roles = roles;
 	}
 	
-	 public static class DocumentoHabilitanteBuilder {
+	 public Long getIdDocumentoHabilitante() {
+		return idDocumentoHabilitante;
+	}
+
+	public void setIdDocumentoHabilitante(Long idDocumentoHabilitante) {
+		this.idDocumentoHabilitante = idDocumentoHabilitante;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
+	}
+
+
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+
+
+	public static class DocumentoHabilitanteBuilder {
 		private Long idTipoDocumento;
+		private Long idDocumentoHabilitante;
 		private Long idReferencia;
 		private String descripcionTipoDocumento;
-		private String estadoOperacion;
-		private String proceso;
+		private EstadoOperacionEnum estadoOperacion;
+		private ProcessEnum proceso;
 		private String pantilla;
 		private Boolean estaCargado;
-		private List<Long> roles;
+		private List<TbQoRolTipoDocumento> roles;
 		
 		public DocumentoHabilitanteBuilder idTipoDocumento(Long idTipoDocumento) {
 			this.idTipoDocumento=idTipoDocumento;
+			return this;
+		}
+		
+		public DocumentoHabilitanteBuilder idDocumentoHabilitante(Long idDocumentoHabilitante) {
+			this.idDocumentoHabilitante=idDocumentoHabilitante;
 			return this;
 		}
 		
@@ -110,12 +177,12 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 			return this;
 		}
 		
-		public DocumentoHabilitanteBuilder estadoOperacion(String estadoOperacion) {
+		public DocumentoHabilitanteBuilder estadoOperacion(EstadoOperacionEnum estadoOperacion) {
 			this.estadoOperacion=estadoOperacion;
 			return this;
 		}
 		
-		public DocumentoHabilitanteBuilder proceso(String proceso) {
+		public DocumentoHabilitanteBuilder proceso(ProcessEnum proceso) {
 			this.proceso=proceso;
 			return this;
 		}
@@ -130,13 +197,13 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 			return this;
 		}
 		
-		public DocumentoHabilitanteBuilder roles(List<Long> roles) {
+		public DocumentoHabilitanteBuilder roles(List<TbQoRolTipoDocumento> roles) {
 			this.roles=roles;
 			return this;
 		}
 		
 		public DocumentoHabilitanteWrapper build() {
-			return new DocumentoHabilitanteWrapper(idTipoDocumento, idReferencia, descripcionTipoDocumento, estadoOperacion, proceso, pantilla, estaCargado, roles);
+			return new DocumentoHabilitanteWrapper(idTipoDocumento,idDocumentoHabilitante, idReferencia, descripcionTipoDocumento, estadoOperacion, proceso, pantilla, estaCargado, roles);
 		}
 		
 		

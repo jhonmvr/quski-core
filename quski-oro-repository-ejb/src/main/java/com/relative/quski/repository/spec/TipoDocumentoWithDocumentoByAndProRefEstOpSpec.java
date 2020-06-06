@@ -50,7 +50,7 @@ public class TipoDocumentoWithDocumentoByAndProRefEstOpSpec  extends AbstractSpe
 				where.add(cb.equal(join.<String>get("idReferencia"), this.idReferencia ));
 			}
 			if(idTipoDocumento != null) {
-				where.add(cb.equal(poll.<TbQoTipoDocumento>get("tbQoTipoDocumento").<Long>get("id"),idTipoDocumento ));
+				where.add(cb.equal(poll.<Long>get("id"),idTipoDocumento ));
 			}
 			if(this.proceso != null) {
 				where.add(cb.equal(poll.<ProcessEnum>get("proceso"), proceso));

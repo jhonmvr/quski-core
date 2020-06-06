@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
 
 
@@ -52,7 +53,8 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	private String objectId;
 	
 	@Column(name="estado_operacion")
-	private String estadoOperacion;
+	@Enumerated(EnumType.STRING)
+	private EstadoOperacionEnum estadoOperacion;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -64,6 +66,9 @@ public class TbQoDocumentoHabilitante implements Serializable {
 
 	@Column(name="nombre_archivo")
 	private String nombreArchivo;
+	
+	@Column(name="tipo_ducumento")
+	private String tipoDocumento;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -166,11 +171,11 @@ public class TbQoDocumentoHabilitante implements Serializable {
 		this.objectId = objectId;
 	}
 
-	public String getEstadoOperacion() {
+	public EstadoOperacionEnum getEstadoOperacion() {
 		return estadoOperacion;
 	}
 
-	public void setEstadoOperacion(String estadoOperacion) {
+	public void setEstadoOperacion(EstadoOperacionEnum estadoOperacion) {
 		this.estadoOperacion = estadoOperacion;
 	}
 
@@ -204,6 +209,14 @@ public class TbQoDocumentoHabilitante implements Serializable {
 
 	public void setTbQoTipoDocumento(TbQoTipoDocumento tbQoTipoDocumento) {
 		this.tbQoTipoDocumento = tbQoTipoDocumento;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 }

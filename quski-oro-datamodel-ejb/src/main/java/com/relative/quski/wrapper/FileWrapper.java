@@ -23,6 +23,8 @@ public class FileWrapper implements Serializable {
     private String fileBase64;
     private Long relatedId;
     private String relatedIdStr;
+    private String estadoOperacion;
+    private String objectId;
     
     public FileWrapper() {}
     
@@ -127,6 +129,22 @@ public class FileWrapper implements Serializable {
 
 	public void setProcess(String process) {
 		this.process = process;
+	}
+
+	public String getEstadoOperacion() {
+		return estadoOperacion;
+	}
+
+	public void setEstadoOperacion(String estadoOperacion) {
+		this.estadoOperacion = estadoOperacion;
+	}
+
+	public String getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(String objectId) {
+		this.objectId = objectId;
 	}
     
 	

@@ -35,7 +35,7 @@ public class TbQoRolTipoDocumento implements Serializable {
 	private Long idTipoDocumento;
 
 	@Column(name = "id_rol")
-	private String idRol;
+	private Long idRol;
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -47,6 +47,29 @@ public class TbQoRolTipoDocumento implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EstadoOperacionEnum estadoOperacion;
 
+	@Column(name="descarga_plantilla")
+	private Boolean descargaPlantilla;
+	
+	@Column(name="carga_documento")
+	private Boolean cargaDocumento;
+	
+	@Column(name="descarga_documento")
+	private Boolean descargaDocumento;
+	
+	@Column(name="carga_documento_adicional")
+	private Boolean cargaDocumentoAdicional;
+	
+	@Column(name="descarga_documento_adicional")
+	private Boolean descargaDocumentoAdicional;
+	
+	@Column(name="accion_uno")
+	private Boolean accionUno;
+	
+	@Column(name="accion_dos")
+	private Boolean accionDos;
+	
+	@Column(name="accion_tres")
+	private Boolean accionTres;
 	
 
 	public TbQoRolTipoDocumento() {
@@ -78,13 +101,13 @@ public class TbQoRolTipoDocumento implements Serializable {
 
 
 
-	public String getIdRol() {
+	public Long getIdRol() {
 		return idRol;
 	}
 
 
 
-	public void setIdRol(String idRol) {
+	public void setIdRol(Long idRol) {
 		this.idRol = idRol;
 	}
 
@@ -124,6 +147,103 @@ public class TbQoRolTipoDocumento implements Serializable {
 		this.estadoOperacion = estadoOperacion;
 	}
 
+
+
+	public Boolean getDescargaPlantilla() {
+		return descargaPlantilla;
+	}
+
+
+
+	public void setDescargaPlantilla(Boolean descargaPlantilla) {
+		this.descargaPlantilla = descargaPlantilla;
+	}
+
+
+
+	public Boolean getCargaDocumento() {
+		return cargaDocumento;
+	}
+
+
+
+	public void setCargaDocumento(Boolean cargaDocumento) {
+		this.cargaDocumento = cargaDocumento;
+	}
+
+
+
+	public Boolean getDescargaDocumento() {
+		return descargaDocumento;
+	}
+
+
+
+	public void setDescargaDocumento(Boolean descargaDocumento) {
+		this.descargaDocumento = descargaDocumento;
+	}
+
+
+
+	public Boolean getCargaDocumentoAdicional() {
+		return cargaDocumentoAdicional;
+	}
+
+
+
+	public void setCargaDocumentoAdicional(Boolean cargaDocumentoAdicional) {
+		this.cargaDocumentoAdicional = cargaDocumentoAdicional;
+	}
+
+
+
+	public Boolean getDescargaDocumentoAdicional() {
+		return descargaDocumentoAdicional;
+	}
+
+
+
+	public void setDescargaDocumentoAdicional(Boolean descargaDocumentoAdicional) {
+		this.descargaDocumentoAdicional = descargaDocumentoAdicional;
+	}
+
+
+
+	public Boolean getAccionUno() {
+		return accionUno;
+	}
+
+
+
+	public void setAccionUno(Boolean accionUno) {
+		this.accionUno = accionUno;
+	}
+
+
+
+	public Boolean getAccionDos() {
+		return accionDos;
+	}
+
+
+
+	public void setAccionDos(Boolean accionDos) {
+		this.accionDos = accionDos;
+	}
+
+
+
+	public Boolean getAccionTres() {
+		return accionTres;
+	}
+
+
+
+	public void setAccionTres(Boolean accionTres) {
+		this.accionTres = accionTres;
+	}
+
+	
 	
 
 }

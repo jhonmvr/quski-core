@@ -20,12 +20,8 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.enums.EstadoOperacionEnum;
-import com.relative.quski.enums.ProcessEnum;
-import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

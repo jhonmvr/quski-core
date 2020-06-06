@@ -95,8 +95,7 @@
 		</dependency>
 		<dependency>
 		 <groupId>com.relative</groupId>
-		  <artifactId>integracion-soap</artifactId>
-		  
+		  <artifactId>integracion-soap</artifactId>		  
 		  </dependency>
 		<dependency>
 			<groupId>com.relative</groupId>
