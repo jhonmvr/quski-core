@@ -6,5 +6,6 @@ import com.relative.quski.model.TbQoTipoArchivo;
 
 @Local
 public interface TipoArchivoRepository extends CrudRepository<Long, TbQoTipoArchivo>{
-
+	
+	
 }

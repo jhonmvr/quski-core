@@ -18,8 +18,10 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
+import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.model.TbQoRolTipoDocumento;
 import com.relative.quski.service.GestorHabilitanteService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
@@ -66,20 +68,34 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 			String proceso,String estadoOperacion) throws RelativeException {
 		PaginatedListWrapper<DocumentoHabilitanteWrapper> plw = new PaginatedListWrapper<>(pw);
 		List<DocumentoHabilitanteWrapper> actions = this.gdh.generateDocumentoHabilitante(pw, 
-				idRol!= null?Long.valueOf( idRol ):null,  
-				idTipoDocumento!= null?Long.valueOf( idTipoDocumento ):null,
-				idReferencia!= null?Long.valueOf(idReferencia):null, 
+				!StringUtils.isEmpty(idRol)?Long.valueOf( idRol ):null,  
+				!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
+				!StringUtils.isEmpty(idReferencia)?Long.valueOf(idReferencia):null, 
 				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso ):null,
 				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null);
 		if (actions != null && !actions.isEmpty() ) {
 			plw.setTotalResults(this.gdh.countDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion( 
-				idTipoDocumento!= null?Long.valueOf( idTipoDocumento ):null,
-				idReferencia!= null?Long.valueOf(idReferencia):null, 
+				!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
+				!StringUtils.isEmpty(idReferencia)?Long.valueOf(idReferencia):null, 
 				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso):null,
 				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null).intValue() );
 			plw.setList(actions);
 		}
 		return plw;
+	}
+	
+	@GET
+	@Path("/getPermisoHabilitanteRol")
+	public GenericWrapper<TbQoRolTipoDocumento> getPermisoHabilitanteRol(
+			@QueryParam("idTipoDocumento") String idTipoDocumento,@QueryParam("idRol") String  idRol,
+			@QueryParam("proceso") String  proceso,@QueryParam("estadoOperacion") String estadoOperacion
+			) throws RelativeException{
+		GenericWrapper<TbQoRolTipoDocumento> permisos= new GenericWrapper<>();
+		permisos.setEntidades(this.gdh.findRolTipoDocumentoByParams(!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf(idTipoDocumento):null, 
+				!StringUtils.isEmpty( idRol )?Long.valueOf(idRol):null, 
+				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso):null,
+				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null));
+		return permisos;
 	}
 	
 }

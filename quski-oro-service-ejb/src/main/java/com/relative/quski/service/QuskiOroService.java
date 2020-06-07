@@ -15,6 +15,8 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -1489,6 +1491,8 @@ public class QuskiOroService {
 		da.setNombreArchivo(fw.getName());
 		return this.manageDocumentoHabilitante(da);
 	}
+	
+	
 
 	/**
 	 * 
