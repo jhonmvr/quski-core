@@ -179,18 +179,11 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 		
 		
 		if( !StringUtils.isEmpty( identificacionCliente )  ) {
-<<<<<<< HEAD
-=======
 
->>>>>>> a6648385b36308fd5bb6c7c30ba6c715fb58c169
 			log.info("*************************>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			log.info("Valor de tipo Plantilla"+td.getTipoPlantilla().toString());
 			log.info("Valor del TipoPlantillaEnum"+TipoPlantillaEnum.AB);
 			log.info("Valor comparado"+ ( td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB ) == 0  ));
-<<<<<<< HEAD
-=======
-
->>>>>>> a6648385b36308fd5bb6c7c30ba6c715fb58c169
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB ) == 0  )  {
 				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
 			} 

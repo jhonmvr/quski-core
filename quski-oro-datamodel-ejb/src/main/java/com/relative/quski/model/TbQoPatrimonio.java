@@ -16,11 +16,11 @@ public class TbQoPatrimonio implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_PATRIMONIO_ID_GENERATOR", sequenceName="SEG_TB_QO_PATRIMONIO")
+	@SequenceGenerator(name="TB_QO_PATRIMONIO_ID_GENERATOR", sequenceName="SEQ_PATRIMONIO", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_PATRIMONIO_ID_GENERATOR")
 	private Long id;
 
-	private String activo;
+	private String activos;
 
 	private BigDecimal avaluo;
 
@@ -54,12 +54,12 @@ public class TbQoPatrimonio implements Serializable {
 		this.id = id;
 	}
 
-	public String getActivo() {
-		return this.activo;
+	public String getActivos() {
+		return this.activos;
 	}
 
-	public void setActivo(String activo) {
-		this.activo = activo;
+	public void setActivos(String activos) {
+		this.activos = activos;
 	}
 
 	public BigDecimal getAvaluo() {

@@ -3,6 +3,7 @@ package com.relative.quski.service;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -25,9 +26,12 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
+import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
+import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
@@ -45,11 +49,14 @@ import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
+import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.IngresoEgresoClienteRepository;
 import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ParroquiaRepository;
+import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ProvinciaRepository;
@@ -124,6 +131,12 @@ public class QuskiOroService {
 	private ParametrosSingleton parametrosSingleton;
 	@Inject
 	private ParametroRepository parametroRepository;
+	@Inject
+	private IngresoEgresoClienteRepository ingresoEgresoClienteRepository;
+	@Inject
+	private PatrimonioRepository patrimonioRepository;
+	@Inject
+	private DireccionClienteRepository direccionClienteRepository;
 
 	/**
 	 * CLIENTE
@@ -2656,7 +2669,6 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
 		}
 	}
@@ -2712,7 +2724,6 @@ public class QuskiOroService {
 =======
 
 	/**
->>>>>>> a6648385b36308fd5bb6c7c30ba6c715fb58c169
 	 * Metodo que lista la informacion de las entidades encontradas
 	 * 
 	 * @param pw Objeto generico que tiene la informacion que determina si el
@@ -2914,6 +2925,225 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+
+	
+	/**
+	 *  ************************** @IngresoEgresoCliente
+	 */
+	/**
+	 * 
+	 * @param valueOf
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoIngresoEgresoCliente findIngresoEgresoClienteById(Long id) throws RelativeException {
+		try {
+			return ingresoEgresoClienteRepository.findById(id);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param entidad
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoIngresoEgresoCliente manageIngresoEgresoCliente(TbQoIngresoEgresoCliente send) throws RelativeException {
+		try {
+			TbQoIngresoEgresoCliente persisted = null;
+			if (send != null && send.getId() != null) {
+				try {
+					persisted = this.ingresoEgresoClienteRepository.findById(send.getId());
+				} catch (RelativeException e) {
+					String mensaje = "ERROR EN BUSQUEDA DE INGRESOS Y EGRESOS  DE CLIENTE AL MOMENTO DE ACTUALIZAR" + e.getMessage();
+					log.log(Level.SEVERE, mensaje,e);
+				}
+				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
+				return this.updateIngresoEgresoCliente(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				log.info("===>>> NO SE ACTUALIZA, VA A CREAR ===========> " + send);
+				return this.ingresoEgresoClienteRepository.add(send);
+				
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoIngresoEgresoCliente updateIngresoEgresoCliente(TbQoIngresoEgresoCliente send, TbQoIngresoEgresoCliente persisted) throws RelativeException {
+		try {
+			log.info("===>>> Entrando a Update TbQoIngresoEgresoCliente ===========> " + send + " " +  persisted);
+			persisted.setValorEgreso(send.getValorEgreso());
+			persisted.setValorIngreso(send.getValorIngreso());
+			log.info("===>>> datos guardados a persisted ===========> " + send + " " +  persisted);
+			return this.ingresoEgresoClienteRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
+	
+	/**
+	 *  ************************** @Patrimonio
+	 */
+
+	/**
+	 * 
+	 * @param valueOf
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoPatrimonio findPatrimonioById(Long id) throws RelativeException {
+		try {
+			return patrimonioRepository.findById(id);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param entidad
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoPatrimonio managePatrimonio(TbQoPatrimonio send) throws RelativeException {
+		try {
+			TbQoPatrimonio persisted = null;
+			if (send != null && send.getId() != null) {
+				try {
+					persisted = this.patrimonioRepository.findById(send.getId());
+				} catch (RelativeException e) {
+					String mensaje = "ERROR EN BUSQUEDA DE PATRIMONIO AL MOMENTO DE ACTUALIZAR" + e.getMessage();
+					log.log(Level.SEVERE, mensaje,e);
+				}
+				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
+				return this.updatePatrimonio(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				log.info("===>>> NO SE ACTUALIZA, VA A CREAR ===========> " + send);
+				return this.patrimonioRepository.add(send);
+				
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoPatrimonio updatePatrimonio(TbQoPatrimonio send, TbQoPatrimonio persisted) throws RelativeException {
+		try {
+			log.info("===>>> Entrando a Update TbQoIngresoEgresoCliente ===========> " + send + " " +  persisted);
+			persisted.setActivos(send.getActivos());
+			persisted.setAvaluo(send.getAvaluo());
+			persisted.setPasivos(send.getPasivos());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			if(persisted.getActivos() != null && persisted.getPasivos() == null && persisted.getActivos() != "" ) {
+				log.info("===>>> datos guardados a persisted ACtivo ===========> " + send + " " +  persisted);
+				return this.patrimonioRepository.update(persisted);
+
+			}else if ( persisted.getActivos() == null && persisted.getPasivos() != null && persisted.getPasivos() != "") {
+				log.info("===>>> datos guardados a persisted Pasivo ===========> " + send + " " +  persisted);
+				return this.patrimonioRepository.update(persisted);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ACTIVO Y PASIVO NO PUEDEN TENER VALORES AL MISMO TIEMPO");
+			}
+			
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
+	/**
+	 *  ************************** @DireccionCliente
+	 */
+
+	/**
+	 * 
+	 * @param valueOf
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoDireccionCliente findDireccionClienteById(Long id) throws RelativeException {
+		try {
+			return direccionClienteRepository.findById(id);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param send
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoDireccionCliente manageDireccionCliente(TbQoDireccionCliente send) throws RelativeException {
+		try {
+			TbQoDireccionCliente persisted = null;
+			if (send != null && send.getId() != null) {
+				try {
+					persisted = this.direccionClienteRepository.findById(send.getId());
+				} catch (RelativeException e) {
+					String mensaje = "ERROR EN BUSQUEDA DE DIRECCION DE CLIENTE AL MOMENTO DE ACTUALIZAR" + e.getMessage();
+					log.log(Level.SEVERE, mensaje,e);
+				}
+				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
+				return this.updateDireccionCliente(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				log.info("===>>> NO SE ACTUALIZA, VA A CREAR ===========> " + send);
+				return this.direccionClienteRepository.add(send);
+				
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoDireccionCliente updateDireccionCliente(TbQoDireccionCliente send, TbQoDireccionCliente persisted) throws RelativeException {
+		try {
+			log.info("===>>> Entrando a Update TbQoIngresoEgresoCliente ===========> " + send + " " +  persisted);
+			persisted.setDireccionLegal(send.getDireccionLegal());
+			persisted.setDireccionEnvioCorrespondencia(send.getDireccionEnvioCorrespondencia());
+			persisted.setTipoDireccion(send.getTipoDireccion());
+			persisted.setProvincia(send.getProvincia());
+			persisted.setCanton(send.getCanton());
+			persisted.setParroquia(send.getParroquia());
+			persisted.setBarrio(send.getBarrio());
+			persisted.setSector(send.getSector());
+			persisted.setCallePrincipal(send.getCallePrincipal());
+			persisted.setCalleSegundaria(send.getCalleSegundaria());
+			persisted.setNumeracion(send.getNumeracion());
+			persisted.setReferenciaUbicacion(send.getReferenciaUbicacion());
+			persisted.setTipoVivienda(send.getTipoVivienda());
+			log.info("===>>> datos guardados a persisted ACtivo ===========> " + send + " " +  persisted);
+			return this.direccionClienteRepository.update(persisted);
+
+			
+			
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
 		}
 	}
 
