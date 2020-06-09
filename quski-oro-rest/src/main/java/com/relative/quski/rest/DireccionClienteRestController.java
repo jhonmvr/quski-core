@@ -2,6 +2,8 @@ package com.relative.quski.rest;
 
 
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -74,6 +76,22 @@ public class DireccionClienteRestController extends BaseRestController implement
 		return null;
 	}
 	
-	
+	@GET
+	@Path("/direccionByIdCliente")
+	@ApiOperation(value = "GenericWrapper<TbQoDireccionCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoDireccionCliente> direccionByIdCliente(@QueryParam("idC") String idC, @QueryParam("tipoDireccion") String tipoDireccion)
+			throws RelativeException {
+		GenericWrapper<TbQoDireccionCliente> loc = new GenericWrapper<>();
+		TbQoDireccionCliente  a = this.findDireccionClienteByIdClienteAndTipoDireccion(Long.valueOf(idC), tipoDireccion);
+		loc.setEntidad(a);
+		return loc;
+	}
+	public TbQoDireccionCliente findDireccionClienteByIdClienteAndTipoDireccion(Long idC, String tipoDireccion) throws RelativeException {
+		List<TbQoDireccionCliente> tmp = this.qos.findDireccionClienteByIdClienteAndTipoDireccion(idC, tipoDireccion);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
 
 }

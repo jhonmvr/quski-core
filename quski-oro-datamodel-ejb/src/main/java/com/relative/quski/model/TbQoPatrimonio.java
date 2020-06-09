@@ -37,6 +37,8 @@ public class TbQoPatrimonio implements Serializable {
 	private BigDecimal infocorp;
 
 	private String pasivos;
+	
+	private String estado;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -110,6 +112,13 @@ public class TbQoPatrimonio implements Serializable {
 		this.pasivos = pasivos;
 	}
 
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
 	}
@@ -117,5 +126,6 @@ public class TbQoPatrimonio implements Serializable {
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
 	}
+
 
 }

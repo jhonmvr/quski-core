@@ -27,6 +27,8 @@ public class TbQoDireccionCliente implements Serializable {
 	private String calleSegundaria;
 
 	private String canton;
+	
+	private String estado;
 
 	@Column(name="direccion_envio_correspondencia")
 	private Boolean direccionEnvioCorrespondencia;
@@ -177,6 +179,14 @@ public class TbQoDireccionCliente implements Serializable {
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }

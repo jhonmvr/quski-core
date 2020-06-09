@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.model.TbQoCliente;
+
 import java.math.BigDecimal;
 
 
@@ -19,16 +22,20 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_INGRESO_EGRESO_CLIENTE_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="valor_egreso")
-	private BigDecimal valorEgreso;
+	@Column(name="es_egreso")
+	private Boolean esEgreso;
 
-	@Column(name="valor_ingreso")
-	private BigDecimal valorIngreso;
+	@Column(name="es_ingreso")
+	private Boolean esIngreso;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
+
+	private BigDecimal valor;
+	
+	private String estado;
 
 	public TbQoIngresoEgresoCliente() {
 	}
@@ -41,20 +48,20 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 		this.id = id;
 	}
 
-	public BigDecimal getValorEgreso() {
-		return this.valorEgreso;
+	public Boolean getEsEgreso() {
+		return this.esEgreso;
 	}
 
-	public void setValorEgreso(BigDecimal valorEgreso) {
-		this.valorEgreso = valorEgreso;
+	public void setEsEgreso(Boolean esEgreso) {
+		this.esEgreso = esEgreso;
 	}
 
-	public BigDecimal getValorIngreso() {
-		return this.valorIngreso;
+	public Boolean getEsIngreso() {
+		return this.esIngreso;
 	}
 
-	public void setValorIngreso(BigDecimal valorIngreso) {
-		this.valorIngreso = valorIngreso;
+	public void setEsIngreso(Boolean esIngreso) {
+		this.esIngreso = esIngreso;
 	}
 
 	public TbQoCliente getTbQoCliente() {
@@ -63,6 +70,22 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
+	}
+
+	public BigDecimal getValor() {
+		return this.valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }
