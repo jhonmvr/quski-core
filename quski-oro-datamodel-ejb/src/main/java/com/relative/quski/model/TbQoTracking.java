@@ -27,6 +27,8 @@ public class TbQoTracking implements Serializable {
 	private BigDecimal codigoRegistro;
 
 	private String estado;
+	
+	private String situacion;
 
 	@Column(name="fecha_asignacion")
 	private Timestamp fechaAsignacion;
@@ -146,6 +148,14 @@ public class TbQoTracking implements Serializable {
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}
+
+	public String getSituacion() {
+		return situacion;
+	}
+
+	public void setSituacion(String situacion) {
+		this.situacion = situacion;
 	}
 
 }

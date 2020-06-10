@@ -1,5 +1,6 @@
 package com.relative.quski.service;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -308,13 +309,35 @@ public class QuskiOroService {
 			if( send.getFechaNacimiento() != null ) {
 				persisted.setFechaNacimiento(send.getFechaNacimiento());
 			}
+			if( send.getActividadEconomicaEmpresa() != null) {
+				persisted.setActividadEconomicaEmpresa(send.getActividadEconomicaEmpresa());
+			}
+			if( send.getCargo() != null) {
+				persisted.setCargo(send.getCargo() );
+			}
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			if( send.getNombreEmpresa() != null) {
+				persisted.setNombreEmpresa(send.getNombreEmpresa());
+			}
+			if( send.getOcupacion() != null) {
+				persisted.setOcupacion( send.getOcupacion() );
+			}
+			if( send.getOrigenIngreso() != null ) {
+				persisted.setOrigenIngreso( send.getOrigenIngreso() );
+			}
+			if ( send.getProfesion() != null ) {
+				persisted.setProfesion( send.getProfesion() );
+			}
+			if( send.getRelacionDependencia() != null ) {
+				persisted.setRelacionDependencia( send.getRelacionDependencia() );
+			}
 			// pon las validaciones par ESTOS CAMPOS Y PRUE OK YA DE NACIONALIDAD YA ESTA YA LE PONGO EL DE EDAD
 			if (send.getEdad()!=null) {
 				persisted.setEdad(send.getEdad());
 			}
 			return clienteRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, " ERROR ACTUALIZANDO CLIENTE ===> " + e.getMessage());
 		}
 	}
 	
@@ -2802,15 +2825,17 @@ public class QuskiOroService {
 				try {
 					persisted = this.trackingRepository.findById(send.getId());
 				} catch (RelativeException e) {
-					@SuppressWarnings("unused")
 					String mensaje = "ERROR EN BUSQUEDA DE PROSPECTO " + e.getMessage();
-					// log.log(Level.SEVERE, mensaje,e);
+					log.log(Level.SEVERE, mensaje,e);
 				}
 				log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + persisted);
 				return this.updateTracking(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				log.info("===>>> NO SE ACTUALIZA, VA A CREAR ===========> " + send);
-				send.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT.toString());
+				if ( send.getFechaInicio() != null && send.getFechaFin() != null ) {
+					log.info("===>>> NO SE CREO, VA A ACTUALIZAR ===========> " + QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin()) + " // ");
+					send.setTotalTiempo( new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())) );				
+				}
 				return this.trackingRepository.add(send);
 				
 			} else {
@@ -2832,15 +2857,36 @@ public class QuskiOroService {
 	 */
 	public TbQoTracking updateTracking(TbQoTracking send, TbQoTracking persisted) throws RelativeException {
 		try {
-			log.info("===>>> Entrando a Update Tracking ===========>2 " + send + " " +  persisted);
-			persisted.setActividad(send.getActividad());
-			persisted.setEstado(send.getEstado());
-			persisted.setFechaAsignacion(send.getFechaAsignacion());
-			persisted.setFechaFin(send.getFechaFin());
-			persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
-			persisted.setObservacion(send.getObservacion());
-			persisted.setTotalTiempo(send.getTotalTiempo());
-			persisted.setUsuario(send.getUsuario());
+			log.info("===>>> Entrando a Update Tracking ===========>  " + send + " " +  persisted);
+			if( send.getActividad() != null) {
+				persisted.setActividad(send.getActividad());
+			}
+			persisted.setEstado(EstadoEnum.ACT.toString());
+			if(send.getSituacion() != null) {
+				persisted.setSituacion( send.getSituacion() );
+			}
+			if( send.getFechaInicio() != null ) {
+				persisted.setFechaInicio( send.getFechaInicio() );
+			}
+			if( send.getFechaAsignacion() != null ) {
+				persisted.setFechaAsignacion(send.getFechaAsignacion());
+			}
+			if( send.getFechaInicioAtencion() != null) {
+				persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
+			}
+			if ( send.getFechaFin() != null ) {
+				persisted.setFechaFin(send.getFechaFin());
+			}
+			if( send.getObservacion() != null ) {
+				persisted.setObservacion(send.getObservacion());
+
+			}			
+			if ( send.getFechaInicio() != null && send.getFechaFin() != null ) {
+				persisted.setTotalTiempo( new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())) );
+			}
+			if ( send.getUsuario() != null ) {
+				persisted.setUsuario(send.getUsuario());
+			}
 			log.info("===>>> datos guardados a persisted ===========>2 " + send + " " +  persisted);
 			return this.trackingRepository.update(persisted);
 		} catch (Exception e) {
