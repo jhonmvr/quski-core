@@ -1567,6 +1567,19 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 
 	}
 	
+	
+	  public TbQoCreditoNegociacion findCreditoNegociacionById(Long id) throws RelativeException {
+		try {
+			return creditoNegociacionRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+	 
+	
+	
 	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
 			String agencia, String proceso, String cedula) throws RelativeException {
 		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);

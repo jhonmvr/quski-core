@@ -52,9 +52,14 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 
 	@Override
-	public GenericWrapper<TbQoCreditoNegociacion> getEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
+	@GET
+	@Path("/getEntity")
+	@ApiOperation(value = "TbQoCreditoNegociacion", notes = "Metodo que retorna credito negociacion por id", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCreditoNegociacion> getEntity(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		TbQoCreditoNegociacion a = this.qos.findCreditoNegociacionById(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
 	}
 
 	@Override
