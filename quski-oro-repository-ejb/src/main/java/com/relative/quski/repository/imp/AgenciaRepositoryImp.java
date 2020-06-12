@@ -22,7 +22,7 @@ public class AgenciaRepositoryImp extends GeneralRepositoryImp<Long, TbQoAgencia
      */
     public AgenciaRepositoryImp() {
     }
-    
+    @Override
     public List<TbQoAgencia> findByParams(String nombreAgencia, String direccionAgencia) throws RelativeException{
     	try {
         	return findAllBySpecification(

@@ -13,17 +13,19 @@ import java.util.List;
  */
 @Entity
 @Table(name="tb_qo_cliente")
-@NamedQuery(name="TbQoCliente.findAll", query="SELECT t FROM TbQoCliente t")
 public class TbQoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEG_TB_QO_CLIENTE")
+	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_CLIENTE" ,initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
 
 	@Column(name="actividad_economica")
 	private String actividadEconomica;
+
+	@Column(name="actividad_economica_empresa")
+	private String actividadEconomicaEmpresa;
 
 	@Column(name="apellido_materno")
 	private String apellidoMaterno;
@@ -41,6 +43,8 @@ public class TbQoCliente implements Serializable {
 
 	@Column(name="cargas_familiares")
 	private BigDecimal cargasFamiliares;
+
+	private String cargo;
 
 	@Column(name="cedula_cliente")
 	private String cedulaCliente;
@@ -76,10 +80,23 @@ public class TbQoCliente implements Serializable {
 	@Column(name="nivel_educacion")
 	private String nivelEducacion;
 
+	@Column(name="nombre_empresa")
+	private String nombreEmpresa;
+
+	private String ocupacion;
+
+	@Column(name="origen_ingreso")
+	private String origenIngreso;
+
 	@Column(name="primer_nombre")
 	private String primerNombre;
 
+	private String profesion;
+
 	private String publicidad;
+
+	@Column(name="relacion_dependencia")
+	private String relacionDependencia;
 
 	@Column(name="segundo_nombre")
 	private String segundoNombre;
@@ -87,11 +104,17 @@ public class TbQoCliente implements Serializable {
 	@Column(name="separacion_bienes")
 	private String separacionBienes;
 
+	@Column(name="telefono_adicional")
+	private String telefonoAdicional;
+
 	@Column(name="telefono_fijo")
 	private String telefonoFijo;
 
 	@Column(name="telefono_movil")
 	private String telefonoMovil;
+
+	@Column(name="telefono_trabajo")
+	private String telefonoTrabajo;
 
 	//bi-directional many-to-one association to TbQoArchivoCliente
 	@OneToMany(mappedBy="tbQoCliente")
@@ -101,9 +124,17 @@ public class TbQoCliente implements Serializable {
 	@OneToMany(mappedBy="tbQoCliente")
 	private List<TbQoCotizador> tbQoCotizadors;
 
+	//bi-directional many-to-one association to TbQoDireccionCliente
+	@OneToMany(mappedBy="tbQoCliente")
+	private List<TbQoDireccionCliente> tbQoDireccionClientes;
+
 	//bi-directional many-to-one association to TbQoDocumentoHabilitante
 	@OneToMany(mappedBy="tbQoCliente")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
+
+	//bi-directional many-to-one association to TbQoIngresoEgresoCliente
+	@OneToMany(mappedBy="tbQoCliente")
+	private List<TbQoIngresoEgresoCliente> tbQoIngresoEgresoClientes;
 
 	//bi-directional many-to-one association to TbQoNegociacion
 	@OneToMany(mappedBy="tbQoCliente")
@@ -138,6 +169,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setActividadEconomica(String actividadEconomica) {
 		this.actividadEconomica = actividadEconomica;
+	}
+
+	public String getActividadEconomicaEmpresa() {
+		return this.actividadEconomicaEmpresa;
+	}
+
+	public void setActividadEconomicaEmpresa(String actividadEconomicaEmpresa) {
+		this.actividadEconomicaEmpresa = actividadEconomicaEmpresa;
 	}
 
 	public String getApellidoMaterno() {
@@ -186,6 +225,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setCargasFamiliares(BigDecimal cargasFamiliares) {
 		this.cargasFamiliares = cargasFamiliares;
+	}
+
+	public String getCargo() {
+		return this.cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
 	}
 
 	public String getCedulaCliente() {
@@ -284,6 +331,30 @@ public class TbQoCliente implements Serializable {
 		this.nivelEducacion = nivelEducacion;
 	}
 
+	public String getNombreEmpresa() {
+		return this.nombreEmpresa;
+	}
+
+	public void setNombreEmpresa(String nombreEmpresa) {
+		this.nombreEmpresa = nombreEmpresa;
+	}
+
+	public String getOcupacion() {
+		return this.ocupacion;
+	}
+
+	public void setOcupacion(String ocupacion) {
+		this.ocupacion = ocupacion;
+	}
+
+	public String getOrigenIngreso() {
+		return this.origenIngreso;
+	}
+
+	public void setOrigenIngreso(String origenIngreso) {
+		this.origenIngreso = origenIngreso;
+	}
+
 	public String getPrimerNombre() {
 		return this.primerNombre;
 	}
@@ -292,12 +363,28 @@ public class TbQoCliente implements Serializable {
 		this.primerNombre = primerNombre;
 	}
 
+	public String getProfesion() {
+		return this.profesion;
+	}
+
+	public void setProfesion(String profesion) {
+		this.profesion = profesion;
+	}
+
 	public String getPublicidad() {
 		return this.publicidad;
 	}
 
 	public void setPublicidad(String publicidad) {
 		this.publicidad = publicidad;
+	}
+
+	public String getRelacionDependencia() {
+		return this.relacionDependencia;
+	}
+
+	public void setRelacionDependencia(String relacionDependencia) {
+		this.relacionDependencia = relacionDependencia;
 	}
 
 	public String getSegundoNombre() {
@@ -316,6 +403,14 @@ public class TbQoCliente implements Serializable {
 		this.separacionBienes = separacionBienes;
 	}
 
+	public String getTelefonoAdicional() {
+		return this.telefonoAdicional;
+	}
+
+	public void setTelefonoAdicional(String telefonoAdicional) {
+		this.telefonoAdicional = telefonoAdicional;
+	}
+
 	public String getTelefonoFijo() {
 		return this.telefonoFijo;
 	}
@@ -330,6 +425,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setTelefonoMovil(String telefonoMovil) {
 		this.telefonoMovil = telefonoMovil;
+	}
+
+	public String getTelefonoTrabajo() {
+		return this.telefonoTrabajo;
+	}
+
+	public void setTelefonoTrabajo(String telefonoTrabajo) {
+		this.telefonoTrabajo = telefonoTrabajo;
 	}
 
 	public List<TbQoArchivoCliente> getTbQoArchivoClientes() {
@@ -376,6 +479,28 @@ public class TbQoCliente implements Serializable {
 		return tbQoCotizador;
 	}
 
+	public List<TbQoDireccionCliente> getTbQoDireccionClientes() {
+		return this.tbQoDireccionClientes;
+	}
+
+	public void setTbQoDireccionClientes(List<TbQoDireccionCliente> tbQoDireccionClientes) {
+		this.tbQoDireccionClientes = tbQoDireccionClientes;
+	}
+
+	public TbQoDireccionCliente addTbQoDireccionCliente(TbQoDireccionCliente tbQoDireccionCliente) {
+		getTbQoDireccionClientes().add(tbQoDireccionCliente);
+		tbQoDireccionCliente.setTbQoCliente(this);
+
+		return tbQoDireccionCliente;
+	}
+
+	public TbQoDireccionCliente removeTbQoDireccionCliente(TbQoDireccionCliente tbQoDireccionCliente) {
+		getTbQoDireccionClientes().remove(tbQoDireccionCliente);
+		tbQoDireccionCliente.setTbQoCliente(null);
+
+		return tbQoDireccionCliente;
+	}
+
 	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {
 		return this.tbQoDocumentoHabilitantes;
 	}
@@ -396,6 +521,28 @@ public class TbQoCliente implements Serializable {
 		tbQoDocumentoHabilitante.setTbQoCliente(null);
 
 		return tbQoDocumentoHabilitante;
+	}
+
+	public List<TbQoIngresoEgresoCliente> getTbQoIngresoEgresoClientes() {
+		return this.tbQoIngresoEgresoClientes;
+	}
+
+	public void setTbQoIngresoEgresoClientes(List<TbQoIngresoEgresoCliente> tbQoIngresoEgresoClientes) {
+		this.tbQoIngresoEgresoClientes = tbQoIngresoEgresoClientes;
+	}
+
+	public TbQoIngresoEgresoCliente addTbQoIngresoEgresoCliente(TbQoIngresoEgresoCliente tbQoIngresoEgresoCliente) {
+		getTbQoIngresoEgresoClientes().add(tbQoIngresoEgresoCliente);
+		tbQoIngresoEgresoCliente.setTbQoCliente(this);
+
+		return tbQoIngresoEgresoCliente;
+	}
+
+	public TbQoIngresoEgresoCliente removeTbQoIngresoEgresoCliente(TbQoIngresoEgresoCliente tbQoIngresoEgresoCliente) {
+		getTbQoIngresoEgresoClientes().remove(tbQoIngresoEgresoCliente);
+		tbQoIngresoEgresoCliente.setTbQoCliente(null);
+
+		return tbQoIngresoEgresoCliente;
 	}
 
 	public List<TbQoNegociacion> getTbQoNegociacions() {

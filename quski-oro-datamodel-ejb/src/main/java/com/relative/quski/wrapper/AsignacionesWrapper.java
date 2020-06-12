@@ -3,64 +3,51 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.model.TbQoAgencia;
-import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
+
 
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 
  */
-@Entity
-@Table(name="tb_qo_credito_negociacion")
+//@Entity
+//@Table(name="tb_qo_credito_negociacion")
 public class AsignacionesWrapper implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@SequenceGenerator(name="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName="SEG_QO_CREDITO_NEGOCIACION")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
+	//@Id
+	//@SequenceGenerator(name="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName="SEG_QO_CREDITO_NEGOCIACION")
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;	
 	
 	private String estado;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	//@Temporal(TemporalType.DATE)
+	//@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_vencimiento")
+	//@Temporal(TemporalType.DATE)
+	//@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 	
-	@Column(name="codigo_operacion")
+	//@Column(name="codigo_operacion")
 	private String codigoOperacion;
 	
 	//private String situacionCodigo;
 	//private String estadoCodigo;
 
 	//bi-directional many-to-one association to TbQoAgencia
-	@ManyToOne
-	@JoinColumn(name="id_agencia")
+	//@ManyToOne
+	//@JoinColumn(name="id_agencia")
 	private AgenciaWrapper agenciaWrapper;
 	//bi-directional many-to-one association to TbQoNegociacion
-	@ManyToOne
-	@JoinColumn(name="id_negociacion")
+	//@ManyToOne
+	//@JoinColumn(name="id_negociacion")
 	private NegociacionWrapper negociacionWrapper;
 	//bi-directional many-to-one association to TbQoProceso
-	@ManyToOne
-	@JoinColumn(name="id_proceso")
+	//	@ManyToOne
+	//@JoinColumn(name="id_proceso")
 	private TbQoProceso tbQoProceso;
 
 	

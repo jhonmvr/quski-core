@@ -135,9 +135,10 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
-		
-		String path= "C:\\WORKSPACE\\QUSKI-BPM-ORO\\Habilitante\\";
+		//cAMBIAR PARA PONER EL PARAMETRO
+		String path= "/home/relative/WORKSPACE/QUSKI/QUSKI_ORO/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
+		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		/*
 		TbMiContrato ccc = null;
@@ -167,9 +168,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		map.put("mainReportName", td.getPlantilla());
 		map.put("REPORT_PATH", path );
 		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
-		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 1" + path+td.getPlantillaUno() );
-		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 2" + path+td.getPlantillaDos() );
-		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 3" + path+td.getPlantillaTres() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 1" + path+td.getPlantillaUno() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 2" + path+td.getPlantillaDos() );
+	//	log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 3" + path+td.getPlantillaTres() );
 	}
 	
 	

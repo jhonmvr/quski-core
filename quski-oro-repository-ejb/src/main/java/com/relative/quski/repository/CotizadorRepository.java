@@ -10,10 +10,10 @@ import com.relative.quski.model.TbQoCotizador;
 @Local
 public interface CotizadorRepository extends CrudRepository<Long, TbQoCotizador>{
 	public List<TbQoCotizador> findByCliente(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections,  String idCotizador) throws RelativeException ;
-	public List<TbQoCotizador> findByCliente(String idCotizador) throws RelativeException ;
+			String sortDirections,  String cedulaCliente) throws RelativeException ;
+	public List<TbQoCotizador> findByCliente(String cedulaCliente) throws RelativeException ;
 
-	public Long countByCliente(String idCotizador) throws RelativeException ;
+	public Long countByCliente(String cedulaCliente) throws RelativeException ;
 	
 	
 	

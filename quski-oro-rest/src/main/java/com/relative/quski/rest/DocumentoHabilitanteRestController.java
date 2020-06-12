@@ -20,7 +20,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.service.QuskiOroService;
 
@@ -59,7 +58,8 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCotizador>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoDocumentoHabilitante", response = PaginatedListWrapper.class)
-	public PaginatedListWrapper<TbQoDocumentoHabilitante> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
+	public PaginatedListWrapper<TbQoDocumentoHabilitante> listAllEntities(
+			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
@@ -97,6 +97,8 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 		// TODO Auto-generated method stub
 		
 	}	
+	
+	
 	
 	
 	/*

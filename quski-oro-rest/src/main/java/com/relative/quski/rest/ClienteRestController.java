@@ -181,6 +181,8 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		loc.setEntidad(gestion);
 		return loc;
 	}
+	
+	
 	@GET
 	@Path("/getClienteByCodigoOperacion")
 	@ApiOperation(value = "GenericWrapper<AsignacionesWrapper>", notes = "Metodo getEntity Retorna wrapper de entidad encontrada en AsignacionesWrapper", response = GenericWrapper.class)
@@ -198,5 +200,15 @@ implements CrudRestControllerInterface<TbQoCliente, GenericWrapper<TbQoCliente>>
 		}
 		return null;
 	}
+	
+	@POST
+	@Path("/crearCliente")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> crearCliente(GenericWrapper<TbQoCliente> wp) throws RelativeException {
+		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.crearCliente(wp.getEntidad()));
+		return loc;
+	}	
+	
 }
 

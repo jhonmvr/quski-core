@@ -3,6 +3,8 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.TipoPlantillaEnum;
 
 import java.util.Date;
@@ -19,7 +21,7 @@ public class TbQoTipoDocumento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_DOCUMENTO")
+	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEQ_TIPO_DOCUMENTO")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR")
 	private Long id;
 
@@ -44,9 +46,19 @@ public class TbQoTipoDocumento implements Serializable {
 
 	@Column(name="tipo_documento")
 	private String tipoDocumento;
+	
+	private String servicio;
 
 	@Column(name="tipo_plantilla")
+	@Enumerated(EnumType.STRING)
 	private TipoPlantillaEnum tipoPlantilla;
+	
+	@Enumerated(EnumType.STRING)
+	private ProcessEnum proceso;
+	
+	@Column(name="estado_operacion")
+	@Enumerated(EnumType.STRING)
+	private EstadoOperacionEnum estadoOperacion;
 
 	//bi-directional many-to-one association to TbQoDocumentoHabilitante
 	@OneToMany(mappedBy="tbQoTipoDocumento")
@@ -133,6 +145,32 @@ public class TbQoTipoDocumento implements Serializable {
 
 	public void setTipoPlantilla(TipoPlantillaEnum tipoPlantilla) {
 		this.tipoPlantilla = tipoPlantilla;
+	}
+	
+	public ProcessEnum getProceso() {
+		return proceso;
+	}
+
+	public void setProceso(ProcessEnum proceso) {
+		this.proceso = proceso;
+	}
+
+	public EstadoOperacionEnum getEstadoOperacion() {
+		return estadoOperacion;
+	}
+
+	public void setEstadoOperacion(EstadoOperacionEnum estadoOperacion) {
+		this.estadoOperacion = estadoOperacion;
+	}
+	
+	
+
+	public String getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(String servicio) {
+		this.servicio = servicio;
 	}
 
 	public List<TbQoDocumentoHabilitante> getTbQoDocumentoHabilitantes() {

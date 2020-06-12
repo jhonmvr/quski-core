@@ -1,4 +1,5 @@
 package com.relative.quski.repository.imp;
+
 import java.util.Date;
 import java.util.List;
 
@@ -26,11 +27,13 @@ import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.ReasignacionByCodigoAndEstadoParamSpec;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
+
 /**
  * Session Bean implementation class ParametrosRepositoryImp
  */
 @Stateless(mappedName = "creditoNegociacionRepository")
-public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCreditoNegociacion> implements CreditoNegociacionRepository {
+public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCreditoNegociacion>
+		implements CreditoNegociacionRepository {
 
 	@Override
 	public Long countByParams(Date fechaDesde, Date fechaHasta, String codigoOperacion, EstadoOperacionEnum estado,
@@ -45,36 +48,39 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 			throws RelativeException {
 		try {
 			return this.findAllBySpecificationPaged(
-					new CreditoNegociacionByParamsSpec(fechaDesde,
-							fechaHasta, codigoOperacion,  proceso, identificacion, agencia),
+					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion,
+							agencia),
 					pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al listar creditos " + e.getMessage());
 		}
 	}
-	
-	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia,
-			String proceso, String cedula) throws RelativeException {
+
+	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
+			String agencia, String proceso, String cedula) throws RelativeException {
 		try {
 			// ~~> QUERY
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-			CriteriaQuery<ListadoOperacionDevueltaWrapper> query = cb.createQuery(ListadoOperacionDevueltaWrapper.class);
+			CriteriaQuery<ListadoOperacionDevueltaWrapper> query = cb
+					.createQuery(ListadoOperacionDevueltaWrapper.class);
 			// ~~> FROM
 			Root<TbQoCreditoNegociacion> poll = query.from(TbQoCreditoNegociacion.class);
 			Join<TbQoCreditoNegociacion, TbQoAgencia> joinContratoAgencia = poll.join("tbQoAgencia");
 			Join<TbQoCreditoNegociacion, TbQoProceso> joinCreditoProceso = poll.join("tbQoProceso");
 			Join<TbQoCreditoNegociacion, TbQoNegociacion> joinCreditoNegociacion = poll.join("tbQoNegociacion");
-			Join<TbQoNegociacion, TbQoCliente> joinNegociacionCliente = joinCreditoNegociacion.join("tbMiCliente");
+			Join<TbQoNegociacion, TbQoCliente> joinNegociacionCliente = joinCreditoNegociacion.join("tbQoCliente");
 			// ~~> WHERE
-			Predicate where = cb.and(cb.like(joinContratoAgencia.get("nombre_agencia"), agencia),
-					cb.like(joinCreditoProceso.get("nombre_proceso"), proceso), cb.like(joinNegociacionCliente.get("cedula_cliente"), cedula));
+			Predicate where = cb.and(cb.like(joinContratoAgencia.get("nombreAgencia"), agencia),
+					cb.like(joinCreditoProceso.get("nombreproceso"), proceso),
+					cb.like(joinNegociacionCliente.get("cedulaCliente"), cedula));
 			query.where(where);
 			// ~~> SELECT
-			query.multiselect(poll.get("codigo_operacion"), poll.get("nombre_proceso"), poll.get("proceso"), poll.get("fecha_creacion"),
-					joinNegociacionCliente.get("primer_nombre"), joinNegociacionCliente.get("segundo_nombre"), joinNegociacionCliente.get("apellido_paterno"),
-					joinNegociacionCliente.get("apellido_materno"), joinNegociacionCliente.get("cedula_cliente, "), poll.get("descripcion"),
-					joinContratoAgencia.get("nombre_agencia"), poll.get("actividad_actual"), poll.get("usuario_ejecutor"), poll.get("motivo_devolucion"))
-					.distinct(true);
+			query.multiselect(poll.get("codigoOperacion"), poll.get("nombreProceso"), poll.get("proceso"),
+					poll.get("fechaCreacion"), joinNegociacionCliente.get("primerNombre"),
+					joinNegociacionCliente.get("segundoNombre"), joinNegociacionCliente.get("apellidoPaterno"),
+					joinNegociacionCliente.get("apellidoMaterno"), joinNegociacionCliente.get("cedulaCliente, "),
+					poll.get("descripcion"), joinContratoAgencia.get("nombreAgencia"), poll.get("actividadActual"),
+					poll.get("usuarioEjecutor"), poll.get("motivoDevolucion")).distinct(true);
 			// ~~> ORDER BY
 			if (pw.getSortDirections().equals("asc")) {
 				query.orderBy(cb.asc(poll.get(pw.getSortFields())));
@@ -94,8 +100,9 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
 		}
 	}
-	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia,
-			String proceso, String cedula) throws RelativeException {
+
+	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia, String proceso,
+			String cedula) throws RelativeException {
 		try {
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<Long> query = cb.createQuery(Long.class);
@@ -104,10 +111,11 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 			Join<TbQoCreditoNegociacion, TbQoAgencia> joinContratoAgencia = poll.join("tbQoAgencia");
 			Join<TbQoCreditoNegociacion, TbQoProceso> joinCreditoProceso = poll.join("tbQoProceso");
 			Join<TbQoCreditoNegociacion, TbQoNegociacion> joinCreditoNegociacion = poll.join("tbQoNegociacion");
-			Join<TbQoNegociacion, TbQoCliente> joinNegociacionCliente = joinCreditoNegociacion.join("tbMiCliente");
+			Join<TbQoNegociacion, TbQoCliente> joinNegociacionCliente = joinCreditoNegociacion.join("tbQoCliente");
 			// ~~> WHERE
 			Predicate where = cb.and(cb.like(joinContratoAgencia.get("nombre_agencia"), agencia),
-					cb.like(joinCreditoProceso.get("nombre_proceso"), proceso), cb.like(joinNegociacionCliente.get("cedula_cliente"), cedula));
+					cb.like(joinCreditoProceso.get("nombre_proceso"), proceso),
+					cb.like(joinNegociacionCliente.get("cedula_cliente"), cedula));
 			query.where(where);
 			query.multiselect(cb.countDistinct(poll.get("id")));
 			TypedQuery<Long> createQuery = this.getEntityManager().createQuery(query);
@@ -116,36 +124,38 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 			throw new RelativeException("" + e);
 		}
 	}
-	
 
 	@Override
 	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion,
 			String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
 		try {
 			if (pw == null) {
-				return 	findAllBySpecification(new AsignacionByParamsSpec(codigoOperacion, nombreAgencia, nombreProceso, cedula));
+				return findAllBySpecification(
+						new AsignacionByParamsSpec(codigoOperacion, nombreAgencia, nombreProceso, cedula));
 			} else {
 				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return 	findAllBySpecificationPaged(
+					return findAllBySpecificationPaged(
 							new AsignacionByParamsSpec(codigoOperacion, nombreAgencia, nombreProceso, cedula),
-							pw.getStartRecord(),pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+							pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 				} else {
-					return 	findAllBySpecification(new AsignacionByParamsSpec(codigoOperacion, nombreAgencia, nombreProceso, cedula));
+					return findAllBySpecification(
+							new AsignacionByParamsSpec(codigoOperacion, nombreAgencia, nombreProceso, cedula));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Asignaciones, " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Ocurrio un error al leer Asignaciones, " + e.getMessage());
 		}
 	}
-
 
 	@Override
 	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado, int startRecord,
 			Integer pageSize, String sortFields, String sortDirections) throws RelativeException {
 		List<TbQoCreditoNegociacion> tmp;
 		try {
-			tmp = this.findAllBySpecificationPaged(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado), startRecord, pageSize, sortFields, sortDirections);
+			tmp = this.findAllBySpecificationPaged(new ReasignacionByCodigoAndEstadoParamSpec(codigOp, estado),
+					startRecord, pageSize, sortFields, sortDirections);
 			if (tmp != null && !tmp.isEmpty()) {
 				return tmp;
 			}
@@ -160,10 +170,11 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 	}
 
 	@Override
-	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado) throws RelativeException {
+	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado)
+			throws RelativeException {
 		List<TbQoCreditoNegociacion> tmp;
 		try {
-			tmp = this.findAllBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado));
+			tmp = this.findAllBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp, estado));
 			if (tmp != null && !tmp.isEmpty()) {
 				return tmp;
 			}
@@ -180,7 +191,7 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 	@Override
 	public Long countfindBycodigOpEstado(String codigOp, EstadoOperacionEnum estado) throws RelativeException {
 		try {
-			return this.countBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp,estado));
+			return this.countBySpecification(new ReasignacionByCodigoAndEstadoParamSpec(codigOp, estado));
 
 		} catch (Exception e) {
 			// log.info("NO EXISTE REGISTROS PARA cotizacion " +e);
@@ -190,7 +201,5 @@ public class CreditoNegociacionImp  extends GeneralRepositoryImp<Long, TbQoCredi
 		}
 
 	}
-
-
 
 }

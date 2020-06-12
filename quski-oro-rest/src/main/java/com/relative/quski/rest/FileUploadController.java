@@ -13,6 +13,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.service.GestorHabilitanteService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.FileWrapper;
@@ -35,6 +36,9 @@ public class FileUploadController extends BaseRestController {
 	@Inject
 	QuskiOroService qos;
 	
+	@Inject
+	GestorHabilitanteService ghs;
+	
 	public FileUploadController() throws RelativeException{
 		super();
 	}
@@ -55,10 +59,39 @@ public class FileUploadController extends BaseRestController {
 			if( fw.getFileBase64() == null || fw.getFileBase64().isEmpty() ) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO LLEGA ARCHIVO");
 			}
-			//log.info("===============>loadFile " + fw.getFileBase64() );
+			
 			fw.setFile(  QuskiOroUtil.convertBase64ToByteArray( fw.getFileBase64() ));
+			log.info("===============>GENERADO " + fw.getFileBase64() );
 			TbQoDocumentoHabilitante da= this.qos.generateDocumentoHabilitante(fw);
 			log.info("===============>loadedeFile " + da.getId() );
+			return fw;
+		}catch (RelativeException e) {
+			throw e;
+		}  
+		 catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR Exception REGISTRO DE ARCHIVO");
+		} 
+	}
+	
+	@POST
+	@Path("/loadFileHabilitanteSimplified")
+	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFile", 
+	response = FileWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = FileWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public FileWrapper  loadFileHabilitanteSimplified(FileWrapper fw) throws RelativeException {
+		try {
+			log.info("===============>loadFile "  );
+			log.info("===============>loadFile FW getRelatedIdStr " + fw.getRelatedIdStr()  );
+			log.info("===============>loadFile FW getRelatedId " + fw.getRelatedId()  );
+			log.info("===============>loadFile FW getProcess " + fw.getProcess() );
+			log.info("===============>loadFile FW tipo docimento id " + fw.getTypeAction() );
+			log.info("===============>loadFile FW getEstadoOperacion " + fw.getEstadoOperacion() );
+			//log.info("===============>GENERADO " + fw.getFileBase64() );
+			TbQoDocumentoHabilitante da= this.ghs.generateDocumentoHabilitanteSimplified(fw);
+			log.info("===============>loadedeFile " + da );
+			fw.setRelatedId( da.getId() );
 			return fw;
 		}catch (RelativeException e) {
 			throw e;

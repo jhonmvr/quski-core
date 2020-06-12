@@ -89,6 +89,7 @@ public class ParroquiaRestController extends BaseRestController implements CrudR
 				sortDirections, isPaginated));
 	}
 
+	
 	private PaginatedListWrapper<Parroquia> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<Parroquia> plw = new PaginatedListWrapper<>(pw);
 		List<Parroquia> actions = this.qos.findAllParroquia(pw);

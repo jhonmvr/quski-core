@@ -26,7 +26,7 @@ public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoClien
 	@Override
 	public Predicate toPredicate(Root<TbQoCliente> poll, CriteriaBuilder cb) {
 
-		return cb.and(cb.like(poll.<String>get("cedulaCliente"),"%"+this.identificacion+"%"), cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
+		return cb.and(cb.like(poll.<String>get("cedulaCliente"),"%"+this.identificacion+"%"), cb.equal(poll.<String>get("estado"), EstadoEnum.ACT.toString()));
 	}
 
 }

@@ -5,5 +5,7 @@ import com.relative.quski.model.TbQoDetalleCredito;
 
 @Local
 public interface DetalleCreditoRepository extends CrudRepository<Long, TbQoDetalleCredito>{
+	
+	
 
 }

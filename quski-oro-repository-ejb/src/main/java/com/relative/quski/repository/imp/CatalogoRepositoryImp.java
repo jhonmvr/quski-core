@@ -39,7 +39,7 @@ public class CatalogoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCatalo
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR por nombre Catalogo");
 		}
 	}
 

@@ -13,17 +13,19 @@ import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndC
  * Session Bean implementation class ParametrosRepositoryImp
  */
 @Stateless(mappedName = "documentoHabilitanteRepository")
-public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long, TbQoDocumentoHabilitante> implements DocumentoHabilitanteRepository {
-	
-	
-	public TbQoDocumentoHabilitante findByTipoDocumentoAndCliAndCotAndNeg( Long idTipoDocumento, String identificacionCliente, Long idCotizador, Long idNegociacion) {
-	List<TbQoDocumentoHabilitante> tmp= this.findAllBySpecification((new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec(idTipoDocumento,  identificacionCliente,  idCotizador,  idNegociacion)));
-	if( tmp != null && !tmp.isEmpty() ) {
-		return tmp.get(0);
-	} else {
-		return null;
-	}
-}
+public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long, TbQoDocumentoHabilitante>
+		implements DocumentoHabilitanteRepository {
 
-	
+	public TbQoDocumentoHabilitante findByTipoDocumentoAndCliAndCotAndNeg(Long idTipoDocumento,
+			String identificacionCliente, Long idCotizador, Long idNegociacion) {
+		List<TbQoDocumentoHabilitante> tmp = this
+				.findAllBySpecification((new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec(idTipoDocumento,
+						identificacionCliente, idCotizador, idNegociacion)));
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		} else {
+			return null;
+		}
+	}
+
 }

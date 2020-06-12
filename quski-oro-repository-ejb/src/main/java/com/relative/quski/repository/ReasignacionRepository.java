@@ -2,13 +2,15 @@ package com.relative.quski.repository;
 
 import java.util.List;
 
+import javax.ejb.Local;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoReasignacionActividad;
-
+@Local
 public interface ReasignacionRepository extends CrudRepository<Long, TbQoReasignacionActividad> {
 	
 	

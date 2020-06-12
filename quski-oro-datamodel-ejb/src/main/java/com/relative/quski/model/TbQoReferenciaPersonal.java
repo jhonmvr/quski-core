@@ -1,8 +1,21 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 
 
 /**
@@ -16,7 +29,7 @@ public class TbQoReferenciaPersonal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR", sequenceName="SEG_QO_REFERENCIA_PERSONAL")
+	@SequenceGenerator(name="TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR", sequenceName="SEQ_REFERENCIA_PERSONAL",initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR")
 	private Long id;
 
@@ -67,8 +80,10 @@ public class TbQoReferenciaPersonal implements Serializable {
 		this.direccion = direccion;
 	}
 
+ 
+
 	public String getEstado() {
-		return this.estado;
+		return estado;
 	}
 
 	public void setEstado(String estado) {

@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,7 +19,7 @@ public class TbQoDetalleCredito implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_DETALLE_CREDITO_ID_GENERATOR", sequenceName="SEG_TB_QO_DETALLE_CREDITO")
+	@SequenceGenerator(name="TB_QO_DETALLE_CREDITO_ID_GENERATOR", sequenceName="SEQ_DETALLE_CREDITO",initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_DETALLE_CREDITO_ID_GENERATOR")
 	private Long id;
 
@@ -41,7 +44,8 @@ public class TbQoDetalleCredito implements Serializable {
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
 
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -135,11 +139,13 @@ public class TbQoDetalleCredito implements Serializable {
 		this.costoTransporte = costoTransporte;
 	}
 
-	public String getEstado() {
-		return this.estado;
+ 
+
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
