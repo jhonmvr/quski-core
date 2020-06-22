@@ -23,6 +23,9 @@ public class TbQoCotizador implements Serializable {
 	@Column(name="aprobacion_mupi")
 	private String aprobacionMupi;
 
+	@Column(name="codigo_cotizacion")
+	private String codigoCotizacion;
+
 	private String estado;
 
 	@Temporal(TemporalType.DATE)
@@ -77,6 +80,14 @@ public class TbQoCotizador implements Serializable {
 
 	public void setAprobacionMupi(String aprobacionMupi) {
 		this.aprobacionMupi = aprobacionMupi;
+	}
+
+	public String getCodigoCotizacion() {
+		return this.codigoCotizacion;
+	}
+
+	public void setCodigoCotizacion(String codigoCotizacion) {
+		this.codigoCotizacion = codigoCotizacion;
 	}
 
 	public String getEstado() {
