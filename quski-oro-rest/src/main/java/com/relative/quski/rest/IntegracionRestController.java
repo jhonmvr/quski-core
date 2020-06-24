@@ -30,11 +30,11 @@ public class IntegracionRestController extends BaseRestController {
 	@GET
 	@Path("/getInformacionPersona")
 	public BaseWrapper<Informacion> getInformacionPersona(
-			@QueryParam("tipoIdentificacion") final String tipoIdentificacion,
-			@QueryParam("identificacion") final String identificacion,
-			@QueryParam("tipoConsulta") final String tipoConsulta,
-			@QueryParam("calificacion") final String calificacion) throws RelativeException {
-		final BaseWrapper<Informacion> info = (BaseWrapper<Informacion>) new BaseWrapper();
+			@QueryParam("tipoIdentificacion")  String tipoIdentificacion,
+			@QueryParam("identificacion")  String identificacion,
+			@QueryParam("tipoConsulta")  String tipoConsulta,
+			@QueryParam("calificacion")  String calificacion) throws RelativeException {
+		 BaseWrapper<Informacion> info =new BaseWrapper<>();
 		info.setEntidad((Informacion) this.is.getClienteInformacion(tipoIdentificacion, identificacion, tipoConsulta,
 				calificacion));
 		return info;
@@ -43,30 +43,30 @@ public class IntegracionRestController extends BaseRestController {
 	@GET
 	@Path("/getInformacionOferta")
 	public BaseWrapper<SimularResponse> getInformacionPersonaOferta(
-			@QueryParam("perfilRiesgo") final String perfilRiesgo,
-			@QueryParam("origenOperacion") final String origenOperacion,
-			@QueryParam("riesgoTotal") final String riesgoTotal,
-			@QueryParam("fechaNacimiento") final String fechaNacimiento,
-			@QueryParam("perfilPreferencia") final String perfilPreferencia,
-			@QueryParam("agenciaOriginacion") final String agenciaOriginacion,
-			@QueryParam("identificacionCliente") final String identificacionCliente,
-			@QueryParam("calificacionMupi") final String calificacionMupi,
-			@QueryParam("coberturaExcepcionada") final String coberturaExcepcionada,
-			@QueryParam("tipoJoya") final String tipoJoya,
-			@QueryParam("descripcion") final String descripcion,
-			@QueryParam("estadoJoya") final String estadoJoya,
-			@QueryParam("tipoOroKilataje") final String tipoOroKilataje,
-			@QueryParam("pesoGr") final String pesoGr,
-			@QueryParam("tienePiedras") final String tienePiedras,
-			@QueryParam("detallePiedras") final String detallePiedras,
-			@QueryParam("descuentoPesoPiedras") final String descuentoPesoPiedras,
-			@QueryParam("pesoNeto") final String pesoNeto,
-			@QueryParam("precioOro") final String precioOro,
-			@QueryParam("valorAplicableCredito") final String valorAplicableCredito,
-			@QueryParam("valorRealizacion") final String valorRealizacion,
-			@QueryParam("numeroPiezas") final String numeroPiezas,
-			@QueryParam("descuentoSuelda") final String descuentoSuelda) throws RelativeException {
-		final BaseWrapper<SimularResponse> oferta = (BaseWrapper<SimularResponse>) new BaseWrapper();
+			@QueryParam("perfilRiesgo")  String perfilRiesgo,
+			@QueryParam("origenOperacion")  String origenOperacion,
+			@QueryParam("riesgoTotal")  String riesgoTotal,
+			@QueryParam("fechaNacimiento")  String fechaNacimiento,
+			@QueryParam("perfilPreferencia")  String perfilPreferencia,
+			@QueryParam("agenciaOriginacion")  String agenciaOriginacion,
+			@QueryParam("identificacionCliente")  String identificacionCliente,
+			@QueryParam("calificacionMupi")  String calificacionMupi,
+			@QueryParam("coberturaExcepcionada")  String coberturaExcepcionada,
+			@QueryParam("tipoJoya")  String tipoJoya,
+			@QueryParam("descripcion")  String descripcion,
+			@QueryParam("estadoJoya")  String estadoJoya,
+			@QueryParam("tipoOroKilataje")  String tipoOroKilataje,
+			@QueryParam("pesoGr")  String pesoGr,
+			@QueryParam("tienePiedras")  String tienePiedras,
+			@QueryParam("detallePiedras")  String detallePiedras,
+			@QueryParam("descuentoPesoPiedras")  String descuentoPesoPiedras,
+			@QueryParam("pesoNeto")  String pesoNeto,
+			@QueryParam("precioOro")  String precioOro,
+			@QueryParam("valorAplicableCredito")  String valorAplicableCredito,
+			@QueryParam("valorRealizacion")  String valorRealizacion,
+			@QueryParam("numeroPiezas")  String numeroPiezas,
+			@QueryParam("descuentoSuelda")  String descuentoSuelda) throws RelativeException {
+		 BaseWrapper<SimularResponse> oferta =new BaseWrapper<>();
 		oferta.setEntidad((SimularResponse) this.is.getClienteInformacionOferta( perfilRiesgo,  origenOperacion,  riesgoTotal,
 				 fechaNacimiento,  perfilPreferencia,  agenciaOriginacion,  identificacionCliente,
 				 calificacionMupi,  coberturaExcepcionada,  tipoJoya,  descripcion,
