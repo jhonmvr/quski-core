@@ -26,11 +26,8 @@ public class IntegracionServiceImp {
 	 * @author BRAYAN MONGE - Relative Engine
 	 * @throws RelativeException
 	 */
-
-	public Informacion getClienteInformacion(final String tipoIdentificacion, final String identificacion,
-			final String tipoConsulta, final String calificacion) throws RelativeException {
-		return ClienteCalculadoraConsumer.callCalculadoraClienteObject(tipoIdentificacion, identificacion, tipoConsulta,
-				calificacion);
+	public Informacion getClienteInformacion( String tipoIdentificacion,  String identificacion,String tipoConsulta,  String calificacion) throws RelativeException {
+		return ClienteCalculadoraConsumer.callCalculadoraClienteObject(tipoIdentificacion, identificacion, tipoConsulta,calificacion);
 	}
 	
 	/**
@@ -64,12 +61,12 @@ public class IntegracionServiceImp {
 	 */
 
 
-	public SimularResponse getClienteInformacionOferta(final String perfilRiesgo, final String origenOperacion,
-			final String riesgoTotal,final  String fechaNacimiento,final  String perfilPreferencia, final String agenciaOriginacion,
-			final String identificacionCliente,final  String calificacionMupi, final String coberturaExcepcionada,final  String tipoJoya,
-			final String descripcion,final  String estadoJoya,final  String tipoOroKilataje, final String pesoGr,final  String tienePiedras,
-			final String detallePiedras,final  String descuentoPesoPiedras,final  String pesoNeto, final String precioOro,
-			final String valorAplicableCredito,final  String valorRealizacion,final  String numeroPiezas,final  String descuentoSuelda)
+	public SimularResponse getClienteInformacionOferta( String perfilRiesgo,  String origenOperacion,
+			 String riesgoTotal,  String fechaNacimiento,  String perfilPreferencia,  String agenciaOriginacion,
+			 String identificacionCliente,  String calificacionMupi,  String coberturaExcepcionada,  String tipoJoya,
+			 String descripcion,  String estadoJoya,  String tipoOroKilataje,  String pesoGr,  String tienePiedras,
+			 String detallePiedras,  String descuentoPesoPiedras,  String pesoNeto,  String precioOro,
+			 String valorAplicableCredito,  String valorRealizacion,  String numeroPiezas,  String descuentoSuelda)
 			throws RelativeException {
 		return ClienteConsultaOfertaConsumer.callCalculadoraClienteObject(perfilRiesgo, origenOperacion, riesgoTotal, fechaNacimiento, perfilPreferencia, agenciaOriginacion, identificacionCliente, calificacionMupi, coberturaExcepcionada, tipoJoya, descripcion, estadoJoya, tipoOroKilataje, pesoGr, tienePiedras, detallePiedras, descuentoPesoPiedras, pesoNeto, precioOro, valorAplicableCredito, valorRealizacion, numeroPiezas, descuentoSuelda);
 	}

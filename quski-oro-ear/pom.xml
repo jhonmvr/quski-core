@@ -51,6 +51,7 @@
 			 <groupId>com.relative</groupId>
 			  <artifactId>integracion-soap</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.relative</groupId>
 			<artifactId>quski-oro-datamodel-ejb</artifactId>

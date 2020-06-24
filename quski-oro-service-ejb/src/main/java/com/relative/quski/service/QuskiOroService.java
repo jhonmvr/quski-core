@@ -628,6 +628,35 @@ public class QuskiOroService {
 
 		return cotizadorRepository.countByCliente(cedulaCliente);
 	}
+	
+	private TbQoCotizador crearCodigoCotizacion( TbQoCotizador persisted) throws RelativeException {
+		String cod = "COD0000000";
+		Long id = persisted.getId();
+		try {
+			if( id < 9 ){
+				cod = "COD000000";
+			} else if ( id < 99) {
+				cod = "COD00000" + id;
+			} else if ( id < 999) {
+				cod = "COD0000" + id;
+			} else if ( id < 9999) {
+				cod = "COD000" + id;
+			} else if ( id < 99999){
+				cod = "COD00" + id;
+			} else if ( id < 999999) {
+				cod = "COD0" + id;
+			} else if ( id < 9999999) {
+				cod = "COD" + id;
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error. Codigo de cotizacion supera los 7 digitos numericos");
+			}
+			persisted.setCodigoCotizacion( cod );
+			return this.cotizadorRepository.update( persisted );
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error Creando codigo de Cotizacion " + e.getMessage());
+
+		} 
+	}
 
 	
 	/**
@@ -647,7 +676,7 @@ public class QuskiOroService {
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(send.getEstado());
-			return cotizadorRepository.update(persisted);
+			return crearCodigoCotizacion ( persisted );
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -674,7 +703,7 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return cotizadorRepository.add(send);
+				return crearCodigoCotizacion( cotizadorRepository.add(send) );
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
