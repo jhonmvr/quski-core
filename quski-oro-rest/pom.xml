@@ -205,6 +205,7 @@
 			 <groupId>com.relative</groupId>
 			  <artifactId>integracion-soap</artifactId>
 			  <scope>provided</scope>
+			  
 		</dependency>
 
 		<dependency>
