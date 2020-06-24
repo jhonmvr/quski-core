@@ -5,8 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -38,8 +35,7 @@ public class TbQoReferenciaPersonal implements Serializable {
 
 	private String direccion;
 
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
+	private String estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -86,11 +82,11 @@ public class TbQoReferenciaPersonal implements Serializable {
 
  
 
-	public EstadoEnum getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(EstadoEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

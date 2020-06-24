@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +26,10 @@ public class TbQoCotizador implements Serializable {
 	@Column(name="aprobacion_mupi")
 	private String aprobacionMupi;
 
-	private String estado;
+	@Column(name="codigo_cotizacion")
+	private String codigoCotizacion;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -79,11 +85,21 @@ public class TbQoCotizador implements Serializable {
 		this.aprobacionMupi = aprobacionMupi;
 	}
 
-	public String getEstado() {
-		return this.estado;
+	public String getCodigoCotizacion() {
+		return this.codigoCotizacion;
 	}
 
-	public void setEstado(String estado) {
+	public void setCodigoCotizacion(String codigoCotizacion) {
+		this.codigoCotizacion = codigoCotizacion;
+	}
+
+ 
+
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

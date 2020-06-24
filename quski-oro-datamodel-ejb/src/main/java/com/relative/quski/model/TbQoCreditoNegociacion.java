@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -100,6 +101,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_proceso")
 	private TbQoProceso tbQoProceso;
+	
+	
+	@Column(name="tipo")
+	@Enumerated(EnumType.STRING)
+	private TipoCreditoNegociacionEnum tipo;
 
 	//bi-directional many-to-one association to TbQoNegociacionCalculo
 	@OneToMany(mappedBy="tbQoCreditoNegociacion")
@@ -295,6 +301,17 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public TbQoProceso getTbQoProceso() {
 		return this.tbQoProceso;
 	}
+	
+
+	public TipoCreditoNegociacionEnum getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(TipoCreditoNegociacionEnum tipo) {
+		this.tipo = tipo;
+	}
+
 
 	public void setTbQoProceso(TbQoProceso tbQoProceso) {
 		this.tbQoProceso = tbQoProceso;

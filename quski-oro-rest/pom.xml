@@ -205,8 +205,8 @@
 			 <groupId>com.relative</groupId>
 			  <artifactId>integracion-soap</artifactId>
 			  <scope>provided</scope>
-			  
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>

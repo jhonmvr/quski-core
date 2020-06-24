@@ -184,7 +184,6 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 			log.info("Valor de tipo Plantilla"+td.getTipoPlantilla().toString());
 			log.info("Valor del TipoPlantillaEnum"+TipoPlantillaEnum.AB);
 			log.info("Valor comparado"+ ( td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB ) == 0  ));
-
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB ) == 0  )  {
 				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
 			} 
