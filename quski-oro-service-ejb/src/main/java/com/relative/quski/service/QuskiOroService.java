@@ -1823,6 +1823,9 @@ public class QuskiOroService {
 	 * @return Cantidad de entidades encontradas
 	 * @throws RelativeException
 	 */
+	
+	
+	
 	/*
 	public List<TbQoVariableCrediticia> listaByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
@@ -3678,5 +3681,25 @@ public List<TbQoVariableCrediticia> findVariableCrediticiaByidCotizador(Long idC
 		}
 	}
 
+	
+	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion) throws RelativeException {
+		if (pw == null) {
+			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			}
+		}
+	}
+
+	public Long countTasacionByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException {
+		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
+	}
+
+	
 }
 	
