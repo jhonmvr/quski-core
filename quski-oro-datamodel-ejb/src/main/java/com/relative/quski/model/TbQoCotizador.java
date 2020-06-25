@@ -28,6 +28,7 @@ public class TbQoCotizador implements Serializable {
 
 	@Column(name="codigo_cotizacion")
 	private String codigoCotizacion;
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -230,5 +231,9 @@ public class TbQoCotizador implements Serializable {
 
 		return tbQoVariablesCrediticia;
 	}
+
+ 
+	
+	
 
 }

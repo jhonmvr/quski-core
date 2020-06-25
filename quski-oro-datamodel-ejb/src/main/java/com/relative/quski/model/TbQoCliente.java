@@ -633,4 +633,8 @@ public class TbQoCliente implements Serializable {
 		return tbQoRiesgoAcumulado;
 	}
 
+ 
+	
+	
+
 }

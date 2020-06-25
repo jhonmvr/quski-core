@@ -205,4 +205,17 @@ public class TbQoDetalleCredito implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
+	@Override
+	public String toString() {
+		return "TbQoDetalleCredito [id=" + id + ", costoCredito=" + costoCredito + ", costoCustodia=" + costoCustodia
+				+ ", costoEstimado=" + costoEstimado + ", costoNuevaOperacion=" + costoNuevaOperacion
+				+ ", costoResguardado=" + costoResguardado + ", costoSeguro=" + costoSeguro + ", costoTransporte="
+				+ costoTransporte + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCreacion=" + fechaCreacion + ", montoPreaprobado=" + montoPreaprobado + ", plazoCredito="
+				+ plazoCredito + ", recibirCliente=" + recibirCliente + ", valorCuota=" + valorCuota
+				+ ", tbQoCotizador=" + tbQoCotizador + "]";
+	}
+	
+	
+
 }

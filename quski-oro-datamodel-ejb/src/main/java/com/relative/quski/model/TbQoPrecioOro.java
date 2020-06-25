@@ -117,4 +117,13 @@ public class TbQoPrecioOro implements Serializable {
 		this.tbQoTipoOro = tbQoTipoOro;
 	}
 
+	@Override
+	public String toString() {
+		return "TbQoPrecioOro [id=" + id + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCreacion=" + fechaCreacion + ", pesoNetoEstimado=" + pesoNetoEstimado + ", precio=" + precio
+				+ ", tbQoCotizador=" + tbQoCotizador + ", tbQoTipoOro=" + tbQoTipoOro + "]";
+	}
+	
+	
+
 }

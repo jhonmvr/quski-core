@@ -1,6 +1,7 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -218,5 +219,17 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	public void setTipoDocumento(String tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
+
+	@Override
+	public String toString() {
+		return "TbQoDocumentoHabilitante [id=" + id + ", archivo=" + Arrays.toString(archivo) + ", estado=" + estado
+				+ ", proceso=" + proceso + ", idReferencia=" + idReferencia + ", objectId=" + objectId
+				+ ", estadoOperacion=" + estadoOperacion + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCreacion=" + fechaCreacion + ", nombreArchivo=" + nombreArchivo + ", tipoDocumento="
+				+ tipoDocumento + ", tbQoCliente=" + tbQoCliente + ", tbQoCotizador=" + tbQoCotizador
+				+ ", tbQoNegociacion=" + tbQoNegociacion + ", tbQoTipoDocumento=" + tbQoTipoDocumento + "]";
+	}
+	
+	
 
 }

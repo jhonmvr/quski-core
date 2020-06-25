@@ -1,8 +1,8 @@
 package com.relative.quski.rest;
 
-
-
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -19,6 +19,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
+import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
@@ -28,21 +29,25 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "CotizadorRestController - REST CRUD")
-public class CotizadorRestController  extends BaseRestController
-implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizador>> {
+public class CotizadorRestController extends BaseRestController
+		implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizador>> {
 
 	public CotizadorRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
 	@Inject
 	QuskiOroService qos;
+	@Inject
+	Logger log;
+	@Inject 
+	CotizacionService cs;
+
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -55,7 +60,7 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 		loc.setEntidad(a);
 		return loc;
 	}
-	
+
 	@Override
 	@GET
 	@Path("/listAllEntities")
@@ -81,7 +86,6 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 		return plw;
 	}
 
-
 	@Override
 	@POST
 	@Path("/persistEntity")
@@ -90,8 +94,19 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageCotizador(wp.getEntidad()));
 		return loc;
-	}	
+	}
+
 	
+	@POST
+	@Path("/crearCotizacionClienteVariableCrediticia")
+	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCotizador> crearCotizacionClienteVariableCrediticia(GenericWrapper<TbQoCotizador> wp)
+			throws RelativeException {
+		log.info("valor que llega>> "+wp);
+		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
+		loc.setEntidad(this.cs.crearCotizacionClienteVariableCrediticia(wp.getEntidad()));
+		return loc;
+	}
 
 	@GET
 	@Path("/cotizadorByCliente")
@@ -102,13 +117,13 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("cedulaCliente") String cedulaCliente
-			) throws RelativeException {
-		return findCotizadorByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
-				sortDirections, isPaginated),cedulaCliente);
+			@QueryParam("cedulaCliente") String cedulaCliente) throws RelativeException {
+		return findCotizadorByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
+				sortFields, sortDirections, isPaginated), cedulaCliente);
 	}
-	
-	private PaginatedListWrapper<TbQoCotizador> findCotizadorByIdentificacion(PaginatedWrapper pw, String cedulaCliente) throws RelativeException {
+
+	private PaginatedListWrapper<TbQoCotizador> findCotizadorByIdentificacion(PaginatedWrapper pw, String cedulaCliente)
+			throws RelativeException {
 		PaginatedListWrapper<TbQoCotizador> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoCotizador> actions = this.qos.listByCliente(pw, cedulaCliente);
 		if (actions != null && !actions.isEmpty()) {
@@ -116,7 +131,6 @@ implements CrudRestControllerInterface<TbQoCotizador, GenericWrapper<TbQoCotizad
 			plw.setList(actions);
 		}
 		return plw;
-	}	
+	}
 
-	
 }
