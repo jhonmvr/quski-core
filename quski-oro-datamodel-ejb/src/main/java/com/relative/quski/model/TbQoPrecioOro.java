@@ -8,44 +8,43 @@ import com.relative.quski.enums.EstadoEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
 /**
  * The persistent class for the tb_qo_precio_oro database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_precio_oro")
+@Table(name = "tb_qo_precio_oro")
 public class TbQoPrecioOro implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_PRECIO_ORO_ID_GENERATOR", sequenceName="SEG_TB_QO_PRECIO_ORO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_PRECIO_ORO_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_PRECIO_ORO_ID_GENERATOR", sequenceName = "SEG_TB_QO_PRECIO_ORO")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_PRECIO_ORO_ID_GENERATOR")
 	private Long id;
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="peso_neto_estimado")
+	@Column(name = "peso_neto_estimado")
 	private BigDecimal pesoNetoEstimado;
 
 	private BigDecimal precio;
 
-	//bi-directional many-to-one association to TbQoCotizador
+	// bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
-	@JoinColumn(name="id_cotizador")
+	@JoinColumn(name = "id_cotizador")
 	private TbQoCotizador tbQoCotizador;
 
-	//bi-directional many-to-one association to TbQoTipoOro
+	// bi-directional many-to-one association to TbQoTipoOro
 	@ManyToOne
-	@JoinColumn(name="id_tipo_oro")
+	@JoinColumn(name = "id_tipo_oro")
 	private TbQoTipoOro tbQoTipoOro;
 
 	public TbQoPrecioOro() {
@@ -58,8 +57,6 @@ public class TbQoPrecioOro implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
- 
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -117,13 +114,6 @@ public class TbQoPrecioOro implements Serializable {
 		this.tbQoTipoOro = tbQoTipoOro;
 	}
 
-	@Override
-	public String toString() {
-		return "TbQoPrecioOro [id=" + id + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCreacion=" + fechaCreacion + ", pesoNetoEstimado=" + pesoNetoEstimado + ", precio=" + precio
-				+ ", tbQoCotizador=" + tbQoCotizador + ", tbQoTipoOro=" + tbQoTipoOro + "]";
-	}
-	
-	
+
 
 }

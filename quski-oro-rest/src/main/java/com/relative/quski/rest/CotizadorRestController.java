@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -21,6 +22,7 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.CotizadorWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +43,7 @@ public class CotizadorRestController extends BaseRestController
 	QuskiOroService qos;
 	@Inject
 	Logger log;
-	@Inject 
+	@Inject
 	CotizacionService cs;
 
 	@Override
@@ -96,13 +98,12 @@ public class CotizadorRestController extends BaseRestController
 		return loc;
 	}
 
-	
 	@POST
 	@Path("/crearCotizacionClienteVariableCrediticia")
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> crearCotizacionClienteVariableCrediticia(GenericWrapper<TbQoCotizador> wp)
 			throws RelativeException {
-		log.info("valor que llega>> "+wp);
+		log.info("valor que llega>> " + wp);
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		loc.setEntidad(this.cs.crearCotizacionClienteVariableCrediticia(wp.getEntidad()));
 		return loc;
@@ -132,5 +133,19 @@ public class CotizadorRestController extends BaseRestController
 		}
 		return plw;
 	}
+
+	@GET
+	@Path("/getCotizacionWrapper")
+	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCotizador> getCotizacionWrapper(@QueryParam("cedulaCliente") String cedulaCliente)
+			throws RelativeException {
+		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
+		TbQoCotizador a = this.cs.buscarCotizacionActivaPorCedula(cedulaCliente);
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	
+
 
 }

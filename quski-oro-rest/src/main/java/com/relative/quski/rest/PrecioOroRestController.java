@@ -147,4 +147,14 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 		return plw;
 	}	
 	
+	@POST
+	@Path("/crearPrecioOro")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo CotizadorByIdCotizador Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	GenericWrapper<TbQoPrecioOro> crearPrecioOro( GenericWrapper<TbQoPrecioOro> pow )throws RelativeException{
+		pow.setEntidad( this.qos.registrarPrecioOroByCotizacion( pow.getEntidad() ) );
+		return pow;
+	}
+	
+	
+	
 }
