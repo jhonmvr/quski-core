@@ -9,7 +9,7 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoVariablesCrediticia;
+import com.relative.quski.model.TbQoVariableCrediticia;
 
 public class CotizadorWrapper implements Serializable{
 	public CotizadorWrapper() {
@@ -27,7 +27,7 @@ public class CotizadorWrapper implements Serializable{
 	private String motivoDeDesestimiento;
 	private TbQoCliente tbQoCliente;
 	private List<TbQoPrecioOro> tbQoPrecioOros;
-	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
+	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
 	private List<TbQoDetalleCredito> tbQoDetalleCreditos;
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 	
@@ -116,10 +116,10 @@ public class CotizadorWrapper implements Serializable{
 	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {
 		this.tbQoPrecioOros = tbQoPrecioOros;
 	}
-	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {
+	public List<TbQoVariableCrediticia> getTbQoVariablesCrediticias() {
 		return tbQoVariablesCrediticias;
 	}
-	public void setTbQoVariablesCrediticias(List<TbQoVariablesCrediticia> tbQoVariablesCrediticias) {
+	public void setTbQoVariablesCrediticias(List<TbQoVariableCrediticia> tbQoVariablesCrediticias) {
 		this.tbQoVariablesCrediticias = tbQoVariablesCrediticias;
 	}
 	public List<TbQoDetalleCredito> getTbQoDetalleCreditos() {

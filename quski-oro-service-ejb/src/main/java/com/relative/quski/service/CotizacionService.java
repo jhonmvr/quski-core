@@ -12,7 +12,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoVariablesCrediticia;
+import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.CotizadorRepository;
 
 @Stateless
@@ -79,12 +79,12 @@ public class CotizacionService {
 			log.info("VALOR QUE LLEGA DEL FRONT...> " + cot);
 			log.info("VALOR DEL ID QUE LLEGA>>" + cot.getId());
 			TbQoCotizador cotLlena = new TbQoCotizador();
-			List<TbQoVariablesCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariablesCrediticia>();
+			List<TbQoVariableCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariableCrediticia>();
 			if (cot != null && cot.getId() == null) {
 				log.info("Valor que llega al IF...> " + cot);
 				log.info("******INGRESA AL IF");
 
-				for (TbQoVariablesCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
+				for (TbQoVariableCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
 					variableCrediticiaLlega.add(varCredi);
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);

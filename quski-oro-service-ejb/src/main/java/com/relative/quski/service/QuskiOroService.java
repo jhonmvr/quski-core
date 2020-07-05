@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,7 +45,7 @@ import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoTracking;
-import com.relative.quski.model.TbQoVariablesCrediticia;
+import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.repository.AgenciaRepository;
 import com.relative.quski.repository.ArchivoClienteRepository;
 import com.relative.quski.repository.CantonRepository;
@@ -77,15 +76,14 @@ import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
-import com.relative.quski.repository.spec.PrecioOroByIdCotizadorSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
-import com.relative.quski.repository.spec.VariablesCrediticiasByIdCotizacionSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 import com.relative.quski.wrapper.PrecioOroWrapper;
+import com.relative.quski.wrapper.VariableCrediticiaWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -853,11 +851,11 @@ public class QuskiOroService {
 	 */
 	public TbQoTipoOro updateTipoOro(TbQoTipoOro send, TbQoTipoOro persisted) throws RelativeException {
 		try {
-			if(send.getQuilate()!= null  ) {
+			if (send.getQuilate() != null) {
 				persisted.setQuilate(send.getQuilate());
 			}
-			if( send.getEstado()!=null) {
-				persisted.setEstado(send.getEstado());			
+			if (send.getEstado() != null) {
+				persisted.setEstado(send.getEstado());
 			}
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			return tipoOroRepository.update(persisted);
@@ -1157,11 +1155,11 @@ public class QuskiOroService {
 			persisted.setPesoNetoEstimado(send.getPesoNetoEstimado());
 			persisted.setEstado(send.getEstado());
 			persisted.setPrecio(send.getPrecio());
-			//persisted.setFechaCreacion(persisted.getFechaCreacion());
+			// persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(send.getEstado());
-			if( send.getTbQoTipoOro() != null ) {
-				persisted.setTbQoTipoOro( send.getTbQoTipoOro() );
+			if (send.getTbQoTipoOro() != null) {
+				persisted.setTbQoTipoOro(send.getTbQoTipoOro());
 			}
 			return precioOroRepository.update(persisted);
 		} catch (RelativeException e) {
@@ -1278,51 +1276,95 @@ public class QuskiOroService {
 		}
 	}
 
+
+
 	/**
-	 * Copia la informacion del wrapper de precio de oro al entity precio de oro
+	 * Copia la informacion del wrapper de variable crediticia al entity variable
+	 * crediticia
+	 * 
 	 * @param idCotizacion
 	 * @return
 	 * @throws RelativeException
 	 */
-	private List<TbQoPrecioOro> copyPrecioOroData( Long idCotizacion )  throws RelativeException {
-		List<TbQoPrecioOro> pos=new ArrayList<>();
+	private List<TbQoVariableCrediticia> copyVariableCrediticiaData(Long idCotizacion) throws RelativeException {
+		List<TbQoVariableCrediticia> varCrediticia = new ArrayList<>();
+		log.info("========>copyVariablesCrediticiasData " + idCotizacion);
+		List<VariableCrediticiaWrapper> variablesCrediticias = this.variableCrediticiaRepository
+				.findByIdCotizadorCustom(idCotizacion);
+
+		if (variablesCrediticias != null && !variablesCrediticias.isEmpty()) {
+			log.info("========>copyVariablesCrediticiaData variablesCrediticias " + variablesCrediticias.size());
+			variablesCrediticias.forEach(vcw -> {
+				log.info("========>leyendo elemento pow " + vcw.getId());
+				TbQoVariableCrediticia vc = new TbQoVariableCrediticia();
+				vc.setId(vcw.getId());
+				vc.setOrden(vcw.getOrden());
+				vc.setNombre(vcw.getNombre());
+				vc.setValor(vcw.getValor());
+
+				varCrediticia.add(vc);
+			});
+		}
+		return varCrediticia;
+
+	}
+	/**
+	 * Copia la informacion del wrapper de precio de oro al entity precio de oro
+	 * 
+	 * @param idCotizacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	private List<TbQoPrecioOro> copyPrecioOroData(Long idCotizacion) throws RelativeException {
+		List<TbQoPrecioOro> pos = new ArrayList<>();
 		log.info("========>copyPrecioOroData " + idCotizacion);
-		List<PrecioOroWrapper> pows= this.precioOroRepository.findByIdCotizadorCustom( idCotizacion );
-		
-		if( pows != null && !pows.isEmpty() ) {
+		List<PrecioOroWrapper> pows = this.precioOroRepository.findByIdCotizadorCustom(idCotizacion);
+
+		if (pows != null && !pows.isEmpty()) {
 			log.info("========>copyPrecioOroData pows " + pows.size());
-			pows.forEach( pow->{
+			pows.forEach(pow -> {
 				log.info("========>leyendo elemento pow " + pow.getId());
 				TbQoPrecioOro po = new TbQoPrecioOro();
-				TbQoTipoOro to= new TbQoTipoOro();
-				po.setId( pow.getId() );
-				to.setId( pow.getIdTipoOro() );
-				to.setPrecio( pow.getPrecio() );
-				to.setQuilate( pow.getQuilate() );
-				po.setTbQoTipoOro( to );
-				pos.add( po );
-			} );
+				TbQoTipoOro to = new TbQoTipoOro();
+				po.setId(pow.getId());
+				to.setId(pow.getIdTipoOro());
+				to.setPrecio(pow.getPrecio());
+				to.setQuilate(pow.getQuilate());
+				po.setTbQoTipoOro(to);
+				pos.add(po);
+			});
 		}
 		return pos;
-		
+
 	}
-	
+	/**
+	 * Metodo que busca el ciente por identificacion 
+	 * @param identificacion
+	 * @return Variables crediticias y precios oro 
+	 * @throws RelativeException
+	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
 			log.info("----->findClienteByIdentificacion");
-			if (cliente != null && cliente.getTbQoCotizador() != null & !cliente.getTbQoCotizador().isEmpty()) {
+			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
 				List<TbQoCotizador> tmp = cliente.getTbQoCotizador().stream()
 						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
 				if (tmp != null && !tmp.isEmpty()) {
-					
-					tmp.get(0).setTbQoPrecioOros( this.copyPrecioOroData( tmp.get(0).getId() ) );
+					log.info("INGRESA AL IF findClienteByIdentificacion ");
+
+					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
 					log.info("----->findClienteByIdentificacion llenpo tipos de preio de ooro");
+					
+					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariableCrediticiaData(tmp.get(0).getId()));
+					log.info("----->findClienteByIdentificacion llenpo las variables crediticias");
 					tmp.get(0).setTbQoCliente(null);
-					//tmp.get(0).setTbQoPrecioOros(this.precioOroRepository
-					//		.findAllBySpecification(new PrecioOroByIdCotizadorSpec((tmp.get(0).getId()))));
-					//tmp.get(0).setTbQoVariablesCrediticias(this.variableCrediticiaRepository
-					//		.findAllBySpecification(new VariablesCrediticiasByIdCotizacionSpec((tmp.get(0).getId()))));
+					// tmp.get(0).setTbQoPrecioOros(this.precioOroRepository
+					// .findAllBySpecification(new
+					// PrecioOroByIdCotizadorSpec((tmp.get(0).getId()))));
+					// tmp.get(0).setTbQoVariablesCrediticias(this.variableCrediticiaRepository
+					// .findAllBySpecification(new
+					// VariablesCrediticiasByIdCotizacionSpec((tmp.get(0).getId()))));
 				}
 				cliente.setTbQoCotizador(tmp);
 				log.info("El cliente completo es>>>>  " + cliente);
@@ -1340,20 +1382,19 @@ public class QuskiOroService {
 		}
 	}
 
-	
 	/**
 	 * 
 	 * @param po
 	 * @return
 	 * @throws RelativeException
 	 */
-	public TbQoPrecioOro registrarPrecioOroByCotizacion( TbQoPrecioOro po ) throws RelativeException {
-		TbQoCotizador cot=this.findCotizadorById( po.getTbQoCotizador().getId() );
-		TbQoTipoOro tpo = this.manageTipoOro( po.getTbQoTipoOro() );
-		//TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
-		po.setTbQoCotizador( cot );
+	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
+		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
+		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
+		// TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		po.setTbQoCotizador(cot);
 		po.setTbQoTipoOro(tpo);
-		return this.managePrecioOro( po );
+		return this.managePrecioOro(po);
 	}
 
 	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador, final EstadoEnum estadoEnum)
@@ -1410,7 +1451,7 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 
-	public List<TbQoVariablesCrediticia> findVariableCrediticiaByIdCotizacion(PaginatedWrapper pw, Long idCotizador)
+	public List<TbQoVariableCrediticia> findVariableCrediticiaByIdCotizacion(PaginatedWrapper pw, Long idCotizador)
 			throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return variableCrediticiaRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(),
@@ -1435,7 +1476,7 @@ public class QuskiOroService {
 
 	}
 
-	public TbQoVariablesCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
+	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
 
 		try {
 			return variableCrediticiaRepository.findById(id);
@@ -1446,16 +1487,16 @@ public class QuskiOroService {
 		}
 	}
 
-	public List<TbQoVariablesCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
+	public List<TbQoVariableCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
-			return this.variableCrediticiaRepository.findAll(TbQoVariablesCrediticia.class);
+			return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class);
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.variableCrediticiaRepository.findAll(TbQoVariablesCrediticia.class, pw.getStartRecord(),
+				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getStartRecord(),
 						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 
 			} else {
-				return this.variableCrediticiaRepository.findAll(TbQoVariablesCrediticia.class, pw.getSortFields(),
+				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getSortFields(),
 						pw.getSortDirections());
 			}
 		}
@@ -1463,7 +1504,7 @@ public class QuskiOroService {
 
 	public Long countVariablesCrediticias() throws RelativeException {
 		try {
-			return variableCrediticiaRepository.countAll(TbQoVariablesCrediticia.class);
+			return variableCrediticiaRepository.countAll(TbQoVariableCrediticia.class);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1472,10 +1513,10 @@ public class QuskiOroService {
 
 	}
 
-	public TbQoVariablesCrediticia manageVariableCrediticia(TbQoVariablesCrediticia send) throws RelativeException {
+	public TbQoVariableCrediticia manageVariableCrediticia(TbQoVariableCrediticia send) throws RelativeException {
 		try {
 			log.info("==> entra a manage variableCrediticia");
-			TbQoVariablesCrediticia persisted = null;
+			TbQoVariableCrediticia persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findVariableCrediticiaById(send.getId());
 				return this.updateVariableCrediticia(send, persisted);
@@ -1496,8 +1537,8 @@ public class QuskiOroService {
 		}
 	}
 
-	private TbQoVariablesCrediticia updateVariableCrediticia(TbQoVariablesCrediticia send,
-			TbQoVariablesCrediticia persisted) throws RelativeException {
+	private TbQoVariableCrediticia updateVariableCrediticia(TbQoVariableCrediticia send,
+			TbQoVariableCrediticia persisted) throws RelativeException {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());

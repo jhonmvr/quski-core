@@ -62,7 +62,7 @@ public class TbQoNegociacion implements Serializable {
 
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
 	@OneToMany(mappedBy="tbQoNegociacion")
-	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
+	private List<TbQoVariableCrediticia> tbQoVariablesCrediticias;
 
 	public TbQoNegociacion() {
 	}
@@ -153,22 +153,22 @@ public class TbQoNegociacion implements Serializable {
 		this.tbQoCliente = tbQoCliente;
 	}
 
-	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {
+	public List<TbQoVariableCrediticia> getTbQoVariablesCrediticias() {
 		return this.tbQoVariablesCrediticias;
 	}
 
-	public void setTbQoVariablesCrediticias(List<TbQoVariablesCrediticia> tbQoVariablesCrediticias) {
+	public void setTbQoVariablesCrediticias(List<TbQoVariableCrediticia> tbQoVariablesCrediticias) {
 		this.tbQoVariablesCrediticias = tbQoVariablesCrediticias;
 	}
 
-	public TbQoVariablesCrediticia addTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+	public TbQoVariableCrediticia addTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().add(tbQoVariablesCrediticia);
 		tbQoVariablesCrediticia.setTbQoNegociacion(this);
 
 		return tbQoVariablesCrediticia;
 	}
 
-	public TbQoVariablesCrediticia removeTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
+	public TbQoVariableCrediticia removeTbQoVariablesCrediticia(TbQoVariableCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
 		tbQoVariablesCrediticia.setTbQoNegociacion(null);
 

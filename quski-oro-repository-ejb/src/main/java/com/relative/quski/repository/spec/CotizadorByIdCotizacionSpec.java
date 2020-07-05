@@ -20,7 +20,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoVariablesCrediticia;
+import com.relative.quski.model.TbQoVariableCrediticia;
 import com.relative.quski.wrapper.CotizadorWrapper;
 
 public class CotizadorByIdCotizacionSpec extends AbstractSpecification<TbQoCotizador> {

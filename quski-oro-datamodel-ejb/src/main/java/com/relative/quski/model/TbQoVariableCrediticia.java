@@ -26,7 +26,7 @@ import com.relative.quski.enums.EstadoEnum;
  */
 @Entity
 @Table(name = "tb_qo_variables_crediticias")
-public class TbQoVariablesCrediticia implements Serializable {
+public class TbQoVariableCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -61,7 +61,7 @@ public class TbQoVariablesCrediticia implements Serializable {
 	@JoinColumn(name = "id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	public TbQoVariablesCrediticia() {
+	public TbQoVariableCrediticia() {
 	}
 
 	public Long getId() {
