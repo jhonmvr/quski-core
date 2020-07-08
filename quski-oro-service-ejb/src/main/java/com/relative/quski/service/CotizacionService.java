@@ -68,22 +68,21 @@ public class CotizacionService {
 	}
 
 	/**
-	 * Metodo que recibe una cotizacion y la crea para tener el id de la cotizacion
+	 * Metodo que recibe una cotizacion y la crea la cotizacion y la Variable
+	 * Crediticia
 	 * 
+	 * @author KLÉBER GUERRA
 	 * @param cot
 	 * @return cotLlena
 	 * @throws RelativeException
 	 */
+
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
-			log.info("VALOR QUE LLEGA DEL FRONT...> " + cot);
-			log.info("VALOR DEL ID QUE LLEGA>>" + cot.getId());
+
 			TbQoCotizador cotLlena = new TbQoCotizador();
 			List<TbQoVariableCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariableCrediticia>();
 			if (cot != null && cot.getId() == null) {
-				log.info("Valor que llega al IF...> " + cot);
-				log.info("******INGRESA AL IF");
-
 				for (TbQoVariableCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
 					variableCrediticiaLlega.add(varCredi);
 				}

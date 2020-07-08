@@ -11,7 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
-
+/**
+ * Clase que realiza el spect del cliente por identificacion valida si el estado es activo 
+ * @author KLÉBER GUERRA Relative Engine
+ *
+ */
 public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoCliente> {
 	private String identificacion;
 

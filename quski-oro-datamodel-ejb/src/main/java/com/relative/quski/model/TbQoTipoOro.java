@@ -112,8 +112,10 @@ public class TbQoTipoOro implements Serializable {
 		this.quilate = quilate;
 	}
 
+ 
+
 	public List<TbQoPrecioOro> getTbQoPrecioOros() {
-		return this.tbQoPrecioOros;
+		return tbQoPrecioOros;
 	}
 
 	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {

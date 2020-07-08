@@ -14,7 +14,7 @@ import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.spec.DetalleCotizacionByIdSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
-import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
+import com.relative.quski.repository.spec.PrecioOroByIdCotizadorSpec;
 import com.relative.quski.wrapper.PrecioOroWrapper;
 
 /**
@@ -63,10 +63,14 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 	}
 
 	@Override
+	/**
+	 * Método que busca el precio oro por id de cotizador es paginado 
+	 * @author KLEBER GUERRA Relative - Engine
+	 */
 	public List<TbQoPrecioOro> findByIdCotizacion(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, Long idCotizador) throws RelativeException {
 		try {
-			return findAllBySpecificationPaged(new DetalleCotizacionByIdSpec(idCotizador), startRecord, pageSize,
+			return findAllBySpecificationPaged(new PrecioOroByIdCotizadorSpec(idCotizador), startRecord, pageSize,
 					sortFields, sortDirections);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -76,9 +80,13 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 	}
 
 	@Override
+	/**
+	 * Método que busca el precio oro por id de cotizador sin paginar 
+	 * @author KLEBER GUERRA Relative - Engine
+	 */
 	public List<TbQoPrecioOro> findByIdCotizacion(Long idCotizador) throws RelativeException {
 		try {
-			return findAllBySpecification(new DetalleCotizacionByIdSpec(idCotizador));
+			return findAllBySpecification(new PrecioOroByIdCotizadorSpec(idCotizador));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,10 +95,14 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 	}
 
 	@Override
+	/**
+	 * Método que realiza el conteo de la cotizacón por Id
+	 * @author KLEBER GUERRA Relative - Engine
+	 */
 	public Long countfindByIdCotizacion(Long idCotizador) throws RelativeException {
 
 		try {
-			return countBySpecification(new DetalleCotizacionByIdSpec(idCotizador));
+			return countBySpecification(new PrecioOroByIdCotizadorSpec(idCotizador));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,13 +110,21 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		}
 	}
 
-	// Long id, Long idCotizador, Long idTipoOro, BigDecimal precio, String quilate
+	
+	/**
+	 * Realiza la búsqueda del precio oro por Id de cotizador por medio de una consulta directa a la base 
+	 * 	//Long id, Long idCotizador, Long idTipoOro, BigDecimal precio, BigDecimal pesoNetoEstimado, String quilate
+	 * @author KLÉBER GUERRA  Relative - Engine
+	 * @param idCotizador
+	 * @return List<PrecioOroWrapper> 
+	 * @throws RelativeException
+	 */
 	@Override
 	public List<PrecioOroWrapper> findByIdCotizadorCustom(Long idCotizador) throws RelativeException {
 		try {
 			StringBuilder queryStr = new StringBuilder("SELECT  NEW com.relative.quski.wrapper.PrecioOroWrapper(");
 			queryStr.append("po.id as id, po.tbQoCotizador.id as idCotizador, po.tbQoTipoOro.id as idTipoOro,");
-			queryStr.append("po.tbQoTipoOro.precio as precio,po.tbQoTipoOro.quilate as quilate)");
+			queryStr.append("po.precio as precio,po.pesoNetoEstimado as pesoNetoEstimado,po.tbQoTipoOro.quilate as quilate)");
 			queryStr.append(" FROM TbQoPrecioOro AS po ");
 			queryStr.append(" where po.tbQoCotizador.id=:idCotizador ");
 			log.info("===> query gfenerado " + queryStr.toString());

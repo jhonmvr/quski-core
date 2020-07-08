@@ -103,7 +103,6 @@ public class CotizadorRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> crearCotizacionClienteVariableCrediticia(GenericWrapper<TbQoCotizador> wp)
 			throws RelativeException {
-		log.info("valor que llega>> " + wp);
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		loc.setEntidad(this.cs.crearCotizacionClienteVariableCrediticia(wp.getEntidad()));
 		return loc;
@@ -144,8 +143,5 @@ public class CotizadorRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
-	
-	
-
 
 }

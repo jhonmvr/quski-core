@@ -103,7 +103,7 @@ public class ClienteRestController extends BaseRestController
 
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
-	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param identificacion
 	 * @return GenericWrapper<TbQoCliente>
 	 * @throws RelativeException

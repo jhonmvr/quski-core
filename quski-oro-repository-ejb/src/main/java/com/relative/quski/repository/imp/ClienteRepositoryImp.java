@@ -71,12 +71,17 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 	}
 
 	@Override
+	/**
+	 * Método que realiza la búsqueda por identificacion
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param identificacion 
+	 * @return TbQoCliente
+	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
-		log.info("INGRESSA AL IMP  findClienteByIdentificacion>>>  " + identificacion);
 		try {
 			List<TbQoCliente> listCliente = this
 					.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			log.info("NUMERO DE CLIENTES RECUPERADOS>> "+listCliente.size());
+			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.size());
 			if (!listCliente.isEmpty()) {
 				if (listCliente.size() <= 1) {
 					log.info("Retorna el valor de la lista " + listCliente.size());

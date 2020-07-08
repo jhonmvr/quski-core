@@ -1,12 +1,25 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import com.relative.quski.enums.EstadoEnum;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.relative.quski.enums.EstadoEnum;
 
 /**
  * The persistent class for the tb_qo_precio_oro database table.
@@ -18,7 +31,7 @@ public class TbQoPrecioOro implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "TB_QO_PRECIO_ORO_ID_GENERATOR", sequenceName = "SEG_TB_QO_PRECIO_ORO")
+	@SequenceGenerator(name = "TB_QO_PRECIO_ORO_ID_GENERATOR", sequenceName = "SEQ_PRECIO_ORO",allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_PRECIO_ORO_ID_GENERATOR")
 	private Long id;
 	@Enumerated(EnumType.STRING)
@@ -31,10 +44,12 @@ public class TbQoPrecioOro implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
-
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "peso_neto_estimado")
 	private BigDecimal pesoNetoEstimado;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@Column(name = "precio")
 	private BigDecimal precio;
 
 	// bi-directional many-to-one association to TbQoCotizador
@@ -113,7 +128,5 @@ public class TbQoPrecioOro implements Serializable {
 	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
 		this.tbQoTipoOro = tbQoTipoOro;
 	}
-
-
 
 }

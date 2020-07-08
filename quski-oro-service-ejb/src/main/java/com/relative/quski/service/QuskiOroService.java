@@ -556,6 +556,23 @@ public class QuskiOroService {
 	}
 
 	/**
+	 * Método que realiza el registro del precio oro por Cotización de uno por uno
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param identificacion
+	 * @return {@link TbQoPrecioOro}
+	 * @throws RelativeException
+	 */
+	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
+		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
+		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
+		// TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		po.setTbQoCotizador(cot);
+		po.setTbQoTipoOro(tpo);
+		return this.managePrecioOro(po);
+	}
+
+	/**
 	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
 	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION
 	 * 
@@ -618,6 +635,7 @@ public class QuskiOroService {
 	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE DEVUELVE LA LISTA DE
 	 * COTIZACIONES QUE SE ENCUENTRAN LIGADOS A UN CLIENTE
 	 * 
+	 * @author KLEBER GUERRA - Relative Engine
 	 * @param pw
 	 * @param cedulaCliente
 	 * @return
@@ -637,6 +655,13 @@ public class QuskiOroService {
 		return cotizadorRepository.countByCliente(cedulaCliente);
 	}
 
+	/**
+	 * Método para crear el código de la cotización
+	 * 
+	 * @param persisted
+	 * @return TbQoCotizador
+	 * @throws RelativeException
+	 */
 	private TbQoCotizador crearCodigoCotizacion(TbQoCotizador persisted) throws RelativeException {
 		log.info("VALOR QUE LLEGA A CREAR CODIGO" + persisted);
 		String cod = "COD0000000";
@@ -1118,7 +1143,7 @@ public class QuskiOroService {
 	 */
 	public TbQoPrecioOro managePrecioOro(TbQoPrecioOro send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a manage managePrecioOro");
 			TbQoPrecioOro persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.precioOroRepository.findById(send.getId());
@@ -1216,72 +1241,10 @@ public class QuskiOroService {
 	 */
 
 	/**
-	 * Metodo que busca por el numero de cedula del cliente
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public TbQoCliente findClienteByIdentificacionPrueba(String identificacion) throws RelativeException {
-		log.info("Ingresa a findClienteByIdentificacion ");
-		TbQoCliente cliente = new TbQoCliente();
-		TbQoCotizador cotizador = new TbQoCotizador();
-		List<TbQoCotizador> cotizaciones;
-		cotizaciones = new ArrayList<TbQoCotizador>();
-		try {
-			cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
-
-			cliente.getTbQoCotizador().forEach(co -> {
-				log.info("ENTRE AL FOREACH 1 ");
-				log.info("ENTRE AL FOREACH 2 " + co);
-				if (!co.getEstado().equals(EstadoEnum.ACT)) {
-					log.info("ENTRE AL FOREACH 3 " + co);
-				} else {
-					cotizador.setEstado(co.getEstado());
-					cotizador.setAprobacionMupi(co.getAprobacionMupi());
-					cotizador.setGradoInteres(co.getGradoInteres());
-					log.info("ENTRE AL FOREACH 4 " + co);
-				}
-			});
-			log.info("SALI DEL FOREACH 5 " + cotizaciones);
-			cliente.getTbQoCotizador().clear();
-			cliente.getTbQoCotizador().add(cotizador);
-//			for (TbQoCotizador cotizacion : cotizaciones) {
-//				log.info("INGRESA AL FOR");
-//				if (cotizacion.getEstado() == EstadoEnum.ACT) {
-//					log.info("ES EL ACTIVO>> " + cliente);
-//					//cotizador = cotizacion;
-//					// break;
-//				} else {
-//					log.info("NO CUMPLE LA CONDICION");
-//					cliente.removeTbQoCotizador(cotizacion);
-//					log.info("NO CUMPLE LA CONDICION" + cliente.getTbQoCotizador());
-//
-//				}
-//			}
-//			//cotizaciones.clear();
-//			//cotizaciones.add(cotizador);
-//			log.info("COTIZACIONES tamaño " + cotizaciones.size());
-//			log.info("VALOR DE LA LISTA DE COTIZACIONES     >>>>>  " + cotizaciones);
-//
-//			if (!cotizador.getTbQoVariablesCrediticias().isEmpty() && !cotizador.getTbQoPrecioOros().isEmpty()) {
-//				//cliente.setTbQoCotizador(cotizaciones);
-//				log.info("ESTA ENTRANDO AL SET DE COTIZADOR? ------>" + cliente.getTbQoCotizador());
-//			}
-//			log.info("Cliente que retorna" + cliente);
-			return cliente;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
-		}
-	}
-
-
-
-	/**
 	 * Copia la informacion del wrapper de variable crediticia al entity variable
 	 * crediticia
 	 * 
+	 * @author KLÉBER GUERRA Relative - Engine
 	 * @param idCotizacion
 	 * @return
 	 * @throws RelativeException
@@ -1308,28 +1271,33 @@ public class QuskiOroService {
 		return varCrediticia;
 
 	}
+
 	/**
 	 * Copia la informacion del wrapper de precio de oro al entity precio de oro
 	 * 
+	 * @author KLÉBER GUERRA Relative - Engine
 	 * @param idCotizacion
-	 * @return
+	 * @return List<TbQoPrecioOro>
 	 * @throws RelativeException
 	 */
 	private List<TbQoPrecioOro> copyPrecioOroData(Long idCotizacion) throws RelativeException {
 		List<TbQoPrecioOro> pos = new ArrayList<>();
 		log.info("========>copyPrecioOroData " + idCotizacion);
 		List<PrecioOroWrapper> pows = this.precioOroRepository.findByIdCotizadorCustom(idCotizacion);
-
 		if (pows != null && !pows.isEmpty()) {
 			log.info("========>copyPrecioOroData pows " + pows.size());
 			pows.forEach(pow -> {
 				log.info("========>leyendo elemento pow " + pow.getId());
+				log.info("========>leyendo elemento pow " + pow.getPrecio());
+				log.info("========>leyendo elemento pow " + pow.getPesoNetoEstimado());
 				TbQoPrecioOro po = new TbQoPrecioOro();
 				TbQoTipoOro to = new TbQoTipoOro();
 				po.setId(pow.getId());
 				to.setId(pow.getIdTipoOro());
 				to.setPrecio(pow.getPrecio());
 				to.setQuilate(pow.getQuilate());
+				po.setPrecio(pow.getPrecio());
+				po.setPesoNetoEstimado(pow.getPesoNetoEstimado());
 				po.setTbQoTipoOro(to);
 				pos.add(po);
 			});
@@ -1337,37 +1305,31 @@ public class QuskiOroService {
 		return pos;
 
 	}
+
 	/**
-	 * Metodo que busca el ciente por identificacion 
+	 * Método que realiza la busqueda por Identificacion
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param identificacion
-	 * @return Variables crediticias y precios oro 
+	 * @return {@link TbQoCliente}
 	 * @throws RelativeException
 	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
-			log.info("----->findClienteByIdentificacion");
+			TbQoCliente clienteId = new TbQoCliente();
 			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
+				clienteId.setId(cliente.getId());
 				List<TbQoCotizador> tmp = cliente.getTbQoCotizador().stream()
 						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
 				if (tmp != null && !tmp.isEmpty()) {
-					log.info("INGRESA AL IF findClienteByIdentificacion ");
-
 					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
-					log.info("----->findClienteByIdentificacion llenpo tipos de preio de ooro");
-					
 					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariableCrediticiaData(tmp.get(0).getId()));
-					log.info("----->findClienteByIdentificacion llenpo las variables crediticias");
 					tmp.get(0).setTbQoCliente(null);
-					// tmp.get(0).setTbQoPrecioOros(this.precioOroRepository
-					// .findAllBySpecification(new
-					// PrecioOroByIdCotizadorSpec((tmp.get(0).getId()))));
-					// tmp.get(0).setTbQoVariablesCrediticias(this.variableCrediticiaRepository
-					// .findAllBySpecification(new
-					// VariablesCrediticiasByIdCotizacionSpec((tmp.get(0).getId()))));
+					tmp.get(0).setTbQoCliente(clienteId);
+
 				}
 				cliente.setTbQoCotizador(tmp);
-				log.info("El cliente completo es>>>>  " + cliente);
 				return cliente;
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -1380,21 +1342,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					"Exception FERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
 		}
-	}
-
-	/**
-	 * 
-	 * @param po
-	 * @return
-	 * @throws RelativeException
-	 */
-	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
-		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
-		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
-		// TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
-		po.setTbQoCotizador(cot);
-		po.setTbQoTipoOro(tpo);
-		return this.managePrecioOro(po);
 	}
 
 	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador, final EstadoEnum estadoEnum)
