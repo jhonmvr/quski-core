@@ -54,44 +54,44 @@ public class ReasignacionesRestController extends BaseRestController
 		// Auto-generated
 	}
 
-	@GET
-	@Path("/findReasignacionByParamsPaginated")
-	@ApiOperation(value = "PaginatedListWrapper<AsignacionesWrapper>", notes = "Metodo Get findByParamsPaginated Retorna wrapper de informacion de paginacion y operaciones activas encontradas", response = PaginatedListWrapper.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Retorno exitoso de informacion", response = GenericWrapper.class),
-			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = GenericWrapper.class) })
-	public PaginatedListWrapper<TbQoCreditoNegociacion> findByParamsPaginated(
-			@QueryParam("page") @DefaultValue("1") String page,
-			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
-			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
-			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
-			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("codigoOperacion") String codigoOperacion, @QueryParam("estado") String estado)
-			throws RelativeException {
+//	@GET
+//	@Path("/findReasignacionByParamsPaginated")
+//	@ApiOperation(value = "PaginatedListWrapper<AsignacionesWrapper>", notes = "Metodo Get findByParamsPaginated Retorna wrapper de informacion de paginacion y operaciones activas encontradas", response = PaginatedListWrapper.class)
+//	@ApiResponses(value = {
+//			@ApiResponse(code = 200, message = "Retorno exitoso de informacion", response = GenericWrapper.class),
+//			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = GenericWrapper.class) })
+//	public PaginatedListWrapper<TbQoCreditoNegociacion> findByParamsPaginated(
+//			@QueryParam("page") @DefaultValue("1") String page,
+//			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+//			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+//			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+//			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+//			@QueryParam("codigoOperacion") String codigoOperacion, @QueryParam("estado") String estado)
+//			throws RelativeException {
+//
+//		return findByParams(
+//				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
+//						isPaginated),
+//				StringUtils.isNotBlank(codigoOperacion) ? codigoOperacion : null,
+//				StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class, estado)
+//						: null);
+//	}
 
-		return findByParams(
-				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
-						isPaginated),
-				StringUtils.isNotBlank(codigoOperacion) ? codigoOperacion : null,
-				StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class, estado)
-						: null);
-	}
-
-	private PaginatedListWrapper<TbQoCreditoNegociacion> findByParams(PaginatedWrapper pw, String codigoOperacion,
-			EstadoOperacionEnum estado) throws RelativeException {
-		log.info("===================> getPlantilla" + estado);
-		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoCreditoNegociacion> actions = null;
-
-		actions = this.procesoService.findByCreditoNegociacion(pw, codigoOperacion, estado);
-		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(
-					this.procesoService.countfindBycodigOperacionEstado(codigoOperacion, estado).intValue());
-			plw.setList(actions);
-		}
-
-		return plw;
-	}
+//	private PaginatedListWrapper<TbQoCreditoNegociacion> findByParams(PaginatedWrapper pw, String codigoOperacion,
+//			EstadoOperacionEnum estado) throws RelativeException {
+//		log.info("===================> getPlantilla" + estado);
+//		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
+//		List<TbQoCreditoNegociacion> actions = null;
+//
+//		actions = this.procesoService.findByCreditoNegociacion(pw, codigoOperacion, estado);
+//		if (actions != null && !actions.isEmpty()) {
+//			plw.setTotalResults(
+//					this.procesoService.countfindBycodigOperacionEstado(codigoOperacion, estado).intValue());
+//			plw.setList(actions);
+//		}
+//
+//		return plw;
+//	}
 	
 	/*
 	 * @Override

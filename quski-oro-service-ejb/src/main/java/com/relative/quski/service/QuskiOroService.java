@@ -2157,39 +2157,39 @@ public class QuskiOroService {
 
 		if (pw == null) {
 			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-					fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion, agencia));
+					fechaDesde, fechaHasta, identificacion, agencia));
 
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta,
-						codigoOperacion, proceso, identificacion, agencia);
+						identificacion, agencia);
 
 			} else {
 				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-						fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion, agencia));
+						fechaDesde, fechaHasta, identificacion, agencia));
 
 			}
 		}
 
 	}
 
-	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
-			String agencia, String proceso, String cedula) throws RelativeException {
-		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
-	}
+//	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
+//			String agencia, String proceso, String cedula) throws RelativeException {
+//		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+//	}
 
 	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
 			String proceso, String identificacion, String agencia) throws RelativeException {
 
 		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
-				fechaHasta, codigoOperacion, proceso, identificacion, agencia)).intValue();
+				fechaHasta, identificacion, agencia)).intValue();
 
 	}
 
 	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia, String proceso,
 			String cedula) throws RelativeException {
 		try {
-			return this.creditoNegociacionRepository.countOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+			return this.creditoNegociacionRepository.countOperacionesDevueltas(pw, agencia, cedula);
 		} catch (Exception e) {
 			throw new RelativeException("" + e);
 		}
@@ -3008,8 +3008,8 @@ public class QuskiOroService {
 	 */
 	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion,
 			String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
-		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw, codigoOperacion, nombreAgencia,
-				nombreProceso, cedula);
+		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw,  nombreAgencia,
+				 cedula);
 	}
 
 	/**

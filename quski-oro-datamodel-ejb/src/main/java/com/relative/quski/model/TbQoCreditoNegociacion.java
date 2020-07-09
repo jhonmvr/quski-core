@@ -44,9 +44,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="costo_seguro")
 	private BigDecimal costoSeguro;
-
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
 		
 	/*@Column(name="codigo_softbank")
 	private String codigoSoftbank;*/
@@ -138,14 +135,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getCodigoOperacion() {
-		return this.codigoOperacion;
-	}
-
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
 	}
 
 	public BigDecimal getCostoCredito() {

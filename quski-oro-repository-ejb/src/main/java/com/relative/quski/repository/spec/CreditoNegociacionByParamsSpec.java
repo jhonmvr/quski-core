@@ -20,18 +20,14 @@ public class CreditoNegociacionByParamsSpec extends AbstractSpecification<TbQoCr
 
 	private String fechaDesde;
 	private String fechaHasta;
-	private String codigoOperacion;
-	private String proceso;
+
 	private String identificacion;
 	private String agencia;
 
-	public CreditoNegociacionByParamsSpec(String fechaDesde, String fechaHasta, String codigoOperacion, String proceso,
-			String identificacion, String agencia) {
+	public CreditoNegociacionByParamsSpec(String fechaDesde, String fechaHasta, String identificacion, String agencia) {
 
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
-		this.codigoOperacion = codigoOperacion;
-		this.proceso = proceso;
 		this.identificacion = identificacion;
 		this.agencia = agencia;
 
@@ -65,14 +61,6 @@ public class CreditoNegociacionByParamsSpec extends AbstractSpecification<TbQoCr
 			Calendar cal = Calendar.getInstance();
 			Date fecha = cal.getTime();
 			patientLevelPredicates.add(cb.lessThanOrEqualTo(credito.<Date>get("fechaCreacion"), fecha));
-		}
-
-		if (StringUtils.isNotBlank(this.codigoOperacion)) {
-			patientLevelPredicates
-					.add(cb.like(credito.<String>get("codigoOperacion"), "%" + this.codigoOperacion + "%"));
-		}
-		if (StringUtils.isNotBlank(this.proceso)) {
-			patientLevelPredicates.add(cb.equal(credito.get("tbQoProceso").<String>get("id"), this.proceso));
 		}
 		if (StringUtils.isNotBlank(this.identificacion)) {
 			patientLevelPredicates.add(cb.like(credito.<TbQoCliente>get("tbQoCliente").<String>get("identificacion"),

@@ -13,9 +13,9 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.BaseWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
+//import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
 import com.relative.integracion.calculadora.cliente.wrapper.Informacion;
-import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
+//import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
 import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse;
 import com.relative.quski.model.TbQoReasignacionActividad;
 import com.relative.quski.model.TbQoTipoOro;
@@ -82,13 +82,13 @@ public class IntegracionRestController extends BaseRestController {
 				 valorRealizacion,  numeroPiezas,  descuentoSuelda));
 		return oferta;
 	}
-	@POST
-	@Path("/getInformacionOfertaGarantia")
-	public BaseWrapper<SimularResponse> getInformacionPersonaOferta(EnvioInformacionPersonaOfertaWrapper envioInformacionPersonaOfertaWrapper) throws RelativeException {
-		 BaseWrapper<SimularResponse> oferta =new BaseWrapper<>();
-		oferta.setEntidad((SimularResponse) this.is.getClienteInformacionOfertaGarantia(envioInformacionPersonaOfertaWrapper ));
-		return oferta;
-	}
+//	@POST
+//	@Path("/getInformacionOfertaGarantia")
+//	public BaseWrapper<SimularResponse> getInformacionPersonaOferta(EnvioInformacionPersonaOfertaWrapper envioInformacionPersonaOfertaWrapper) throws RelativeException {
+//		 BaseWrapper<SimularResponse> oferta =new BaseWrapper<>();
+//		oferta.setEntidad((SimularResponse) this.is.getClienteInformacionOfertaGarantia(envioInformacionPersonaOfertaWrapper ));
+//		return oferta;
+//	}
 	
 }
 
