@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,7 +23,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
@@ -48,6 +48,8 @@ public class ClienteRestController extends BaseRestController
 	QuskiOroService qos;
 	@Inject
 	CotizacionService cos;
+	@Inject
+	Logger log;
 
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
@@ -103,6 +105,7 @@ public class ClienteRestController extends BaseRestController
 
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
+	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param identificacion
 	 * @return GenericWrapper<TbQoCliente>
@@ -110,9 +113,10 @@ public class ClienteRestController extends BaseRestController
 	 */
 	@GET
 	@Path("/findclienteByIdentificacion")
-	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
+ 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCliente> findclienteByIdentificacion(@QueryParam("identificacion") String identificacion)
 			throws RelativeException {
+		log.info("INGRESA A LA BUSQUEDA");
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		TbQoCliente a = this.qos.findClienteByIdentificacion(identificacion);
 		loc.setEntidad(a);

@@ -571,6 +571,19 @@ public class QuskiOroService {
 		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
 	}
+	/**
+	 * Método que realiza la eliminación lógica del precio oro 
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param id
+	 * @return {@link TbQoPrecioOro}
+	 * @throws RelativeException
+	 */
+	public TbQoPrecioOro eliminarPrecioOro(Long id)throws RelativeException{
+		TbQoPrecioOro precioOro=this.precioOroRepository.findById(id);
+		precioOro.setEstado(EstadoEnum.INA);
+		return this.managePrecioOro(precioOro);
+	}
 
 	/**
 	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
@@ -1183,7 +1196,7 @@ public class QuskiOroService {
 			// persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(send.getEstado());
-			if (send.getTbQoTipoOro() != null) {
+			if (send.getTbQoTipoOro() != null ) {
 				persisted.setTbQoTipoOro(send.getTbQoTipoOro());
 			}
 			return precioOroRepository.update(persisted);

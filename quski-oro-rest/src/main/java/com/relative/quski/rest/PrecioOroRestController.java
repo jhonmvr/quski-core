@@ -158,6 +158,17 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 		return pow;
 	}
 	
+	 
+	@GET
+	@Path("/eliminarPrecioOro")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
+	public GenericWrapper<TbQoPrecioOro> removeEntity(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoPrecioOro> loc = new GenericWrapper<>();
+		TbQoPrecioOro a = this.qos.eliminarPrecioOro(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
 	
 	
 }
