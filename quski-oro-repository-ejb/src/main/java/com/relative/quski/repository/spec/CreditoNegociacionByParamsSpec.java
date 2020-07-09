@@ -48,7 +48,6 @@ public class CreditoNegociacionByParamsSpec extends AbstractSpecification<TbQoCr
 
 		if (StringUtils.isNotBlank(this.fechaDesde)) {
 
-			@SuppressWarnings("deprecation")
 			Calendar cal = Calendar.getInstance();
 			Date fecha = cal.getTime();
 			Log.info("+++++FECHA>>>>>>>>>>" + fecha);
@@ -57,7 +56,6 @@ public class CreditoNegociacionByParamsSpec extends AbstractSpecification<TbQoCr
 		}
 
 		if (StringUtils.isNotBlank(this.fechaHasta)) {
-			@SuppressWarnings("deprecation")
 			Calendar cal = Calendar.getInstance();
 			Date fecha = cal.getTime();
 			patientLevelPredicates.add(cb.lessThanOrEqualTo(credito.<Date>get("fechaCreacion"), fecha));

@@ -12,7 +12,6 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
-import com.relative.quski.repository.spec.DetalleCotizacionByIdSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizadorSpec;
 import com.relative.quski.wrapper.PrecioOroWrapper;

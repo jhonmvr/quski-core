@@ -7,11 +7,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.enums.EstadoOperacionEnum;
-import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoReasignacionActividad;
 
 public class ReasignacionByCodigoParamSpec extends AbstractSpecification<TbQoReasignacionActividad> {

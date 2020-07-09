@@ -159,6 +159,7 @@ public class QuskiOroUtil {
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String dateToString(Date date) throws RelativeException{
 		try {
 			if( date !=null ) {
@@ -192,6 +193,7 @@ public class QuskiOroUtil {
 	 * @return 4 de julio del 2019
 	 * @throws RelativeException
 	 */
+	@SuppressWarnings("deprecation")
 	public static String dateToFullString(Date date) throws RelativeException{
 		try {
 			String[] mes= {"enero", "febrero", "marzo", "abril", "mayo", "junio","julio","agosto","septiembre", "octubre", "noviembre", "diciembre"};
@@ -257,6 +259,7 @@ public class QuskiOroUtil {
 		 */
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String dateToStringFormat(Date date) throws RelativeException {
 		try {
 			String ano = String.valueOf(date.getYear()+1900);

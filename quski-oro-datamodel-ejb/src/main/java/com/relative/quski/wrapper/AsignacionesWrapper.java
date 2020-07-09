@@ -3,9 +3,6 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.relative.quski.model.TbQoProceso;
-
-
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 
@@ -45,10 +42,8 @@ public class AsignacionesWrapper implements Serializable{
 	//@ManyToOne
 	//@JoinColumn(name="id_negociacion")
 	private NegociacionWrapper negociacionWrapper;
-	//bi-directional many-to-one association to TbQoProceso
-	//	@ManyToOne
-	//@JoinColumn(name="id_proceso")
-	private TbQoProceso tbQoProceso;
+
+
 
 	
 	public AsignacionesWrapper() {
@@ -111,18 +106,4 @@ public class AsignacionesWrapper implements Serializable{
 	public void setNegociacionWrapper(NegociacionWrapper negociacionWrapper) {
 		this.negociacionWrapper = negociacionWrapper;
 	}
-
-	public TbQoProceso getTbQoProceso() {
-		return this.tbQoProceso;
-	}
-
-	public void setTbQoProceso(TbQoProceso tbQoProceso) {
-		this.tbQoProceso = tbQoProceso;
-	}
-
-
-
-
-		
-	
 }

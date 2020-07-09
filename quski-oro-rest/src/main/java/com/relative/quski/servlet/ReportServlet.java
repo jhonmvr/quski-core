@@ -35,6 +35,7 @@ public class ReportServlet extends HttpServlet {
 	private ReportService reportService;
 
 
+	@SuppressWarnings("unused")
 	@Inject
 	private QuskiOroService mos;
 	
@@ -62,6 +63,7 @@ public class ReportServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings("unused")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("=========>ENTRA EN SERVELT REPORTE PDF ");
 		String fechaDesde=request.getParameter( "fechaDesde" );

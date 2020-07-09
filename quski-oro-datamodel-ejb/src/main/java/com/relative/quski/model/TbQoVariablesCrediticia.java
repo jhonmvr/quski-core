@@ -1,46 +1,36 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+
+import java.util.Date;
+
 
 /**
  * The persistent class for the tb_qo_variables_crediticias database table.
  * 
  */
 @Entity
-@Table(name = "tb_qo_variables_crediticias")
-public class TbQoVariableCrediticia implements Serializable {
+@Table(name="tb_qo_variables_crediticias")
+public class TbQoVariablesCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName = "SEG_TB_QO_VARIABLES_CREDITICIAS")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName = "SEG_TB_QO_VARIABLES_CREDITICIAS")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
 	private Long id;
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_actualizacion")
+	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_creacion")
+	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
 	private String nombre;
@@ -49,19 +39,17 @@ public class TbQoVariableCrediticia implements Serializable {
 
 	private String valor;
 
-	// bi-directional many-to-one association to TbQoCotizador
-
+	//bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
-	@JoinColumn(name = "id_cotizador")
+	@JoinColumn(name="id_cotizador")
 	private TbQoCotizador tbQoCotizador;
 
-	// bi-directional many-to-one association to TbQoNegociacion
-
+	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
-	@JoinColumn(name = "id_negociacion")
+	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	public TbQoVariableCrediticia() {
+	public TbQoVariablesCrediticia() {
 	}
 
 	public Long getId() {
@@ -135,7 +123,4 @@ public class TbQoVariableCrediticia implements Serializable {
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
-
-
-
 }

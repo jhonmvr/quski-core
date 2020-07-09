@@ -16,8 +16,6 @@ import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoNegociacion;
-import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.model.TbQoReasignacionActividad;
 import com.relative.quski.service.ProcesoService;
 

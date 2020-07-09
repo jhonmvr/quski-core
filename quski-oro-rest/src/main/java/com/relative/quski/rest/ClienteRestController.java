@@ -26,8 +26,6 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
-import com.relative.quski.wrapper.AsignacionesWrapper;
-import com.relative.quski.wrapper.ClienteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -104,32 +102,42 @@ public class ClienteRestController extends BaseRestController
 	}
 
 	/**
-	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
+	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION CON COTIZACION
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion
+	 * @param  String identificacion
 	 * @return GenericWrapper<TbQoCliente>
 	 * @throws RelativeException
 	 */
 	@GET
-	@Path("/findclienteByIdentificacion")
- 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCliente> findclienteByIdentificacion(@QueryParam("identificacion") String identificacion)
+	@Path("/findClienteByIdentificacionWithCotizacion")
+ 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> findClienteByIdentificacionWithCotizacion(@QueryParam("identificacion") String identificacion)
 			throws RelativeException {
 		log.info("INGRESA A LA BUSQUEDA");
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
-		TbQoCliente a = this.qos.findClienteByIdentificacion(identificacion);
+		TbQoCliente a = this.qos.findClienteByIdentificacionWithCotizacion(identificacion);
 		loc.setEntidad(a);
 		return loc;
 	}
-//	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
-//		TbQoCliente tmp = ;
-//		if (tmp != null && !tmp.isEmpty()) {
-//			return tmp.get(0);
-//		}
-//		return null;
-//	}
-
+	/**
+	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
+	 * 
+	 * @author JEROHAM CADENAS - Relative Engine
+	 * @param  String identificacion.
+	 * @return GenericWrapper<TbQoCliente>
+	 * @throws RelativeException.
+	 */
+	@GET
+	@Path("/findClienteByIdentificacion")
+ 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
+	public TbQoCliente findClienteByIdentificacion(@QueryParam("identificacion") String identificacion) throws RelativeException {
+		List<TbQoCliente> tmp = this.qos.findClienteByIdentifiacion(identificacion);
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		}
+		return null;
+	}
 	@GET
 	@Path("/findByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbMiCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiCliente", response = PaginatedListWrapper.class)
@@ -172,49 +180,35 @@ public class ClienteRestController extends BaseRestController
 		}
 		return plw;
 	}
-
-	@GET
-	@Path("/obtenerCliente")
-	@ApiOperation(value = "GenericWrapper<DetalleCreditoWrapper>", notes = "Metodo DetalleCreditoWrapper Retorna wrapper de entidades encontradas en DetalleCreditoWrapper", response = GenericWrapper.class)
-
-	public GenericWrapper<ClienteWrapper> obtenerCliente() throws RelativeException {
-		GenericWrapper<ClienteWrapper> loc = new GenericWrapper<>();
-		ClienteWrapper gestion = new ClienteWrapper();
-		// gestion.setNombresCompletos("ESTEBAN PAUL JAMI LOPEZ");
-		gestion.setCedulaCliente("1708764053");
-		gestion.setPrimerNombre("ESTEBAN");
-		gestion.setSegundoNombre("PAUL");
-		gestion.setApellidoPaterno("JAMI");
-		gestion.setApellidoMaterno("LOPEZ");
-		gestion.setEdad("32");
-		gestion.setNacionalidad("ECUADOR");
-		gestion.setTelefonoFijo("3262055");
-		gestion.setTelefonoMovil("0998569332");
-		gestion.setEmail("XXXXX@XXX.COM");
-		gestion.setPublicidad("FACEBOOK");
-		gestion.setCampania("INBOUND");
-		loc.setEntidad(gestion);
-		return loc;
-	}
-
-	@GET
-	@Path("/getClienteByCodigoOperacion")
-	@ApiOperation(value = "GenericWrapper<AsignacionesWrapper>", notes = "Metodo getEntity Retorna wrapper de entidad encontrada en AsignacionesWrapper", response = GenericWrapper.class)
-	public GenericWrapper<AsignacionesWrapper> getClienteByCodigoOperacion(
-			@QueryParam("codigoOperacion") String codigoOperacion) throws RelativeException {
-		GenericWrapper<AsignacionesWrapper> loc = new GenericWrapper<>();
-		AsignacionesWrapper a = this.findClienteBycodigoOperacion(codigoOperacion);
-		loc.setEntidad(a);
-		return loc;
-	}
-
-	private AsignacionesWrapper findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
-		List<AsignacionesWrapper> tmp = this.qos.findClienteBycodigoOperacion(codigoOperacion);
-		if (tmp != null && !tmp.isEmpty()) {
-			return tmp.get(0);
-		}
-		return null;
-	}
+/**
+ * 
+ * @deprecated NO USAR METODO YA NO ES FUNCIONAL, OBTENER CLIENTE DE BASE DE DATOS O SOFTBANK
+ * @return
+ * @throws RelativeException
+ */
+//	@GET
+//	@Path("/obtenerCliente")
+//	@ApiOperation(value = "GenericWrapper<DetalleCreditoWrapper>", notes = "Metodo DetalleCreditoWrapper Retorna wrapper de entidades encontradas en DetalleCreditoWrapper", response = GenericWrapper.class)
+//
+//	public GenericWrapper<ClienteWrapper> obtenerCliente() throws RelativeException {
+//		GenericWrapper<ClienteWrapper> loc = new GenericWrapper<>();
+//		ClienteWrapper gestion = new ClienteWrapper();
+//		// gestion.setNombresCompletos("ESTEBAN PAUL JAMI LOPEZ");
+//		gestion.setCedulaCliente("1708764053");
+//		gestion.setPrimerNombre("ESTEBAN");
+//		gestion.setSegundoNombre("PAUL");
+//		gestion.setApellidoPaterno("JAMI");
+//		gestion.setApellidoMaterno("LOPEZ");
+//		gestion.setEdad("32");
+//		gestion.setNacionalidad("ECUADOR");
+//		gestion.setTelefonoFijo("3262055");
+//		gestion.setTelefonoMovil("0998569332");
+//		gestion.setEmail("XXXXX@XXX.COM");
+//		gestion.setPublicidad("FACEBOOK");
+//		gestion.setCampania("INBOUND");
+//		loc.setEntidad(gestion);
+//		return loc;
+//	}
 
 	@POST
 	@Path("/crearCliente")
@@ -224,22 +218,4 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(this.qos.crearCliente(wp.getEntidad()));
 		return loc;
 	}
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("/buscarCotizacionesAnterioresByIdCliente")
-	 * 
-	 * @ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes =
-	 * "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCotizador",
-	 * response = GenericWrapper.class) public GenericWrapper<TbQoCotizador>
-	 * buscarCotizacionesAnterioresByIdCliente(@QueryParam("id") String id) throws
-	 * RelativeException { GenericWrapper<TbQoCotizador> loc = new
-	 * GenericWrapper<>(); TbQoCotizador a =
-	 * this.qos.findCotizadorById(Long.valueOf(id)); loc.setEntidad(a); return loc;
-	 * } private TbQoCotizador findCotizadorById(Long id) throws RelativeException {
-	 * List<TbQoCotizador> tmp = this.qos.findCotizadorById(id) if (tmp != null &&
-	 * !tmp.isEmpty()) { return tmp.get(0); } return null; }
-	 */
-
 }

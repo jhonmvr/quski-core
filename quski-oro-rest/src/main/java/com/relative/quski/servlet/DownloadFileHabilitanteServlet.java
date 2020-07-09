@@ -31,6 +31,7 @@ public class DownloadFileHabilitanteServlet extends HttpServlet {
     
 	private static final Log log = LogFactory.getLog(DownloadFileHabilitanteServlet.class);
 	
+	@SuppressWarnings("unused")
 	@Inject
 	private QuskiOroService sas;
 	
@@ -49,6 +50,7 @@ public class DownloadFileHabilitanteServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@SuppressWarnings({ "unused", "null" })
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.info("=========>ENTRA EN SERVELT DOWNLOAD CONTRATO PDF PDF ");
 		

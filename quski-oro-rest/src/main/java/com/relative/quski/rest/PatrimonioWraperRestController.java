@@ -32,7 +32,6 @@ public class PatrimonioWraperRestController extends BaseRestController
 implements CrudRestControllerInterface<PatrimonioWrapper, GenericWrapper<PatrimonioWrapper>>  {
 	static final String oro14k = "14k";
 	static final String oro15k = "15k";
-	private double valor;
 	@Inject
 	Logger log;
 	public PatrimonioWraperRestController() throws RelativeException {
