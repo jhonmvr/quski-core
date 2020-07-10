@@ -22,7 +22,6 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.CotizadorWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

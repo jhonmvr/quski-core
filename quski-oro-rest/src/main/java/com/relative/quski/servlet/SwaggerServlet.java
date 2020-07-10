@@ -13,6 +13,11 @@ import io.swagger.jaxrs.config.BeanConfig;
         )
 
 public class SwaggerServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public void init(ServletConfig config) {
 		
         System.out.println("My servlet has been initialized");

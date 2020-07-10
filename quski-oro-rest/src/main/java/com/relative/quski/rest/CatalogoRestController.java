@@ -6,7 +6,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -17,18 +16,11 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.ClienteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.relative.quski.model.TbQoCatalogo;
-import com.relative.quski.service.QuskiOroService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 @Path("/catalogoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -46,7 +38,6 @@ implements CrudRestControllerInterface<TbQoCatalogo, GenericWrapper<TbQoCatalogo
 	QuskiOroService qos;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
 		
 	}
 	

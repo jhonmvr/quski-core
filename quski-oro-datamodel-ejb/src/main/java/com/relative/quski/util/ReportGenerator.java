@@ -46,7 +46,8 @@ public class ReportGenerator {
 	private Map<String, Object> hm = null;
     private String reportName;
     private JRXmlDataSource jrxmlDS;
-    private List dataSource;
+    @SuppressWarnings("rawtypes")
+	private List dataSource;
     private String jsonObj;
      
  
@@ -61,7 +62,8 @@ public class ReportGenerator {
     	 this.geDB = geDB;
     }
     
-    public ReportGenerator(List dataSource,Map<String, Object> map, String reportName) {
+    @SuppressWarnings("rawtypes")
+	public ReportGenerator(List dataSource,Map<String, Object> map, String reportName) {
     	this.hm = map;
         this.reportName= reportName;
     	this.dataSource=dataSource;
@@ -74,7 +76,8 @@ public class ReportGenerator {
     }
     
     
-    private static Connection mockJdbcConnection(){
+    @SuppressWarnings("unused")
+	private static Connection mockJdbcConnection(){
     	try {
 			String url = "jdbc:postgresql://localhost/relgedb";
 			Properties props = new Properties();
@@ -399,7 +402,8 @@ public class ReportGenerator {
     }
     
     //List<RelgeTickets> ticketsWithId
-    public static byte[] generateReportPdf( List dataSource, String reportFilePath,  Map<String, Object> parameters ) throws RelativeException{
+    @SuppressWarnings("rawtypes")
+	public static byte[] generateReportPdf( List dataSource, String reportFilePath,  Map<String, Object> parameters ) throws RelativeException{
     	
     	try {
     		log.info( "++++++>> Ingresa en el generateReportPdf con conexion " + dataSource + " path " +  reportFilePath );
@@ -460,7 +464,8 @@ public class ReportGenerator {
 	     }
 	 }
 	 
-	 private ByteArrayOutputStream generateReportAsExcel() {
+	 @SuppressWarnings("unused")
+	private ByteArrayOutputStream generateReportAsExcel() {
 	     try {
 	         try {
 	         	ByteArrayOutputStream baos = new ByteArrayOutputStream();

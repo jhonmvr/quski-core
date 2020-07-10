@@ -6,17 +6,13 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jfree.util.Log;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.EstadoOperacionEnum;
-import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 
 public class CotizadorByIdentificacionClienteSpec extends AbstractSpecification<TbQoCotizador> {

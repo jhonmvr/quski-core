@@ -1,13 +1,6 @@
 package com.relative.quski.bpms.api;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.SegUsuarioWrapper;
 
@@ -34,12 +27,13 @@ public class UsuarioRestClient {
 	}
 
 	
+	@SuppressWarnings("unused")
 	public static void main( String[] args )  {
 		System.out.println("entrando a UsuarioRes");
 		UsuarioRestClient r = new UsuarioRestClient();
 		//r.getClienteWrapper().setContent(content);
 		r.getClienteWrapper().setUrlStr("http://localhost:8080/core-security-web/resources/reusRestController/rese003");
-		ReRestClient<SegUsuarioWrapper> b= new ReRestClient<>( r.getClienteWrapper() );
+		ReRestClient<SegUsuarioWrapper> b = new ReRestClient<>( r.getClienteWrapper() );
 		try {
 			
 			

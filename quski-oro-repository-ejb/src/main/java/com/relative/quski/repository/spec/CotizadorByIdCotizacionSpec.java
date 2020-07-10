@@ -6,22 +6,22 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
+//import javax.persistence.criteria.Join;
+//import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jfree.util.Log;
+//import org.apache.commons.lang3.StringUtils;
+//import org.jfree.util.Log;
 
-import com.hazelcast.concurrent.atomicreference.operations.IsNullOperation;
+//import com.hazelcast.concurrent.atomicreference.operations.IsNullOperation;
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoCliente;
+//import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoVariableCrediticia;
-import com.relative.quski.wrapper.CotizadorWrapper;
+//import com.relative.quski.model.TbQoPrecioOro;
+//import com.relative.quski.model.TbQoVariablesCrediticia;
+//import com.relative.quski.wrapper.CotizadorWrapper;
 
 public class CotizadorByIdCotizacionSpec extends AbstractSpecification<TbQoCotizador> {
 	@Inject

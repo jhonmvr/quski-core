@@ -14,19 +14,15 @@ import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 
 public class AsignacionByParamsSpec extends AbstractSpecification<AsignacionesWrapper> {
-	private String codigoOperacion;
 	private String nombreAgencia;
-	private String nombreProceso;
 	private String cedula;
 
 	
 
-	public AsignacionByParamsSpec(String codigoOperacion, String nombreAgencia, String nombreProceso, String cedula) {
+	public AsignacionByParamsSpec( String nombreAgencia, String cedula) {
 		super();
 
-		this.codigoOperacion = codigoOperacion;
 		this.nombreAgencia = nombreAgencia;
-		this.nombreProceso = nombreProceso;
 		this.cedula = cedula;
 		
 	}
@@ -40,14 +36,9 @@ public class AsignacionByParamsSpec extends AbstractSpecification<AsignacionesWr
 		List<Predicate> where = new ArrayList<>();
 		String e = EstadoOperacionEnum.PENDIENTE_APROBACION.toString();
 		where.add(cb.equal(poll.get("estado"), e));
-		if (StringUtils.isNotBlank(this.codigoOperacion)) {
-			where.add(cb.equal(poll.get("codigoOperacion"), this.codigoOperacion));
-		}
+
 		if (StringUtils.isNotBlank(this.nombreAgencia)) {
 			where.add(cb.equal(poll.get("agenciaWrapper").get("nombreAgencia"), this.nombreAgencia));
-		}
-		if (StringUtils.isNotBlank(this.nombreProceso)) {
-			where.add(cb.equal(poll.get("tbQoProceso").get("nombreProceso"), this.nombreProceso));
 		}
 		if (StringUtils.isNotBlank(this.cedula)) {
 			where.add(cb.equal(poll.get("negociacionWrapper").get("tbQoCliente").get("cedulaCliente"), this.cedula));
