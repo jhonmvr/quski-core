@@ -18,6 +18,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -1550,6 +1551,14 @@ public class QuskiOroService {
 			return documentoHabilitanteRepository.findById(id);
 		} catch (RelativeException e) {
 			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
+	
+	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento, ProcessEnum proceso, Long referencia) throws RelativeException {
+		try {
+			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso, referencia);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}

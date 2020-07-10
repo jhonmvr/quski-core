@@ -103,16 +103,16 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, @QueryParam("idCreditoNegociacion") String idCreditoNegociacion)
 			throws RelativeException {
 		return findByCreditoNegociacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
-				sortFields, sortDirections, isPaginated), new Long(idCreditoNegociacion));
+				sortFields, sortDirections, isPaginated), idCreditoNegociacion);
 	}
 
-	private PaginatedListWrapper<TbQoTasacion> findByCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
+	private PaginatedListWrapper<TbQoTasacion> findByCreditoNegociacion(PaginatedWrapper pw, String idCreditoNegociacion)
 			throws RelativeException {
 		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoTasacion> actions = null;
-		actions = this.qos.findTasacionByIdCreditoNegociacion(pw, idCreditoNegociacion);
+		actions = this.qos.findTasacionByIdCreditoNegociacion(pw, idCreditoNegociacion.isEmpty() ? null : Long.parseLong(idCreditoNegociacion));
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countTasacionByIdCreditoNegociacion(idCreditoNegociacion).intValue());
+			plw.setTotalResults(this.qos.countTasacionByIdCreditoNegociacion(idCreditoNegociacion.isEmpty() ? null : Long.parseLong(idCreditoNegociacion)).intValue());
 			plw.setList(actions);
 		}
 

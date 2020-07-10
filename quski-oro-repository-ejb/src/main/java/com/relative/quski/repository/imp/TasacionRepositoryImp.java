@@ -33,7 +33,16 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 	@Override
 	public List<TbQoTasacion> findByIdCreditoNegociacionPaged(Long idCreditoNegociacion, int page, int pageSize,
 			String order, String direction) throws RelativeException {
-		// TODO Auto-generated method stub
+		List<TbQoTasacion> tmp;
+		try {
+			tmp = this.findAllBySpecificationPaged(new TasacionByIdCreditoNegociacionSpec(idCreditoNegociacion), page,
+					pageSize, order, direction);
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e);
+		}
 		return null;
 	}
 
