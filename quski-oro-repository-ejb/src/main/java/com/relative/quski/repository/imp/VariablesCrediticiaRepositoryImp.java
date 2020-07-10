@@ -78,7 +78,7 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 					"SELECT  NEW com.relative.quski.wrapper.VariableCrediticiaWrapper(");
 			queryStr.append(
 					"vc.id as id, vc.tbQoCotizador.id as idCotizador, vc.orden as orden,vc.nombre as nombre,vc.valor as valor)");
-			queryStr.append(" FROM TbQoVariableCrediticia AS vc ");
+			queryStr.append(" FROM TbQoVariablesCrediticia AS vc ");
 			queryStr.append(" where vc.tbQoCotizador.id=:idCotizador ");
 			log.info("===> query gfenerado " + queryStr.toString());
 			TypedQuery<VariableCrediticiaWrapper> query = this.getEntityManager().createQuery(queryStr.toString(),
