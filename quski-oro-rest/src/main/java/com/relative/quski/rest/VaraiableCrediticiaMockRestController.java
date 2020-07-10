@@ -1,24 +1,17 @@
 package com.relative.quski.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
-import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.wrapper.VariableCrediticiaWrapper;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 @Path("/VaraiableCrediticiaMockRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,21 +38,34 @@ implements CrudRestControllerInterface<VariableCrediticiaWrapper, GenericWrapper
 		return null;
 	}
 
-	@Override
-	@GET
-	@Path("/listAllEntities")
-	@ApiOperation(value = "PaginatedListWrapper<VariableCrediticiaWrapper>", notes = "Metodo Get listAllEntities Retorna un mock de variables creiticias ", response = PaginatedListWrapper.class)
-	public PaginatedListWrapper<VariableCrediticiaWrapper> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
-			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
-			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
-			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
-			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated) throws RelativeException {
-		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
-		return findAll(
-				new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
-
-	}
-	
+	/*
+	 * @Override
+	 * 
+	 * @GET
+	 * 
+	 * @Path("/listAllEntities")
+	 * 
+	 * @ApiOperation(value = "PaginatedListWrapper<VariableCrediticiaWrapper>",
+	 * notes =
+	 * "Metodo Get listAllEntities Retorna un mock de variables creiticias ",
+	 * response = PaginatedListWrapper.class) public
+	 * PaginatedListWrapper<VariableCrediticiaWrapper>
+	 * listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
+	 * 
+	 * @QueryParam("pageSize") @DefaultValue("10") String pageSize,
+	 * 
+	 * @QueryParam("sortFields") @DefaultValue("id") String sortFields,
+	 * 
+	 * @QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+	 * 
+	 * @QueryParam("isPaginated") @DefaultValue("N") String isPaginated) throws
+	 * RelativeException { Integer firstItem = Integer.valueOf(page) *
+	 * Integer.valueOf(pageSize); return findAll( new PaginatedWrapper(firstItem,
+	 * Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
+	 * 
+	 * }
+	 */
+	/*
 	private PaginatedListWrapper<VariableCrediticiaWrapper> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<VariableCrediticiaWrapper> plw = new PaginatedListWrapper<>(pw);
 		List<VariableCrediticiaWrapper> l = new ArrayList<>();
@@ -88,11 +94,18 @@ implements CrudRestControllerInterface<VariableCrediticiaWrapper, GenericWrapper
 		plw.setList(l);
 		return plw;
 		
-	}
+	}*/
 
 	@Override
 	public GenericWrapper<VariableCrediticiaWrapper> persistEntity(GenericWrapper<VariableCrediticiaWrapper> arg0)
 			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PaginatedListWrapper<VariableCrediticiaWrapper> listAllEntities(String arg0, String arg1, String arg2,
+			String arg3, String arg4) throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
 	}

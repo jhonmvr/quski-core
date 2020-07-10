@@ -3,7 +3,6 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 import java.math.BigDecimal;
@@ -25,8 +24,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	
-
 	@Column(name="costo_credito")
 	private BigDecimal costoCredito;
 
@@ -45,21 +42,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="costo_seguro")
 	private BigDecimal costoSeguro;
 
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
-		
-	/*@Column(name="codigo_softbank")
-	private String codigoSoftbank;*/
-
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
-	
-	@Enumerated(EnumType.STRING)
-	private EstadoOperacionEnum estado;
-	
-	@Column(name="id_usuario")
-	private String idUsuario;
-	
+
+	private String estado;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
@@ -71,6 +58,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
+	
+	// Ususario Asesor que creo la negociacion.
+	@Column(name="id_usuario")
+	private String idUsuario;
 
 	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;
@@ -83,6 +74,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="recibir_cliente")
 	private BigDecimal recibirCliente;
+
+	@Column(name="tipo")
+	@Enumerated(EnumType.STRING)
+	private TipoCreditoNegociacionEnum tipo;
 
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
@@ -97,19 +92,13 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	//bi-directional many-to-one association to TbQoProceso
-	@ManyToOne
-	@JoinColumn(name="id_proceso")
-	private TbQoProceso tbQoProceso;
-	
-	
-	@Column(name="tipo")
-	@Enumerated(EnumType.STRING)
-	private TipoCreditoNegociacionEnum tipo;
-
 	//bi-directional many-to-one association to TbQoNegociacionCalculo
 	@OneToMany(mappedBy="tbQoCreditoNegociacion")
 	private List<TbQoNegociacionCalculo> tbQoNegociacionCalculos;
+
+	//bi-directional many-to-one association to TbQoReasignacionActividad
+	@OneToMany(mappedBy="tbQoCreditoNegociacion")
+	private List<TbQoReasignacionActividad> tbQoReasignacionActividads;
 
 	//bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy="tbQoCreditoNegociacion")
@@ -117,20 +106,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public TbQoCreditoNegociacion() {
 	}
-	
-	
-
-	public String getIdUsuario() {
-		return idUsuario;
-	}
-
-
-
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
-	}
-
-
 
 	public Long getId() {
 		return this.id;
@@ -138,14 +113,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getCodigoOperacion() {
-		return this.codigoOperacion;
-	}
-
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
 	}
 
 	public BigDecimal getCostoCredito() {
@@ -204,19 +171,13 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.costoTransporte = costoTransporte;
 	}
 
-
-
-	public EstadoOperacionEnum getEstado() {
-		return estado;
+	public String getEstado() {
+		return this.estado;
 	}
 
-
-
-	public void setEstado(EstadoOperacionEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-
-
 
 	public Date getFechaActualizacion() {
 		return this.fechaActualizacion;
@@ -240,6 +201,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
+	}
+
+	public String getIdUsuario() {
+		return this.idUsuario;
+	}
+
+	public void setIdUsuario(String idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getJoyasSeleccionadas() {
@@ -274,6 +243,15 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.recibirCliente = recibirCliente;
 	}
 
+	public TipoCreditoNegociacionEnum getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(TipoCreditoNegociacionEnum tipo) {
+		this.tipo = tipo;
+	}
+
 	public BigDecimal getValorCuota() {
 		return this.valorCuota;
 	}
@@ -298,25 +276,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
 
-	public TbQoProceso getTbQoProceso() {
-		return this.tbQoProceso;
-	}
-	
-
-	public TipoCreditoNegociacionEnum getTipo() {
-		return tipo;
-	}
-
-
-	public void setTipo(TipoCreditoNegociacionEnum tipo) {
-		this.tipo = tipo;
-	}
-
-
-	public void setTbQoProceso(TbQoProceso tbQoProceso) {
-		this.tbQoProceso = tbQoProceso;
-	}
-
 	public List<TbQoNegociacionCalculo> getTbQoNegociacionCalculos() {
 		return this.tbQoNegociacionCalculos;
 	}
@@ -337,6 +296,28 @@ public class TbQoCreditoNegociacion implements Serializable {
 		tbQoNegociacionCalculo.setTbQoCreditoNegociacion(null);
 
 		return tbQoNegociacionCalculo;
+	}
+
+	public List<TbQoReasignacionActividad> getTbQoReasignacionActividads() {
+		return this.tbQoReasignacionActividads;
+	}
+
+	public void setTbQoReasignacionActividads(List<TbQoReasignacionActividad> tbQoReasignacionActividads) {
+		this.tbQoReasignacionActividads = tbQoReasignacionActividads;
+	}
+
+	public TbQoReasignacionActividad addTbQoReasignacionActividad(TbQoReasignacionActividad tbQoReasignacionActividad) {
+		getTbQoReasignacionActividads().add(tbQoReasignacionActividad);
+		tbQoReasignacionActividad.setTbQoCreditoNegociacion(this);
+
+		return tbQoReasignacionActividad;
+	}
+
+	public TbQoReasignacionActividad removeTbQoReasignacionActividad(TbQoReasignacionActividad tbQoReasignacionActividad) {
+		getTbQoReasignacionActividads().remove(tbQoReasignacionActividad);
+		tbQoReasignacionActividad.setTbQoCreditoNegociacion(null);
+
+		return tbQoReasignacionActividad;
 	}
 
 	public List<TbQoTasacion> getTbQoTasacions() {

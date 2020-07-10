@@ -1,25 +1,13 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -36,9 +24,15 @@ public class TbQoNegociacion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
+	@Column(name="asesor_responsable")
+	private String asesorResponsable;
+
+	@Column(name="codigo_operacion")
+	private String codigoOperacion;
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
@@ -46,6 +40,18 @@ public class TbQoNegociacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
+
+	@Column(name="id_asesor_responsable")
+	private String idAsesorResponsable;
+
+	@Column(name="proceso_actual_negociacion")
+	private String procesoActualNegociacion;
+
+	@Column(name="situacion_negociacion")
+	private String situacionNegociacion;
+
+	@Column(name="tipo_negociacion")
+	private String tipoNegociacion;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
@@ -75,7 +81,21 @@ public class TbQoNegociacion implements Serializable {
 		this.id = id;
 	}
 
- 
+	public String getAsesorResponsable() {
+		return this.asesorResponsable;
+	}
+
+	public void setAsesorResponsable(String asesorResponsable) {
+		this.asesorResponsable = asesorResponsable;
+	}
+
+	public String getCodigoOperacion() {
+		return this.codigoOperacion;
+	}
+
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
+	}
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -99,6 +119,38 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getIdAsesorResponsable() {
+		return this.idAsesorResponsable;
+	}
+
+	public void setIdAsesorResponsable(String idAsesorResponsable) {
+		this.idAsesorResponsable = idAsesorResponsable;
+	}
+
+	public String getProcesoActualNegociacion() {
+		return this.procesoActualNegociacion;
+	}
+
+	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
+		this.procesoActualNegociacion = procesoActualNegociacion;
+	}
+
+	public String getSituacionNegociacion() {
+		return this.situacionNegociacion;
+	}
+
+	public void setSituacionNegociacion(String situacionNegociacion) {
+		this.situacionNegociacion = situacionNegociacion;
+	}
+
+	public String getTipoNegociacion() {
+		return this.tipoNegociacion;
+	}
+
+	public void setTipoNegociacion(String tipoNegociacion) {
+		this.tipoNegociacion = tipoNegociacion;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
@@ -171,7 +223,6 @@ public class TbQoNegociacion implements Serializable {
 	public TbQoVariablesCrediticia removeTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
 		tbQoVariablesCrediticia.setTbQoNegociacion(null);
-
 		return tbQoVariablesCrediticia;
 	}
 

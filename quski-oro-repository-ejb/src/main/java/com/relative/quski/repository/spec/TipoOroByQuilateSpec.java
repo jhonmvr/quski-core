@@ -4,7 +4,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jfree.util.Log;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;

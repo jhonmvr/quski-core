@@ -16,8 +16,9 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = -8940327911305978824L;
 	
-	private Long idTipoDocumento;
+	
 	private Long idDocumentoHabilitante;
+	private Long idTipoDocumento;
 	private Long idReferencia;
 	private String descripcionTipoDocumento;
 	private String objectId;

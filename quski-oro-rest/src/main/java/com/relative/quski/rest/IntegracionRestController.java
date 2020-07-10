@@ -1,4 +1,5 @@
 package com.relative.quski.rest;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -9,7 +10,9 @@ import javax.ws.rs.QueryParam;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.BaseWrapper;
 import com.relative.core.web.util.BaseRestController;
+//import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
 import com.relative.integracion.calculadora.cliente.wrapper.Informacion;
+//import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
 import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse;
 import com.relative.quski.service.IntegracionServiceImp;
 
@@ -74,5 +77,14 @@ public class IntegracionRestController extends BaseRestController {
 				 valorRealizacion,  numeroPiezas,  descuentoSuelda));
 		return oferta;
 	}
-
+//	@POST
+//	@Path("/getInformacionOfertaGarantia")
+//	public BaseWrapper<SimularResponse> getInformacionPersonaOferta(EnvioInformacionPersonaOfertaWrapper envioInformacionPersonaOfertaWrapper) throws RelativeException {
+//		 BaseWrapper<SimularResponse> oferta =new BaseWrapper<>();
+//		oferta.setEntidad((SimularResponse) this.is.getClienteInformacionOfertaGarantia(envioInformacionPersonaOfertaWrapper ));
+//		return oferta;
+//	}
+	
 }
+
+

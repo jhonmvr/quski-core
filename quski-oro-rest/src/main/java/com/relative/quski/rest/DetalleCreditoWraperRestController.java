@@ -29,7 +29,6 @@ public class DetalleCreditoWraperRestController extends BaseRestController
 implements CrudRestControllerInterface<DetalleCreditoWrapper, GenericWrapper<DetalleCreditoWrapper>>  {
 	static final String oro14k = "14k";
 	static final String oro15k = "15k";
-	private double valor;
 	@Inject
 	Logger log;
 	public DetalleCreditoWraperRestController() throws RelativeException {

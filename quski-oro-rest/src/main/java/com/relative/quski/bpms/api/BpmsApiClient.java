@@ -426,6 +426,7 @@ public class BpmsApiClient {
 	 * @return Listado de objetos con el contenido de las variables
 	 * @throws RelativeException
 	 */
+	@SuppressWarnings("unchecked")
 	public static ArrayList<HashMap<String,Object>> getBpmsProcesssVariable(String bpmsUrlService, String authorization,String instanceId)  throws RelativeException{
         log.info("===> getBpmsProcesssVariable con instanceId " + instanceId);
         log.info("===> getBpmsProcesssVariable con authorization " + authorization);

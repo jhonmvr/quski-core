@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 
 public class RiesgoAcumuladoWrapper implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nroOperacion;
 	private String tipoOferta;
 	private String nroPrestamo;

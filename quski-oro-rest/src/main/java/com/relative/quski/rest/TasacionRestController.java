@@ -1,9 +1,5 @@
 package com.relative.quski.rest;
 
-
-
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -20,7 +16,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
 

@@ -8,62 +8,62 @@ import com.relative.quski.enums.EstadoEnum;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the tb_qo_cotizador database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_cotizador")
+@Table(name = "tb_qo_cotizador")
 public class TbQoCotizador implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_COTIZADOR_ID_GENERATOR", sequenceName="SEQ_COTIZADOR",initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_COTIZADOR_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_COTIZADOR_ID_GENERATOR", sequenceName = "SEQ_COTIZADOR", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_COTIZADOR_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="aprobacion_mupi")
+	@Column(name = "aprobacion_mupi")
 	private String aprobacionMupi;
 
-	@Column(name="codigo_cotizacion")
+	@Column(name = "codigo_cotizacion")
 	private String codigoCotizacion;
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="grado_interes")
+	@Column(name = "grado_interes")
 	private String gradoInteres;
 
-	@Column(name="motivo_de_desestimiento")
+	@Column(name = "motivo_de_desestimiento")
 	private String motivoDeDesestimiento;
 
-	//bi-directional many-to-one association to TbQoCliente
+	// bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
-	@JoinColumn(name="id_cliente")
+	@JoinColumn(name = "id_cliente")
 	private TbQoCliente tbQoCliente;
 
-	//bi-directional many-to-one association to TbQoDetalleCredito
-	@OneToMany(mappedBy="tbQoCotizador")
+	// bi-directional many-to-one association to TbQoDetalleCredito
+	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoDetalleCredito> tbQoDetalleCreditos;
 
-	//bi-directional many-to-one association to TbQoDocumentoHabilitante
-	@OneToMany(mappedBy="tbQoCotizador")
+	// bi-directional many-to-one association to TbQoDocumentoHabilitante
+	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-	//bi-directional many-to-one association to TbQoPrecioOro
-	@OneToMany(mappedBy="tbQoCotizador")
+	// bi-directional many-to-one association to TbQoPrecioOro
+	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoPrecioOro> tbQoPrecioOros;
 
-	//bi-directional many-to-one association to TbQoVariablesCrediticia
-	@OneToMany(mappedBy="tbQoCotizador")
+	// bi-directional many-to-one association to TbQoVariablesCrediticia
+	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
 
 	public TbQoCotizador() {
@@ -92,8 +92,6 @@ public class TbQoCotizador implements Serializable {
 	public void setCodigoCotizacion(String codigoCotizacion) {
 		this.codigoCotizacion = codigoCotizacion;
 	}
-
- 
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -230,5 +228,21 @@ public class TbQoCotizador implements Serializable {
 
 		return tbQoVariablesCrediticia;
 	}
+
+	@Override
+	public String toString() {
+		return "TbQoCotizador [id=" + id + ", aprobacionMupi=" + aprobacionMupi + ", codigoCotizacion="
+				+ codigoCotizacion + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCreacion=" + fechaCreacion + ", gradoInteres=" + gradoInteres + ", motivoDeDesestimiento="
+				+ motivoDeDesestimiento + ", tbQoCliente=" + tbQoCliente + ", tbQoDetalleCreditos="
+				+ tbQoDetalleCreditos + ", tbQoDocumentoHabilitantes=" + tbQoDocumentoHabilitantes + ", tbQoPrecioOros="
+				+ tbQoPrecioOros + ", tbQoVariablesCrediticias=" + tbQoVariablesCrediticias + "]";
+	}
+
+ 
+
+
+	
+	
 
 }

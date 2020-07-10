@@ -2,154 +2,156 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * The persistent class for the tb_qo_cliente database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_cliente")
+@Table(name = "tb_qo_cliente")
 public class TbQoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_CLIENTE" ,initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_CLIENTE_ID_GENERATOR", sequenceName = "SEQ_CLIENTE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="actividad_economica")
+	@Column(name = "actividad_economica")
 	private String actividadEconomica;
 
-	@Column(name="actividad_economica_empresa")
+	@Column(name = "actividad_economica_empresa")
 	private String actividadEconomicaEmpresa;
 
-	@Column(name="apellido_materno")
+	@Column(name = "apellido_materno")
 	private String apellidoMaterno;
 
-	@Column(name="apellido_paterno")
+	@Column(name = "apellido_paterno")
 	private String apellidoPaterno;
 
-	@Column(name="apoderado_cliente")
+	@Column(name = "apoderado_cliente")
 	private String apoderadoCliente;
 
 	private String campania;
 
-	@Column(name="canal_contacto")
+	@Column(name = "canal_contacto")
 	private String canalContacto;
 
-	@Column(name="cargas_familiares")
+	@Column(name = "cargas_familiares")
 	private BigDecimal cargasFamiliares;
 
 	private String cargo;
 
-	@Column(name="cedula_cliente")
+	@Column(name = "cedula_cliente")
 	private String cedulaCliente;
 
 	private BigDecimal edad;
 
 	private String email;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
-	private String estado;
-
-	@Column(name="estado_civil")
+	@Column(name = "estado_civil")
 	private String estadoCivil;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_nacimiento")
+	@Column(name = "fecha_nacimiento")
 	private Date fechaNacimiento;
 
 	private String genero;
 
-	@Column(name="lugar_nacimiento")
+	@Column(name = "lugar_nacimiento")
 	private String lugarNacimiento;
 
 	private String nacionalidad;
 
-	@Column(name="nivel_educacion")
+	@Column(name = "nivel_educacion")
 	private String nivelEducacion;
 
-	@Column(name="nombre_empresa")
+	@Column(name = "nombre_empresa")
 	private String nombreEmpresa;
 
 	private String ocupacion;
 
-	@Column(name="origen_ingreso")
+	@Column(name = "origen_ingreso")
 	private String origenIngreso;
 
-	@Column(name="primer_nombre")
+	@Column(name = "primer_nombre")
 	private String primerNombre;
 
 	private String profesion;
 
 	private String publicidad;
 
-	@Column(name="relacion_dependencia")
+	@Column(name = "relacion_dependencia")
 	private String relacionDependencia;
 
-	@Column(name="segundo_nombre")
+	@Column(name = "segundo_nombre")
 	private String segundoNombre;
 
-	@Column(name="separacion_bienes")
+	@Column(name = "separacion_bienes")
 	private String separacionBienes;
 
-	@Column(name="telefono_adicional")
+	@Column(name = "telefono_adicional")
 	private String telefonoAdicional;
 
-	@Column(name="telefono_fijo")
+	@Column(name = "telefono_fijo")
 	private String telefonoFijo;
 
-	@Column(name="telefono_movil")
+	@Column(name = "telefono_movil")
 	private String telefonoMovil;
 
-	@Column(name="telefono_trabajo")
+	@Column(name = "telefono_trabajo")
 	private String telefonoTrabajo;
 
-	//bi-directional many-to-one association to TbQoArchivoCliente
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoArchivoCliente
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoArchivoCliente> tbQoArchivoClientes;
 
-	//bi-directional many-to-one association to TbQoCotizador
-	@OneToMany(mappedBy="tbQoCliente")
-	private List<TbQoCotizador> tbQoCotizadors;
+	// bi-directional many-to-one association to TbQoCotizador
+	@OneToMany(mappedBy = "tbQoCliente")
+	private List<TbQoCotizador> tbQoCotizador;
 
-	//bi-directional many-to-one association to TbQoDireccionCliente
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoDireccionCliente
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoDireccionCliente> tbQoDireccionClientes;
 
-	//bi-directional many-to-one association to TbQoDocumentoHabilitante
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoDocumentoHabilitante
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-	//bi-directional many-to-one association to TbQoIngresoEgresoCliente
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoIngresoEgresoCliente
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoIngresoEgresoCliente> tbQoIngresoEgresoClientes;
 
-	//bi-directional many-to-one association to TbQoNegociacion
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoNegociacion
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoNegociacion> tbQoNegociacions;
 
-	//bi-directional many-to-one association to TbQoPatrimonio
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoPatrimonio
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoPatrimonio> tbQoPatrimonios;
 
-	//bi-directional many-to-one association to TbQoReferenciaPersonal
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoReferenciaPersonal
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoReferenciaPersonal> tbQoReferenciaPersonals;
 
-	//bi-directional many-to-one association to TbQoRiesgoAcumulado
-	@OneToMany(mappedBy="tbQoCliente")
+	// bi-directional many-to-one association to TbQoRiesgoAcumulado
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados;
 
 	public TbQoCliente() {
@@ -259,11 +261,11 @@ public class TbQoCliente implements Serializable {
 		this.email = email;
 	}
 
-	public String getEstado() {
-		return this.estado;
+	public EstadoEnum getEstado() {
+		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -457,23 +459,23 @@ public class TbQoCliente implements Serializable {
 		return tbQoArchivoCliente;
 	}
 
-	public List<TbQoCotizador> getTbQoCotizadors() {
-		return this.tbQoCotizadors;
+	public List<TbQoCotizador> getTbQoCotizador() {
+		return tbQoCotizador;
 	}
 
-	public void setTbQoCotizadors(List<TbQoCotizador> tbQoCotizadors) {
-		this.tbQoCotizadors = tbQoCotizadors;
+	public void setTbQoCotizador(List<TbQoCotizador> tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
 	}
 
 	public TbQoCotizador addTbQoCotizador(TbQoCotizador tbQoCotizador) {
-		getTbQoCotizadors().add(tbQoCotizador);
+		getTbQoCotizador().add(tbQoCotizador);
 		tbQoCotizador.setTbQoCliente(this);
 
 		return tbQoCotizador;
 	}
 
 	public TbQoCotizador removeTbQoCotizador(TbQoCotizador tbQoCotizador) {
-		getTbQoCotizadors().remove(tbQoCotizador);
+		getTbQoCotizador().remove(tbQoCotizador);
 		tbQoCotizador.setTbQoCliente(null);
 
 		return tbQoCotizador;
@@ -632,5 +634,9 @@ public class TbQoCliente implements Serializable {
 
 		return tbQoRiesgoAcumulado;
 	}
+
+ 
+	
+	
 
 }

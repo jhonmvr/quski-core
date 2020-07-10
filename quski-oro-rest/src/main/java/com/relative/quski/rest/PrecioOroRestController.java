@@ -1,5 +1,6 @@
 package com.relative.quski.rest;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,8 +18,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.service.QuskiOroService;
 
@@ -31,6 +30,9 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "PrecioOroRestController - REST CRUD")
 public class PrecioOroRestController extends BaseRestController
 implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioOro>>  {
+	
+	@Inject 
+	Logger log;
 
 	public PrecioOroRestController() throws RelativeException {
 		super();
@@ -146,5 +148,27 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 		}
 		return plw;
 	}	
+	
+	@POST
+	@Path("/crearPrecioOro")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo CotizadorByIdCotizador Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	public GenericWrapper<TbQoPrecioOro> crearPrecioOro( GenericWrapper<TbQoPrecioOro> pow )throws RelativeException{
+		log.info("=================> ingresa a crearPrecioOro");
+		pow.setEntidad( this.qos.registrarPrecioOroByCotizacion( pow.getEntidad() ) );
+		return pow;
+	}
+	
+	 
+	@GET
+	@Path("/eliminarPrecioOro")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
+	public GenericWrapper<TbQoPrecioOro> removeEntity(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoPrecioOro> loc = new GenericWrapper<>();
+		TbQoPrecioOro a = this.qos.eliminarPrecioOro(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	
 	
 }

@@ -125,7 +125,7 @@ public class NumeroaLetras {
     }
     
     public static void main(String[] args){
-    	NumeroaLetras letras = new NumeroaLetras();
+    	//NumeroaLetras letras = new NumeroaLetras();
     	
     	System.out.println(NumeroaLetras.convertir("12324.22", false));
     	

@@ -1,23 +1,11 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+
+import java.util.Date;
 
 
 /**
@@ -30,11 +18,13 @@ public class TbQoVariablesCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName="SEG_TB_QO_VARIABLES_CREDITICIAS")
+	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName = "SEG_TB_QO_VARIABLES_CREDITICIAS")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
 	private Long id;
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
@@ -55,7 +45,6 @@ public class TbQoVariablesCrediticia implements Serializable {
 	private TbQoCotizador tbQoCotizador;
 
 	//bi-directional many-to-one association to TbQoNegociacion
-	
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
@@ -134,5 +123,4 @@ public class TbQoVariablesCrediticia implements Serializable {
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
-
 }

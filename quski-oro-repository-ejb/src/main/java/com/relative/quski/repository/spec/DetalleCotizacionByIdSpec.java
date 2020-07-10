@@ -19,7 +19,6 @@ private Long id;
 	}
 	@Override
 	public boolean isSatisfiedBy(TbQoPrecioOro t) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -1,12 +1,9 @@
 package com.relative.quski.rest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,11 +12,9 @@ import javax.ws.rs.core.MediaType;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
-import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.TasacionWrapper;
 
 import io.swagger.annotations.Api;
@@ -35,7 +30,6 @@ implements CrudRestControllerInterface<TasacionWrapper, GenericWrapper<TasacionW
 	static final String oro14k = "14k";
 	static final String oro15k = "15k";
 	private BigDecimal multiplicador = new BigDecimal("0.00") ;
-	private BigDecimal valor = new BigDecimal("0.00");
 	//private String[] tipoOro = {"QUILATE14", "QUILATE18"};
 	@Inject
 	Logger log;

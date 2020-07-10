@@ -22,4 +22,7 @@ public interface ClienteRepository extends CrudRepository<Long, TbQoCliente> {
 			String telefono, String celular, String correo,  EstadoEnum estado) throws RelativeException;
 	
 	public List<AsignacionesWrapper> clienteBycodigoOperacion(String codigoOperacion) throws RelativeException;
+
+
+	public TbQoCliente findClienteByIdentificacion(String identificacion)  throws RelativeException;
 }

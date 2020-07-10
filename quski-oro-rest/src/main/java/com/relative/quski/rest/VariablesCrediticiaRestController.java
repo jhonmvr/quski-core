@@ -27,18 +27,18 @@ import io.swagger.annotations.ApiOperation;
 
 
 
-@Path("/variableCrediticiaRestController")
+@Path("/variablesCrediticiaRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "VariableCrediticiaRestController - REST CRUD")
-public class VariableCrediticiaRestController extends BaseRestController
+@Api(value = "VariablesCrediticiaRestController - REST CRUD")
+public class VariablesCrediticiaRestController extends BaseRestController
 		implements CrudRestControllerInterface<TbQoVariablesCrediticia, GenericWrapper<TbQoVariablesCrediticia>> {
 	
 	
 	@Inject
 	QuskiOroService qos;
 	
-	public VariableCrediticiaRestController() throws RelativeException {
+	public VariablesCrediticiaRestController() throws RelativeException {
 		super();
 	}
 
@@ -52,7 +52,7 @@ public class VariableCrediticiaRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTipoOro", response = GenericWrapper.class)
 	public GenericWrapper<TbQoVariablesCrediticia> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoVariablesCrediticia> loc = new GenericWrapper<>();
-		TbQoVariablesCrediticia a = this.qos.findVariableCrediticiaById(Long.valueOf(id));
+		TbQoVariablesCrediticia a = this.qos.findVariablesCrediticiaById(Long.valueOf(id));
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -91,14 +91,14 @@ public class VariableCrediticiaRestController extends BaseRestController
 			throws RelativeException {
 		try {
 			GenericWrapper<TbQoVariablesCrediticia> gw= new GenericWrapper<>();
-			gw.setEntidad(this.qos.manageVariableCrediticia( vc.getEntidad() ));
+			gw.setEntidad(this.qos.manageVariablesCrediticia( vc.getEntidad() ));
 			return vc;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController persistEntity, " + e.getMessage());
 		}
 	}
 	@GET
-	@Path("/variableCrediticiaByIdCotizacion")
+	@Path("/variablesCrediticiaByIdCotizacion")
 	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
 	public PaginatedListWrapper<TbQoVariablesCrediticia> variableCrediticiaByIdCotizador(
 			@QueryParam("page") @DefaultValue("1") String page,
@@ -108,13 +108,13 @@ public class VariableCrediticiaRestController extends BaseRestController
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
 			@QueryParam("idCotizador") String idCotizador
 			) throws RelativeException {
-		return variableCrediticiaByIdCotizador(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+		return variablesCrediticiaByIdCotizador(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
 				sortDirections, isPaginated),Long.valueOf(idCotizador));
 	}
 	
-	private PaginatedListWrapper<TbQoVariablesCrediticia> variableCrediticiaByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
+	private PaginatedListWrapper<TbQoVariablesCrediticia> variablesCrediticiaByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
 		PaginatedListWrapper<TbQoVariablesCrediticia> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoVariablesCrediticia> actions = this.qos.findVariableCrediticiaByIdCotizacion(pw, idCotizador);
+		List<TbQoVariablesCrediticia> actions = this.qos.findVariablesCrediticiaByIdCotizacion(pw, idCotizador);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countVariblesCrediticiaByIdCotizacion(idCotizador).intValue());
 			plw.setList(actions);
