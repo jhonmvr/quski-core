@@ -39,6 +39,7 @@ import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
@@ -64,6 +65,7 @@ import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ProvinciaRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
+import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
@@ -90,6 +92,8 @@ public class QuskiOroService {
 	private CotizadorRepository cotizadorRepository;
 	@Inject
 	private TipoOroRepository tipoOroRepository;
+	@Inject
+	private RiesgoAcumuladoRepository riesgoAcumuladoRepository;
 	@Inject
 	private DetalleCreditoRepository detalleCreditoRepository;
 	@Inject
@@ -1363,8 +1367,9 @@ public class QuskiOroService {
 				cliente.setTbQoCotizador(tmp);
 				return cliente;
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ,
-						"ERROR AL BUSCAR CLIENTE: NO EXISTE CLIENTE, NO TIENE COTIZACIONES O COTIZACIONES ACTIVAS: " + identificacion);
+				return null;
+//				throw new RelativeException(Constantes.ERROR_CODE_READ,
+//						"ERROR AL BUSCAR CLIENTE: NO EXISTE CLIENTE, NO TIENE COTIZACIONES O COTIZACIONES ACTIVAS: " + identificacion);
 			}
 		} catch (RelativeException e) {
 			throw e;
@@ -1490,6 +1495,15 @@ public class QuskiOroService {
 
 	}
 
+	/**
+	 * @author Desconocido - Creacion 
+	 * @editor Jeroham Cadenas - Actualizacion
+	 * @param  TbQoVariablesCrediticia send
+	 * @return TbQoVariablesCrediticia
+	 * @throws RelativeException
+	 * @comment Metodo crea o actualiza una entidad de variables crediticias
+	 * @comment Preguntar antes de editar.  
+	 */
 	public TbQoVariablesCrediticia manageVariablesCrediticia(TbQoVariablesCrediticia send) throws RelativeException {
 		try {
 			log.info("==> entra a manage variableCrediticia");
@@ -1500,22 +1514,20 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado( EstadoEnum.ACT );
 				return variablesCrediticiaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					"Error actualizando la Agencia " + e.getMessage());
 		}
 	}
 
-	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send,
-			TbQoVariablesCrediticia persisted) throws RelativeException {
+	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send, TbQoVariablesCrediticia persisted) throws RelativeException {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
@@ -1532,12 +1544,33 @@ public class QuskiOroService {
 		}
 	}
 
+	/**
+	 * @author Desconocido - Creacion 
+	 * @editor Jeroham Cadenas - Actualizacion
+	 * @param  Long id
+	 * @return TbQoNegociacion
+	 * @throws RelativeException
+	 * @comment Metodo Busca la negociacion y las variables crediticias asociadas
+	 * @comment Preguntar antes de editar.  
+	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 		try {
-			return negociacionRepository.findById(id);
+			TbQoNegociacion neg = null;
+			List<TbQoRiesgoAcumulado> riesgo = null;
+			TbQoCliente cliente = null;
+			neg = negociacionRepository.findById(id); 
+			cliente = neg.getTbQoCliente();
+			
+			cliente.getTbQoCotizador().forEach( cot -> {
+				cot.setTbQoCliente( null );
+			});
+			riesgo = this.riesgoAcumuladoRepository.findByIdCliente( cliente.getId() );
+			cliente.setTbQoRiesgoAcumulados( riesgo );
+			
+			neg.setTbQoCliente( cliente );
+			neg.setTbQoVariablesCrediticias( this.variablesCrediticiaRepository.findByIdNegociacion( id )); // Hacer null las relacions de variables crediticias.
+			return neg;
 		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
@@ -1568,8 +1601,8 @@ public class QuskiOroService {
 
 	public TbQoNegociacion manageNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
-			log.info("==> entra a manage variableCrediticia");
-			log.info("==> entra a manage Negociacion");
+			//log.info("==> entra a manage variableCrediticia");
+			//log.info("==> entra a manage Negociacion");
 			TbQoNegociacion persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findNegociacionById(send.getId());
@@ -1577,9 +1610,10 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT);
 				return negociacionRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo ");
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -1595,13 +1629,20 @@ public class QuskiOroService {
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
-			persisted.setId(send.getId());
-			persisted.setTbQoCliente(send.getTbQoCliente());
-			persisted.setTbQoVariablesCrediticias(send.getTbQoVariablesCrediticias());
+			//persisted.setTbQoCliente(send.getTbQoCliente());
+			//persisted.setTbQoVariablesCrediticias(send.getTbQoVariablesCrediticias());
 			persisted.setEstado(send.getEstado());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setAsesorResponsable( send.getAsesorResponsable() );
+			persisted.setIdAsesorResponsable( send.getIdAsesorResponsable() );
+			persisted.setProcesoActualNegociacion( send.getProcesoActualNegociacion() );
+			persisted.setSituacionNegociacion( send.getSituacionNegociacion() );
+			persisted.setTipoNegociacion( send.getTipoNegociacion() );
+			
+			persisted.setId( persisted.getId() );
+			persisted.setFechaCreacion( persisted.getFechaCreacion() );
+			persisted.setCodigoOperacion( persisted.getCodigoOperacion() );
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-
+			
 			return negociacionRepository.update(persisted);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());

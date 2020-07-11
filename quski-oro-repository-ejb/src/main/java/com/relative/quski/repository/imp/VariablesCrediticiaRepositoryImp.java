@@ -13,6 +13,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.VariablesCrediticiasByIdCotizacionSpec;
+import com.relative.quski.repository.spec.VariablesCrediticiasByIdNegociacionSpec;
 import com.relative.quski.wrapper.VariableCrediticiaWrapper;
 
 /**
@@ -78,7 +79,7 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 					"SELECT  NEW com.relative.quski.wrapper.VariableCrediticiaWrapper(");
 			queryStr.append(
 					"vc.id as id, vc.tbQoCotizador.id as idCotizador, vc.orden as orden,vc.nombre as nombre,vc.valor as valor)");
-			queryStr.append(" FROM TbQoVariableCrediticia AS vc ");
+			queryStr.append(" FROM TbQoVariablesCrediticia AS vc ");
 			queryStr.append(" where vc.tbQoCotizador.id=:idCotizador ");
 			log.info("===> query gfenerado " + queryStr.toString());
 			TypedQuery<VariableCrediticiaWrapper> query = this.getEntityManager().createQuery(queryStr.toString(),
@@ -89,6 +90,17 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					"Error en la busqueda findByIdCotizador " + e.getMessage());
+		}
+	}
+
+	@Override
+	public List<TbQoVariablesCrediticia> findByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return findAllBySpecification(new VariablesCrediticiasByIdNegociacionSpec( idNegociacion ));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
 	}
 }

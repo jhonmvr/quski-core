@@ -13,6 +13,8 @@ public interface VariablesCrediticiaRepository extends CrudRepository<Long, TbQo
 			String sortDirections,  Long idCotizador) throws RelativeException ;
 
 	public List<TbQoVariablesCrediticia> findByIdCotizacion(Long idCotizador) throws RelativeException ;
+	
+	public List<TbQoVariablesCrediticia> findByIdNegociacion(Long idNegociacion) throws RelativeException ;
 
 	public Long countByIdCotizacion(Long idCotizador) throws RelativeException ;
 	

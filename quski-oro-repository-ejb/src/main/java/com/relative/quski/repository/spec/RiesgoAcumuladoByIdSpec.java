@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.relative.quski.repository.spec;
 
 import java.util.ArrayList;
@@ -12,36 +9,31 @@ import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoAgencia;
+import com.relative.quski.model.TbQoRiesgoAcumulado;
 
-/**
- * @author relative
- *
- */
-public class AgenciaByIdSpec extends AbstractSpecification<TbQoAgencia> {
-	private long id;
+public class RiesgoAcumuladoByIdSpec extends AbstractSpecification<TbQoRiesgoAcumulado> {
+	private Long id;
 
-	public AgenciaByIdSpec(long id) {
+	public RiesgoAcumuladoByIdSpec(Long id) {
 
 		this.id = id;
 
 	}
-
 	@Override
-	public boolean isSatisfiedBy(TbQoAgencia arg0) {
+	public boolean isSatisfiedBy(TbQoRiesgoAcumulado arg0) {
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoAgencia> poll, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<TbQoRiesgoAcumulado> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-	
-		Integer a = (int) this.id;
-		if (a != null && a != 0) {
+
+		if (this.id != null && this.id != 0) {
 			where.add(cb.equal(poll.get("id"), this.id));
 			where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		}	
 		return cb.and(where.toArray(new Predicate[0]));
 	}
+
 
 }

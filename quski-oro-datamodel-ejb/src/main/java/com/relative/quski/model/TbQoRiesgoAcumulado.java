@@ -1,24 +1,13 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.TbQoCliente;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 
 /**
@@ -31,89 +20,69 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName="SEG_TB_QO_RIESGO_ACUMULADO")
+	@SequenceGenerator(name="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName = "SEQ_CLIENTE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR")
 	private Long id;
-
-	@Column(name="capital_cuota_atrasada")
-	private BigDecimal capitalCuotaAtrasada;
 
 	@Column(name="capital_inicial")
 	private BigDecimal capitalInicial;
 
-	@Column(name="cobertura_actual")
-	private BigDecimal coberturaActual;
-
-	@Column(name="cobertura_anterior")
-	private BigDecimal coberturaAnterior;
-
-	@Column(name="cuenta_individual")
-	private String cuentaIndividual;
-
-	private BigDecimal cuota;
-
-	private String custodia;
-
-	@Column(name="dias_mora")
-	private BigDecimal diasMora;
+	@Column(name="dias_mora_actual")
+	private BigDecimal diasMoraActual;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
-	@Column(name="estatus_credito")
-	private BigDecimal estatusCredito;
+	@Column(name="estado_operacion")
+	private String estadoOperacion;
 
-	private String estatusmediacion;
+	@Column(name="estado_primera_cuota_vigente")
+	private String estadoPrimeraCuotaVigente;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_aprobacion")
-	private Date fechaAprobacion;
-
-	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_final_credito")
-	private Date fechaFinalCredito;
+	@Column(name="id_moneda")
+	private BigDecimal idMoneda;
 
-	@Column(name="gestion_cobranza")
-	private String gestionCobranza;
+	@Column(name="nombre_producto")
+	private String nombreProducto;
 
-	@Column(name="interes_cuota_atrasada")
-	private BigDecimal interesCuotaAtrasada;
+	@Column(name="numero_cuotas_faltantes")
+	private BigDecimal numeroCuotasFaltantes;
 
-	private String mora;
+	@Column(name="numero_cuotas_totales")
+	private BigDecimal numeroCuotasTotales;
 
-	@Column(name="motivo_bloque")
-	private String motivoBloque;
+	@Column(name="numero_garantias_reales")
+	private BigDecimal numeroGarantiasReales;
 
-	@Column(name="n_coutas_impagadas")
-	private BigDecimal nCoutasImpagadas;
+	@Column(name="numero_operacion")
+	private String numeroOperacion;
 
-	@Column(name="numero_prestamo")
-	private BigDecimal numeroPrestamo;
+	@Column(name="numero_operacion_relacionada")
+	private String numeroOperacionRelacionada;
 
-	private BigDecimal plazo;
+	@Column(name="primera_cuota_vigente")
+	private BigDecimal primeraCuotaVigente;
 
-	private String retanqueo;
+	@Column(name="valor_al_dia")
+	private BigDecimal valorAlDia;
 
-	@Column(name="saldo_capital")
-	private BigDecimal saldoCapital;
+	@Column(name="valor_al_dia_mas_cuota_actual")
+	private BigDecimal valorAlDiaMasCuotaActual;
 
-	@Column(name="tipo_credito")
-	private String tipoCredito;
+	@Column(name="valor_cancela_prestamo")
+	private BigDecimal valorCancelaPrestamo;
 
-	@Column(name="total_deuda")
-	private BigDecimal totalDeuda;
-
-	@Column(name="ult_div_pagado")
-	private BigDecimal ultDivPagado;
-
+	@Column(name="valor_proyectado_cuota_actual")
+	private BigDecimal valorProyectadoCuotaActual;
+	
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
@@ -130,14 +99,6 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.id = id;
 	}
 
-	public BigDecimal getCapitalCuotaAtrasada() {
-		return this.capitalCuotaAtrasada;
-	}
-
-	public void setCapitalCuotaAtrasada(BigDecimal capitalCuotaAtrasada) {
-		this.capitalCuotaAtrasada = capitalCuotaAtrasada;
-	}
-
 	public BigDecimal getCapitalInicial() {
 		return this.capitalInicial;
 	}
@@ -146,55 +107,13 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.capitalInicial = capitalInicial;
 	}
 
-	public BigDecimal getCoberturaActual() {
-		return this.coberturaActual;
+	public BigDecimal getDiasMoraActual() {
+		return this.diasMoraActual;
 	}
 
-	public void setCoberturaActual(BigDecimal coberturaActual) {
-		this.coberturaActual = coberturaActual;
+	public void setDiasMoraActual(BigDecimal diasMoraActual) {
+		this.diasMoraActual = diasMoraActual;
 	}
-
-	public BigDecimal getCoberturaAnterior() {
-		return this.coberturaAnterior;
-	}
-
-	public void setCoberturaAnterior(BigDecimal coberturaAnterior) {
-		this.coberturaAnterior = coberturaAnterior;
-	}
-
-	public String getCuentaIndividual() {
-		return this.cuentaIndividual;
-	}
-
-	public void setCuentaIndividual(String cuentaIndividual) {
-		this.cuentaIndividual = cuentaIndividual;
-	}
-
-	public BigDecimal getCuota() {
-		return this.cuota;
-	}
-
-	public void setCuota(BigDecimal cuota) {
-		this.cuota = cuota;
-	}
-
-	public String getCustodia() {
-		return this.custodia;
-	}
-
-	public void setCustodia(String custodia) {
-		this.custodia = custodia;
-	}
-
-	public BigDecimal getDiasMora() {
-		return this.diasMora;
-	}
-
-	public void setDiasMora(BigDecimal diasMora) {
-		this.diasMora = diasMora;
-	}
-
- 
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -204,20 +123,20 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.estado = estado;
 	}
 
-	public BigDecimal getEstatusCredito() {
-		return this.estatusCredito;
+	public String getEstadoOperacion() {
+		return this.estadoOperacion;
 	}
 
-	public void setEstatusCredito(BigDecimal estatusCredito) {
-		this.estatusCredito = estatusCredito;
+	public void setEstadoOperacion(String estadoOperacion) {
+		this.estadoOperacion = estadoOperacion;
 	}
 
-	public String getEstatusmediacion() {
-		return this.estatusmediacion;
+	public String getEstadoPrimeraCuotaVigente() {
+		return this.estadoPrimeraCuotaVigente;
 	}
 
-	public void setEstatusmediacion(String estatusmediacion) {
-		this.estatusmediacion = estatusmediacion;
+	public void setEstadoPrimeraCuotaVigente(String estadoPrimeraCuotaVigente) {
+		this.estadoPrimeraCuotaVigente = estadoPrimeraCuotaVigente;
 	}
 
 	public Date getFechaActualizacion() {
@@ -228,14 +147,6 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public Date getFechaAprobacion() {
-		return this.fechaAprobacion;
-	}
-
-	public void setFechaAprobacion(Date fechaAprobacion) {
-		this.fechaAprobacion = fechaAprobacion;
-	}
-
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -244,110 +155,101 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Date getFechaFinalCredito() {
-		return this.fechaFinalCredito;
+	public BigDecimal getIdMoneda() {
+		return this.idMoneda;
 	}
 
-	public void setFechaFinalCredito(Date fechaFinalCredito) {
-		this.fechaFinalCredito = fechaFinalCredito;
+	public void setIdMoneda(BigDecimal idMoneda) {
+		this.idMoneda = idMoneda;
 	}
 
-	public String getGestionCobranza() {
-		return this.gestionCobranza;
+	public String getNombreProducto() {
+		return this.nombreProducto;
 	}
 
-	public void setGestionCobranza(String gestionCobranza) {
-		this.gestionCobranza = gestionCobranza;
+	public void setNombreProducto(String nombreProducto) {
+		this.nombreProducto = nombreProducto;
 	}
 
-	public BigDecimal getInteresCuotaAtrasada() {
-		return this.interesCuotaAtrasada;
+	public BigDecimal getNumeroCuotasFaltantes() {
+		return this.numeroCuotasFaltantes;
 	}
 
-	public void setInteresCuotaAtrasada(BigDecimal interesCuotaAtrasada) {
-		this.interesCuotaAtrasada = interesCuotaAtrasada;
+	public void setNumeroCuotasFaltantes(BigDecimal numeroCuotasFaltantes) {
+		this.numeroCuotasFaltantes = numeroCuotasFaltantes;
 	}
 
-	public String getMora() {
-		return this.mora;
+	public BigDecimal getNumeroCuotasTotales() {
+		return this.numeroCuotasTotales;
 	}
 
-	public void setMora(String mora) {
-		this.mora = mora;
+	public void setNumeroCuotasTotales(BigDecimal numeroCuotasTotales) {
+		this.numeroCuotasTotales = numeroCuotasTotales;
 	}
 
-	public String getMotivoBloque() {
-		return this.motivoBloque;
+	public BigDecimal getNumeroGarantiasReales() {
+		return this.numeroGarantiasReales;
 	}
 
-	public void setMotivoBloque(String motivoBloque) {
-		this.motivoBloque = motivoBloque;
+	public void setNumeroGarantiasReales(BigDecimal numeroGarantiasReales) {
+		this.numeroGarantiasReales = numeroGarantiasReales;
 	}
 
-	public BigDecimal getNCoutasImpagadas() {
-		return this.nCoutasImpagadas;
+	public String getNumeroOperacion() {
+		return this.numeroOperacion;
 	}
 
-	public void setNCoutasImpagadas(BigDecimal nCoutasImpagadas) {
-		this.nCoutasImpagadas = nCoutasImpagadas;
+	public void setNumeroOperacion(String numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
 	}
 
-	public BigDecimal getNumeroPrestamo() {
-		return this.numeroPrestamo;
+	public String getNumeroOperacionRelacionada() {
+		return this.numeroOperacionRelacionada;
 	}
 
-	public void setNumeroPrestamo(BigDecimal numeroPrestamo) {
-		this.numeroPrestamo = numeroPrestamo;
+	public void setNumeroOperacionRelacionada(String numeroOperacionRelacionada) {
+		this.numeroOperacionRelacionada = numeroOperacionRelacionada;
 	}
 
-	public BigDecimal getPlazo() {
-		return this.plazo;
+	public BigDecimal getPrimeraCuotaVigente() {
+		return this.primeraCuotaVigente;
 	}
 
-	public void setPlazo(BigDecimal plazo) {
-		this.plazo = plazo;
+	public void setPrimeraCuotaVigente(BigDecimal primeraCuotaVigente) {
+		this.primeraCuotaVigente = primeraCuotaVigente;
 	}
 
-	public String getRetanqueo() {
-		return this.retanqueo;
+	public BigDecimal getValorAlDia() {
+		return this.valorAlDia;
 	}
 
-	public void setRetanqueo(String retanqueo) {
-		this.retanqueo = retanqueo;
+	public void setValorAlDia(BigDecimal valorAlDia) {
+		this.valorAlDia = valorAlDia;
 	}
 
-	public BigDecimal getSaldoCapital() {
-		return this.saldoCapital;
+	public BigDecimal getValorAlDiaMasCuotaActual() {
+		return this.valorAlDiaMasCuotaActual;
 	}
 
-	public void setSaldoCapital(BigDecimal saldoCapital) {
-		this.saldoCapital = saldoCapital;
+	public void setValorAlDiaMasCuotaActual(BigDecimal valorAlDiaMasCuotaActual) {
+		this.valorAlDiaMasCuotaActual = valorAlDiaMasCuotaActual;
 	}
 
-	public String getTipoCredito() {
-		return this.tipoCredito;
+	public BigDecimal getValorCancelaPrestamo() {
+		return this.valorCancelaPrestamo;
 	}
 
-	public void setTipoCredito(String tipoCredito) {
-		this.tipoCredito = tipoCredito;
+	public void setValorCancelaPrestamo(BigDecimal valorCancelaPrestamo) {
+		this.valorCancelaPrestamo = valorCancelaPrestamo;
 	}
 
-	public BigDecimal getTotalDeuda() {
-		return this.totalDeuda;
+	public BigDecimal getValorProyectadoCuotaActual() {
+		return this.valorProyectadoCuotaActual;
 	}
 
-	public void setTotalDeuda(BigDecimal totalDeuda) {
-		this.totalDeuda = totalDeuda;
+	public void setValorProyectadoCuotaActual(BigDecimal valorProyectadoCuotaActual) {
+		this.valorProyectadoCuotaActual = valorProyectadoCuotaActual;
 	}
-
-	public BigDecimal getUltDivPagado() {
-		return this.ultDivPagado;
-	}
-
-	public void setUltDivPagado(BigDecimal ultDivPagado) {
-		this.ultDivPagado = ultDivPagado;
-	}
-
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
 	}
