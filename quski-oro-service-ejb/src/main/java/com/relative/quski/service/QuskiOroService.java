@@ -571,16 +571,17 @@ public class QuskiOroService {
 		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
 	}
+
 	/**
-	 * Método que realiza la eliminación lógica del precio oro 
+	 * Método que realiza la eliminación lógica del precio oro
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param id
 	 * @return {@link TbQoPrecioOro}
 	 * @throws RelativeException
 	 */
-	public TbQoPrecioOro eliminarPrecioOro(Long id)throws RelativeException{
-		TbQoPrecioOro precioOro=this.precioOroRepository.findById(id);
+	public TbQoPrecioOro eliminarPrecioOro(Long id) throws RelativeException {
+		TbQoPrecioOro precioOro = this.precioOroRepository.findById(id);
 		precioOro.setEstado(EstadoEnum.INA);
 		return this.managePrecioOro(precioOro);
 	}
@@ -1196,7 +1197,7 @@ public class QuskiOroService {
 			// persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(send.getEstado());
-			if (send.getTbQoTipoOro() != null ) {
+			if (send.getTbQoTipoOro() != null) {
 				persisted.setTbQoTipoOro(send.getTbQoTipoOro());
 			}
 			return precioOroRepository.update(persisted);
@@ -1295,14 +1296,19 @@ public class QuskiOroService {
 	 */
 	private List<TbQoPrecioOro> copyPrecioOroData(Long idCotizacion) throws RelativeException {
 		List<TbQoPrecioOro> pos = new ArrayList<>();
+
 		log.info("========>copyPrecioOroData " + idCotizacion);
 		List<PrecioOroWrapper> pows = this.precioOroRepository.findByIdCotizadorCustom(idCotizacion);
-		if (pows != null && !pows.isEmpty()) {
-			log.info("========>copyPrecioOroData pows " + pows.size());
-			pows.forEach(pow -> {
+		List<PrecioOroWrapper> powact = pows.stream().filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0)
+				.collect(Collectors.toList());
+		if (powact != null && !powact.isEmpty()) {
+			log.info("========>copyPrecioOroData pows " + powact.size());
+			powact.forEach(pow -> {
+
 				log.info("========>leyendo elemento pow " + pow.getId());
 				log.info("========>leyendo elemento pow " + pow.getPrecio());
 				log.info("========>leyendo elemento pow " + pow.getPesoNetoEstimado());
+				log.info("========> leyendo elemento pow " + pow.getEstado());
 				TbQoPrecioOro po = new TbQoPrecioOro();
 				TbQoTipoOro to = new TbQoTipoOro();
 				po.setId(pow.getId());
@@ -1312,7 +1318,10 @@ public class QuskiOroService {
 				po.setPrecio(pow.getPrecio());
 				po.setPesoNetoEstimado(pow.getPesoNetoEstimado());
 				po.setTbQoTipoOro(to);
+				po.setEstado(pow.getEstado());
+
 				pos.add(po);
+
 			});
 		}
 		return pos;
