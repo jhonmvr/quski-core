@@ -40,6 +40,7 @@ public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoClien
 			where.add(cb.equal(poll.get("cedulaCliente"), this.identificacion));
 		}
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
+		
 		return cb.and(where.toArray(new Predicate[]{}));	
 	}
 

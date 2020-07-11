@@ -3,6 +3,8 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.relative.quski.enums.EstadoEnum;
+
 public class PrecioOroWrapper implements Serializable {
 
 	/**
@@ -16,9 +18,12 @@ public class PrecioOroWrapper implements Serializable {
 	private BigDecimal precio;
 	private BigDecimal pesoNetoEstimado;
 	private String quilate;
+	private EstadoEnum estado;
+
+
 
 	public PrecioOroWrapper(Long id, Long idCotizador, Long idTipoOro, BigDecimal precio, BigDecimal pesoNetoEstimado,
-			String quilate) {
+			String quilate, EstadoEnum estado) {
 		super();
 		this.id = id;
 		this.idCotizador = idCotizador;
@@ -26,6 +31,7 @@ public class PrecioOroWrapper implements Serializable {
 		this.precio = precio;
 		this.pesoNetoEstimado = pesoNetoEstimado;
 		this.quilate = quilate;
+		this.estado = estado;
 	}
 
 	public Long getId() {
@@ -75,5 +81,15 @@ public class PrecioOroWrapper implements Serializable {
 	public void setPesoNetoEstimado(BigDecimal pesoNetoEstimado) {
 		this.pesoNetoEstimado = pesoNetoEstimado;
 	}
+
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+	
+	
 
 }

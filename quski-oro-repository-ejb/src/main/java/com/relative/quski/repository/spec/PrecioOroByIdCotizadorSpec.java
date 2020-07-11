@@ -8,6 +8,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoPrecioOro;
 /**
@@ -34,7 +35,7 @@ public class PrecioOroByIdCotizadorSpec extends AbstractSpecification<TbQoPrecio
 	public Predicate toPredicate(Root<TbQoPrecioOro> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.<TbQoCotizador>get("tbQoCotizador").get("id"), this.id));
-		//where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
+		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[] {}));
 
 	}
