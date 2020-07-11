@@ -1,17 +1,17 @@
 package com.relative.quski.service;
 
-import java.util.List;
+//import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.relative.core.exception.RelativeException;
-import com.relative.core.persistence.Repository;
+//import com.relative.core.persistence.Repository;
 import com.relative.core.util.main.Constantes;
-import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.quski.enums.EstadoOperacionEnum;
-import com.relative.quski.model.TbQoCreditoNegociacion;
+//import com.relative.core.util.main.PaginatedWrapper;
+//import com.relative.quski.enums.EstadoOperacionEnum;
+//import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoReasignacionActividad;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.ReasignacionRepository;
@@ -34,28 +34,28 @@ public class ProcesoService {
 	 * @return
 	 * @throws RelativeException
 	 */
-	public List<TbQoCreditoNegociacion> findByCreditoNegociacion(PaginatedWrapper pw, String codigOperacion,
-			EstadoOperacionEnum estado) throws RelativeException {
+//	public List<TbQoCreditoNegociacion> findByCreditoNegociacion(PaginatedWrapper pw, String codigOperacion,
+//			EstadoOperacionEnum estado) throws RelativeException {
+//
+//		if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+//			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado, pw.getStartRecord(),
+//					pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+//		} else {
+//			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado);
+//		}
+//	}
 
-		if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado, pw.getStartRecord(),
-					pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
-		} else {
-			return creditoNegociacionRepository.findBycodigOpEstado(codigOperacion, estado);
-		}
-	}
-
-	public Long countfindBycodigOperacionEstado(String codigOperacion, EstadoOperacionEnum estado)
-			throws RelativeException {
-		try {
-			return creditoNegociacionRepository.countfindBycodigOpEstado(codigOperacion, estado);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"codigOperacion y estado no encontrado " + e.getMessage());
-		}
-	}
+//	public Long countfindBycodigOperacionEstado(String codigOperacion, EstadoOperacionEnum estado)
+//			throws RelativeException {
+//		try {
+//			return creditoNegociacionRepository.countfindBycodigOpEstado(codigOperacion, estado);
+//		} catch (RelativeException e) {
+//			throw e;
+//		} catch (Exception e) {
+//			throw new RelativeException(Constantes.ERROR_CODE_READ,
+//					"codigOperacion y estado no encontrado " + e.getMessage());
+//		}
+//	}
 
 	/**
 	 * Metodo que realiza la busqueda de las reasignaciones por id

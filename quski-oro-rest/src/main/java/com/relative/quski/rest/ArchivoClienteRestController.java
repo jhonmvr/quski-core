@@ -21,7 +21,6 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoArchivoCliente;
-import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;

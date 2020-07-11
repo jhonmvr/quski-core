@@ -7,12 +7,8 @@ import javax.ejb.Stateless;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
-import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.quski.enums.EstadoOperacionEnum;
-import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoReasignacionActividad;
 import com.relative.quski.repository.ReasignacionRepository;
-import com.relative.quski.repository.spec.ReasignacionByCodigoAndEstadoParamSpec;
 import com.relative.quski.repository.spec.ReasignacionByCodigoParamSpec;
 @Stateless(mappedName = "reasignacionRepository")
 public class ReasignacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoReasignacionActividad> implements ReasignacionRepository {

@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
-import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoRolTipoDocumento;
-import com.relative.quski.model.TbQoTipoDocumento;
 
 
 

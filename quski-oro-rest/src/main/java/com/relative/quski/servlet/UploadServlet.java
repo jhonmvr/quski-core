@@ -21,12 +21,18 @@ import com.relative.core.util.main.Constantes;
 @MultipartConfig
 public class UploadServlet extends HttpServlet {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Log log = LogFactory.getLog(UploadServlet.class);
 	
 	//private Map<String, FileWrapper> files;
 
 //  private static final long serialVersionUID = 1L;
-  private File fileUploadPath;
+  @SuppressWarnings("unused")
+private File fileUploadPath;
 
   @Override
   public void init(ServletConfig config) {
@@ -60,7 +66,6 @@ public class UploadServlet extends HttpServlet {
       * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
       * 
       */
-  @SuppressWarnings("unchecked")
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	  log.info("==============> entra a metodo post en servlet");
@@ -81,7 +86,8 @@ public class UploadServlet extends HttpServlet {
   
  
 
-  private String getMimeType(File file) {
+  @SuppressWarnings("unused")
+private String getMimeType(File file) {
       String mimetype = "";
       if (file.exists()) {
           if (getSuffix(file.getName()).equalsIgnoreCase("png")) {
@@ -95,7 +101,8 @@ public class UploadServlet extends HttpServlet {
       return mimetype;
   }
 
-  private String getMimeType(String file) {
+  @SuppressWarnings("unused")
+private String getMimeType(String file) {
       String mimetype = "";
       if (getSuffix(file).equalsIgnoreCase("png")) {
           mimetype = "image/png";

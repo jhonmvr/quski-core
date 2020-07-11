@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -85,6 +84,7 @@ public class ReRestClient<T> {
 		//this.classLoader = this.getClass().getClassLoader();
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main( String[] args ) {
 		RestClientWrapper cw= new RestClientWrapper();
 		cw.setAcceptCharset( "utf-8" );

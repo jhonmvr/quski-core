@@ -11,8 +11,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoVariableCrediticia;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.CotizadorRepository;
 
 @Stateless
@@ -81,9 +80,9 @@ public class CotizacionService {
 		try {
 
 			TbQoCotizador cotLlena = new TbQoCotizador();
-			List<TbQoVariableCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariableCrediticia>();
+			List<TbQoVariablesCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariablesCrediticia>();
 			if (cot != null && cot.getId() == null) {
-				for (TbQoVariableCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
+				for (TbQoVariablesCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
 					variableCrediticiaLlega.add(varCredi);
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);

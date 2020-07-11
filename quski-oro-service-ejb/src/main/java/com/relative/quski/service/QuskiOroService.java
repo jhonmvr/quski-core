@@ -38,14 +38,13 @@ import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoTracking;
-import com.relative.quski.model.TbQoVariableCrediticia;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.AgenciaRepository;
 import com.relative.quski.repository.ArchivoClienteRepository;
 import com.relative.quski.repository.CantonRepository;
@@ -63,7 +62,6 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ParroquiaRepository;
 import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
-import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ProvinciaRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
 import com.relative.quski.repository.TasacionRepository;
@@ -71,17 +69,15 @@ import com.relative.quski.repository.TipoArchivoRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
 import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.TrackingRepository;
-import com.relative.quski.repository.VariableCrediticiaRepository;
+import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
-import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
-import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 import com.relative.quski.wrapper.PrecioOroWrapper;
 import com.relative.quski.wrapper.VariableCrediticiaWrapper;
 
@@ -107,7 +103,7 @@ public class QuskiOroService {
 	@Inject
 	private NegociacionRepository negociacionRepository;
 	@Inject
-	private VariableCrediticiaRepository variableCrediticiaRepository;
+	private VariablesCrediticiaRepository variablesCrediticiaRepository;
 	@Inject
 	private TasacionRepository tasacionRepository;
 	@Inject
@@ -132,9 +128,6 @@ public class QuskiOroService {
 	private CatalogoRepository catalogoRepository;
 	@Inject
 	private AgenciaRepository agenciaRepository;
-	@Inject
-	private ProcesoRepository procesoRepository;
-
 	@Inject
 	private TrackingRepository trackingRepository;
 	@Inject
@@ -1263,17 +1256,17 @@ public class QuskiOroService {
 	 * @return
 	 * @throws RelativeException
 	 */
-	private List<TbQoVariableCrediticia> copyVariableCrediticiaData(Long idCotizacion) throws RelativeException {
-		List<TbQoVariableCrediticia> varCrediticia = new ArrayList<>();
+	private List<TbQoVariablesCrediticia> copyVariablesCrediticiaData(Long idCotizacion) throws RelativeException {
+		List<TbQoVariablesCrediticia> varCrediticia = new ArrayList<>();
 		log.info("========>copyVariablesCrediticiasData " + idCotizacion);
-		List<VariableCrediticiaWrapper> variablesCrediticias = this.variableCrediticiaRepository
+		List<VariableCrediticiaWrapper> variablesCrediticias = this.variablesCrediticiaRepository
 				.findByIdCotizadorCustom(idCotizacion);
 
 		if (variablesCrediticias != null && !variablesCrediticias.isEmpty()) {
 			log.info("========>copyVariablesCrediticiaData variablesCrediticias " + variablesCrediticias.size());
 			variablesCrediticias.forEach(vcw -> {
 				log.info("========>leyendo elemento pow " + vcw.getId());
-				TbQoVariableCrediticia vc = new TbQoVariableCrediticia();
+				TbQoVariablesCrediticia vc = new TbQoVariablesCrediticia();
 				vc.setId(vcw.getId());
 				vc.setOrden(vcw.getOrden());
 				vc.setNombre(vcw.getNombre());
@@ -1329,14 +1322,40 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Método que realiza la busqueda por Identificacion
+	 ************************************ @Cliente
+	 */
+
+	/**
+	 * Metodo que busca por el numero de cedula del cliente
 	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion
-	 * @return {@link TbQoCliente}
+	 * @author SAUL MENDEZ - Relative Engine
+	 * @param  String identificacion
+	 * @return TbQoCliente 
 	 * @throws RelativeException
 	 */
-	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
+	public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
+		List<TbQoCliente> tmp;
+		try {
+			tmp = this.clienteRepository.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+		} catch (Exception e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ,
+				"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+	}
+	return null;
+
+	}
+	/**
+	 * Método que realiza la busqueda por Identificacion con cotizaciones
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param  String identificacion
+	 * @return TbQoCliente
+	 * @throws RelativeException
+	 */
+	public TbQoCliente findClienteByIdentificacionWithCotizacion(String identificacion) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
 			TbQoCliente clienteId = new TbQoCliente();
@@ -1346,23 +1365,21 @@ public class QuskiOroService {
 						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
 				if (tmp != null && !tmp.isEmpty()) {
 					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
-					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariableCrediticiaData(tmp.get(0).getId()));
+					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariablesCrediticiaData(tmp.get(0).getId()));
 					tmp.get(0).setTbQoCliente(null);
 					tmp.get(0).setTbQoCliente(clienteId);
-
 				}
 				cliente.setTbQoCotizador(tmp);
 				return cliente;
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_READ,
-						"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+						"ERROR AL BUSCAR CLIENTE: NO EXISTE CLIENTE, NO TIENE COTIZACIONES O COTIZACIONES ACTIVAS: " + identificacion);
 			}
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"Exception FERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
 		}
 	}
 
@@ -1370,7 +1387,7 @@ public class QuskiOroService {
 			throws RelativeException {
 		TbQoCotizador cotizacion = new TbQoCotizador();
 		try {
-			if (cotizador != null && estadoEnum.equals(estadoEnum.ACT)) {
+			if (cotizador != null && estadoEnum.equals(EstadoEnum.ACT)) {
 				cotizacion = this.cotizadorRepository.findById(cotizador.getId());
 			}
 
@@ -1420,13 +1437,13 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 
-	public List<TbQoVariableCrediticia> findVariableCrediticiaByIdCotizacion(PaginatedWrapper pw, Long idCotizador)
+	public List<TbQoVariablesCrediticia> findVariablesCrediticiaByIdCotizacion(PaginatedWrapper pw, Long idCotizador)
 			throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return variableCrediticiaRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(),
+			return variablesCrediticiaRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(),
 					pw.getSortFields(), pw.getSortDirections(), idCotizador);
 		} else {
-			return variableCrediticiaRepository.findByIdCotizacion(idCotizador);
+			return variablesCrediticiaRepository.findByIdCotizacion(idCotizador);
 		}
 	}
 
@@ -1441,14 +1458,14 @@ public class QuskiOroService {
 
 	public Long countVariblesCrediticiaByIdCotizacion(Long idCotizador) throws RelativeException {
 
-		return variableCrediticiaRepository.countByIdCotizacion(idCotizador);
+		return variablesCrediticiaRepository.countByIdCotizacion(idCotizador);
 
 	}
 
-	public TbQoVariableCrediticia findVariableCrediticiaById(Long id) throws RelativeException {
+	public TbQoVariablesCrediticia findVariablesCrediticiaById(Long id) throws RelativeException {
 
 		try {
-			return variableCrediticiaRepository.findById(id);
+			return variablesCrediticiaRepository.findById(id);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1456,16 +1473,16 @@ public class QuskiOroService {
 		}
 	}
 
-	public List<TbQoVariableCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
+	public List<TbQoVariablesCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
-			return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class);
+			return this.variablesCrediticiaRepository.findAll(TbQoVariablesCrediticia.class);
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getStartRecord(),
+				return this.variablesCrediticiaRepository.findAll(TbQoVariablesCrediticia.class, pw.getStartRecord(),
 						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 
 			} else {
-				return this.variableCrediticiaRepository.findAll(TbQoVariableCrediticia.class, pw.getSortFields(),
+				return this.variablesCrediticiaRepository.findAll(TbQoVariablesCrediticia.class, pw.getSortFields(),
 						pw.getSortDirections());
 			}
 		}
@@ -1473,7 +1490,7 @@ public class QuskiOroService {
 
 	public Long countVariablesCrediticias() throws RelativeException {
 		try {
-			return variableCrediticiaRepository.countAll(TbQoVariableCrediticia.class);
+			return variablesCrediticiaRepository.countAll(TbQoVariablesCrediticia.class);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1482,17 +1499,17 @@ public class QuskiOroService {
 
 	}
 
-	public TbQoVariableCrediticia manageVariableCrediticia(TbQoVariableCrediticia send) throws RelativeException {
+	public TbQoVariablesCrediticia manageVariablesCrediticia(TbQoVariablesCrediticia send) throws RelativeException {
 		try {
 			log.info("==> entra a manage variableCrediticia");
-			TbQoVariableCrediticia persisted = null;
+			TbQoVariablesCrediticia persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.findVariableCrediticiaById(send.getId());
-				return this.updateVariableCrediticia(send, persisted);
+				persisted = this.findVariablesCrediticiaById(send.getId());
+				return this.updateVariablesCrediticia(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
-				return variableCrediticiaRepository.add(send);
+				return variablesCrediticiaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
@@ -1506,8 +1523,8 @@ public class QuskiOroService {
 		}
 	}
 
-	private TbQoVariableCrediticia updateVariableCrediticia(TbQoVariableCrediticia send,
-			TbQoVariableCrediticia persisted) throws RelativeException {
+	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send,
+			TbQoVariablesCrediticia persisted) throws RelativeException {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
@@ -1516,7 +1533,7 @@ public class QuskiOroService {
 			persisted.setFechaActualizacion(new Date());
 			persisted.setEstado(send.getEstado());
 
-			return this.variableCrediticiaRepository.update(persisted);
+			return this.variablesCrediticiaRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1965,8 +1982,7 @@ public class QuskiOroService {
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(
 			String identificacionCliente, Long idCotizador, Long idNegociacion, Long idTipoDocumento)
 			throws RelativeException {
-		DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();
-
+		//DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();
 		try {
 
 			return documentoHabilitanteRepository.findByTipoDocumentoAndCliAndCotAndNeg(idTipoDocumento,
@@ -2179,39 +2195,39 @@ public class QuskiOroService {
 
 		if (pw == null) {
 			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-					fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion, agencia));
+					fechaDesde, fechaHasta, identificacion, agencia));
 
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta,
-						codigoOperacion, proceso, identificacion, agencia);
+						identificacion, agencia);
 
 			} else {
 				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-						fechaDesde, fechaHasta, codigoOperacion, proceso, identificacion, agencia));
+						fechaDesde, fechaHasta, identificacion, agencia));
 
 			}
 		}
 
 	}
 
-	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
-			String agencia, String proceso, String cedula) throws RelativeException {
-		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
-	}
+//	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
+//			String agencia, String proceso, String cedula) throws RelativeException {
+//		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+//	}
 
 	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
 			String proceso, String identificacion, String agencia) throws RelativeException {
 
 		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
-				fechaHasta, codigoOperacion, proceso, identificacion, agencia)).intValue();
+				fechaHasta, identificacion, agencia)).intValue();
 
 	}
 
 	public Integer countOperacionesDevueltas(PaginatedWrapper pw, String codigo, String agencia, String proceso,
 			String cedula) throws RelativeException {
 		try {
-			return this.creditoNegociacionRepository.countOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
+			return this.creditoNegociacionRepository.countOperacionesDevueltas(pw, agencia, cedula);
 		} catch (Exception e) {
 			throw new RelativeException("" + e);
 		}
@@ -3030,8 +3046,8 @@ public class QuskiOroService {
 	 */
 	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion,
 			String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
-		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw, codigoOperacion, nombreAgencia,
-				nombreProceso, cedula);
+		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw,  nombreAgencia,
+				 cedula);
 	}
 
 	/**
@@ -3090,50 +3106,6 @@ public class QuskiOroService {
 		}
 	}
 
-	/**
-	 * METODO QUE BUSCA LOS PROCESOS METODO QUE BUSCA LOS PROCESOS
-	 * 
-	 * @param PaginatedWrapper
-	 * @author JEROHAM CADENAS - Relative Engine
-	 * @throws RelativeException
-	 */
-
-	public List<TbQoProceso> findAllProceso(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.procesoRepository.findAll(TbQoProceso.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.procesoRepository.findAll(TbQoProceso.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return this.procesoRepository.findAll(TbQoProceso.class, pw.getSortFields(),
-							pw.getSortDirections());
-				}
-			}
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Procesos no encontrados " + e.getMessage());
-		}
-
-	}
-
-	public Long countProceso() throws RelativeException {
-		try {
-			return procesoRepository.countAll(TbQoProceso.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Procesos no encontrados " + e.getMessage());
-		}
-	}
-
-	public List<AsignacionesWrapper> findClienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
-		return this.clienteRepository.clienteBycodigoOperacion(codigoOperacion);
-
-	}
 
 	/**
 	 * * * * * * *** * * ** ** * *@Tracking

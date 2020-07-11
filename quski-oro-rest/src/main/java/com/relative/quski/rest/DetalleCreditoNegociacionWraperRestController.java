@@ -17,7 +17,6 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.wrapper.DetalleCreditoNegociacionWrapper;
-import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -30,7 +29,6 @@ public class DetalleCreditoNegociacionWraperRestController extends BaseRestContr
 implements CrudRestControllerInterface<DetalleCreditoNegociacionWrapper, GenericWrapper<DetalleCreditoNegociacionWrapper>>  {
 	static final String oro14k = "14k";
 	static final String oro15k = "15k";
-	private double valor;
 	@Inject
 	Logger log;
 	public DetalleCreditoNegociacionWraperRestController() throws RelativeException {
