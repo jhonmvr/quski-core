@@ -15,7 +15,6 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.ClienteByParamsSpec;
-import com.relative.quski.wrapper.AsignacionesWrapper;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -45,7 +44,6 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Ocurrio un error al leer clientes, " + e.getMessage());
 		}
@@ -64,11 +62,7 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 		}
 	}
 
-	@Override
-	public List<AsignacionesWrapper> clienteBycodigoOperacion(String codigoOperacion) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	/**
