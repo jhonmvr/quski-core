@@ -561,9 +561,11 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
+		log.info("INGRESA A---->registrarPrecioOroByCotizacion___>ID COTIZADOR "+po.getTbQoCotizador().getId());
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
-		// TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		//TbQoTipoOro tpos=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		log.info("VALOR DE TPOS---> "+tpo);
 		po.setTbQoCotizador(cot);
 		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
@@ -854,7 +856,7 @@ public class QuskiOroService {
 	 */
 	public TbQoTipoOro manageTipoOro(TbQoTipoOro send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a manage Tipo Oro");
 			TbQoTipoOro persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.tipoOroRepository.findById(send.getId());
@@ -872,7 +874,7 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando el Tipo Oro " + e.getMessage());
 		}
 	}
 
