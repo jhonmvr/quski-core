@@ -1,6 +1,5 @@
 package com.relative.quski.repository.imp;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -11,7 +10,6 @@ import javax.persistence.TypedQuery;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
@@ -34,7 +32,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 			return findAllBySpecificationPaged(new PrecioOroByIdCotizacionSpec(idCotizador), startRecord, pageSize,
 					sortFields, sortDirections);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
@@ -45,7 +42,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		try {
 			return findAllBySpecification(new PrecioOroByIdCotizacionSpec(idCotizador));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
@@ -57,7 +53,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		try {
 			return countBySpecification(new PrecioOroByIdCotizacionSpec(idCotizador));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
@@ -75,7 +70,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 			return findAllBySpecificationPaged(new PrecioOroByIdCotizadorSpec(idCotizador), startRecord, pageSize,
 					sortFields, sortDirections);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
@@ -91,7 +85,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		try {
 			return findAllBySpecification(new PrecioOroByIdCotizadorSpec(idCotizador));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
@@ -108,7 +101,6 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 		try {
 			return countBySpecification(new PrecioOroByIdCotizadorSpec(idCotizador));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}

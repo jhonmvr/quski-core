@@ -4,8 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoCliente;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,9 +21,6 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@SequenceGenerator(name="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName = "SEQ_CLIENTE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_RIESGO_ACUMULADO_ID_GENERATOR")
 	private Long id;
-
-	@Column(name="capital_inicial")
-	private BigDecimal capitalInicial;
 
 	@Column(name="dias_mora_actual")
 	private BigDecimal diasMoraActual;
@@ -97,14 +92,6 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public BigDecimal getCapitalInicial() {
-		return this.capitalInicial;
-	}
-
-	public void setCapitalInicial(BigDecimal capitalInicial) {
-		this.capitalInicial = capitalInicial;
 	}
 
 	public BigDecimal getDiasMoraActual() {

@@ -33,6 +33,7 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoExcepcione;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
@@ -56,6 +57,7 @@ import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.IngresoEgresoClienteRepository;
 import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
@@ -144,9 +146,11 @@ public class QuskiOroService {
 	private PatrimonioRepository patrimonioRepository;
 	@Inject
 	private DireccionClienteRepository direccionClienteRepository;
+	@Inject
+	private ExcepcionesRepository excepcionesRepository;
 
 	/**
-	 * CLIENTE
+	 * * * * * * * * * * * @CLIENTE
 	 */
 
 	/**
@@ -1552,6 +1556,20 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Agencia " + e.getMessage());
 		}
 	}
+	/**
+	 * @Comment Busca las variables crediticias relacionadas a una negociacion.
+	 * @author  Jeroham Cadenas
+	 * @param   Long idNegociacion
+	 * @return  List<TbQoVariablesCrediticia>
+	 * @throws  RelativeException
+	 */
+	public List<TbQoVariablesCrediticia> findVariablesCrediticiaByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return variablesCrediticiaRepository.findByIdNegociacion( idNegociacion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Variables no encontradas no encontrada " + e.getMessage());
+		}
+	}
 
 	/**
 	 * @author Desconocido - Creacion 
@@ -1564,23 +1582,9 @@ public class QuskiOroService {
 	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 		try {
-			TbQoNegociacion neg = null;
-			List<TbQoRiesgoAcumulado> riesgo = null;
-			TbQoCliente cliente = null;
-			neg = negociacionRepository.findById(id); 
-			cliente = neg.getTbQoCliente();
-			
-			cliente.getTbQoCotizador().forEach( cot -> {
-				cot.setTbQoCliente( null );
-			});
-			riesgo = this.riesgoAcumuladoRepository.findByIdCliente( cliente.getId() );
-			cliente.setTbQoRiesgoAcumulados( riesgo );
-			
-			neg.setTbQoCliente( cliente );
-			neg.setTbQoVariablesCrediticias( this.variablesCrediticiaRepository.findByIdNegociacion( id )); // Hacer null las relacions de variables crediticias.
-			return neg;
+			return negociacionRepository.findById(id); 
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Negociacion no encontrada " + e.getMessage());
 		}
 	}
 
@@ -1638,8 +1642,7 @@ public class QuskiOroService {
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
-			//persisted.setTbQoCliente(send.getTbQoCliente());
-			//persisted.setTbQoVariablesCrediticias(send.getTbQoVariablesCrediticias());
+			persisted.setTbQoCliente(send.getTbQoCliente());
 			persisted.setEstado(send.getEstado());
 			persisted.setAsesorResponsable( send.getAsesorResponsable() );
 			persisted.setIdAsesorResponsable( send.getIdAsesorResponsable() );
@@ -1970,7 +1973,6 @@ public class QuskiOroService {
 			}
 
 		} catch (NumberFormatException e) {
-			// e.printStackTrace();
 			dhs = null;
 			log.info("===================: error no existe datos para contrato y accion " + fw.getRelatedIdStr() + "  "
 					+ fw.getTypeAction());
@@ -2086,15 +2088,13 @@ public class QuskiOroService {
 	 * 
 	 * return variableCrediticiaRepository.countByIdCotizador(idCotizador); }
 	 * 
-	 * /** Metodo que se encarga de gestionar la entidad sea creacion o
+	 */
+	
+	 /** Metodo que se encarga de gestionar la entidad sea creacion o
 	 * actualizacion
-	 * 
 	 * @author SAUL MENDEZ - Relative Engine
-	 * 
 	 * @param send entidad con la informacion de creacion o actualizacion
-	 * 
 	 * @return Entidad modificada o actualizada
-	 * 
 	 * @throws RelativeException
 	 */
 	public TbQoCreditoNegociacion manageCalculoNegociacion(TbQoCreditoNegociacion send) throws RelativeException {
@@ -3831,6 +3831,169 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda " + e.getMessage());
+		}
+	}
+	/**
+	 * **************************************** @RiesgoAcumulado
+	 */
+	
+	/**
+	 * @Comment Busca los Riesgos Acumulados relacionados a un cliente.
+	 * @author  Jeroham Cadenas
+	 * @param   Long idCliente
+	 * @return  List<TbQoRiesgoAcumulado>
+	 * @throws  RelativeException
+	 */
+	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(Long idCliente) throws RelativeException {
+		try {
+			return riesgoAcumuladoRepository.findByIdCliente( idCliente );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " Riesgos Acumulados no encontrados " + e.getMessage());
+		}
+	}
+
+	/**
+	 * **************************************** @Excepciones
+	 * @throws RelativeException 
+	 */
+	
+	/**
+	 * @author Jeroham Cadenas
+	 * @param  Long id
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcione finExcepcionById(Long id) throws RelativeException {
+		try {
+			return excepcionesRepository.findById( id );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar Excepcion especifica: "  + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas
+	 * @param  Long idNegociacion
+	 * @param  String tipoExcepcion
+	 * @param  String estadoExcepcion
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException {
+		try {
+			return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, estadoExcepcion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar Excepcion especifica: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  Long idNegociacion
+	 * @param  PaginatedWrapper pw
+	 * @return List<TbQoExcepcione>
+	 * @throws RelativeException 
+	 */
+	public List<TbQoExcepcione> findByIdNegociacion(PaginatedWrapper pw, Long idNegociacion) throws RelativeException {
+		
+		try {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByIdNegociacion(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), idNegociacion);
+			} else {
+				return excepcionesRepository.findByIdNegociacion( idNegociacion );
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de negociacion: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  Long idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionesByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return excepcionesRepository.countByIdNegociacion( idNegociacion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de negociacion:   " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  Long idCliente
+	 * @param  PaginatedWrapper pw
+	 * @return List<TbQoExcepcione>
+	 * @throws RelativeException 
+	 */
+	public List<TbQoExcepcione> findByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
+		
+		try {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByIdCliente(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), idCliente);
+			} else {
+				return excepcionesRepository.findByIdCliente( idCliente );
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  Long idCliente
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionesByIdCliente(Long idCliente) throws RelativeException {
+		try {
+			return excepcionesRepository.countByIdCliente( idCliente );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de cliente:  " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  PaginatedWrapper pw
+	 * @param  String tipoExcepcion
+	 * @param  Long idNegociacion
+	 * @return List<TbQoExcepcione>
+	 * @throws RelativeException 
+	 */
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(PaginatedWrapper pw, String tipoExcepcion, Long idNegociacion ) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion );
+			} else {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(  tipoExcepcion, idNegociacion );
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Jeroham Cadenas 
+	 * @param  String tipoExcepcion
+	 * @param  Long idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionesByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException {
+		try {
+			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion( tipoExcepcion, idNegociacion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de cliente:  " + e.getMessage());
 		}
 	}
 

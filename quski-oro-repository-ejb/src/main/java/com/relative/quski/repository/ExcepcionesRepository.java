@@ -20,12 +20,18 @@ public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcio
 	
 	public TbQoExcepcione findById(Long id)throws RelativeException;
 	
+	public List<TbQoExcepcione> findByIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, Long idNegociacion ) throws RelativeException;
 	public List<TbQoExcepcione> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
+	public Long countByIdNegociacion(Long idNegociacion) throws RelativeException ;
 	
+	public List<TbQoExcepcione> findByIdCliente(int startRecord, Integer pageSize, String sortFields, String sortDirections,  Long idCliente ) throws RelativeException;
 	public List<TbQoExcepcione> findByIdCliente( Long idCliente ) throws RelativeException;
+	public Long countByIdCliente(Long idCliente) throws RelativeException ;
 	
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion) throws RelativeException;
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException;
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion) throws RelativeException;
+	public Long countByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException ;
 	
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( String tipoExcepcion, Long idNegociacion, String estadoExcepcion ) throws RelativeException;
+	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException;
 	
 }

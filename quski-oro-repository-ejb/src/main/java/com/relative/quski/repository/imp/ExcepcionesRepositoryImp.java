@@ -19,7 +19,7 @@ import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegocia
 /**
  * Session Bean implementation class AgenciaRepositoryImp
  */
-@Stateless(mappedName = "agenciaRepository")
+@Stateless(mappedName = "excepcionesRepository")
 public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcione> implements ExcepcionesRepository  {
 	@Inject
 	Logger log;
@@ -50,12 +50,39 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 		}
 	}
 	@Override
-	public List<TbQoExcepcione> findByIdNegociacion(Long idNegociacion) throws RelativeException {
+	public List<TbQoExcepcione> findByIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, Long idNegociacion) throws RelativeException {
+		try {
+			return findAllBySpecificationPaged(new ExcepcionesByIdNegociacionSpec( idNegociacion ), startRecord,
+					pageSize, sortFields, sortDirections);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " Ocurrio un error al leer Excepciones: "  + e.getMessage());
+		}
+	}
+	
+	@Override
+	public List<TbQoExcepcione> findByIdNegociacion( Long idNegociacion) throws RelativeException {
 		try {
         	return findAllBySpecification( new ExcepcionesByIdNegociacionSpec( idNegociacion ) );
     	} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Excepciones: " + e.getMessage());
     	}
+	}
+	@Override
+	public Long countByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return countBySpecification(new ExcepcionesByIdNegociacionSpec( idNegociacion ));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " No  se puedieron contar los registros " + e.getMessage());
+		}
+	}
+	@Override
+	public List<TbQoExcepcione> findByIdCliente(int startRecord, Integer pageSize, String sortFields, String sortDirections, Long idCliente) throws RelativeException {
+		try {
+			return findAllBySpecificationPaged(new ExcepcionesByIdClienteSpec( idCliente ), startRecord,
+					pageSize, sortFields, sortDirections);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " Ocurrio un error al leer Excepciones: "  + e.getMessage());
+		}
 	}
 	@Override
 	public List<TbQoExcepcione> findByIdCliente(Long idCliente) throws RelativeException {
@@ -66,6 +93,14 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
     	}
 	}
 	@Override
+	public Long countByIdCliente(Long idCliente) throws RelativeException {
+		try {
+			return countBySpecification(new ExcepcionesByIdClienteSpec( idCliente ));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " No  se puedieron contar los registros " + e.getMessage());
+		}
+	}
+	@Override
 	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion) throws RelativeException {
 		try {
         	return findAllBySpecification( new ExcepcionesByTipoExcepcionAndIdNegociacionSpec( tipoExcepcion, idNegociacion ) );
@@ -74,8 +109,25 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
     	}
 	}
 	@Override
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(String tipoExcepcion,
-			Long idNegociacion, String estadoExcepcion) throws RelativeException {
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion) throws RelativeException {
+		try {
+			return findAllBySpecificationPaged(new ExcepcionesByTipoExcepcionAndIdNegociacionSpec( tipoExcepcion, idNegociacion ), startRecord,
+					pageSize, sortFields, sortDirections);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " Ocurrio un error al leer Excepciones: "  + e.getMessage());
+		}
+	}
+	@Override
+	public Long countByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion) throws RelativeException {
+		try {
+			return countBySpecification(new ExcepcionesByTipoExcepcionAndIdNegociacionSpec( tipoExcepcion, idNegociacion ));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " No  se puedieron contar los registros " + e.getMessage());
+		}
+	}
+	@Override
+	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion, String tipoExcepcion,
+			 String estadoExcepcion) throws RelativeException {
 		try {
 			List<TbQoExcepcione> listExcepciones = this.findAllBySpecification( new ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec( tipoExcepcion,  idNegociacion, estadoExcepcion ) );
 			log.info("NUMERO DE EXCEPCIONES RECUPERADAS ---------------------------> " + listExcepciones.size());
@@ -90,8 +142,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR EN LA BUSQUEDA, NO EXISTEN EXCEPCIONES CON ESE ID (IMP)");
 			}
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"Ocurrio un error al leer Excepciones: " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Excepciones: " + e.getMessage());
 		}
 	}
 }

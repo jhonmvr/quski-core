@@ -4,10 +4,10 @@ import javax.ejb.Stateless;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraConsumer;
-import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
+//import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
 import com.relative.integracion.calculadora.cliente.consumer.ClienteConsultaOfertaConsumer;
 import com.relative.integracion.calculadora.cliente.wrapper.Informacion;
-import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
+//import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
 import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse;
 
 @Stateless
@@ -74,8 +74,8 @@ public class IntegracionServiceImp {
 	}
 	
 	
-	public SimularResponse getClienteInformacionOfertaGarantia(EnvioInformacionPersonaOfertaWrapper envioInformacionPersonaOfertaWrapper) 
-			throws RelativeException {
-		return ClienteCalculadoraOfertaGarantiaConsumer.callCalculadoraClienteObject(envioInformacionPersonaOfertaWrapper);
-	}
+//	public SimularResponse getClienteInformacionOfertaGarantia(EnvioInformacionPersonaOfertaWrapper envioInformacionPersonaOfertaWrapper) 
+//			throws RelativeException {
+//		return ClienteCalculadoraOfertaGarantiaConsumer.callCalculadoraClienteObject(envioInformacionPersonaOfertaWrapper);
+//	}
 }

@@ -37,6 +37,12 @@ public class TbQoExcepcione implements Serializable {
 
 	@Column(name="tipo_excepcion")
 	private String tipoExcepcion;
+	
+	@Column(name="observacion_asesor")
+	private String observacionAsesor;
+	
+	@Column(name="observacion_aprobador")
+	private String observacionAprobador;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_actualizacion")
@@ -118,6 +124,22 @@ public class TbQoExcepcione implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public String getObservacionAsesor() {
+		return this.observacionAsesor;
+	}
+
+	public void setObservacionAsesor(String observacionAsesor) {
+		this.observacionAsesor = observacionAsesor;
+	}
+
+	public String getObservacionAprobador() {
+		return this.observacionAprobador;
+	}
+
+	public void setObservacionAprobador(String observacionAprobador) {
+		this.observacionAprobador = observacionAprobador;
+	}
+
 	public TbQoNegociacion getTbQoNegociacion() {
 		return this.tbQoNegociacion;
 	}
@@ -125,5 +147,4 @@ public class TbQoExcepcione implements Serializable {
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
-
 }
