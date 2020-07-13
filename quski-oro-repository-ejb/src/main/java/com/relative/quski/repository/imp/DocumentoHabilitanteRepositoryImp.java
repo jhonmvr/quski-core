@@ -5,9 +5,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 
 import com.relative.core.persistence.GeneralRepositoryImp;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
+import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndProRefEstOpSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -21,6 +23,19 @@ public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long
 		List<TbQoDocumentoHabilitante> tmp = this
 				.findAllBySpecification((new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec(idTipoDocumento,
 						identificacionCliente, idCotizador, idNegociacion)));
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public TbQoDocumentoHabilitante findByTipoDocumentoAndReferenciaAndProceso(Long idTipoDocumento,
+			ProcessEnum proceso, Long referencia) {
+		List<TbQoDocumentoHabilitante> tmp = this
+				.findAllBySpecification((new DocumentoByTipoDocumentoAndProRefEstOpSpec(idTipoDocumento,
+						referencia,proceso , null)));
 		if (tmp != null && !tmp.isEmpty()) {
 			return tmp.get(0);
 		} else {

@@ -5,6 +5,8 @@ public enum ProcessEnum {
 	JOYA,
 	COTIZACION,
 	NEGOCIACION,
-	CLIENTE
+	CLIENTE,
+	CREDITONUEVO,
+	FUNDA
 
 }

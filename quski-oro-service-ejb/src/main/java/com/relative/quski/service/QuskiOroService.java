@@ -20,6 +20,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -565,9 +566,11 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
+		log.info("INGRESA A---->registrarPrecioOroByCotizacion___>ID COTIZADOR "+po.getTbQoCotizador().getId());
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
-		// TbQoTipoOro tpo=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		//TbQoTipoOro tpos=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		log.info("VALOR DE TPOS---> "+tpo);
 		po.setTbQoCotizador(cot);
 		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
@@ -858,7 +861,7 @@ public class QuskiOroService {
 	 */
 	public TbQoTipoOro manageTipoOro(TbQoTipoOro send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a manage Tipo Oro");
 			TbQoTipoOro persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.tipoOroRepository.findById(send.getId());
@@ -876,7 +879,7 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando el Tipo Oro " + e.getMessage());
 		}
 	}
 
@@ -1766,6 +1769,14 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
+	
+	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento, ProcessEnum proceso, Long referencia) throws RelativeException {
+		try {
+			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso, referencia);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+	}
 
 	public List<TbQoDocumentoHabilitante> findAllDocumentoHabilitante(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
@@ -2045,6 +2056,9 @@ public class QuskiOroService {
 	 * @return Cantidad de entidades encontradas
 	 * @throws RelativeException
 	 */
+	
+	
+	
 	/*
 	 * public List<TbQoVariableCrediticia> listaByIdCotizador(PaginatedWrapper pw,
 	 * String idCotizador) throws RelativeException { if (pw != null &&
@@ -3997,4 +4011,24 @@ public class QuskiOroService {
 		}
 	}
 
+	
+	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion) throws RelativeException {
+		if (pw == null) {
+			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			}
+		}
+	}
+
+	public Long countTasacionByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException {
+		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
+	}
+
+	
 }

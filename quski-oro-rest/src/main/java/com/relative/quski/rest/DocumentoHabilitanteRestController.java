@@ -20,8 +20,10 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.util.QuskiOroUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -142,4 +144,17 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 		}
 
 	}*/
+	
+
+	@GET
+	@Path("/getByProcesoTipoDocumentoReferencia")
+	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoDocumentoHabilitante", response = GenericWrapper.class)
+	public GenericWrapper<TbQoDocumentoHabilitante> getByTipoDocumentoProcesoReferencia(@QueryParam("idTipoDocumento") String idTipoDocumento, 
+			@QueryParam("proceso") String proceso, @QueryParam("referencia") String referencia) throws RelativeException {
+		GenericWrapper<TbQoDocumentoHabilitante> loc = new GenericWrapper<>();
+		TbQoDocumentoHabilitante a = this.qos.findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(idTipoDocumento.isEmpty() ? null : Long.valueOf(idTipoDocumento), 
+				QuskiOroUtil.getEnumFromString(ProcessEnum.class, proceso), referencia.isEmpty() ? null : Long.valueOf(referencia));
+		loc.setEntidad(a);
+		return loc;
+	}
 }
