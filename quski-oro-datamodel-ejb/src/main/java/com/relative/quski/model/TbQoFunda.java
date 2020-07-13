@@ -8,7 +8,6 @@ import javax.persistence.*;
 import com.relative.quski.enums.EstadoEnum;
 
 import java.util.Date;
-import java.util.List;
 
 
 /**

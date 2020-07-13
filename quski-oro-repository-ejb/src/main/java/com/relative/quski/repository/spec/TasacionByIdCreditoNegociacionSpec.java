@@ -1,14 +1,10 @@
 package com.relative.quski.repository.spec;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoTasacion;
 
 public class TasacionByIdCreditoNegociacionSpec  extends AbstractSpecification<TbQoTasacion> {
