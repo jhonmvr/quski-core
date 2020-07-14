@@ -1,5 +1,7 @@
 package com.relative.quski.rest;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -86,4 +88,31 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
 		return loc;
 	}	
+	
+		
+	@GET
+	@Path("/getByCreditoNegociacion")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbMiCotizacion", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoTasacion> getByCreditoNegociacion(@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, @QueryParam("idCreditoNegociacion") String idCreditoNegociacion)
+			throws RelativeException {
+		return findByCreditoNegociacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
+				sortFields, sortDirections, isPaginated), idCreditoNegociacion);
+	}
+
+	private PaginatedListWrapper<TbQoTasacion> findByCreditoNegociacion(PaginatedWrapper pw, String idCreditoNegociacion)
+			throws RelativeException {
+		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoTasacion> actions = null;
+		actions = this.qos.findTasacionByIdCreditoNegociacion(pw, idCreditoNegociacion.isEmpty() ? null : Long.parseLong(idCreditoNegociacion));
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTasacionByIdCreditoNegociacion(idCreditoNegociacion.isEmpty() ? null : Long.parseLong(idCreditoNegociacion)).intValue());
+			plw.setList(actions);
+		}
+
+		return plw;
+	}
 }

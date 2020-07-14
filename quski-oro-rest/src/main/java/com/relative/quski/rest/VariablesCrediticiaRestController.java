@@ -121,6 +121,20 @@ public class VariablesCrediticiaRestController extends BaseRestController
 		}
 		return plw;
 	}
+	
+	/**
+	 * 
+	 * @author Jeroham Cadenas
+	 * @param  idNegociacion
+	 * @return List<TbQoVariablesCrediticia>
+	 * @throws RelativeException
+	 */
+	@GET
+	@Path("/variablesCrediticiaByIdNegociacion")
+	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
+	public List<TbQoVariablesCrediticia> variablesCrediticiaByIdNegociacion( @QueryParam("idNegociacion") String idNegociacion ) throws RelativeException {
+			return this.qos.findVariablesCrediticiaByIdNegociacion( Long.valueOf(idNegociacion) );
+	}
 }	
 	
 
