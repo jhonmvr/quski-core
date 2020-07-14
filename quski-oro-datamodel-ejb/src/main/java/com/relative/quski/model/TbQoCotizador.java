@@ -46,7 +46,7 @@ public class TbQoCotizador implements Serializable {
 	private String motivoDeDesestimiento;
 
 	// bi-directional many-to-one association to TbQoCliente
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_cliente")
 	private TbQoCliente tbQoCliente;
 
@@ -238,11 +238,5 @@ public class TbQoCotizador implements Serializable {
 				+ tbQoDetalleCreditos + ", tbQoDocumentoHabilitantes=" + tbQoDocumentoHabilitantes + ", tbQoPrecioOros="
 				+ tbQoPrecioOros + ", tbQoVariablesCrediticias=" + tbQoVariablesCrediticias + "]";
 	}
-
- 
-
-
-	
-	
 
 }

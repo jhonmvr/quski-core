@@ -745,6 +745,7 @@ public class QuskiOroService {
 		try {
 			log.info("==> entra a manager Cotizador>> " + send);
 			TbQoCotizador persisted = null;
+			List<TbQoVariablesCrediticia> variables=new ArrayList<TbQoVariablesCrediticia>();
 			if (send != null && send.getId() != null) {
 				log.info("==> entra AL IF  a manage Cotizador");
 				persisted = this.cotizadorRepository.findById(send.getId());
@@ -753,13 +754,15 @@ public class QuskiOroService {
 
 				return this.updateCotizador(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				log.info("INGRESA AL ELSE IF manageCotizador " + send);
+				log.info("INGRESA A CREAR LA COTIZACION  ELSE IF " + send);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
 
 				log.info("VALORES ACTUALIZADOS>>> " + send);
 				persisted = cotizadorRepository.add(send);
 				log.info("VALOR INSERTADO" + persisted);
+				log.info("VARIABLES CREDITICIAS"+send.getTbQoVariablesCrediticias());
+				variablesCrediticiaRepository.add(send.getTbQoVariablesCrediticias());
 
 				return crearCodigoCotizacion(persisted);
 			} else {

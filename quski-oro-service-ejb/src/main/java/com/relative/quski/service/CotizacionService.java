@@ -78,15 +78,24 @@ public class CotizacionService {
 
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
+			log.info("INGRESA A crearCotizacionClienteVariableCrediticia " + cot);
 
 			TbQoCotizador cotLlena = new TbQoCotizador();
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariablesCrediticia>();
+			log.info("COTIZACION QUE LLEGA" + cot);
+
 			if (cot != null && cot.getId() == null) {
+				cotLlena = this.qos.manageCotizador(cot);
+				log.info("idClientte---> " + cot.getId());
+				
 				for (TbQoVariablesCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
 					variableCrediticiaLlega.add(varCredi);
+					this.qos.manageVariablesCrediticia(varCredi);
+					
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
-				cotLlena = this.qos.manageCotizador(cot);
+				
+				
 
 			} else {
 				if (cot.getEstado().equals(EstadoEnum.ACT))

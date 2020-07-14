@@ -118,12 +118,15 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "telefono_trabajo")
 	private String telefonoTrabajo;
 
+	@Column(name = "aprobado_web_mupi")
+	private String aprobacionMupi;
+
 	// bi-directional many-to-one association to TbQoArchivoCliente
 	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoArchivoCliente> tbQoArchivoClientes;
 
 	// bi-directional many-to-one association to TbQoCotizador
-	@OneToMany(mappedBy = "tbQoCliente")
+	@OneToMany(mappedBy = "tbQoCliente", cascade = CascadeType.ALL)
 	private List<TbQoCotizador> tbQoCotizador;
 
 	// bi-directional many-to-one association to TbQoDireccionCliente
@@ -323,6 +326,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setNacionalidad(String nacionalidad) {
 		this.nacionalidad = nacionalidad;
+	}
+
+	public String getAprobacionMupi() {
+		return aprobacionMupi;
+	}
+
+	public void setAprobacionMupi(String aprobacionMupi) {
+		this.aprobacionMupi = aprobacionMupi;
 	}
 
 	public String getNivelEducacion() {
@@ -634,9 +645,5 @@ public class TbQoCliente implements Serializable {
 
 		return tbQoRiesgoAcumulado;
 	}
-
- 
-	
-	
 
 }

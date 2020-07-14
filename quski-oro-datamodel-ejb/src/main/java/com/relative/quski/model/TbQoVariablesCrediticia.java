@@ -18,7 +18,7 @@ public class TbQoVariablesCrediticia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName = "SEG_TB_QO_VARIABLES_CREDITICIAS")
+	@SequenceGenerator(name="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR", sequenceName="SEQ_VARIABLE_CREDITICIA", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_VARIABLES_CREDITICIAS_ID_GENERATOR")
 	private Long id;
 
@@ -123,4 +123,12 @@ public class TbQoVariablesCrediticia implements Serializable {
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
+
+	@Override
+	public String toString() {
+		return "TbQoVariablesCrediticia [id=" + id + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
+				+ ", fechaCreacion=" + fechaCreacion + ", nombre=" + nombre + ", orden=" + orden + ", valor=" + valor
+				+ ", tbQoCotizador=" + tbQoCotizador + ", tbQoNegociacion=" + tbQoNegociacion + "]";
+	}
+	
 }
