@@ -39,7 +39,7 @@ public class CotizadorByIdentificacionClienteSpec extends AbstractSpecification<
 		if (StringUtils.isNotBlank(a)) {
 		
 			where.add(cb.equal(poll.get("tbQoCliente").get("cedulaCliente"), a));
-			where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT.toString()));
+			where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		}
 		return cb.and(where.toArray(new Predicate[0]));
 
