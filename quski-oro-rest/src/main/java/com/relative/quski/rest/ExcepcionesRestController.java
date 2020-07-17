@@ -42,15 +42,15 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	}
 
 	@GET
-	@Path("/findByTipoExcepcionAndIdNegociacionAndestadoExcepcion")
+	@Path("/findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo Especifico Retorna entidad encontradas en TbQoExcepcione por id de negociacion, tipo de excepcion y estado de la excepcion", response = GenericWrapper.class)
-	public GenericWrapper<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(
+	public GenericWrapper<TbQoExcepcione> findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("tipoExcepcion") String tipoExcepcion,
 			@QueryParam("estadoExcepcion") String estadoExcepcion
 			) throws RelativeException {
 		GenericWrapper<TbQoExcepcione> loc = new GenericWrapper<>();
-		TbQoExcepcione a = this.qos.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long.valueOf( idNegociacion ), tipoExcepcion, estadoExcepcion );
+		TbQoExcepcione a = this.qos.findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion( Long.valueOf( idNegociacion ), tipoExcepcion, estadoExcepcion );
 		loc.setEntidad(a);
 		return loc;
 	}

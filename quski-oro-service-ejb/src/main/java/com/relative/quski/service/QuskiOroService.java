@@ -3775,8 +3775,6 @@ public class QuskiOroService {
 				}
 				return this.updateDireccionCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				// log.info("===>>> NO SE ACTUALIZA, VA A CREAR DIRECCION ===========> " +
-				// send);
 				try {
 					cambioInac = this.direccionClienteRepository.findByIdCliente(send.getTbQoCliente().getId());
 				} catch (RelativeException e) {
@@ -3797,7 +3795,6 @@ public class QuskiOroService {
 						"ERROR: ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error al actualizar" + e.getMessage());
 		}
 	}
@@ -3812,8 +3809,6 @@ public class QuskiOroService {
 	public TbQoDireccionCliente updateDireccionCliente(TbQoDireccionCliente send, TbQoDireccionCliente persisted)
 			throws RelativeException {
 		try {
-			// log.info("===>>> Entrando a Update TbQoIngresoEgresoCliente ===========> " +
-			// send + " " + persisted);
 			persisted.setDireccionLegal(send.getDireccionLegal());
 			persisted.setDireccionEnvioCorrespondencia(send.getDireccionEnvioCorrespondencia());
 			persisted.setTipoDireccion(send.getTipoDireccion());
@@ -3828,12 +3823,9 @@ public class QuskiOroService {
 			persisted.setReferenciaUbicacion(send.getReferenciaUbicacion());
 			persisted.setTipoVivienda(send.getTipoVivienda());
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			// log.info("===>>> datos guardados a persisted Activo ===========> " + send + "
-			// " + persisted);
 			return this.direccionClienteRepository.update(persisted);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
 		}
 	}
@@ -3843,7 +3835,6 @@ public class QuskiOroService {
 		try {
 			return direccionClienteRepository.findByIdClienteAndTipoDireccion(idC, tipoDireccion);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda " + e.getMessage());
 		}
 	}
@@ -3893,11 +3884,41 @@ public class QuskiOroService {
 	 * @return TbQoExcepcione
 	 * @throws RelativeException
 	 */
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException {
+	public TbQoExcepcione findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException {
 		try {
-			return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, estadoExcepcion );
+			if ( this.validarTipoExcepcion( tipoExcepcion ).equals("true") ) {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, estadoExcepcion );
+			} else {
+				String mensaje = validarTipoExcepcion( tipoExcepcion );
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:"+ mensaje);			
+			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar Excepcion especifica: " + e.getMessage());
+			String mensaje = validarTipoExcepcion( tipoExcepcion );
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:"+ mensaje);
+		}
+	}
+	/**
+	 * 
+	 * @param  String tipoExcepcion
+	 * @return String
+	 */
+	private String validarTipoExcepcion ( String tipoExcepcion ) {
+		try {
+			if ( tipoExcepcion != null && !tipoExcepcion.isEmpty() ) {
+				List<TbMiParametro> listTipo= this.parametroRepository.findByNombreAndTipoOrdered("","TIP-EXC", false);
+				String[] valor = new String[1];
+				valor[0] = " NO EXISTE TIPO DE EXCEPCION ";
+				listTipo.forEach( param -> {
+					if ( param.getNombre().equals( tipoExcepcion ) ) {
+						valor[0] = "true";
+					}
+				});
+				return valor[0];
+			} else {
+				return " TIPO DE EXCEPCION NO INGRESADA: '" + tipoExcepcion + "'.";
+			}
+		} catch (RelativeException e) {
+			return " ERROR DESCONOCIDO AL BUSCAR TIPO DE EXCEPCION: ";
 		}
 	}
 

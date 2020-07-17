@@ -14,10 +14,13 @@ import com.relative.quski.model.TbQoExcepcione;
 public class ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec extends AbstractSpecification<TbQoExcepcione> {
 	private Long idNegociacion;
 	private String tipoExcepcion;
+	private String estadoExcepcion;
+
 	public ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec(String tipoExcepcion, Long idNegociacion, String estadoExcepcion) {
 
 		this.idNegociacion = idNegociacion;
 		this.tipoExcepcion = tipoExcepcion;
+		this.estadoExcepcion = estadoExcepcion;
 	}
 	@Override
 	public boolean isSatisfiedBy(TbQoExcepcione arg0) {
@@ -30,10 +33,12 @@ public class ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec ex
 
 		if (this.idNegociacion != null && this.idNegociacion != 0) {
 			where.add(cb.equal(poll.get("tbQoNegociacion"), this.idNegociacion));
-			
 		}	
 		if (this.tipoExcepcion != null && !this.tipoExcepcion.isEmpty()) {
 			where.add(cb.equal(poll.get("tipoExcepcion"), this.tipoExcepcion));
+		}	
+		if (this.estadoExcepcion != null && !this.estadoExcepcion.isEmpty()) {
+			where.add(cb.equal(poll.get("estadoExcepcion"), this.estadoExcepcion));
 		}	
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
