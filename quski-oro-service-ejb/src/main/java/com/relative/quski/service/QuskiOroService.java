@@ -261,7 +261,6 @@ public class QuskiOroService {
 		try {
 			persisted.setId(send.getId());
 			persisted.setCedulaCliente(send.getCedulaCliente());
-			;
 			persisted.setPrimerNombre(send.getPrimerNombre());
 			persisted.setSegundoNombre(send.getSegundoNombre());
 			persisted.setApellidoPaterno(send.getApellidoPaterno());
@@ -1611,6 +1610,9 @@ public class QuskiOroService {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
+				if( send.getTbQoNegociacion() != null && send.getTbQoNegociacion().getId()==null ) {
+					send.setTbQoNegociacion(null);
+				}
 				return variablesCrediticiaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
@@ -1628,8 +1630,12 @@ public class QuskiOroService {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
-			persisted.setTbQoCotizador(send.getTbQoCotizador());
-			persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+			if( send.getTbQoCotizador()!=null ) {
+				persisted.setTbQoCotizador(send.getTbQoCotizador());
+			}
+			if( send.getTbQoNegociacion()!=null ) {
+				persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+			}
 			persisted.setFechaActualizacion(new Date());
 			persisted.setEstado(send.getEstado());
 
