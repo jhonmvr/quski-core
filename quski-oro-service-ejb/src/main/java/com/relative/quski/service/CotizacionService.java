@@ -31,6 +31,7 @@ public class CotizacionService {
 	/**
 	 * Metodo que busca la cotizacion completa activa por cedula de cliente
 	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param cedulaCliente
 	 * @return cotizacion
 	 * @throws RelativeException
@@ -70,7 +71,7 @@ public class CotizacionService {
 	 * Metodo que recibe una cotizacion y la crea la cotizacion y la Variable
 	 * Crediticia
 	 * 
-	 * @author KLÉBER GUERRA
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param cot
 	 * @return cotLlena
 	 * @throws RelativeException
@@ -78,15 +79,21 @@ public class CotizacionService {
 
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
-
+			log.info("INGRESA A crearCotizacionClienteVariableCrediticia " + cot);
 			TbQoCotizador cotLlena = new TbQoCotizador();
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariablesCrediticia>();
+
 			if (cot != null && cot.getId() == null) {
+				cotLlena = this.qos.manageCotizador(cot);
+				log.info("idCotizacion---> " + cot.getId());
+				log.info("VARIABLES QUE LLEGAN QUE LLEGA" + cot.getTbQoVariablesCrediticias());
+
 				for (TbQoVariablesCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
 					variableCrediticiaLlega.add(varCredi);
+					this.qos.manageVariablesCrediticia(varCredi);
+
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
-				cotLlena = this.qos.manageCotizador(cot);
 
 			} else {
 				if (cot.getEstado().equals(EstadoEnum.ACT))
@@ -99,6 +106,24 @@ public class CotizacionService {
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
+
+	}
+
+	/***
+	 * METODO QUE REALIZA LA CADUCACION DE LA COTIZACION ANTERIOR
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param cot
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoCotizador caducarCotizacion(TbQoCotizador cot) throws RelativeException {
+		log.info("ingresa a caducar  --> " + cot);
+		if (cot != null && cot.getId() != null) {
+			cot.setEstado(EstadoEnum.INA);
+
+		}
+		return this.qos.manageCotizador(cot);
 
 	}
 

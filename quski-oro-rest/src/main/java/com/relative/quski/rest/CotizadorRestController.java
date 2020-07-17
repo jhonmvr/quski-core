@@ -143,4 +143,14 @@ public class CotizadorRestController extends BaseRestController
 		return loc;
 	}
 
+	@POST
+	@Path("/caducarCotizacion")
+	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCotizador> caducarCotizacion(GenericWrapper<TbQoCotizador> wp) throws RelativeException {
+		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
+		loc.setEntidad(this.cs.caducarCotizacion(wp.getEntidad()));
+		return loc;
+
+	}
+
 }

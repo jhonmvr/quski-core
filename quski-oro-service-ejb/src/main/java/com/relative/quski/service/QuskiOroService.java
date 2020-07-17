@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -232,7 +233,7 @@ public class QuskiOroService {
 	 */
 	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Abono");
+			log.info("==> entra a manage Cliente");
 			TbQoCliente persisted = null;
 			if (send != null && send.getId() != null) {
 				log.info("==================>   Ingresa a actualizacion ===================> ");
@@ -536,7 +537,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * COTIZADOR
+	 * * * * * * * * * * * @COTIZACION
 	 */
 
 	/**
@@ -566,18 +567,18 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
-		log.info("INGRESA A---->registrarPrecioOroByCotizacion___>ID COTIZADOR "+po.getTbQoCotizador().getId());
+		log.info("INGRESA A---->registrarPrecioOroByCotizacion___>ID COTIZADOR " + po.getTbQoCotizador().getId());
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
-		//TbQoTipoOro tpos=this.findTipoOroById( po.getTbQoTipoOro().getId() );
-		log.info("VALOR DE TPOS---> "+tpo);
+		// TbQoTipoOro tpos=this.findTipoOroById( po.getTbQoTipoOro().getId() );
+		log.info("VALOR DE TPOS---> " + tpo);
 		po.setTbQoCotizador(cot);
 		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
 	}
 
 	/**
-	 * Método que realiza la eliminación lógica del precio oro
+	 * Método que realiza la eliminación lógica del precio oro en cotizacion
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param id
@@ -592,7 +593,7 @@ public class QuskiOroService {
 
 	/**
 	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
-	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION
+	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION PARA RECUPERAR LOS PRECIOS ORO
 	 * 
 	 * @param pw
 	 * @param idCotizador
@@ -616,7 +617,8 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Metodo que lista la informacion de las entidades encontradas
+	 * Metodo que lista todas las cotizaciones informacion de las entidades
+	 * encontradas
 	 * 
 	 * @param pw Objeto generico que tiene la informacion que determina si el
 	 *           resultado es total o paginado
@@ -649,9 +651,8 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
-	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE DEVUELVE LA LISTA DE
-	 * COTIZACIONES QUE SE ENCUENTRAN LIGADOS A UN CLIENTE
+	 * METODO QUE BUSCA LAS COTIZACIONES ACTIVAS DE UN CLIENTE LAS CADUCA
+	 * 
 	 * 
 	 * @author KLEBER GUERRA - Relative Engine
 	 * @param pw
@@ -660,12 +661,23 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public List<TbQoCotizador> listByCliente(PaginatedWrapper pw, String cedulaCliente) throws RelativeException {
-		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return cotizadorRepository.findByCliente(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections(), cedulaCliente);
-		} else {
-			return cotizadorRepository.findByCliente(cedulaCliente);
+		try {
+
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+
+				return cotizadorRepository.findByCliente(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+						pw.getSortDirections(), cedulaCliente);
+
+			} else {
+				return cotizadorRepository.findByCliente(cedulaCliente);
+			}
+
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error Creando codigo de Cotizacion " + e.getMessage());
 		}
+
 	}
 
 	public Long countByCliente(String cedulaCliente) throws RelativeException {
@@ -714,7 +726,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Metodo que actualiza la entidad
+	 * Metodo que actualiza la entidad cotizador
 	 * 
 	 * @authorSAUL MENDEZ- Relative Engine
 	 * @param send      informacion enviada para update
@@ -739,7 +751,8 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * Metodo que se encarga de realizar la gestión de la entidad cotizador sea
+	 * creacion o actualizacion
 	 * 
 	 * @author SAUL MENDEZ - Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
@@ -750,6 +763,8 @@ public class QuskiOroService {
 		try {
 			log.info("==> entra a manager Cotizador>> " + send);
 			TbQoCotizador persisted = null;
+			List<TbQoVariablesCrediticia> variables = new ArrayList<TbQoVariablesCrediticia>();
+			TbQoCliente cliente = new TbQoCliente();
 			if (send != null && send.getId() != null) {
 				log.info("==> entra AL IF  a manage Cotizador");
 				persisted = this.cotizadorRepository.findById(send.getId());
@@ -758,13 +773,19 @@ public class QuskiOroService {
 
 				return this.updateCotizador(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				log.info("INGRESA AL ELSE IF manageCotizador " + send);
+				log.info("INGRESA A CREAR LA COTIZACION  ELSE IF " + send);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
+				log.info("VALORES ACTUALIZADOS>>> " + send.getTbQoCliente());
+				cliente = this.manageCliente(send.getTbQoCliente());
+				TbQoCliente cliente2 = new TbQoCliente();
+				cliente2.setId(cliente.getId());
+				send.setTbQoCliente(cliente2);
 
-				log.info("VALORES ACTUALIZADOS>>> " + send);
 				persisted = cotizadorRepository.add(send);
 				log.info("VALOR INSERTADO" + persisted);
+				log.info("VARIABLES CREDITICIAS" + send.getTbQoVariablesCrediticias());
+				variablesCrediticiaRepository.add(send.getTbQoVariablesCrediticias());
 
 				return crearCodigoCotizacion(persisted);
 			} else {
@@ -797,7 +818,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * TipoOro
+	 * * * * * * * * * * * @TIPO ORO
 	 */
 
 	/**
@@ -879,7 +900,8 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando el Tipo Oro " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando el Tipo Oro " + e.getMessage());
 		}
 	}
 
@@ -950,7 +972,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Detalle Credito
+	 * * * * * * * * * * * @DETALLE DE CREDITO
 	 */
 
 	/**
@@ -1097,7 +1119,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Precio oro
+	 * * * * * * * * * * * @PRECIO ORO
 	 */
 
 	/**
@@ -1255,7 +1277,7 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * Cliente
+	 * * * * * * * * * * * @VARIABLE CREDITICIA
 	 */
 
 	/**
@@ -1264,7 +1286,7 @@ public class QuskiOroService {
 	 * 
 	 * @author KLÉBER GUERRA Relative - Engine
 	 * @param idCotizacion
-	 * @return
+	 * @return List<TbQoVariablesCrediticia>
 	 * @throws RelativeException
 	 */
 	private List<TbQoVariablesCrediticia> copyVariablesCrediticiaData(Long idCotizacion) throws RelativeException {
@@ -1337,11 +1359,11 @@ public class QuskiOroService {
 	 */
 
 	/**
-	 * Metodo que busca por el numero de cedula del cliente
+	 * Metodo que busca al cliente por el numero de cedula del cliente
 	 * 
 	 * @author SAUL MENDEZ - Relative Engine
-	 * @param  String identificacion
-	 * @return TbQoCliente 
+	 * @param String identificacion
+	 * @return TbQoCliente
 	 * @throws RelativeException
 	 */
 	public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
@@ -1352,17 +1374,18 @@ public class QuskiOroService {
 				return tmp;
 			}
 		} catch (Exception e) {
-		throw new RelativeException(Constantes.ERROR_CODE_READ,
-				"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
-	}
-	return null;
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+		}
+		return null;
 
 	}
+
 	/**
 	 * Método que realiza la busqueda por Identificacion con cotizaciones
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param  String identificacion
+	 * @param String identificacion
 	 * @return TbQoCliente
 	 * @throws RelativeException
 	 */
@@ -1370,17 +1393,20 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
 			TbQoCliente clienteId = new TbQoCliente();
+
 			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
 				clienteId.setId(cliente.getId());
 				List<TbQoCotizador> tmp = cliente.getTbQoCotizador().stream()
 						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
 				if (tmp != null && !tmp.isEmpty()) {
+
 					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
 					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariablesCrediticiaData(tmp.get(0).getId()));
 					tmp.get(0).setTbQoCliente(null);
 					tmp.get(0).setTbQoCliente(clienteId);
 				}
 				cliente.setTbQoCotizador(tmp);
+
 				return cliente;
 			} else {
 				return null;
@@ -1395,11 +1421,19 @@ public class QuskiOroService {
 		}
 	}
 
-	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador, final EstadoEnum estadoEnum)
-			throws RelativeException {
+	/**
+	 * METODO QUE BUSCA LA COTIZACION ACTIVA
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param cotizador
+	 * @param estadoEnum
+	 * @return TbQoCotizador
+	 * @throws RelativeException
+	 */
+	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador) throws RelativeException {
 		TbQoCotizador cotizacion = new TbQoCotizador();
 		try {
-			if (cotizador != null && estadoEnum.equals(EstadoEnum.ACT)) {
+			if (cotizador != null && cotizador.getEstado().equals(EstadoEnum.ACT)) {
 				cotizacion = this.cotizadorRepository.findById(cotizador.getId());
 			}
 
@@ -1411,6 +1445,14 @@ public class QuskiOroService {
 
 	}
 
+	/**
+	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine TbQoCotizador
+	 * @param identificacion
+	 * @return
+	 * @throws RelativeException
+	 */
 	public List<TbQoCliente> findClienteByIdentifiacionList(String identificacion) throws RelativeException {
 		List<TbQoCliente> tmp;
 		try {
@@ -1433,6 +1475,23 @@ public class QuskiOroService {
 				apellidoMaterno, telefono, celular, correo, estado);
 	}
 
+	/**
+	 * 
+	 * METODO QUE BUSCA POR MEDIO DE UN PARAMETRO
+	 * 
+	 * @param pw
+	 * @param identificacion
+	 * @param primerNombre
+	 * @param apellidoPaterno
+	 * @param segundoNombre
+	 * @param apellidoMaterno
+	 * @param telefono
+	 * @param celular
+	 * @param correo
+	 * @param estado
+	 * @return List<TbQoCliente>
+	 * @throws RelativeException
+	 */
 	public List<TbQoCliente> findClienteByParams(PaginatedWrapper pw, String identificacion, String primerNombre,
 			String apellidoPaterno, String segundoNombre, String apellidoMaterno, String telefono, String celular,
 			String correo, EstadoEnum estado) throws RelativeException {
@@ -1460,12 +1519,13 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION
+	 * METODO QUE CUENTA LAS VARIABLES CREDITICIAS LIGADAS A LA COTIZACION
 	 * 
 	 * @param pw
 	 * @param idCotizador
 	 * @author SAUL MENDEZ - Relative Engine
 	 * @throws RelativeException
+	 * @{@link returnType}
 	 */
 
 	public Long countVariblesCrediticiaByIdCotizacion(Long idCotizador) throws RelativeException {
@@ -1474,6 +1534,13 @@ public class QuskiOroService {
 
 	}
 
+	/**
+	 * METODO QUE BUSCA LA VARIABLE CREDITICA POR ID
+	 * 
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
 	public TbQoVariablesCrediticia findVariablesCrediticiaById(Long id) throws RelativeException {
 
 		try {
@@ -1485,6 +1552,13 @@ public class QuskiOroService {
 		}
 	}
 
+	/**
+	 * METODO QUE DEVUELVE TODAS LAS VARIABLES CREDITICIAS
+	 * 
+	 * @param pw
+	 * @return
+	 * @throws RelativeException
+	 */
 	public List<TbQoVariablesCrediticia> findAllVariablesCrediticias(PaginatedWrapper pw) throws RelativeException {
 		if (pw == null) {
 			return this.variablesCrediticiaRepository.findAll(TbQoVariablesCrediticia.class);
@@ -1500,6 +1574,12 @@ public class QuskiOroService {
 		}
 	}
 
+	/**
+	 * METODO QUE CUENTA EL NUMERO DE VARIABLES CREDITICIAS
+	 * 
+	 * @return Long
+	 * @throws RelativeException
+	 */
 	public Long countVariablesCrediticias() throws RelativeException {
 		try {
 			return variablesCrediticiaRepository.countAll(TbQoVariablesCrediticia.class);
@@ -1512,13 +1592,13 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * @author Desconocido - Creacion 
+	 * @author Desconocido - Creacion
 	 * @editor Jeroham Cadenas - Actualizacion
-	 * @param  TbQoVariablesCrediticia send
+	 * @param TbQoVariablesCrediticia send
 	 * @return TbQoVariablesCrediticia
 	 * @throws RelativeException
 	 * @comment Metodo crea o actualiza una entidad de variables crediticias
-	 * @comment Preguntar antes de editar.  
+	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoVariablesCrediticia manageVariablesCrediticia(TbQoVariablesCrediticia send) throws RelativeException {
 		try {
@@ -1530,7 +1610,7 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
-				send.setEstado( EstadoEnum.ACT );
+				send.setEstado(EstadoEnum.ACT);
 				return variablesCrediticiaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
@@ -1543,7 +1623,8 @@ public class QuskiOroService {
 		}
 	}
 
-	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send, TbQoVariablesCrediticia persisted) throws RelativeException {
+	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send,
+			TbQoVariablesCrediticia persisted) throws RelativeException {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
@@ -1559,33 +1640,36 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Agencia " + e.getMessage());
 		}
 	}
+
 	/**
 	 * @Comment Busca las variables crediticias relacionadas a una negociacion.
-	 * @author  Jeroham Cadenas
-	 * @param   Long idNegociacion
-	 * @return  List<TbQoVariablesCrediticia>
-	 * @throws  RelativeException
+	 * @author Jeroham Cadenas
+	 * @param Long idNegociacion
+	 * @return List<TbQoVariablesCrediticia>
+	 * @throws RelativeException
 	 */
-	public List<TbQoVariablesCrediticia> findVariablesCrediticiaByIdNegociacion(Long idNegociacion) throws RelativeException {
+	public List<TbQoVariablesCrediticia> findVariablesCrediticiaByIdNegociacion(Long idNegociacion)
+			throws RelativeException {
 		try {
-			return variablesCrediticiaRepository.findByIdNegociacion( idNegociacion );
+			return variablesCrediticiaRepository.findByIdNegociacion(idNegociacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Variables no encontradas no encontrada " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Variables no encontradas no encontrada " + e.getMessage());
 		}
 	}
 
 	/**
-	 * @author Desconocido - Creacion 
+	 * @author Desconocido - Creacion
 	 * @editor Jeroham Cadenas - Actualizacion
-	 * @param  Long id
+	 * @param Long id
 	 * @return TbQoNegociacion
 	 * @throws RelativeException
 	 * @comment Metodo Busca la negociacion y las variables crediticias asociadas
-	 * @comment Preguntar antes de editar.  
+	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 		try {
-			return negociacionRepository.findById(id); 
+			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Negociacion no encontrada " + e.getMessage());
 		}
@@ -1617,8 +1701,8 @@ public class QuskiOroService {
 
 	public TbQoNegociacion manageNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
-			//log.info("==> entra a manage variableCrediticia");
-			//log.info("==> entra a manage Negociacion");
+			// log.info("==> entra a manage variableCrediticia");
+			// log.info("==> entra a manage Negociacion");
 			TbQoNegociacion persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findNegociacionById(send.getId());
@@ -1647,17 +1731,17 @@ public class QuskiOroService {
 		try {
 			persisted.setTbQoCliente(send.getTbQoCliente());
 			persisted.setEstado(send.getEstado());
-			persisted.setAsesorResponsable( send.getAsesorResponsable() );
-			persisted.setIdAsesorResponsable( send.getIdAsesorResponsable() );
-			persisted.setProcesoActualNegociacion( send.getProcesoActualNegociacion() );
-			persisted.setSituacionNegociacion( send.getSituacionNegociacion() );
-			persisted.setTipoNegociacion( send.getTipoNegociacion() );
-			
-			persisted.setId( persisted.getId() );
-			persisted.setFechaCreacion( persisted.getFechaCreacion() );
-			persisted.setCodigoOperacion( persisted.getCodigoOperacion() );
+			persisted.setAsesorResponsable(send.getAsesorResponsable());
+			persisted.setIdAsesorResponsable(send.getIdAsesorResponsable());
+			persisted.setProcesoActualNegociacion(send.getProcesoActualNegociacion());
+			persisted.setSituacionNegociacion(send.getSituacionNegociacion());
+			persisted.setTipoNegociacion(send.getTipoNegociacion());
+
+			persisted.setId(persisted.getId());
+			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setCodigoOperacion(persisted.getCodigoOperacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			
+
 			return negociacionRepository.update(persisted);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Cliente " + e.getMessage());
@@ -1769,10 +1853,12 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
-	
-	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento, ProcessEnum proceso, Long referencia) throws RelativeException {
+
+	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento,
+			ProcessEnum proceso, Long referencia) throws RelativeException {
 		try {
-			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso, referencia);
+			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso,
+					referencia);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
@@ -2036,7 +2122,8 @@ public class QuskiOroService {
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(
 			String identificacionCliente, Long idCotizador, Long idNegociacion, Long idTipoDocumento)
 			throws RelativeException {
-		//DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();
+		// DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec docHabilitanteSpec = new
+		// DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec();
 		try {
 
 			return documentoHabilitanteRepository.findByTipoDocumentoAndCliAndCotAndNeg(idTipoDocumento,
@@ -2056,9 +2143,7 @@ public class QuskiOroService {
 	 * @return Cantidad de entidades encontradas
 	 * @throws RelativeException
 	 */
-	
-	
-	
+
 	/*
 	 * public List<TbQoVariableCrediticia> listaByIdCotizador(PaginatedWrapper pw,
 	 * String idCotizador) throws RelativeException { if (pw != null &&
@@ -2103,9 +2188,10 @@ public class QuskiOroService {
 	 * return variableCrediticiaRepository.countByIdCotizador(idCotizador); }
 	 * 
 	 */
-	
-	 /** Metodo que se encarga de gestionar la entidad sea creacion o
-	 * actualizacion
+
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
 	 * @author SAUL MENDEZ - Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
 	 * @return Entidad modificada o actualizada
@@ -2249,8 +2335,8 @@ public class QuskiOroService {
 			throws RelativeException {
 
 		if (pw == null) {
-			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-					fechaDesde, fechaHasta, identificacion, agencia));
+			return this.creditoNegociacionRepository.findAllBySpecification(
+					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia));
 
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
@@ -2258,8 +2344,8 @@ public class QuskiOroService {
 						identificacion, agencia);
 
 			} else {
-				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
-						fechaDesde, fechaHasta, identificacion, agencia));
+				return this.creditoNegociacionRepository.findAllBySpecification(
+						new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia));
 
 			}
 		}
@@ -2274,8 +2360,8 @@ public class QuskiOroService {
 	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
 			String proceso, String identificacion, String agencia) throws RelativeException {
 
-		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
-				fechaHasta, identificacion, agencia)).intValue();
+		return this.creditoNegociacionRepository.countBySpecification(
+				new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia)).intValue();
 
 	}
 
@@ -2443,7 +2529,6 @@ public class QuskiOroService {
 		try {
 			persisted.setId(send.getId());
 			persisted.setNombresCompletos(send.getNombresCompletos());
-			;
 			persisted.setNombresCompletos(send.getNombresCompletos());
 			persisted.setEstado(EstadoEnum.ACT.toString());
 			persisted.setParentesco(send.getParentesco());
@@ -3101,8 +3186,7 @@ public class QuskiOroService {
 	 */
 	public List<AsignacionesWrapper> findAsignacionesByParamsPaginated(PaginatedWrapper pw, String codigoOperacion,
 			String nombreAgencia, String nombreProceso, String cedula) throws RelativeException {
-		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw,  nombreAgencia,
-				 cedula);
+		return this.creditoNegociacionRepository.findAsignacionesByParamsPaginated(pw, nombreAgencia, cedula);
 	}
 
 	/**
@@ -3160,7 +3244,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Agencias no encontradas " + e.getMessage());
 		}
 	}
-
 
 	/**
 	 * * * * * * *** * * ** ** * *@Tracking
@@ -3838,49 +3921,54 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error en la busqueda " + e.getMessage());
 		}
 	}
+
 	/**
 	 * **************************************** @RiesgoAcumulado
 	 */
-	
+
 	/**
 	 * @Comment Busca los Riesgos Acumulados relacionados a un cliente.
-	 * @author  Jeroham Cadenas
-	 * @param   Long idCliente
-	 * @return  List<TbQoRiesgoAcumulado>
-	 * @throws  RelativeException
+	 * @author Jeroham Cadenas
+	 * @param Long idCliente
+	 * @return List<TbQoRiesgoAcumulado>
+	 * @throws RelativeException
 	 */
 	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(Long idCliente) throws RelativeException {
 		try {
-			return riesgoAcumuladoRepository.findByIdCliente( idCliente );
+			return riesgoAcumuladoRepository.findByIdCliente(idCliente);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, " Riesgos Acumulados no encontrados " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					" Riesgos Acumulados no encontrados " + e.getMessage());
 		}
 	}
 
 	/**
 	 * **************************************** @Excepciones
-	 * @throws RelativeException 
+	 * 
+	 * @throws RelativeException
 	 */
-	
+
 	/**
 	 * @author Jeroham Cadenas
-	 * @param  Long id
+	 * @param Long id
 	 * @return TbQoExcepcione
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione finExcepcionById(Long id) throws RelativeException {
 		try {
-			return excepcionesRepository.findById( id );
+			return excepcionesRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar Excepcion especifica: "  + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al buscar Excepcion especifica: " + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @author Jeroham Cadenas
-	 * @param  Long idNegociacion
-	 * @param  String tipoExcepcion
-	 * @param  String estadoExcepcion
+	 * @param Long   idNegociacion
+	 * @param String tipoExcepcion
+	 * @param String estadoExcepcion
 	 * @return TbQoExcepcione
 	 * @throws RelativeException
 	 */
@@ -3924,125 +4012,138 @@ public class QuskiOroService {
 
 	/**
 	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  Long idNegociacion
-	 * @param  PaginatedWrapper pw
+	 * @author Jeroham Cadenas
+	 * @param Long             idNegociacion
+	 * @param PaginatedWrapper pw
 	 * @return List<TbQoExcepcione>
-	 * @throws RelativeException 
+	 * @throws RelativeException
 	 */
 	public List<TbQoExcepcione> findByIdNegociacion(PaginatedWrapper pw, Long idNegociacion) throws RelativeException {
-		
+
 		try {
-			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 				return excepcionesRepository.findByIdNegociacion(pw.getStartRecord(), pw.getPageSize(),
 						pw.getSortFields(), pw.getSortDirections(), idNegociacion);
 			} else {
-				return excepcionesRepository.findByIdNegociacion( idNegociacion );
+				return excepcionesRepository.findByIdNegociacion(idNegociacion);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de negociacion: " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al Buscar Excepciones por id de negociacion: " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  Long idNegociacion
+	 * @author Jeroham Cadenas
+	 * @param Long idNegociacion
 	 * @return Long
 	 * @throws RelativeException
 	 */
 	public Long countExcepcionesByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			return excepcionesRepository.countByIdNegociacion( idNegociacion );
+			return excepcionesRepository.countByIdNegociacion(idNegociacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de negociacion:   " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al contar Excepciones por id de negociacion:   " + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  Long idCliente
-	 * @param  PaginatedWrapper pw
+	 * @author Jeroham Cadenas
+	 * @param Long             idCliente
+	 * @param PaginatedWrapper pw
 	 * @return List<TbQoExcepcione>
-	 * @throws RelativeException 
+	 * @throws RelativeException
 	 */
 	public List<TbQoExcepcione> findByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
-		
+
 		try {
-			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return excepcionesRepository.findByIdCliente(pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections(), idCliente);
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByIdCliente(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+						pw.getSortDirections(), idCliente);
 			} else {
-				return excepcionesRepository.findByIdCliente( idCliente );
+				return excepcionesRepository.findByIdCliente(idCliente);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de cliente: " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al Buscar Excepciones por id de cliente: " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  Long idCliente
+	 * @author Jeroham Cadenas
+	 * @param Long idCliente
 	 * @return Long
 	 * @throws RelativeException
 	 */
 	public Long countExcepcionesByIdCliente(Long idCliente) throws RelativeException {
 		try {
-			return excepcionesRepository.countByIdCliente( idCliente );
+			return excepcionesRepository.countByIdCliente(idCliente);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de cliente:  " + e.getMessage());
-		}
-	}
-	/**
-	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  PaginatedWrapper pw
-	 * @param  String tipoExcepcion
-	 * @param  Long idNegociacion
-	 * @return List<TbQoExcepcione>
-	 * @throws RelativeException 
-	 */
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(PaginatedWrapper pw, String tipoExcepcion, Long idNegociacion ) throws RelativeException {
-		try {
-			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion );
-			} else {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(  tipoExcepcion, idNegociacion );
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al Buscar Excepciones por id de cliente: " + e.getMessage());
-		}
-	}
-	
-	/**
-	 * 
-	 * @author Jeroham Cadenas 
-	 * @param  String tipoExcepcion
-	 * @param  Long idNegociacion
-	 * @return Long
-	 * @throws RelativeException
-	 */
-	public Long countExcepcionesByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException {
-		try {
-			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion( tipoExcepcion, idNegociacion );
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar Excepciones por id de cliente:  " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al contar Excepciones por id de cliente:  " + e.getMessage());
 		}
 	}
 
-	
-	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion) throws RelativeException {
+	/**
+	 * 
+	 * @author Jeroham Cadenas
+	 * @param PaginatedWrapper pw
+	 * @param String           tipoExcepcion
+	 * @param Long             idNegociacion
+	 * @return List<TbQoExcepcione>
+	 * @throws RelativeException
+	 */
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(PaginatedWrapper pw, String tipoExcepcion,
+			Long idNegociacion) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion);
+			} else {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al Buscar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * @author Jeroham Cadenas
+	 * @param String tipoExcepcion
+	 * @param Long   idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionesByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion)
+			throws RelativeException {
+		try {
+			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al contar Excepciones por id de cliente:  " + e.getMessage());
+		}
+	}
+
+	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
+			throws RelativeException {
 		if (pw == null) {
 			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections());
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
+						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 			} else {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections());
+				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
+						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 			}
 		}
 	}
@@ -4051,5 +4152,4 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
 
-	
 }

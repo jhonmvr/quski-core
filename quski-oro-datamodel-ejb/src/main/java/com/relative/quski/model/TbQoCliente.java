@@ -118,6 +118,9 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "telefono_trabajo")
 	private String telefonoTrabajo;
 
+	@Column(name = "aprobado_web_mupi")
+	private String aprobacionMupi;
+
 	// bi-directional many-to-one association to TbQoArchivoCliente
 	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoArchivoCliente> tbQoArchivoClientes;
@@ -323,6 +326,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setNacionalidad(String nacionalidad) {
 		this.nacionalidad = nacionalidad;
+	}
+
+	public String getAprobacionMupi() {
+		return aprobacionMupi;
+	}
+
+	public void setAprobacionMupi(String aprobacionMupi) {
+		this.aprobacionMupi = aprobacionMupi;
 	}
 
 	public String getNivelEducacion() {
@@ -635,7 +646,28 @@ public class TbQoCliente implements Serializable {
 		return tbQoRiesgoAcumulado;
 	}
 
- 
+	@Override
+	public String toString() {
+		return "TbQoCliente [id=" + id + ", actividadEconomica=" + actividadEconomica + ", actividadEconomicaEmpresa="
+				+ actividadEconomicaEmpresa + ", apellidoMaterno=" + apellidoMaterno + ", apellidoPaterno="
+				+ apellidoPaterno + ", apoderadoCliente=" + apoderadoCliente + ", campania=" + campania
+				+ ", canalContacto=" + canalContacto + ", cargasFamiliares=" + cargasFamiliares + ", cargo=" + cargo
+				+ ", cedulaCliente=" + cedulaCliente + ", edad=" + edad + ", email=" + email + ", estado=" + estado
+				+ ", estadoCivil=" + estadoCivil + ", fechaActualizacion=" + fechaActualizacion + ", fechaCreacion="
+				+ fechaCreacion + ", fechaNacimiento=" + fechaNacimiento + ", genero=" + genero + ", lugarNacimiento="
+				+ lugarNacimiento + ", nacionalidad=" + nacionalidad + ", nivelEducacion=" + nivelEducacion
+				+ ", nombreEmpresa=" + nombreEmpresa + ", ocupacion=" + ocupacion + ", origenIngreso=" + origenIngreso
+				+ ", primerNombre=" + primerNombre + ", profesion=" + profesion + ", publicidad=" + publicidad
+				+ ", relacionDependencia=" + relacionDependencia + ", segundoNombre=" + segundoNombre
+				+ ", separacionBienes=" + separacionBienes + ", telefonoAdicional=" + telefonoAdicional
+				+ ", telefonoFijo=" + telefonoFijo + ", telefonoMovil=" + telefonoMovil + ", telefonoTrabajo="
+				+ telefonoTrabajo + ", aprobacionMupi=" + aprobacionMupi + ", tbQoArchivoClientes="
+				+ tbQoArchivoClientes + ", tbQoCotizador=" + tbQoCotizador + ", tbQoDireccionClientes="
+				+ tbQoDireccionClientes + ", tbQoDocumentoHabilitantes=" + tbQoDocumentoHabilitantes
+				+ ", tbQoIngresoEgresoClientes=" + tbQoIngresoEgresoClientes + ", tbQoNegociacions=" + tbQoNegociacions
+				+ ", tbQoPatrimonios=" + tbQoPatrimonios + ", tbQoReferenciaPersonals=" + tbQoReferenciaPersonals
+				+ ", tbQoRiesgoAcumulados=" + tbQoRiesgoAcumulados + "]";
+	}
 	
 	
 
