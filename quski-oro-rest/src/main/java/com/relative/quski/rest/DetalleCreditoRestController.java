@@ -28,9 +28,9 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "DetalleCreditoRestController - REST CRUD")
-public class DetalleCreditoRestControlles  extends BaseRestController
+public class DetalleCreditoRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDetalleCredito>>{
-	public DetalleCreditoRestControlles() throws RelativeException {
+	public DetalleCreditoRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
 	}

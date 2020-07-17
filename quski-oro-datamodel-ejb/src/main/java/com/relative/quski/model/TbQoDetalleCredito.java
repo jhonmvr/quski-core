@@ -1,75 +1,81 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
-
-import java.math.BigDecimal;
-import java.util.Date;
-
 
 /**
  * The persistent class for the tb_qo_detalle_credito database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_detalle_credito")
+@Table(name = "tb_qo_detalle_credito")
 public class TbQoDetalleCredito implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_DETALLE_CREDITO_ID_GENERATOR", sequenceName="SEQ_DETALLE_CREDITO",initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_DETALLE_CREDITO_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_DETALLE_CREDITO_ID_GENERATOR", sequenceName = "SEQ_DETALLE_CREDITO", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_DETALLE_CREDITO_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="costo_credito")
+	@Column(name = "costo_credito")
 	private BigDecimal costoCredito;
 
-	@Column(name="costo_custodia")
+	@Column(name = "costo_custodia")
 	private BigDecimal costoCustodia;
 
-	@Column(name="costo_estimado")
+	@Column(name = "costo_estimado")
 	private BigDecimal costoEstimado;
 
-	@Column(name="costo_nueva_operacion")
+	@Column(name = "costo_nueva_operacion")
 	private BigDecimal costoNuevaOperacion;
 
-	@Column(name="costo_resguardado")
+	@Column(name = "costo_resguardado")
 	private BigDecimal costoResguardado;
 
-	@Column(name="costo_seguro")
+	@Column(name = "costo_seguro")
 	private BigDecimal costoSeguro;
 
-	@Column(name="costo_transporte")
+	@Column(name = "costo_tasacion")
+	private String costoTasacion;
+
+	@Column(name = "costo_transporte")
 	private BigDecimal costoTransporte;
+
+	@Column(name = "costo_valoracion")
+	private BigDecimal costoValoracion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="monto_preaprobado")
+	@Column(name = "monto_preaprobado")
 	private BigDecimal montoPreaprobado;
 
-	@Column(name="plazo_credito")
+	@Column(name = "plazo_credito")
 	private String plazoCredito;
 
-	@Column(name="recibir_cliente")
+	@Column(name = "recibir_cliente")
 	private BigDecimal recibirCliente;
 
-	@Column(name="valor_cuota")
+	private String solca;
+
+	@Column(name = "valor_cuota")
 	private BigDecimal valorCuota;
 
-	//bi-directional many-to-one association to TbQoCotizador
+	// bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
-	@JoinColumn(name="id_cotizador")
+	@JoinColumn(name = "id_cotizador")
 	private TbQoCotizador tbQoCotizador;
 
 	public TbQoDetalleCredito() {
@@ -139,8 +145,6 @@ public class TbQoDetalleCredito implements Serializable {
 		this.costoTransporte = costoTransporte;
 	}
 
- 
-
 	public EstadoEnum getEstado() {
 		return estado;
 	}
@@ -205,17 +209,28 @@ public class TbQoDetalleCredito implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
-	@Override
-	public String toString() {
-		return "TbQoDetalleCredito [id=" + id + ", costoCredito=" + costoCredito + ", costoCustodia=" + costoCustodia
-				+ ", costoEstimado=" + costoEstimado + ", costoNuevaOperacion=" + costoNuevaOperacion
-				+ ", costoResguardado=" + costoResguardado + ", costoSeguro=" + costoSeguro + ", costoTransporte="
-				+ costoTransporte + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCreacion=" + fechaCreacion + ", montoPreaprobado=" + montoPreaprobado + ", plazoCredito="
-				+ plazoCredito + ", recibirCliente=" + recibirCliente + ", valorCuota=" + valorCuota
-				+ ", tbQoCotizador=" + tbQoCotizador + "]";
+	public String getCostoTasacion() {
+		return costoTasacion;
 	}
-	
-	
+
+	public void setCostoTasacion(String costoTasacion) {
+		this.costoTasacion = costoTasacion;
+	}
+
+	public BigDecimal getCostoValoracion() {
+		return costoValoracion;
+	}
+
+	public void setCostoValoracion(BigDecimal costoValoracion) {
+		this.costoValoracion = costoValoracion;
+	}
+
+	public String getSolca() {
+		return solca;
+	}
+
+	public void setSolca(String solca) {
+		this.solca = solca;
+	}
 
 }
