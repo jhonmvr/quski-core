@@ -1734,7 +1734,7 @@ public class QuskiOroService {
 			persisted.setAsesorResponsable(send.getAsesorResponsable());
 			persisted.setIdAsesorResponsable(send.getIdAsesorResponsable());
 			persisted.setProcesoActualNegociacion(send.getProcesoActualNegociacion());
-			persisted.setSituacionNegociacion(send.getSituacionNegociacion());
+			persisted.setEstadoNegociacion(send.getEstadoNegociacion());
 			persisted.setTipoNegociacion(send.getTipoNegociacion());
 
 			persisted.setId(persisted.getId());
