@@ -1,5 +1,6 @@
 package com.relative.quski.service;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.model.TbQoFunda;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoNegociacionCalculo;
@@ -59,6 +61,7 @@ import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
+import com.relative.quski.repository.FundaRepository;
 import com.relative.quski.repository.IngresoEgresoClienteRepository;
 import com.relative.quski.repository.NegociacionCalculoRepository;
 import com.relative.quski.repository.NegociacionRepository;
@@ -78,6 +81,7 @@ import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
+import com.relative.quski.repository.spec.FundaByParamsSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
@@ -149,6 +153,8 @@ public class QuskiOroService {
 	private DireccionClienteRepository direccionClienteRepository;
 	@Inject
 	private ExcepcionesRepository excepcionesRepository;
+	@Inject
+	private FundaRepository fundaRepository;
 
 	/**
 	 * * * * * * * * * * * @CLIENTE
@@ -2269,10 +2275,6 @@ public class QuskiOroService {
 
 	}
 
-//	public List<ListadoOperacionDevueltaWrapper> listOperacionesDevueltas(PaginatedWrapper pw, String codigo,
-//			String agencia, String proceso, String cedula) throws RelativeException {
-//		return this.creditoNegociacionRepository.listOperacionesDevueltas(pw, codigo, agencia, proceso, cedula);
-//	}
 
 	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
 			String proceso, String identificacion, String agencia) throws RelativeException {
@@ -4033,5 +4035,157 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
 
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author DIEGO SERRANO - Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoFunda findFundaById(Long id) throws RelativeException {
+		try {
+			return fundaRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Funda no encontrada " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoFunda> findAllFunda(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.fundaRepository.findAll(TbQoFunda.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.fundaRepository.findAll(TbQoFunda.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.fundaRepository.findAll(TbQoFunda.class, pw.getSortFields(),
+							pw.getSortDirections());
+
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error al buscar todos los Abonos " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author DIEGO SERRANO - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countFunda() throws RelativeException {
+		try {
+			return fundaRepository.countAll(TbQoFunda.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Funda no encontrado " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author BRAYAN MONGE - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoFunda manageFunda(TbQoFunda send) throws RelativeException {
+		try {
+			log.info("==> entra a manage Funda");
+			TbQoFunda persisted = null;
+			if (send != null && send.getId() != null) {
+				log.info("==================>   Ingresa a actualizacion ===================> ");
+				persisted = this.fundaRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updateFunda(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				log.info("INGRESA A CREACION");
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return fundaRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Funda " + e.getMessage());
+		}
+	}
+	public TbQoFunda updateFunda(TbQoFunda send, TbQoFunda persisted) throws RelativeException {
+		try {
+			persisted.setCodigo(send.getCodigo());
+			persisted.setEstado(send.getEstado());
+			persisted.setPeso(send.getPeso());
+			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			return fundaRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Abono " + e.getMessage());
+		}
+	}
+	
+	public List<TbQoFunda> findFundaByParams(PaginatedWrapper pw, String codigo,
+			BigDecimal peso, EstadoEnum estado)
+			throws RelativeException {
+
+		if (pw == null) {
+			return this.fundaRepository.findAllBySpecification(new FundaByParamsSpec(
+					codigo, peso, estado));
+
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.fundaRepository.findPorCustomFilterFundas(pw, codigo, peso,
+						estado);
+
+			} else {
+				return this.fundaRepository.findAllBySpecification(new FundaByParamsSpec(
+						codigo, peso, estado));
+
+			}
+		}
+
+	}
+
+	public Integer countFundaByParams(String codigo, BigDecimal peso, EstadoEnum estado) throws RelativeException {
+
+		return this.fundaRepository.countBySpecification(new FundaByParamsSpec(
+				codigo, peso, estado)).intValue();
+
+	}
+
+	public TbQoFunda reservarFunda(BigDecimal peso, String usuario) throws RelativeException {
+		TbQoFunda fundaReservada = null;
+		fundaReservada = fundaRepository.reservarFunda(peso);
+		return fundaReservada;
+
+	}
+	
 	
 }
