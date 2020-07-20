@@ -126,7 +126,7 @@ public class TbQoCliente implements Serializable {
 	private List<TbQoArchivoCliente> tbQoArchivoClientes;
 
 	// bi-directional many-to-one association to TbQoCotizador
-	@OneToMany(mappedBy = "tbQoCliente", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoCotizador> tbQoCotizador;
 
 	// bi-directional many-to-one association to TbQoDireccionCliente
@@ -645,5 +645,9 @@ public class TbQoCliente implements Serializable {
 
 		return tbQoRiesgoAcumulado;
 	}
+
+ 
+	
+	
 
 }

@@ -124,11 +124,6 @@ public class TbQoVariablesCrediticia implements Serializable {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
 
-	@Override
-	public String toString() {
-		return "TbQoVariablesCrediticia [id=" + id + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCreacion=" + fechaCreacion + ", nombre=" + nombre + ", orden=" + orden + ", valor=" + valor
-				+ ", tbQoCotizador=" + tbQoCotizador + ", tbQoNegociacion=" + tbQoNegociacion + "]";
-	}
+ 
 	
 }

@@ -25,7 +25,6 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "excepcionesRestController - REST CRUD")
-
 public class ExcepcionesRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepcione>> {
 	@Inject
@@ -42,18 +41,19 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	}
 
 	@GET
-	@Path("/findByTipoExcepcionAndIdNegociacionAndestadoExcepcion")
+	@Path("/findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo Especifico Retorna entidad encontradas en TbQoExcepcione por id de negociacion, tipo de excepcion y estado de la excepcion", response = GenericWrapper.class)
-	public GenericWrapper<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(
+	public GenericWrapper<TbQoExcepcione> findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("tipoExcepcion") String tipoExcepcion,
 			@QueryParam("estadoExcepcion") String estadoExcepcion
 			) throws RelativeException {
 		GenericWrapper<TbQoExcepcione> loc = new GenericWrapper<>();
-		TbQoExcepcione a = this.qos.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long.valueOf( idNegociacion ), tipoExcepcion, estadoExcepcion );
+		TbQoExcepcione a = this.qos.findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion( Long.valueOf( idNegociacion ), tipoExcepcion, estadoExcepcion );
 		loc.setEntidad(a);
 		return loc;
 	}
+	@Override
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo getEntity Retorna entidad encontradas en TbQoExcepcione", response = GenericWrapper.class)
@@ -69,13 +69,11 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	@Override
 	public PaginatedListWrapper<TbQoExcepcione> listAllEntities(String arg0, String arg1, String arg2, String arg3,
 			String arg4) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public GenericWrapper<TbQoExcepcione> persistEntity(GenericWrapper<TbQoExcepcione> arg0) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

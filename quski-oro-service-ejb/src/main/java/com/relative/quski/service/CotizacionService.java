@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.CotizadorRepository;
@@ -17,9 +18,7 @@ import com.relative.quski.repository.CotizadorRepository;
 @Stateless
 public class CotizacionService {
 
-	public CotizacionService() {
-		super();
-	}
+	
 
 	@Inject
 	Logger log;
@@ -27,10 +26,16 @@ public class CotizacionService {
 	QuskiOroService qos;
 	@Inject
 	CotizadorRepository cotizacionRepository;
+	
+	
+	public CotizacionService() {
+		super();
+	}
 
 	/**
 	 * Metodo que busca la cotizacion completa activa por cedula de cliente
 	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param cedulaCliente
 	 * @return cotizacion
 	 * @throws RelativeException
@@ -67,10 +72,10 @@ public class CotizacionService {
 	}
 
 	/**
-	 * Metodo que recibe una cotizacion y la crea la cotizacion y la Variable
+	 * Metodo que recibe  cotizacion y la crea al cliente la cotizacion y la Variable
 	 * Crediticia
 	 * 
-	 * @author KLÉBER GUERRA
+	 * @author KLÉBER GUERRA - Relative Engine
 	 * @param cot
 	 * @return cotLlena
 	 * @throws RelativeException
@@ -79,35 +84,48 @@ public class CotizacionService {
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
 			log.info("INGRESA A crearCotizacionClienteVariableCrediticia " + cot);
-
 			TbQoCotizador cotLlena = new TbQoCotizador();
-			List<TbQoVariablesCrediticia> variableCrediticiaLlega = new ArrayList<TbQoVariablesCrediticia>();
-			log.info("COTIZACION QUE LLEGA" + cot);
-
+			
+			List<TbQoVariablesCrediticia> variableCrediticiaLlega = cot.getTbQoVariablesCrediticias();
 			if (cot != null && cot.getId() == null) {
+				TbQoCliente cliente= this.qos.manageCliente(cot.getTbQoCliente());
+				cot.setTbQoCliente(cliente   );
 				cotLlena = this.qos.manageCotizador(cot);
-				log.info("idClientte---> " + cot.getId());
-				
-				for (TbQoVariablesCrediticia varCredi : cot.getTbQoVariablesCrediticias()) {
-					variableCrediticiaLlega.add(varCredi);
+				log.info("idCotizacion---> " + cot.getId());
+				for (TbQoVariablesCrediticia varCredi : variableCrediticiaLlega) {
+					log.info("====> varable crediticia " + varCredi.getNombre());
+					varCredi.setTbQoCotizador( cotLlena );
 					this.qos.manageVariablesCrediticia(varCredi);
-					
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
-				
-				
-
-			} else {
-				if (cot.getEstado().equals(EstadoEnum.ACT))
-					log.info("ES ANTIGUO");
+			} else {				
+				log.info("===>COTIZACION EXISTE");
 				cotLlena = this.qos.findCotizadorById(cot.getId());
 				log.info("VALOR  COTIZACION ESTADO ACT>>>" + cotLlena);
 
 			}
 			return cotLlena;
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, "Error al crear la cotizacion y varables crediticias " + e.getMessage());
 		}
+
+	}
+
+	/***
+	 * METODO QUE REALIZA LA CADUCACION DE LA COTIZACION ANTERIOR
+	 * 
+	 * @author KLÉBER GUERRA - Relative Engine
+	 * @param cot
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoCotizador caducarCotizacion(TbQoCotizador cot) throws RelativeException {
+		log.info("ingresa a caducar  --> " + cot);
+		if (cot != null && cot.getId() != null) {
+			cot.setEstado(EstadoEnum.INA);
+
+		}
+		return this.qos.manageCotizador(cot);
 
 	}
 

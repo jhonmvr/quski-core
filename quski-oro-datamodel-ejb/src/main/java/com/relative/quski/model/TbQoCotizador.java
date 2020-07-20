@@ -46,7 +46,7 @@ public class TbQoCotizador implements Serializable {
 	private String motivoDeDesestimiento;
 
 	// bi-directional many-to-one association to TbQoCliente
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private TbQoCliente tbQoCliente;
 
@@ -229,14 +229,6 @@ public class TbQoCotizador implements Serializable {
 		return tbQoVariablesCrediticia;
 	}
 
-	@Override
-	public String toString() {
-		return "TbQoCotizador [id=" + id + ", aprobacionMupi=" + aprobacionMupi + ", codigoCotizacion="
-				+ codigoCotizacion + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCreacion=" + fechaCreacion + ", gradoInteres=" + gradoInteres + ", motivoDeDesestimiento="
-				+ motivoDeDesestimiento + ", tbQoCliente=" + tbQoCliente + ", tbQoDetalleCreditos="
-				+ tbQoDetalleCreditos + ", tbQoDocumentoHabilitantes=" + tbQoDocumentoHabilitantes + ", tbQoPrecioOros="
-				+ tbQoPrecioOros + ", tbQoVariablesCrediticias=" + tbQoVariablesCrediticias + "]";
-	}
+
 
 }
