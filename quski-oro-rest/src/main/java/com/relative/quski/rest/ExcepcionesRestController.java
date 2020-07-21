@@ -25,7 +25,6 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "excepcionesRestController - REST CRUD")
-
 public class ExcepcionesRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepcione>> {
 	@Inject
@@ -54,6 +53,7 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 		loc.setEntidad(a);
 		return loc;
 	}
+	@Override
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo getEntity Retorna entidad encontradas en TbQoExcepcione", response = GenericWrapper.class)
@@ -69,13 +69,11 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	@Override
 	public PaginatedListWrapper<TbQoExcepcione> listAllEntities(String arg0, String arg1, String arg2, String arg3,
 			String arg4) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public GenericWrapper<TbQoExcepcione> persistEntity(GenericWrapper<TbQoExcepcione> arg0) throws RelativeException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
