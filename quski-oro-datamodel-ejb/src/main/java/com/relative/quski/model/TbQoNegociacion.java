@@ -47,8 +47,8 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="proceso_actual_negociacion")
 	private String procesoActualNegociacion;
 
-	@Column(name="situacion_negociacion")
-	private String situacionNegociacion;
+	@Column(name="estado_negociacion")
+	private String estadoNegociacion;
 
 	@Column(name="tipo_negociacion")
 	private String tipoNegociacion;
@@ -136,13 +136,13 @@ public class TbQoNegociacion implements Serializable {
 	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
 		this.procesoActualNegociacion = procesoActualNegociacion;
 	}
-
-	public String getSituacionNegociacion() {
-		return this.situacionNegociacion;
+ 
+	public String getEstadoNegociacion() {
+		return estadoNegociacion;
 	}
 
-	public void setSituacionNegociacion(String situacionNegociacion) {
-		this.situacionNegociacion = situacionNegociacion;
+	public void setEstadoNegociacion(String estadoNegociacion) {
+		this.estadoNegociacion = estadoNegociacion;
 	}
 
 	public String getTipoNegociacion() {

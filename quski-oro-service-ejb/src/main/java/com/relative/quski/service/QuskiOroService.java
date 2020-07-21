@@ -233,7 +233,8 @@ public class QuskiOroService {
 	 */
 	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Cliente");
+			log.info("VALORES QUE LLEGAN" + send);
+			log.info("==> entra a manage Cliente=======>ID  " + send.getId());
 			TbQoCliente persisted = null;
 			if (send != null && send.getId() != null) {
 				log.info("==================>   Ingresa a actualizacion ===================> ");
@@ -242,7 +243,6 @@ public class QuskiOroService {
 				return this.updateCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				log.info("INGRESA A CREACION");
-
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return clienteRepository.add(send);
 			} else {
@@ -1368,8 +1368,10 @@ public class QuskiOroService {
 	public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
 		List<TbQoCliente> tmp;
 		try {
+			log.info("LA CEDULA QUE LLEGA ES findClienteByIdentifiacion------> "+identificacion);
 			tmp = this.clienteRepository.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
 			if (tmp != null && !tmp.isEmpty()) {
+				log.info("EL CIENTE QUE RETORNA ES ------> "+tmp);
 				return tmp;
 			}
 		} catch (Exception e) {
@@ -1630,10 +1632,10 @@ public class QuskiOroService {
 		try {
 			persisted.setNombre(send.getNombre());
 			persisted.setValor(send.getValor());
-			if( send.getTbQoCotizador()!=null ) {
+			if (send.getTbQoCotizador() != null) {
 				persisted.setTbQoCotizador(send.getTbQoCotizador());
 			}
-			if( send.getTbQoNegociacion()!=null ) {
+			if (send.getTbQoNegociacion() != null) {
 				persisted.setTbQoNegociacion(send.getTbQoNegociacion());
 			}
 			persisted.setFechaActualizacion(new Date());
@@ -1740,7 +1742,7 @@ public class QuskiOroService {
 			persisted.setAsesorResponsable(send.getAsesorResponsable());
 			persisted.setIdAsesorResponsable(send.getIdAsesorResponsable());
 			persisted.setProcesoActualNegociacion(send.getProcesoActualNegociacion());
-			persisted.setSituacionNegociacion(send.getSituacionNegociacion());
+			persisted.setEstadoNegociacion(send.getEstadoNegociacion());
 			persisted.setTipoNegociacion(send.getTipoNegociacion());
 
 			persisted.setId(persisted.getId());
@@ -3978,32 +3980,36 @@ public class QuskiOroService {
 	 * @return TbQoExcepcione
 	 * @throws RelativeException
 	 */
-	public TbQoExcepcione findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException {
+	public TbQoExcepcione findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long idNegociacion,
+			String tipoExcepcion, String estadoExcepcion) throws RelativeException {
 		try {
-			if ( this.validarTipoExcepcion( tipoExcepcion ).equals("true") ) {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, estadoExcepcion );
+			if (this.validarTipoExcepcion(tipoExcepcion).equals("true")) {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(idNegociacion,
+						tipoExcepcion, estadoExcepcion);
 			} else {
-				String mensaje = validarTipoExcepcion( tipoExcepcion );
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:"+ mensaje);			
+				String mensaje = validarTipoExcepcion(tipoExcepcion);
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:" + mensaje);
 			}
 		} catch (RelativeException e) {
-			String mensaje = validarTipoExcepcion( tipoExcepcion );
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:"+ mensaje);
+			String mensaje = validarTipoExcepcion(tipoExcepcion);
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:" + mensaje);
 		}
 	}
+
 	/**
 	 * 
-	 * @param  String tipoExcepcion
+	 * @param String tipoExcepcion
 	 * @return String
 	 */
-	private String validarTipoExcepcion ( String tipoExcepcion ) {
+	private String validarTipoExcepcion(String tipoExcepcion) {
 		try {
-			if ( tipoExcepcion != null && !tipoExcepcion.isEmpty() ) {
-				List<TbMiParametro> listTipo= this.parametroRepository.findByNombreAndTipoOrdered("","TIP-EXC", false);
+			if (tipoExcepcion != null && !tipoExcepcion.isEmpty()) {
+				List<TbMiParametro> listTipo = this.parametroRepository.findByNombreAndTipoOrdered("", "TIP-EXC",
+						false);
 				String[] valor = new String[1];
 				valor[0] = " NO EXISTE TIPO DE EXCEPCION ";
-				listTipo.forEach( param -> {
-					if ( param.getNombre().equals( tipoExcepcion ) ) {
+				listTipo.forEach(param -> {
+					if (param.getNombre().equals(tipoExcepcion)) {
 						valor[0] = "true";
 					}
 				});
