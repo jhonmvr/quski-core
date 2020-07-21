@@ -1,13 +1,25 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-
-import com.relative.quski.enums.EstadoEnum;
-
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -136,15 +148,8 @@ public class TbQoNegociacion implements Serializable {
 	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
 		this.procesoActualNegociacion = procesoActualNegociacion;
 	}
-<<<<<<< HEAD
- 
 	public String getEstadoNegociacion() {
 		return estadoNegociacion;
-=======
-
-	public String getEstadoNegociacion() {
-		return this.estadoNegociacion;
->>>>>>> e10e9e14c370a14edd9e0cec5fd9b4020d811aa9
 	}
 
 	public void setEstadoNegociacion(String estadoNegociacion) {
