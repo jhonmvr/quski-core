@@ -21,6 +21,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
@@ -3981,7 +3982,15 @@ public class QuskiOroService {
 	public TbQoExcepcione findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException {
 		try {
 			if ( this.validarTipoExcepcion( tipoExcepcion ).equals("true") ) {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, estadoExcepcion );
+				EstadoExcepcionEnum[] values = EstadoExcepcionEnum.values();
+				EstadoExcepcionEnum EnumExc = null;
+				for (int i = 0; i < values.length; i++) {
+					EstadoExcepcionEnum estadoExcepcionEnum = values[i];
+					if (estadoExcepcionEnum.toString().equals( estadoExcepcion )) {
+						EnumExc = estadoExcepcionEnum;
+					}
+				}
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, EnumExc );
 			} else {
 				String mensaje = validarTipoExcepcion( tipoExcepcion );
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:"+ mensaje);			
@@ -4135,10 +4144,76 @@ public class QuskiOroService {
 			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"Error al contar Excepciones por id de cliente:  " + e.getMessage());
+					"Error al contar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  TbQoExcepcione send
+	 * @param  TbQoExcepcione persisted
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	private TbQoExcepcione updateExcepcion( TbQoExcepcione send, TbQoExcepcione persisted ) throws RelativeException {
+		try {
+			persisted.setFechaActualizacion( new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado( EstadoEnum.ACT );
+			EstadoExcepcionEnum[] values = EstadoExcepcionEnum.values();
+			for (int i = 0; i < values.length; i++) {
+				EstadoExcepcionEnum estadoExcepcionEnum = values[i];
+				if (estadoExcepcionEnum.equals( send.getEstadoExcepcion() )) {
+					persisted.setEstadoExcepcion( estadoExcepcionEnum );
+				}
+			}
+			persisted.setIdAprobador( send.getIdAprobador());
+			persisted.setObservacionAprobador( send.getObservacionAprobador() );
+			return this.excepcionesRepository.update(persisted);
+
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  TbQoExcepcione send
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
+		TbQoExcepcione persisted = null;
+		try {
+			if (send != null && send.getId() != null) {
+				persisted = this.excepcionesRepository.findById(send.getId());
+				return this.updateExcepcion(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				send.setEstado(EstadoEnum.ACT);
+				send.setEstadoExcepcion( EstadoExcepcionEnum.PENDIENTE);
+				send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
+				persisted = this.excepcionesRepository.add(send);
+				persisted.setTbQoNegociacion( send.getTbQoNegociacion() );
+				return persisted;
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+						": ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, ": AL CREAR O ACTUALIZAR EXCEPCION" + e.getMessage());
 		}
 	}
 
+	
+	/**
+	 *  ******************************* @TASACION
+	 */
+	/**
+	 * 
+	 * @param pw
+	 * @param idCreditoNegociacion
+	 * @return
+	 * @throws RelativeException
+	 */
 	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
 			throws RelativeException {
 		if (pw == null) {
@@ -4157,5 +4232,6 @@ public class QuskiOroService {
 	public Long countTasacionByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
+
 
 }

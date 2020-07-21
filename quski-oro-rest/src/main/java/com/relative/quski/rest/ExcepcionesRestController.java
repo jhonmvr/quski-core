@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -36,7 +37,6 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -73,10 +73,15 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	}
 
 	@Override
-	public GenericWrapper<TbQoExcepcione> persistEntity(GenericWrapper<TbQoExcepcione> arg0) throws RelativeException {
-		return null;
+	@POST
+	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoExcepcione> persistEntity(GenericWrapper<TbQoExcepcione> wp) throws RelativeException {
+		GenericWrapper<TbQoExcepcione> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.manageExcepcion(wp.getEntidad()));
+		return loc;
+
 	}
-	
 	@GET
 	@Path("/findByIdNegociacion")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcione>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcione por id de Negociacion", response = GenericWrapper.class)

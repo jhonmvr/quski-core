@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcione;
 import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.spec.ExcepcionByIdSpec;
@@ -125,7 +126,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 	@Override
 	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion, String tipoExcepcion,
-			 String estadoExcepcion) throws RelativeException {
+			 EstadoExcepcionEnum estadoExcepcion) throws RelativeException {
 		try {
 			List<TbQoExcepcione> listExcepciones = this.findAllBySpecification( new ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec( tipoExcepcion,  idNegociacion, estadoExcepcion ) );
 			if (!listExcepciones.isEmpty()) {
