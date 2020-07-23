@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -193,7 +194,6 @@ public class QuskiOroService {
 				} else {
 					return this.clienteRepository.findAll(TbQoCliente.class, pw.getSortFields(),
 							pw.getSortDirections());
-
 				}
 			}
 		} catch (RelativeException e) {
@@ -235,32 +235,31 @@ public class QuskiOroService {
 		try {
 			log.info("VALORES QUE LLEGAN" + send);
 			log.info("==> entra a manage Cliente=======>ID  " + send.getId());
-			TbQoCliente persisted = null;
-			if (send != null && send.getId() != null) {
+			TbQoCliente persisted = this.clienteRepository
+					.findClienteByIdentificacion(send.getCedulaCliente());
+			if (send != null && persisted != null && persisted.getId() != null
+					&& send.getCedulaCliente().equals(persisted.getCedulaCliente())) {
 				log.info("==================>   Ingresa a actualizacion ===================> ");
-				persisted = this.clienteRepository.findById(send.getId());
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateCliente(send, persisted);
-			} else if (send != null && send.getId() == null) {
+			} else
 				log.info("INGRESA A CREACION");
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return clienteRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
-			}
+			send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+			return clienteRepository.add(send);
+
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Abono " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error actualizando el cliente " + e.getMessage());
 		}
 	}
 
 	public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
 		try {
-			persisted.setId(send.getId());
-			persisted.setCedulaCliente(send.getCedulaCliente());
+			 
 			persisted.setPrimerNombre(send.getPrimerNombre());
 			persisted.setSegundoNombre(send.getSegundoNombre());
 			persisted.setApellidoPaterno(send.getApellidoPaterno());
@@ -274,10 +273,6 @@ public class QuskiOroService {
 			persisted.setNivelEducacion(send.getNivelEducacion());
 			persisted.setActividadEconomica(send.getActividadEconomica());
 			persisted.setEdad(send.getEdad());
-
-			if (!StringUtils.isEmpty(send.getCedulaCliente())) {
-				persisted.setCedulaCliente(send.getCedulaCliente());
-			}
 
 			if (!StringUtils.isEmpty(send.getActividadEconomica())) {
 				persisted.setActividadEconomica(send.getActividadEconomica());
@@ -1367,18 +1362,23 @@ public class QuskiOroService {
 	 */
 	public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
 		List<TbQoCliente> tmp;
+		TbQoCliente cli = new TbQoCliente();
 		try {
-			log.info("LA CEDULA QUE LLEGA ES findClienteByIdentifiacion------> "+identificacion);
+			log.info("LA CEDULA QUE LLEGA ES findClienteByIdentifiacion------> " + identificacion);
 			tmp = this.clienteRepository.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+
 			if (tmp != null && !tmp.isEmpty()) {
-				log.info("EL CIENTE QUE RETORNA ES ------> "+tmp);
+				log.info("EL CIENTE QUE RETORNA ES ------> " + tmp);
 				return tmp;
+			} else {
+				tmp.add(this.manageCliente(cli));
+				return tmp;
+
 			}
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
 		}
-		return null;
 
 	}
 
@@ -1393,6 +1393,7 @@ public class QuskiOroService {
 	public TbQoCliente findClienteByIdentificacionWithCotizacion(String identificacion) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
+
 			TbQoCliente clienteId = new TbQoCliente();
 
 			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
@@ -1612,7 +1613,7 @@ public class QuskiOroService {
 				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-				if( send.getTbQoNegociacion() != null && send.getTbQoNegociacion().getId()==null ) {
+				if (send.getTbQoNegociacion() != null && send.getTbQoNegociacion().getId() == null) {
 					send.setTbQoNegociacion(null);
 				}
 				return variablesCrediticiaRepository.add(send);

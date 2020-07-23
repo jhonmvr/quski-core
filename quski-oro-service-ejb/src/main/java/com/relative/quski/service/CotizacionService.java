@@ -126,5 +126,10 @@ public class CotizacionService {
 		return this.qos.manageCotizador(cot);
 
 	}
+	
+	public TbQoCliente buscarCliente(String identificacion )throws RelativeException{
+		TbQoCliente cliente=qos.findClienteByIdentificacionWithCotizacion(identificacion);
+		return cliente;
+	}
 
 }

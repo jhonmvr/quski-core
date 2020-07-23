@@ -1,5 +1,6 @@
 package com.relative.quski.repository.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -62,29 +63,31 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 		}
 	}
 
-
-
 	@Override
 	/**
 	 * Método que realiza la búsqueda por identificacion
+	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion 
+	 * @param identificacion
 	 * @return TbQoCliente
 	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
-			List<TbQoCliente> listCliente = this
-					.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+			List<TbQoCliente> listCliente = new ArrayList<>();
+			listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
 			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.size());
 			if (!listCliente.isEmpty()) {
 				if (listCliente.size() <= 1) {
 					log.info("Retorna el valor de la lista " + listCliente.size());
 					return listCliente.get(0);
+
 				} else {
-					throw new RelativeException(Constantes.ERROR_CODE_READ, "NO EXISTE CLIENTE, ");
+					 
+					// listCliente.add(this.findClienteByIdentificacion(identificacion));
+					return null;
 				}
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR EN LA BUSQUEDA DE CLIENTE, ");
+				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
