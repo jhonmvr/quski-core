@@ -18,16 +18,13 @@ import com.relative.quski.repository.CotizadorRepository;
 @Stateless
 public class CotizacionService {
 
-	
-
 	@Inject
 	Logger log;
 	@Inject
 	QuskiOroService qos;
 	@Inject
 	CotizadorRepository cotizacionRepository;
-	
-	
+
 	public CotizacionService() {
 		super();
 	}
@@ -72,7 +69,7 @@ public class CotizacionService {
 	}
 
 	/**
-	 * Metodo que recibe  cotizacion y la crea al cliente la cotizacion y la Variable
+	 * Metodo que recibe cotizacion y la crea al cliente la cotizacion y la Variable
 	 * Crediticia
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
@@ -83,22 +80,22 @@ public class CotizacionService {
 
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
-			log.info("INGRESA A crearCotizacionClienteVariableCrediticia " + cot);
+			log.info("INGRESA A crearCotizacionClienteVariableCrediticia=====> IDCLIENTE " + cot.getTbQoCliente().getId());
 			TbQoCotizador cotLlena = new TbQoCotizador();
-			
+
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = cot.getTbQoVariablesCrediticias();
 			if (cot != null && cot.getId() == null) {
-				TbQoCliente cliente= this.qos.manageCliente(cot.getTbQoCliente());
-				cot.setTbQoCliente(cliente   );
+				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
+				cot.setTbQoCliente(cliente);
 				cotLlena = this.qos.manageCotizador(cot);
 				log.info("idCotizacion---> " + cot.getId());
 				for (TbQoVariablesCrediticia varCredi : variableCrediticiaLlega) {
 					log.info("====> varable crediticia " + varCredi.getNombre());
-					varCredi.setTbQoCotizador( cotLlena );
+					varCredi.setTbQoCotizador(cotLlena);
 					this.qos.manageVariablesCrediticia(varCredi);
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
-			} else {				
+			} else {
 				log.info("===>COTIZACION EXISTE");
 				cotLlena = this.qos.findCotizadorById(cot.getId());
 				log.info("VALOR  COTIZACION ESTADO ACT>>>" + cotLlena);
@@ -106,7 +103,8 @@ public class CotizacionService {
 			}
 			return cotLlena;
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, "Error al crear la cotizacion y varables crediticias " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					"Error al crear la cotizacion y varables crediticias " + e.getMessage());
 		}
 
 	}
