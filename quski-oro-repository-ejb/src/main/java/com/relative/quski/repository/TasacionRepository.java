@@ -12,6 +12,13 @@ public interface TasacionRepository extends CrudRepository<Long, TbQoTasacion>{
 	public List<TbQoTasacion> findByIdCreditoNegociacion(Long idCreditoNegociacion)  throws RelativeException;
 	public List<TbQoTasacion> findByIdCreditoNegociacionPaged(Long idCreditoNegociacion, int page, int pageSize, String order,
 			String direction) throws RelativeException;
-	
 	public Long countFindByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException;
+	
+	/**
+	 * @author  Jeroham Cadenas - Developer Twelve
+	 * @apiNote Metodos utilizados para consulta en escepcion de cobertura
+	 */
+	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion)  throws RelativeException;
+	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion, int startRecord, Integer pageSize, String sortFields, String sortDirections ) throws RelativeException;
+	public Long countFindByIdNegociacion(Long idNegociacion) throws RelativeException;
 }

@@ -3,6 +3,7 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 import java.math.BigDecimal;
@@ -45,7 +46,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
 
-	private String estado;
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -171,11 +172,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.costoTransporte = costoTransporte;
 	}
 
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

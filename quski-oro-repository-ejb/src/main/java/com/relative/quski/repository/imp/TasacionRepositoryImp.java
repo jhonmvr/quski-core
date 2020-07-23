@@ -9,6 +9,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
+import com.relative.quski.repository.spec.TasacionByIdNegociacionSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -41,7 +42,7 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 				return tmp;
 			}
 		} catch (Exception e) {
-			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e);
+			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e.getMessage());
 		}
 		return null;
 	}
@@ -58,6 +59,41 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 			throw new RelativeException("Error al buscar por id Credito negociacion " + e);
 		}
 		return null;
+	}
+	
+	@Override
+	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return this.findAllBySpecification( new TasacionByIdNegociacionSpec( idNegociacion ) );
+		}catch (Exception e) {
+			throw new RelativeException(": Al buscar tasacion por id de negociacion imp " + e.getMessage());
+		}
+	}
+
+	@Override
+	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion, int startRecord, Integer pageSize, String sortFields, String sortDirections ) throws RelativeException {
+		try {
+			return this.findAllBySpecificationPaged( new TasacionByIdNegociacionSpec( idNegociacion ), startRecord,
+					pageSize, sortFields, sortDirections );
+		} catch (Exception e) {
+			throw new RelativeException(": Al buscar contrato por id de Negociacion imp " + e.getMessage());
+		}
+	}
+
+	@Override
+	public Long countFindByIdNegociacion(Long idNegociacion) throws RelativeException {
+		Long tmp;
+		try {
+			tmp = this.countBySpecification( new TasacionByIdNegociacionSpec( idNegociacion ) );
+			if (tmp != null) {
+				return tmp;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(": Al contar los registro de tasacion por id de negociacion " + e.getMessage());
+		}
+		
 	}
 	
 	

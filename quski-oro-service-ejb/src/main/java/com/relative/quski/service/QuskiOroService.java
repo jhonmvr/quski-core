@@ -4216,16 +4216,11 @@ public class QuskiOroService {
 	 */
 	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
 			throws RelativeException {
-		if (pw == null) {
-			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
+					pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 		} else {
-			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
-						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
-			} else {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
-						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
-			}
+			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
 		}
 	}
 
@@ -4233,5 +4228,39 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
 
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  PaginatedWrapper pw
+	 * @param  Long idNegociacion
+	 * @return List<TbQoTasacion>
+	 * @throws RelativeException
+	 */
+	public List<TbQoTasacion> findTasacionByIdNegociacion(PaginatedWrapper pw, Long idNegociacion) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.tasacionRepository.findByIdNegociacion(idNegociacion,
+						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.tasacionRepository.findByIdNegociacion( idNegociacion );			
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, ": AL BUSCAR TASACION POR ID NEGOCIACION" + e.getMensaje());
+		}
+	}
 
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  Long idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countTasacionByByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return this.tasacionRepository.countFindByIdNegociacion( idNegociacion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, ": AL CONTAR REGISTROS DE TASACION POR ID NEGOCIACION" + e.getMensaje());
+		}
+	}
 }
