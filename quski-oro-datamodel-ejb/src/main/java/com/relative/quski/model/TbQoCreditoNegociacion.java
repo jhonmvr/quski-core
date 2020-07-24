@@ -46,6 +46,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
 
+	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
@@ -71,7 +72,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private BigDecimal montoPreaprobado;
 
 	@Column(name="plazo_credito")
-	private String plazoCredito;
+	private BigDecimal plazoCredito;
 
 	@Column(name="recibir_cliente")
 	private BigDecimal recibirCliente;
@@ -228,11 +229,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.montoPreaprobado = montoPreaprobado;
 	}
 
-	public String getPlazoCredito() {
+	public BigDecimal getPlazoCredito() {
 		return this.plazoCredito;
 	}
 
-	public void setPlazoCredito(String plazoCredito) {
+	public void setPlazoCredito(BigDecimal plazoCredito) {
 		this.plazoCredito = plazoCredito;
 	}
 

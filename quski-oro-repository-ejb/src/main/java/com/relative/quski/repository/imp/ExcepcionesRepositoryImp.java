@@ -42,7 +42,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 					throw new RelativeException(Constantes.ERROR_CODE_READ, "EXISTE MAS DE UNA EXCEPCION, ERROR DE DESARROLLO (IMP)");
 				}
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR EN LA BUSQUEDA, NO EXISTEN EXCEPCIONES CON ESE ID (IMP)");
+				return null;			
 			}
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ + this.mensaje + e.getMessage());

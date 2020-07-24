@@ -4171,6 +4171,7 @@ public class QuskiOroService {
 					persisted.setEstadoExcepcion( estadoExcepcionEnum );
 				}
 			}
+			persisted.setCaracteristica( send.getCaracteristica() );
 			persisted.setIdAprobador( send.getIdAprobador());
 			persisted.setObservacionAprobador( send.getObservacionAprobador() );
 			return this.excepcionesRepository.update(persisted);

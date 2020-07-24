@@ -30,8 +30,8 @@ public class ExcepcionByIdSpec extends AbstractSpecification<TbQoExcepcione> {
 
 		if (this.id != null && this.id != 0) {
 			where.add(cb.equal(poll.get("id"), this.id));
-			where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		}	
+		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 

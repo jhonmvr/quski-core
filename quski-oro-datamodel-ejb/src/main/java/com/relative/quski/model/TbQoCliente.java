@@ -54,6 +54,7 @@ public class TbQoCliente implements Serializable {
 	private BigDecimal edad;
 
 	private String email;
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
