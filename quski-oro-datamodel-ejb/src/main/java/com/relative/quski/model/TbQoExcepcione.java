@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 
 import java.util.Date;
 
@@ -24,9 +25,10 @@ public class TbQoExcepcione implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-
+	
+	@Enumerated(EnumType.STRING)
 	@Column(name="estado_excepcion")
-	private String estadoExcepcion;
+	private EstadoExcepcionEnum estadoExcepcion;
 
 
 	@Column(name="id_aprobador")
@@ -37,6 +39,8 @@ public class TbQoExcepcione implements Serializable {
 
 	@Column(name="tipo_excepcion")
 	private String tipoExcepcion;
+	
+	private String caracteristica;
 	
 	@Column(name="observacion_asesor")
 	private String observacionAsesor;
@@ -61,18 +65,18 @@ public class TbQoExcepcione implements Serializable {
 	}
 
 	public EstadoEnum getEstado() {
-		return estado;
+		return this.estado;
 	}
 
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
-	public String getEstadoExcepcion() {
+	public EstadoExcepcionEnum getEstadoExcepcion() {
 		return this.estadoExcepcion;
 	}
 
-	public void setEstadoExcepcion(String estadoExcepcion) {
+	public void setEstadoExcepcion(EstadoExcepcionEnum estadoExcepcion) {
 		this.estadoExcepcion = estadoExcepcion;
 	}
 
@@ -138,6 +142,14 @@ public class TbQoExcepcione implements Serializable {
 
 	public void setObservacionAprobador(String observacionAprobador) {
 		this.observacionAprobador = observacionAprobador;
+	}
+
+	public String getCaracteristica() {
+		return caracteristica;
+	}
+
+	public void setCaracteristica(String caracteristica) {
+		this.caracteristica = caracteristica;
 	}
 
 	public TbQoNegociacion getTbQoNegociacion() {

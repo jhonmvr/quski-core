@@ -9,6 +9,7 @@ import javax.ejb.Local;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcione;
 /**
  * 
@@ -32,6 +33,6 @@ public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcio
 	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion) throws RelativeException;
 	public Long countByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException ;
 	
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, String estadoExcepcion ) throws RelativeException;
+	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion ) throws RelativeException;
 	
 }

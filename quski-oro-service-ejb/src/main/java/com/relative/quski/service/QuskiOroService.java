@@ -22,6 +22,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
@@ -3984,10 +3985,17 @@ public class QuskiOroService {
 	public TbQoExcepcione findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long idNegociacion,
 			String tipoExcepcion, String estadoExcepcion) throws RelativeException {
 		try {
-			if (this.validarTipoExcepcion(tipoExcepcion).equals("true")) {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(idNegociacion,
-						tipoExcepcion, estadoExcepcion);
-			} else {
+			if ( this.validarTipoExcepcion( tipoExcepcion ).equals("true") ) {
+				EstadoExcepcionEnum[] values = EstadoExcepcionEnum.values();
+				EstadoExcepcionEnum EnumExc = null;
+				for (int i = 0; i < values.length; i++) {
+					EstadoExcepcionEnum estadoExcepcionEnum = values[i];
+					if (estadoExcepcionEnum.toString().equals( estadoExcepcion )) {
+						EnumExc = estadoExcepcionEnum;
+					}
+				}
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( idNegociacion, tipoExcepcion, EnumExc );
+			}else {
 				String mensaje = validarTipoExcepcion(tipoExcepcion);
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR:" + mensaje);
 			}
@@ -4142,22 +4150,84 @@ public class QuskiOroService {
 			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"Error al contar Excepciones por id de cliente:  " + e.getMessage());
+					"Error al contar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  TbQoExcepcione send
+	 * @param  TbQoExcepcione persisted
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	private TbQoExcepcione updateExcepcion( TbQoExcepcione send, TbQoExcepcione persisted ) throws RelativeException {
+		try {
+			persisted.setFechaActualizacion( new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado( EstadoEnum.ACT );
+			EstadoExcepcionEnum[] values = EstadoExcepcionEnum.values();
+			for (int i = 0; i < values.length; i++) {
+				EstadoExcepcionEnum estadoExcepcionEnum = values[i];
+				if (estadoExcepcionEnum.equals( send.getEstadoExcepcion() )) {
+					persisted.setEstadoExcepcion( estadoExcepcionEnum );
+				}
+			}
+			persisted.setCaracteristica( send.getCaracteristica() );
+			persisted.setIdAprobador( send.getIdAprobador());
+			persisted.setObservacionAprobador( send.getObservacionAprobador() );
+			return this.excepcionesRepository.update(persisted);
+
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando" + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  TbQoExcepcione send
+	 * @return TbQoExcepcione
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
+		TbQoExcepcione persisted = null;
+		try {
+			if (send != null && send.getId() != null) {
+				persisted = this.excepcionesRepository.findById(send.getId());
+				return this.updateExcepcion(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				send.setEstado(EstadoEnum.ACT);
+				send.setEstadoExcepcion( EstadoExcepcionEnum.PENDIENTE);
+				send.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
+				persisted = this.excepcionesRepository.add(send);
+				persisted.setTbQoNegociacion( send.getTbQoNegociacion() );
+				return persisted;
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+						": ID NO ENCONTRADO EN JSON PARA ACTUALIZAR");
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, ": AL CREAR O ACTUALIZAR EXCEPCION" + e.getMessage());
 		}
 	}
 
+	
+	/**
+	 *  ******************************* @TASACION
+	 */
+	/**
+	 * 
+	 * @param pw
+	 * @param idCreditoNegociacion
+	 * @return
+	 * @throws RelativeException
+	 */
 	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
 			throws RelativeException {
-		if (pw == null) {
-			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
+					pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 		} else {
-			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
-						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
-			} else {
-				return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion,
-						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
-			}
+			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
 		}
 	}
 
@@ -4165,4 +4235,39 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
 
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  PaginatedWrapper pw
+	 * @param  Long idNegociacion
+	 * @return List<TbQoTasacion>
+	 * @throws RelativeException
+	 */
+	public List<TbQoTasacion> findTasacionByIdNegociacion(PaginatedWrapper pw, Long idNegociacion) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.tasacionRepository.findByIdNegociacion(idNegociacion,
+						pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.tasacionRepository.findByIdNegociacion( idNegociacion );			
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, ": AL BUSCAR TASACION POR ID NEGOCIACION" + e.getMensaje());
+		}
+	}
+
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  Long idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countTasacionByByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			return this.tasacionRepository.countFindByIdNegociacion( idNegociacion );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, ": AL CONTAR REGISTROS DE TASACION POR ID NEGOCIACION" + e.getMensaje());
+		}
+	}
 }
