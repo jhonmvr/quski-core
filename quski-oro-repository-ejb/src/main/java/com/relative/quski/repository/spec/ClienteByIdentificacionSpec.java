@@ -1,12 +1,15 @@
 package com.relative.quski.repository.spec;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jfree.util.Log;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
@@ -17,6 +20,8 @@ import com.relative.quski.model.TbQoCliente;
  *
  */
 public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoCliente> {
+	@Inject
+	Logger log;
 	private String identificacion;
 
 	public ClienteByIdentificacionSpec(String identificacion) {
@@ -37,10 +42,10 @@ public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoClien
 
 		List<Predicate> where = new ArrayList<>();
 		if (StringUtils.isNotBlank(this.identificacion)) {
-			where.add(cb.equal(poll.get("cedulaCliente"), this.identificacion));
+			where.add(cb.equal(poll.<String>get("cedulaCliente"), this.identificacion));
 		}
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
-		
+	//	log.info("VALOR DE LA COMPARACION=======> "+cb.and(where.toArray(new Predicate[] {})));
 		return cb.and(where.toArray(new Predicate[]{}));	
 	}
 

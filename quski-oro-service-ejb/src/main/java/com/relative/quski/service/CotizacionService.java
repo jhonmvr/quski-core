@@ -80,25 +80,37 @@ public class CotizacionService {
 
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
-			log.info("INGRESA A crearCotizacionClienteVariableCrediticia=====> IDCLIENTE " + cot.getTbQoCliente().getId());
+			log.info("INGRESA A crearCotizacionClienteVariableCrediticia=====> IDCLIENTE "
+					+ cot.getTbQoCliente().getId());
+			log.info("CEDULA EN crearCotizacionClienteVariableCrediticia=====> NUMERO DE CEDULA "
+					+ cot.getTbQoCliente().getCedulaCliente());
 			TbQoCotizador cotLlena = new TbQoCotizador();
-
+	
+			// BUSQUEDA POR LA CEDULA
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = cot.getTbQoVariablesCrediticias();
-			if (cot != null && cot.getId() == null) {
+			if (cot != null && cot.getId() == null && cot.getTbQoCliente().getCedulaCliente() != null) {
+				
+				
+				
 				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
 				cot.setTbQoCliente(cliente);
+				log.info("EL VALOR DEL CLIENTE FUERA DEL MANAGE ES =====>" + cot.getTbQoCliente());
 				cotLlena = this.qos.manageCotizador(cot);
-				log.info("idCotizacion---> " + cot.getId());
+				log.info("idCotizacion=====> " + cotLlena.getId());
 				for (TbQoVariablesCrediticia varCredi : variableCrediticiaLlega) {
-					log.info("====> varable crediticia " + varCredi.getNombre());
+					log.info("====> varable crediticia===> " + varCredi.getNombre());
 					varCredi.setTbQoCotizador(cotLlena);
 					this.qos.manageVariablesCrediticia(varCredi);
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
 			} else {
-				log.info("===>COTIZACION EXISTE");
+				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
+				cot.setTbQoCliente(cliente);
+				log.info("EL VALOR DEL CLIENTE FUERA DEL MANAGE ES =====>" + cot.getTbQoCliente());
+				// RARO
+				log.info("===>COTIZACION EXISTE====> ");
 				cotLlena = this.qos.findCotizadorById(cot.getId());
-				log.info("VALOR  COTIZACION ESTADO ACT>>>" + cotLlena);
+				log.info("VALOR  COTIZACION ESTADO ACT====>>>" + cotLlena.getId());
 
 			}
 			return cotLlena;
@@ -126,9 +138,9 @@ public class CotizacionService {
 		return this.qos.manageCotizador(cot);
 
 	}
-	
-	public TbQoCliente buscarCliente(String identificacion )throws RelativeException{
-		TbQoCliente cliente=qos.findClienteByIdentificacionWithCotizacion(identificacion);
+
+	public TbQoCliente buscarCliente(String identificacion) throws RelativeException {
+		TbQoCliente cliente = qos.findClienteByIdentificacionWithCotizacion(identificacion);
 		return cliente;
 	}
 

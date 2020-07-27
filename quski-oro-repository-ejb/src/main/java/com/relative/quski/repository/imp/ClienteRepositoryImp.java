@@ -73,21 +73,29 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
+			TbQoCliente cliente = new TbQoCliente();
+			cliente.setCedulaCliente(identificacion);
+			log.info("INGRESA A findClienteByIdentificacion ===> " + identificacion);
 			List<TbQoCliente> listCliente = new ArrayList<>();
+			
+			//listCliente=this.findByParams(null, identificacion, "", "", "", "", "", "", "",EstadoEnum.ACT);
+					
 			listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.size());
+			log.info("VALORES QUE RETORNAN=====> "+listCliente.size());
+			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.toString());
 			if (!listCliente.isEmpty()) {
 				if (listCliente.size() <= 1) {
 					log.info("Retorna el valor de la lista " + listCliente.size());
-					return listCliente.get(0);
+					cliente=listCliente.get(0);
+					return cliente;
 
 				} else {
-					 
+
 					// listCliente.add(this.findClienteByIdentificacion(identificacion));
-					return null;
-				}
+					return new TbQoCliente();				}
 			} else {
-				return null;
+				log.info("2do ELSE Retorna el valor de la lista " );
+				return cliente;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
