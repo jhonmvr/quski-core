@@ -93,7 +93,8 @@ import com.relative.quski.wrapper.VariableCrediticiaWrapper;
 public class QuskiOroService {
 	@Inject
 	Logger log;
-
+	@Inject
+	private CotizacionService cs;
 	@Inject
 	private CotizadorRepository cotizadorRepository;
 	@Inject
@@ -241,16 +242,16 @@ public class QuskiOroService {
 					+ send.getCedulaCliente());
 
 			TbQoCliente persisted = this.clienteRepository.findClienteByIdentificacion(send.getCedulaCliente());
-			log.info("VALOR DEL PERSISTED===> " + persisted.getCedulaCliente() + " VALOR DEL SEND =====> "
-					+ send.getCedulaCliente());
+			log.info("manageCliente======VALOR DEL PERSISTED===> " + persisted.getCedulaCliente()
+					+ " VALOR DEL SEND =====> " + send.getCedulaCliente());
 			// HACER LA VALIDACION POR CEDULA
 			if (send != null && persisted != null && persisted.getId() != null
 					&& send.getCedulaCliente().equals(persisted.getCedulaCliente())) {
-				log.info("==================>   Ingresa a actualizacion ===================> ");
+				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateCliente(send, persisted);
 			} else
-				log.info("INGRESA A CREACION=====>");
+				log.info("INGRESA A CREACION manageCliente=====>");
 			send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 			send.setEstado(EstadoEnum.ACT);
 			return clienteRepository.add(send);
@@ -570,7 +571,7 @@ public class QuskiOroService {
 	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
 		log.info("INGRESA A---->registrarPrecioOroByCotizacion___>ID COTIZADOR " + po.getTbQoCotizador().getId());
-		 
+
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		log.info("COTIZACIONES QUE SE RECUPERA " + cot);
 		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
@@ -766,22 +767,26 @@ public class QuskiOroService {
 	 */
 	public TbQoCotizador manageCotizador(TbQoCotizador send) throws RelativeException {
 		try {
-
-			log.info("==> entra a manager Cotizador>> " + send);
-
 			TbQoCotizador persisted = null;
+			if (send.getId() != null && send.getEstado().equals(EstadoEnum.ACT)) {
+				log.info("Va CADUCAR COTIZACION ==> " + send);
+				cs.caducarCotizacion(send);
+			}
+			log.info("==> entra a manager Cotizador>> " + send);
 
 			List<TbQoVariablesCrediticia> variables = new ArrayList<TbQoVariablesCrediticia>();
 			TbQoCliente cliente = new TbQoCliente();
 
 			List<TbQoCotizador> cotCedula = this.listByCliente(null, send.getTbQoCliente().getCedulaCliente());
-			log.info("VALOR COTIZACION ===>  " + cotCedula);
+			log.info("TAMAÑO COTIZACION ===>  " + cotCedula.size());
+
 			for (TbQoCotizador cotizar : cotCedula) {
 				if (cotizar.getTbQoCliente().getCedulaCliente().equals(send.getTbQoCliente().getCedulaCliente())
 						&& send != null && send.getId() != null) {
 					log.info("El valor de la cedula que retorna es crearCotizacionClienteVariableCrediticia ===>  "
 							+ cotizar.getTbQoCliente().getCedulaCliente());
 					log.info("==> entra ACTUALIZAR  manage Cotizador=====> ");
+					persisted = null;
 					persisted = this.cotizadorRepository.findById(send.getId());
 					send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 					send.setEstado(EstadoEnum.INA);
@@ -800,7 +805,7 @@ public class QuskiOroService {
 				TbQoCliente cliente2 = new TbQoCliente();
 				cliente2.setId(cliente.getId());
 				send.setTbQoCliente(cliente2);
-
+				persisted = null;
 				persisted = cotizadorRepository.add(send);
 				log.info("VALOR DEL ID DEL CLIENTE LUEGO DE AGREGAR====> " + persisted.getTbQoCliente().getId());
 				log.info("VALOR INSERTADO idCotizacion=====> " + persisted.getId());

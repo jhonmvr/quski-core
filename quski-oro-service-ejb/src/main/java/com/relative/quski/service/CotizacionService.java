@@ -88,10 +88,17 @@ public class CotizacionService {
 	
 			// BUSQUEDA POR LA CEDULA
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = cot.getTbQoVariablesCrediticias();
+			log.info("crearCotizacionClienteVariableCrediticia ====VALOR DE LA COTIZACION====> "+cot);
+			if (cot!=null && cot.getId()!=null) {
+				log.info("crearCotizacionClienteVariableCrediticia=====Ingresa a la cotizacion ===> "+cot.getTbQoCliente().getCedulaCliente());
+				this.buscarCotizacionActivaPorCedula(cot.getTbQoCliente().getCedulaCliente());
+				log.info("crearCotizacionClienteVariableCrediticia======Ingresa a caducar la cotizacion====> "+cot);
+				this.caducarCotizacion(cot);
+				log.info("crearCotizacionClienteVariableCrediticia========Cotizacion caducada====> "+cot);
+				
+			}
 			if (cot != null && cot.getId() == null && cot.getTbQoCliente().getCedulaCliente() != null) {
-				
-				
-				
+								
 				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
 				cot.setTbQoCliente(cliente);
 				log.info("EL VALOR DEL CLIENTE FUERA DEL MANAGE ES =====>" + cot.getTbQoCliente());

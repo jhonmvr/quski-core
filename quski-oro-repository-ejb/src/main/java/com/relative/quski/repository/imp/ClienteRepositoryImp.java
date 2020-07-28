@@ -95,7 +95,7 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 					return new TbQoCliente();				}
 			} else {
 				log.info("2do ELSE Retorna el valor de la lista " );
-				return cliente;
+				return  new TbQoCliente();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
