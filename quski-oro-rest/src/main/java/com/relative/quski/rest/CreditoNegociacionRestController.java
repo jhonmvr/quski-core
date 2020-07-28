@@ -95,7 +95,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("codigoOperacion") String codigoOperacion, 
 			@QueryParam("proceso") String proceso,
 			@QueryParam("identificacion") String identificacion,
-			@QueryParam("agencia") String agencia
+			@QueryParam("cliente") String cliente,
+			@QueryParam("agencia") String agencia,
+			@QueryParam("estado") String estado
 			) throws RelativeException {
 		
 		return creditoNegociacionByParams(
@@ -108,7 +110,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	
 	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde, String fechaHasta,
-			String codigoOperacion ,String proceso, String identificacion, String agencia) throws RelativeException {
+			String codigoOperacion ,String proceso, String identificacion, String agencia, String cliente ) throws RelativeException {
 		
 		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
 		

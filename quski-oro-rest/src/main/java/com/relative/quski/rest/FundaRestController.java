@@ -143,7 +143,7 @@ public class FundaRestController extends BaseRestController
 	response = GenericWrapper.class)
 	public GenericWrapper<TbQoFunda> reservarFunda(@QueryParam("peso") String peso, @QueryParam("usuario") String usuario) throws RelativeException {
 		GenericWrapper<TbQoFunda> loc = new GenericWrapper<>();
-		TbQoFunda a =this.qos.reservarFunda(peso!=null?BigDecimal.valueOf(Long.valueOf(peso)):null, usuario);
+		TbQoFunda a =this.qos.reservarFunda(BigDecimal.valueOf(Long.valueOf(peso)), usuario);
 		loc.setEntidad(a);
 		return loc;
 	}
