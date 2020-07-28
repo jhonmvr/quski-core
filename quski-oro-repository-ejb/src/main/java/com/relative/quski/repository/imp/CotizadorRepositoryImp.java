@@ -64,7 +64,7 @@ public class CotizadorRepositoryImp extends GeneralRepositoryImp<Long, TbQoCotiz
 	@Override
 	public TbQoCotizador findCotizadorByCedula(String cedulaCliente) throws RelativeException {
 		try {
-			log.info(" ANTES DEL IF <-------------------------------------------------------> " + cedulaCliente );
+			log.info(" findCotizadorByCedula ANTES DEL IF <-------------------------------------------------------> " + cedulaCliente );
 			List<TbQoCotizador> tmp = this.findAllBySpecification(new CotizadorByIdentificacionClienteSpec(cedulaCliente));
 			log.info("LISTA DE COTIZACIONES ACTIVAS DEL CLIENTE ANTES DEL IF -------------------------------------------------------> " + tmp.size());
 

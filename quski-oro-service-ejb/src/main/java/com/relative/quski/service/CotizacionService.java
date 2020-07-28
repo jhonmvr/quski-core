@@ -18,16 +18,13 @@ import com.relative.quski.repository.CotizadorRepository;
 @Stateless
 public class CotizacionService {
 
-	
-
 	@Inject
 	Logger log;
 	@Inject
 	QuskiOroService qos;
 	@Inject
 	CotizadorRepository cotizacionRepository;
-	
-	
+
 	public CotizacionService() {
 		super();
 	}
@@ -72,7 +69,7 @@ public class CotizacionService {
 	}
 
 	/**
-	 * Metodo que recibe  cotizacion y la crea al cliente la cotizacion y la Variable
+	 * Metodo que recibe cotizacion y la crea al cliente la cotizacion y la Variable
 	 * Crediticia
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
@@ -83,30 +80,50 @@ public class CotizacionService {
 
 	public TbQoCotizador crearCotizacionClienteVariableCrediticia(TbQoCotizador cot) throws RelativeException {
 		try {
-			log.info("INGRESA A crearCotizacionClienteVariableCrediticia " + cot);
+			log.info("INGRESA A crearCotizacionClienteVariableCrediticia=====> IDCLIENTE "
+					+ cot.getTbQoCliente().getId());
+			log.info("CEDULA EN crearCotizacionClienteVariableCrediticia=====> NUMERO DE CEDULA "
+					+ cot.getTbQoCliente().getCedulaCliente());
 			TbQoCotizador cotLlena = new TbQoCotizador();
-			
+	
+			// BUSQUEDA POR LA CEDULA
 			List<TbQoVariablesCrediticia> variableCrediticiaLlega = cot.getTbQoVariablesCrediticias();
-			if (cot != null && cot.getId() == null) {
-				TbQoCliente cliente= this.qos.manageCliente(cot.getTbQoCliente());
-				cot.setTbQoCliente(cliente   );
+			log.info("crearCotizacionClienteVariableCrediticia ====VALOR DE LA COTIZACION====> "+cot);
+			if (cot!=null && cot.getId()!=null) {
+				log.info("crearCotizacionClienteVariableCrediticia=====Ingresa a la cotizacion ===> "+cot.getTbQoCliente().getCedulaCliente());
+				this.buscarCotizacionActivaPorCedula(cot.getTbQoCliente().getCedulaCliente());
+				log.info("crearCotizacionClienteVariableCrediticia======Ingresa a caducar la cotizacion====> "+cot);
+				this.caducarCotizacion(cot);
+				log.info("crearCotizacionClienteVariableCrediticia========Cotizacion caducada====> "+cot);
+				
+			}
+			if (cot != null && cot.getId() == null && cot.getTbQoCliente().getCedulaCliente() != null) {
+								
+				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
+				cot.setTbQoCliente(cliente);
+				log.info("EL VALOR DEL CLIENTE FUERA DEL MANAGE ES =====>" + cot.getTbQoCliente());
 				cotLlena = this.qos.manageCotizador(cot);
-				log.info("idCotizacion---> " + cot.getId());
+				log.info("idCotizacion=====> " + cotLlena.getId());
 				for (TbQoVariablesCrediticia varCredi : variableCrediticiaLlega) {
-					log.info("====> varable crediticia " + varCredi.getNombre());
-					varCredi.setTbQoCotizador( cotLlena );
+					log.info("====> varable crediticia===> " + varCredi.getNombre());
+					varCredi.setTbQoCotizador(cotLlena);
 					this.qos.manageVariablesCrediticia(varCredi);
 				}
 				cotLlena.setTbQoVariablesCrediticias(variableCrediticiaLlega);
-			} else {				
-				log.info("===>COTIZACION EXISTE");
+			} else {
+				TbQoCliente cliente = this.qos.manageCliente(cot.getTbQoCliente());
+				cot.setTbQoCliente(cliente);
+				log.info("EL VALOR DEL CLIENTE FUERA DEL MANAGE ES =====>" + cot.getTbQoCliente());
+				// RARO
+				log.info("===>COTIZACION EXISTE====> ");
 				cotLlena = this.qos.findCotizadorById(cot.getId());
-				log.info("VALOR  COTIZACION ESTADO ACT>>>" + cotLlena);
+				log.info("VALOR  COTIZACION ESTADO ACT====>>>" + cotLlena.getId());
 
 			}
 			return cotLlena;
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, "Error al crear la cotizacion y varables crediticias " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					"Error al crear la cotizacion y varables crediticias " + e.getMessage());
 		}
 
 	}
@@ -127,6 +144,11 @@ public class CotizacionService {
 		}
 		return this.qos.manageCotizador(cot);
 
+	}
+
+	public TbQoCliente buscarCliente(String identificacion) throws RelativeException {
+		TbQoCliente cliente = qos.findClienteByIdentificacionWithCotizacion(identificacion);
+		return cliente;
 	}
 
 }

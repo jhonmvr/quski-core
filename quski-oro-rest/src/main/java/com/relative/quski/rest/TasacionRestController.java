@@ -102,7 +102,6 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		return findByCreditoNegociacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
 				sortFields, sortDirections, isPaginated), idCreditoNegociacion);
 	}
-
 	private PaginatedListWrapper<TbQoTasacion> findByCreditoNegociacion(PaginatedWrapper pw, String idCreditoNegociacion)
 			throws RelativeException {
 		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
@@ -112,7 +111,31 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 			plw.setTotalResults(this.qos.countTasacionByIdCreditoNegociacion(idCreditoNegociacion.isEmpty() ? null : Long.parseLong(idCreditoNegociacion)).intValue());
 			plw.setList(actions);
 		}
-
+		return plw;
+	}
+	@GET
+	@Path("/findByIdNegociacion")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbMiCotizacion", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoTasacion> findByIdNegociacion(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, 
+			@QueryParam("idNegociacion") String idNegociacion)
+			throws RelativeException {
+		return findByIdNegociacionPW(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
+				sortFields, sortDirections, isPaginated),Long.valueOf( idNegociacion ));
+	}
+	private PaginatedListWrapper<TbQoTasacion> findByIdNegociacionPW(PaginatedWrapper pw, Long idNegociacion)
+			throws RelativeException {
+		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoTasacion> actions = null;
+		actions = this.qos.findTasacionByIdNegociacion(pw, idNegociacion);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTasacionByByIdNegociacion(idNegociacion).intValue());
+			plw.setList(actions);
+		}
 		return plw;
 	}
 }

@@ -101,43 +101,62 @@ public class ClienteRestController extends BaseRestController
 		return loc;
 	}
 
+	/*
+	 * / @GET
+	 * 
+	 * @Path("/findClienteByIdentificacionWithCotizacion")
+	 * 
+	 * @ApiOperation(value = "GenericWrapper<TbQoCliente>", notes =
+	 * "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente"
+	 * , response = GenericWrapper.class) public GenericWrapper<TbQoCliente>
+	 * findClienteByIdentificacionWithCotizacion(@QueryParam("identificacion")
+	 * String identificacion) throws RelativeException {
+	 * log.info("INGRESA A LA BUSQUEDA"); GenericWrapper<TbQoCliente> loc = new
+	 * GenericWrapper<>(); TbQoCliente a =
+	 * this.cos..findClienteByIdentificacionWithCotizacion(identificacion);
+	 * loc.setEntidad(a); return loc; }
+	 */
+
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION CON COTIZACION
 	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param  String identificacion
+	 * @param String identificacion
 	 * @return GenericWrapper<TbQoCliente>
 	 * @throws RelativeException
 	 */
 	@GET
-	@Path("/findClienteByIdentificacionWithCotizacion")
- 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCliente> findClienteByIdentificacionWithCotizacion(@QueryParam("identificacion") String identificacion)
-			throws RelativeException {
-		log.info("INGRESA A LA BUSQUEDA");
+	@Path("/findClienteByIdentificacionCotizacion")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> findClienteByIdentificacionCotizacion(
+			@QueryParam("identificacion") String identificacion) throws RelativeException {
+		log.info("INGRESA A LA BUSQUEDA findClienteByIdentificacionCotizacion ");
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		TbQoCliente a = this.qos.findClienteByIdentificacionWithCotizacion(identificacion);
 		loc.setEntidad(a);
 		return loc;
 	}
+
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
 	 * 
 	 * @author JEROHAM CADENAS - Relative Engine
-	 * @param  String identificacion.
+	 * @param String identificacion.
 	 * @return GenericWrapper<TbQoCliente>
 	 * @throws RelativeException.
 	 */
 	@GET
 	@Path("/findClienteByIdentificacion")
- 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
-	public TbQoCliente findClienteByIdentificacion(@QueryParam("identificacion") String identificacion) throws RelativeException {
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
+	public TbQoCliente findClienteByIdentificacion(@QueryParam("identificacion") String identificacion)
+			throws RelativeException {
 		List<TbQoCliente> tmp = this.qos.findClienteByIdentifiacion(identificacion);
 		if (tmp != null && !tmp.isEmpty()) {
 			return tmp.get(0);
 		}
 		return null;
 	}
+
 	@GET
 	@Path("/findByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbMiCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiCliente", response = PaginatedListWrapper.class)
@@ -180,12 +199,14 @@ public class ClienteRestController extends BaseRestController
 		}
 		return plw;
 	}
-/**
- * 
- * @deprecated NO USAR METODO YA NO ES FUNCIONAL, OBTENER CLIENTE DE BASE DE DATOS O SOFTBANK
- * @return
- * @throws RelativeException
- */
+
+	/**
+	 * 
+	 * @deprecated NO USAR METODO YA NO ES FUNCIONAL, OBTENER CLIENTE DE BASE DE
+	 *             DATOS O SOFTBANK
+	 * @return
+	 * @throws RelativeException
+	 */
 //	@GET
 //	@Path("/obtenerCliente")
 //	@ApiOperation(value = "GenericWrapper<DetalleCreditoWrapper>", notes = "Metodo DetalleCreditoWrapper Retorna wrapper de entidades encontradas en DetalleCreditoWrapper", response = GenericWrapper.class)
