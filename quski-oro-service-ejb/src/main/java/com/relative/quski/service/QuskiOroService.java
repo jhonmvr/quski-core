@@ -998,8 +998,46 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * * * * * * * * * * * @DETALLE DE CREDITO
+	 * * * * * * * * * * * @DETALLE @CREDITO
 	 */
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  PaginatedWrapper pw
+	 * @param  Long idCotizador
+	 * @return List<TbQoDetalleCredito>
+	 * @throws RelativeException
+	 */
+	public List<TbQoDetalleCredito> listByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
+		try {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador( idCotizador, pw.getStartRecord(),
+						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador( idCotizador );					
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al buscar los detalle credito  Por Id Cotizador (Service) " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author  Jeroham Cadenas - Developer Twelve
+	 * @param 	Long idCotizador
+	 * @return	Long
+	 * @throws  RelativeException
+	 */
+	public Long countListByIdCotizador( Long idCotizador ) throws RelativeException {
+		try {
+			return detalleCreditoRepository.countByIdCotizador( idCotizador );
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar los detalle credito  Por Id Cotizador" + e.getMessage());
+		}
+	}
+	
 
 	/**
 	 * Metodo que busca la entidad por su PK
@@ -1278,32 +1316,39 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
-	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION
+	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION Y TAMBIEN AL CLIENTE.
 	 * 
-	 * @param pw
-	 * @param idCotizador
-	 * @author SAUL MENDEZ - Relative Engine
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param  PaginatedWrapper pw
+	 * @param  String cedula
+	 * @return List<TbQoPrecioOro>
 	 * @throws RelativeException
 	 */
-
-	public List<TbQoPrecioOro> listByIdCotizador(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+	public List<TbQoPrecioOro> listByCedula(PaginatedWrapper pw, String cedula) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return precioOroRepository.findByIdCotizador(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections(), idCotizador);
+			
+			return precioOroRepository.findByCedula(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
+					pw.getSortDirections(), cedula);
 
 		} else {
-			return precioOroRepository.findByIdCotizador(idCotizador);
+			return precioOroRepository.findByCedula(cedula);
 		}
 	}
 
-	public Long countByIdCotizador(String idCotizador) throws RelativeException {
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve 
+	 * @param  String cedula
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countByCedula(String cedula) throws RelativeException {
 
-		return precioOroRepository.countByIdCotizador(idCotizador);
+		return precioOroRepository.countByCedula(cedula);
 	}
 
 	/**
-	 * * * * * * * * * * * @VARIABLE CREDITICIA
+	 * * * * * * * * * * * @VARIABLE @CREDITICIA
 	 */
 
 	/**

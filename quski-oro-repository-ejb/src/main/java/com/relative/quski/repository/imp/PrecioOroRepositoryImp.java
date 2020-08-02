@@ -12,7 +12,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
-import com.relative.quski.repository.spec.PrecioOroByIdCotizacionSpec;
+import com.relative.quski.repository.spec.PrecioOroByCedulaSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizadorSpec;
 import com.relative.quski.wrapper.PrecioOroWrapper;
 
@@ -24,37 +24,45 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 
 	@Inject
 	Logger log;
+	String mensaje = "PROBLEMA EN IMP. DE PRECIOS ORO";
 
 	@Override
-	public List<TbQoPrecioOro> findByIdCotizador(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections, String idCotizador) throws RelativeException {
+	public List<TbQoPrecioOro> findByCedula(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, String cedula) throws RelativeException {
 		try {
-			return findAllBySpecificationPaged(new PrecioOroByIdCotizacionSpec(idCotizador), startRecord, pageSize,
+			List<TbQoPrecioOro> listPrecios = this.findAllBySpecificationPaged( new PrecioOroByCedulaSpec(cedula), startRecord, pageSize,
 					sortFields, sortDirections);
+			if (!listPrecios.isEmpty()) {
+				return listPrecios;
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje);
 		}
 	}
 
 	@Override
-	public List<TbQoPrecioOro> findByIdCotizador(String idCotizador) throws RelativeException {
+	public List<TbQoPrecioOro> findByCedula(String cedula) throws RelativeException {
 		try {
-			return findAllBySpecification(new PrecioOroByIdCotizacionSpec(idCotizador));
+			List<TbQoPrecioOro> listPrecios = this.findAllBySpecification(new PrecioOroByCedulaSpec(cedula));
+			if (!listPrecios.isEmpty()) {
+				return listPrecios;
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje);
 		}
 	}
 
 	@Override
-	public Long countByIdCotizador(String idCotizador) throws RelativeException {
+	public Long countByCedula(String cedula) throws RelativeException {
 
 		try {
-			return countBySpecification(new PrecioOroByIdCotizacionSpec(idCotizador));
+			return countBySpecification(new PrecioOroByCedulaSpec(cedula));
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje);
 		}
 	}
 

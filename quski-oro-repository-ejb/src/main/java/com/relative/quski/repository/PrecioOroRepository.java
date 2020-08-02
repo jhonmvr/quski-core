@@ -11,13 +11,12 @@ import com.relative.quski.wrapper.PrecioOroWrapper;
 
 @Local
 public interface PrecioOroRepository extends CrudRepository<Long, TbQoPrecioOro> {
-	public List<TbQoPrecioOro> findByIdCotizador(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections, String idCotizador) throws RelativeException;
+	public List<TbQoPrecioOro> findByCedula(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, String cedula) throws RelativeException;
+	public List<TbQoPrecioOro> findByCedula(String cedula) throws RelativeException;
+	public Long countByCedula(String cedula) throws RelativeException;
 
-	public List<TbQoPrecioOro> findByIdCotizador(String idCotizador) throws RelativeException;
-
-	public Long countByIdCotizador(String idCotizador) throws RelativeException;
-
+	
 	public List<TbQoPrecioOro> findByIdCotizacion(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, Long idCotizador) throws RelativeException;
 
