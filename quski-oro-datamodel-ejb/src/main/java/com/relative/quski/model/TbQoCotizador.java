@@ -242,5 +242,9 @@ public class TbQoCotizador implements Serializable {
 	
 
 
+	
+	
+
+
 
 }

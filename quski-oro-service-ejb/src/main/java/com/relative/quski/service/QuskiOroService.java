@@ -1395,16 +1395,20 @@ public class QuskiOroService {
 	public List<TbQoCliente> findClienteByIdentifiacion(String identificacion) throws RelativeException {
 		List<TbQoCliente> tmp;
 		TbQoCliente cli = new TbQoCliente();
+		cli.setCedulaCliente(identificacion);
 		try {
 			log.info("LA CEDULA QUE LLEGA ES findClienteByIdentifiacion------> " + identificacion);
 			tmp = this.clienteRepository.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
 
 			if (tmp != null && !tmp.isEmpty()) {
-				log.info("EL CIENTE QUE RETORNA ES ------> " + tmp);
+				log.info("EL CIENTE QUE RETORNA ES ------> " + tmp.size());
 				return tmp;
 			} else {
+				/*log.info("INGRESA AL ELSE QOS.findClienteByIdentifiacion ");
 				tmp.add(this.manageCliente(cli));
-				return tmp;
+			
+				return tmp;*/
+				return null;
 
 			}
 		} catch (Exception e) {
@@ -1413,6 +1417,7 @@ public class QuskiOroService {
 		}
 
 	}
+	
 
 	/**
 	 * Método que realiza la busqueda por Identificacion con cotizaciones
