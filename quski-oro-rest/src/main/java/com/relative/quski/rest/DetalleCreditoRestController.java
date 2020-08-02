@@ -68,12 +68,49 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 				new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
 
 	}
-
+	
 	private PaginatedListWrapper<TbQoDetalleCredito> findAll(PaginatedWrapper pw) throws RelativeException {
 		PaginatedListWrapper<TbQoDetalleCredito> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoDetalleCredito> actions = this.qos.findAllDetalleCredito(pw);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countDetalleCredito().intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	/**
+	 * 
+	 * @author Jeroham Cadenas - Developer Twelve 
+	 * @param  String page
+	 * @param  String pageSize
+	 * @param  String sortFields
+	 * @param  String sortDirections
+	 * @param  String isPaginated
+	 * @param  String idCotizador
+	 * @return PaginatedListWrapper
+	 * @throws RelativeException
+	 */
+	@GET
+	@Path("/listByIdCotizador")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoDetalleCredito>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoDetalleCredito", response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<TbQoDetalleCredito> listByIdCotizador(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("idCotizador") String idCotizador) throws RelativeException {
+		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
+		return listByIdCotizador(
+				new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated), Long.valueOf(idCotizador) );
+
+	}
+
+	private PaginatedListWrapper<TbQoDetalleCredito> listByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
+		PaginatedListWrapper<TbQoDetalleCredito> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoDetalleCredito> actions = this.qos.listByIdCotizador(pw, idCotizador);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countListByIdCotizador( idCotizador ).intValue());
 			plw.setList(actions);
 		}
 		return plw;
