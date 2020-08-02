@@ -1,5 +1,6 @@
 package com.relative.quski.repository.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -62,29 +63,39 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 		}
 	}
 
-
-
 	@Override
 	/**
 	 * Método que realiza la búsqueda por identificacion
+	 * 
 	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion 
+	 * @param identificacion
 	 * @return TbQoCliente
 	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
-			List<TbQoCliente> listCliente = this
-					.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.size());
+			TbQoCliente cliente = new TbQoCliente();
+			cliente.setCedulaCliente(identificacion);
+			log.info("INGRESA A findClienteByIdentificacion ===> " + identificacion);
+			List<TbQoCliente> listCliente = new ArrayList<>();
+			
+			//listCliente=this.findByParams(null, identificacion, "", "", "", "", "", "", "",EstadoEnum.ACT);
+					
+			listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+			log.info("VALORES QUE RETORNAN=====> "+listCliente.size());
+			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.toString());
 			if (!listCliente.isEmpty()) {
 				if (listCliente.size() <= 1) {
 					log.info("Retorna el valor de la lista " + listCliente.size());
-					return listCliente.get(0);
+					cliente=listCliente.get(0);
+					return cliente;
+
 				} else {
-					throw new RelativeException(Constantes.ERROR_CODE_READ, "NO EXISTE CLIENTE, ");
-				}
+
+					// listCliente.add(this.findClienteByIdentificacion(identificacion));
+					return new TbQoCliente();				}
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR EN LA BUSQUEDA DE CLIENTE, ");
+				log.info("2do ELSE Retorna el valor de la lista " );
+				return  new TbQoCliente();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

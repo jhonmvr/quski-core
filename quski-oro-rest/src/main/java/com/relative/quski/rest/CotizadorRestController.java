@@ -137,6 +137,7 @@ public class CotizadorRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> getCotizacionWrapper(@QueryParam("cedulaCliente") String cedulaCliente)
 			throws RelativeException {
+		log.info(("INGRESA EN getCotizacionWrapper====>"+cedulaCliente));
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		TbQoCotizador a = this.cs.buscarCotizacionActivaPorCedula(cedulaCliente);
 		loc.setEntidad(a);

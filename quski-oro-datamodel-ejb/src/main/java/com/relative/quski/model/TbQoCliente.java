@@ -648,6 +648,9 @@ public class TbQoCliente implements Serializable {
 	}
 
  
+
+	
+ 
 	
 	
 
