@@ -1,6 +1,5 @@
 package com.relative.quski.repository.imp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -73,34 +72,20 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 	 */
 	public TbQoCliente findClienteByIdentificacion(String identificacion) throws RelativeException {
 		try {
-			TbQoCliente cliente = new TbQoCliente();
-			cliente.setCedulaCliente(identificacion);
-			log.info("INGRESA A findClienteByIdentificacion ===> " + identificacion);
-			List<TbQoCliente> listCliente = new ArrayList<>();
 			
-			//listCliente=this.findByParams(null, identificacion, "", "", "", "", "", "", "",EstadoEnum.ACT);
-					
-			listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			log.info("VALORES QUE RETORNAN=====> "+listCliente.size());
-			log.info("NUMERO DE CLIENTES RECUPERADOS>> " + listCliente.toString());
+			List<TbQoCliente>  listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
+			log.info("CANTIDAD DE CLIENTES =====> "+listCliente.size());
 			if (!listCliente.isEmpty()) {
-				if (listCliente.size() <= 1) {
-					log.info("Retorna el valor de la lista " + listCliente.size());
-					cliente=listCliente.get(0);
-					return cliente;
-
+				if (listCliente.size() == 1) {
+					return listCliente.get(0);
 				} else {
-
-					// listCliente.add(this.findClienteByIdentificacion(identificacion));
-					return new TbQoCliente();				}
+					throw new RelativeException(Constantes.ERROR_CODE_READ,"LA VALIDACION DE CEDULA NO FUNCIONA");			
+					}
 			} else {
-				log.info("2do ELSE Retorna el valor de la lista " );
-				return  new TbQoCliente();
+				return  null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"Ocurrio un error al leer cliente, " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"Ocurrio un error al leer cliente, " + e.getMessage());
 		}
 	}
 }

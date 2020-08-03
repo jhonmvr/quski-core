@@ -20,13 +20,11 @@ import com.relative.quski.model.TbQoCliente;
  *
  */
 public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoCliente> {
-	@Inject
-	Logger log;
 	private String identificacion;
 
 	public ClienteByIdentificacionSpec(String identificacion) {
 
-		this.identificacion = identificacion == null ? "" : identificacion;
+		this.identificacion = identificacion;
 	}
 
 	public ClienteByIdentificacionSpec() {
@@ -42,10 +40,9 @@ public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoClien
 
 		List<Predicate> where = new ArrayList<>();
 		if (StringUtils.isNotBlank(this.identificacion)) {
-			where.add(cb.equal(poll.<String>get("cedulaCliente"), this.identificacion));
+			where.add(cb.equal(poll.get("cedulaCliente"), this.identificacion));
 		}
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
-	//	log.info("VALOR DE LA COMPARACION=======> "+cb.and(where.toArray(new Predicate[] {})));
 		return cb.and(where.toArray(new Predicate[]{}));	
 	}
 

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -65,10 +66,15 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 			return null;
 	}
 
+	@POST
+	@Path("/persistEntity")
 	@Override
-	public GenericWrapper<TbQoRiesgoAcumulado> persistEntity(GenericWrapper<TbQoRiesgoAcumulado> arg0)
-			throws RelativeException {
-		return null;
+	@ApiOperation(value = "GenericWrapper<TbQoRiesgoAcumulado> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbQoRiesgoAcumulado", 
+	response = GenericWrapper.class)
+	public GenericWrapper<TbQoRiesgoAcumulado> persistEntity(GenericWrapper<TbQoRiesgoAcumulado> ra) throws RelativeException {
+		GenericWrapper<TbQoRiesgoAcumulado> gw= new GenericWrapper<>();
+		gw.setEntidades(this.qos.manageListRiesgoAcumulados( ra.getEntidades() ));
+		return gw;
 	}
 
 	/**

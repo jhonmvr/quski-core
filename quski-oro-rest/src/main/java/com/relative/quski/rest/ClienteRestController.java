@@ -148,13 +148,12 @@ public class ClienteRestController extends BaseRestController
 	@GET
 	@Path("/findClienteByIdentificacion")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
-	public TbQoCliente findClienteByIdentificacion(@QueryParam("identificacion") String identificacion)
+	public GenericWrapper<TbQoCliente> findClienteByIdentificacion(@QueryParam("identificacion") String identificacion)
 			throws RelativeException {
-		List<TbQoCliente> tmp = this.qos.findClienteByIdentifiacion(identificacion);
-		if (tmp != null && !tmp.isEmpty()) {
-			return tmp.get(0);
-		}
-		return null;
+		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		TbQoCliente a = this.qos.findClienteByIdentifiacion(identificacion);
+		loc.setEntidad(a);
+		return loc;
 	}
 
 	@GET
