@@ -40,7 +40,7 @@ public class TbQoDetalleCredito implements Serializable {
 	private BigDecimal costoSeguro;
 
 	@Column(name = "costo_tasacion")
-	private String costoTasacion;
+	private BigDecimal costoTasacion;
 
 	@Column(name = "costo_transporte")
 	private BigDecimal costoTransporte;
@@ -209,11 +209,11 @@ public class TbQoDetalleCredito implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
-	public String getCostoTasacion() {
+	public BigDecimal getCostoTasacion() {
 		return costoTasacion;
 	}
 
-	public void setCostoTasacion(String costoTasacion) {
+	public void setCostoTasacion(BigDecimal costoTasacion) {
 		this.costoTasacion = costoTasacion;
 	}
 
