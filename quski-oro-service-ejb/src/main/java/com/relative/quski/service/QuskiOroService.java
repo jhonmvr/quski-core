@@ -236,7 +236,7 @@ public class QuskiOroService {
 	 */
 	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
 		try {
-			if( send.getCedulaCliente().isEmpty() ) {
+			if( send.getCedulaCliente() != null ) {
 				TbQoCliente persisted = this.clienteRepository.findClienteByIdentificacion(send.getCedulaCliente());
 				if(persisted != null && persisted.getId() != null) {
 					log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");

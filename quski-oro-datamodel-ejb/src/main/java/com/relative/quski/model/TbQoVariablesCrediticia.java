@@ -38,6 +38,8 @@ public class TbQoVariablesCrediticia implements Serializable {
 	private String orden;
 
 	private String valor;
+	
+	private String codigo;
 
 	//bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
@@ -106,6 +108,14 @@ public class TbQoVariablesCrediticia implements Serializable {
 
 	public void setValor(String valor) {
 		this.valor = valor;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public TbQoCotizador getTbQoCotizador() {

@@ -97,6 +97,7 @@ public class ClienteRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCliente> persistEntity(GenericWrapper<TbQoCliente> wp) throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		log.info("INGRESA AL REST DE persistEntity cliente ");		
 		loc.setEntidad(this.qos.manageCliente(wp.getEntidad()));
 		return loc;
 	}
