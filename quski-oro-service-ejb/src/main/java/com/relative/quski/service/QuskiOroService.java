@@ -1046,7 +1046,7 @@ public class QuskiOroService {
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateDetalleCredito(send, persisted);
 			} else if (send != null && send.getId() == null) {
-
+				send.setEstado( EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return detalleCreditoRepository.add(send);
 			} else {
@@ -1077,20 +1077,9 @@ public class QuskiOroService {
 	public TbQoDetalleCredito updateDetalleCredito(TbQoDetalleCredito send, TbQoDetalleCredito persisted)
 			throws RelativeException {
 		try {
-			persisted.setPlazoCredito(send.getPlazoCredito());
-			persisted.setMontoPreaprobado(send.getMontoPreaprobado());
-			persisted.setRecibirCliente(send.getRecibirCliente());
-			persisted.setCostoNuevaOperacion(send.getCostoNuevaOperacion());
-			persisted.setCostoCustodia(send.getCostoCustodia());
-			persisted.setCostoTransporte(send.getCostoTransporte());
-			persisted.setCostoCredito(send.getCostoCredito());
-			persisted.setCostoSeguro(send.getCostoSeguro());
-			persisted.setCostoResguardado(send.getCostoResguardado());
-			persisted.setCostoEstimado(send.getCostoEstimado());
-			persisted.setValorCuota(send.getValorCuota());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado(send.getEstado());
+			persisted.setEstado( EstadoEnum.ACT );
 			return detalleCreditoRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
