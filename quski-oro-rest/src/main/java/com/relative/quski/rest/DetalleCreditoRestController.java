@@ -125,4 +125,12 @@ implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDe
 		loc.setEntidad(this.qos.manageDetalleCredito(wp.getEntidad()));
 		return loc;
 	}	
+	@POST
+	@Path("/persistEntities")
+	@ApiOperation(value = "GenericWrapper<TbQoDetalleCredito>", notes = "Metodo Post persistEntities Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoDetalleCredito", response = GenericWrapper.class)
+	public GenericWrapper<TbQoDetalleCredito> persistEntities(GenericWrapper<TbQoDetalleCredito> wp) throws RelativeException {
+		GenericWrapper<TbQoDetalleCredito> loc = new GenericWrapper<>();
+		loc.setEntidades( this.qos.manageDetalleCreditos( wp.getEntidades() ) );
+		return loc;
+	}	
 }

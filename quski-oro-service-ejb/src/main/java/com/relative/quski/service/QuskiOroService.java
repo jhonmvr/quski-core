@@ -522,23 +522,20 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * * * * * * * * * * * @COTIZACION
+	 * * * * * * * * * * * @COTIZADOR
 	 */
 
 	/**
-	 * Metodo que busca la entidad por su PK
 	 * 
-	 * @param id Pk de la entidad
-	 * @return Entidad encontrada
-	 * @author SAUL MENDEZ - Relative Engine
+	 * @author Jeroham Cadenas - Devepoler Twelve
+	 * @param  Long id
+	 * @return TbQoCotizador
 	 * @throws RelativeException
 	 */
 	public TbQoCotizador findCotizadorById(Long id) throws RelativeException {
 		try {
 			return cotizadorRepository.findById(id);
 		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
@@ -1024,6 +1021,30 @@ public class QuskiOroService {
 					"Error al buscar todos los detalle credito " + e.getMessage());
 		}
 	}
+	public List<TbQoDetalleCredito> manageDetalleCreditos(List<TbQoDetalleCredito> sends) throws RelativeException {
+		try {
+			List<TbQoDetalleCredito> persisteds = new ArrayList<>();
+			sends.forEach(element ->{
+				element.setEstado( EstadoEnum.ACT );
+				element.setId( null );
+				element.setFechaCreacion( new Date(System.currentTimeMillis()) );
+				try {
+					if(element.getTbQoCotizador() != null) {
+						this.manageCotizador( element.getTbQoCotizador() );
+						if ( element.getTbQoCotizador().getTbQoCliente() != null ) {
+							this.manageCliente( element.getTbQoCotizador().getTbQoCliente() );							
+						}
+					}					
+					persisteds.add( this.detalleCreditoRepository.add( element ));
+				} catch (Exception e) {
+						e.printStackTrace();
+				}
+			});
+			return persisteds;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo CREACION DE DETALLES DE CREDITO");
+		}
+	}
 
 	/**
 	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
@@ -1062,6 +1083,7 @@ public class QuskiOroService {
 
 		}
 	}
+	
 
 	/**
 	 * Metodo que actualiza la entidad
