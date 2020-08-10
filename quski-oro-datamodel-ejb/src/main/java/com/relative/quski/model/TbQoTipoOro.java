@@ -45,7 +45,7 @@ public class TbQoTipoOro implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	private BigDecimal precio;
+
 	
 	
 
@@ -94,14 +94,6 @@ public class TbQoTipoOro implements Serializable {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
-	}
-
-	public BigDecimal getPrecio() {
-		return this.precio;
-	}
-
-	public void setPrecio(BigDecimal precio) {
-		this.precio = precio;
 	}
 
 	public String getQuilate() {

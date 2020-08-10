@@ -572,7 +572,12 @@ public class QuskiOroService {
 	public TbQoPrecioOro eliminarPrecioOro(Long id) throws RelativeException {
 		TbQoPrecioOro precioOro = this.precioOroRepository.findById(id);
 		precioOro.setEstado(EstadoEnum.INA);
-		return this.managePrecioOro(precioOro);
+		try {
+			return this.precioOroRepository.update(precioOro);
+		}catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+		
 	}
 
 	/**
@@ -1374,7 +1379,6 @@ public class QuskiOroService {
 				TbQoTipoOro to = new TbQoTipoOro();
 				po.setId(pow.getId());
 				to.setId(pow.getIdTipoOro());
-				to.setPrecio(pow.getPrecio());
 				to.setQuilate(pow.getQuilate());
 				po.setPrecio(pow.getPrecio());
 				po.setPesoNetoEstimado(pow.getPesoNetoEstimado());
