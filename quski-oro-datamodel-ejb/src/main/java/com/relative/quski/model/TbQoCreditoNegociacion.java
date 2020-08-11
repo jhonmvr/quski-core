@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 import java.math.BigDecimal;
@@ -48,6 +49,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
+	@Enumerated(EnumType.STRING)
+	private ProcesoEnum proceso;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -64,6 +68,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	// Ususario Asesor que creo la negociacion.
 	@Column(name="id_usuario")
 	private String idUsuario;
+	
+	@Column(name="codigo")
+	private String codigo;
 
 	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;

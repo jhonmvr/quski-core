@@ -22,11 +22,14 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 //import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.service.QuskiOroService;
 //import com.relative.quski.util.QuskiOroUtil;
 //import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
+import com.relative.quski.util.QuskiOroUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -103,23 +106,28 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return creditoNegociacionByParams(
 				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
 						isPaginated),
-				fechaDesde, fechaHasta, StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null, proceso, identificacion,  agencia);
+				fechaDesde, fechaHasta, StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
+						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(ProcesoEnum.class, proceso)
+						: null, identificacion,  Long.valueOf(agencia), cliente, 
+						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado)
+								: null);
 		
 	}
 	
 	
 	
-	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde, String fechaHasta,
-			String codigoOperacion ,String proceso, String identificacion, String agencia, String cliente ) throws RelativeException {
+	private PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde,
+			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
+			EstadoEnum estado ) throws RelativeException {
 		
 		PaginatedListWrapper<TbQoCreditoNegociacion> plw = new PaginatedListWrapper<>(pw);
 		
 		List<TbQoCreditoNegociacion> actions =null; 
-				actions=this.qos.findCreditoNegociacionByParams(pw, fechaDesde, fechaHasta, codigoOperacion,
-				proceso, identificacion, agencia);
+			actions=this.qos.findCreditoNegociacionByParams(pw, fechaDesde, fechaHasta, identificacion, 
+				proceso,codigoOperacion,  agencia, cliente, estado);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countCreditoNegociacionByParams(fechaDesde, fechaHasta, codigoOperacion,
-					proceso, identificacion, agencia));
+			plw.setTotalResults(this.qos.countCreditoNegociacionByParams(fechaDesde, fechaHasta, identificacion, 
+					proceso,codigoOperacion,  agencia, cliente, estado));
 			plw.setList(actions);
 		}
 		return plw;

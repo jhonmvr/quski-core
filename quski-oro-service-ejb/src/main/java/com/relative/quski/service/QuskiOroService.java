@@ -1,12 +1,10 @@
 package com.relative.quski.service;
-
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -18,12 +16,12 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
@@ -2381,21 +2379,21 @@ public class QuskiOroService {
 	 */
 
 	public List<TbQoCreditoNegociacion> findCreditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde,
-			String fechaHasta, String codigoOperacion, String proceso, String identificacion, String agencia)
+			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
+			EstadoEnum estado)
 			throws RelativeException {
 
 		if (pw == null) {
 			return this.creditoNegociacionRepository.findAllBySpecification(
-					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia));
+					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
 
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta,
-						identificacion, agencia);
+				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta, identificacion, proceso, codigoOperacion, agencia , cliente, estado);
 
 			} else {
 				return this.creditoNegociacionRepository.findAllBySpecification(
-						new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia));
+						new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
 
 			}
 		}
@@ -2403,11 +2401,12 @@ public class QuskiOroService {
 	}
 
 
-	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
-			String proceso, String identificacion, String agencia) throws RelativeException {
+	public Integer countCreditoNegociacionByParams(String fechaDesde,
+			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
+			EstadoEnum estado) throws RelativeException {
 
-		return this.creditoNegociacionRepository.countBySpecification(
-				new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia)).intValue();
+		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde, 
+				fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado)).intValue();
 
 	}
 
@@ -4297,7 +4296,7 @@ public class QuskiOroService {
 	 * @param pw Objeto generico que tiene la informacion que determina si el
 	 *           resultado es total o paginado
 	 * @return Listado de entidades encontradas
-	 * @author BRAYAN MONGE - Relative Engine
+	 * @author DIEGO SERRANO - Relative Engine
 	 * @throws RelativeException
 	 */
 	public List<TbQoFunda> findAllFunda(PaginatedWrapper pw) throws RelativeException {
@@ -4321,7 +4320,10 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					"Error al buscar todos los Abonos " + e.getMessage());
-	 * 
+			
+		}
+		}
+	 /*
 	 * @author Jeroham Cadenas - Developer Twelve
 	 * @param PaginatedWrapper pw
 	 * @param Long             idNegociacion
@@ -4446,7 +4448,7 @@ public class QuskiOroService {
 	}
 	
 	
-	 * 
+	 /*
 	 * @author Jeroham Cadenas - Developer Twelve
 	 * @param Long idNegociacion
 	 * @return Long
