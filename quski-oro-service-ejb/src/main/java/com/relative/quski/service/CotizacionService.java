@@ -93,7 +93,7 @@ public class CotizacionService {
 				log.info("crearCotizacionClienteVariableCrediticia=====Ingresa a la cotizacion ===> "+cot.getTbQoCliente().getCedulaCliente());
 				this.buscarCotizacionActivaPorCedula(cot.getTbQoCliente().getCedulaCliente());
 				log.info("crearCotizacionClienteVariableCrediticia======Ingresa a caducar la cotizacion====> "+cot);
-				this.caducarCotizacion(cot);
+				//this.caducarCotizacion(cot);
 				log.info("crearCotizacionClienteVariableCrediticia========Cotizacion caducada====> "+cot);
 				
 			}

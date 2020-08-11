@@ -89,35 +89,43 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoPrecioOro", response = GenericWrapper.class)
-	
-	
 	public GenericWrapper<TbQoPrecioOro> persistEntity(GenericWrapper<TbQoPrecioOro> wp) throws RelativeException {
 		GenericWrapper<TbQoPrecioOro> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.managePrecioOro(wp.getEntidad()));
 		return loc;
 	}	
 	
-	
+	/**
+	 * @author Jeroham Cadenas - developer Twelve
+	 * @param  String page
+	 * @param  String pageSize
+	 * @param  String sortFields
+	 * @param  String sortDirections
+	 * @param  String isPaginated
+	 * @param  Stringcedula
+	 * @return PaginatedListWrapper<TbQoPrecioOro>
+	 * @throws RelativeException
+	 */
 	@GET
-	@Path("/precioOroByIdCotizador")
-	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo precioOroByIdCotizador Retorna wrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
-	public PaginatedListWrapper<TbQoPrecioOro> precioOroByIdCotizador(
+	@Path("/findByCedula")
+	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Retorna PaginatedListWrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoPrecioOro> findByCedula(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("idCotizador") String idCotizador
+			@QueryParam("cedula") String cedula
 			) throws RelativeException {
 		return findPendienteByIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
-				sortDirections, isPaginated),idCotizador);
+				sortDirections, isPaginated),cedula);
 	}
 	
-	private PaginatedListWrapper<TbQoPrecioOro> findPendienteByIdentificacion(PaginatedWrapper pw, String idCotizador) throws RelativeException {
+	private PaginatedListWrapper<TbQoPrecioOro> findPendienteByIdentificacion(PaginatedWrapper pw, String cedula) throws RelativeException {
 		PaginatedListWrapper<TbQoPrecioOro> plw = new PaginatedListWrapper<>(pw);
-		List<TbQoPrecioOro> actions = this.qos.listByIdCotizador(pw, idCotizador);
+		List<TbQoPrecioOro> actions = this.qos.listByCedula(pw, cedula);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countByIdCotizador(idCotizador).intValue());
+			plw.setTotalResults(this.qos.countByCedula(cedula).intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -162,7 +170,7 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 	@GET
 	@Path("/eliminarPrecioOro")
 	@ApiOperation(value = "GenericWrapper<TbQoPrecioOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoPrecioOro", response = GenericWrapper.class)
-	public GenericWrapper<TbQoPrecioOro> removeEntity(@QueryParam("id") String id) throws RelativeException {
+	public GenericWrapper<TbQoPrecioOro> eliminarPrecioOro(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoPrecioOro> loc = new GenericWrapper<>();
 		TbQoPrecioOro a = this.qos.eliminarPrecioOro(Long.valueOf(id));
 		loc.setEntidad(a);

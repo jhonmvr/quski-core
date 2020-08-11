@@ -16,6 +16,8 @@ public interface CotizadorRepository extends CrudRepository<Long, TbQoCotizador>
 	public Long countByCliente(String cedulaCliente) throws RelativeException ;
 	public TbQoCotizador findCotizadorByCedula( String cedulaCliente) throws RelativeException;
 	
+	public TbQoCotizador findById( Long id) throws RelativeException;
+	
 	
 	
 	

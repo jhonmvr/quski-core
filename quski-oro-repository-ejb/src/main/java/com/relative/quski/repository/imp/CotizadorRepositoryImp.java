@@ -11,6 +11,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.repository.CotizadorRepository;
+import com.relative.quski.repository.spec.CotizadorByIdSpec;
 import com.relative.quski.repository.spec.CotizadorByIdentificacionClienteSpec;
 
 /**
@@ -70,6 +71,20 @@ public class CotizadorRepositoryImp extends GeneralRepositoryImp<Long, TbQoCotiz
 
 			if (tmp != null && !tmp.isEmpty()) {
 				log.info("LISTA DE COTIZACIONES ACTIVAS DEL CLIENTE  " + tmp.size());
+				return tmp.get(0);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR cotizador");
+		}
+	}
+	@Override
+	public TbQoCotizador findById( Long id ) throws RelativeException {
+		try {
+			List<TbQoCotizador> tmp = this.findAllBySpecification(new CotizadorByIdSpec(id));
+			if (!tmp.isEmpty() || tmp.size() > 1) {
+				log.info("LISTA DE COTIZACIONES ACTIVAS" + tmp.size());
 				return tmp.get(0);
 			} else {
 				return null;

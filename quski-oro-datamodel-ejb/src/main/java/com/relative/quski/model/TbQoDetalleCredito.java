@@ -40,7 +40,7 @@ public class TbQoDetalleCredito implements Serializable {
 	private BigDecimal costoSeguro;
 
 	@Column(name = "costo_tasacion")
-	private String costoTasacion;
+	private BigDecimal costoTasacion;
 
 	@Column(name = "costo_transporte")
 	private BigDecimal costoTransporte;
@@ -62,13 +62,16 @@ public class TbQoDetalleCredito implements Serializable {
 	@Column(name = "monto_preaprobado")
 	private BigDecimal montoPreaprobado;
 
-	@Column(name = "plazo_credito")
-	private String plazoCredito;
+	@Column(name = "plazo")
+	private BigDecimal plazo;
 
 	@Column(name = "recibir_cliente")
 	private BigDecimal recibirCliente;
+	
+	@Column(name = "periodo_plazo")
+	private String periodoPlazo;
 
-	private String solca;
+	private BigDecimal solca;
 
 	@Column(name = "valor_cuota")
 	private BigDecimal valorCuota;
@@ -177,12 +180,20 @@ public class TbQoDetalleCredito implements Serializable {
 		this.montoPreaprobado = montoPreaprobado;
 	}
 
-	public String getPlazoCredito() {
-		return this.plazoCredito;
+	public BigDecimal getPlazo() {
+		return this.plazo;
 	}
 
-	public void setPlazoCredito(String plazoCredito) {
-		this.plazoCredito = plazoCredito;
+	public void setPlazo(BigDecimal plazo) {
+		this.plazo = plazo;
+	}
+
+	public String getPeriodoPlazo() {
+		return periodoPlazo;
+	}
+
+	public void setPeriodoPlazo(String periodoPlazo) {
+		this.periodoPlazo = periodoPlazo;
 	}
 
 	public BigDecimal getRecibirCliente() {
@@ -209,11 +220,11 @@ public class TbQoDetalleCredito implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
-	public String getCostoTasacion() {
+	public BigDecimal getCostoTasacion() {
 		return costoTasacion;
 	}
 
-	public void setCostoTasacion(String costoTasacion) {
+	public void setCostoTasacion(BigDecimal costoTasacion) {
 		this.costoTasacion = costoTasacion;
 	}
 
@@ -225,11 +236,11 @@ public class TbQoDetalleCredito implements Serializable {
 		this.costoValoracion = costoValoracion;
 	}
 
-	public String getSolca() {
+	public BigDecimal getSolca() {
 		return solca;
 	}
 
-	public void setSolca(String solca) {
+	public void setSolca(BigDecimal solca) {
 		this.solca = solca;
 	}
 

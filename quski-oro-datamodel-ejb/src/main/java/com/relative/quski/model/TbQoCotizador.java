@@ -22,9 +22,6 @@ public class TbQoCotizador implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_COTIZADOR_ID_GENERATOR")
 	private Long id;
 
-	@Column(name = "aprobacion_mupi")
-	private String aprobacionMupi;
-
 	@Column(name = "codigo_cotizacion")
 	private String codigoCotizacion;
 
@@ -75,14 +72,6 @@ public class TbQoCotizador implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getAprobacionMupi() {
-		return this.aprobacionMupi;
-	}
-
-	public void setAprobacionMupi(String aprobacionMupi) {
-		this.aprobacionMupi = aprobacionMupi;
 	}
 
 	public String getCodigoCotizacion() {
@@ -228,19 +217,4 @@ public class TbQoCotizador implements Serializable {
 
 		return tbQoVariablesCrediticia;
 	}
-
-	@Override
-	public String toString() {
-		return "TbQoCotizador [id=" + id + ", aprobacionMupi=" + aprobacionMupi + ", codigoCotizacion="
-				+ codigoCotizacion + ", estado=" + estado + ", fechaActualizacion=" + fechaActualizacion
-				+ ", fechaCreacion=" + fechaCreacion + ", gradoInteres=" + gradoInteres + ", motivoDeDesestimiento="
-				+ motivoDeDesestimiento + ", tbQoCliente=" + tbQoCliente + ", tbQoDetalleCreditos="
-				+ tbQoDetalleCreditos + ", tbQoDocumentoHabilitantes=" + tbQoDocumentoHabilitantes + ", tbQoPrecioOros="
-				+ tbQoPrecioOros + ", tbQoVariablesCrediticias=" + tbQoVariablesCrediticias + "]";
-	}
-	
-	
-
-
-
 }

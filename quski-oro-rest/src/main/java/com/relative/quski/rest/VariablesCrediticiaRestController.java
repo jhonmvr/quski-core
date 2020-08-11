@@ -87,15 +87,10 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	@Override
 	@ApiOperation(value = "GenericWrapper<TbMiVariableCrediticia> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbMiVariableCrediticia", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoVariablesCrediticia> persistEntity(GenericWrapper<TbQoVariablesCrediticia> vc)
-			throws RelativeException {
-		try {
-			GenericWrapper<TbQoVariablesCrediticia> gw= new GenericWrapper<>();
-			gw.setEntidad(this.qos.manageVariablesCrediticia( vc.getEntidad() ));
-			return vc;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,"ERROR CONTROLADOR usuarioCanalRestController persistEntity, " + e.getMessage());
-		}
+	public GenericWrapper<TbQoVariablesCrediticia> persistEntity(GenericWrapper<TbQoVariablesCrediticia> vc) throws RelativeException {
+		GenericWrapper<TbQoVariablesCrediticia> gw= new GenericWrapper<>();
+		gw.setEntidades(this.qos.manageListVariablesCrediticias( vc.getEntidades() ));
+		return gw;
 	}
 	@GET
 	@Path("/variablesCrediticiaByIdCotizacion")
