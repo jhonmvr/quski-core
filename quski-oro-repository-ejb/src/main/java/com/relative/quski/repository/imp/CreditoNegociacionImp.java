@@ -15,7 +15,9 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoAgencia;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
@@ -42,12 +44,12 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 
 	@Override
 	public List<TbQoCreditoNegociacion> findPorCustomFilterCreditos(PaginatedWrapper pw, String fechaDesde,
-			String fechaHasta, String identificacion, String agencia)
+			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
+			EstadoEnum estado)
 			throws RelativeException {
 		try {
 			return this.findAllBySpecificationPaged(
-					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion,
-							agencia),
+					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado),
 					pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al listar creditos " + e.getMessage());
