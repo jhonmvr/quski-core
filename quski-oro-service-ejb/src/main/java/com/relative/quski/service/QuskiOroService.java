@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,7 +16,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -94,8 +92,6 @@ public class QuskiOroService {
 	String mensaje = "ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: ";
 	@Inject
 	Logger log;
-	@Inject
-	private CotizacionService cs;
 	@Inject
 	private CotizadorRepository cotizadorRepository;
 	@Inject
@@ -3971,22 +3967,44 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * **************************************** @RiesgoAcumulado
+	 * **************************************** @RIESGO_ACUMULADO
 	 */
 
 	/**
 	 * @Comment Busca los Riesgos Acumulados relacionados a un cliente.
 	 * @author Jeroham Cadenas
+	 * @param PaginatedWrapper pw
 	 * @param Long idCliente
 	 * @return List<TbQoRiesgoAcumulado>
 	 * @throws RelativeException
 	 */
-	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(Long idCliente) throws RelativeException {
+	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
 		try {
-			return riesgoAcumuladoRepository.findByIdCliente(idCliente);
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente, pw.getStartRecord(),
+						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente );					
+			}
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					" Riesgos Acumulados no encontrados " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author  Jeroham Cadenas - Developer Twelve
+	 * @param 	Long idCliente
+	 * @return	Long
+	 * @throws  RelativeException
+	 */
+	public Long countRiesgoAcumuladoByIdCliente( Long idCliente ) throws RelativeException {
+		try {
+			return riesgoAcumuladoRepository.countByIdCotizador( idCliente );
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar los riesgos acumulado por id cliente" + e.getMessage());
 		}
 	}
 	
@@ -3997,13 +4015,17 @@ public class QuskiOroService {
 				element.setEstado( EstadoEnum.ACT );
 				element.setId( null );
 				element.setFechaCreacion( new Date(System.currentTimeMillis()) );
-				if(element.getTbQoCliente() != null) {
-					try {
+				try {
+					if(element.getTbQoCliente() != null) {
 						persisted.add( this.riesgoAcumuladoRepository.add( element ));
-					} catch (Exception e) {
-						e.printStackTrace();
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_CREATE, "No existe cliente al cual relacion el riesgo acumulado --> "+ element.getNumeroOperacion());
 					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				
 			});
 			return persisted;
 		} catch (Exception e) {

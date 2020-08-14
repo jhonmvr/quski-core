@@ -27,12 +27,8 @@ public class RiesgoAcumuladoByIdClienteSpec extends AbstractSpecification<TbQoRi
 	@Override
 	public Predicate toPredicate(Root<TbQoRiesgoAcumulado> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-
-		if (this.idCliente != null && this.idCliente != 0) {
-			where.add(cb.equal(poll.get("tbQoCliente"), this.idCliente));
-		}	
+		where.add(cb.equal(poll.get("tbQoCliente"), this.idCliente));
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
-
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 

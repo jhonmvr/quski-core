@@ -51,7 +51,8 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<RiesgoAcumuladoWrapper>", notes = "Metodo Get listAllEntities Retorna un mock de riesgo acumulado ", response = PaginatedListWrapper.class)
-	public PaginatedListWrapper<TbQoRiesgoAcumulado> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
+	public PaginatedListWrapper<TbQoRiesgoAcumulado> listAllEntities(
+			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
@@ -65,13 +66,19 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	private PaginatedListWrapper<TbQoRiesgoAcumulado> findAll(PaginatedWrapper pw) {
 			return null;
 	}
-
+	/**
+	 * 
+	 * @note   Servicio para crear varios riesgo acumulado a la vez.
+	 * @author Jeroham Cadenas
+	 * @param  GenericWrapper<TbQoRiesgoAcumulado> ra
+	 * @return GenericWrapper<TbQoRiesgoAcumulado>
+	 * @throws RelativeException
+	 */
 	@POST
-	@Path("/persistEntity")
-	@Override
+	@Path("/persistEntities")
 	@ApiOperation(value = "GenericWrapper<TbQoRiesgoAcumulado> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbQoRiesgoAcumulado", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoRiesgoAcumulado> persistEntity(GenericWrapper<TbQoRiesgoAcumulado> ra) throws RelativeException {
+	public GenericWrapper<TbQoRiesgoAcumulado> persistEntities(GenericWrapper<TbQoRiesgoAcumulado> ra) throws RelativeException {
 		GenericWrapper<TbQoRiesgoAcumulado> gw= new GenericWrapper<>();
 		gw.setEntidades(this.qos.manageListRiesgoAcumulados( ra.getEntidades() ));
 		return gw;
@@ -86,9 +93,34 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	 */
 	@GET
 	@Path("/findRiesgoAcumuladoByIdCliente")
-	@ApiOperation(value = "List<TbQoRiesgoAcumulado>", notes = "Metodo Retorna List de entidades encontradas en TbQoRiesgoAcumulado", response = List.class)
-	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente( @QueryParam("idCliente") String idCliente ) throws RelativeException {
-			return this.qos.findRiesgoAcumuladoByIdCliente( Long.valueOf( idCliente ) );
+	@ApiOperation(value = "PaginatedListWrapper<TbQoRiesgoAcumulado>", notes = "Metodo Retorna List de entidades encontradas en TbQoRiesgoAcumulado", response = List.class)
+	public PaginatedListWrapper<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente( 
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("idCliente") String idCliente ) throws RelativeException {
+		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
+		return listByIdCliente(	new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated), Long.valueOf( idCliente ));
+		
+		
+	}
+	private PaginatedListWrapper<TbQoRiesgoAcumulado> listByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
+		PaginatedListWrapper<TbQoRiesgoAcumulado> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoRiesgoAcumulado> actions = this.qos.findRiesgoAcumuladoByIdCliente(pw, idCliente);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countRiesgoAcumuladoByIdCliente( idCliente ).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+
+	@Override
+	public GenericWrapper<TbQoRiesgoAcumulado> persistEntity(GenericWrapper<TbQoRiesgoAcumulado> arg0)
+			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 
