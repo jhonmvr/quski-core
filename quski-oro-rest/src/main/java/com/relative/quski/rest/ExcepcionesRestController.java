@@ -153,6 +153,33 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 		}
 		return plw;
 	}
+	
+	@GET
+	@Path("/findByTipoExcepcionAndIdNegociacionAndCaracteristica")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcione>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcione por id de Cliente", response = GenericWrapper.class)
+	public PaginatedListWrapper<TbQoExcepcione> findByIdClfindByTipoExcepcionAndIdNegociacionAndCaracteristica( 
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("tipoExcepcion")  String tipoExcepcion,
+			@QueryParam("idNegociacion")  String idNegociacion,
+			@QueryParam("caracteristica")  String caracteristica
+			
+			) throws RelativeException {
+		return findByTipoExcepcionAndIdNegociacionAndCaracteristica(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated), tipoExcepcion, Long.valueOf(idNegociacion), caracteristica);
+	}
+	private PaginatedListWrapper<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(PaginatedWrapper pw, String tipoExcepcion,Long idNegociacion, String caracteristica) throws RelativeException {
+		PaginatedListWrapper<TbQoExcepcione> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoExcepcione> actions = this.qos.findByTipoExcepcionAndIdNegociacionAndCaracteristica(pw, tipoExcepcion, idNegociacion, caracteristica );
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristica( tipoExcepcion, idNegociacion, caracteristica ).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
 
 	
 	

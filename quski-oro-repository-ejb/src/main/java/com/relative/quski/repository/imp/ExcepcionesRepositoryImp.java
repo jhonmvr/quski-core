@@ -14,6 +14,7 @@ import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.spec.ExcepcionByIdSpec;
 import com.relative.quski.repository.spec.ExcepcionesByIdClienteSpec;
 import com.relative.quski.repository.spec.ExcepcionesByIdNegociacionSpec;
+import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec;
 import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec;
 import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionSpec;
 
@@ -141,5 +142,34 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Excepciones: " + e.getMessage());
 		}
+	}
+	@Override
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(int startRecord, Integer pageSize,
+			String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion, String caracteristica)
+			throws RelativeException {
+		try {
+			return findAllBySpecificationPaged(new ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec( tipoExcepcion, idNegociacion, caracteristica ), startRecord,
+					pageSize, sortFields, sortDirections);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " Ocurrio un error al leer Excepciones: "  + e.getMessage());
+		}
+	}
+	@Override
+	public Long countByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion, Long idNegociacion,
+			String caracteristica) throws RelativeException {
+		try {
+			return countBySpecification(new ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec( tipoExcepcion, idNegociacion, caracteristica ));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " No  se puedieron contar los registros " + e.getMessage());
+		}
+	}
+	
+	@Override
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion, Long idNegociacion, String caracteristica) throws RelativeException {
+		try {
+        	return findAllBySpecification( new ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec( tipoExcepcion, idNegociacion, caracteristica ) );
+    	} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Excepciones: " + e.getMessage());
+    	}
 	}
 }

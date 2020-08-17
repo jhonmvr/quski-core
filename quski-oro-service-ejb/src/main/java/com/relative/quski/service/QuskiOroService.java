@@ -4196,7 +4196,7 @@ public class QuskiOroService {
 					"Error al Buscar Excepciones por id de cliente: " + e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @author Jeroham Cadenas
@@ -4209,6 +4209,49 @@ public class QuskiOroService {
 			throws RelativeException {
 		try {
 			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al contar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Diego Serrano
+	 * @param PaginatedWrapper pw
+	 * @param String           tipoExcepcion
+	 * @param Long             idNegociacion
+	 * @return List<TbQoExcepcione>
+	 * @throws RelativeException
+	 */
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(PaginatedWrapper pw, String tipoExcepcion,
+			Long idNegociacion, String caracteristica) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion, caracteristica);
+			} else {
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion, idNegociacion, caracteristica);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					"Error al Buscar Excepciones por id de cliente: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 
+	 * @author Jeroham Cadenas
+	 * @param String tipoExcepcion
+	 * @param Long   idNegociacion
+	 * @return Long
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion, Long idNegociacion, String caracteristica)
+			throws RelativeException {
+		try {
+			return excepcionesRepository.countByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion, idNegociacion, caracteristica);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Error al contar Excepciones por id de cliente: " + e.getMessage());
