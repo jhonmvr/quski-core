@@ -46,13 +46,43 @@ public class RiesgoAcumuladoRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 					"Ocurrio un error al leer Excepciones: " + e.getMessage());
 		}
 	}
+	@Override
+	public List<TbQoRiesgoAcumulado> findByIdCliente(Long idCliente, int startRecord,
+			Integer pageSize, String sortFields, String sortDirections) throws RelativeException {
+		try {
+			List<TbQoRiesgoAcumulado> listRiesgoAcumulado = this.findAllBySpecificationPaged( new RiesgoAcumuladoByIdClienteSpec( idCliente ), startRecord, pageSize,
+					sortFields, sortDirections);
+			log.info("NUMERO DE EXCEPCIONES RECUPERADAS ---------------------------> " + listRiesgoAcumulado.size());
+			if (!listRiesgoAcumulado.isEmpty()) {
+					return listRiesgoAcumulado;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar riesgos acumulados paginados");
+		}
+	}
 
 	@Override
 	public List<TbQoRiesgoAcumulado> findByIdCliente( Long idCliente ) throws RelativeException {
 		try {
-        	return findAllBySpecification( new RiesgoAcumuladoByIdClienteSpec( idCliente ) );
+			List<TbQoRiesgoAcumulado> listRiesgoAcumulado = this.findAllBySpecification( new RiesgoAcumuladoByIdClienteSpec( idCliente ) );
+			log.info("NUMERO DE EXCEPCIONES RECUPERADAS ---------------------------> " + listRiesgoAcumulado.size());
+			if (!listRiesgoAcumulado.isEmpty()) {
+				return listRiesgoAcumulado;
+		} else {
+			return null;
+		}
     	} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Ocurrio un error al leer Excepciones: " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar riesgos acumulados no paginados");
     	}
+	}
+	@Override
+	public Long countByIdCotizador(Long idCliente) throws RelativeException {
+		try {
+			return countBySpecification(new RiesgoAcumuladoByIdClienteSpec(idCliente));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar los resultado de riesgo acumulado");
+		}
 	}
 }

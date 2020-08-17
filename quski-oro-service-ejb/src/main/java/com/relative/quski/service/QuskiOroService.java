@@ -97,8 +97,6 @@ public class QuskiOroService {
 	@Inject
 	Logger log;
 	@Inject
-	private CotizacionService cs;
-	@Inject
 	private CotizadorRepository cotizadorRepository;
 	@Inject
 	private TipoOroRepository tipoOroRepository;
@@ -3972,22 +3970,44 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * **************************************** @RiesgoAcumulado
+	 * **************************************** @RIESGO_ACUMULADO
 	 */
 
 	/**
 	 * @Comment Busca los Riesgos Acumulados relacionados a un cliente.
 	 * @author Jeroham Cadenas
+	 * @param PaginatedWrapper pw
 	 * @param Long idCliente
 	 * @return List<TbQoRiesgoAcumulado>
 	 * @throws RelativeException
 	 */
-	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(Long idCliente) throws RelativeException {
+	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
 		try {
-			return riesgoAcumuladoRepository.findByIdCliente(idCliente);
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente, pw.getStartRecord(),
+						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente );					
+			}
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					" Riesgos Acumulados no encontrados " + e.getMessage());
+		}
+	}
+	/**
+	 * 
+	 * @author  Jeroham Cadenas - Developer Twelve
+	 * @param 	Long idCliente
+	 * @return	Long
+	 * @throws  RelativeException
+	 */
+	public Long countRiesgoAcumuladoByIdCliente( Long idCliente ) throws RelativeException {
+		try {
+			return riesgoAcumuladoRepository.countByIdCotizador( idCliente );
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al contar los riesgos acumulado por id cliente" + e.getMessage());
 		}
 	}
 	
@@ -3998,13 +4018,17 @@ public class QuskiOroService {
 				element.setEstado( EstadoEnum.ACT );
 				element.setId( null );
 				element.setFechaCreacion( new Date(System.currentTimeMillis()) );
-				if(element.getTbQoCliente() != null) {
-					try {
+				try {
+					if(element.getTbQoCliente() != null) {
 						persisted.add( this.riesgoAcumuladoRepository.add( element ));
-					} catch (Exception e) {
-						e.printStackTrace();
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_CREATE, "No existe cliente al cual relacion el riesgo acumulado --> "+ element.getNumeroOperacion());
 					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				
 			});
 			return persisted;
 		} catch (Exception e) {
