@@ -1783,13 +1783,12 @@ public class QuskiOroService {
 			persisted.setEstado(send.getEstado());
 			persisted.setAsesorResponsable(send.getAsesorResponsable());
 			persisted.setIdAsesorResponsable(send.getIdAsesorResponsable());
-			persisted.setProcesoActualNegociacion(send.getProcesoActualNegociacion());
-			persisted.setEstadoNegociacion(send.getEstadoNegociacion());
-			persisted.setTipoNegociacion(send.getTipoNegociacion());
+			persisted.setProcesoActual(send.getProcesoActual());
+			persisted.setSituacion(send.getSituacion());
+			persisted.setTipo(send.getTipo());
 
 			persisted.setId(persisted.getId());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setCodigoOperacion(persisted.getCodigoOperacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 
 			return negociacionRepository.update(persisted);

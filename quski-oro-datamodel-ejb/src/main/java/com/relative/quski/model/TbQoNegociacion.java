@@ -39,9 +39,6 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="asesor_responsable")
 	private String asesorResponsable;
 
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
-
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 	
@@ -56,14 +53,12 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="id_asesor_responsable")
 	private String idAsesorResponsable;
 
-	@Column(name="proceso_actual_negociacion")
-	private String procesoActualNegociacion;
+	@Column(name="proceso_actual")
+	private String procesoActual;
 
-	@Column(name="estado_negociacion")
-	private String estadoNegociacion;
+	private String situacion;
 
-	@Column(name="tipo_negociacion")
-	private String tipoNegociacion;
+	private String tipo;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
@@ -101,12 +96,28 @@ public class TbQoNegociacion implements Serializable {
 		this.asesorResponsable = asesorResponsable;
 	}
 
-	public String getCodigoOperacion() {
-		return this.codigoOperacion;
+	public String getProcesoActual() {
+		return procesoActual;
 	}
 
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
+	public void setProcesoActual(String procesoActual) {
+		this.procesoActual = procesoActual;
+	}
+
+	public String getSituacion() {
+		return situacion;
+	}
+
+	public void setSituacion(String situacion) {
+		this.situacion = situacion;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public EstadoEnum getEstado() {
@@ -139,29 +150,6 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setIdAsesorResponsable(String idAsesorResponsable) {
 		this.idAsesorResponsable = idAsesorResponsable;
-	}
-
-	public String getProcesoActualNegociacion() {
-		return this.procesoActualNegociacion;
-	}
-
-	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
-		this.procesoActualNegociacion = procesoActualNegociacion;
-	}
-	public String getEstadoNegociacion() {
-		return estadoNegociacion;
-	}
-
-	public void setEstadoNegociacion(String estadoNegociacion) {
-		this.estadoNegociacion = estadoNegociacion;
-	}
-
-	public String getTipoNegociacion() {
-		return this.tipoNegociacion;
-	}
-
-	public void setTipoNegociacion(String tipoNegociacion) {
-		this.tipoNegociacion = tipoNegociacion;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
