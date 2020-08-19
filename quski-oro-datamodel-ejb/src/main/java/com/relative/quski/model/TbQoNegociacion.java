@@ -39,7 +39,6 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="asesor_responsable")
 	private String asesorResponsable;
 
-
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 	
@@ -54,13 +53,11 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="id_asesor_responsable")
 	private String idAsesorResponsable;
 
-	@Column(name="proceso_actual_negociacion")
-	private String procesoActualNegociacion;
+	@Column(name="proceso_actual")
+	private String procesoActual;
 
-	@Column(name="situacion")
 	private String situacion;
 
-	@Column(name="tipo")
 	private String tipo;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
@@ -99,6 +96,29 @@ public class TbQoNegociacion implements Serializable {
 		this.asesorResponsable = asesorResponsable;
 	}
 
+	public String getProcesoActual() {
+		return procesoActual;
+	}
+
+	public void setProcesoActual(String procesoActual) {
+		this.procesoActual = procesoActual;
+	}
+
+	public String getSituacion() {
+		return situacion;
+	}
+
+	public void setSituacion(String situacion) {
+		this.situacion = situacion;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -130,31 +150,6 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setIdAsesorResponsable(String idAsesorResponsable) {
 		this.idAsesorResponsable = idAsesorResponsable;
-	}
-
-	public String getProcesoActualNegociacion() {
-		return this.procesoActualNegociacion;
-	}
-
-	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
-		this.procesoActualNegociacion = procesoActualNegociacion;
-	}
-
-
-	public String getSituacion() {
-		return situacion;
-	}
-
-	public void setSituacion(String situacion) {
-		this.situacion = situacion;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
