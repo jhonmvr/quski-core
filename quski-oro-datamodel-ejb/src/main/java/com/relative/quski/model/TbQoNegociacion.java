@@ -39,8 +39,6 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="asesor_responsable")
 	private String asesorResponsable;
 
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -59,11 +57,11 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="proceso_actual_negociacion")
 	private String procesoActualNegociacion;
 
-	@Column(name="estado_negociacion")
-	private String estadoNegociacion;
+	@Column(name="situacion")
+	private String situacion;
 
-	@Column(name="tipo_negociacion")
-	private String tipoNegociacion;
+	@Column(name="tipo")
+	private String tipo;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
@@ -101,13 +99,6 @@ public class TbQoNegociacion implements Serializable {
 		this.asesorResponsable = asesorResponsable;
 	}
 
-	public String getCodigoOperacion() {
-		return this.codigoOperacion;
-	}
-
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
-	}
 
 	public EstadoEnum getEstado() {
 		return estado;
@@ -148,20 +139,22 @@ public class TbQoNegociacion implements Serializable {
 	public void setProcesoActualNegociacion(String procesoActualNegociacion) {
 		this.procesoActualNegociacion = procesoActualNegociacion;
 	}
-	public String getEstadoNegociacion() {
-		return estadoNegociacion;
+
+
+	public String getSituacion() {
+		return situacion;
 	}
 
-	public void setEstadoNegociacion(String estadoNegociacion) {
-		this.estadoNegociacion = estadoNegociacion;
+	public void setSituacion(String situacion) {
+		this.situacion = situacion;
 	}
 
-	public String getTipoNegociacion() {
-		return this.tipoNegociacion;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setTipoNegociacion(String tipoNegociacion) {
-		this.tipoNegociacion = tipoNegociacion;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
