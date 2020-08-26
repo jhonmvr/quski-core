@@ -24,6 +24,7 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.AsignacionByParamsSpec;
+import com.relative.quski.repository.spec.CreditoByIdNegociacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
@@ -142,6 +143,23 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Ocurrio un error al leer Asignaciones, " + e.getMessage());
 		}
+	}
+
+	@Override
+	public List<TbQoCreditoNegociacion> findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException {
+		try {
+			List<TbQoCreditoNegociacion> tmp;
+			tmp = this.findAllBySpecification(new CreditoByIdNegociacionSpec(idNegociacion));
+			if(tmp != null && !tmp.isEmpty()) {
+				return tmp;
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDO ENCONTRAR CREDITO POPR ID_NEGOCIACION");
+		}
+		
 	}
 
 //	@Override
