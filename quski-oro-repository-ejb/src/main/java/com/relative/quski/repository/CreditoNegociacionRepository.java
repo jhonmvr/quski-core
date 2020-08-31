@@ -36,5 +36,7 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 	//public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado)throws RelativeException;
 	//public Long countfindBycodigOpEstado(String codigOp, EstadoOperacionEnum estado)throws RelativeException;
 
+	public List<TbQoCreditoNegociacion> findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException;
+
 }
 
