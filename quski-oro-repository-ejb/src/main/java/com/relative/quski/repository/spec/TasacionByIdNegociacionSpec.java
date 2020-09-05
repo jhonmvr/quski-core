@@ -8,7 +8,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoTasacion;
 
 public class TasacionByIdNegociacionSpec  extends AbstractSpecification<TbQoTasacion> {
