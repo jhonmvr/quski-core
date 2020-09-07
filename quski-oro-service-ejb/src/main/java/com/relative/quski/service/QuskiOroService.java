@@ -83,6 +83,7 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -220,7 +221,7 @@ public class QuskiOroService {
 	}
 	// todo: Eliminar campo de aprobacion mupi del cotizador
 	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
 	 * 
 	 * @author BRAYAN MONGE - Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
@@ -471,11 +472,13 @@ public class QuskiOroService {
 	/**
 	 * 
 	 * @param cliente
+	 * @param idNegociacion 
 	 * @return
 	 * @throws RelativeException
 	 */
-	public TbQoCliente crearCliente(TbQoCliente cliente) throws RelativeException {
+	public RespuestaCrearClienteWrapper crearCliente(TbQoCliente cliente, Long idNegociacion) throws RelativeException {
 		TbQoCliente locCliente = new TbQoCliente();
+		RespuestaCrearClienteWrapper respuesta = null;
 		Map<String, String> erroresDireccion = new HashMap<>();
 		Map<String, String> erroresIngresoEgreso = new HashMap<>();
 		Map<String, String> erroresPatrimonio = new HashMap<>();
@@ -511,7 +514,23 @@ public class QuskiOroService {
 			}
 
 		}
-		return locCliente;
+		//buscar cuantos creditos tiene por idNegociacion
+		if( idNegociacion != null) {
+			respuesta = new RespuestaCrearClienteWrapper();
+			respuesta.setIdNegociacion(idNegociacion);
+			List<TbQoCreditoNegociacion> creditos = creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+			if(creditos != null) {
+				Integer numeroCreditos = creditos.size();
+				if(numeroCreditos ==1) {
+					respuesta.setIdCredito(creditos.get(0).getId());
+				}
+				
+				respuesta.setNumeroCreditos(numeroCreditos.longValue());
+			}else {
+				respuesta.setNumeroCreditos(Long.valueOf("0"));
+			}
+		}
+		return respuesta;
 	}
 
 	/**

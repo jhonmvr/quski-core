@@ -26,6 +26,7 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -183,9 +184,10 @@ public class ClienteRestController extends BaseRestController
 	@POST
 	@Path("/crearCliente")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCliente> crearCliente(GenericWrapper<TbQoCliente> wp) throws RelativeException {
-		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
-		loc.setEntidad(this.qos.crearCliente(wp.getEntidad()));
+	public GenericWrapper<RespuestaCrearClienteWrapper> crearCliente(GenericWrapper<TbQoCliente> wp,@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<RespuestaCrearClienteWrapper> loc = new GenericWrapper<>();
+		
+		loc.setEntidad( this.qos.crearCliente(wp.getEntidad(), StringUtils.isNotBlank(idNegociacion)? Long.valueOf(idNegociacion):null) );
 		return loc;
 	}
 }
