@@ -137,8 +137,13 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		Map<String, Object> map = new HashMap<>();
 		//CAMBIAR PARA PONER EL PARAMETRO
 		
+<<<<<<< HEAD
+		String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
+		//String path= "/home/relative/workspace/QUSKI/New_Quski_Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes";
+=======
 		//String path= "/home/relative/WORKSPACE/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 		String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
+>>>>>>> 890b2fbe314577ce07746ba8d9bbb9003d2eb325
 		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
