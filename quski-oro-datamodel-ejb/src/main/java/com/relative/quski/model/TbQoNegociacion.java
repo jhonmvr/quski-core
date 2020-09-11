@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.SituacionEnum;
 
 
 /**
@@ -55,8 +56,9 @@ public class TbQoNegociacion implements Serializable {
 
 	@Column(name="proceso_actual")
 	private String procesoActual;
-
-	private String situacion;
+	
+	@Enumerated(EnumType.STRING)
+	private SituacionEnum situacion;
 
 	private String tipo;
 
@@ -104,11 +106,11 @@ public class TbQoNegociacion implements Serializable {
 		this.procesoActual = procesoActual;
 	}
 
-	public String getSituacion() {
+	public SituacionEnum getSituacion() {
 		return situacion;
 	}
 
-	public void setSituacion(String situacion) {
+	public void setSituacion(SituacionEnum situacion) {
 		this.situacion = situacion;
 	}
 

@@ -21,6 +21,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -1575,7 +1576,7 @@ public class QuskiOroService {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
 				send.setProcesoActual("TASACION");
-				send.setSituacion("EN_PROCESO");
+				send.setSituacion( SituacionEnum.CANCELADO );
 				send.setTipo("NUEVO");
 				if(send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
@@ -1592,7 +1593,44 @@ public class QuskiOroService {
 		}
 
 	}
-
+	/**
+	 * @author 	Jeroham Cadenas - Actualizacion
+	 * @param 	Long id
+	 * @return 	TbQoNegociacion
+	 * @throws 	RelativeException
+	 * @comment Finaliza una negociacion en caso de que sea completado el flujo de negociacion.
+	 * @comment Preguntar antes de editar.
+	 */
+	public TbQoNegociacion finalizarNegociacion(TbQoNegociacion send) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = null;
+			persisted = this.findNegociacionById( send.getId() );
+			persisted.setSituacion( SituacionEnum.FINALIZADO );
+			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			return negociacionRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error Finalizando Negociacion" + e.getMessage());
+		}
+	}
+	/**
+	 * @author 	Jeroham Cadenas - Actualizacion
+	 * @param 	Long id
+	 * @return 	TbQoNegociacion
+	 * @throws 	RelativeException
+	 * @comment Cancela una negociacion en caso de que se detenga el flujo de negociacion.
+	 * @comment Preguntar antes de editar.
+	 */
+	public TbQoNegociacion cancelarNegociacion(TbQoNegociacion send) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = null;
+			persisted = this.findNegociacionById( send.getId() );
+			persisted.setSituacion( SituacionEnum.CANCELADO );
+			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			return negociacionRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error Cancelando Negociacion" + e.getMessage());
+		}
+	}
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
