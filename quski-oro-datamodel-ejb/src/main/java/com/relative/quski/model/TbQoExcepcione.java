@@ -32,10 +32,10 @@ public class TbQoExcepcione implements Serializable {
 
 
 	@Column(name="id_aprobador")
-	private Long idAprobador;
+	private String idAprobador;
 
 	@Column(name="id_asesor")
-	private Long idAsesor;
+	private String idAsesor;
 
 	@Column(name="tipo_excepcion")
 	private String tipoExcepcion;
@@ -88,19 +88,19 @@ public class TbQoExcepcione implements Serializable {
 		this.id = id;
 	}
 
-	public Long getIdAprobador() {
+	public String getIdAprobador() {
 		return this.idAprobador;
 	}
 
-	public void setIdAprobador(Long idAprobador) {
+	public void setIdAprobador(String idAprobador) {
 		this.idAprobador = idAprobador;
 	}
 
-	public Long getIdAsesor() {
+	public String getIdAsesor() {
 		return this.idAsesor;
 	}
 
-	public void setIdAsesor(Long idAsesor) {
+	public void setIdAsesor(String idAsesor) {
 		this.idAsesor = idAsesor;
 	}
 
