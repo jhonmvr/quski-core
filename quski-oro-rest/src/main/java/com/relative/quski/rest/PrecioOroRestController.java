@@ -78,7 +78,7 @@ implements CrudRestControllerInterface<TbQoPrecioOro, GenericWrapper<TbQoPrecioO
 		PaginatedListWrapper<TbQoPrecioOro> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoPrecioOro> actions = this.qos.findAllPrecioOro(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countTipoOro().intValue());
+			plw.setTotalResults(this.qos.countPrecioOro().intValue());
 			plw.setList(actions);
 		}
 		return plw;

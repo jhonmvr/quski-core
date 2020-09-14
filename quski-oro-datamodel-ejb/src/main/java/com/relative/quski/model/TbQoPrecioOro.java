@@ -57,10 +57,8 @@ public class TbQoPrecioOro implements Serializable {
 	@JoinColumn(name = "id_cotizador")
 	private TbQoCotizador tbQoCotizador;
 
-	// bi-directional many-to-one association to TbQoTipoOro
-	@ManyToOne
-	@JoinColumn(name = "id_tipo_oro")
-	private TbQoTipoOro tbQoTipoOro;
+	@JoinColumn(name = "tipo_oro")
+	private String tipoOro;
 
 	public TbQoPrecioOro() {
 	}
@@ -121,12 +119,12 @@ public class TbQoPrecioOro implements Serializable {
 		this.tbQoCotizador = tbQoCotizador;
 	}
 
-	public TbQoTipoOro getTbQoTipoOro() {
-		return this.tbQoTipoOro;
+	public String getTipoOro() {
+		return this.tipoOro;
 	}
 
-	public void setTbQoTipoOro(TbQoTipoOro tbQoTipoOro) {
-		this.tbQoTipoOro = tbQoTipoOro;
+	public void setTipoOro(String tipoOro) {
+		this.tipoOro = tipoOro;
 	}
 
 }

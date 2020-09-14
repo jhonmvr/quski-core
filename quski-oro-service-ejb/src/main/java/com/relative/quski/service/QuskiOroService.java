@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -23,6 +21,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.model.Canton;
 import com.relative.quski.model.Parroquia;
 import com.relative.quski.model.Provincia;
@@ -48,7 +47,6 @@ import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
-import com.relative.quski.model.TbQoTipoOro;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.AgenciaRepository;
@@ -76,20 +74,17 @@ import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
 import com.relative.quski.repository.TipoDocumentoRepository;
-import com.relative.quski.repository.TipoOroRepository;
 import com.relative.quski.repository.TrackingRepository;
 import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.FundaByParamsSpec;
-import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.FileWrapper;
-import com.relative.quski.wrapper.PrecioOroWrapper;
-import com.relative.quski.wrapper.VariableCrediticiaWrapper;
+import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -98,8 +93,6 @@ public class QuskiOroService {
 	Logger log;
 	@Inject
 	private CotizadorRepository cotizadorRepository;
-	@Inject
-	private TipoOroRepository tipoOroRepository;
 	@Inject
 	private RiesgoAcumuladoRepository riesgoAcumuladoRepository;
 	@Inject
@@ -229,7 +222,7 @@ public class QuskiOroService {
 	}
 	// todo: Eliminar campo de aprobacion mupi del cotizador
 	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
 	 * 
 	 * @author BRAYAN MONGE - Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
@@ -480,11 +473,13 @@ public class QuskiOroService {
 	/**
 	 * 
 	 * @param cliente
+	 * @param idNegociacion 
 	 * @return
 	 * @throws RelativeException
 	 */
-	public TbQoCliente crearCliente(TbQoCliente cliente) throws RelativeException {
+	public RespuestaCrearClienteWrapper crearCliente(TbQoCliente cliente, Long idNegociacion) throws RelativeException {
 		TbQoCliente locCliente = new TbQoCliente();
+		RespuestaCrearClienteWrapper respuesta = null;
 		Map<String, String> erroresDireccion = new HashMap<>();
 		Map<String, String> erroresIngresoEgreso = new HashMap<>();
 		Map<String, String> erroresPatrimonio = new HashMap<>();
@@ -520,7 +515,23 @@ public class QuskiOroService {
 			}
 
 		}
-		return locCliente;
+		//buscar cuantos creditos tiene por idNegociacion
+		if( idNegociacion != null) {
+			respuesta = new RespuestaCrearClienteWrapper();
+			respuesta.setIdNegociacion(idNegociacion);
+			List<TbQoCreditoNegociacion> creditos = creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+			if(creditos != null) {
+				Integer numeroCreditos = creditos.size();
+				if(numeroCreditos ==1) {
+					respuesta.setIdCredito(creditos.get(0).getId());
+				}
+				
+				respuesta.setNumeroCreditos(numeroCreditos.longValue());
+			}else {
+				respuesta.setNumeroCreditos(Long.valueOf("0"));
+			}
+		}
+		return respuesta;
 	}
 
 	/**
@@ -555,11 +566,7 @@ public class QuskiOroService {
 
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		log.info("COTIZACIONES QUE SE RECUPERA " + cot);
-		TbQoTipoOro tpo = this.manageTipoOro(po.getTbQoTipoOro());
-		// TbQoTipoOro tpos=this.findTipoOroById( po.getTbQoTipoOro().getId() );
-		log.info("VALOR DE TPOS---> " + tpo);
 		po.setTbQoCotizador(cot);
-		po.setTbQoTipoOro(tpo);
 		return this.managePrecioOro(po);
 	}
 
@@ -779,162 +786,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Cotizador no encontrado " + e.getMessage());
 		}
 	}
-
-	/**
-	 * * * * * * * * * * * @TIPO ORO
-	 */
-
-	/**
-	 * Metodo que busca la entidad por su PK
-	 * 
-	 * @param id Pk de la entidad
-	 * @return Entidad encontrada
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
-	public TbQoTipoOro findTipoOroById(Long id) throws RelativeException {
-		try {
-			return tipoOroRepository.findById(id);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que lista la informacion de las entidades encontradas
-	 * 
-	 * @param pw Objeto generico que tiene la informacion que determina si el
-	 *           resultado es total o paginado
-	 * @return Listado de entidades encontradas
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
-	public List<TbQoTipoOro> findAllTipoOro(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.tipoOroRepository.findAll(TbQoTipoOro.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.tipoOroRepository.findAll(TbQoTipoOro.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return this.tipoOroRepository.findAll(TbQoTipoOro.class, pw.getSortFields(),
-							pw.getSortDirections());
-
-				}
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @param send entidad con la informacion de creacion o actualizacion
-	 * @return Entidad modificada o actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoTipoOro manageTipoOro(TbQoTipoOro send) throws RelativeException {
-		try {
-			log.info("==> entra a manage Tipo Oro");
-			TbQoTipoOro persisted = null;
-			if (send != null && send.getId() != null) {
-				persisted = this.tipoOroRepository.findById(send.getId());
-				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-				return this.updateTipoOro(send, persisted);
-			} else if (send != null && send.getId() == null) {
-
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado(EstadoEnum.ACT);
-				return tipoOroRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error actualizando el Tipo Oro " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que actualiza la entidad
-	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
-	 * @param send      informacion enviada para update
-	 * @param persisted entidad existente sobre la que se actualiza
-	 * @return Entidad actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoTipoOro updateTipoOro(TbQoTipoOro send, TbQoTipoOro persisted) throws RelativeException {
-		try {
-			if (send.getQuilate() != null) {
-				persisted.setQuilate(send.getQuilate());
-			}
-			if (send.getEstado() != null) {
-				persisted.setEstado(send.getEstado());
-			}
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			return tipoOroRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Tipo oro " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que cuenta la cantidad de entidades existentes
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public Long countTipoOro() throws RelativeException {
-		try {
-			return tipoOroRepository.countAll(TbQoTipoOro.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "TipoOro no encontrado " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que busca por el quilate del tipo de oro
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public List<TbQoTipoOro> findTipoOroByQuilate(String quilate) throws RelativeException {
-		List<TbQoTipoOro> tmp;
-		try {
-			tmp = this.tipoOroRepository.findAllBySpecification(new TipoOroByQuilateSpec(quilate));
-			if (tmp != null && !tmp.isEmpty()) {
-				return tmp;
-			}
-		} catch (Exception e) {
-
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					"ERROR: AL BUSCAR tipo oro por quilate: " + quilate);
-		}
-		return null;
-
-	}
-
 	/**
 	 * * * * * * * * * * * @DETALLE @CREDITO
 	 */
@@ -1237,10 +1088,7 @@ public class QuskiOroService {
 			persisted.setPrecio(send.getPrecio());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(EstadoEnum.ACT);
-			
-			if (send.getTbQoTipoOro() != null) {
-				persisted.setTbQoTipoOro(send.getTbQoTipoOro());
-			}
+			persisted.setTipoOro( send.getTipoOro());
 			return precioOroRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
@@ -1320,38 +1168,6 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 		}
-}
-
-	/**
-	 * Copia la informacion del wrapper de variable crediticia al entity variable
-	 * crediticia
-	 * 
-	 * @author KLÉBER GUERRA Relative - Engine
-	 * @param idCotizacion
-	 * @return List<TbQoVariablesCrediticia>
-	 * @throws RelativeException
-	 */
-	private List<TbQoVariablesCrediticia> copyVariablesCrediticiaData(Long idCotizacion) throws RelativeException {
-		List<TbQoVariablesCrediticia> varCrediticia = new ArrayList<>();
-		log.info("========>copyVariablesCrediticiasData " + idCotizacion);
-		List<VariableCrediticiaWrapper> variablesCrediticias = this.variablesCrediticiaRepository
-				.findByIdCotizadorCustom(idCotizacion);
-
-		if (variablesCrediticias != null && !variablesCrediticias.isEmpty()) {
-			log.info("========>copyVariablesCrediticiaData variablesCrediticias " + variablesCrediticias.size());
-			variablesCrediticias.forEach(vcw -> {
-				log.info("========>leyendo elemento pow " + vcw.getId());
-				TbQoVariablesCrediticia vc = new TbQoVariablesCrediticia();
-				vc.setId(vcw.getId());
-				vc.setOrden(vcw.getOrden());
-				vc.setNombre(vcw.getNombre());
-				vc.setValor(vcw.getValor());
-
-				varCrediticia.add(vc);
-			});
-		}
-		return varCrediticia;
-
 	}
 
 	/**
@@ -1362,38 +1178,38 @@ public class QuskiOroService {
 	 * @return List<TbQoPrecioOro>
 	 * @throws RelativeException
 	 */
-	private List<TbQoPrecioOro> copyPrecioOroData(Long idCotizacion) throws RelativeException {
-		List<TbQoPrecioOro> pos = new ArrayList<>();
-
-		log.info("========>copyPrecioOroData " + idCotizacion);
-		List<PrecioOroWrapper> pows = this.precioOroRepository.findByIdCotizadorCustom(idCotizacion);
-		List<PrecioOroWrapper> powact = pows.stream().filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0)
-				.collect(Collectors.toList());
-		if (powact != null && !powact.isEmpty()) {
-			log.info("========>copyPrecioOroData pows " + powact.size());
-			powact.forEach(pow -> {
-
-				log.info("========>leyendo elemento pow " + pow.getId());
-				log.info("========>leyendo elemento pow " + pow.getPrecio());
-				log.info("========>leyendo elemento pow " + pow.getPesoNetoEstimado());
-				log.info("========> leyendo elemento pow " + pow.getEstado());
-				TbQoPrecioOro po = new TbQoPrecioOro();
-				TbQoTipoOro to = new TbQoTipoOro();
-				po.setId(pow.getId());
-				to.setId(pow.getIdTipoOro());
-				to.setQuilate(pow.getQuilate());
-				po.setPrecio(pow.getPrecio());
-				po.setPesoNetoEstimado(pow.getPesoNetoEstimado());
-				po.setTbQoTipoOro(to);
-				po.setEstado(pow.getEstado());
-
-				pos.add(po);
-
-			});
-		}
-		return pos;
-
-	}
+//	private List<TbQoPrecioOro> copyPrecioOroData(Long idCotizacion) throws RelativeException {
+//		List<TbQoPrecioOro> pos = new ArrayList<>();
+//
+//		log.info("========>copyPrecioOroData " + idCotizacion);
+//		List<PrecioOroWrapper> pows = this.precioOroRepository.findByIdCotizadorCustom(idCotizacion);
+//		List<PrecioOroWrapper> powact = pows.stream().filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0)
+//				.collect(Collectors.toList());
+//		if (powact != null && !powact.isEmpty()) {
+//			log.info("========>copyPrecioOroData pows " + powact.size());
+//			powact.forEach(pow -> {
+//
+//				log.info("========>leyendo elemento pow " + pow.getId());
+//				log.info("========>leyendo elemento pow " + pow.getPrecio());
+//				log.info("========>leyendo elemento pow " + pow.getPesoNetoEstimado());
+//				log.info("========> leyendo elemento pow " + pow.getEstado());
+//				TbQoPrecioOro po = new TbQoPrecioOro();
+//				TbQoTipoOro to = new TbQoTipoOro();
+//				po.setId(pow.getId());
+//				to.setId(pow.getIdTipoOro());
+//				to.setQuilate(pow.getQuilate());
+//				po.setPrecio(pow.getPrecio());
+//				po.setPesoNetoEstimado(pow.getPesoNetoEstimado());
+//				po.setTbQoTipoOro(to);
+//				po.setEstado(pow.getEstado());
+//
+//				pos.add(po);
+//
+//			});
+//		}
+//		return pos;
+//
+//	}
 
 	/**
 	 ************************************ @Cliente
@@ -1418,49 +1234,49 @@ public class QuskiOroService {
 
 	}
 	
-
-	/**
-	 * Método que realiza la busqueda por Identificacion con cotizaciones
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param String identificacion
-	 * @return TbQoCliente
-	 * @throws RelativeException
-	 */
-	public TbQoCliente findClienteByIdentificacionWithCotizacion(String identificacion) throws RelativeException {
-		try {
-			log.info("INICIA findClienteByIdentificacionWithCotizacion");
-			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
-
-			TbQoCliente clienteId = new TbQoCliente();
-			log.info("NUMERO DE COTIZACIONES QUE RETORNAN ----> " + cliente.getTbQoCotizador().size());
-
-			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
-				clienteId.setId(cliente.getId());
-				List<TbQoCotizador> tmp = cliente.getTbQoCotizador().stream()
-						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
-				if (tmp != null && !tmp.isEmpty()) {
-
-					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
-					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariablesCrediticiaData(tmp.get(0).getId()));
-					tmp.get(0).setTbQoCliente(null);
-					tmp.get(0).setTbQoCliente(clienteId);
-				}
-				cliente.setTbQoCotizador(tmp);
-
-				return cliente;
-			} else {
-				return null;
-//				throw new RelativeException(Constantes.ERROR_CODE_READ,
-//						"ERROR AL BUSCAR CLIENTE: NO EXISTE CLIENTE, NO TIENE COTIZACIONES O COTIZACIONES ACTIVAS: " + identificacion);
-			}
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
-		}
-	}
+//
+//	/**
+//	 * Método que realiza la busqueda por Identificacion con cotizaciones
+//	 * 
+//	 * @author KLÉBER GUERRA - Relative Engine
+//	 * @param String identificacion
+//	 * @return TbQoCliente
+//	 * @throws RelativeException
+//	 */
+//	public TbQoCliente findClienteByIdentificacionWithCotizacion(String identificacion) throws RelativeException {
+//		try {
+//			log.info("INICIA findClienteByIdentificacionWithCotizacion");
+//			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion(identificacion);
+//
+//			TbQoCliente clienteId = new TbQoCliente();
+//			log.info("NUMERO DE COTIZACIONES QUE RETORNAN ----> " + cliente.getTbQoCotizador().size());
+//
+//			if (cliente != null && cliente.getTbQoCotizador() != null && !cliente.getTbQoCotizador().isEmpty()) {
+//				clienteId.setId(cliente.getId());
+//				List<TbQoCotizador> tmp = cliente.getTbQoCotizador().stream()
+//						.filter(c -> c.getEstado().compareTo(EstadoEnum.ACT) == 0).collect(Collectors.toList());
+//				if (tmp != null && !tmp.isEmpty()) {
+//
+//					tmp.get(0).setTbQoPrecioOros(this.copyPrecioOroData(tmp.get(0).getId()));
+//					tmp.get(0).setTbQoVariablesCrediticias(this.copyVariablesCrediticiaData(tmp.get(0).getId()));
+//					tmp.get(0).setTbQoCliente(null);
+//					tmp.get(0).setTbQoCliente(clienteId);
+//				}
+//				cliente.setTbQoCotizador(tmp);
+//
+//				return cliente;
+//			} else {
+//				return null;
+////				throw new RelativeException(Constantes.ERROR_CODE_READ,
+////						"ERROR AL BUSCAR CLIENTE: NO EXISTE CLIENTE, NO TIENE COTIZACIONES O COTIZACIONES ACTIVAS: " + identificacion);
+//			}
+//		} catch (RelativeException e) {
+//			throw e;
+//		} catch (Exception e) {
+//			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+//					"ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: " + identificacion);
+//		}
+//	}
 
 	/**
 	 * METODO QUE BUSCA LA COTIZACION ACTIVA
@@ -1753,31 +1569,70 @@ public class QuskiOroService {
 
 	public TbQoNegociacion manageNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
-			// log.info("==> entra a manage variableCrediticia");
-			// log.info("==> entra a manage Negociacion");
+
 			TbQoNegociacion persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findNegociacionById(send.getId());
 				return this.updateNegociacion(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
+				send.setProcesoActual("TASACION");
+				send.setSituacion( SituacionEnum.CANCELADO );
+				send.setTipo("NUEVO");
+				if(send.getTbQoCliente().getId() == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
+				}
 				return negociacionRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo ");
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error creando o actualizando negociacion");
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					"Error actualizando la Agencia " + e.getMessage());
 		}
 
 	}
-
+	/**
+	 * @author 	Jeroham Cadenas - Actualizacion
+	 * @param 	Long id
+	 * @return 	TbQoNegociacion
+	 * @throws 	RelativeException
+	 * @comment Finaliza una negociacion en caso de que sea completado el flujo de negociacion.
+	 * @comment Preguntar antes de editar.
+	 */
+	public TbQoNegociacion finalizarNegociacion(TbQoNegociacion send) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = null;
+			persisted = this.findNegociacionById( send.getId() );
+			persisted.setSituacion( SituacionEnum.FINALIZADO );
+			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			return negociacionRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error Finalizando Negociacion" + e.getMessage());
+		}
+	}
+	/**
+	 * @author 	Jeroham Cadenas - Actualizacion
+	 * @param 	Long id
+	 * @return 	TbQoNegociacion
+	 * @throws 	RelativeException
+	 * @comment Cancela una negociacion en caso de que se detenga el flujo de negociacion.
+	 * @comment Preguntar antes de editar.
+	 */
+	public TbQoNegociacion cancelarNegociacion(TbQoNegociacion send) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = null;
+			persisted = this.findNegociacionById( send.getId() );
+			persisted.setSituacion( SituacionEnum.CANCELADO );
+			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			return negociacionRepository.update(persisted);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error Cancelando Negociacion" + e.getMessage());
+		}
+	}
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
