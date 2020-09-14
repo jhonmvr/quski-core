@@ -1718,7 +1718,9 @@ public class QuskiOroService {
 	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
+		
 		try {
+			log.info("ID QUE INGRESA findNegociacionById===> "+id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Negociacion no encontrada " + e.getMessage());
@@ -4318,9 +4320,11 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
+		log.info("Valor del send en manageExcepcion===> "+send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
+				log.info("INGRESA AL IF");
 				persisted = this.excepcionesRepository.findById(send.getId());
 				return this.updateExcepcion(send, persisted);
 			} else if (send != null && send.getId() == null) {
