@@ -111,7 +111,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="id_agencia")
 	private int idAgencia;
-
+	
 	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")

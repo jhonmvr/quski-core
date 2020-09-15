@@ -1,4 +1,5 @@
 package com.relative.quski.service;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -16,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -69,6 +72,8 @@ import com.relative.quski.repository.spec.FundaByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
+import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
+import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
@@ -121,6 +126,8 @@ public class QuskiOroService {
 	private ExcepcionesRepository excepcionesRepository;
 	@Inject
 	private FundaRepository fundaRepository;
+	@Inject
+	private SoftBankApiClient sbapiclient;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -1257,7 +1264,9 @@ public class QuskiOroService {
 	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
+		
 		try {
+			log.info("ID QUE INGRESA findNegociacionById===> "+id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
@@ -1432,7 +1441,6 @@ public class QuskiOroService {
 			persisted.setValorComercial(send.getValorComercial());
 			persisted.setValorOro(send.getValorOro());
 			persisted.setValorRealizacion(send.getValorRealizacion());
-			persisted.setTbQoTipoOro(send.getTbQoTipoOro());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
@@ -2952,9 +2960,11 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
+		log.info("Valor del send en manageExcepcion===> "+send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
+				log.info("INGRESA AL IF");
 				persisted = this.excepcionesRepository.findById(send.getId());
 				return this.updateExcepcion(send, persisted);
 			} else if (send != null && send.getId() == null) {
@@ -3171,4 +3181,22 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+	
+	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
+		CrearOperacionRespuestaWrapper operacionWrapper = null;
+		try {
+			
+			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(QuskiOroConstantes.URLCLOUDSTUDIO+"credito/operacion/crear", "", datosOperacion);
+			return operacionWrapper;
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					": ERROR AL CONSUMIR SERVICIO" );
+		}
+	
+		
+		
+	}
+	
+	
+	
 }

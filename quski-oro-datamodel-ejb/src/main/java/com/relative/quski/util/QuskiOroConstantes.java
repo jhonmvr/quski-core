@@ -239,8 +239,8 @@ public class QuskiOroConstantes {
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = "ERROR AL REALIZAR ACTUALIZACION O CREACION";
 	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR.";
 	
+	// SOFTBANK
+	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 
-	
-	
   
 }

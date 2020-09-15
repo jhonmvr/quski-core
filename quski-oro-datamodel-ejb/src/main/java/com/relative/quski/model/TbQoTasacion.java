@@ -103,8 +103,6 @@ public class TbQoTasacion implements Serializable {
 	@JoinColumn(name="id_credito_negociacion")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 
-	@JoinColumn(name="tipo_oro")
-	private String tipoOro;
 
 	@ManyToOne
 	@JoinColumn(name="id_funda")
@@ -303,14 +301,6 @@ public class TbQoTasacion implements Serializable {
 
 	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
-	}
-
-	public String getTbQoTipoOro() {
-		return this.tipoOro;
-	}
-
-	public void setTbQoTipoOro(String tipoOro) {
-		this.tipoOro = tipoOro;
 	}
 
 	public TbQoFunda getTbQoFunda() {

@@ -10,7 +10,7 @@ import javax.persistence.criteria.Root;
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.model.TbQoTasacion;
 
-public class TasacionByIdNegociacionSpec  extends AbstractSpecification<TbQoTasacion> {
+public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasacion> {
 
 	private Long idNegociacion;
 
@@ -33,7 +33,7 @@ public class TasacionByIdNegociacionSpec  extends AbstractSpecification<TbQoTasa
 		List<Predicate> where = new ArrayList<>();
 		if (this.idNegociacion != null && this.idNegociacion != 0) {
 			where.add(cb.equal(poll.get("tbQoCreditoNegociacion").get("tbQoNegociacion"), this.idNegociacion));
-		}	
+		}
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 }

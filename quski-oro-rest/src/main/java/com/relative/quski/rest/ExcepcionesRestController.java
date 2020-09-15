@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -30,6 +31,9 @@ public class ExcepcionesRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepcione>> {
 	@Inject
 	QuskiOroService qos;
+	@Inject
+	Logger log;
+
 	
 	public ExcepcionesRestController() throws RelativeException {
 		super();
@@ -77,6 +81,7 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcione>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
 	public GenericWrapper<TbQoExcepcione> persistEntity(GenericWrapper<TbQoExcepcione> wp) throws RelativeException {
+		log.info("INGRESA AL PERSIST====> "+wp);
 		GenericWrapper<TbQoExcepcione> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageExcepcion(wp.getEntidad()));
 		return loc;
@@ -92,7 +97,10 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
 			@QueryParam("idNegociacion")  String idNegociacion 
+			
 			) throws RelativeException {
+	
+		
 		return findByIdNegociacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
 				sortDirections, isPaginated),Long.valueOf( idNegociacion ));
 	}

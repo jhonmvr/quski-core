@@ -138,4 +138,6 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		}
 		return plw;
 	}
+	
+	
 }
