@@ -37,11 +37,13 @@ public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasac
 	@Override
 	public Predicate toPredicate(Root<TbQoTasacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
+
 		
 		Join<TbQoTasacion, TbQoCreditoNegociacion> joinCreditoNegociacion = poll.join("tbQoCreditoNegociacion",
 				JoinType.INNER);
 		Join<TbQoCreditoNegociacion, TbQoNegociacion> joinNegociacion = poll.join("tbQoCreditoNegociacion",
 				JoinType.INNER);
+
 		if (this.idNegociacion != null && this.idNegociacion != 0) {
 			
 		

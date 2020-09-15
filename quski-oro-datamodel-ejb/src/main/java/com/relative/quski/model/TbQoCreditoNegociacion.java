@@ -109,23 +109,13 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
 
-	//bi-directional many-to-one association to TbQoAgencia
-	@ManyToOne
-	@JoinColumn(name="id_agencia")
-	private TbQoAgencia tbQoAgencia;
-
+	@Column(name="id_agencia")
+	private int idAgencia;
+	
 	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
-
-	//bi-directional many-to-one association to TbQoNegociacionCalculo
-	@OneToMany(mappedBy="tbQoCreditoNegociacion")
-	private List<TbQoNegociacionCalculo> tbQoNegociacionCalculos;
-
-	//bi-directional many-to-one association to TbQoReasignacionActividad
-	@OneToMany(mappedBy="tbQoCreditoNegociacion")
-	private List<TbQoReasignacionActividad> tbQoReasignacionActividads;
 
 	//bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy="tbQoCreditoNegociacion")
@@ -313,12 +303,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.valorCuota = valorCuota;
 	}
 
-	public TbQoAgencia getTbQoAgencia() {
-		return this.tbQoAgencia;
+	public int getTbQoAgencia() {
+		return this.idAgencia;
 	}
 
-	public void setTbQoAgencia(TbQoAgencia tbQoAgencia) {
-		this.tbQoAgencia = tbQoAgencia;
+	public void setTbQoAgencia(int tbQoAgencia) {
+		this.idAgencia = tbQoAgencia;
 	}
 
 	public TbQoNegociacion getTbQoNegociacion() {
@@ -327,50 +317,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
-	}
-
-	public List<TbQoNegociacionCalculo> getTbQoNegociacionCalculos() {
-		return this.tbQoNegociacionCalculos;
-	}
-
-	public void setTbQoNegociacionCalculos(List<TbQoNegociacionCalculo> tbQoNegociacionCalculos) {
-		this.tbQoNegociacionCalculos = tbQoNegociacionCalculos;
-	}
-
-	public TbQoNegociacionCalculo addTbQoNegociacionCalculo(TbQoNegociacionCalculo tbQoNegociacionCalculo) {
-		getTbQoNegociacionCalculos().add(tbQoNegociacionCalculo);
-		tbQoNegociacionCalculo.setTbQoCreditoNegociacion(this);
-
-		return tbQoNegociacionCalculo;
-	}
-
-	public TbQoNegociacionCalculo removeTbQoNegociacionCalculo(TbQoNegociacionCalculo tbQoNegociacionCalculo) {
-		getTbQoNegociacionCalculos().remove(tbQoNegociacionCalculo);
-		tbQoNegociacionCalculo.setTbQoCreditoNegociacion(null);
-
-		return tbQoNegociacionCalculo;
-	}
-
-	public List<TbQoReasignacionActividad> getTbQoReasignacionActividads() {
-		return this.tbQoReasignacionActividads;
-	}
-
-	public void setTbQoReasignacionActividads(List<TbQoReasignacionActividad> tbQoReasignacionActividads) {
-		this.tbQoReasignacionActividads = tbQoReasignacionActividads;
-	}
-
-	public TbQoReasignacionActividad addTbQoReasignacionActividad(TbQoReasignacionActividad tbQoReasignacionActividad) {
-		getTbQoReasignacionActividads().add(tbQoReasignacionActividad);
-		tbQoReasignacionActividad.setTbQoCreditoNegociacion(this);
-
-		return tbQoReasignacionActividad;
-	}
-
-	public TbQoReasignacionActividad removeTbQoReasignacionActividad(TbQoReasignacionActividad tbQoReasignacionActividad) {
-		getTbQoReasignacionActividads().remove(tbQoReasignacionActividad);
-		tbQoReasignacionActividad.setTbQoCreditoNegociacion(null);
-
-		return tbQoReasignacionActividad;
 	}
 
 	public List<TbQoTasacion> getTbQoTasacions() {

@@ -136,19 +136,10 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
 		//CAMBIAR PARA PONER EL PARAMETRO
-		
- 
-		//String path= "/home/relative/WORKSPACE/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
+		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
+		//String path= "/home/relative/WORKSPACE/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";		
 		String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
- 
-		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
-		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
-		/*
-		TbMiContrato ccc = null;
-		if(StringUtils.isNotBlank(codigoContrato)) {
-			ccc=this.mis.findContratoById( Long.valueOf( codigoContrato ) );
-		}*/
 		this.setParameters(map,path,  identificacionCliente, nombreCliente, idCotizador, idNegociacion, td);
 		this.setReportData(map, path, identificacionCliente, nombreCliente, idCotizador, idNegociacion, td);
 		return this.generateReport(map, path, formato, td);
