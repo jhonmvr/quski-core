@@ -22,6 +22,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 //import com.relative.quski.enums.EstadoOperacionEnum;
@@ -30,6 +31,8 @@ import com.relative.quski.service.QuskiOroService;
 //import com.relative.quski.util.QuskiOroUtil;
 //import com.relative.quski.wrapper.ListadoOperacionDevueltaWrapper;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
+import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +45,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@Inject
 	QuskiOroService qos;
+	@Inject
+	SoftBankApiClient sbac;
+	
 	public CreditoNegociacionRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
@@ -133,7 +139,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return plw;
 	}
 
-//	/**
+//	
 //	 * Lista contratos por agencia y dos estado en clase personalizada
 //	 * 
 //	 * @param page
@@ -177,4 +183,16 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 //		}
 //		return plw;
 //	}
+	
+	@GET
+	@Path("/crearOperacion")
+	@ApiOperation(value = "GenericWrapper<CrearOperacionRespuestaWrapper>", notes = "Metodo Post perfeccionarContrato Retorna GenericWrapper de informacion TbMiContrato", response = GenericWrapper.class)
+	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion,
+			@QueryParam("usuario") String usuario)throws RelativeException {
+		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
+		return loc;
+	}
+	
+	
 }

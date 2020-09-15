@@ -233,6 +233,6 @@ public class QuskiOroConstantes {
 	public static final String VALOR_IVA_CERO = "0.00";
 	public static final String BILLETE = "BILLETE";
 	public static final String MONEDA = "MONEDA";
-	
+	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
   
 }

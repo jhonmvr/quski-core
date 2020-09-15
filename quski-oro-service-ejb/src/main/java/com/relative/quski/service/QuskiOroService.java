@@ -1,4 +1,5 @@
 package com.relative.quski.service;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -84,9 +86,12 @@ import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.FundaByParamsSpec;
 import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
+import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
+import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.PrecioOroWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -157,6 +162,8 @@ public class QuskiOroService {
 	private ExcepcionesRepository excepcionesRepository;
 	@Inject
 	private FundaRepository fundaRepository;
+	@Inject
+	private SoftBankApiClient sbapiclient;
 
 	/**
 	 * * * * * * * * * * * @CLIENTE
@@ -4572,4 +4579,22 @@ public class QuskiOroService {
 					": AL CONTAR REGISTROS DE TASACION POR ID NEGOCIACION" + e.getMensaje());
 		}
 	}
+	
+	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
+		CrearOperacionRespuestaWrapper operacionWrapper = null;
+		try {
+			
+			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(QuskiOroConstantes.URLCLOUDSTUDIO+"credito/operacion/crear", "", datosOperacion);
+			return operacionWrapper;
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					": ERROR AL CONSUMIR SERVICIO" );
+		}
+	
+		
+		
+	}
+	
+	
+	
 }
