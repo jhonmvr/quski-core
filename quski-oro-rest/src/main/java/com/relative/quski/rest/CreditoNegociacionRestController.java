@@ -1,14 +1,11 @@
 package com.relative.quski.rest;
 
-//import java.util.ArrayList;
-//import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -44,13 +41,14 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	QuskiOroService qos;
 	public CreditoNegociacionRestController() throws RelativeException {
 		super();
-		// TODO Auto-generated constructor stub
+		//  Auto-generated constructor stub
+
 	}
 
 
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 		
 	}
 
@@ -71,18 +69,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	@POST
-	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoCalculoNegociacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCalculoNegociacion", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
-		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.qos.manageCalculoNegociacion(wp.getEntidad()));
-		return loc;
-	}
-	
-	
 	@GET
 	@Path("/creditoNegociacionByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
@@ -133,48 +119,11 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return plw;
 	}
 
-//	/**
-//	 * Lista contratos por agencia y dos estado en clase personalizada
-//	 * 
-//	 * @param page
-//	 * @param pageSize
-//	 * @param sortFields
-//	 * @param sortDirections
-//	 * @param isPaginated
-//	 * @param idAgencia
-//	 * @param estado1
-//	 * @param estado2
-//	 * @return
-//	 * @throws RelativeException
-//	 */
-//	@GET
-//	@Path("/getOperacionesDevueltas")
-//	@ApiOperation(value = "PaginatedListWrapper<ContratosPerfecionados>", notes = "Metodo que retorna contratos por agencia y dos estado en clase personalizada ContratosPerfecionados", response = GenericWrapper.class)
-//	public PaginatedListWrapper<ListadoOperacionDevueltaWrapper> getOperacionesDevueltasByParams(
-//			@QueryParam("page") @DefaultValue("0") String page,
-//			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
-//			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
-//			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
-//			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-//			@QueryParam("codigo") String codigo, @QueryParam("agencia") String agencia,
-//			@QueryParam("proceso") String proceso, @QueryParam("cedula") String cedula) throws RelativeException {
-//		
-//		return getOperacionesDevueltasByParams(
-//				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
-//						isPaginated),
-//				codigo, agencia,
-//				proceso, cedula);
-//	}
 
-	
-	
-//	private PaginatedListWrapper<ListadoOperacionDevueltaWrapper> getOperacionesDevueltasByParams(PaginatedWrapper pw, String codigo, String agencia, String proceso, String cedula) throws RelativeException {
-//		PaginatedListWrapper<ListadoOperacionDevueltaWrapper> plw = new PaginatedListWrapper<>(pw);
-//		List<ListadoOperacionDevueltaWrapper> actions = this.qos.listOperacionesDevueltas(pw, agencia, cedula);
-//		if (actions != null && !actions.isEmpty()) {
-//			plw.setTotalResults(this.qos.countOperacionesDevueltas(pw, codigo, agencia, proceso, cedula));
-//			plw.setList(actions);
-//		}
-//		return plw;
-//	}
+	@Override
+	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> arg0)
+			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

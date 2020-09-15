@@ -32,15 +32,13 @@ public class DetalleCreditoRestController  extends BaseRestController
 implements CrudRestControllerInterface<TbQoDetalleCredito, GenericWrapper<TbQoDetalleCredito>>{
 	public DetalleCreditoRestController() throws RelativeException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Inject
 	QuskiOroService qos;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
-		// TODO Auto-generated method stub
-		
+		// Standar de metodo vacio;
 	}
 
 	@Override
