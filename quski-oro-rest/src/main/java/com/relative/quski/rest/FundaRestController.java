@@ -23,7 +23,6 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoFunda;
 import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;

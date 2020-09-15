@@ -2,8 +2,6 @@ package com.relative.quski.repository.spec;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -11,11 +9,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jfree.util.Log;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoFunda;
 
 public class FundaByParamsSpec extends AbstractSpecification<TbQoFunda> {

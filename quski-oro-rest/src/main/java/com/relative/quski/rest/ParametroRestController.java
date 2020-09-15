@@ -342,7 +342,8 @@ public class ParametroRestController extends BaseRestController
 	@GET
 	@Path("/getDiffBetweenDateInicioActual")
 	@ApiOperation(value = "GenericWrapper<YearMonthDay>", notes = "Retorna la diferencia entre fecha inicio y fecha actual", response = GenericWrapper.class)
-	public GenericWrapper<YearMonthDay> getDiffBetweenDateInicioActual(@QueryParam("fechaInicio") String fechaInicio,
+	public GenericWrapper<YearMonthDay> getDiffBetweenDateInicioActual(
+			@QueryParam("fechaInicio") String fechaInicio,
 			@QueryParam("formato") String formato) throws RelativeException {
 		if (StringUtils.isBlank(fechaInicio) || StringUtils.isBlank(formato)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Fecha inicio o formato no pueden ser nulos");
@@ -350,6 +351,17 @@ public class ParametroRestController extends BaseRestController
 		GenericWrapper<com.relative.quski.wrapper.YearMonthDay> w = new GenericWrapper<>();
 		w.setEntidad(QuskiOroUtil.countDaysBetweenDates(QuskiOroUtil.formatSringToDate(fechaInicio, formato)));
 		return w;
+	}
+	@GET
+	@Path("/calcularEdad")
+	@ApiOperation(value = "GenericWrapper<YearMonthDay>", notes = "Retorna la diferencia entre fecha inicio y fecha actual", response = GenericWrapper.class)
+	public int calcularEdad(
+			@QueryParam("fechaInicio") String fechaNecimiento,
+			@QueryParam("formato") String formato) throws RelativeException {
+		if (StringUtils.isBlank(fechaNecimiento) || StringUtils.isBlank(formato)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Fecha inicio o formato no pueden ser nulos");
+		}
+		return QuskiOroUtil.calculateEdad( QuskiOroUtil.formatSringToDate( fechaNecimiento, formato ) );
 	}
 
 }
