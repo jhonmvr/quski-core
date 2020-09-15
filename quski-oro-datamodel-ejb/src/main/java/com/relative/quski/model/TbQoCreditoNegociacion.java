@@ -109,10 +109,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
 
-	//bi-directional many-to-one association to TbQoAgencia
-	@ManyToOne
-	@JoinColumn(name="id_agencia")
-	private TbQoAgencia tbQoAgencia;
+	
 
 	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
@@ -311,14 +308,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setValorCuota(BigDecimal valorCuota) {
 		this.valorCuota = valorCuota;
-	}
-
-	public TbQoAgencia getTbQoAgencia() {
-		return this.tbQoAgencia;
-	}
-
-	public void setTbQoAgencia(TbQoAgencia tbQoAgencia) {
-		this.tbQoAgencia = tbQoAgencia;
 	}
 
 	public TbQoNegociacion getTbQoNegociacion() {

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -82,7 +83,6 @@ import com.relative.quski.repository.spec.CatalogoByNombreSpec;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.repository.spec.FundaByParamsSpec;
-import com.relative.quski.repository.spec.TipoOroByQuilateSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AsignacionesWrapper;
@@ -1735,7 +1735,6 @@ public class QuskiOroService {
 			persisted.setValorComercial(send.getValorComercial());
 			persisted.setValorOro(send.getValorOro());
 			persisted.setValorRealizacion(send.getValorRealizacion());
-			persisted.setTbQoTipoOro(send.getTbQoTipoOro());
 			// persisted.setTbTipoJoya(send.getTbTipoJoya());
 			// persisted.setTbTipoJoya(send.getTbTipoJoya());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
