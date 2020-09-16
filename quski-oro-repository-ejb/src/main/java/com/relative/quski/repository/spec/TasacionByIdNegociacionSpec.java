@@ -39,16 +39,11 @@ public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasac
 		List<Predicate> where = new ArrayList<>();
 
 		
-		Join<TbQoTasacion, TbQoCreditoNegociacion> joinCreditoNegociacion = poll.join("tbQoCreditoNegociacion",
-				JoinType.INNER);
-		Join<TbQoCreditoNegociacion, TbQoNegociacion> joinNegociacion = poll.join("tbQoCreditoNegociacion",
-				JoinType.INNER);
+		Join<TbQoTasacion, TbQoCreditoNegociacion> joinCreditoNegociacion = poll.join("tbQoCreditoNegociacion",JoinType.INNER);
+		Join<TbQoCreditoNegociacion, TbQoNegociacion> joinNegociacion = joinCreditoNegociacion.join("tbQoNegociacion",JoinType.INNER);
 
 		if (this.idNegociacion != null && this.idNegociacion != 0) {
-			
-		
-
-			where.add(cb.equal(poll.get("tbQoCreditoNegociacion").get("tbQoNegociacion"), this.idNegociacion));
+			where.add(cb.equal(joinNegociacion.get("id"),this.idNegociacion) );
 		}
 		return cb.and(where.toArray(new Predicate[0]));
 	}
