@@ -1443,6 +1443,7 @@ public class QuskiOroService {
 			persisted.setValorRealizacion(send.getValorRealizacion());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setTipoOro(send.getTipoOro());
 			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
 			return tasacionRepository.update(persisted);
 		} catch (RelativeException e) {
@@ -3185,7 +3186,7 @@ public class QuskiOroService {
 	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
 		CrearOperacionRespuestaWrapper operacionWrapper = null;
 		try {
-			
+			log.info("llega hasta aqui");
 			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(QuskiOroConstantes.URLCLOUDSTUDIO+"credito/operacion/crear", "", datosOperacion);
 			return operacionWrapper;
 		} catch (RelativeException | UnsupportedEncodingException e) {

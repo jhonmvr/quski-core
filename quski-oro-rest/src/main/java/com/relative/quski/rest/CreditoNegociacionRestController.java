@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -122,11 +123,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@GET
+	@POST
 	@Path("/crearOperacion")
 	@ApiOperation(value = "GenericWrapper<CrearOperacionRespuestaWrapper>", notes = "Metodo Post perfeccionarContrato Retorna GenericWrapper de informacion TbMiContrato", response = GenericWrapper.class)
-	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion,
-			@QueryParam("usuario") String usuario)throws RelativeException {
+	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion)throws RelativeException {
 		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
 		return loc;
