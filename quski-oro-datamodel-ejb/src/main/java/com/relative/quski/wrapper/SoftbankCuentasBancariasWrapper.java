@@ -2,7 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-public class CuentasBancariasClienteWrapper implements Serializable{
+public class SoftbankCuentasBancariasWrapper implements Serializable{
 
 	/**
 	 * 
@@ -14,6 +14,7 @@ public class CuentasBancariasClienteWrapper implements Serializable{
     private String cuenta;
     private Boolean activo;
     private Boolean esAhorros;
+    
 	public Long getId() {
 		return id;
 	}

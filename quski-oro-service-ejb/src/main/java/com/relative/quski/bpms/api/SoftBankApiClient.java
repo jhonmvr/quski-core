@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -15,6 +16,7 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.SoftbankClientWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaClienteWrapper;
 
 public class SoftBankApiClient {
 
@@ -43,7 +45,6 @@ public class SoftBankApiClient {
 		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 		if(status>=200 && status < 300) {
 			Gson gsons = new GsonBuilder().create();
-			
 			SoftbankClientWrapper GenericWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankClientWrapper.class);
 			//SoftbankClientWrapper respuestaWrapper = (SoftbankClientWrapper)response.get(ReRestClient.RETURN_OBJECT);
 			log.info("============> respuesta servicio objeto "+ GenericWrapper.getCodigoEducacion().charAt(0));
@@ -63,46 +64,48 @@ public class SoftBankApiClient {
 					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 		}
 	}
-	public static String callpun01RestCambio(String urlService, String authorization,SoftbankClientWrapper wrapper)
+	public static SoftbankClientWrapper callConsultaClienteRest(String urlService, String authorization, SoftbankConsultaClienteWrapper consulta)
 			throws RelativeException, UnsupportedEncodingException {
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(wrapper);
-		byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-		log.info("=====> wrapper " + new String(content));
-		String service = urlService;
-		log.info("===> callBpmsInitProcesss con servcio " + service);
-		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-				RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
-				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClientWrapper.class);
-		log.info("===> Respuesta de servicio " + response);
-		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
-		if(status>=200 && status < 300) {
-			Gson gsons = new GsonBuilder().create();
-			
-			SoftbankClientWrapper GenericWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankClientWrapper.class);
-			//SoftbankClientWrapper respuestaWrapper = (SoftbankClientWrapper)response.get(ReRestClient.RETURN_OBJECT);
-			log.info("============> respuesta servicio objeto "+ GenericWrapper.getCodigoEducacion().charAt(0));
-			log.info("============> respuesta servicio objeto "+ GenericWrapper.getCodigoEstadoCivil().getClass() );
-			
-			/*
-			 * String
-			 * huboErrores=respuestaWrapper.getSdtRespuestaUN01().get(0).getHubo_Errores();
-			 * if(StringUtils.isNotBlank(huboErrores) && huboErrores.equalsIgnoreCase("S"))
-			 * { throw new
-			 * SegSucreException(Constantes.ERROR_CODE_CUSTOM,"EN LOS DATOS UN01: "
-			 * +respuestaWrapper.getSdtRespuestaUN01().get(0).getObservacion()); }
-			 */
-			return String.valueOf(response.get(ReRestClient.RETURN_OBJECT));
-		}else {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
-					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(consulta);
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=========> WRAPPER CONSULTA ========> " + new String(content));
+			String service = urlService;
+			log.info("=========> SERVICIO URL ========> " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClientWrapper.class);
+			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			log.info("=========> VALOR DEL STATUS ========> "+ status);
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				SoftbankClientWrapper genericWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankClientWrapper.class);
+				// SoftbankClientWrapper respuestaWrapper = (SoftbankClientWrapper)response.get(ReRestClient.RETURN_OBJECT);
+				// log.info("=========> RESPUESTA DEL SERVICIO respuestaWrapper ========> "+ respuestaWrapper);
+				log.info("=========> RESPUESTA DEL SERVICIO GenericWrapper ========> "+ genericWrapper);
+				log.info("=========> RESPUESTA DEL SERVICIO WRAPPER.CODIGOCIVIL ========> "+ genericWrapper.getCodigoEstadoCivil().getClass());
+				return genericWrapper;
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-
-
-	
-
 	public static CrearOperacionRespuestaWrapper callCrearOperacion01Rest(String urlService, String authorization,CrearOperacionEntradaWrapper datosEntradaOperacion)
 			throws RelativeException, UnsupportedEncodingException {
 		

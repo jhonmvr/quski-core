@@ -76,6 +76,8 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
+import com.relative.quski.wrapper.SoftbankClientWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaClienteWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -126,8 +128,6 @@ public class QuskiOroService {
 	private ExcepcionesRepository excepcionesRepository;
 	@Inject
 	private FundaRepository fundaRepository;
-	@Inject
-	private SoftBankApiClient sbapiclient;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -1019,6 +1019,16 @@ public class QuskiOroService {
 			return this.clienteRepository.findClienteByIdentificacion( identificacion );
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje + identificacion);
+		}
+
+	}
+	public SoftbankClientWrapper findClienteBySoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper( identificacion );
+			return SoftBankApiClient.callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar", null, consulta);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 
 	}

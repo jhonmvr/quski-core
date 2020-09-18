@@ -25,7 +25,7 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	private EstadoEnum estado;
 	private DatosRegistroWrapper datosRegistro; 
 	private DatosImpComWrapper datosImpCom;
-	private DatosCuentaClienteWrapper datosCuentaCliente;
+	private SoftbankDatosCuentaWrapper datosCuentaCliente;
 	private GarantiasWrapper garantias;
 	public Long getIdTipoIdentificacion() {
 		return idTipoIdentificacion;
@@ -117,10 +117,10 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	public void setDatosImpCom(DatosImpComWrapper datosImpCom) {
 		this.datosImpCom = datosImpCom;
 	}
-	public DatosCuentaClienteWrapper getDatosCuentaCliente() {
+	public SoftbankDatosCuentaWrapper getDatosCuentaCliente() {
 		return datosCuentaCliente;
 	}
-	public void setDatosCuentaCliente(DatosCuentaClienteWrapper datosCuentaCliente) {
+	public void setDatosCuentaCliente(SoftbankDatosCuentaWrapper datosCuentaCliente) {
 		this.datosCuentaCliente = datosCuentaCliente;
 	}
 	public GarantiasWrapper getGarantias() {

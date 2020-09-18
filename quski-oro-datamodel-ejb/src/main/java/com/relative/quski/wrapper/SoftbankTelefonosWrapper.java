@@ -2,7 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-public class TelefonosClienteWrapper implements Serializable{
+public class SoftbankTelefonosWrapper implements Serializable{
 
 	/**
 	 * 
@@ -12,6 +12,7 @@ public class TelefonosClienteWrapper implements Serializable{
 	private Long id;                                   
 	private String codigoTipoTelefono;                  
 	private String numero;
+	private Boolean activo;
 	public Long getId() {
 		return id;
 	}
@@ -29,6 +30,12 @@ public class TelefonosClienteWrapper implements Serializable{
 	}
 	public void setNumero(String numero) {
 		this.numero = numero;
+	}
+	public Boolean getActivo() {
+		return activo;
+	}
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 	
 }

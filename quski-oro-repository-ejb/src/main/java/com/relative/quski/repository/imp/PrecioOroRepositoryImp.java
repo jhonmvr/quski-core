@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.TypedQuery;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -14,7 +13,6 @@ import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.spec.PrecioOroByCedulaSpec;
 import com.relative.quski.repository.spec.PrecioOroByIdCotizadorSpec;
-import com.relative.quski.wrapper.PrecioOroWrapper;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -113,41 +111,4 @@ public class PrecioOroRepositoryImp extends GeneralRepositoryImp<Long, TbQoPreci
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
 	}
-
-	/**
-	 * Realiza la búsqueda del precio oro por Id de cotizador por medio de una
-	 * consulta directa a la base //Long id, Long idCotizador, Long idTipoOro,
-	 * BigDecimal precio, BigDecimal pesoNetoEstimado, String quilate
-	 * 
-	 * @author KLÉBER GUERRA Relative - Engine
-	 * @param idCotizador
-	 * @return List<PrecioOroWrapper>
-	 * @throws RelativeException
-	 */
-
-	/*
-	 * Long id, Long idCotizador, Long idTipoOro, BigDecimal precio, BigDecimal
-	 * pesoNetoEstimado, String quilate, EstadoEnum estado
-	 */
-	@Override
-	public List<PrecioOroWrapper> findByIdCotizadorCustom(Long idCotizador) throws RelativeException {
-		try {
-			StringBuilder queryStr = new StringBuilder("SELECT  NEW com.relative.quski.wrapper.PrecioOroWrapper(");
-			queryStr.append("po.id as id, po.tbQoCotizador.id as idCotizador, po.tbQoTipoOro.id as idTipoOro,");
-			queryStr.append(
-					"po.precio as precio,po.pesoNetoEstimado as pesoNetoEstimado,po.tbQoTipoOro.quilate as quilate,po.estado as estado)");
-			queryStr.append(" FROM TbQoPrecioOro AS po ");
-			queryStr.append(" where po.tbQoCotizador.id=:idCotizador ");
-			log.info("===> query gfenerado " + queryStr.toString());
-			TypedQuery<PrecioOroWrapper> query = this.getEntityManager().createQuery(queryStr.toString(),
-					PrecioOroWrapper.class);
-			query.setParameter("idCotizador", idCotizador);
-			return query.getResultList();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"Error en la busqueda PrecioOroWrapper findByIdCotizadorCustom " + e.getMessage());
-		}
-	}
-
 }
