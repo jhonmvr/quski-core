@@ -241,6 +241,7 @@ public class QuskiOroConstantes {
 	
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
+	public static final Integer TIPO_CEDULA = 1;
 
   
 }

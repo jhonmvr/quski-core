@@ -50,7 +50,6 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	@Override
 	@GET
 	@Path("/listAllEntities")
-	@ApiOperation(value = "PaginatedListWrapper<RiesgoAcumuladoWrapper>", notes = "Metodo Get listAllEntities Retorna un mock de riesgo acumulado ", response = PaginatedListWrapper.class)
 	public PaginatedListWrapper<TbQoRiesgoAcumulado> listAllEntities(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

@@ -13,7 +13,6 @@ public class SoftbankClientWrapper implements Serializable{
 	public SoftbankClientWrapper() {
 		
 	}
-	
 		private Long idTipoIdentificacion;
 		private String identificacion;                         
 		private String nombreCompleto;                         
@@ -23,32 +22,46 @@ public class SoftbankClientWrapper implements Serializable{
 		private String segundoNombre;                         
 		private Boolean esCliente;                             
 		private String codigoMotivoVisita;                         
-		private Date fechaIngreso;                              
-		private String idAgencia;                              
+		private String fechaIngreso;                              
+		private Long idAgencia;                              
 		private Long idPaisNacimiento;                        
 		private Long idPais;                                  
 		private Long idLugarNacimiento;                       
-		private Date fechaNacimiento;                        
+		private SoftbankActividadEconomicaWrapper actividadEconomica; 
+		private String fechaNacimiento;                        
 		private String codigoSexo;                           
 		private String codigoProfesion;                      
 		private String codigoEstadoCivil;                   
 		private String codigoEducacion;                      
 		private Long numeroCargasFamiliares;              
 		private String email;                              
-		private Long codigoUsuario;                       
+		private String codigoUsuario;                       
 		private String codigoUsuarioAsesor; 			
+		private List<SoftbankDireccionWrapper> direcciones;
+		private List<SoftbankTelefonosWrapper> telefonos;		
+		private List<SoftbankCuentasBancariasWrapper> cuentasBancariasCliente;
+		private List<SoftbankContactosWrapper> contactosCliente;
+		private List<SoftbankDatosTrabajoWrapper> datosTrabajoCliente;
 		private Long activos;                              
 		private Long pasivos;                               
 		private Long ingresos;                               
-		private Long egresos;                               
-		private String mensaje;                               
-		private String codigoServicio;                    
-		private List<DireccionWrapper> direcciones;
-		private ActividadEconomicaClienteWrapper actividadEconomica; 
-		private List<TelefonosClienteWrapper>telefonos;		
-		private List<CuentasBancariasClienteWrapper> cuentasBancariasCliente;
-		private List<ContactosClienteWrapper>contactosCliente;
-		private List<DatosTrabajoClienteWrapper>datosTrabajoCliente;
+		private Long egresos;   
+		private String mensaje; 
+		private String codigoServicio;   
+		private Boolean existeError; 
+		private String validaciones; 
+		
+		// CAMPOS ESTAN SOBRANDO
+		private String integrantes; 
+		private String representantes; 
+		private String nombreComercial; 
+		private String razonSocial; 
+		private Boolean esGrupo; 
+		private String registroLegal; 
+		private String fechaCreacion; 
+		private String fechaRegistroLegal; 
+
+		
 		public Long getIdTipoIdentificacion() {
 			return idTipoIdentificacion;
 		}
@@ -103,16 +116,16 @@ public class SoftbankClientWrapper implements Serializable{
 		public void setCodigoMotivoVisita(String codigoMotivoVisita) {
 			this.codigoMotivoVisita = codigoMotivoVisita;
 		}
-		public Date getFechaIngreso() {
+		public String getFechaIngreso() {
 			return fechaIngreso;
 		}
-		public void setFechaIngreso(Date fechaIngreso) {
+		public void setFechaIngreso(String fechaIngreso) {
 			this.fechaIngreso = fechaIngreso;
 		}
-		public String getIdAgencia() {
+		public Long getIdAgencia() {
 			return idAgencia;
 		}
-		public void setIdAgencia(String idAgencia) {
+		public void setIdAgencia(Long idAgencia) {
 			this.idAgencia = idAgencia;
 		}
 		public Long getIdPaisNacimiento() {
@@ -133,10 +146,10 @@ public class SoftbankClientWrapper implements Serializable{
 		public void setIdLugarNacimiento(Long idLugarNacimiento) {
 			this.idLugarNacimiento = idLugarNacimiento;
 		}
-		public Date getFechaNacimiento() {
+		public String getFechaNacimiento() {
 			return fechaNacimiento;
 		}
-		public void setFechaNacimiento(Date fechaNacimiento) {
+		public void setFechaNacimiento(String fechaNacimiento) {
 			this.fechaNacimiento = fechaNacimiento;
 		}
 		public String getCodigoSexo() {
@@ -175,10 +188,10 @@ public class SoftbankClientWrapper implements Serializable{
 		public void setEmail(String email) {
 			this.email = email;
 		}
-		public Long getCodigoUsuario() {
+		public String getCodigoUsuario() {
 			return codigoUsuario;
 		}
-		public void setCodigoUsuario(Long codigoUsuario) {
+		public void setCodigoUsuario(String codigoUsuario) {
 			this.codigoUsuario = codigoUsuario;
 		}
 		public String getCodigoUsuarioAsesor() {
@@ -223,41 +236,100 @@ public class SoftbankClientWrapper implements Serializable{
 		public void setCodigoServicio(String codigoServicio) {
 			this.codigoServicio = codigoServicio;
 		}
-		public List<DireccionWrapper> getDirecciones() {
+		public List<SoftbankDireccionWrapper> getDirecciones() {
 			return direcciones;
 		}
-		public void setDirecciones(List<DireccionWrapper> direcciones) {
+		public void setDirecciones(List<SoftbankDireccionWrapper> direcciones) {
 			this.direcciones = direcciones;
 		}
-		public ActividadEconomicaClienteWrapper getActividadEconomica() {
+		public SoftbankActividadEconomicaWrapper getActividadEconomica() {
 			return actividadEconomica;
 		}
-		public void setActividadEconomica(ActividadEconomicaClienteWrapper actividadEconomica) {
+		public void setActividadEconomica(SoftbankActividadEconomicaWrapper actividadEconomica) {
 			this.actividadEconomica = actividadEconomica;
 		}
-		public List<TelefonosClienteWrapper> getTelefonos() {
+		public List<SoftbankTelefonosWrapper> getTelefonos() {
 			return telefonos;
 		}
-		public void setTelefonos(List<TelefonosClienteWrapper> telefonos) {
+		public void setTelefonos(List<SoftbankTelefonosWrapper> telefonos) {
 			this.telefonos = telefonos;
 		}
-		public List<CuentasBancariasClienteWrapper> getCuentasBancariasCliente() {
+		public List<SoftbankCuentasBancariasWrapper> getCuentasBancariasCliente() {
 			return cuentasBancariasCliente;
 		}
-		public void setCuentasBancariasCliente(List<CuentasBancariasClienteWrapper> cuentasBancariasCliente) {
+		public void setCuentasBancariasCliente(List<SoftbankCuentasBancariasWrapper> cuentasBancariasCliente) {
 			this.cuentasBancariasCliente = cuentasBancariasCliente;
 		}
-		public List<ContactosClienteWrapper> getContactosCliente() {
+		public List<SoftbankContactosWrapper> getContactosCliente() {
 			return contactosCliente;
 		}
-		public void setContactosCliente(List<ContactosClienteWrapper> contactosCliente) {
+		public void setContactosCliente(List<SoftbankContactosWrapper> contactosCliente) {
 			this.contactosCliente = contactosCliente;
 		}
-		public List<DatosTrabajoClienteWrapper> getDatosTrabajoCliente() {
+		public List<SoftbankDatosTrabajoWrapper> getDatosTrabajoCliente() {
 			return datosTrabajoCliente;
 		}
-		public void setDatosTrabajoCliente(List<DatosTrabajoClienteWrapper> datosTrabajoCliente) {
+		public void setDatosTrabajoCliente(List<SoftbankDatosTrabajoWrapper> datosTrabajoCliente) {
 			this.datosTrabajoCliente = datosTrabajoCliente;
-		}	  
-
+		}
+		public Boolean getExisteError() {
+			return existeError;
+		}
+		public void setExisteError(Boolean existeError) {
+			this.existeError = existeError;
+		}
+		public String getValidaciones() {
+			return validaciones;
+		}
+		public void setValidaciones(String validaciones) {
+			this.validaciones = validaciones;
+		}
+		public String getIntegrantes() {
+			return integrantes;
+		}
+		public void setIntegrantes(String integrantes) {
+			this.integrantes = integrantes;
+		}
+		public String getRepresentantes() {
+			return representantes;
+		}
+		public void setRepresentantes(String representantes) {
+			this.representantes = representantes;
+		}
+		public String getNombreComercial() {
+			return nombreComercial;
+		}
+		public void setNombreComercial(String nombreComercial) {
+			this.nombreComercial = nombreComercial;
+		}
+		public String getRazonSocial() {
+			return razonSocial;
+		}
+		public void setRazonSocial(String razonSocial) {
+			this.razonSocial = razonSocial;
+		}
+		public Boolean getEsGrupo() {
+			return esGrupo;
+		}
+		public void setEsGrupo(Boolean esGrupo) {
+			this.esGrupo = esGrupo;
+		}
+		public String getRegistroLegal() {
+			return registroLegal;
+		}
+		public void setRegistroLegal(String registroLegal) {
+			this.registroLegal = registroLegal;
+		}
+		public String getFechaCreacion() {
+			return fechaCreacion;
+		}
+		public void setFechaCreacion(String fechaCreacion) {
+			this.fechaCreacion = fechaCreacion;
+		}
+		public String getFechaRegistroLegal() {
+			return fechaRegistroLegal;
+		}
+		public void setFechaRegistroLegal(String fechaRegistroLegal) {
+			this.fechaRegistroLegal = fechaRegistroLegal;
+		}
 }

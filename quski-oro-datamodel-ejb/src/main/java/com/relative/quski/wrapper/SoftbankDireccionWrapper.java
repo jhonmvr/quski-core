@@ -2,7 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-public class DireccionWrapper implements Serializable{
+public class SoftbankDireccionWrapper implements Serializable{
 
 	/**
 	 * 
@@ -20,7 +20,6 @@ public class DireccionWrapper implements Serializable{
 	private String referencia;
 	private Boolean esDireccionLegal;
 	private Boolean esDireccionEnvio;
-	private Boolean activo;
 	public Long getId() {
 		return id;
 	}
@@ -87,12 +86,4 @@ public class DireccionWrapper implements Serializable{
 	public void setEsDireccionEnvio(Boolean esDireccionEnvio) {
 		this.esDireccionEnvio = esDireccionEnvio;
 	}
-	public Boolean getActivo() {
-		return activo;
-	}
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
-	}
-	
-	
 }

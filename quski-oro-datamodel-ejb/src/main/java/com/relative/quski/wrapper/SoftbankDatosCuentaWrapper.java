@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 
 import com.relative.quski.enums.EstadoEnum;
 
-public class DatosCuentaClienteWrapper implements Serializable {
+public class SoftbankDatosCuentaWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public DatosCuentaClienteWrapper() {
+	public SoftbankDatosCuentaWrapper() {
 		
 	}
 	private Long idTipoIdentificacion;
@@ -25,7 +25,7 @@ public class DatosCuentaClienteWrapper implements Serializable {
 	private EstadoEnum estado;
 	private DatosRegistroWrapper datosRegistro; 
 	private DatosImpComWrapper datosImpCom;
-	private DatosCuentaClienteWrapper datosCuentaCliente;
+	private SoftbankDatosCuentaWrapper datosCuentaCliente;
 	private GarantiasWrapper garantias;
 	public Long getIdTipoIdentificacion() {
 		return idTipoIdentificacion;
@@ -117,10 +117,10 @@ public class DatosCuentaClienteWrapper implements Serializable {
 	public void setDatosImpCom(DatosImpComWrapper datosImpCom) {
 		this.datosImpCom = datosImpCom;
 	}
-	public DatosCuentaClienteWrapper getDatosCuentaCliente() {
+	public SoftbankDatosCuentaWrapper getDatosCuentaCliente() {
 		return datosCuentaCliente;
 	}
-	public void setDatosCuentaCliente(DatosCuentaClienteWrapper datosCuentaCliente) {
+	public void setDatosCuentaCliente(SoftbankDatosCuentaWrapper datosCuentaCliente) {
 		this.datosCuentaCliente = datosCuentaCliente;
 	}
 	public GarantiasWrapper getGarantias() {

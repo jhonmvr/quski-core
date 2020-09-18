@@ -2,7 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-public class ActividadEconomicaClienteWrapper implements Serializable{
+public class SoftbankActividadEconomicaWrapper implements Serializable{
 
 	/**
 	 * 

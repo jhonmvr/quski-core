@@ -2,7 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-public class DatosTrabajoClienteWrapper implements Serializable{
+public class SoftbankDatosTrabajoWrapper implements Serializable{
 
 	/**
 	 * 
@@ -17,6 +17,7 @@ public class DatosTrabajoClienteWrapper implements Serializable{
 	private String cargo;
 	private Boolean esPrincipal;
 	private Boolean activo;
+	
 	public Long getId() {
 		return id;
 	}

@@ -3,7 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-public class ContactosClienteWrapper implements Serializable{
+public class SoftbankContactosWrapper implements Serializable{
 
 	/**
 	 * 
@@ -14,8 +14,9 @@ public class ContactosClienteWrapper implements Serializable{
     private  String nombres;
     private String apellidos; 
     private String direccion;
-    private List<TelefonosContactoClienteWrapper>telefonos;
+    private List<TelefonosContactoClienteWrapper> telefonos;
     private Boolean activo;
+    
 	public Long getId() {
 		return id;
 	}
