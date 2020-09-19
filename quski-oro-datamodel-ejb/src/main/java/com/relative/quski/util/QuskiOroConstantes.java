@@ -1,64 +1,65 @@
 package com.relative.quski.util;
 
+
 /**
  * 
  * @author LUIS TAMAYO - RELATIVE ENGINE
  *
  */
 public class QuskiOroConstantes {
+	private QuskiOroConstantes() {}
 	
 	/**
 	 * Archivo de configuraciones con informacion general de notificaciones
 	 */
-	public final static String FILE_NAME_NOTIFICACION_FILE_PROPS="sa.properties";
-	public final static String PREFIX_REPORT_MAIN_PATH="report.main.path.";
-	public final static String PREFIX_REPORT_SUB_ONE_PATH="report.sub.one.path.";
-	public final static String PREFIX_REPORT_SUB_TWO_PATH="report.sub.two.path.";
-	public final static String PREFIX_REPORT_SUB_THREE_PATH="report.sub.three.path.";
-	public final static String PATH_REPORTE="PATH_REPORTE";
-	public final static String REPORT_MAIN_PATH="PATH_REPORTE";
+	public static final  String FILE_NAME_NOTIFICACION_FILE_PROPS="sa.properties";
+	public static final String PREFIX_REPORT_MAIN_PATH="report.main.path.";
+	public static final String PREFIX_REPORT_SUB_ONE_PATH="report.sub.one.path.";
+	public static final String PREFIX_REPORT_SUB_TWO_PATH="report.sub.two.path.";
+	public static final String PREFIX_REPORT_SUB_THREE_PATH="report.sub.three.path.";
+	public static final String PATH_REPORTE="PATH_REPORTE";
+	public static final String REPORT_MAIN_PATH="PATH_REPORTE";
 	/**
 	 * Varible en sistema correspondiente al home de widlfly
 	 */
-	//public final static String JBOSS_CONFIG_DIR_PROPS="jboss.server.config.dir";
-	public final static String JBOSS_CONFIG_DIR_PROPS="jboss.home.dir";
+	public static final String JBOSS_CONFIG_DIR_PROPS="jboss.home.dir";
 
-	public final static String PDF_DUMMY_PATH_PROPS="siniestros.pdf.dummypath";
+	public static final String PDF_DUMMY_PATH_PROPS="siniestros.pdf.dummypath";
 	
-	public final static String SINIESTRO_FIRMA_PATH_PROPS="siniestros.img.path.firma";
-	public final static String SINIESTRO_LOGO_PATH_PROPS="siniestros.img.path.logo";
+	public static final String SINIESTRO_FIRMA_PATH_PROPS="siniestros.img.path.firma";
+	public static final String SINIESTRO_LOGO_PATH_PROPS="siniestros.img.path.logo";
 	
-	public final static String SINIESTRO_AGRICOLA_CONF_DIR="/portalservicios_dir/midas_oro/";
+	public static final String SINIESTRO_AGRICOLA_CONF_DIR="/portalservicios_dir/midas_oro/";
 	
-	public final static String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
+	public static final String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
 	
 	/**
 	 * Formato de envio JSON
 	 */
-	public final static String CONTENT_TYPE_JSON="application/json";
+	public static final String CONTENT_TYPE_JSON="application/json";
 	
 	/**
 	 * Metodo HTTP GET
 	 */
-	public final static String METHOD_HTTP_GET="GET";
+	public static final String METHOD_HTTP_GET="GET";
 	
 	/**
 	 * Metodo HTTP POST
 	 */
-	public final static String METHOD_HTTP_POST="POST";
+	public static final String METHOD_HTTP_POST="POST";
 	
 	/**
 	 * Plantilla del mensaje
 	 */
-	public final static String MESSAGE_TEMPLATE="message.template";
+	public static final String MESSAGE_TEMPLATE="message.template";
 	
 	
 	/**
 	 * SEGURIDADES
 	 */
-	public final static String SEGURIDAD_URL_PROPS="seguridad.url";
-	public final static String SEGURIDAD_URL_UXR_PROPS="seguridad.url.uxr";
-	public final static String SEGURIDAD_ICON_LOCATION_PROPS="seguridad.icon.location";
+	public static final String SEGURIDAD_URL_PROPS="seguridad.url";
+	public static final String SEGURIDAD_URL_UXR_PROPS="seguridad.url.uxr";
+	public static final String SEGURIDAD_ICON_LOCATION_PROPS="seguridad.icon.location";
 	
 	
 	
@@ -84,10 +85,6 @@ public class QuskiOroConstantes {
 	public static final String CAJA_FUERTE_CUSTODIA ="CAJA_FUERTE_CUSTODIA";
 	public static final String CAJA_FUERTE_VITRINA ="VITRINA";
     
-    /**
-     * WEB SOCKET 
-     */
-    //public static final String  WEB_SOCKET_CLIENT_RESERVA="ws://172.16.150.86:8080/siniestro-agricola-rest/siniestrows/";
     
     public static final String  PARAM_APGW_SINIESTROS_KEY="APGW_SINIESTROS_KEY";
     public static final String  PARAM_BPMS_REST_AUTH_KEY="BPMS_REST_AUTH_KEY";
@@ -234,5 +231,17 @@ public class QuskiOroConstantes {
 	public static final String BILLETE = "BILLETE";
 	public static final String MONEDA = "MONEDA";
 	
+	// MENSAJES DE EXCEPCIONES
+	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA";
+	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "ERROR AL REALIZAR BUSQUEDA";
+	public static final String ERROR_AL_REALIZAR_CREACION = "ERROR AL REALIZAR CREACION";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "ERROR AL REALIZAR ACTUALIZACION";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = "ERROR AL REALIZAR ACTUALIZACION O CREACION";
+	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR.";
+	
+	// SOFTBANK
+	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
+	public static final Integer TIPO_CEDULA = 1;
+
   
 }

@@ -27,6 +27,7 @@ import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
+import com.relative.quski.wrapper.SoftbankClientWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +67,14 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/getClienteSoftbank")
+	public GenericWrapper<SoftbankClientWrapper> getClienteSoftbank(@QueryParam("cedula") String cedula) throws RelativeException {
+		GenericWrapper<SoftbankClientWrapper> loc = new GenericWrapper<>();
+		SoftbankClientWrapper a = this.qos.findClienteBySoftbank(cedula);
+		loc.setEntidad(a);
+		return loc;
+	}
 
 	@Override
 	@GET
@@ -102,27 +111,6 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(this.qos.manageCliente(wp.getEntidad()));
 		return loc;
 	}
-
-//	/**
-//	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION CON COTIZACION
-//	 * 
-//	 * @author KLÉBER GUERRA - Relative Engine
-//	 * @param String identificacion
-//	 * @return GenericWrapper<TbQoCliente>
-//	 * @throws RelativeException
-//	 */
-//	@GET
-//	@Path("/findClienteByIdentificacionCotizacion")
-//	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
-//	public GenericWrapper<TbQoCliente> findClienteByIdentificacionCotizacion(
-//			@QueryParam("identificacion") String identificacion) throws RelativeException {
-//		log.info("INGRESA A LA BUSQUEDA findClienteByIdentificacionCotizacion ");
-//		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
-//		TbQoCliente a = this.qos.findClienteByIdentificacionWithCotizacion(identificacion);
-//		loc.setEntidad(a);
-//		return loc;
-//	}
-
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
 	 * 
