@@ -38,6 +38,7 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="descuento_peso_piedra_retasacion")
 	private BigDecimal descuentoPesoPiedraRetasacion;
+	
 
 	@Column(name="descuento_suelda")
 	private BigDecimal descuentoSuelda;
@@ -97,6 +98,9 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="valor_realizacion_retasacion")
 	private BigDecimal valorRealizacionRetasacion;
+	
+	@Column(name="tipo_oro")
+	private String tipoOro;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
@@ -310,6 +314,18 @@ public class TbQoTasacion implements Serializable {
 	public void setTbQoFunda(TbQoFunda tbQoFunda) {
 		this.tbQoFunda = tbQoFunda;
 	}
+
+	public String getTipoOro() {
+		return tipoOro;
+	}
+
+	public void setTipoOro(String tipoOro) {
+		this.tipoOro = tipoOro;
+	}
+
+
+	
+	
 	
 	
 
