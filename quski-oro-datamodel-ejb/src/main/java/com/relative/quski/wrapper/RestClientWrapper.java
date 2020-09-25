@@ -12,11 +12,13 @@ public class RestClientWrapper implements Serializable {
 	public static final String PREFIX_BEARER="Bearer ";
 	public static final String CONTENT_TYPE_JSON="application/json";
 	public static final String CONTENT_TYPE_XML="application/xml";
+	public static final String CONTENT_TYPE_TEXT_XML="text/xml";
 	public static final String CONTENT_TYPE_X_WWW_FORM="application/x-www-form-urlencoded";
 	public static final String METHOD_GET="GET";
 	public static final String METHOD_POST="POST";
 	public static final String METHOD_PUT="PUT";
 	public static final String METHOD_DELETE="DELETE";
+	
 	
 	
 	private String urlStr;

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
@@ -72,12 +73,16 @@ import com.relative.quski.repository.spec.FundaByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
+import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
+import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
-import com.relative.quski.wrapper.SoftbankClientWrapper;
+import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaClienteWrapper;
+import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
+import com.relative.quski.wrapper.TokenWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -1022,16 +1027,7 @@ public class QuskiOroService {
 		}
 
 	}
-	public SoftbankClientWrapper findClienteBySoftbank(String identificacion) throws RelativeException {
-		try {
-			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper( identificacion );
-			return SoftBankApiClient.callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar", null, consulta);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
 
-	}
 	/**
 	 * METODO QUE BUSCA LA COTIZACION ACTIVA
 	 * 
@@ -3191,7 +3187,15 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
+	/**
+	 * * * ** * * * * * * * * * * * * * * * * * * * *  @SOFTBANK
+	 */
+	/**
+	 * 
+	 * @param datosOperacion
+	 * @return
+	 * @throws RelativeException
+	 */
 	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
 		CrearOperacionRespuestaWrapper operacionWrapper = null;
 		try {
@@ -3202,9 +3206,76 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					": ERROR AL CONSUMIR SERVICIO" );
 		}
-	
-		
-		
+	}
+	/**
+	 * 
+	 * @param identificacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	public SoftbankClienteWrapper findClienteSoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper( identificacion );
+			return SoftBankApiClient.callConsultaClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CLIENTE + QuskiOroConstantes.CONSULTAR_SOFTBANK, null, consulta);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
+	public SoftbankRespuestaWrapper crearClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
+		try {
+			return SoftBankApiClient.callCrearClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CLIENTE + QuskiOroConstantes.CREAR_SOFTBANK, null, cliente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+
+	}
+	public SoftbankRespuestaWrapper editarClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
+		try {
+			if( !cliente.getIdTipoIdentificacion().equals(0) && cliente.getIdTipoIdentificacion() != null ) {
+				if(!cliente.getIdentificacion().equals("") && cliente.getIdentificacion() != null) {
+					if(!cliente.getCodigoUsuario().equals("") && cliente.getCodigoUsuario() != null) {
+						return SoftBankApiClient.callEditarClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CLIENTE + QuskiOroConstantes.EDITAR_SOFTBANK, null, cliente);												
+					} else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA CODIGO USUARIO");
+					}
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA IDENTIFICACION");
+				}
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA ID DE TIPO IDENTIFICACION");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+
+	}
+	/**
+	 * * * ** * * * * * * * * * * * * * * * * * * * *  @APIGATEWAY
+	 */
+	public CalculadoraRespuestaWrapper simularOfertasCalculadoraPrueba(CalculadoraEntradaWrapper wrapper) throws RelativeException {
+		try {
+			return CalculadoraRespuestaWrapper.generateMockupEstandar();
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
+	public CalculadoraRespuestaWrapper simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper) throws RelativeException {
+		try {
+			wrapper.generateMockup();
+			StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
+			log.info(" =====================> XML STRING EN SERVICE  ===================> "+ xml.toString() +" <==========================");
+			TokenWrapper token = ApiGatewayClient.getToken();
+			return ApiGatewayClient.callCalculadoraRest(token.getAccessToken(), wrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
 	}
 	
 	

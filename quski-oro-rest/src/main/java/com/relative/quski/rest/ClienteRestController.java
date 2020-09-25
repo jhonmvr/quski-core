@@ -27,7 +27,6 @@ import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
-import com.relative.quski.wrapper.SoftbankClientWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,14 +63,6 @@ public class ClienteRestController extends BaseRestController
 	public GenericWrapper<TbQoCliente> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		TbQoCliente a = this.qos.findClienteById(Long.valueOf(id));
-		loc.setEntidad(a);
-		return loc;
-	}
-	@GET
-	@Path("/getClienteSoftbank")
-	public GenericWrapper<SoftbankClientWrapper> getClienteSoftbank(@QueryParam("cedula") String cedula) throws RelativeException {
-		GenericWrapper<SoftbankClientWrapper> loc = new GenericWrapper<>();
-		SoftbankClientWrapper a = this.qos.findClienteBySoftbank(cedula);
 		loc.setEntidad(a);
 		return loc;
 	}

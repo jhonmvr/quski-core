@@ -241,7 +241,15 @@ public class QuskiOroConstantes {
 	
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
+	public static final String URL_SERVICIO_SOFTBANK_CLIENTE ="http://201.183.238.73:1991/api/cliente/";
+	public static final String EDITAR_SOFTBANK ="editar";
+	public static final String CONSULTAR_SOFTBANK ="consultar";
+	public static final String CREAR_SOFTBANK ="crear";
+
+	// API GATEWAY
 	public static final Integer TIPO_CEDULA = 1;
+	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
+
 
   
 }

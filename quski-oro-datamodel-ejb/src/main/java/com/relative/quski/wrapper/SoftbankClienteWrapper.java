@@ -1,19 +1,21 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.List;
 
-public class SoftbankClientWrapper implements Serializable{
+import com.relative.quski.util.QuskiOroConstantes;
+
+public class SoftbankClienteWrapper implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -365985272182192369L;
-	public SoftbankClientWrapper() {
-		
+	public SoftbankClienteWrapper( String identificacion ) {
+		this.setIdTipoIdentificacion( QuskiOroConstantes.TIPO_CEDULA );
+		this.identificacion = identificacion;
 	}
-		private Long idTipoIdentificacion;
+		private Integer idTipoIdentificacion;
 		private String identificacion;                         
 		private String nombreCompleto;                         
 		private String primerApellido;                        
@@ -62,10 +64,10 @@ public class SoftbankClientWrapper implements Serializable{
 		private String fechaRegistroLegal; 
 
 		
-		public Long getIdTipoIdentificacion() {
+		public Integer getIdTipoIdentificacion() {
 			return idTipoIdentificacion;
 		}
-		public void setIdTipoIdentificacion(Long idTipoIdentificacion) {
+		public void setIdTipoIdentificacion(Integer idTipoIdentificacion) {
 			this.idTipoIdentificacion = idTipoIdentificacion;
 		}
 		public String getIdentificacion() {
