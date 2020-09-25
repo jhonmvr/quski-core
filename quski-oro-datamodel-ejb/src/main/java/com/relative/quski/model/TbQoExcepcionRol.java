@@ -4,7 +4,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.TipoExcepcionEnum;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -14,6 +16,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="tb_qo_excepcion_rol")
+@NamedQuery(name="TbQoExcepcionRol.findAll", query="SELECT t FROM TbQoExcepcionRol t")
 public class TbQoExcepcionRol implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -21,8 +24,12 @@ public class TbQoExcepcionRol implements Serializable {
 	@SequenceGenerator(name="TB_QO_EXCEPCION_ROL_ID_GENERATOR", sequenceName="SEQ_EXCEPCION_ROL", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_EXCEPCION_ROL_ID_GENERATOR")
 	private long id;
-	@Enumerated((EnumType.STRING))
+
+	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
+	@Enumerated(EnumType.STRING)
+	private TipoExcepcionEnum excepcion;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -32,13 +39,7 @@ public class TbQoExcepcionRol implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="id_rol")
-	private String idRol;
-
-	//bi-directional many-to-one association to TbQoExcepcione
-	@ManyToOne
-	@JoinColumn(name="id_excepcion")
-	private TbQoExcepcione tbQoExcepcione;
+	private String rol;
 
 	public TbQoExcepcionRol() {
 	}
@@ -51,14 +52,20 @@ public class TbQoExcepcionRol implements Serializable {
 		this.id = id;
 	}
 
- 
-
 	public EstadoEnum getEstado() {
 		return estado;
 	}
 
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
+	}
+
+	public TipoExcepcionEnum getExcepcion() {
+		return excepcion;
+	}
+
+	public void setExcepcion(TipoExcepcionEnum excepcion) {
+		this.excepcion = excepcion;
 	}
 
 	public Date getFechaActualizacion() {
@@ -77,20 +84,12 @@ public class TbQoExcepcionRol implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getIdRol() {
-		return this.idRol;
+	public String getRol() {
+		return this.rol;
 	}
 
-	public void setIdRol(String idRol) {
-		this.idRol = idRol;
-	}
-
-	public TbQoExcepcione getTbQoExcepcione() {
-		return this.tbQoExcepcione;
-	}
-
-	public void setTbQoExcepcione(TbQoExcepcione tbQoExcepcione) {
-		this.tbQoExcepcione = tbQoExcepcione;
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 
 }
