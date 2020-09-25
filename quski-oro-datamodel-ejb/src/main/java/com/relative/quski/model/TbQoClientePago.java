@@ -1,10 +1,24 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -13,23 +27,24 @@ import java.util.List;
  */
 @Entity
 @Table(name="tb_qo_cliente_pago")
-@NamedQuery(name="TbQoClientePago.findAll", query="SELECT t FROM TbQoClientePago t")
 public class TbQoClientePago implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CLIENTE_PAGO_IDPAGO_GENERATOR", sequenceName="SEQ_CLIENTE_PAGO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_PAGO_IDPAGO_GENERATOR")
-	@Column(name="id_pago")
-	private Long idPago;
+	@SequenceGenerator(name="TB_QO_CLIENTE_PAGO_ID_GENERATOR", sequenceName="SEQ_CLIENTE_PAGO", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CLIENTE_PAGO_ID_GENERATOR")
+	private Long id;
 
 	private String cedula;
+
+	@Column(name="codigo_cuenta_mupi")
+	private String codigoCuentaMupi;
 
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
 
-	@Column(name="codigo_operacion_mupi")
-	private String codigoOperacionMupi;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -66,12 +81,12 @@ public class TbQoClientePago implements Serializable {
 	public TbQoClientePago() {
 	}
 
-	public Long getIdPago() {
-		return this.idPago;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setIdPago(Long idPago) {
-		this.idPago = idPago;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getCedula() {
@@ -82,6 +97,14 @@ public class TbQoClientePago implements Serializable {
 		this.cedula = cedula;
 	}
 
+	public String getCodigoCuentaMupi() {
+		return this.codigoCuentaMupi;
+	}
+
+	public void setCodigoCuentaMupi(String codigoCuentaMupi) {
+		this.codigoCuentaMupi = codigoCuentaMupi;
+	}
+
 	public String getCodigoOperacion() {
 		return this.codigoOperacion;
 	}
@@ -90,12 +113,12 @@ public class TbQoClientePago implements Serializable {
 		this.codigoOperacion = codigoOperacion;
 	}
 
-	public String getCodigoOperacionMupi() {
-		return this.codigoOperacionMupi;
+	public EstadoEnum getEstado() {
+		return this.estado;
 	}
 
-	public void setCodigoOperacionMupi(String codigoOperacionMupi) {
-		this.codigoOperacionMupi = codigoOperacionMupi;
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
 	}
 
 	public Date getFechaActualizacion() {

@@ -1,9 +1,24 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -13,14 +28,20 @@ import java.util.Date;
 @Entity
 @Table(name="tb_qo_registrar_pago")
 public class TbQoRegistrarPago implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final Long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_REGISTRAR_PAGO_ID_GENERATOR", sequenceName="SEQ_REGISTRAR_PAGO")
+	@SequenceGenerator(name="TB_QO_REGISTRAR_PAGO_ID_GENERATOR", sequenceName="SEQ_REGISTRAR_PAGO", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REGISTRAR_PAGO_ID_GENERATOR")
 	private Long id;
 
+	private String comprobante;
+
 	private String cuentas;
+
+
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -65,12 +86,28 @@ public class TbQoRegistrarPago implements Serializable {
 		this.id = id;
 	}
 
+	public String getComprobante() {
+		return this.comprobante;
+	}
+
+	public void setComprobante(String comprobante) {
+		this.comprobante = comprobante;
+	}
+
 	public String getCuentas() {
 		return this.cuentas;
 	}
 
 	public void setCuentas(String cuentas) {
 		this.cuentas = cuentas;
+	}
+
+	public EstadoEnum getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
 	}
 
 	public Date getFechaActualizacion() {

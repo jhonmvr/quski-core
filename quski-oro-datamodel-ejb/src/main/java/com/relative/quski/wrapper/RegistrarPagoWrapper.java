@@ -26,7 +26,4 @@ public class RegistrarPagoWrapper implements Serializable{
 		this.cliente = cliente;
 	}
 	
-	
-	
-	
 }
