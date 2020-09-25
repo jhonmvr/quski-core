@@ -9,10 +9,10 @@ import javax.inject.Inject;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.repository.RegistrarPagoRepository;
+import com.relative.quski.wrapper.BloquearFondosWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 
 @Stateless
@@ -55,7 +55,34 @@ public class PagoService {
 		}
 	}
 
-
+	public BloquearFondosWrapper crearBloquearFondos(BloquearFondosWrapper bloquearFondos) throws RelativeException {
+		try {
+			if(bloquearFondos == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL PAGO");
+			}
+			if(bloquearFondos.getCliente() == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CLIENTE PAGO");
+			}
+			
+			TbQoClientePago cliente = qos.manageClientePago(bloquearFondos.getCliente());
+			List<TbQoRegistrarPago> listaPagos = null;
+			if(bloquearFondos.getPagos() != null && !bloquearFondos.getPagos().isEmpty()) {
+				listaPagos = new ArrayList<>();
+				for(TbQoRegistrarPago registro : bloquearFondos.getPagos()) {
+					registro.setTbQoClientePago(cliente);
+					listaPagos.add(qos.manageRegistrarPago(registro));
+					
+				}
+			}
+			bloquearFondos.setCliente(cliente);
+			bloquearFondos.setPagos(listaPagos);
+			return bloquearFondos;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long idClientePago) throws RelativeException {
 		// TODO Auto-generated method stub
 		return registrarPagoRepository.findByIdClientePago(idClientePago);

@@ -28,7 +28,7 @@ public class FundaRepositoryImp extends GeneralRepositoryImp<Long, TbQoFunda> im
 	@Override
 	public List<TbQoFunda> findPorCustomFilterFundas(PaginatedWrapper pw, String codigo, BigDecimal peso,
 			EstadoEnum estado) throws RelativeException {
-		// TODO Auto-generated method stub
+		
 		try {
 			return this.findAllBySpecificationPaged(
 					new FundaByParamsSpec(codigo, peso, estado),

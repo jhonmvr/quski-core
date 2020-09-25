@@ -3290,13 +3290,13 @@ public class QuskiOroService {
 			try {
 					if(send != null && send.getId() != null) {
 						TbQoRegistrarPago persisted = this.registrarPagoRepository.findById(send.getId());
+						send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 						log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 						return this.updateRegistrarPago(send, persisted);
 					} else {
 						log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
 						send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 						send.setEstado(EstadoEnum.ACT);
-						
 						return registrarPagoRepository.add(send);
 					}
 				
@@ -3372,8 +3372,7 @@ public List<TbQoClientePago> findAllClientePago(PaginatedWrapper pw) throws Rela
 		throw e;
 	} catch (Exception e) {
 		e.printStackTrace();
-		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-				"Error al buscar todos los Abonos " + e.getMessage());
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "ERROR AL BUSCAR CLIENTE_PAGO " + e.getMessage());
 	}
 }
 
@@ -3393,7 +3392,7 @@ public Long countClientePago() throws RelativeException {
 		throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
 	}
 }
-// todo: Eliminar campo de aprobacion mupi del cotizador
+
 /**
  * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
  * 
@@ -3405,12 +3404,14 @@ public Long countClientePago() throws RelativeException {
 public TbQoClientePago manageClientePago(TbQoClientePago send) throws RelativeException {
 	try {
 			if(send.getId() != null) {
-				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());				
+				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				return this.updateClientePago(send, persisted);
 				
 			} else {
 				send.setEstado(EstadoEnum.ACT);
+				send.setTipo(ProcesoEnum.PAGOS);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				TbQoClientePago persisted = this.clientePagoRepository.add( send );
 				return persisted;

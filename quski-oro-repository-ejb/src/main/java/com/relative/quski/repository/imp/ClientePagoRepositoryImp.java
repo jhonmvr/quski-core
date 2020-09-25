@@ -19,23 +19,25 @@ import com.relative.quski.repository.ClientePagoRepository;
 public class ClientePagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoClientePago> implements ClientePagoRepository {
 	
 	@Override
-	public Long countByParams(String cedula, String nombreCliente, String codigoCuentaMupi, String codigoOperacion,
-			String observacion, String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado)
+	public TbQoClientePago finClientePago(String cedula) throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<TbQoClientePago> findByParams(PaginatedWrapper pw, String cedula, String nombreCliente,
+			String codigoCuentaMupi, String codigoOperacion, String observacion, String tipoCredito,
+			BigDecimal valorDepositado, BigDecimal valorPrecancelado, String estado, String tipo)
 			throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TbQoClientePago finClientePago(String cedula) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<TbQoClientePago> findByParams(PaginatedWrapper pw, String cedula, String nombreCliente,
-			String codigoCuentaMupi, String codigoOperacion, String observacion, String tipoCredito,
-			BigDecimal valorDepositado, BigDecimal valorPrecancelado) throws RelativeException {
+	public Long countByParams(String cedula, String nombreCliente, String codigoCuentaMupi, String codigoOperacion,
+			String observacion, String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado,
+			String estado, String tipo) throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
 	}
