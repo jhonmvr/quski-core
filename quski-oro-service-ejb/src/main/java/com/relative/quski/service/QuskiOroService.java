@@ -81,6 +81,7 @@ import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.ExceptionWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
@@ -3509,6 +3510,27 @@ public TbQoClientePago updateClientePago(TbQoClientePago send, TbQoClientePago p
 		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 				" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
 	}
+}
+public List<ExceptionWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol,
+		String identificacion) throws RelativeException {
+	try {
+		if(pw!=null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.excepcionesRepository.findByRolAndIdentificacion(pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections(),rol,identificacion);
+		}else {
+			return this.excepcionesRepository.findByRolAndIdentificacion(rol,identificacion);
+		}
+	} catch (RelativeException e) {
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+				"Error al buscar todos los Abonos " + e.getMessage());
+	}
+}
+public Integer countExcepcionByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
+	return this.excepcionesRepository.countByRolAndIdentificacion(rol,identificacion);
 }
 
 }
