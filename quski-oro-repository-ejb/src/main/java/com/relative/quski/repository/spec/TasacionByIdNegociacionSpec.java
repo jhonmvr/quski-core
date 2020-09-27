@@ -31,19 +31,21 @@ public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasac
 		// TODO Auto-generated method stub
 		return false;
 	}
-/*
- * 	
- */
+
+	/*
+	 * 	
+	 */
 	@Override
 	public Predicate toPredicate(Root<TbQoTasacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 
-		
-		Join<TbQoTasacion, TbQoCreditoNegociacion> joinCreditoNegociacion = poll.join("tbQoCreditoNegociacion",JoinType.INNER);
-		Join<TbQoCreditoNegociacion, TbQoNegociacion> joinNegociacion = joinCreditoNegociacion.join("tbQoNegociacion",JoinType.INNER);
+		Join<TbQoTasacion, TbQoCreditoNegociacion> joinCreditoNegociacion = poll.join("tbQoCreditoNegociacion",
+				JoinType.INNER);
+		Join<TbQoCreditoNegociacion, TbQoNegociacion> joinNegociacion = joinCreditoNegociacion.join("tbQoNegociacion",
+				JoinType.INNER);
 
 		if (this.idNegociacion != null && this.idNegociacion != 0) {
-			where.add(cb.equal(joinNegociacion.get("id"),this.idNegociacion) );
+			where.add(cb.equal(joinNegociacion.get("id"), this.idNegociacion));
 		}
 		return cb.and(where.toArray(new Predicate[0]));
 	}

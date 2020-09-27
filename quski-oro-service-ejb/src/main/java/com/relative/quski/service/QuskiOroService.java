@@ -28,6 +28,7 @@ import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
 import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
@@ -40,6 +41,7 @@ import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
@@ -47,6 +49,7 @@ import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.ArchivoClienteRepository;
+import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.CreditoNegociacionRepository;
@@ -61,6 +64,7 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
+import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
@@ -133,6 +137,10 @@ public class QuskiOroService {
 	private ExcepcionesRepository excepcionesRepository;
 	@Inject
 	private FundaRepository fundaRepository;
+	@Inject
+	private ClientePagoRepository clientePagoRepository;
+	@Inject
+	private RegistrarPagoRepository registrarPagoRepository;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -3173,7 +3181,6 @@ public class QuskiOroService {
 
 	}
 	
-	
 	 /*
 	 * @author Jeroham Cadenas - Developer Twelve
 	 * @param Long idNegociacion
@@ -3199,7 +3206,6 @@ public class QuskiOroService {
 	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
 		CrearOperacionRespuestaWrapper operacionWrapper = null;
 		try {
-			
 			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(QuskiOroConstantes.URLCLOUDSTUDIO+"credito/operacion/crear", "", datosOperacion);
 			return operacionWrapper;
 		} catch (RelativeException | UnsupportedEncodingException e) {
@@ -3275,9 +3281,235 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-
 	}
+		
+	//Registrar Pago
+		/**
+		 * Metodo que busca la entidad por su PK
+		 * 
+		 * @param id_pago Pk de la entidad
+		 * @return Entidad encontrada
+		 * @author Relative Engine
+		 * @throws RelativeException
+		 */
+		public TbQoRegistrarPago findRegistrarPagoById(Long id) throws RelativeException {
+			try {
+				return registrarPagoRepository.findById(id);
+			} catch (RelativeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			}
+		}
+
+		/**
+		 * Metodo que lista la informacion de las entidades encontradas
+		 * 
+		 * @param pw Objeto generico que tiene la informacion que determina si el
+		 *           resultado es total o paginado
+		 * @return Listado de entidades encontradas
+		 * @author  Relative Engine
+		 * @throws RelativeException
+		 */
+		public List<TbQoRegistrarPago> findAllRegistrarPago(PaginatedWrapper pw) throws RelativeException {
+			try {
+				if (pw == null) {
+					return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class);
+				} else {
+					if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+						return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class, pw.getStartRecord(), pw.getPageSize(),
+								pw.getSortFields(), pw.getSortDirections());
+					} else {
+						return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class, pw.getSortFields(),
+								pw.getSortDirections());
+					}
+				}
+			} catch (RelativeException e) {
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+						"Error al buscar todos los Abonos " + e.getMessage());
+			}
+		}
+
+		/**
+		 * Metodo que cuenta la cantidad de entidades existentes
+		 * 
+		 * @author Relative Engine
+		 * @return Cantidad de entidades encontradas
+		 * @throws RelativeException
+		 */
+		public Long countRegistrarPago() throws RelativeException {
+			try {
+				return registrarPagoRepository.countAll(TbQoRegistrarPago.class);
+			} catch (RelativeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+			}
+		}
 	
+		/**
+		 * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+		 * 
+		 * @author Relative Engine
+		 * @param send entidad con la informacion de creacion o actualizacion
+		 * @return Entidad modificada o actualizada
+		 * @throws RelativeException
+		 */
+		public TbQoRegistrarPago manageRegistrarPago(TbQoRegistrarPago send) throws RelativeException {
+			try {
+					if(send != null && send.getId() != null) {
+						TbQoRegistrarPago persisted = this.registrarPagoRepository.findById(send.getId());
+						log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
+						return this.updateRegistrarPago(send, persisted);
+					} else {
+						log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
+						send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+						send.setEstado(EstadoEnum.ACT);
+						
+						return registrarPagoRepository.add(send);
+					}
+				
+			} catch (RelativeException e) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
+			}
+		}
+		/**
+		 * @author 
+		 * @param  TbQoRegistrarPago send
+		 * @param  TbQoRegistrarPago persisted
+		 * @return TbQoRegistrarPago
+		 * @throws RelativeException
+		 */
+		public TbQoRegistrarPago updateRegistrarPago(TbQoRegistrarPago send, TbQoRegistrarPago persisted) throws RelativeException {
+			try {
+				
+				return registrarPagoRepository.update(persisted);
+			} catch (Exception e) {
+
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+						" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+			}
+		}
+
 	
-	
+
+
+//CLIENTE PAGO
+
+/**
+ * Metodo que busca la entidad por su PK
+ * 
+ * @param id_pago Pk de la entidad
+ * @return Entidad encontrada
+ * @author Relative Engine
+ * @throws RelativeException
+ */
+public TbQoClientePago findClientePagoById(Long id) throws RelativeException {
+	try {
+		return clientePagoRepository.findById(id);
+	} catch (RelativeException e) {
+		throw e;
+	} catch (Exception e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+	}
 }
+
+/**
+ * Metodo que lista la informacion de las entidades encontradas
+ * 
+ * @param pw Objeto generico que tiene la informacion que determina si el
+ *           resultado es total o paginado
+ * @return Listado de entidades encontradas
+ * @author  Relative Engine
+ * @throws RelativeException
+ */
+public List<TbQoClientePago> findAllClientePago(PaginatedWrapper pw) throws RelativeException {
+	try {
+		if (pw == null) {
+			return this.clientePagoRepository.findAll(TbQoClientePago.class);
+		} else {
+			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.clientePagoRepository.findAll(TbQoClientePago.class, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			} else {
+				return this.clientePagoRepository.findAll(TbQoClientePago.class, pw.getSortFields(),
+						pw.getSortDirections());
+			}
+		}
+	} catch (RelativeException e) {
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+				"Error al buscar todos los Abonos " + e.getMessage());
+	}
+}
+
+/**
+ * Metodo que cuenta la cantidad de entidades existentes
+ * 
+ * @author Relative Engine
+ * @return Cantidad de entidades encontradas
+ * @throws RelativeException
+ */
+public Long countClientePago() throws RelativeException {
+	try {
+		return clientePagoRepository.countAll(TbQoClientePago.class);
+	} catch (RelativeException e) {
+		throw e;
+	} catch (Exception e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+	}
+}
+// todo: Eliminar campo de aprobacion mupi del cotizador
+/**
+ * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+ * 
+ * @author Relative Engine
+ * @param send entidad con la informacion de creacion o actualizacion
+ * @return Entidad modificada o actualizada
+ * @throws RelativeException
+ */
+public TbQoClientePago manageClientePago(TbQoClientePago send) throws RelativeException {
+	try {
+			if(send.getId() != null) {
+				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());				
+				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
+				return this.updateClientePago(send, persisted);
+				
+			} else {
+				send.setEstado(EstadoEnum.ACT);
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				TbQoClientePago persisted = this.clientePagoRepository.add( send );
+				return persisted;
+			}
+	} catch (RelativeException e) {
+		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
+	}
+}
+
+/**
+ * @author 
+ * @param  TbQoClientePago send
+ * @param  TbQoClientePago persisted
+ * @return TbQoClientePago
+ * @throws RelativeException
+ */
+public TbQoClientePago updateClientePago(TbQoClientePago send, TbQoClientePago persisted) throws RelativeException {
+	try {
+		
+		return clientePagoRepository.update(persisted);
+	} catch (Exception e) {
+
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+				" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+	}
+}
+
+}
+
