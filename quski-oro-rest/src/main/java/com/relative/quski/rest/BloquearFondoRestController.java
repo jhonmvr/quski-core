@@ -115,7 +115,7 @@ public class BloquearFondoRestController extends BaseRestController
 	public GenericWrapper<RegistrarPagoWrapper> crearRegistrarPago(RegistrarPagoWrapper registroPago) throws RelativeException {
 		GenericWrapper<RegistrarPagoWrapper> loc = new GenericWrapper<>();
 		
-		loc.setEntidad( this.ps.crearRegistrarPago(registroPago) );
+		//loc.setEntidad( this.ps.crearRegistrarPago(registroPago) );
 		return loc;
 	}
 	
