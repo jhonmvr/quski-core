@@ -17,9 +17,9 @@ public class ExcepcionRolWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private TipoExcepcionEnum tipoExcepcion ;
+	private String tipoExcepcion ;
 	private String nombreCliente;
-	public ExcepcionRolWrapper(Long id, TipoExcepcionEnum tipoExcepcion, String nombreCliente) {
+	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente) {
 		super();
 		this.id = id;
 		this.tipoExcepcion = tipoExcepcion;
@@ -31,10 +31,10 @@ public class ExcepcionRolWrapper implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public TipoExcepcionEnum getTipoExcepcion() {
+	public String getTipoExcepcion() {
 		return tipoExcepcion;
 	}
-	public void setTipoExcepcion(TipoExcepcionEnum tipoExcepcion) {
+	public void setTipoExcepcion(String tipoExcepcion) {
 		this.tipoExcepcion = tipoExcepcion;
 	}
 	public String getNombreCliente() {
