@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 
 
 /**
@@ -28,7 +29,10 @@ import com.relative.quski.enums.EstadoEnum;
 @Entity
 @Table(name="tb_qo_cliente_pago")
 public class TbQoClientePago implements Serializable {
-	private static final Long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5670664066700465760L;
 
 	@Id
 	@SequenceGenerator(name="TB_QO_CLIENTE_PAGO_ID_GENERATOR", sequenceName="SEQ_CLIENTE_PAGO", initialValue = 1, allocationSize = 1)
@@ -45,6 +49,9 @@ public class TbQoClientePago implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
+	@Enumerated(EnumType.STRING)
+	private ProcesoEnum tipo;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -121,6 +128,13 @@ public class TbQoClientePago implements Serializable {
 		this.estado = estado;
 	}
 
+	public ProcesoEnum getTipo() {
+		return this.tipo;
+	}
+	
+	public void setTipo(ProcesoEnum tipo) {
+		this.tipo = tipo;
+	}
 	public Date getFechaActualizacion() {
 		return this.fechaActualizacion;
 	}

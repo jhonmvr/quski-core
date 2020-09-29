@@ -16,12 +16,18 @@ import com.relative.quski.model.TbQoClientePago;
 public interface ClientePagoRepository extends CrudRepository<Long, TbQoClientePago> {
 	public List<TbQoClientePago>  findByParams(PaginatedWrapper pw, String cedula, String nombreCliente, 
 			String codigoCuentaMupi, String codigoOperacion, String observacion, 
-			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado) throws RelativeException;
+			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado, String estado, String tipo) throws RelativeException;
 	
 	
 	public Long countByParams(String cedula, String nombreCliente, 
 			String codigoCuentaMupi, String codigoOperacion, String observacion, 
-			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado) throws RelativeException;
+			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado,String estado, String tipo) throws RelativeException;
 
-	public TbQoClientePago finClientePago(String cedula)  throws RelativeException;
+	public static TbQoClientePago finClientePago(Long cedula)  throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	TbQoClientePago finClientePago(String cedula) throws RelativeException;
 }

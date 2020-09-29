@@ -28,7 +28,11 @@ import com.relative.quski.enums.EstadoEnum;
 @Entity
 @Table(name="tb_qo_registrar_pago")
 public class TbQoRegistrarPago implements Serializable {
-	private static final Long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8489954519916084320L;
 
 	@Id
 	@SequenceGenerator(name="TB_QO_REGISTRAR_PAGO_ID_GENERATOR", sequenceName="SEQ_REGISTRAR_PAGO", initialValue = 1, allocationSize = 1)
@@ -181,5 +185,9 @@ public class TbQoRegistrarPago implements Serializable {
 	public void setTbQoClientePago(TbQoClientePago tbQoClientePago) {
 		this.tbQoClientePago = tbQoClientePago;
 	}
+
+	
+
+	
 
 }

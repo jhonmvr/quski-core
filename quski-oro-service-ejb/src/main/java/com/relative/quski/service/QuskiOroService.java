@@ -3607,6 +3607,7 @@ public class QuskiOroService {
 		}
 	}
 
+
 	/**
 	 * Metodo que cuenta la cantidad de entidades existentes
 	 * 
@@ -3621,6 +3622,36 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+=======
+		/**
+
+	
+		/**
+		 * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+		 * 
+		 * @author Relative Engine
+		 * @param send entidad con la informacion de creacion o actualizacion
+		 * @return Entidad modificada o actualizada
+		 * @throws RelativeException
+		 */
+		public TbQoRegistrarPago manageRegistrarPago(TbQoRegistrarPago send) throws RelativeException {
+			try {
+					if(send != null && send.getId() != null) {
+						TbQoRegistrarPago persisted = this.registrarPagoRepository.findById(send.getId());
+						send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+						log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
+						return this.updateRegistrarPago(send, persisted);
+					} else {
+						log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
+						send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+						send.setEstado(EstadoEnum.ACT);
+						return registrarPagoRepository.add(send);
+					}
+				
+			} catch (RelativeException e) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
+			}
+>>>>>>> 384e15ca4fb9bc09c903f8cee6126d648b72f018
 		}
 	}
 
@@ -3739,8 +3770,18 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
 		}
+<<<<<<< HEAD
+=======
+	} catch (RelativeException e) {
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "ERROR AL BUSCAR CLIENTE_PAGO " + e.getMessage());
+>>>>>>> 384e15ca4fb9bc09c903f8cee6126d648b72f018
 	}
 
+<<<<<<< HEAD
 // todo: Eliminar campo de aprobacion mupi del cotizador
 	/**
 	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o
@@ -3755,6 +3796,38 @@ public class QuskiOroService {
 		try {
 			if (send.getId() != null) {
 				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());
+=======
+/**
+ * Metodo que cuenta la cantidad de entidades existentes
+ * 
+ * @author Relative Engine
+ * @return Cantidad de entidades encontradas
+ * @throws RelativeException
+ */
+public Long countClientePago() throws RelativeException {
+	try {
+		return clientePagoRepository.countAll(TbQoClientePago.class);
+	} catch (RelativeException e) {
+		throw e;
+	} catch (Exception e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+	}
+}
+
+/**
+ * @Description Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+ * 
+ * @author Relative Engine
+ * @param send entidad con la informacion de creacion o actualizacion
+ * @return Entidad modificada o actualizada
+ * @throws RelativeException
+ */
+public TbQoClientePago manageClientePago(TbQoClientePago send) throws RelativeException {
+	try {
+			if(send.getId() != null) {
+				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+>>>>>>> 384e15ca4fb9bc09c903f8cee6126d648b72f018
 				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				return this.updateClientePago(send, persisted);
 
@@ -3770,6 +3843,7 @@ public class QuskiOroService {
 		}
 	}
 
+<<<<<<< HEAD
 	/**
 	 * @author
 	 * @param TbQoClientePago send
@@ -3787,5 +3861,47 @@ public class QuskiOroService {
 					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
 		}
 	}
+=======
+/**
+ * @author 
+ * @param  TbQoClientePago send
+ * @param  TbQoClientePago persisted
+ * @return TbQoClientePago
+ * @throws RelativeException
+ */
+public TbQoClientePago updateClientePago(TbQoClientePago send, TbQoClientePago persisted) throws RelativeException {
+	try {
+		
+		return clientePagoRepository.update(persisted);
+	} catch (Exception e) {
+
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+				" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+	}
+}
+public List<ExceptionWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol, 
+		String identificacion) throws RelativeException {
+	try {
+		if(pw!=null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.excepcionesRepository.findByRolAndIdentificacion(pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections(),rol,identificacion);
+		}else {
+			return this.excepcionesRepository.findByRolAndIdentificacion(rol,identificacion);
+		}
+	} catch (RelativeException e) {
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+				"Error al buscar todos los Abonos " + e.getMessage());
+	}
+}
+public Integer countExcepcionByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
+	return this.excepcionesRepository.countByRolAndIdentificacion(rol,identificacion);
+}
+
+}
+>>>>>>> 384e15ca4fb9bc09c903f8cee6126d648b72f018
 
 }

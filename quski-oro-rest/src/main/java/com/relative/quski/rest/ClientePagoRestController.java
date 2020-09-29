@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -20,9 +22,10 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoClientePago;
+import com.relative.quski.model.TbQoRegistrarPago;
+import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Path("/clientePagoRestController")
@@ -39,7 +42,8 @@ public class ClientePagoRestController extends BaseRestController
 	Logger log;
 	@Inject
 	QuskiOroService qos;
-	
+	@Inject
+	PagoService ps;
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
@@ -93,5 +97,15 @@ public class ClientePagoRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
-	
+	@GET
+	@Path("/findByIdClientePago")
+	@ApiOperation(value = "GenericWrapper<TbQoClientePago>", 
+	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoClientePago", 
+	response = GenericWrapper.class)
+	public GenericWrapper<TbQoClientePago> findByIdClientePago(@QueryParam("cedula")  String cedula) throws RelativeException {
+		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<>();
+		
+		loc.setEntidades( this.ps.findClientePagoByIdClientePago(StringUtils.isNotBlank(cedula)?Long.valueOf(cedula):null) );
+		return loc;
+	}
 }
