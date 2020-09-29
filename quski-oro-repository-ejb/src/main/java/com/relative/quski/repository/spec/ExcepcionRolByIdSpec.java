@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.relative.quski.repository.spec;
 
 import java.util.ArrayList;
@@ -8,26 +11,31 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoExcepcionRol;
 
-public class DocumentoById extends AbstractSpecification<TbQoDocumentoHabilitante> {
-
+/**
+ * @author KLÉBER GUERRA relative Engine
+ *
+ */
+public class ExcepcionRolByIdSpec extends AbstractSpecification<TbQoExcepcionRol> {
 	private Long id;
 
-	public DocumentoById(Long id) {
+	public ExcepcionRolByIdSpec(Long id) {
+
 		this.id = id;
 	}
 
-	public DocumentoById() {
+	public ExcepcionRolByIdSpec() {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(TbQoDocumentoHabilitante arg0) {
+	public boolean isSatisfiedBy(TbQoExcepcionRol arg0) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoDocumentoHabilitante> poll, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<TbQoExcepcionRol> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<Predicate>();
 		if (this.id != null) {
 			where.add(cb.equal(poll.<Long>get("id"), this.id));

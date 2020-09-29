@@ -23,7 +23,7 @@ public class TbQoExcepcionRol implements Serializable {
 	@Id
 	@SequenceGenerator(name="TB_QO_EXCEPCION_ROL_ID_GENERATOR", sequenceName="SEQ_EXCEPCION_ROL", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_EXCEPCION_ROL_ID_GENERATOR")
-	private long id;
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -44,11 +44,11 @@ public class TbQoExcepcionRol implements Serializable {
 	public TbQoExcepcionRol() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -191,30 +191,6 @@ implements CrudRestControllerInterface<TbQoExcepcione, GenericWrapper<TbQoExcepc
 		return plw;
 	}
 
-	@GET
-	@Path("/findByRolAndIdentificacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcione>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcione por id de Negociacion", response = GenericWrapper.class)
-	public PaginatedListWrapper<ExceptionWrapper> findByRolAndIdentificacion( 
-			@QueryParam("page") @DefaultValue("1") String page,
-			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
-			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
-			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
-			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
-			@QueryParam("rol")  String rol, @QueryParam("identificacion")  String identificacion
-			) throws RelativeException {
 	
-		
-		return findByRolAndIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
-				sortDirections, isPaginated),rol,identificacion);
-	}
-	private PaginatedListWrapper<ExceptionWrapper> findByRolAndIdentificacion(PaginatedWrapper pw, String rol,String identificacion) throws RelativeException {
-		PaginatedListWrapper<ExceptionWrapper> plw = new PaginatedListWrapper<>(pw);
-		List<ExceptionWrapper> actions = this.qos.findExcepcionByRolAndIdentificacion(pw, rol,identificacion);
-		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countExcepcionByRolAndIdentificacion( rol,identificacion ).intValue());
-			plw.setList(actions);
-		}
-		return plw;
-	}
 	
 }

@@ -40,11 +40,6 @@ public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcio
 	
 	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion ) throws RelativeException;
 
-	public List<ExceptionWrapper> findByRolAndIdentificacion(int startRecord, Integer pageSize, String sortFields,
-			String sortDirections, String rol, String identificacion) throws RelativeException ;
 
-	public List<ExceptionWrapper> findByRolAndIdentificacion(String rol, String identificacion) throws RelativeException ;
-
-	public Integer countByRolAndIdentificacion(String rol, String identificacion) throws RelativeException ;
 	
 }
