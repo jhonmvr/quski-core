@@ -23,5 +23,11 @@ public interface ClientePagoRepository extends CrudRepository<Long, TbQoClienteP
 			String codigoCuentaMupi, String codigoOperacion, String observacion, 
 			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado,String estado, String tipo) throws RelativeException;
 
-	public TbQoClientePago finClientePago(String cedula)  throws RelativeException;
+	public static TbQoClientePago finClientePago(Long cedula)  throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	TbQoClientePago finClientePago(String cedula) throws RelativeException;
 }

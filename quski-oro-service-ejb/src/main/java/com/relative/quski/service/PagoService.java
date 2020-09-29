@@ -83,9 +83,16 @@ public class PagoService {
 			throw e;
 		}
 	}
-	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long idClientePago) throws RelativeException {
+	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long id) throws RelativeException {
 		// TODO Auto-generated method stub
-		return registrarPagoRepository.findByIdClientePago(idClientePago);
+		return registrarPagoRepository.findByIdClientePago(id);
+	}
+
+	
+
+	public List<TbQoClientePago> findClientePagoByIdClientePago(Long id) throws RelativeException{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

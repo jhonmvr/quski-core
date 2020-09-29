@@ -19,7 +19,7 @@ import com.relative.quski.repository.ClientePagoRepository;
 public class ClientePagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoClientePago> implements ClientePagoRepository {
 	
 	@Override
-	public TbQoClientePago finClientePago(String cedula) throws RelativeException {
+	public TbQoClientePago finClientePago(final String cedula) throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
 	}

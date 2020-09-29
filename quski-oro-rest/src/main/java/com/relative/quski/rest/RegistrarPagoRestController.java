@@ -124,10 +124,10 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("idClientePago")  String idClientePago) throws RelativeException {
+	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("id")  String id) throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
 		
-		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(idClientePago)?Long.valueOf(idClientePago):null) );
+		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(id)?Long.valueOf(id):null) );
 		return loc;
 	}
 	

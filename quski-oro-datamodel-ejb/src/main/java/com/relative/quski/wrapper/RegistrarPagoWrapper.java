@@ -11,8 +11,9 @@ public class RegistrarPagoWrapper implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<TbQoRegistrarPago> pagos;
 	private TbQoClientePago cliente;
+	private List<TbQoRegistrarPago> pagos;
+	
 	public List<TbQoRegistrarPago> getPagos() {
 		return pagos;
 	}

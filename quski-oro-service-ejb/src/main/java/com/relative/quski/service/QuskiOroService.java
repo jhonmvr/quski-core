@@ -3412,7 +3412,6 @@ public TbQoClientePago manageClientePago(TbQoClientePago send) throws RelativeEx
 				
 			} else {
 				send.setEstado(EstadoEnum.ACT);
-				send.setTipo(ProcesoEnum.PAGOS);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				TbQoClientePago persisted = this.clientePagoRepository.add( send );
 				return persisted;
@@ -3439,7 +3438,7 @@ public TbQoClientePago updateClientePago(TbQoClientePago send, TbQoClientePago p
 				" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
 	}
 }
-public List<ExceptionWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol,
+public List<ExceptionWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol, 
 		String identificacion) throws RelativeException {
 	try {
 		if(pw!=null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
