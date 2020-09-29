@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
 
-
 /**
  * The persistent class for the tb_qo_registrar_pago database table.
  * 
@@ -28,21 +27,16 @@ import com.relative.quski.enums.EstadoEnum;
 @Entity
 @Table(name="tb_qo_registrar_pago")
 public class TbQoRegistrarPago implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8489954519916084320L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_REGISTRAR_PAGO_ID_GENERATOR", sequenceName="SEQ_REGISTRAR_PAGO", initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_REGISTRAR_PAGO_ID_GENERATOR", sequenceName="SEQ_REGISTRAR_PAGO", initialValue = 1, allocationSize = 1) //
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REGISTRAR_PAGO_ID_GENERATOR")
 	private Long id;
 
 	private String comprobante;
 
 	private String cuentas;
-
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -185,9 +179,5 @@ public class TbQoRegistrarPago implements Serializable {
 	public void setTbQoClientePago(TbQoClientePago tbQoClientePago) {
 		this.tbQoClientePago = tbQoClientePago;
 	}
-
-	
-
-	
 
 }
