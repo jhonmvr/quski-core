@@ -242,6 +242,11 @@ public class QuskiOroConstantes {
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 	public static final Integer TIPO_CEDULA = 1;
+	//storage
+	public static final String collectionName = "collectionName";
+	public static final String databaseName = "databaseName";
+	public static final String URL_STORAGE = "URL_STORAGE";
+	
 
   
 }
