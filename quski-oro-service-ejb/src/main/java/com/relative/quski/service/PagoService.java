@@ -49,8 +49,14 @@ public class PagoService {
 
 			TbQoClientePago cliente = qos.manageClientePago(registroPago.getCliente());
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
-				List<FileLocalStorage> listFile = new ArrayList<>();
+				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {
+					List<FileLocalStorage> listFile = new ArrayList<>();
+					FileLocalStorage file = new FileLocalStorage();
+					file.setArchivo(registro.getArchivo());
+					file.setNombreArchivo(registro.getNombreArchivo());
+					file.setProceso("REGISTRO_PAGO");
+					listFile.add(file);
 					LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
 							.getValor().concat(getQueryParametersNotificacion(UUID.randomUUID().toString(),
 									"TIPO_CLIENTE", "", listFile)),

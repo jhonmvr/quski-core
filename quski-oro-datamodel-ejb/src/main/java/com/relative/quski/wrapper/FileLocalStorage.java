@@ -12,6 +12,26 @@ public class FileLocalStorage implements Serializable{
 	private String nombreArchivo;
 	private String archivo;
 	private String proceso;
+	public String getNombreArchivo() {
+		return nombreArchivo;
+	}
+	public void setNombreArchivo(String nombreArchivo) {
+		this.nombreArchivo = nombreArchivo;
+	}
+	public String getArchivo() {
+		return archivo;
+	}
+	public void setArchivo(String archivo) {
+		this.archivo = archivo;
+	}
+	public String getProceso() {
+		return proceso;
+	}
+	public void setProceso(String proceso) {
+		this.proceso = proceso;
+	}
+	
+	
 	
 
 }
