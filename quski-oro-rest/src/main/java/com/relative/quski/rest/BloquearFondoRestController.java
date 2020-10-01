@@ -1,6 +1,5 @@
 package com.relative.quski.rest;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang.StringUtils;
 
 import com.relative.core.exception.RelativeException;
-import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -31,14 +29,14 @@ import com.relative.quski.wrapper.RegistrarPagoWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Path("/registrarPagoRestController")
+@Path("/bloquearFondoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "registrarPagoRestController - REST CRUD")
-public class RegistrarPagoRestController extends BaseRestController
+@Api(value = "bloquearFondoRestController - REST CRUD")
+public class BloquearFondoRestController extends BaseRestController
 		implements CrudRestControllerInterface<TbQoRegistrarPago, GenericWrapper<TbQoRegistrarPago>> {
 
-	public RegistrarPagoRestController() throws RelativeException {
+	public BloquearFondoRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -114,18 +112,10 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
-	public GenericWrapper<RegistrarPagoWrapper> crearRegistrarPago(RegistrarPagoWrapper registroPago, String autentication) throws RelativeException {
+	public GenericWrapper<RegistrarPagoWrapper> crearRegistrarPago(RegistrarPagoWrapper registroPago) throws RelativeException {
 		GenericWrapper<RegistrarPagoWrapper> loc = new GenericWrapper<>();
 		
-		try {
-			loc.setEntidad( this.ps.crearRegistrarPago(registroPago,autentication) );
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		//loc.setEntidad( this.ps.crearRegistrarPago(registroPago) );
 		return loc;
 	}
 	
@@ -134,10 +124,10 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("id")  String id) throws RelativeException {
+	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("idClientePago")  String idClientePago) throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
 		
-		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(id)?Long.valueOf(id):null) );
+		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(idClientePago)?Long.valueOf(idClientePago):null) );
 		return loc;
 	}
 	

@@ -37,6 +37,7 @@ public class TbQoExcepcione implements Serializable {
 	@Column(name="id_asesor")
 	private String idAsesor;
 
+
 	@Column(name="tipo_excepcion")
 	private String tipoExcepcion;
 	

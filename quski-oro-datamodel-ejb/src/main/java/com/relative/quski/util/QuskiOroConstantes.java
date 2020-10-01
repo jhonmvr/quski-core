@@ -249,8 +249,14 @@ public class QuskiOroConstantes {
 	// API GATEWAY
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
+	
 	// CRM SERVICES 
 	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
+	
+	//STORAGE
+	public static final String collectionName = "collectionName";
+	public static final String databaseName = "databaseName";
+	public static final String URL_STORAGE = "URL_STORAGE";
 
 
   

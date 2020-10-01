@@ -1,24 +1,13 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -28,7 +17,7 @@ import com.relative.quski.enums.EstadoEnum;
 @Entity
 @Table(name="tb_qo_cliente_pago")
 public class TbQoClientePago implements Serializable {
-	private static final Long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name="TB_QO_CLIENTE_PAGO_ID_GENERATOR", sequenceName="SEQ_CLIENTE_PAGO", initialValue = 1, allocationSize = 1)
@@ -42,7 +31,7 @@ public class TbQoClientePago implements Serializable {
 
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
-
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -58,6 +47,8 @@ public class TbQoClientePago implements Serializable {
 	private String nombreCliente;
 
 	private String observacion;
+
+	private String tipo;
 
 	@Column(name="tipo_credito")
 	private String tipoCredito;
@@ -151,6 +142,14 @@ public class TbQoClientePago implements Serializable {
 
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
+	}
+
+	public String getTipo() {
+		return this.tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public String getTipoCredito() {

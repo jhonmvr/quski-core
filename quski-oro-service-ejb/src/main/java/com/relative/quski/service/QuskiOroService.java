@@ -36,6 +36,7 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoExcepcione;
 import com.relative.quski.model.TbQoFunda;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
@@ -58,6 +59,7 @@ import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.FundaRepository;
 import com.relative.quski.repository.IngresoEgresoClienteRepository;
@@ -84,7 +86,7 @@ import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
-import com.relative.quski.wrapper.ExceptionWrapper;
+import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -146,6 +148,8 @@ public class QuskiOroService {
 	private ClientePagoRepository clientePagoRepository;
 	@Inject
 	private RegistrarPagoRepository registrarPagoRepository;
+	@Inject
+	private ExcepcionRolRepository excepcionRolRepository;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -1100,6 +1104,18 @@ public class QuskiOroService {
 		}
 
 	}
+	public SoftbankClienteWrapper findClienteBySoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper(identificacion);
+			return SoftBankApiClient.callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar", null,
+					consulta);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
 
 	/**
 	 * METODO QUE BUSCA LA COTIZACION ACTIVA
@@ -1396,6 +1412,7 @@ public class QuskiOroService {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
 				send.setSituacion(SituacionEnum.EN_PROCESO);
+				send.setSituacion(SituacionEnum.CANCELADO);
 				if (send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
@@ -3231,6 +3248,158 @@ public class QuskiOroService {
 	}
 
 	/**
+	 * * * * * * * * * * ********************************** * @EXCEPCION_ROL
+	 */
+	/**
+	 * Método que realiza la busqueda de la Excepcion Rol por id
+	 * 
+	 * @author Kléber Guerra Developer Four
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol findById(Long id) throws RelativeException {
+		try {
+			return excepcionRolRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que busca todos los ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param pw
+	 * @return
+	 * @throws RelativeException
+	 */
+	public List<TbQoExcepcionRol> findAllExcepcionRol(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza el conteo de los ExcepcionRol
+	 * 
+	 * @author Kléber Guerra -Relative Engine
+	 * @return
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionRol() throws RelativeException {
+		try {
+			return excepcionRolRepository.countAll(TbQoExcepcionRol.class);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza la administración del ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param send
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol manageExcepcionRol(TbQoExcepcionRol send) throws RelativeException {
+
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoExcepcionRol persisted = this.excepcionRolRepository.findById(send.getId());
+				if (persisted != null && persisted.getId() != null) {
+					return this.updateExcepcionRol(send, persisted);
+				} else {
+					send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+					send.setEstado(EstadoEnum.ACT);
+					return excepcionRolRepository.add(send);
+				}
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza la actualización de la ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol updateExcepcionRol(TbQoExcepcionRol send, TbQoExcepcionRol persisted)
+			throws RelativeException {
+		try {
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(EstadoEnum.ACT);
+			persisted.setExcepcion(send.getExcepcion());
+			if (!StringUtils.isEmpty(send.getRol())) {
+				persisted.setRol(send.getRol());
+			}
+			return excepcionRolRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * @author Kléber Guerra - Relative Engine
+	 * @param pw
+	 * @param rol
+	 * @param identificacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	public List<ExcepcionRolWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol,
+			String identificacion) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.excepcionRolRepository.findByRolAndIdentificacion(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), rol, identificacion);
+			} else {
+				return this.excepcionRolRepository.findByRolAndIdentificacion(rol, identificacion);
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					"Error al buscar todos los Abonos " + e.getMessage());
+		}
+	}
+
+	public Integer countExcepcionByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
+		return this.excepcionRolRepository.countByRolAndIdentificacion(rol, identificacion);
+	}
+
+	/**
 	 * ******************************* @TASACION
 	 */
 	/**
@@ -3462,8 +3631,7 @@ public class QuskiOroService {
 	 * @return
 	 * @throws RelativeException
 	 */
-	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion)
-			throws RelativeException {
+	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException {
 		CrearOperacionRespuestaWrapper operacionWrapper = null;
 		try {
 			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(
@@ -3545,43 +3713,9 @@ public class QuskiOroService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
-		}
-
-	}
-
-	/**
-	 * * * ** * * * * * * * * * * * * * * * * * * * * @APIGATEWAY
-	 */
-	public CalculadoraRespuestaWrapper simularOfertasCalculadoraPrueba(CalculadoraEntradaWrapper wrapper)
-			throws RelativeException {
-		try {
-			return CalculadoraRespuestaWrapper.generateMockupEstandar();
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-
-	}
-
-	public CalculadoraRespuestaWrapper simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper)
-			throws RelativeException {
-		try {
-			wrapper.generateMockup();
-			StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
-			log.info(" =====================> XML STRING EN SERVICE  ===================> " + xml.toString()
-					+ " <==========================");
-			TokenWrapper token = ApiGatewayClient.getToken();
-			return ApiGatewayClient.callCalculadoraRest(token.getAccessToken(), wrapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
-
-	// Registrar Pago
 	/**
 	 * Metodo que busca la entidad por su PK
 	 * 
@@ -3631,7 +3765,35 @@ public class QuskiOroService {
 					"Error al buscar todos los Abonos " + e.getMessage());
 		}
 	}
+	/**
+	 * * * ** * * * * * * * * * * * * * * * * * * * * @APIGATEWAY
+	 */
+	public CalculadoraRespuestaWrapper simularOfertasCalculadoraPrueba(CalculadoraEntradaWrapper wrapper)
+			throws RelativeException {
+		try {
+			return CalculadoraRespuestaWrapper.generateMockupEstandar();
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
 
+	}
+
+	public CalculadoraRespuestaWrapper simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper)
+			throws RelativeException {
+		try {
+			wrapper.generateMockup();
+			StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
+			log.info(" =====================> XML STRING EN SERVICE  ===================> " + xml.toString()
+					+ " <==========================");
+			TokenWrapper token = ApiGatewayClient.getToken();
+			return ApiGatewayClient.callCalculadoraRest(token.getAccessToken(), wrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
 	/**
 	 * Metodo que cuenta la cantidad de entidades existentes
 	 * 
@@ -3648,11 +3810,9 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
 		}
 	}
-
 	/**
 	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o
 	 *              actualizacion
-	 * 
 	 * @author Relative Engine
 	 * @param send entidad con la informacion de creacion o actualizacion
 	 * @return Entidad modificada o actualizada
@@ -3662,22 +3822,20 @@ public class QuskiOroService {
 		try {
 			if (send != null && send.getId() != null) {
 				TbQoRegistrarPago persisted = this.registrarPagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				return this.updateRegistrarPago(send, persisted);
 			} else {
 				log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-
 				return registrarPagoRepository.add(send);
 			}
-
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
 		}
 	}
-
 	/**
 	 * @author
 	 * @param TbQoRegistrarPago send
@@ -3688,17 +3846,12 @@ public class QuskiOroService {
 	public TbQoRegistrarPago updateRegistrarPago(TbQoRegistrarPago send, TbQoRegistrarPago persisted)
 			throws RelativeException {
 		try {
-
 			return registrarPagoRepository.update(persisted);
 		} catch (Exception e) {
-
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
 		}
 	}
-
-//CLIENTE PAGO
-
 	/**
 	 * Metodo que busca la entidad por su PK
 	 * 
@@ -3748,7 +3901,6 @@ public class QuskiOroService {
 					"Error al buscar todos los Abonos " + e.getMessage());
 		}
 	}
-
 	/**
 	 * Metodo que cuenta la cantidad de entidades existentes
 	 * 
@@ -3764,9 +3916,8 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
 		}
-	}
 
-// todo: Eliminar campo de aprobacion mupi del cotizador
+	}
 	/**
 	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o
 	 *              actualizacion
@@ -3780,9 +3931,9 @@ public class QuskiOroService {
 		try {
 			if (send.getId() != null) {
 				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				return this.updateClientePago(send, persisted);
-
 			} else {
 				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
@@ -3807,36 +3958,10 @@ public class QuskiOroService {
 
 			return clientePagoRepository.update(persisted);
 		} catch (Exception e) {
-
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
 		}
 	}
-
-	public List<ExceptionWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol,
-			String identificacion) throws RelativeException {
-		try {
-			if (pw != null && pw.getIsPaginated() != null
-					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.excepcionesRepository.findByRolAndIdentificacion(pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections(), rol, identificacion);
-			} else {
-				return this.excepcionesRepository.findByRolAndIdentificacion(rol, identificacion);
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
-		}
-	}
-
-	public Integer countExcepcionByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
-		return this.excepcionesRepository.countByRolAndIdentificacion(rol, identificacion);
-	}
-
 	/** ********************************************** @CREDITONEGOCIACION */
 	public TbQoCreditoNegociacion manageCreditoNegociacion(TbQoCreditoNegociacion send) throws RelativeException {
 		try {
