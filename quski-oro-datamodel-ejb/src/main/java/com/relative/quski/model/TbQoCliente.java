@@ -31,6 +31,9 @@ public class TbQoCliente implements Serializable {
 
 	@Column(name = "apellido_materno")
 	private String apellidoMaterno;
+	
+	@Column(name = "nombre_completo")
+	private String nombreCompleto;
 
 	@Column(name = "apellido_paterno")
 	private String apellidoPaterno;
@@ -51,7 +54,7 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "cedula_cliente")
 	private String cedulaCliente;
 
-	private BigDecimal edad;
+	private int edad;
 
 	private String email;
 	
@@ -193,6 +196,14 @@ public class TbQoCliente implements Serializable {
 		this.apellidoMaterno = apellidoMaterno;
 	}
 
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
+	}
+
 	public String getApellidoPaterno() {
 		return this.apellidoPaterno;
 	}
@@ -249,11 +260,11 @@ public class TbQoCliente implements Serializable {
 		this.cedulaCliente = cedulaCliente;
 	}
 
-	public BigDecimal getEdad() {
+	public int getEdad() {
 		return this.edad;
 	}
 
-	public void setEdad(BigDecimal edad) {
+	public void setEdad(int edad) {
 		this.edad = edad;
 	}
 

@@ -17,6 +17,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.NegociacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +86,14 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 			String arg4) throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@GET
+	@Path("/iniciarNegociacion")
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula,@QueryParam("asesor") String asesor) throws RelativeException {
+		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
+		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor);
+		loc.setEntidad(a);
+		return loc;
 	}
 	
 	

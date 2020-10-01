@@ -57,7 +57,7 @@ public class CalculadoraRestController extends BaseRestController
 	@Path("/simularOferta")
 	public GenericWrapper<CalculadoraRespuestaWrapper> simularOferta(GenericWrapper<CalculadoraEntradaWrapper> wrapper) throws RelativeException {
 		GenericWrapper<CalculadoraRespuestaWrapper> loc = new GenericWrapper<>();
-		CalculadoraRespuestaWrapper a = this.qos.simularOfertasCalculadoraPrueba(wrapper.getEntidad());
+		CalculadoraRespuestaWrapper a = this.qos.simularOfertasCalculadora(wrapper.getEntidad());
 		loc.setEntidad(a);
 		return loc;
 	}

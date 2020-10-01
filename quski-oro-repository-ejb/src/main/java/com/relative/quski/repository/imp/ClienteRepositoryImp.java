@@ -74,7 +74,6 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 		try {
 			
 			List<TbQoCliente>  listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			log.info("CANTIDAD DE CLIENTES =====> "+listCliente.size());
 			if (!listCliente.isEmpty()) {
 				if (listCliente.size() == 1) {
 					return listCliente.get(0);
