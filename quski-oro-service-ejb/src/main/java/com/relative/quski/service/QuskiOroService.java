@@ -4141,8 +4141,12 @@ public class QuskiOroService {
 	private List<IntegracionVariableWrapper> traerVariablesEquifax( String cedula ) throws RelativeException{
 		try {
 			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula); 
-			List<IntegracionVariableWrapper> list = data.getXmlVariablesInternas().getVariablesInternas().getVariables();
-			return !list.isEmpty() ? list : null; 
+			if(data != null) {
+				List<IntegracionVariableWrapper> list = data.getXmlVariablesInternas().getVariablesInternas().getVariables();
+				return !list.isEmpty() ? list : null; 
+			} else {
+				return null;
+			}
 		} catch(RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,

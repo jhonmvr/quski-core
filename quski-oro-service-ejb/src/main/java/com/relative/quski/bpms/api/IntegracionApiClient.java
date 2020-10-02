@@ -47,10 +47,10 @@ public class IntegracionApiClient {
 					log.info("Respuesta de servicio EQUIFAX A SERVICE");
 					return respuesta.getEntidad();
 				} else {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "EL SERVICIO TRAJO UN ERROR" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+					return null;
 				}
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				return null;
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
