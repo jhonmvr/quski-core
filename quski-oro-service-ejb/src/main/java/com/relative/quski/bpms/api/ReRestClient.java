@@ -64,6 +64,8 @@ public class ReRestClient<T> {
 	
 	public static final String RETURN_OBJECT="resultado";
 	public static final String RETURN_MESSAGE="message";
+	public static final String RETURN_ENTIDAD="entidad";
+
 	// public static final String RETURN_STATUS="estado";
 	public static final String RETURN_STATUS="codigoServicio";
 	

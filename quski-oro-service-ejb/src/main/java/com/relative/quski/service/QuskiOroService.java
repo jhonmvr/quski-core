@@ -21,6 +21,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
+import com.relative.quski.bpms.api.IntegracionApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
@@ -88,16 +89,21 @@ import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.IntegracionDatosClienteWrapper;
+import com.relative.quski.wrapper.IntegracionEntidadWrapper;
+import com.relative.quski.wrapper.IntegracionRubroWrapper;
+import com.relative.quski.wrapper.IntegracionVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
-import com.relative.quski.wrapper.SoftbankConsultaClienteWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
+import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
 
 @Stateless
 public class QuskiOroService {
-	String mensaje = "ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: ";
 	@Inject
 	Logger log;
 	@Inject
@@ -313,9 +319,6 @@ public class QuskiOroService {
 			}
 			if (send.getRelacionDependencia() != null) {
 				persisted.setRelacionDependencia(send.getRelacionDependencia());
-			}
-			if (send.getEdad() > 0) {
-				persisted.setEdad(send.getEdad());
 			}
 			return clienteRepository.update(persisted);
 		} catch (RelativeException e) {
@@ -1075,6 +1078,12 @@ public class QuskiOroService {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if( element.getTbQoNegociacion() != null ) {
+					try {
+						persisted.add(this.variablesCrediticiaRepository.add(element));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			});
 			return persisted;
@@ -1087,6 +1096,33 @@ public class QuskiOroService {
 	 ************************************ @Cliente
 	 */
 
+	private TbQoCliente createCliente( String cedula ) throws RelativeException{
+		try {
+			TbQoCliente cliente = this.findClienteByIdentifiacion( cedula );
+			if( cliente != null) {
+				log.info("CLIENTE EN BASE =================>   "+ cliente +"   <===========");
+				return this.manageCliente( cliente );
+			} else {
+				 cliente = this.clienteSoftToTbQoCliente( this.findClienteSoftbank( cedula ));
+				if( cliente != null ) {
+					log.info("CLIENTE EN SOFTBANK =============>   "+ cliente +"   <=============");
+					return this.manageCliente( cliente );
+				} else {
+					cliente = this.prospectoCrmToTbQoCliente( this.findProspectoCrm( cedula ));
+					if( cliente != null ) {
+						log.info("CLIENTE EN CRM ===================>   "+ cliente +"   <==============");
+						return this.manageCliente( cliente );
+					} else {
+						return null;
+					}
+				}
+			}
+		}catch( RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE + e.getMensaje());
+		}
+		
+	} 
 	/**
 	 * Metodo que busca al cliente por el numero de cedula del cliente
 	 * 
@@ -1099,48 +1135,11 @@ public class QuskiOroService {
 	public TbQoCliente findClienteByIdentifiacion(String identificacion) throws RelativeException {
 		try {
 			return this.clienteRepository.findClienteByIdentificacion(identificacion);
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje + identificacion);
-		}
-
-	}
-	public SoftbankClienteWrapper findClienteBySoftbank(String identificacion) throws RelativeException {
-		try {
-			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper(identificacion);
-			return SoftBankApiClient.callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar", null,
-					consulta);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-
-	}
-
-	/**
-	 * METODO QUE BUSCA LA COTIZACION ACTIVA
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param cotizador
-	 * @param estadoEnum
-	 * @return TbQoCotizador
-	 * @throws RelativeException
-	 */
-	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador) throws RelativeException {
-		TbQoCotizador cotizacion = new TbQoCotizador();
-		try {
-			if (cotizador != null && cotizador.getEstado().equals(EstadoEnum.ACT)) {
-				cotizacion = this.cotizadorRepository.findById(cotizador.getId());
-			}
-
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ +" Mi error EN SERVICE -> "+ identificacion);
 		}
-		return cotizacion;
 
 	}
-
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
 	 * 
@@ -1500,53 +1499,55 @@ public class QuskiOroService {
 	}
 	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor) throws RelativeException {
 		try {
-		
-			NegociacionWrapper wp = null;
-			TbQoCliente clienteS = this.clienteSoftToTbQoCliente( this.findClienteSoftbank( cedula ));
-			TbQoCliente clienteQ = this.findClienteByIdentifiacion( cedula );
-			TbQoCliente clienteC = this.prospectoCrmToTbQoCliente( this.findProspectoCrm( cedula ));
-
-			if( clienteS != null ) {
-				log.info("CLIENTE EN SOFTBANK =========================>   "+ clienteS +"   <===============================");
-				return generarTablasIniciales( clienteS, asesor);
-			} else if( clienteQ != null ) {
-				log.info("CLIENTE EN BASE =========================>   "+ clienteQ +"   <===============================");
-				return generarTablasIniciales( clienteQ, asesor );
-			} else if( clienteC != null ) {
-				log.info("CLIENTE EN CRM =========================>   "+ clienteC +"   <===============================");
-				return generarTablasIniciales( clienteC, asesor );
+			TbQoCliente cliente = this.createCliente( cedula );
+			if( cliente != null) {
+				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
+				return generarTablasIniciales( cliente, asesor);
 			} else {
-				log.info("CLIENTE =========================>   NULL   <===============================");
-				return wp;
+				return new NegociacionWrapper (false);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM ,QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
 		}
 	}
 
 	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor) throws RelativeException{
 		try {
 			NegociacionWrapper wrapper = new NegociacionWrapper();
-			wrapper.setNegociacion( this.createNegociacion( cliente, asesor ) );
-			//wrapper.setCredito( this.manageCreditoNegociacion( ) );
-			//wrapper.getRiesgos( this.manageListRiesgoAcumulados( ));
-			//wrapper.setVariables( this.manageListVariablesCrediticias( ) );
-			return null;
+			TbQoCreditoNegociacion credito = this.createCredito( cliente, asesor );
+			List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank( cliente.getCedulaCliente() );		
+			List<IntegracionVariableWrapper> variables = this.traerVariablesEquifax( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() );
+						
+			wrapper.setCredito( credito );
+			wrapper.setRiesgos( this.createRiesgoFrontSoftBank( riesgos, credito.getTbQoNegociacion().getTbQoCliente() ) );
+			wrapper.setVariables( this.createVariablesFromEquifax( variables, credito.getTbQoNegociacion() ) );
+			wrapper.setRespuesta(true);
+			if(wrapper.getCredito() != null) {
+				return wrapper;
+			}else {
+				return new NegociacionWrapper(false);
+			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
 		}
 		
 	}
-	private TbQoNegociacion createNegociacion( TbQoCliente cl, String asesor) throws RelativeException{
+	private TbQoCreditoNegociacion createCredito( TbQoCliente cl, String asesor) throws RelativeException{
 		try {
-			TbQoCliente persisted = this.manageCliente( cl );
-			if(persisted != null ) {
+			if(cl != null ) {
 				TbQoNegociacion ng = new TbQoNegociacion();
 				ng.setIdAsesor( asesor );
-				ng.setTbQoCliente( persisted );
-				return this.manageNegociacion( ng );
+				ng.setTbQoCliente( cl );
+				TbQoNegociacion negociacion = this.manageNegociacion( ng );
+				if(negociacion != null) {
+					TbQoCreditoNegociacion cr = new TbQoCreditoNegociacion();
+					cr.setIdUsuario( asesor );
+					cr.setTbQoNegociacion( negociacion );
+					return this.manageCreditoNegociacion( cr );
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				}
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);			
 			}
@@ -3650,11 +3651,12 @@ public class QuskiOroService {
 	 */
 	public SoftbankClienteWrapper findClienteSoftbank(String identificacion) throws RelativeException {
 		try {
-			SoftbankConsultaClienteWrapper consulta = new SoftbankConsultaClienteWrapper(identificacion);
+			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
 			SoftbankClienteWrapper persisted = SoftBankApiClient.callConsultaClienteRest(
 					QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CLIENTE + QuskiOroConstantes.CONSULTAR_SOFTBANK, null,
 					consulta);
-			if(persisted != null && persisted.getIdentificacion() != null) {
+			log.info("=========> QUE JESTO? ========> "+ persisted.getIdentificacion());
+			if(persisted.getIdentificacion() != null) {
 				return persisted; 
 			}else {
 				return null;
@@ -3666,19 +3668,92 @@ public class QuskiOroService {
 		}
 
 	}
+	public List<SoftbankOperacionWrapper> consultarRiesgoSoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
+			SoftbankRiesgoWrapper persisted = SoftBankApiClient.callConsultaRiesgoRest(consulta);
+			if(!persisted.getOperaciones().isEmpty()) {
+				return persisted.getOperaciones(); 
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private List<TbQoRiesgoAcumulado> createRiesgoFrontSoftBank( List<SoftbankOperacionWrapper> operaciones, TbQoCliente cliente) throws RelativeException{
+		try {
+			if(operaciones != null) {
+				List<TbQoRiesgoAcumulado> list = new ArrayList<>();
+				operaciones.forEach(e->{
+					TbQoRiesgoAcumulado r = new TbQoRiesgoAcumulado( cliente );
+					r.setReferencia( e.getReferencia() );
+					r.setNumeroOperacion( e.getNumeroOperacion() );
+					r.setCodigoCarteraQuski( e.getCodigoCarteraQuski() );
+					r.setTipoOperacion( e.getTipoOperacion() );
+					r.setEsDemandada( e.getEsDemandada() );
+					try {
+						r.setFechaEfectiva( QuskiOroUtil.formatSringToDate( e.getFechaEfectiva() ) );
+					} catch (RelativeException e1) {
+						e1.printStackTrace();
+					} 
+					try {
+						r.setFechaVencimiento( QuskiOroUtil.formatSringToDate( e.getFechaVencimiento() ) );
+					} catch (RelativeException e1) {
+						e1.printStackTrace();
+					}
+					r.setInteresMora( e.getInteresMora() );
+					r.setSaldo( e.getSaldo() );
+					r.setValorAlDia( e.getValorAlDia());
+					r.setValorAlDiaMasCuotaActual( e.getValorAlDiaMasCuotaActual() );
+					r.setValorProyectadoCuotaActual( e.getValorProyectadoCuotaActual() );
+					r.setValorCancelaPrestamo( e.getValorCancelaPrestamo() );
+					r.setDiasMoraActual( e.getDiasMoraActual() );
+					r.setNumeroCuotasTotales( e.getNumeroCuotasTotales() );
+					r.setNumeroCuotasFaltantes( e.getNumeroCuotasFaltantes() );
+					r.setEstadoPrimeraCuotaVigente( e.getEstadoPrimeraCuotaVigente() );
+					r.setNombreProducto( e.getNombreProducto() );
+					r.setPrimeraCuotaVigente( e.getPrimeraCuotaVigente() );
+					r.setNumeroGarantiasReales( e.getNumeroGarantiasReales() );
+					r.setEstadoOperacion( e.getEstadoOperacion() );
+					r.setIdMoneda( e.getIdMoneda() );
+					list.add(r);
+				});
+				return this.manageListRiesgoAcumulados( list );
+			}else {
+				return null;
+			}
+			
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+		
+	}
 	private TbQoCliente clienteSoftToTbQoCliente( SoftbankClienteWrapper s ) throws RelativeException {
-		TbQoCliente c = new TbQoCliente();
-		c.setApellidoMaterno( s.getSegundoApellido() );
-		c.setApellidoPaterno( s.getPrimerApellido()  );
-		c.setCedulaCliente( s.getIdentificacion() );
-		c.setEdad( QuskiOroUtil.calculateEdad( QuskiOroUtil.formatSringToDate( s.getFechaNacimiento() )));
-		c.setEmail( s.getEmail() );
-		c.setFechaNacimiento( QuskiOroUtil.formatSringToDate( s.getFechaNacimiento() ) );
-		c.setPrimerNombre( s.getPrimerNombre() );
-		c.setNacionalidad( s.getIdPaisNacimiento().toString() );
-		c.setSegundoNombre(s.getSegundoNombre() );
-		c.setNombreCompleto( s.getNombreCompleto() );
-		return c;
+		try {
+			if(s != null) {
+				TbQoCliente c = new TbQoCliente();
+				c.setApellidoMaterno( s.getSegundoApellido() );
+				c.setApellidoPaterno( s.getPrimerApellido()  );
+				c.setCedulaCliente( s.getIdentificacion() );
+				c.setEdad( BigDecimal.valueOf( QuskiOroUtil.calculateEdad( QuskiOroUtil.formatSringToDate( s.getFechaNacimiento() )) ));
+				c.setEmail( s.getEmail() );
+				c.setFechaNacimiento( QuskiOroUtil.formatSringToDate( s.getFechaNacimiento() ) );
+				c.setPrimerNombre( s.getPrimerNombre() );
+				c.setNacionalidad( s.getIdPaisNacimiento().toString() );
+				c.setSegundoNombre(s.getSegundoNombre() );
+				c.setNombreCompleto( s.getNombreCompleto() );
+				return c;
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
 	}
 
 	public SoftbankRespuestaWrapper crearClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
@@ -3972,7 +4047,8 @@ public class QuskiOroService {
 			} else if (send.getId() == null) {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado( EstadoEnum.ACT);
-				return this.creditoNegociacionRepository.add(send);
+				send.setSituacion( SituacionEnum.EN_PROCESO);
+				return crearCodigoCreditoNuevo( this.creditoNegociacionRepository.add(send) );
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
@@ -3981,10 +4057,10 @@ public class QuskiOroService {
 		}
 
 	}
-	private TbQoCreditoNegociacion crearCodigoCredito(TbQoCreditoNegociacion persisted) throws RelativeException {
+	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		String cod = "NUEV0000000";
 		Long id = persisted.getId();
-		log.info("id en crearCodigoCotizacion " + persisted.getId());
+		log.info(" ID EN crearCodigoCotizacion =======================> " + persisted.getId()+ " <============== ");
 		try {
 			if (id < 9) {
 				cod = "NUEV000000";
@@ -4001,8 +4077,7 @@ public class QuskiOroService {
 			} else if (id < 9999999) {
 				cod = "NUEV" + id;
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de Credito supera los 7 digitos numericos");
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"Error. Codigo de Credito supera los 7 digitos numericos");
 			}
 			persisted.setCodigo(cod);
 			return this.creditoNegociacionRepository.update(persisted);
@@ -4036,16 +4111,88 @@ public class QuskiOroService {
 
 	}
 	private TbQoCliente prospectoCrmToTbQoCliente( CrmProspectoCortoWrapper p ) {
-		TbQoCliente c = new TbQoCliente();
-		c.setCedulaCliente( p.getCedula() );
-		c.setNombreCompleto( p.getNombreCompleto() );
-		c.setEmail( p.getEmail() );
-		c.setTelefonoAdicional( p.getPhoneOther() );
-		c.setTelefonoFijo( p.getPhoneHome() );
-		c.setTelefonoMovil( p.getPhoneMobile() );
-		c.setTelefonoTrabajo( p.getPhoneWork() );
-		return c;
+		if( p != null ) {
+			TbQoCliente c = new TbQoCliente();
+			c.setCedulaCliente( p.getCedula() );
+			c.setNombreCompleto( p.getNombreCompleto() );
+			c.setEmail( p.getEmail() );
+			c.setTelefonoAdicional( p.getPhoneOther() );
+			c.setTelefonoFijo( p.getPhoneHome() );
+			c.setTelefonoMovil( p.getPhoneMobile() );
+			c.setTelefonoTrabajo( p.getPhoneWork() );
+			return c;
+		} else {
+			return null; 
+		}
 	}
 	
-
+	/** ********************w************************** @INTEGRACION ****************************************************/
+	
+	private IntegracionDatosClienteWrapper traerDatosPersonaEquifax( String cedula ) throws RelativeException{
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula); 
+			return data.getDatoscliente();
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private List<IntegracionVariableWrapper> traerVariablesEquifax( String cedula ) throws RelativeException{
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula); 
+			List<IntegracionVariableWrapper> list = data.getXmlVariablesInternas().getVariablesInternas().getVariables();
+			return !list.isEmpty() ? list : null; 
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private List<TbQoVariablesCrediticia> createVariablesFromEquifax( List<IntegracionVariableWrapper> equifax, TbQoNegociacion negociacion ) throws RelativeException{
+		try {
+			if( equifax != null ) {
+				List<TbQoVariablesCrediticia> list = new ArrayList<>();
+				equifax.forEach(e->{
+					TbQoVariablesCrediticia v = new TbQoVariablesCrediticia(negociacion);
+					v.setCodigo( e.getCodigo() );
+					v.setNombre( e.getNombre() );
+					v.setOrden( e.getOrden().toString() );
+					v.setValor( e.getValor() );
+					list.add( v );
+				});
+				return this.manageListVariablesCrediticias( list );
+			}else {
+				return null;
+			}
+		} catch( RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private List<IntegracionRubroWrapper>  traerIngresosEgresosEquifax( String cedula ) throws RelativeException{
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula); 
+			return data.getIngresosegresos().getRubros();
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private String  traerExcepcionEquifax( String cedula ) throws RelativeException{
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula); 
+			if(data != null && data.getCodigoError() == 3) {
+				return data.getMensaje();
+			}else { 
+				return null;
+			}
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
 }

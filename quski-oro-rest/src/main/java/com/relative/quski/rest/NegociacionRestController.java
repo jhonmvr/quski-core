@@ -89,7 +89,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@GET
 	@Path("/iniciarNegociacion")
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula,@QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
 		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor);
 		loc.setEntidad(a);

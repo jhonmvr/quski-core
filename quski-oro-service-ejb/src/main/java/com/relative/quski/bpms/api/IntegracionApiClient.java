@@ -1,6 +1,5 @@
 package com.relative.quski.bpms.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -12,46 +11,44 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.CrmConsultaWrapper;
-import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
-import com.relative.quski.wrapper.CrmRespuestaWrapper;
+import com.relative.quski.wrapper.IntegracionConsultaWrapper;
+import com.relative.quski.wrapper.IntegracionEntidadWrapper;
+import com.relative.quski.wrapper.IntegracionRespuestaWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 
-public class CrmApiClient {
+public class IntegracionApiClient {
 
-	private static final Log log = LogFactory.getLog(CrmApiClient.class);
+	private static final Log log = LogFactory.getLog(IntegracionApiClient.class);
 
 	public static void main(String[] args) {
 		
 	}
 	/**
 	 * 
-	 * @param urlService
-	 * @param authorization
-	 * @param wrapper
+	 * @param cedula
 	 * @return
 	 * @throws RelativeException
-	 * @throws UnsupportedEncodingException
 	 */
-	public static CrmProspectoCortoWrapper callConsultaProspectoRest(String cedula) throws RelativeException, UnsupportedEncodingException {
+	public static IntegracionEntidadWrapper callPersonaRest(String cedula) throws RelativeException {
 		try {
-			CrmConsultaWrapper wrapper = new CrmConsultaWrapper(cedula);
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(wrapper);
-			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> WRAPPER CRM CONSULTA " + new String(content));
-			String service = QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO;
-			log.info("===> URL CRM " + service);
+			IntegracionConsultaWrapper wrapper = new IntegracionConsultaWrapper(cedula);
+			String service = QuskiOroConstantes.URL_PERSONA + QuskiOroConstantes.PARAMETRO_1 + wrapper.getTipoIdentificacion() + QuskiOroConstantes.PARAMETRO_2 + wrapper.getIdentificacion() + QuskiOroConstantes.PARAMETRO_3 + wrapper.getTipoConsulta() + QuskiOroConstantes.PARAMETRO_4 + wrapper.getCalificacion();
+			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrmRespuestaWrapper.class);
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, IntegracionRespuestaWrapper.class);
 			log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				CrmRespuestaWrapper respuesta = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrmRespuestaWrapper.class);
-				return respuesta.getEntidad(); 
+				IntegracionRespuestaWrapper respuesta = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), IntegracionRespuestaWrapper.class);
+				if(respuesta.getEntidad().getIdentificacion() > 0 ) {
+					log.info("Respuesta de servicio EQUIFAX A SERVICE");
+					return respuesta.getEntidad();
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "EL SERVICIO TRAJO UN ERROR" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				}
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
@@ -59,9 +56,6 @@ public class CrmApiClient {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {

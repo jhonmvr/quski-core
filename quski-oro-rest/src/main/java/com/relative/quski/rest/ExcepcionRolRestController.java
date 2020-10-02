@@ -24,7 +24,6 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
-import com.relative.quski.wrapper.ExceptionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

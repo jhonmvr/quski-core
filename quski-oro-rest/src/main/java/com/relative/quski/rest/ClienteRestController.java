@@ -23,7 +23,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -45,8 +44,6 @@ public class ClienteRestController extends BaseRestController
 
 	@Inject
 	QuskiOroService qos;
-	@Inject
-	CotizacionService cos;
 	@Inject
 	Logger log;
 

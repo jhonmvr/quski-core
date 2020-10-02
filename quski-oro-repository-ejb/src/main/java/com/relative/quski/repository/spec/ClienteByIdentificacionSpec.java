@@ -32,7 +32,6 @@ public class ClienteByIdentificacionSpec extends AbstractSpecification<TbQoClien
 
 	@Override
 	public Predicate toPredicate(Root<TbQoCliente> poll, CriteriaBuilder cb) {
-
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.get("cedulaCliente"), this.identificacion));
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));

@@ -4,23 +4,22 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 
 public class NegociacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private TbQoNegociacion negociacion;
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
 	private TbQoCreditoNegociacion credito;
+	private Boolean respuesta;
 
-	public TbQoNegociacion getNegociacion() {
-		return negociacion;
+	public NegociacionWrapper(Boolean respuesta) {
+		super();
+		this.respuesta = respuesta;
 	}
-	public void setNegociacion(TbQoNegociacion negociacion) {
-		this.negociacion = negociacion;
+	public NegociacionWrapper() {
 	}
 	public List<TbQoVariablesCrediticia> getVariables() {
 		return variables;
@@ -39,5 +38,11 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public void setCredito(TbQoCreditoNegociacion credito) {
 		this.credito = credito;
+	}
+	public Boolean getRespuesta() {
+		return respuesta;
+	}
+	public void setRespuesta(Boolean respuesta) {
+		this.respuesta = respuesta;
 	}
 }

@@ -23,6 +23,26 @@ public class TbQoCliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_CLIENTE_ID_GENERATOR")
 	private Long id;
 
+	@Column(name = "cedula_cliente")
+	private String cedulaCliente;
+
+	@Column(name = "primer_nombre")
+	private String primerNombre;
+
+	@Column(name = "segundo_nombre")
+	private String segundoNombre;
+	
+	@Column(name = "apellido_paterno")
+	private String apellidoPaterno;
+	
+	private String genero;
+	
+	@Column(name = "estado_civil")
+	private String estadoCivil;
+	
+	@Column(name = "cargas_familiares")
+	private BigDecimal cargasFamiliares;
+	
 	@Column(name = "actividad_economica")
 	private String actividadEconomica;
 
@@ -35,9 +55,6 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "nombre_completo")
 	private String nombreCompleto;
 
-	@Column(name = "apellido_paterno")
-	private String apellidoPaterno;
-
 	@Column(name = "apoderado_cliente")
 	private String apoderadoCliente;
 
@@ -46,23 +63,19 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "canal_contacto")
 	private String canalContacto;
 
-	@Column(name = "cargas_familiares")
-	private BigDecimal cargasFamiliares;
+
 
 	private String cargo;
 
-	@Column(name = "cedula_cliente")
-	private String cedulaCliente;
 
-	private int edad;
+	private BigDecimal edad;
 
 	private String email;
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
-	@Column(name = "estado_civil")
-	private String estadoCivil;
+
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_actualizacion")
@@ -76,7 +89,6 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "fecha_nacimiento")
 	private Date fechaNacimiento;
 
-	private String genero;
 
 	@Column(name = "lugar_nacimiento")
 	private String lugarNacimiento;
@@ -94,8 +106,6 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "origen_ingreso")
 	private String origenIngreso;
 
-	@Column(name = "primer_nombre")
-	private String primerNombre;
 
 	private String profesion;
 
@@ -104,8 +114,6 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "relacion_dependencia")
 	private String relacionDependencia;
 
-	@Column(name = "segundo_nombre")
-	private String segundoNombre;
 
 	@Column(name = "separacion_bienes")
 	private String separacionBienes;
@@ -260,11 +268,11 @@ public class TbQoCliente implements Serializable {
 		this.cedulaCliente = cedulaCliente;
 	}
 
-	public int getEdad() {
+	public BigDecimal getEdad() {
 		return this.edad;
 	}
 
-	public void setEdad(int edad) {
+	public void setEdad(BigDecimal edad) {
 		this.edad = edad;
 	}
 

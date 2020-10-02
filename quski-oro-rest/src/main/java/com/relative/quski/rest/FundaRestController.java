@@ -24,7 +24,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoFunda;
-import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 
@@ -45,8 +44,6 @@ public class FundaRestController extends BaseRestController
 
 	@Inject
 	QuskiOroService qos;
-	@Inject
-	CotizacionService cos;
 	@Inject
 	Logger log;
 

@@ -22,7 +22,6 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoClientePago;
-import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
 
