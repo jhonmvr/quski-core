@@ -3922,14 +3922,10 @@ public class QuskiOroService {
 		try {
 			return registrarPagoRepository.update(persisted);
 		} catch (Exception e) {
-<<<<<<< HEAD
 
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+
-					" ClientePago ===> " + e.getMessage());
-=======
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
->>>>>>> 82471597785a0043f5337bbf5ab61b7d09ec0c26
+
 		}
 	}
 	/**
@@ -3978,7 +3974,7 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA_ABONO + e.getMessage());
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 	/**
@@ -4037,14 +4033,10 @@ public class QuskiOroService {
 
 			return clientePagoRepository.update(persisted);
 		} catch (Exception e) {
-<<<<<<< HEAD
 
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+
-					" ClientePago ===> " + e.getMessage());
-=======
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
->>>>>>> 82471597785a0043f5337bbf5ab61b7d09ec0c26
+
 		}
 	}
 	/** ********************************************** @CREDITONEGOCIACION */
@@ -4066,11 +4058,6 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
-<<<<<<< HEAD
-	
-
-}
-=======
 	}
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		String cod = "NUEV0000000";
@@ -4215,4 +4202,3 @@ public class QuskiOroService {
 		}
 	}
 }
->>>>>>> 82471597785a0043f5337bbf5ab61b7d09ec0c26
