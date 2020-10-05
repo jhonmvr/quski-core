@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -20,7 +21,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoExcepcione;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.ExceptionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

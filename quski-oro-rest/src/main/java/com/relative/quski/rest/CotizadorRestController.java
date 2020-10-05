@@ -20,7 +20,6 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
@@ -35,15 +34,12 @@ public class CotizadorRestController extends BaseRestController
 
 	public CotizadorRestController() throws RelativeException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Inject
 	QuskiOroService qos;
 	@Inject
 	Logger log;
-	@Inject
-	CotizacionService cs;
 
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
@@ -97,16 +93,6 @@ public class CotizadorRestController extends BaseRestController
 		return loc;
 	}
 
-	@POST
-	@Path("/crearCotizacionClienteVariableCrediticia")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCotizador> crearCotizacionClienteVariableCrediticia(GenericWrapper<TbQoCotizador> wp)
-			throws RelativeException {
-		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
-		loc.setEntidad(this.cs.crearCotizacionClienteVariableCrediticia(wp.getEntidad()));
-		return loc;
-	}
-
 	@GET
 	@Path("/cotizadorByCliente")
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo CotizadorBycedulaCliente Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
@@ -131,27 +117,4 @@ public class CotizadorRestController extends BaseRestController
 		}
 		return plw;
 	}
-
-	@GET
-	@Path("/getCotizacionWrapper")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCotizador> getCotizacionWrapper(@QueryParam("cedulaCliente") String cedulaCliente)
-			throws RelativeException {
-		log.info(("INGRESA EN getCotizacionWrapper====>"+cedulaCliente));
-		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
-		TbQoCotizador a = this.cs.buscarCotizacionActivaPorCedula(cedulaCliente);
-		loc.setEntidad(a);
-		return loc;
-	}
-
-	@POST
-	@Path("/caducarCotizacion")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
-	public GenericWrapper<TbQoCotizador> caducarCotizacion(GenericWrapper<TbQoCotizador> wp) throws RelativeException {
-		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
-		loc.setEntidad(this.cs.caducarCotizacion(wp.getEntidad()));
-		return loc;
-
-	}
-
 }

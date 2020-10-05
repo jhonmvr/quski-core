@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -117,10 +118,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return plw;
 	}
 	@Override
-	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> arg0)
+	@POST
+	@Path("/persistEntity")
+	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> wp)
 			throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.manageCreditoNegociacion(wp.getEntidad()));
+		return loc;
 	}
 	@GET
 	@Path("/crearOperacion")

@@ -45,6 +45,7 @@ import com.google.gson.reflect.TypeToken;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.RestClientWrapper;
 
 public class ReRestClient<T> {
@@ -63,6 +64,8 @@ public class ReRestClient<T> {
 	
 	public static final String RETURN_OBJECT="resultado";
 	public static final String RETURN_MESSAGE="message";
+	public static final String RETURN_ENTIDAD="entidad";
+
 	// public static final String RETURN_STATUS="estado";
 	public static final String RETURN_STATUS="codigoServicio";
 	
@@ -163,6 +166,7 @@ public class ReRestClient<T> {
 			String serviceUrl, Class<T> classType) throws RelativeException{
 		try {
 			logger.info("==>Ingreaa a callRestApi "); 
+			QuskiOroUtil.disableCertificates();
 			RestClientWrapper cw= new RestClientWrapper();
 			cw.setAcceptCharset( QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET );
 			setContentTypeAccept(contentTypeAccept,cw);
@@ -180,6 +184,7 @@ public class ReRestClient<T> {
 			cw.setTransform(transform);
 			logger.info("==>Wrapper generado " );
 			ReRestClient<T> b= new ReRestClient<>( cw );
+			logger.info("==> holis? " );
 			return b.execute(classType);
 		} catch (RelativeException e) {
 			throw e;
@@ -195,7 +200,9 @@ public class ReRestClient<T> {
 			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_JSON );
 		} else if( RestClientWrapper.CONTENT_TYPE_XML.equalsIgnoreCase( contentType ) ) {
 			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_XML );
-		} else {
+		} else if( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM.equalsIgnoreCase( contentType )){
+			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM );
+		} else{
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"DEBE DEFINIR TIPO DE CONTENIDO CONTENT-TYPE" );
 		}
 	}
@@ -378,8 +385,7 @@ public class ReRestClient<T> {
 			try {
 				return httpclient.execute(request);
 			} catch (Exception e) {
-				throw new RuntimeException(
-						"Could not execute request [" + request.getMethod() + "] " + request.getURI(), e);
+				throw new RuntimeException("Could not execute request [" + request.getMethod() + "] " + request.getURI(), e);
 			}
 		}
 

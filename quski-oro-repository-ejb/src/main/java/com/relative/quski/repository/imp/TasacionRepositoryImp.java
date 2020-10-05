@@ -10,6 +10,7 @@ import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
 import com.relative.quski.repository.spec.TasacionByIdNegociacionSpec;
+import com.relative.quski.repository.spec.TasacionByIdSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -40,6 +41,19 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 					pageSize, order, direction);
 			if (tmp != null && !tmp.isEmpty()) {
 				return tmp;
+			}
+		} catch (Exception e) {
+			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e.getMessage());
+		}
+		return null;
+	}
+	@Override
+	public TbQoTasacion findById(Long id) throws RelativeException {
+		List<TbQoTasacion> tmp;
+		try {
+			tmp = this.findAllBySpecification( new TasacionByIdSpec( id ) );
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp.get(0);
 			}
 		} catch (Exception e) {
 			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e.getMessage());
