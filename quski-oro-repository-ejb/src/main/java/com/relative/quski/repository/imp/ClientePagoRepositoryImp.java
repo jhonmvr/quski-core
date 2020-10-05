@@ -47,11 +47,11 @@ public class ClientePagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCli
 
 
 	@Override
-	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo)
+	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado)
 			throws RelativeException {
 		try {
 			List<TbQoClientePago> tmp;
-			tmp= this.findAllBySpecification(new ClientePagoByIdAndEstadoSpec(id,estado, tipo));
+			tmp= this.findAllBySpecification(new ClientePagoByIdAndEstadoSpec(id,estado));
 			if(tmp != null && !tmp.isEmpty()) {
 				return tmp.get(0);
 			}

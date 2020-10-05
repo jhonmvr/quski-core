@@ -15,7 +15,7 @@ public class RegistrarPagoByIdClientePagoSpec extends AbstractSpecification<TbQo
 	public RegistrarPagoByIdClientePagoSpec(Long idClientePago) {
 		super();
 		this.idClientePago = idClientePago;
-		this.tipo= tipo;
+		//this.tipo= tipo;
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class RegistrarPagoByIdClientePagoSpec extends AbstractSpecification<TbQo
 
 	@Override
 	public Predicate toPredicate(Root<TbQoRegistrarPago> poll, CriteriaBuilder cb) {
-		cb.and(cb.equal(poll.get("tbQoClientePago").get(tipo), this.tipo));
+		//cb.and(cb.equal(poll.get("tbQoClientePago").get(tipo), this.tipo));
 		return cb.and(cb.equal(poll.get("tbQoClientePago").get("id"), this.idClientePago));
 	}
 

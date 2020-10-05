@@ -12,13 +12,11 @@ public class ClientePagoByIdAndEstadoSpec extends AbstractSpecification<TbQoClie
 
 	private Long idClientePago;
 	private EstadoEnum estado;
-	private String tipo;
 	
-	public ClientePagoByIdAndEstadoSpec(Long idClientePago, EstadoEnum estado, String tipo) {
+	public ClientePagoByIdAndEstadoSpec(Long idClientePago, EstadoEnum estado) {
 		super();
 		this.idClientePago = idClientePago;
 		this.estado = estado;
-		this.tipo = tipo;
 	}
 
 	@Override
@@ -31,8 +29,7 @@ public class ClientePagoByIdAndEstadoSpec extends AbstractSpecification<TbQoClie
 	public Predicate toPredicate(Root<TbQoClientePago> poll, CriteriaBuilder cb) {
 		// TODO Auto-generated method stub
 		return cb.and(cb.equal(poll.get("id"), this.idClientePago),
-				cb.equal(poll.get("estado"), this.estado),
-				cb.equal(poll.get("tipo"), this.tipo));
+				cb.equal(poll.get("estado"), this.estado));
 	}
 
 }

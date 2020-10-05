@@ -122,9 +122,9 @@ public class PagoService {
 
 	
 
-	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long id, String tipo) throws RelativeException {
+	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long id) throws RelativeException {
 		// TODO Auto-generated method stub
-		return registrarPagoRepository.findByIdClientePago(id, tipo);
+		return registrarPagoRepository.findByIdClientePago(id);
 	}
 
 	public List<TbQoClientePago> findClientePagoByIdClientePago(Long id) throws RelativeException {
@@ -133,9 +133,9 @@ public class PagoService {
 	}
 
 	
-	public TbQoClientePago aprobarPago(Long id, EstadoEnum estado, String tipo) throws RelativeException {
+	public TbQoClientePago aprobarPago(Long id, EstadoEnum estado) throws RelativeException {
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado, tipo);
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado);
 			if(clientePago == null) { 
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
@@ -152,9 +152,9 @@ public class PagoService {
 		
 	}
 
-	public TbQoClientePago rechazarPago(Long id, EstadoEnum estado, String tipo) throws RelativeException {
+	public TbQoClientePago rechazarPago(Long id, EstadoEnum estado) throws RelativeException {
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado, tipo);
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado);
 			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}

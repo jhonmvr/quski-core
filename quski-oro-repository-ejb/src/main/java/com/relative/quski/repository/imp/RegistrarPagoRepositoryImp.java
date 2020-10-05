@@ -19,7 +19,7 @@ import com.relative.quski.repository.spec.RegistrarPagoByIdClientePagoSpec;
 public class RegistrarPagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoRegistrarPago> implements RegistrarPagoRepository {
 
 	@Override
-	public List<TbQoRegistrarPago> findByIdClientePago(Long idClientePago, String ipo) throws RelativeException {
+	public List<TbQoRegistrarPago> findByIdClientePago(Long idClientePago) throws RelativeException {
 		try {
 			List<TbQoRegistrarPago> tmp;
 			tmp= this.findAllBySpecification(new RegistrarPagoByIdClientePagoSpec(idClientePago));
