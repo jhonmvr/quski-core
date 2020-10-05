@@ -110,6 +110,9 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	public TbQoRiesgoAcumulado() {
 	}
+	public TbQoRiesgoAcumulado( TbQoCliente cliente) {
+		this.tbQoCliente = cliente;
+	}
 
 	public String getCodigoCarteraQuski() {
 		return this.codigoCarteraQuski;

@@ -37,9 +37,6 @@ public class TbQoNegociacion implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="asesor_responsable")
-	private String asesorResponsable;
-
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 	
@@ -51,11 +48,8 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="id_asesor_responsable")
-	private String idAsesorResponsable;
-
-	@Column(name="proceso_actual")
-	private String procesoActual;
+	@Column(name="id_asesor")
+	private String idAsesor;
 	
 	@Enumerated(EnumType.STRING)
 	private SituacionEnum situacion;
@@ -88,22 +82,6 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getAsesorResponsable() {
-		return this.asesorResponsable;
-	}
-
-	public void setAsesorResponsable(String asesorResponsable) {
-		this.asesorResponsable = asesorResponsable;
-	}
-
-	public String getProcesoActual() {
-		return procesoActual;
-	}
-
-	public void setProcesoActual(String procesoActual) {
-		this.procesoActual = procesoActual;
 	}
 
 	public SituacionEnum getSituacion() {
@@ -146,12 +124,12 @@ public class TbQoNegociacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getIdAsesorResponsable() {
-		return this.idAsesorResponsable;
+	public String getIdAsesor() {
+		return this.idAsesor;
 	}
 
-	public void setIdAsesorResponsable(String idAsesorResponsable) {
-		this.idAsesorResponsable = idAsesorResponsable;
+	public void setIdAsesor(String idAsesor) {
+		this.idAsesor = idAsesor;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {

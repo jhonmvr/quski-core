@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -27,7 +31,7 @@ public class TbQoTasacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEG_TB_QO_TASACION")
+	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEQ_TASACION")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TASACION_ID_GENERATOR")
 	private Long id;
 
@@ -42,7 +46,10 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="descuento_suelda")
 	private BigDecimal descuentoSuelda;
-
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
+	
 	@Column(name="descuento_suelda_retasacion")
 	private BigDecimal descuentoSueldaRetasacion;
 
@@ -112,6 +119,14 @@ public class TbQoTasacion implements Serializable {
 	@JoinColumn(name="id_funda")
 	private TbQoFunda tbQoFunda;
 	
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+
 	public TbQoTasacion() {
 	}
 

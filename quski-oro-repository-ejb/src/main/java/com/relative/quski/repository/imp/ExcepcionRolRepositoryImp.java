@@ -37,24 +37,34 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 		implements ExcepcionRolRepository {
 
 	@Override
-	public List<ExcepcionRolWrapper > findByRolAndIdentificacion(int startRecord, Integer pageSize, String sortFields,
+	public List<ExcepcionRolWrapper> findByRolAndIdentificacion(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, String rol, String identificacion) throws RelativeException {
 		try {
-			// ~~> QUERY
+			List<TbQoExcepcionRol> listRol = null;
+			if (StringUtils.isNotBlank(rol)) {
+				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
+				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
+				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
+				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
+				listRol = createQue.getResultList();
+			}
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
 			// ~~> FROM
 			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
-			Join<TbQoExcepcione, TbQoExcepcionRol> joinExcepcionRol = poll.join("tipoExcepcion");
 			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE
 			List<Predicate> where = new ArrayList<>();
-			if (StringUtils.isNotBlank(rol)) {
-				where.add(cb.equal(joinExcepcionRol.get("rol"), rol));
+			if (listRol != null && !listRol.isEmpty()) {
+				List<String> tipos = new ArrayList<>();
+				for (TbQoExcepcionRol l : listRol) {
+					tipos.add(l.getExcepcion().toString());
+				}
+				where.add(poll.get("tipoExcepcion").in(tipos));
 			}
-
 			if (StringUtils.isNotBlank(identificacion)) {
 				where.add(cb.equal(joinCliente.get("cedulaCliente"), identificacion));
 			}
@@ -63,8 +73,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			query.where(cb.and(where.toArray(new Predicate[] {})));
 
 			// ~~> SELECT
-			query.multiselect(poll.get("id"), poll.get("tipoException"), joinCliente.get("cedulaCliente"),
-					joinCliente.get("primerNombre"), joinCliente.get("apellidoPaterno"));
+			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("apellidoPaterno"));
 
 			// ~~> ORDER BY
 			if (sortDirections.equals("asc")) {
@@ -90,18 +99,35 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 	public List<ExcepcionRolWrapper> findByRolAndIdentificacion(String rol, String identificacion)
 			throws RelativeException {
 		try {
+
+			List<TbQoExcepcionRol> listRol = null;
+			if (StringUtils.isNotBlank(rol)) {
+				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
+				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
+				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
+				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
+				listRol = createQue.getResultList();
+			}
+
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
 			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
 			// ~~> FROM
 			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
-			Join<TbQoExcepcione, TbQoExcepcionRol> joinExcepcionRol = poll.join("tipoExcepcion");
+
 			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE
 			List<Predicate> where = new ArrayList<>();
-			if (StringUtils.isNotBlank(rol)) {
-				where.add(cb.equal(joinExcepcionRol.get("rol"), rol));
+
+			if (listRol != null && !listRol.isEmpty()) {
+				List<String> tipos = new ArrayList<>();
+				for (TbQoExcepcionRol l : listRol) {
+					tipos.add(l.getExcepcion().toString());
+				}
+				where.add(poll.get("tipoExcepcion").in(tipos));
 			}
 
 			if (StringUtils.isNotBlank(identificacion)) {
@@ -112,8 +138,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			query.where(cb.and(where.toArray(new Predicate[] {})));
 
 			// ~~> SELECT
-			query.multiselect(poll.get("id"), poll.get("tipoException"), joinCliente.get("cedulaCliente"),
-					joinCliente.get("primerNombre"), joinCliente.get("apellidoPaterno"));
+			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("apellidoPaterno"));
 
 			// ~~> EJECUTAR CONSULTA
 
@@ -130,20 +155,32 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 	@Override
 	public Integer countByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
 		try {
+			List<TbQoExcepcionRol> listRol = null;
+			if (StringUtils.isNotBlank(rol)) {
+				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
+				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
+				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
+				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
+				listRol = createQue.getResultList();
+			}
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<Long> query = cb.createQuery(Long.class);
 			// ~~> FROM
 			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
-			Join<TbQoExcepcione, TbQoExcepcionRol> joinExcepcionRol = poll.join("tipoExcepcion");
+
 			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE
 			List<Predicate> where = new ArrayList<>();
-			if (StringUtils.isNotBlank(rol)) {
-				where.add(cb.equal(joinExcepcionRol.get("rol"), rol));
+			if (listRol != null && !listRol.isEmpty()) {
+				List<String> tipos = new ArrayList<>();
+				for (TbQoExcepcionRol l : listRol) {
+					tipos.add(l.getExcepcion().toString());
+				}
+				where.add(poll.get("tipoExcepcion").in(tipos));
 			}
-
 			if (StringUtils.isNotBlank(identificacion)) {
 				where.add(cb.equal(joinCliente.get("cedulaCliente"), identificacion));
 			}
