@@ -23,9 +23,12 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 
 import io.swagger.annotations.Api;
@@ -134,11 +137,56 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("id")  String id) throws RelativeException {
+	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("id")  String id,@QueryParam("tipo")  String tipo) throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
 		
-		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(id)?Long.valueOf(id):null) );
+		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(id)?Long.valueOf(id):null, tipo) );
 		return loc;
 	}
 	
+	@GET
+	@Path("/aprobar")
+	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
+	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
+	response = GenericWrapper.class)
+	public GenericWrapper<TbQoClientePago> aprobar(@QueryParam("id")  String id,@QueryParam("estado")  EstadoEnum estado, @QueryParam("tipo")  String tipo) 
+			throws RelativeException {
+		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
+		Constantes.MSG_ERROR_BUSQUEDA.concat(id);
+		Constantes.MSG_ERROR_BUSQUEDA.concat(tipo);		
+		loc.setEntidad( this.ps.aprobarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null, estado, tipo) );
+		return loc;
+	}
+	
+	@GET
+	@Path("/rechazar")
+	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
+	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
+	response = GenericWrapper.class)
+	public GenericWrapper<TbQoClientePago> rechazar(@QueryParam("id")  String id, @QueryParam("estado")  EstadoEnum estado, @QueryParam("tipo")  String tipo) 
+			throws RelativeException { 
+		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
+		Constantes.MSG_ERROR_BUSQUEDA.concat(id);
+		Constantes.MSG_ERROR_BUSQUEDA.concat(tipo);
+		loc.setEntidad( this.ps.rechazarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,estado,tipo) );
+		return loc;
+	}
+	
+	@POST
+	@Path("/bloqueoFondo")
+	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
+	notes = "Metodo Post registra los bloqueo de fondos o credito en la entidad TbQoRegistrarPago", 
+	response = GenericWrapper.class)
+	public GenericWrapper<RegistrarBloqueoFondoWrapper> bloqueoFondo(RegistrarBloqueoFondoWrapper bloqueoFondo, String autentication) 
+			throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<RegistrarBloqueoFondoWrapper> loc = new GenericWrapper<>();
+		
+		try {
+			loc.setEntidad( this.ps.bloqueoFondo(bloqueoFondo, autentication));
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return loc;
+	}
 }

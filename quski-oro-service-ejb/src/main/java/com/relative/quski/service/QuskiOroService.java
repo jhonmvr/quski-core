@@ -82,7 +82,6 @@ import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
-import com.relative.quski.wrapper.ExceptionWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.SoftbankClientWrapper;
@@ -331,7 +330,7 @@ public class QuskiOroService {
 				try {
 					this.manageDireccionCliente(dc);
 				} catch (RelativeException e) {
-					errores.put("direccion-" + dc.getCallePrincipal(), "Error registro direccion " + e.getMensaje());
+					errores.put("direccion-" + dc.getCallePrincipal(), "ERROR REGISTRO DIRRECION" + e.getMensaje());
 				}
 			});
 		}
@@ -354,7 +353,7 @@ public class QuskiOroService {
 					this.manageIngresoEgresoCliente(ie);
 				} catch (RelativeException e) {
 					errores.put("Ingreso Egreso-" + ie.getTbQoCliente(),
-							"Error registro IngresoEgreso " + e.getMensaje());
+							"ERROR REGISTRO INGRESOS EGRESOS " + e.getMensaje());
 				}
 			});
 		}
@@ -375,7 +374,7 @@ public class QuskiOroService {
 				try {
 					this.managePatrimonio(pa);
 				} catch (RelativeException e) {
-					errores.put("Patrimonio-" + pa.getTbQoCliente(), "Error registro Patrimonio " + e.getMensaje());
+					errores.put("Patrimonio-" + pa.getTbQoCliente(), "ERROR REGISTRO PATRIMONIO" + e.getMensaje());
 				}
 			});
 		}
@@ -3327,8 +3326,8 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+
+					"todos los Abonos " + e.getMessage());
 		}
 	}
 
@@ -3556,7 +3555,7 @@ public class QuskiOroService {
 					QuskiOroConstantes.URLCLOUDSTUDIO + "credito/operacion/crear", "", datosOperacion);
 			return operacionWrapper;
 		} catch (RelativeException | UnsupportedEncodingException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, ": ERROR AL CONSUMIR SERVICIO");
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS);
 		}
 	}
 
@@ -3575,7 +3574,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
 		}
 	}
 
@@ -3606,8 +3605,8 @@ public class QuskiOroService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+
+					"TODOS LOS ABONOS" + e.getMessage());
 		}
 	}
 
@@ -3624,7 +3623,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.CLIENTE_PAGO_NO_ENCONTRADO + e.getMessage());
 		}
 	}
 
@@ -3651,13 +3650,12 @@ public class QuskiOroService {
 			} else {
 				log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado(EstadoEnum.ACT);
 				return registrarPagoRepository.add(send);
 			}
 
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION+
+					" ClientePago" + e.getMessage());
 		}
 
 	}
@@ -3676,8 +3674,8 @@ public class QuskiOroService {
 			return registrarPagoRepository.update(persisted);
 		} catch (Exception e) {
 
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+
+					" ClientePago ===> " + e.getMessage());
 		}
 	}
 
@@ -3697,7 +3695,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
 		}
 	}
 
@@ -3729,7 +3727,7 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					"Error al buscar todos los Abonos " + e.getMessage());
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA_ABONO + e.getMessage());
 		}
 	}
 
@@ -3746,7 +3744,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "ClientePago no encontrado " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.CLIENTE_PAGO_NO_ENCONTRADO + e.getMessage());
 		}
 
 	}
@@ -3770,14 +3768,13 @@ public class QuskiOroService {
 				return this.updateClientePago(send, persisted);
 
 			} else {
-				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				TbQoClientePago persisted = this.clientePagoRepository.add(send);
 				return persisted;
 			}
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"ERROR AL CREAR O ACTUALIZAR ClientePago" + e.getMessage());
+					 QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION +"CLIENTE PAGO" + e.getMessage());
 		}
 	}
 
@@ -3794,9 +3791,11 @@ public class QuskiOroService {
 			return clientePagoRepository.update(persisted);
 		} catch (Exception e) {
 
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+
+					" ClientePago ===> " + e.getMessage());
 		}
 	}
+
+	
 
 }

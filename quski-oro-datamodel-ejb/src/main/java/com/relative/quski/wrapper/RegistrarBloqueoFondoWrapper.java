@@ -4,20 +4,21 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoClientePago;
-import com.relative.quski.model.TbQoRegistrarPago;
 
-public class BloquearFondosWrapper implements Serializable{
+public class RegistrarBloqueoFondoWrapper implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<TbQoRegistrarPago> pagos;
 	private TbQoClientePago cliente;
-	public List<TbQoRegistrarPago> getPagos() {
-		return pagos;
+	private List<RegistroBloqueoFondoWrapper> bloqueos;
+	
+	
+	public List<RegistroBloqueoFondoWrapper> getBloqueos() {
+		return bloqueos;
 	}
-	public void setPagos(List<TbQoRegistrarPago> pagos) {
-		this.pagos = pagos;
+	public void setBloqueos(List<RegistroBloqueoFondoWrapper> bloqueos) {
+		this.bloqueos = bloqueos;
 	}
 	public TbQoClientePago getCliente() {
 		return cliente;
@@ -25,5 +26,6 @@ public class BloquearFondosWrapper implements Serializable{
 	public void setCliente(TbQoClientePago cliente) {
 		this.cliente = cliente;
 	}
+	
 	
 }

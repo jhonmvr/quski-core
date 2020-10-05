@@ -1,10 +1,9 @@
 package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -13,15 +12,17 @@ import javax.inject.Inject;
 import com.google.gson.Gson;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.bpms.api.LocalStorageClient;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoRegistrarPago;
+import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.BloquearFondosWrapper;
 import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
+import com.relative.quski.wrapper.RegistroBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistroPagoWrapper;
 
 @Stateless
@@ -32,6 +33,8 @@ public class PagoService {
 	private QuskiOroService qos;
 	@Inject
 	private RegistrarPagoRepository registrarPagoRepository;
+	@Inject
+	private ClientePagoRepository clientePagoRepository;
 
 	@Inject
 	private ParametroRepository parametroRepository;
@@ -48,30 +51,40 @@ public class PagoService {
 			}
 
 			TbQoClientePago cliente = qos.manageClientePago(registroPago.getCliente());
+			cliente.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			cliente.setEstado(EstadoEnum.PENDIENTE_APROBACION);
+			log.info(" ID de registro cliente: >>>>> " + cliente.getId());
+			
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
 				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {
-					List<FileLocalStorage> listFile = new ArrayList<>();
+					/*List<FileLocalStorage> listFile = new ArrayList<>();
 					FileLocalStorage file = new FileLocalStorage();
 					file.setArchivo(registro.getArchivo());
 					file.setNombreArchivo(registro.getNombreArchivo());
 					file.setProceso("REGISTRO_PAGO");
-					listFile.add(file);
+					
 					LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
 							.getValor().concat(getQueryParametersNotificacion(UUID.randomUUID().toString(),
 									"TIPO_CLIENTE", "", listFile)),
 							autorizacion);
+							 
+							 */
 					TbQoRegistrarPago pago = new TbQoRegistrarPago();
 					pago.setCuentas(registro.getCuentas());
 					pago.setFechaPago(registro.getFechadePago());
 					pago.setInstitucionFinanciera(registro.getInstitucionFinanciera());
 					pago.setNumeroDeposito(registro.getNumerodeDeposito());
 					pago.setValorPagado(registro.getValorpagado());
+					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+					pago.setEstado(EstadoEnum.ACT);
 					pago.setTbQoClientePago(cliente);
+					qos.manageRegistrarPago(pago);
+					
 				}
 			}
+			
 			registroPago.setCliente(cliente);
-			// registroPago.setPagos(listaPagos);
 			return registroPago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -107,39 +120,11 @@ public class PagoService {
 		return params.toString();
 	}
 
-	public BloquearFondosWrapper crearBloquearFondos(BloquearFondosWrapper bloquearFondos) throws RelativeException {
-		try {
-			if (bloquearFondos == null) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL PAGO");
-			}
-			if (bloquearFondos.getCliente() == null) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"NO SE PUEDE LEER LA INFORMACION DEL CLIENTE PAGO");
-			}
+	
 
-			TbQoClientePago cliente = qos.manageClientePago(bloquearFondos.getCliente());
-			List<TbQoRegistrarPago> listaPagos = null;
-			if (bloquearFondos.getPagos() != null && !bloquearFondos.getPagos().isEmpty()) {
-				listaPagos = new ArrayList<>();
-				for (TbQoRegistrarPago registro : bloquearFondos.getPagos()) {
-					registro.setTbQoClientePago(cliente);
-					listaPagos.add(qos.manageRegistrarPago(registro));
-
-				}
-			}
-			bloquearFondos.setCliente(cliente);
-			bloquearFondos.setPagos(listaPagos);
-			return bloquearFondos;
-		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw e;
-		}
-	}
-
-	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long id) throws RelativeException {
+	public List<TbQoRegistrarPago> findRegistrarPagoByIdClientePago(Long id, String tipo) throws RelativeException {
 		// TODO Auto-generated method stub
-		return registrarPagoRepository.findByIdClientePago(id);
+		return registrarPagoRepository.findByIdClientePago(id, tipo);
 	}
 
 	public List<TbQoClientePago> findClientePagoByIdClientePago(Long id) throws RelativeException {
@@ -147,4 +132,100 @@ public class PagoService {
 		return null;
 	}
 
+	
+	public TbQoClientePago aprobarPago(Long id, EstadoEnum estado, String tipo) throws RelativeException {
+		try {
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado, tipo);
+			if(clientePago == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
+			}
+			
+			clientePago.setEstado(EstadoEnum.APROBADO);
+			TbQoClientePago pago = qos.manageClientePago(clientePago);
+			//falta enviar el correo electronico con la observacion al asesor
+			return pago;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	public TbQoClientePago rechazarPago(Long id, EstadoEnum estado, String tipo) throws RelativeException {
+		try {
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado, tipo);
+			if(clientePago == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
+			}
+			
+			clientePago.setEstado(EstadoEnum.RECHAZADO);
+			TbQoClientePago pago = qos.manageClientePago(clientePago);
+			//falta enviar el correo electronico con la observacion al asesor
+			
+			return pago;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+	// REGISTRO BLOQUEO DE FONDOS EN LA TABLA REGISTRAR PAGO 
+	public RegistrarBloqueoFondoWrapper bloqueoFondo(RegistrarBloqueoFondoWrapper bloqueoFondo, String autentication)throws RelativeException {
+		try {
+		if (bloqueoFondo == null) {
+			throw new RelativeException( QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION+ "DEL PAGO");
+		}
+		if (bloqueoFondo.getCliente() == null) {
+			throw new RelativeException( QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION+
+					" DEL CLIENTE PAGO");
+		}
+
+		TbQoClientePago cliente = qos.manageClientePago(bloqueoFondo.getCliente());
+		cliente.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+		cliente.setEstado(EstadoEnum.PENDIENTE_APROBACION);
+		log.info(" ID de registro cliente: >>>>> " + cliente.getId());
+		
+		if (bloqueoFondo.getBloqueos() != null && !bloqueoFondo.getBloqueos().isEmpty()) {
+			
+			for (RegistroBloqueoFondoWrapper registro : bloqueoFondo.getBloqueos()) {
+				/*List<FileLocalStorage> listFile = new ArrayList<>();
+				FileLocalStorage file = new FileLocalStorage();
+				file.setArchivo(registro.getArchivo());
+				file.setNombreArchivo(registro.getNombreArchivo());
+				file.setProceso("REGISTRO_PAGO");
+				
+				LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
+						.getValor().concat(getQueryParametersNotificacion(UUID.randomUUID().toString(),
+								"TIPO_CLIENTE", "", listFile)),
+						autorizacion);
+						 
+						 */
+				TbQoRegistrarPago bloqueo = new TbQoRegistrarPago();
+				bloqueo.setCuentas(registro.getCuentas());
+				bloqueo.setFechaPago(registro.getFechaPago());
+				bloqueo.setInstitucionFinanciera(registro.getInstitucionFinanciera());
+				bloqueo.setNumeroDeposito(registro.getNumeroDeposito());
+				bloqueo.setValorPagado(registro.getValorPagado());
+				bloqueo.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				bloqueo.setEstado(EstadoEnum.ACT);
+				bloqueo.setTbQoClientePago(cliente);
+				qos.manageRegistrarPago(bloqueo);
+				
+			}
+		}
+		
+		bloqueoFondo.setCliente(cliente);
+		return bloqueoFondo;
+	} catch (RelativeException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		throw e;
+	}
+	}
+
+
+	
+	
 }

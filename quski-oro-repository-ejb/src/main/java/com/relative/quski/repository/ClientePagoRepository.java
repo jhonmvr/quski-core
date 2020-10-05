@@ -8,12 +8,15 @@ import javax.ejb.Local;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 
 
 
 @Local
 public interface ClientePagoRepository extends CrudRepository<Long, TbQoClientePago> {
+	
+	
 	public List<TbQoClientePago>  findByParams(PaginatedWrapper pw, String cedula, String nombreCliente, 
 			String codigoCuentaMupi, String codigoOperacion, String observacion, 
 			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado, String estado, String tipo) throws RelativeException;
@@ -23,11 +26,18 @@ public interface ClientePagoRepository extends CrudRepository<Long, TbQoClienteP
 			String codigoCuentaMupi, String codigoOperacion, String observacion, 
 			String tipoCredito, BigDecimal valorDepositado, BigDecimal valorPrecancelado,String estado, String tipo) throws RelativeException;
 
-	public static TbQoClientePago finClientePago(Long cedula)  throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 
 	TbQoClientePago finClientePago(String cedula) throws RelativeException;
+
+
+	/**
+	 * Metodo que busca en clientePago por id y estado
+	 * @param idClientePago
+	 * @param pendienteAprobacion
+	 * @return TbQoClientePago
+	 * @throws RelativeException
+	 */
+	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo) throws RelativeException;
 }

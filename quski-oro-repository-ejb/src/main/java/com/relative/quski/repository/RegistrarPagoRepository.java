@@ -13,7 +13,7 @@ import com.relative.quski.model.TbQoRegistrarPago;
 @Local
 public interface RegistrarPagoRepository extends CrudRepository<Long, TbQoRegistrarPago> {
 
-	List<TbQoRegistrarPago> findByIdClientePago(Long idClientePago) throws RelativeException;
+	List<TbQoRegistrarPago> findByIdClientePago(Long idClientePago, String tipo) throws RelativeException;
 	
 
 }
