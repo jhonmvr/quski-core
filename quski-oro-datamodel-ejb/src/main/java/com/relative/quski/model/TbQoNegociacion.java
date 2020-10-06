@@ -16,7 +16,6 @@ import java.util.List;
  */
 @Entity
 @Table(name="tb_qo_negociacion")
-@NamedQuery(name="TbQoNegociacion.findAll", query="SELECT t FROM TbQoNegociacion t")
 public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +23,7 @@ public class TbQoNegociacion implements Serializable {
 	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
-	
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -99,6 +98,14 @@ public class TbQoNegociacion implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
+	public String getIdAsesor() {
+		return idAsesor;
+	}
+
+	public void setIdAsesor(String idAsesor) {
+		this.idAsesor = idAsesor;
+	}
+
 	public Date getFechaCreacion() {
 		return this.fechaCreacion;
 	}
@@ -106,15 +113,6 @@ public class TbQoNegociacion implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-
-	public String getIdAsesor() {
-		return this.idAsesor;
-	}
-
-	public void setIdAsesor(String idAsesor) {
-		this.idAsesor = idAsesor;
-	}
-
 	public String getProcesoActual() {
 		return this.procesoActual;
 	}

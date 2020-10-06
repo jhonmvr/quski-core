@@ -103,8 +103,8 @@ public class ClientePagoRestController extends BaseRestController
 	response = GenericWrapper.class)
 	public GenericWrapper<TbQoClientePago> findByIdClientePago(@QueryParam("cedula")  String cedula) throws RelativeException {
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<>();
-		
 		loc.setEntidades( this.ps.findClientePagoByIdClientePago(StringUtils.isNotBlank(cedula)?Long.valueOf(cedula):null) );
 		return loc;
 	}
+	
 }

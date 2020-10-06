@@ -31,11 +31,14 @@ public class TbQoTasacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEQ_TASACION")
+	@SequenceGenerator(name="TB_QO_TASACION_ID_GENERATOR", sequenceName="SEG_TB_QO_TASACION")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TASACION_ID_GENERATOR")
 	private Long id;
 
 	private String descripcion;
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Column(name="descuento_peso_piedra")
 	private BigDecimal descuentoPesoPiedra;
@@ -46,10 +49,7 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="descuento_suelda")
 	private BigDecimal descuentoSuelda;
-	
-	@Enumerated(EnumType.STRING)
-	private EstadoEnum estado;
-	
+
 	@Column(name="descuento_suelda_retasacion")
 	private BigDecimal descuentoSueldaRetasacion;
 

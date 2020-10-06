@@ -13,7 +13,7 @@ public class RegistrarPagoWrapper implements Serializable{
 	private TbQoClientePago cliente;
 	private List<RegistroPagoWrapper> pagos;
 	
-	
+
 	public TbQoClientePago getCliente() {
 		return cliente;
 	}
