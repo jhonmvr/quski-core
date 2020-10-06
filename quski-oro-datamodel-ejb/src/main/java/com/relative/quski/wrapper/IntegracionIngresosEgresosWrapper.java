@@ -11,14 +11,13 @@ public class IntegracionIngresosEgresosWrapper implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@JsonProperty("rubro")
-	private List<IntegracionRubroWrapper> rubros;
-	
+	private List<IntegracionRubroWrapper> rubro;
+
 	public List<IntegracionRubroWrapper> getRubros() {
-		return rubros;
+		return rubro;
 	}
-	public void setRubros(List<IntegracionRubroWrapper> rubros) {
-		this.rubros = rubros;
+	public void setRubros(List<IntegracionRubroWrapper> rubro) {
+		this.rubro = rubro;
 	} 
 
 }

@@ -3,6 +3,7 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 
 import java.math.BigDecimal;
@@ -35,9 +36,13 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 
 	private BigDecimal valor;
 	
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	public TbQoIngresoEgresoCliente() {
+	}
+	public TbQoIngresoEgresoCliente( TbQoCliente cliente) {
+		this.tbQoCliente = cliente;
 	}
 
 	public Long getId() {
@@ -80,11 +85,11 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 		this.valor = valor;
 	}
 
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

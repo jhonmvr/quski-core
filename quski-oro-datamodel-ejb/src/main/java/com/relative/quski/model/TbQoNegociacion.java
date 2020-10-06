@@ -1,26 +1,13 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.SituacionEnum;
+
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -29,17 +16,18 @@ import com.relative.quski.enums.SituacionEnum;
  */
 @Entity
 @Table(name="tb_qo_negociacion")
+@NamedQuery(name="TbQoNegociacion.findAll", query="SELECT t FROM TbQoNegociacion t")
 public class TbQoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION"	,initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_NEGOCIACION", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
-
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-	
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
@@ -50,7 +38,10 @@ public class TbQoNegociacion implements Serializable {
 
 	@Column(name="id_asesor")
 	private String idAsesor;
-	
+
+	@Column(name="proceso_actual")
+	private String procesoActual;
+
 	@Enumerated(EnumType.STRING)
 	private SituacionEnum situacion;
 
@@ -64,6 +55,10 @@ public class TbQoNegociacion implements Serializable {
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
+	//bi-directional many-to-one association to TbQoExcepcione
+	@OneToMany(mappedBy="tbQoNegociacion")
+	private List<TbQoExcepcione> tbQoExcepciones;
+
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
@@ -72,6 +67,10 @@ public class TbQoNegociacion implements Serializable {
 	//bi-directional many-to-one association to TbQoVariablesCrediticia
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
+
+	//bi-directional many-to-one association to TbQoRiesgoAcumulado
+	@OneToMany(mappedBy="tbQoNegociacion")
+	private List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados;
 
 	public TbQoNegociacion() {
 	}
@@ -84,24 +83,8 @@ public class TbQoNegociacion implements Serializable {
 		this.id = id;
 	}
 
-	public SituacionEnum getSituacion() {
-		return situacion;
-	}
-
-	public void setSituacion(SituacionEnum situacion) {
-		this.situacion = situacion;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 	public EstadoEnum getEstado() {
-		return estado;
+		return this.estado;
 	}
 
 	public void setEstado(EstadoEnum estado) {
@@ -130,6 +113,30 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setIdAsesor(String idAsesor) {
 		this.idAsesor = idAsesor;
+	}
+
+	public String getProcesoActual() {
+		return this.procesoActual;
+	}
+
+	public void setProcesoActual(String procesoActual) {
+		this.procesoActual = procesoActual;
+	}
+
+	public SituacionEnum getSituacion() {
+		return this.situacion;
+	}
+
+	public void setSituacion(SituacionEnum situacion) {
+		this.situacion = situacion;
+	}
+
+	public String getTipo() {
+		return this.tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
@@ -176,6 +183,28 @@ public class TbQoNegociacion implements Serializable {
 		return tbQoDocumentoHabilitante;
 	}
 
+	public List<TbQoExcepcione> getTbQoExcepciones() {
+		return this.tbQoExcepciones;
+	}
+
+	public void setTbQoExcepciones(List<TbQoExcepcione> tbQoExcepciones) {
+		this.tbQoExcepciones = tbQoExcepciones;
+	}
+
+	public TbQoExcepcione addTbQoExcepcione(TbQoExcepcione tbQoExcepcione) {
+		getTbQoExcepciones().add(tbQoExcepcione);
+		tbQoExcepcione.setTbQoNegociacion(this);
+
+		return tbQoExcepcione;
+	}
+
+	public TbQoExcepcione removeTbQoExcepcione(TbQoExcepcione tbQoExcepcione) {
+		getTbQoExcepciones().remove(tbQoExcepcione);
+		tbQoExcepcione.setTbQoNegociacion(null);
+
+		return tbQoExcepcione;
+	}
+
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
 	}
@@ -202,7 +231,30 @@ public class TbQoNegociacion implements Serializable {
 	public TbQoVariablesCrediticia removeTbQoVariablesCrediticia(TbQoVariablesCrediticia tbQoVariablesCrediticia) {
 		getTbQoVariablesCrediticias().remove(tbQoVariablesCrediticia);
 		tbQoVariablesCrediticia.setTbQoNegociacion(null);
+
 		return tbQoVariablesCrediticia;
+	}
+
+	public List<TbQoRiesgoAcumulado> getTbQoRiesgoAcumulados() {
+		return this.tbQoRiesgoAcumulados;
+	}
+
+	public void setTbQoRiesgoAcumulados(List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados) {
+		this.tbQoRiesgoAcumulados = tbQoRiesgoAcumulados;
+	}
+
+	public TbQoRiesgoAcumulado addTbQoRiesgoAcumulado(TbQoRiesgoAcumulado tbQoRiesgoAcumulado) {
+		getTbQoRiesgoAcumulados().add(tbQoRiesgoAcumulado);
+		tbQoRiesgoAcumulado.setTbQoNegociacion(this);
+
+		return tbQoRiesgoAcumulado;
+	}
+
+	public TbQoRiesgoAcumulado removeTbQoRiesgoAcumulado(TbQoRiesgoAcumulado tbQoRiesgoAcumulado) {
+		getTbQoRiesgoAcumulados().remove(tbQoRiesgoAcumulado);
+		tbQoRiesgoAcumulado.setTbQoNegociacion(null);
+
+		return tbQoRiesgoAcumulado;
 	}
 
 }

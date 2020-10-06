@@ -45,14 +45,18 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 		}
 	}
 	@Override
-	public List<TbQoCreditoNegociacion> findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException {
+	public TbQoCreditoNegociacion findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			List<TbQoCreditoNegociacion> tmp;
-			tmp = this.findAllBySpecification(new CreditoByIdNegociacionSpec(idNegociacion));
-			if(tmp != null && !tmp.isEmpty()) {
-				return tmp;
+			List<TbQoCreditoNegociacion> tmp = this.findAllBySpecification(new CreditoByIdNegociacionSpec(idNegociacion));
+			if(!tmp.isEmpty()) {
+				if(tmp.size() == 1) {
+					return tmp.get(0);
+				} else {
+					return null;
+				}
+			}else {
+				return null;				
 			}
-			return null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -633,7 +633,6 @@ public class TbQoCliente implements Serializable {
 	public TbQoReferenciaPersonal addTbQoReferenciaPersonal(TbQoReferenciaPersonal tbQoReferenciaPersonal) {
 		getTbQoReferenciaPersonals().add(tbQoReferenciaPersonal);
 		tbQoReferenciaPersonal.setTbQoCliente(this);
-
 		return tbQoReferenciaPersonal;
 	}
 

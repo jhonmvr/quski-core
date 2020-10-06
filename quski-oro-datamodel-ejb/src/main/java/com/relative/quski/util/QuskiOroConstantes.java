@@ -239,7 +239,7 @@ public class QuskiOroConstantes {
 	public static final String ERROR_NEGOCIACION = ": ERROR AL CREAR TODA LA GESTION -> ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
-	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
+	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
 	
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
@@ -256,7 +256,8 @@ public class QuskiOroConstantes {
 	
 	// CRM SERVICES 
 	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
-	
+	public static final String URL_CRM_PERSIST ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/persistEntity";
+
 	//STORAGE
 	public static final String collectionName = "collectionName";
 	public static final String databaseName = "databaseName";
