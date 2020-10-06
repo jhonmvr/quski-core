@@ -232,49 +232,21 @@ public class QuskiOroConstantes {
 	public static final String MONEDA = "MONEDA";
 	
 	// MENSAJES DE EXCEPCIONES
-
-	public static final String CLIENTE_PAGO_NO_ENCONTRADO = "CLIENTE PAGO NO ENCONTRADO";
-	public static final String ERROR_AL_CONSUMIR_SERVICIOS = "ERROR AL CONSUMIR LOS SERVICIOS";
-	public static final String ERROR_AL_INTENTAR_GUARDAR_EN_LOCAL_STORAGE = "ERROR AL INTENTAR GUARDAR EN LOCAL STORAGE";
-	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = "ERROR AL INTENTAR LEER LA INFORMACION";
-
-	public static final String ACCION_NO_ENCONTRADA = ": ACCION NO ENCONTRADA -> ";
-	public static final String ERROR_AL_REALIZAR_BUSQUEDA = ": ERROR AL REALIZAR BUSQUEDA -> ";
-	public static final String ERROR_AL_REALIZAR_CREACION = ": ERROR AL REALIZAR CREACION -> ";
-	public static final String ERROR_CREATE_CLIENTE = ": ERROR AL CREAR AL CLIENTE -> ";
-	public static final String ERROR_NEGOCIACION = ": ERROR AL CREAR TODA LA GESTION -> ";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
-	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
+	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA";
+	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "ERROR AL REALIZAR BUSQUEDA";
+	public static final String ERROR_AL_REALIZAR_CREACION = "ERROR AL REALIZAR CREACION";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "ERROR AL REALIZAR ACTUALIZACION";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = "ERROR AL REALIZAR ACTUALIZACION O CREACION";
+	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR.";
 	
-
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
-	public static final String URL_SERVICIO_SOFTBANK_CLIENTE ="http://201.183.238.73:1991/api/cliente/";
-	public static final String EDITAR_SOFTBANK ="editar";
-	public static final String CONSULTAR_SOFTBANK ="consultar";
-	public static final String CREAR_SOFTBANK ="crear";
-	public static final String URL_SOFTBANK_RIESGO_ACUMULADO ="http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
-
-
-	// API GATEWAY
 	public static final Integer TIPO_CEDULA = 1;
-	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
-	
-	// CRM SERVICES 
-	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
-	
-	//STORAGE
+	//storage
 	public static final String collectionName = "collectionName";
 	public static final String databaseName = "databaseName";
 	public static final String URL_STORAGE = "URL_STORAGE";
 	
-	//INTEGRACION
-	public static final String ERROR_005 = "005";
-	public static final String URL_PERSONA = "http://localhost:8080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
-	public static final String PARAMETRO_1 = "?tipoIdentificacion=";
-	public static final String PARAMETRO_2 = "&identificacion=";
-	public static final String PARAMETRO_3 = "&tipoConsulta=";
-	public static final String PARAMETRO_4 = "&calificacion=";
+
   
 }
