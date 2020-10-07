@@ -138,8 +138,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		//CAMBIAR PARA PONER EL PARAMETRO
 		
 
-		String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
-		//String path= "/home/relative/workspace/QUSKI/New_Quski_Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes";
+		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
+		String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 
 		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("================PATH===> P" +path);

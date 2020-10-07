@@ -20,7 +20,6 @@ public class RestClientWrapper implements Serializable {
 	public static final String METHOD_DELETE="DELETE";
 	
 	
-	
 	private String urlStr;
 	private String method;
 	private String acceptHeader;
