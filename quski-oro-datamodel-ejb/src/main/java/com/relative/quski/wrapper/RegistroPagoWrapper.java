@@ -11,24 +11,46 @@ public class RegistroPagoWrapper implements Serializable{
 	 */
 	private static final long serialVersionUID = -3205114036416526081L;
 	
-	private String cuentas;
-	private Date fechadePago;
 	private String institucionFinanciera;
-	private BigDecimal numerodeDeposito;
+	private String cuentas;
+	private Date fechaPago;
+	private BigDecimal numeroDeposito;
 	private BigDecimal valorpagado;
-	private String nombreArchivo;
+	private String comprobante;
+	//private String estado;
 	private String archivo;
+	private String fileBase64;
+	private String nombreArchivo;
+	
+	public String getFileBase64() {
+		return fileBase64;
+	}
+	public void setFileBase64(String fileBase64) {
+		this.fileBase64 = fileBase64;
+	}
+	public String getComprobante() {
+		return comprobante;
+	}
+	public void setComprobante(String comprobante) {
+		this.comprobante = comprobante;
+	}
+	/*public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}*/
 	public String getCuentas() {
 		return cuentas;
 	}
 	public void setCuentas(String cuentas) {
 		this.cuentas = cuentas;
 	}
-	public Date getFechadePago() {
-		return fechadePago;
+	public Date getFechaPago() {
+		return fechaPago;
 	}
-	public void setFechadePago(Date fechadePago) {
-		this.fechadePago = fechadePago;
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
 	}
 	public String getInstitucionFinanciera() {
 		return institucionFinanciera;
@@ -36,11 +58,11 @@ public class RegistroPagoWrapper implements Serializable{
 	public void setInstitucionFinanciera(String institucionFinanciera) {
 		this.institucionFinanciera = institucionFinanciera;
 	}
-	public BigDecimal getNumerodeDeposito() {
-		return numerodeDeposito;
+	public BigDecimal getNumeroDeposito() {
+		return numeroDeposito;
 	}
-	public void setNumerodeDeposito(BigDecimal numerodeDeposito) {
-		this.numerodeDeposito = numerodeDeposito;
+	public void setNumeroDeposito(BigDecimal numeroDeposito) {
+		this.numeroDeposito = numeroDeposito;
 	}
 	public BigDecimal getValorpagado() {
 		return valorpagado;

@@ -72,9 +72,9 @@ public class PagoService {
 							 */
 					TbQoRegistrarPago pago = new TbQoRegistrarPago();
 					pago.setCuentas(registro.getCuentas());
-					pago.setFechaPago(registro.getFechadePago());
+					pago.setFechaPago(registro.getFechaPago());
 					pago.setInstitucionFinanciera(registro.getInstitucionFinanciera());
-					pago.setNumeroDeposito(registro.getNumerodeDeposito());
+					pago.setNumeroDeposito(registro.getNumeroDeposito());
 					pago.setValorPagado(registro.getValorpagado());
 					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 					pago.setEstado(EstadoEnum.ACT);
