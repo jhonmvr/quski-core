@@ -273,6 +273,15 @@ public class QuskiOroConstantes {
 	
 	//PAGO SERVICE
 	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = "ERROR AL INTENTAR LEER LA INFORMACION";
+	//E-MAIL
+	public static final String emailSecurityType = "emailSecurityType";
+	public static final String smtpHostServer = "smtpHostServer";
+	public static final String portEmail = "portEmail";
+	public static final String sfPortEmail = "sfPortEmail";
+	public static final String userEmail = "userEmail";
+	public static final String fromEmail = "fromEmail";
+	public static final String authEmail = "authEmail";
+	public static final String passwordEmail = "passwordEmail";
 	
 	
 
