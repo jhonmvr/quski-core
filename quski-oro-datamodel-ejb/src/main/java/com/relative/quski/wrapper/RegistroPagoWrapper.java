@@ -18,7 +18,7 @@ public class RegistroPagoWrapper implements Serializable{
 	private BigDecimal valorpagado;
 	private String comprobante;
 	//private String estado;
-	private String archivo;
+	private byte[] archivo;
 	private String fileBase64;
 	private String nombreArchivo;
 	
@@ -76,10 +76,10 @@ public class RegistroPagoWrapper implements Serializable{
 	public void setNombreArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
 	}
-	public String getArchivo() {
+	public byte[] getArchivo() {
 		return archivo;
 	}
-	public void setArchivo(String archivo) {
+	public void setArchivo(byte[] archivo) {
 		this.archivo = archivo;
 	}
 	
