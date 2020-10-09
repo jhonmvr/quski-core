@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -34,7 +35,8 @@ public class TbQoRegistrarPago implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REGISTRAR_PAGO_ID_GENERATOR")
 	private Long id;
 
-	private String comprobante;
+	@Lob
+	private byte[] comprobante;
 
 	private String cuentas;
 
@@ -84,11 +86,11 @@ public class TbQoRegistrarPago implements Serializable {
 		this.id = id;
 	}
 
-	public String getComprobante() {
+	public byte[] getComprobante() {
 		return this.comprobante;
 	}
 
-	public void setComprobante(String comprobante) {
+	public void setComprobante(byte[] comprobante) {
 		this.comprobante = comprobante;
 	}
 

@@ -2,16 +2,25 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+
+import org.olap4j.impl.ArrayMap;
 
 import com.google.gson.Gson;
+import com.hazelcast.cp.internal.datastructures.atomicref.client.SetMessageTask;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.bpms.api.LocalStorageClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoRegistrarPago;
@@ -20,10 +29,13 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 import com.relative.quski.wrapper.RegistroBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistroPagoWrapper;
+
+import net.sf.jasperreports.engine.convert.ConvertChartContext;
 
 @Stateless
 public class PagoService {
@@ -35,11 +47,11 @@ public class PagoService {
 	private RegistrarPagoRepository registrarPagoRepository;
 	@Inject
 	private ClientePagoRepository clientePagoRepository;
-
 	@Inject
 	private ParametroRepository parametroRepository;
+	
 
-	public RegistrarPagoWrapper crearRegistrarPago(RegistrarPagoWrapper registroPago, String autorizacion)
+	public RegistrarPagoWrapper crearRegistrarPago(RegistrarPagoWrapper registroPago, String autorizacion, byte[] bs)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			if (registroPago == null) {
@@ -58,7 +70,7 @@ public class PagoService {
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
 				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {
-					/*List<FileLocalStorage> listFile = new ArrayList<>();
+					List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
 					FileLocalStorage file = new FileLocalStorage();
 					file.setArchivo(registro.getArchivo());
 					file.setNombreArchivo(registro.getNombreArchivo());
@@ -69,12 +81,12 @@ public class PagoService {
 									"TIPO_CLIENTE", "", listFile)),
 							autorizacion);
 							 
-							 */
+							 
 					TbQoRegistrarPago pago = new TbQoRegistrarPago();
 					pago.setCuentas(registro.getCuentas());
-					pago.setFechaPago(registro.getFechadePago());
+					pago.setFechaPago(registro.getFechaPago());
 					pago.setInstitucionFinanciera(registro.getInstitucionFinanciera());
-					pago.setNumeroDeposito(registro.getNumerodeDeposito());
+					pago.setNumeroDeposito(registro.getNumeroDeposito());
 					pago.setValorPagado(registro.getValorpagado());
 					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 					pago.setEstado(EstadoEnum.ACT);
@@ -142,13 +154,25 @@ public class PagoService {
 			
 			clientePago.setEstado(EstadoEnum.APROBADO);
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
+			
 			//falta enviar el correo electronico con la observacion al asesor
+			clientePago.getCedula();
+			clientePago.getNombreCliente();
+			clientePago.getCodigoCuentaMupi();
+			clientePago.getCodigoOperacion();
+			String contenido = (clientePago.toString());
+			Map<String,byte[]> adjunto = new ArrayMap<String, byte[]>();//= (LocalStorageClient);
+			String[] para= {"steed_corporation@hotmail.com", "hoscarly007@gmail.com"} ;
+			String asunto = EstadoEnum.APROBADO.toString(); 
+			qos.mailNotificacion(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}
+		
+		
 		
 	}
 
