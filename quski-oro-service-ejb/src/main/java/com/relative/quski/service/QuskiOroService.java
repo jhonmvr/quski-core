@@ -1367,7 +1367,6 @@ public class QuskiOroService {
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 
 		try {
-			log.info("ID QUE INGRESA findNegociacionById===> " + id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -1500,7 +1499,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.createCliente( cedula );
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1514,7 +1512,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.createClienteFromEquifax( this.traerEntidadPersonaEquifax( cedula ) ); 
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1527,7 +1524,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador( id );
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1586,8 +1582,7 @@ public class QuskiOroService {
 			}else {
 				return new NegociacionWrapper(false);
 			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
+		} catch (RelativeException | UnsupportedEncodingException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
 		}
 		
@@ -1611,7 +1606,6 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);			
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
 		}
 		
@@ -3307,7 +3301,6 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
-		log.info("Valor del send en manageExcepcion===> " + send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
@@ -3470,12 +3463,7 @@ public class QuskiOroService {
 				return this.excepcionRolRepository.findByRolAndIdentificacion(rol, identificacion);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+
-					"todos los Abonos " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+"todos los Abonos " + e.getMessage());
 		}
 	}
 
@@ -4204,7 +4192,7 @@ public class QuskiOroService {
 			return null; 
 		}
 	}
-	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException {
+	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException, UnsupportedEncodingException {
 		try {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
 			entidad.setCedulaC( cliente.getCedulaCliente() );
@@ -4215,19 +4203,12 @@ public class QuskiOroService {
 			entidad.setPhoneMobile( cliente.getTelefonoMovil() );
 			entidad.setPhoneHome( cliente.getTelefonoFijo() );
 			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper( entidad );
-			try {
-				CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
-				if(pro != null) {
-					return true;
-				} else {
-					return false;
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
-			}
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
+			return pro != null ? Boolean.TRUE : Boolean.FALSE ;
 		}catch(RelativeException e ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(Constantes.ERROR_CODE_CREATE);
 		}
 	}
 	
