@@ -115,9 +115,8 @@ public class TbQoTasacion implements Serializable {
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 
 
-	@ManyToOne
-	@JoinColumn(name="id_funda")
-	private TbQoFunda tbQoFunda;
+	@Column(name="id_funda")
+	private BigDecimal idFunda;
 	
 	public EstadoEnum getEstado() {
 		return estado;
@@ -322,12 +321,12 @@ public class TbQoTasacion implements Serializable {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
 	}
 
-	public TbQoFunda getTbQoFunda() {
-		return tbQoFunda;
+	public BigDecimal getTbQoFunda() {
+		return idFunda;
 	}
 
-	public void setTbQoFunda(TbQoFunda tbQoFunda) {
-		this.tbQoFunda = tbQoFunda;
+	public void setTbQoFunda(BigDecimal idFunda) {
+		this.idFunda = idFunda;
 	}
 
 	public String getTipoOro() {
