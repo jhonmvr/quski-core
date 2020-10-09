@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.sound.midi.MidiDevice.Info;
 import javax.ws.rs.GET;
 
 import org.olap4j.impl.ArrayMap;
@@ -156,14 +157,11 @@ public class PagoService {
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
 			
 			//falta enviar el correo electronico con la observacion al asesor
-			clientePago.getCedula();
-			clientePago.getNombreCliente();
-			clientePago.getCodigoCuentaMupi();
-			clientePago.getCodigoOperacion();
-			String contenido = (clientePago.toString());
+			String contenido = (clientePago.getCedula()+clientePago.getNombreCliente()+clientePago.getCodigoCuentaMupi()+clientePago.getCodigoOperacion());
 			Map<String,byte[]> adjunto = new ArrayMap<String, byte[]>();//= (LocalStorageClient);
-			String[] para= {"steed_corporation@hotmail.com", "hoscarly007@gmail.com"} ;
+			String[] para= {"hoscarly007@gmail.com"} ;
 			String asunto = EstadoEnum.APROBADO.toString(); 
+			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
 			qos.mailNotificacion(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {

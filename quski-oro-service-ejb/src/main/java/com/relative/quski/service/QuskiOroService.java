@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -4239,9 +4240,10 @@ public class QuskiOroService {
 						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
 						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
 						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
-						  ) .fromEmail( fromEmail ) .message( contenido )
+						  ) .fromEmail( fromEmail ) .message( contenido  )
 						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  Transport.send(null, null, passwordEmail, passwordEmail);
 						  EmailUtil.sendEmail( ed );  
 			 }else {
 				 EmailDefinition ed = new EmailDefinition.Builder()
