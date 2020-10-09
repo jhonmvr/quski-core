@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,9 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.enums.EmailSecurityTypeEnum;
+import com.relative.core.util.mail.EmailDefinition;
+import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.bpms.api.ApiGatewayClient;
@@ -4346,5 +4350,64 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
+	}
+	
+	public void mailNotificacion(String[] para,String asunto,String contenido,Map<String,byte[]> adjunto) throws RelativeException {
+		try {
+			log.info("=====>>> ENTRA A NOTIFICACIONES MAIL");
+			log.info("=====>>> PARA: "+para);
+			log.info("=====>>> ASUNTO: "+asunto);
+			log.info("=====>>> CONTENIDO: "+contenido);
+			log.info("=====>>> ADJUNTO: "+adjunto);
+			log.info("=====>>> Inicializa mail");
+			String emailSecurityType = this.parametroRepository.findByNombre(QuskiOroConstantes.emailSecurityType).getValor();
+			String smtpHostServer =	this.parametroRepository.findByNombre(QuskiOroConstantes.smtpHostServer).getValor();
+			String portEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
+			String sfPortEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
+			String userEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
+			String fromEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmail).getValor();
+			String authEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
+			String passwordEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
+			 log.info("parametro email smtpHostServer==>>"+emailSecurityType);
+			 log.info("parametro email smtpHostServer==>>"+smtpHostServer);
+			 log.info("parametro email portEmail==>>"+portEmail);
+			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
+			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
+			 log.info("parametro email userEmail==>>"+userEmail);
+			 log.info("parametro email fromEmail==>>"+fromEmail);
+			 log.info("parametro email authEmail==>>"+authEmail);
+			 log.info("parametro email passwordEmail==>>"+passwordEmail);
+			 if(adjunto != null) {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
+						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
+						  ) .fromEmail( fromEmail ) .message( contenido )
+						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  EmailUtil.sendEmail( ed );  
+			 }else {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
+						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
+						  ) .fromEmail( fromEmail ) .message( contenido )
+						  .hasFiles(Boolean.FALSE).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  EmailUtil.sendEmail( ed ); 
+			 }
+			
+		} catch (RelativeException e) {
+			log.info("=====>>> error en envio "+ e);
+			e.getStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+		
+    
 	}
 }
