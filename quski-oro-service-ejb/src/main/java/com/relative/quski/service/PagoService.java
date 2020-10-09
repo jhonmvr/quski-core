@@ -157,12 +157,12 @@ public class PagoService {
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
 			
 			//falta enviar el correo electronico con la observacion al asesor
-			String contenido = (clientePago.getCedula()+clientePago.getNombreCliente()+clientePago.getCodigoCuentaMupi()+clientePago.getCodigoOperacion());
-			Map<String,byte[]> adjunto = new ArrayMap<String, byte[]>();//= (LocalStorageClient);
-			String[] para= {"hoscarly007@gmail.com"} ;
+			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
+			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+			String para= "hoscarly007@gmail.com" ;
 			String asunto = EstadoEnum.APROBADO.toString(); 
 			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
-			qos.mailNotificacion(para, asunto, contenido, adjunto);
+			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -184,7 +184,12 @@ public class PagoService {
 			clientePago.setEstado(EstadoEnum.RECHAZADO);
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
 			//falta enviar el correo electronico con la observacion al asesor
-			
+			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
+			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+			String para= "hoscarly007@gmail.com" ;
+			String asunto = EstadoEnum.APROBADO.toString(); 
+			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
+			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block

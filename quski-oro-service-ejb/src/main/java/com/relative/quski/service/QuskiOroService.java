@@ -1368,7 +1368,6 @@ public class QuskiOroService {
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 
 		try {
-			log.info("ID QUE INGRESA findNegociacionById===> " + id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -1501,7 +1500,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.createCliente( cedula );
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1515,7 +1513,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.createClienteFromEquifax( this.traerEntidadPersonaEquifax( cedula ) ); 
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1528,7 +1525,6 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador( id );
 			if( cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
 				return generarTablasIniciales( cliente, asesor);
 			} else {
 				return new NegociacionWrapper (false);
@@ -1587,8 +1583,7 @@ public class QuskiOroService {
 			}else {
 				return new NegociacionWrapper(false);
 			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
+		} catch (RelativeException | UnsupportedEncodingException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
 		}
 		
@@ -1612,7 +1607,6 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);			
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
 		}
 		
@@ -3308,7 +3302,6 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
-		log.info("Valor del send en manageExcepcion===> " + send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
@@ -3471,12 +3464,7 @@ public class QuskiOroService {
 				return this.excepcionRolRepository.findByRolAndIdentificacion(rol, identificacion);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+
-					"todos los Abonos " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+"todos los Abonos " + e.getMessage());
 		}
 	}
 
@@ -4065,7 +4053,7 @@ public class QuskiOroService {
 			return null; 
 		}
 	}
-	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException {
+	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException, UnsupportedEncodingException {
 		try {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
 			entidad.setCedulaC( cliente.getCedulaCliente() );
@@ -4076,19 +4064,12 @@ public class QuskiOroService {
 			entidad.setPhoneMobile( cliente.getTelefonoMovil() );
 			entidad.setPhoneHome( cliente.getTelefonoFijo() );
 			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper( entidad );
-			try {
-				CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
-				if(pro != null) {
-					return true;
-				} else {
-					return false;
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
-			}
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
+			return pro != null ? Boolean.TRUE : Boolean.FALSE ;
 		}catch(RelativeException e ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(Constantes.ERROR_CODE_CREATE);
 		}
 	}
 	
@@ -4222,25 +4203,24 @@ public class QuskiOroService {
 			String portEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
 			String sfPortEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
 			String userEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
-			String fromEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmail).getValor();
+			String fromEmailDesa=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
 			String authEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
 			String passwordEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
-			 log.info("parametro email smtpHostServer==>>"+emailSecurityType);
-			 log.info("parametro email smtpHostServer==>>"+smtpHostServer);
-			 log.info("parametro email portEmail==>>"+portEmail);
-			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
-			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
-			 log.info("parametro email userEmail==>>"+userEmail);
-			 log.info("parametro email fromEmail==>>"+fromEmail);
-			 log.info("parametro email authEmail==>>"+authEmail);
-			 log.info("parametro email passwordEmail==>>"+passwordEmail);
+			 log.info("parametro email emailSecurityType ===> "+emailSecurityType);
+			 log.info("parametro email smtpHostServer    ===> "+smtpHostServer);
+			 log.info("parametro email portEmail         ===> "+portEmail);
+			 log.info("parametro email sfPortEmail       ===> "+sfPortEmail);
+			 log.info("parametro email userEmail         ===> "+userEmail);
+			 log.info("parametro email fromEmailDesa     ===> "+fromEmailDesa);
+			 log.info("parametro email authEmail         ===> "+authEmail);
+			 log.info("parametro email passwordEmail     ===> "+passwordEmail);
 			 if(adjunto != null) {
 				 EmailDefinition ed = new EmailDefinition.Builder()
 						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
 						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
 						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
 						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
-						  ) .fromEmail( fromEmail ) .message( contenido  )
+						  ) .fromEmail( fromEmailDesa ) .message( contenido )
 						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
 						  Transport.send(null, null, passwordEmail, passwordEmail);
@@ -4249,23 +4229,33 @@ public class QuskiOroService {
 				 EmailDefinition ed = new EmailDefinition.Builder()
 						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
 						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
-						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
-						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
-						  ) .fromEmail( fromEmail ) .message( contenido )
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail.equalsIgnoreCase("TRUE") ).password(passwordEmail)
+						  .user(userEmail).subject(asunto).tos( Arrays.asList(para) ) 
+						  .fromEmail( fromEmailDesa ) .message( contenido )
 						  .hasFiles(Boolean.FALSE).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
 						  EmailUtil.sendEmail( ed ); 
 			 }
 			
 		} catch (RelativeException e) {
-			log.info("=====>>> error en envio "+ e);
 			e.getStackTrace();
-			throw e;
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());			
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
-		
-    
+	}
+	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido, Map<java.lang.String,byte[]> adjunto) throws RelativeException {
+		try {
+			String[] array = new String[1];
+			array[0] = para;
+			
+			this.mailNotificacion(array, asunto, contenido, adjunto);
+			return Boolean.TRUE;
+		} catch (RelativeException e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());
+
+		}
 	}
 }

@@ -240,9 +240,9 @@ public class QuskiOroConstantes {
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
 	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
-	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR.";
-	public static final String CLIENTE_PAGO_NO_ENCONTRADO = "CLIENTE PAGO NO ENCONTRADO";	
-	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR ERVICIOS";
+	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
+	public static final String CLIENTE_PAGO_NO_ENCONTRADO = ": CLIENTE PAGO NO ENCONTRADO. -> ";	
+	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR SERVICIOS. -> ";
 
 	
 	// SOFTBANK
@@ -279,9 +279,10 @@ public class QuskiOroConstantes {
 	public static final String portEmail = "portEmail";
 	public static final String sfPortEmail = "sfPortEmail";
 	public static final String userEmail = "userEmail";
-	public static final String fromEmail = "fromEmail";
+	public static final String fromEmailDesa = "fromEmailDesa";
 	public static final String authEmail = "authEmail";
 	public static final String passwordEmail = "passwordEmail";
+	public static final String TIPO = "MAIL";
 	
 	
 

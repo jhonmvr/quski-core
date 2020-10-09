@@ -92,7 +92,7 @@ public class CrmApiClient {
 				CrmRespuestaPersistWrapper respuesta = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrmRespuestaPersistWrapper.class);
 				return respuesta.getEntidades().get(0); 
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				return null;
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
