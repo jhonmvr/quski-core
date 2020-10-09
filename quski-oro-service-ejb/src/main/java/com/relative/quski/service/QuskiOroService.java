@@ -4202,25 +4202,24 @@ public class QuskiOroService {
 			String portEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
 			String sfPortEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
 			String userEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
-			String fromEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmail).getValor();
+			String fromEmailDesa=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
 			String authEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
 			String passwordEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
-			 log.info("parametro email smtpHostServer==>>"+emailSecurityType);
-			 log.info("parametro email smtpHostServer==>>"+smtpHostServer);
-			 log.info("parametro email portEmail==>>"+portEmail);
-			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
-			 log.info("parametro email sfPortEmail==>>"+sfPortEmail);
-			 log.info("parametro email userEmail==>>"+userEmail);
-			 log.info("parametro email fromEmail==>>"+fromEmail);
-			 log.info("parametro email authEmail==>>"+authEmail);
-			 log.info("parametro email passwordEmail==>>"+passwordEmail);
+			 log.info("parametro email emailSecurityType ===> "+emailSecurityType);
+			 log.info("parametro email smtpHostServer    ===> "+smtpHostServer);
+			 log.info("parametro email portEmail         ===> "+portEmail);
+			 log.info("parametro email sfPortEmail       ===> "+sfPortEmail);
+			 log.info("parametro email userEmail         ===> "+userEmail);
+			 log.info("parametro email fromEmailDesa     ===> "+fromEmailDesa);
+			 log.info("parametro email authEmail         ===> "+authEmail);
+			 log.info("parametro email passwordEmail     ===> "+passwordEmail);
 			 if(adjunto != null) {
 				 EmailDefinition ed = new EmailDefinition.Builder()
 						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
 						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
 						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
 						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
-						  ) .fromEmail( fromEmail ) .message( contenido )
+						  ) .fromEmail( fromEmailDesa ) .message( contenido )
 						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
 						  EmailUtil.sendEmail( ed );  
@@ -4228,23 +4227,32 @@ public class QuskiOroService {
 				 EmailDefinition ed = new EmailDefinition.Builder()
 						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
 						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
-						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
-						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
-						  ) .fromEmail( fromEmail ) .message( contenido )
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail.equalsIgnoreCase("TRUE") ).password(passwordEmail)
+						  .user(userEmail).subject(asunto).tos( Arrays.asList(para) ) 
+						  .fromEmail( fromEmailDesa ) .message( contenido )
 						  .hasFiles(Boolean.FALSE).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
 						  EmailUtil.sendEmail( ed ); 
 			 }
 			
 		} catch (RelativeException e) {
-			log.info("=====>>> error en envio "+ e);
 			e.getStackTrace();
-			throw e;
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());			
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
-		
-    
+	}
+	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido) throws RelativeException {
+		try {
+			String[] array = new String[1];
+			array[0] = para;
+			this.mailNotificacion(array, asunto, contenido, null);
+			return Boolean.TRUE;
+		} catch (RelativeException e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());
+
+		}
 	}
 }
