@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -95,9 +96,9 @@ public class ArchivoClienteRestController extends BaseRestController
 	@GET
 	@Path("/enviarCorreoPrueba")
 	public GenericWrapper<Boolean> enviarCorreoPrueba(@QueryParam("para") String para,
-			@QueryParam("asunto") String asunto, @QueryParam("contenido") String contenido) throws RelativeException {
+			@QueryParam("asunto") String asunto, @QueryParam("contenido") String contenido, Map<String, byte[]> adjunto) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.qos.enviarCorreoPruebas(para, asunto, contenido);
+		Boolean a = this.qos.enviarCorreoPruebas(para, asunto, contenido,adjunto);
 		loc.setEntidad(a);
 		return loc;
 	}

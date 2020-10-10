@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -4191,6 +4192,7 @@ public class QuskiOroService {
 						  ) .fromEmail( fromEmailDesa ) .message( contenido )
 						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
 						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  Transport.send(null, null, passwordEmail, passwordEmail);
 						  EmailUtil.sendEmail( ed );  
 			 }else {
 				 EmailDefinition ed = new EmailDefinition.Builder()
@@ -4212,11 +4214,12 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
 	}
-	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido) throws RelativeException {
+	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido, Map<java.lang.String,byte[]> adjunto) throws RelativeException {
 		try {
 			String[] array = new String[1];
 			array[0] = para;
-			this.mailNotificacion(array, asunto, contenido, null);
+			
+			this.mailNotificacion(array, asunto, contenido, adjunto);
 			return Boolean.TRUE;
 		} catch (RelativeException e) {
 			e.getStackTrace();

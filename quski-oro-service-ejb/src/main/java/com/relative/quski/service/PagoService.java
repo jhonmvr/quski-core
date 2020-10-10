@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.sound.midi.MidiDevice.Info;
 import javax.ws.rs.GET;
 
 import org.olap4j.impl.ArrayMap;
@@ -156,15 +157,12 @@ public class PagoService {
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
 			
 			//falta enviar el correo electronico con la observacion al asesor
-			clientePago.getCedula();
-			clientePago.getNombreCliente();
-			clientePago.getCodigoCuentaMupi();
-			clientePago.getCodigoOperacion();
-			String contenido = (clientePago.toString());
-			Map<String,byte[]> adjunto = new ArrayMap<String, byte[]>();//= (LocalStorageClient);
-			String[] para= {"steed_corporation@hotmail.com", "hoscarly007@gmail.com"} ;
+			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
+			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+			String para= "hoscarly007@gmail.com" ;
 			String asunto = EstadoEnum.APROBADO.toString(); 
-			qos.mailNotificacion(para, asunto, contenido, adjunto);
+			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
+			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -186,7 +184,12 @@ public class PagoService {
 			clientePago.setEstado(EstadoEnum.RECHAZADO);
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
 			//falta enviar el correo electronico con la observacion al asesor
-			
+			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
+			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+			String para= "hoscarly007@gmail.com" ;
+			String asunto = EstadoEnum.APROBADO.toString(); 
+			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
+			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block

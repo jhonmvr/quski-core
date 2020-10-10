@@ -242,7 +242,7 @@ public class QuskiOroConstantes {
 	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
 	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
 	public static final String CLIENTE_PAGO_NO_ENCONTRADO = ": CLIENTE PAGO NO ENCONTRADO. -> ";	
-	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR ERVICIOS. -> ";
+	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR SERVICIOS. -> ";
 
 	
 	// SOFTBANK
