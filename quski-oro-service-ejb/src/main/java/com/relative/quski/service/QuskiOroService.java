@@ -1442,18 +1442,17 @@ public class QuskiOroService {
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
-			persisted.setTbQoCliente(send.getTbQoCliente());
-			persisted.setEstado(send.getEstado());
-			persisted.setIdAsesor(send.getIdAsesor());
-			persisted.setSituacion(send.getSituacion());
-			persisted.setTipo(send.getTipo());
-			persisted.setId(persisted.getId());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			if(send.getIdAsesor() != null ) {
+				persisted.setIdAsesor(send.getIdAsesor());				
+			}
+			if( send.getSituacion() != null ) {
+				persisted.setSituacion(send.getSituacion());				
+			}
+			persisted.setEstado( EstadoEnum.ACT );				
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			return negociacionRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
