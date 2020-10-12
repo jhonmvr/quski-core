@@ -150,11 +150,13 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoClientePago> aprobar(@QueryParam("id")  String id,@QueryParam("estado")  EstadoEnum estado) 
+	public GenericWrapper<TbQoClientePago> aprobar(@QueryParam("id")  String id,
+			@QueryParam("mail")  String mail,
+			@QueryParam("nombre")  String nombre) 
 			throws RelativeException {
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
 		Constantes.MSG_ERROR_BUSQUEDA.concat(id);	
-		loc.setEntidad( this.ps.aprobarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null, estado) );
+		loc.setEntidad( this.ps.aprobarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,nombre,mail) );
 		return loc;
 	}
 	
@@ -163,11 +165,13 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoClientePago> rechazar(@QueryParam("id")  String id, @QueryParam("estado")  EstadoEnum estado) 
+	public GenericWrapper<TbQoClientePago> rechazar(@QueryParam("id")  String id,
+			@QueryParam("mail")  String mail,
+			@QueryParam("nombre")  String nombre) 
 			throws RelativeException { 
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
 		Constantes.MSG_ERROR_BUSQUEDA.concat(id);
-		loc.setEntidad( this.ps.rechazarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,estado) );
+		loc.setEntidad( this.ps.rechazarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,nombre,mail) );
 		return loc;
 	}
 	

@@ -5,20 +5,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.sound.midi.MidiDevice.Info;
-import javax.ws.rs.GET;
 
 import org.olap4j.impl.ArrayMap;
 
 import com.google.gson.Gson;
-import com.hazelcast.cp.internal.datastructures.atomicref.client.SetMessageTask;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.bpms.api.LocalStorageClient;
@@ -29,14 +24,12 @@ import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.FileLocalStorage;
-import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 import com.relative.quski.wrapper.RegistroBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistroPagoWrapper;
-
-import net.sf.jasperreports.engine.convert.ConvertChartContext;
 
 @Stateless
 public class PagoService {
@@ -78,8 +71,8 @@ public class PagoService {
 					file.setProceso("REGISTRO_PAGO");
 					
 					LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
-							.getValor().concat(getQueryParametersNotificacion(UUID.randomUUID().toString(),
-									"TIPO_CLIENTE", "", listFile)),
+							.getValor().concat("?databaseName=").concat("localStorage&").concat("collectionName=").concat("col_file&").
+							concat("objectEncripted=").concat("el archivo en base 64"),
 							autorizacion);
 							 
 							 
@@ -146,23 +139,31 @@ public class PagoService {
 	}
 
 	
-	public TbQoClientePago aprobarPago(Long id, EstadoEnum estado) throws RelativeException {
+	public TbQoClientePago aprobarPago(Long id, String nombreAprobador, String mailAprobador) throws RelativeException {
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado);
-			if(clientePago == null) { 
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, EstadoEnum.PENDIENTE_APROBACION);
+			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
 			
 			clientePago.setEstado(EstadoEnum.APROBADO);
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
-			
-			//falta enviar el correo electronico con la observacion al asesor
-			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
-			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-			String para= "hoscarly007@gmail.com" ;
-			String asunto = EstadoEnum.APROBADO.toString(); 
-			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
-			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
+			try {
+				String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
+				textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoEnum.APROBADO.toString())
+						.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente()).replace("--Identificacion Cliente--", clientePago.getCedula())
+						.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
+						.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( pago.getFechaActualizacion()));
+				ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+				String[] para= {mailAprobador,"hoscarly007@gmail.com"};
+				
+				String asunto ="Aprobacion de solictud "+ EstadoEnum.APROBADO.toString(); 
+				log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
+				qos.mailNotificacion(para, asunto, textoContenido, null);
+			} catch (Exception e) {
+				log.info("----NO SE PUDO ENVIAR EL CORREO DE RECHAZAR PAGO----");
+				e.printStackTrace();
+			}
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -174,22 +175,31 @@ public class PagoService {
 		
 	}
 
-	public TbQoClientePago rechazarPago(Long id, EstadoEnum estado) throws RelativeException {
+	public TbQoClientePago rechazarPago(Long id,String nombreAprobador, String mailAprobador) throws RelativeException {
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, estado);
+			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, EstadoEnum.PENDIENTE_APROBACION);
 			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
 			
 			clientePago.setEstado(EstadoEnum.RECHAZADO);
 			TbQoClientePago pago = qos.manageClientePago(clientePago);
-			//falta enviar el correo electronico con la observacion al asesor
-			String contenido = (clientePago.getCedula()+" -- "+clientePago.getNombreCliente()+" -- "+clientePago.getCodigoCuentaMupi()+" -- "+clientePago.getCodigoOperacion());
-			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-			String para= "hoscarly007@gmail.com" ;
-			String asunto = EstadoEnum.APROBADO.toString(); 
-			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+contenido+"--"+adjunto);
-			qos.enviarCorreoPruebas(para, asunto, contenido, adjunto);
+			try {
+				String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
+				textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoEnum.RECHAZADO.toString())
+						.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente()).replace("--Identificacion Cliente--", clientePago.getCedula())
+						.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
+						.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( pago.getFechaActualizacion()));
+				ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
+				String[] para= {mailAprobador,"hoscarly007@gmail.com"};
+				
+				String asunto ="Aprobacion de solictud "+ EstadoEnum.RECHAZADO.toString(); 
+				log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
+				qos.mailNotificacion(para, asunto, textoContenido, null);
+			} catch (Exception e) {
+				log.info("----NO SE PUDO ENVIAR EL CORREO DE RECHAZAR PAGO----");
+				e.printStackTrace();
+			}
 			return pago;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
