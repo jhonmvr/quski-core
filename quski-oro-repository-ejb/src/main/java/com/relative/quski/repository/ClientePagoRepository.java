@@ -39,5 +39,5 @@ public interface ClientePagoRepository extends CrudRepository<Long, TbQoClienteP
 	 * @return TbQoClientePago
 	 * @throws RelativeException
 	 */
-	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado) throws RelativeException;
+	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo) throws RelativeException;
 }

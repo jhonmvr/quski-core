@@ -47,7 +47,7 @@ public class ClientePagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCli
 
 
 	@Override
-	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado)
+	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo)
 			throws RelativeException {
 		try {
 			List<TbQoClientePago> tmp;
