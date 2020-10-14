@@ -28,7 +28,7 @@ public class DocumentoById extends AbstractSpecification<TbQoDocumentoHabilitant
 
 	@Override
 	public Predicate toPredicate(Root<TbQoDocumentoHabilitante> poll, CriteriaBuilder cb) {
-		List<Predicate> where = new ArrayList<Predicate>();
+		List<Predicate> where = new ArrayList<>();
 		if (this.id != null) {
 			where.add(cb.equal(poll.<Long>get("id"), this.id));
 		}
