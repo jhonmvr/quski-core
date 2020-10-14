@@ -232,15 +232,60 @@ public class QuskiOroConstantes {
 	public static final String MONEDA = "MONEDA";
 	
 	// MENSAJES DE EXCEPCIONES
-	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA";
-	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "ERROR AL REALIZAR BUSQUEDA";
-	public static final String ERROR_AL_REALIZAR_CREACION = "ERROR AL REALIZAR CREACION";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "ERROR AL REALIZAR ACTUALIZACION";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = "ERROR AL REALIZAR ACTUALIZACION O CREACION";
-	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR.";
+	public static final String ACCION_NO_ENCONTRADA = ": ACCION NO ENCONTRADA -> ";
+	public static final String ERROR_AL_REALIZAR_BUSQUEDA = ": ERROR AL REALIZAR BUSQUEDA -> ";
+	public static final String ERROR_AL_REALIZAR_CREACION = ": ERROR AL REALIZAR CREACION -> ";
+	public static final String ERROR_CREATE_CLIENTE = ": ERROR AL CREAR AL CLIENTE -> ";
+	public static final String ERROR_NEGOCIACION = ": ERROR AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
+	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
+	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
+	public static final String CLIENTE_PAGO_NO_ENCONTRADO = ": CLIENTE PAGO NO ENCONTRADO. -> ";	
+	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR SERVICIOS. -> ";
+
 	
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
+	public static final Integer TIPO_CEDULA = 1;
+	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
+	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
+	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "http://201.183.238.73:1991/api/cliente/consultar";
+	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/crear";
+	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
+
+	// INTEGRACION
+	public static final String URL_PERSONA ="http://localhost:8080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
+	public static final String PARAMETRO_1 ="?tipoIdentificacion=";
+	public static final String PARAMETRO_2 ="&identificacion=";
+	public static final String PARAMETRO_3 ="&tipoConsulta=";
+	public static final String PARAMETRO_4 ="&calificacion=";
+
+	// CRM SERVICES 
+	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
+	public static final String URL_CRM_PERSIST ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/persistEntity";
+
+	
+	//STORAGE
+	public static final String collectionName = "collectionName";
+	public static final String databaseName = "databaseName";
+	public static final String URL_STORAGE = "URL_STORAGE";
+	
+	//PAGO SERVICE
+	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = "ERROR AL INTENTAR LEER LA INFORMACION";
+	//E-MAIL
+	public static final String emailSecurityType = "emailSecurityType";
+	public static final String smtpHostServer = "smtpHostServer";
+	public static final String portEmail = "portEmail";
+	public static final String sfPortEmail = "sfPortEmail";
+	public static final String userEmail = "userEmail";
+	public static final String fromEmailDesa = "fromEmailDesa";
+	public static final String authEmail = "authEmail";
+	public static final String passwordEmail = "passwordEmail";
+	public static final String TIPO = "MAIL";
+	public static final String TEXTO_APROBACION_PAGO = "TEXTO_APROBACION_PAGO";
+	
+	
 
   
 }

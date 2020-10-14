@@ -38,9 +38,14 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 
 	@Inject
 	QuskiOroService qos;
-	@Override
-	public void deleteEntity(String arg0) throws RelativeException {
 
+	@GET
+	@Path("/eliminarJoya")
+	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
+		TbQoTasacion a = this.qos.eliminarJoya(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
 	}
 
 	@Override
@@ -137,6 +142,12 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 			plw.setList(actions);
 		}
 		return plw;
+	}
+
+	@Override
+	public void deleteEntity(String arg0) throws RelativeException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -1,9 +1,12 @@
+
 package com.relative.quski.service;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,33 +15,44 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.enums.EmailSecurityTypeEnum;
+import com.relative.core.util.mail.EmailDefinition;
+import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.ApiGatewayClient;
+import com.relative.quski.bpms.api.CrmApiClient;
+import com.relative.quski.bpms.api.IntegracionApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SituacionEnum;
+import com.relative.quski.enums.TipoRubroEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
 import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoExcepcione;
-import com.relative.quski.model.TbQoFunda;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTipoArchivo;
@@ -46,20 +60,23 @@ import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.ArchivoClienteRepository;
+import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
 import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
-import com.relative.quski.repository.FundaRepository;
 import com.relative.quski.repository.IngresoEgresoClienteRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
+import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
+import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
@@ -68,18 +85,35 @@ import com.relative.quski.repository.TrackingRepository;
 import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
-import com.relative.quski.repository.spec.FundaByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
+import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
+import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.CrmEntidadWrapper;
+import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
+import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
+import com.relative.quski.wrapper.CrmProspectoWrapper;
+import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.IntegracionDatosClienteWrapper;
+import com.relative.quski.wrapper.IntegracionEntidadWrapper;
+import com.relative.quski.wrapper.IntegracionRubroWrapper;
+import com.relative.quski.wrapper.IntegracionVariableWrapper;
+import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
+import com.relative.quski.wrapper.SoftbankClienteWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankOperacionWrapper;
+import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
+import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
+import com.relative.quski.wrapper.TokenWrapper;
 
 @Stateless
 public class QuskiOroService {
-	String mensaje = "ERROR: AL BUSCAR CLIENTE CON IDENTIFICACION: ";
 	@Inject
 	Logger log;
 	@Inject
@@ -124,10 +158,15 @@ public class QuskiOroService {
 	private DireccionClienteRepository direccionClienteRepository;
 	@Inject
 	private ExcepcionesRepository excepcionesRepository;
+
 	@Inject
-	private FundaRepository fundaRepository;
+	private ClientePagoRepository clientePagoRepository;
 	@Inject
-	private SoftBankApiClient sbapiclient;
+	private RegistrarPagoRepository registrarPagoRepository;
+	@Inject
+	private ExcepcionRolRepository excepcionRolRepository;
+	@Inject
+	private ProcesoRepository procesoRepository;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -144,9 +183,11 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @param pw
@@ -167,9 +208,11 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @return
@@ -179,9 +222,11 @@ public class QuskiOroService {
 		try {
 			return clienteRepository.countAll(TbQoCliente.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @param send
@@ -190,9 +235,9 @@ public class QuskiOroService {
 	 */
 	public TbQoCliente manageCliente(TbQoCliente send) throws RelativeException {
 		try {
-			if( send.getCedulaCliente() != null ) {
+			if (send.getCedulaCliente() != null) {
 				TbQoCliente persisted = this.clienteRepository.findClienteByIdentificacion(send.getCedulaCliente());
-				if(persisted != null && persisted.getId() != null) {
+				if (persisted != null && persisted.getId() != null) {
 					return this.updateCliente(send, persisted);
 				} else {
 					send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
@@ -200,27 +245,38 @@ public class QuskiOroService {
 					return clienteRepository.add(send);
 				}
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION );
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * @author Developer Twelve
-	 * @param  TbQoCliente send
-	 * @param  TbQoCliente persisted
+	 * @param TbQoCliente send
+	 * @param TbQoCliente persisted
 	 * @return TbQoCliente
 	 * @throws RelativeException
 	 */
 	public TbQoCliente updateCliente(TbQoCliente send, TbQoCliente persisted) throws RelativeException {
 		try {
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado( EstadoEnum.ACT );
-			if (!StringUtils.isEmpty(send.getActividadEconomica())) {persisted.setActividadEconomica(send.getActividadEconomica());}
-			if (!StringUtils.isEmpty(send.getPrimerNombre())) {persisted.setPrimerNombre(send.getPrimerNombre());}
-			if (!StringUtils.isEmpty(send.getSegundoNombre())) {persisted.setSegundoNombre(send.getSegundoNombre());}
-			if (!StringUtils.isEmpty(send.getApoderadoCliente())) {persisted.setApoderadoCliente(send.getApoderadoCliente());}
+			persisted.setEstado(EstadoEnum.ACT);
+			if (!StringUtils.isEmpty(send.getActividadEconomica())) {
+				persisted.setActividadEconomica(send.getActividadEconomica());
+			}
+			if (!StringUtils.isEmpty(send.getPrimerNombre())) {
+				persisted.setPrimerNombre(send.getPrimerNombre());
+			}
+			if (!StringUtils.isEmpty(send.getSegundoNombre())) {
+				persisted.setSegundoNombre(send.getSegundoNombre());
+			}
+			if (!StringUtils.isEmpty(send.getApoderadoCliente())) {
+				persisted.setApoderadoCliente(send.getApoderadoCliente());
+			}
 			if (!StringUtils.isEmpty(send.getCampania())) {
 				persisted.setCampania(send.getCampania());
 			}
@@ -275,12 +331,10 @@ public class QuskiOroService {
 			if (send.getRelacionDependencia() != null) {
 				persisted.setRelacionDependencia(send.getRelacionDependencia());
 			}
-			if (send.getEdad() != null) {
-				persisted.setEdad(send.getEdad());
-			}
 			return clienteRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -298,7 +352,7 @@ public class QuskiOroService {
 				try {
 					this.manageDireccionCliente(dc);
 				} catch (RelativeException e) {
-					errores.put("direccion-" + dc.getCallePrincipal(), "Error registro direccion " + e.getMensaje());
+					errores.put("direccion-" + dc.getCallePrincipal(), "ERROR REGISTRO DIRRECION" + e.getMensaje());
 				}
 			});
 		}
@@ -320,7 +374,8 @@ public class QuskiOroService {
 				try {
 					this.manageIngresoEgresoCliente(ie);
 				} catch (RelativeException e) {
-					errores.put("Ingreso Egreso-" + ie.getTbQoCliente(), "Error registro IngresoEgreso " + e.getMensaje());
+					errores.put("Ingreso Egreso-" + ie.getTbQoCliente(),
+							"ERROR REGISTRO INGRESOS EGRESOS " + e.getMensaje());
 				}
 			});
 		}
@@ -341,7 +396,7 @@ public class QuskiOroService {
 				try {
 					this.managePatrimonio(pa);
 				} catch (RelativeException e) {
-					errores.put("Patrimonio-" + pa.getTbQoCliente(), "Error registro Patrimonio " + e.getMensaje());
+					errores.put("Patrimonio-" + pa.getTbQoCliente(), "ERROR REGISTRO PATRIMONIO" + e.getMensaje());
 				}
 			});
 		}
@@ -373,7 +428,7 @@ public class QuskiOroService {
 	/**
 	 * 
 	 * @param cliente
-	 * @param idNegociacion 
+	 * @param idNegociacion
 	 * @return
 	 * @throws RelativeException
 	 */
@@ -382,18 +437,14 @@ public class QuskiOroService {
 			RespuestaCrearClienteWrapper respuesta = null;
 			TbQoCliente locCliente = this.manageCliente(cliente);
 			this.crearRelacionesCliente(cliente, locCliente);
-			if( idNegociacion != null) {
+			if (idNegociacion != null) {
 				respuesta = new RespuestaCrearClienteWrapper();
 				respuesta.setIdNegociacion(idNegociacion);
-				List<TbQoCreditoNegociacion> creditos = creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
-				if(creditos != null) {
-					Integer numeroCreditos = creditos.size();
-					if(numeroCreditos ==1) {
-						respuesta.setIdCredito(creditos.get(0).getId());
-					}
-					
-					respuesta.setNumeroCreditos(numeroCreditos.longValue());
-				}else {
+				TbQoCreditoNegociacion credito = creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+				if (credito != null) {
+					respuesta.setIdCredito(credito.getId());
+					respuesta.setNumeroCreditos(Long.valueOf("1"));
+				} else {
 					respuesta.setNumeroCreditos(Long.valueOf("0"));
 				}
 			}
@@ -401,10 +452,12 @@ public class QuskiOroService {
 		} catch (NumberFormatException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION  + e.getMensaje());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje());
 		}
 
 	}
+
 	/**
 	 * @param cliente
 	 * @param locCliente
@@ -415,84 +468,61 @@ public class QuskiOroService {
 			Map<String, String> erroresDireccion;
 			erroresDireccion = this.createDireccionesCliente(locCliente, cliente.getTbQoDireccionClientes());
 			if (erroresDireccion.size() > 0) {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresDireccion.toString());
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresDireccion.toString());
 			}
-			Map<String, String> erroresIngresoEgreso = this.createIngresoEgresoCliente(locCliente, cliente.getTbQoIngresoEgresoClientes());
+			Map<String, String> erroresIngresoEgreso = this.createIngresoEgresoCliente(locCliente,
+					cliente.getTbQoIngresoEgresoClientes());
 			if (erroresIngresoEgreso.size() > 0) {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION  + erroresIngresoEgreso.toString());
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresIngresoEgreso.toString());
 			}
-			Map<String, String> erroresPatrimonio = this.createPatrimonioCliente(locCliente, cliente.getTbQoPatrimonios());
+			Map<String, String> erroresPatrimonio = this.createPatrimonioCliente(locCliente,
+					cliente.getTbQoPatrimonios());
 			if (erroresPatrimonio.size() > 0) {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION  + erroresPatrimonio.toString());
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresPatrimonio.toString());
 			}
-			Map<String, String> erroresReferencia = this.createReferenciasPersonales(locCliente, cliente.getTbQoReferenciaPersonals());
+			Map<String, String> erroresReferencia = this.createReferenciasPersonales(locCliente,
+					cliente.getTbQoReferenciaPersonals());
 			if (erroresReferencia.size() > 0) {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION  + erroresReferencia.toString());
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresReferencia.toString());
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 		}
 	}
 
 	/**
 	 * * * * * * * * * * * @COTIZADOR
 	 */
-
-	/**
-	 * 
-	 * @author Developer Twelve
-	 * @param  Long id
-	 * @return TbQoCotizador
-	 * @throws RelativeException
-	 */
 	public TbQoCotizador findCotizadorById(Long id) throws RelativeException {
 		try {
 			return cotizadorRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
-	/**
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion
-	 * @return {@link TbQoPrecioOro}
-	 * @throws RelativeException
-	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		po.setTbQoCotizador(cot);
 		return this.managePrecioOro(po);
 	}
 
-	/**
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param id
-	 * @return {@link TbQoPrecioOro}
-	 * @throws RelativeException
-	 */
 	public TbQoPrecioOro eliminarPrecioOro(Long id) throws RelativeException {
 		TbQoPrecioOro precioOro = this.precioOroRepository.findById(id);
 		precioOro.setEstado(EstadoEnum.INA);
 		try {
 			return this.precioOroRepository.update(precioOro);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-		
-	}
 
-	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
-	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION PARA RECUPERAR LOS PRECIOS ORO
-	 * 
-	 * @param pw
-	 * @param idCotizador
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
+	}
 
 	public List<TbQoPrecioOro> findByIdCotizacion(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
@@ -530,7 +560,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -556,7 +587,8 @@ public class QuskiOroService {
 			}
 
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 
 	}
@@ -598,9 +630,11 @@ public class QuskiOroService {
 			persisted.setCodigoCotizacion(cod);
 			return this.cotizadorRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @param send
@@ -613,12 +647,14 @@ public class QuskiOroService {
 			persisted.setGradoInteres(send.getGradoInteres());
 			persisted.setMotivoDeDesestimiento(send.getMotivoDeDesestimiento());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado( EstadoEnum.ACT );
+			persisted.setEstado(EstadoEnum.ACT);
 			return this.cotizadorRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @param send
@@ -628,19 +664,21 @@ public class QuskiOroService {
 	public TbQoCotizador manageCotizador(TbQoCotizador send) throws RelativeException {
 		try {
 			if (send != null && send.getId() != null) {
-				TbQoCotizador persisted = this.cotizadorRepository.findById( send.getId() );
+				TbQoCotizador persisted = this.cotizadorRepository.findById(send.getId());
 				return this.updateCotizador(send, persisted);
 
 			} else {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-				TbQoCotizador cotSinCotido = this.cotizadorRepository.add( send );
-				return crearCodigoCotizacion( cotSinCotido );
+				TbQoCotizador cotSinCotido = this.cotizadorRepository.add(send);
+				return crearCodigoCotizacion(cotSinCotido);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @return
@@ -650,47 +688,49 @@ public class QuskiOroService {
 		try {
 			return cotizadorRepository.countAll(TbQoCotizador.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	/**
-	 * * * * * * * * * * * @DETALLE @CREDITO
-	 */
+
+	/** * * * * * * * * * * * @DETALLE @CREDITO */
 	/**
 	 * 
 	 * @author Jeroham Cadenas - Developer Twelve
-	 * @param  PaginatedWrapper pw
-	 * @param  Long idCotizador
+	 * @param PaginatedWrapper pw
+	 * @param Long             idCotizador
 	 * @return List<TbQoDetalleCredito>
 	 * @throws RelativeException
 	 */
 	public List<TbQoDetalleCredito> listByIdCotizador(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
 		try {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador( idCotizador, pw.getStartRecord(),
+				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador(idCotizador, pw.getStartRecord(),
 						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 			} else {
-				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador( idCotizador );					
+				return this.detalleCreditoRepository.findDetalleCreditoByIdCotizador(idCotizador);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
-	 * @author  Jeroham Cadenas - Developer Twelve
-	 * @param 	Long idCotizador
-	 * @return	Long
-	 * @throws  RelativeException
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param Long idCotizador
+	 * @return Long
+	 * @throws RelativeException
 	 */
-	public Long countListByIdCotizador( Long idCotizador ) throws RelativeException {
+	public Long countListByIdCotizador(Long idCotizador) throws RelativeException {
 		try {
-			return detalleCreditoRepository.countByIdCotizador( idCotizador );
+			return detalleCreditoRepository.countByIdCotizador(idCotizador);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
 
 	/**
 	 * 
@@ -703,7 +743,8 @@ public class QuskiOroService {
 		try {
 			return detalleCreditoRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -732,37 +773,40 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	public List<TbQoDetalleCredito> manageDetalleCreditos(List<TbQoDetalleCredito> sends) {
 		List<TbQoDetalleCredito> persisteds = new ArrayList<>();
-		sends.forEach(element ->{
-			element.setEstado( EstadoEnum.ACT );
-			element.setId( null );
-			element.setFechaCreacion( new Date(System.currentTimeMillis()) );
+		sends.forEach(element -> {
+			element.setEstado(EstadoEnum.ACT);
+			element.setId(null);
+			element.setFechaCreacion(new Date(System.currentTimeMillis()));
 			try {
-				persisteds.add( this.relacionarCotizadorAndCliente(element) );
+				persisteds.add(this.relacionarCotizadorAndCliente(element));
 			} catch (RelativeException e) {
 				e.printStackTrace();
 			}
 		});
 		return persisteds;
 	}
+
 	/**
-	 * @author 	Jeroham Cadenas - Developer Twelve
-	 * @param 	persisteds
-	 * @param 	element
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param persisteds
+	 * @param element
 	 */
 	private TbQoDetalleCredito relacionarCotizadorAndCliente(TbQoDetalleCredito element) throws RelativeException {
 		try {
-			if(element.getTbQoCotizador() != null) {
-				this.manageCotizador( element.getTbQoCotizador() );
-				if ( element.getTbQoCotizador().getTbQoCliente() != null ) {
-					this.manageCliente( element.getTbQoCotizador().getTbQoCliente() );							
+			if (element.getTbQoCotizador() != null) {
+				this.manageCotizador(element.getTbQoCotizador());
+				if (element.getTbQoCotizador().getTbQoCliente() != null) {
+					this.manageCliente(element.getTbQoCotizador().getTbQoCliente());
 				}
-			}					
-			return this.detalleCreditoRepository.add( element );
+			}
+			return this.detalleCreditoRepository.add(element);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
@@ -785,17 +829,18 @@ public class QuskiOroService {
 				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.updateDetalleCredito(send, persisted);
 			} else if (send.getId() == null) {
-				send.setEstado( EstadoEnum.ACT);
+				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return detalleCreditoRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION );
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
-	
 
 	/**
 	 * Metodo que actualiza la entidad
@@ -811,12 +856,13 @@ public class QuskiOroService {
 	public TbQoDetalleCredito updateDetalleCredito(TbQoDetalleCredito send, TbQoDetalleCredito persisted)
 			throws RelativeException {
 		try {
-			
+
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado( EstadoEnum.ACT );
+			persisted.setEstado(EstadoEnum.ACT);
 			return detalleCreditoRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -831,7 +877,8 @@ public class QuskiOroService {
 		try {
 			return detalleCreditoRepository.countAll(TbQoDetalleCredito.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -853,7 +900,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -880,7 +928,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -899,13 +948,15 @@ public class QuskiOroService {
 				return this.updatePrecioOro(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado( EstadoEnum.ACT );
+				send.setEstado(EstadoEnum.ACT);
 				return precioOroRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -924,10 +975,11 @@ public class QuskiOroService {
 			persisted.setPrecio(send.getPrecio());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(EstadoEnum.ACT);
-			persisted.setTipoOro( send.getTipoOro());
+			persisted.setTipoOro(send.getTipoOro());
 			return precioOroRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -942,22 +994,24 @@ public class QuskiOroService {
 		try {
 			return precioOroRepository.countAll(TbQoPrecioOro.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
 	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION Y TAMBIEN AL CLIENTE.
+	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION Y TAMBIEN AL
+	 * CLIENTE.
 	 * 
 	 * @author Jeroham Cadenas - Developer Twelve
-	 * @param  PaginatedWrapper pw
-	 * @param  String cedula
+	 * @param PaginatedWrapper pw
+	 * @param String           cedula
 	 * @return List<TbQoPrecioOro>
 	 * @throws RelativeException
 	 */
 	public List<TbQoPrecioOro> listByCedula(PaginatedWrapper pw, String cedula) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			
+
 			return precioOroRepository.findByCedula(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
 					pw.getSortDirections(), cedula);
 
@@ -968,8 +1022,8 @@ public class QuskiOroService {
 
 	/**
 	 * 
-	 * @author Jeroham Cadenas - Developer Twelve 
-	 * @param  String cedula
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param String cedula
 	 * @return Long
 	 * @throws RelativeException
 	 */
@@ -979,69 +1033,53 @@ public class QuskiOroService {
 	}
 
 	/**
-	 * * * * * * * * * * * @VARIABLE @CREDITICIA
-	 */
-	public List<TbQoVariablesCrediticia> manageListVariablesCrediticias( List<TbQoVariablesCrediticia> send ) throws RelativeException {
-		try {
-			List<TbQoVariablesCrediticia> persisted = new ArrayList<>();
-			send.forEach(element ->{
-				element.setEstado( EstadoEnum.ACT );
-				element.setId( null );
-				element.setFechaCreacion( new Date(System.currentTimeMillis()) );
-				if(element.getTbQoCotizador() != null) {
-					try {
-						persisted.add( this.variablesCrediticiaRepository.add( element ));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			return persisted;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
-		}
-	}
-	/**
 	 ************************************ @Cliente
 	 */
+
+	private TbQoCliente createCliente(String cedula) throws RelativeException {
+		try {
+			TbQoCliente cliente = this.findClienteByIdentifiacion(cedula);
+			if (cliente != null) {
+				log.info("CLIENTE EN BASE =================>   " + cliente + "   <===========");
+				return this.manageCliente(cliente);
+			} else {
+				cliente = this.clienteSoftToTbQoCliente(this.findClienteSoftbank(cedula));
+				if (cliente != null) {
+					log.info("CLIENTE EN SOFTBANK =============>   " + cliente + "   <=============");
+					return this.manageCliente(cliente);
+				} else {
+					cliente = this.prospectoCrmToTbQoCliente(this.findProspectoCrm(cedula));
+					if (cliente != null) {
+						log.info("CLIENTE EN CRM ===================>   " + cliente + "   <==============");
+						return this.manageCliente(cliente);
+					} else {
+						return null;
+					}
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_CREATE_CLIENTE + e.getMensaje());
+		}
+
+	}
 
 	/**
 	 * Metodo que busca al cliente por el numero de cedula del cliente
 	 * 
 	 * @author SAUL MENDEZ - Relative Engine
 	 * @update Jeroham Cadenas - Developer Twelve
-	 * @param  String identificacion
+	 * @param String identificacion
 	 * @return TbQoCliente
 	 * @throws RelativeException
 	 */
 	public TbQoCliente findClienteByIdentifiacion(String identificacion) throws RelativeException {
 		try {
-			return this.clienteRepository.findClienteByIdentificacion( identificacion );
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, this.mensaje + identificacion);
-		}
-
-	}
-	/**
-	 * METODO QUE BUSCA LA COTIZACION ACTIVA
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param cotizador
-	 * @param estadoEnum
-	 * @return TbQoCotizador
-	 * @throws RelativeException
-	 */
-	public TbQoCotizador findCotizadorByIdAndEstado(TbQoCotizador cotizador) throws RelativeException {
-		TbQoCotizador cotizacion = new TbQoCotizador();
-		try {
-			if (cotizador != null && cotizador.getEstado().equals(EstadoEnum.ACT)) {
-				cotizacion = this.cotizadorRepository.findById(cotizador.getId());
-			}
-
+			return this.clienteRepository.findClienteByIdentificacion(identificacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ + " Mi error EN SERVICE -> " + identificacion);
 		}
-		return cotizacion;
 
 	}
 
@@ -1061,7 +1099,8 @@ public class QuskiOroService {
 				return tmp;
 			}
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 		return null;
 
@@ -1096,6 +1135,37 @@ public class QuskiOroService {
 			String correo, EstadoEnum estado) throws RelativeException {
 		return this.clienteRepository.findByParams(pw, identificacion, primerNombre, apellidoPaterno, segundoNombre,
 				apellidoMaterno, telefono, celular, correo, estado);
+	}
+
+	/**
+	 * * * * * * * * * * * @VARIABLE @CREDITICIA
+	 */
+	public List<TbQoVariablesCrediticia> manageListVariablesCrediticias(List<TbQoVariablesCrediticia> send)
+			throws RelativeException {
+		try {
+			List<TbQoVariablesCrediticia> persisted = new ArrayList<>();
+			send.forEach(element -> {
+				element.setEstado(EstadoEnum.ACT);
+				element.setId(null);
+				element.setFechaCreacion(new Date(System.currentTimeMillis()));
+				if (element.getTbQoCotizador() != null) {
+					try {
+						persisted.add(this.variablesCrediticiaRepository.add(element));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (element.getTbQoNegociacion() != null) {
+					try {
+						persisted.add(this.variablesCrediticiaRepository.add(element));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return persisted;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		}
 	}
 
 	/**
@@ -1145,7 +1215,8 @@ public class QuskiOroService {
 		try {
 			return variablesCrediticiaRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1181,7 +1252,8 @@ public class QuskiOroService {
 		try {
 			return variablesCrediticiaRepository.countAll(TbQoVariablesCrediticia.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 
 	}
@@ -1210,13 +1282,14 @@ public class QuskiOroService {
 				}
 				return variablesCrediticiaRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
-	
 
 	private TbQoVariablesCrediticia updateVariablesCrediticia(TbQoVariablesCrediticia send,
 			TbQoVariablesCrediticia persisted) throws RelativeException {
@@ -1234,7 +1307,8 @@ public class QuskiOroService {
 
 			return this.variablesCrediticiaRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -1250,9 +1324,14 @@ public class QuskiOroService {
 		try {
 			return variablesCrediticiaRepository.findByIdNegociacion(idNegociacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
+	/**
+	 * * * * * * * * * * * @NEGOCIACION
+	 */
 
 	/**
 	 * @author Desconocido - Creacion
@@ -1264,12 +1343,12 @@ public class QuskiOroService {
 	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
-		
+
 		try {
-			log.info("ID QUE INGRESA findNegociacionById===> "+id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1293,7 +1372,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1307,83 +1387,240 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-				send.setProcesoActual( ProcesoEnum.TASACION.toString() );
-				send.setSituacion( SituacionEnum.CANCELADO );
-				if(send.getTbQoCliente().getId() == null) {
+				send.setSituacion(SituacionEnum.EN_PROCESO);
+				if (send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
 				return negociacionRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
 	}
+
 	/**
-	 * @author 	Jeroham Cadenas - Actualizacion
-	 * @param 	Long id
-	 * @return 	TbQoNegociacion
-	 * @throws 	RelativeException
-	 * @comment Finaliza una negociacion en caso de que sea completado el flujo de negociacion.
+	 * @author Jeroham Cadenas - Actualizacion
+	 * @param Long id
+	 * @return TbQoNegociacion
+	 * @throws RelativeException
+	 * @comment Finaliza una negociacion en caso de que sea completado el flujo de
+	 *          negociacion.
 	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion finalizarNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
 			TbQoNegociacion persisted = null;
-			persisted = this.findNegociacionById( send.getId() );
-			persisted.setSituacion( SituacionEnum.FINALIZADO );
-			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			persisted = this.findNegociacionById(send.getId());
+			persisted.setSituacion(SituacionEnum.FINALIZADO);
+			persisted.setFechaActualizacion(new Date(System.currentTimeMillis()));
 			return negociacionRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
-	 * @author 	Jeroham Cadenas - Actualizacion
-	 * @param 	Long id
-	 * @return 	TbQoNegociacion
-	 * @throws 	RelativeException
-	 * @comment Cancela una negociacion en caso de que se detenga el flujo de negociacion.
+	 * @author Jeroham Cadenas - Actualizacion
+	 * @param Long id
+	 * @return TbQoNegociacion
+	 * @throws RelativeException
+	 * @comment Cancela una negociacion en caso de que se detenga el flujo de
+	 *          negociacion.
 	 * @comment Preguntar antes de editar.
 	 */
 	public TbQoNegociacion cancelarNegociacion(TbQoNegociacion send) throws RelativeException {
 		try {
 			TbQoNegociacion persisted = null;
-			persisted = this.findNegociacionById( send.getId() );
-			persisted.setSituacion( SituacionEnum.CANCELADO );
-			persisted.setFechaActualizacion( new Date(System.currentTimeMillis()) );
+			persisted = this.findNegociacionById(send.getId());
+			persisted.setSituacion(SituacionEnum.CANCELADO);
+			persisted.setFechaActualizacion(new Date(System.currentTimeMillis()));
 			return negociacionRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
-		}
-	}
-	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
-			throws RelativeException {
-		try {
-			persisted.setTbQoCliente(send.getTbQoCliente());
-			persisted.setEstado(send.getEstado());
-			persisted.setAsesorResponsable(send.getAsesorResponsable());
-			persisted.setIdAsesorResponsable(send.getIdAsesorResponsable());
-			persisted.setProcesoActual(send.getProcesoActual());
-			persisted.setSituacion(send.getSituacion());
-			persisted.setTipo(send.getTipo());
-			persisted.setId(persisted.getId());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			return negociacionRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
+	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
+			throws RelativeException {
+		try {
+			if(send.getIdAsesor() != null ) {
+				persisted.setIdAsesor(send.getIdAsesor());				
+			}
+			if( send.getSituacion() != null ) {
+				persisted.setSituacion(send.getSituacion());				
+			}
+			persisted.setEstado( EstadoEnum.ACT );				
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			return negociacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * * * * * * * * * * * @TASACION
+	 */
 	public TbQoTasacion findTasacionById(Long id) throws RelativeException {
 		try {
 			return tasacionRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
+	}
+
+	/**
+	 * * * * * * * * * * * @NEGOCIACION_WRAPPER
+	 */
+	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor) throws RelativeException {
+		try {
+
+			TbQoCliente cliente = this.createCliente( cedula );
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
+			} else {
+				return new NegociacionWrapper(false);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
+		}
+	}
+
+	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor) throws RelativeException {
+		try {
+ 			TbQoCliente cliente = this.createClienteFromEquifax( this.traerEntidadPersonaEquifax( cedula ) ); 
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
+			} else {
+				return new NegociacionWrapper(false);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
+		}
+	}
+
+	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor) throws RelativeException {
+		try {
+ 
+			TbQoCliente cliente = this.findClienteByCotizador( id );
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
+			} else {
+				return new NegociacionWrapper(false);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
+		}
+	}
+
+	private TbQoCliente findClienteByCotizador(Long id) throws RelativeException {
+		try {
+			TbQoCotizador cot = this.findCotizadorById(id);
+			if (cot != null) {
+				return this.findClienteByIdentifiacion(cot.getTbQoCliente().getCedulaCliente());
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Trae las negociaciones existentes
+	 * 
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
+	public NegociacionWrapper traerNegociacionExistente(Long id) throws RelativeException {
+		try {
+			NegociacionWrapper tmp = new NegociacionWrapper();
+			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
+			if (tmp.getCredito() != null) {
+				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(id));
+				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(id));
+				tmp.setJoyas(this.tasacionRepository.findByIdNegociacion(id));
+				tmp.setExcepciones(this.excepcionesRepository.findByIdNegociacion(id));
+				tmp.setRespuesta(true);
+				return tmp;
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+		}
+	}
+
+	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor) throws RelativeException {
+		try {
+			NegociacionWrapper wrapper = new NegociacionWrapper();
+			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor);
+			List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente());
+			List<IntegracionVariableWrapper> variables = this
+					.traerVariablesEquifax(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
+
+			wrapper.setCredito(credito);
+			wrapper.setRiesgos(this.createRiesgoFrontSoftBank(riesgos, credito.getTbQoNegociacion()));
+			wrapper.setVariables(this.createVariablesFromEquifax(variables, credito.getTbQoNegociacion()));
+			wrapper.setExcepcionBre(this.traerExcepcionEquifax(cliente.getCedulaCliente()));
+			wrapper.setRespuesta(true);
+			if (wrapper.getCredito() != null) {
+
+				this.guardarProspectoCrm(cliente);
+				return wrapper;
+			} else {
+				return new NegociacionWrapper(false);
+			}
+
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
+
+		}
+
+	}
+
+	private TbQoCreditoNegociacion createCredito(TbQoCliente cl, String asesor) throws RelativeException {
+		try {
+			if (cl != null) {
+				TbQoNegociacion ng = new TbQoNegociacion();
+				ng.setIdAsesor(asesor);
+				ng.setTbQoCliente(cl);
+				TbQoNegociacion negociacion = this.manageNegociacion(ng);
+				if (negociacion != null) {
+					TbQoCreditoNegociacion cr = new TbQoCreditoNegociacion();
+					cr.setIdUsuario(asesor);
+					cr.setTbQoNegociacion(negociacion);
+					return this.manageCreditoNegociacion(cr);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+							QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				}
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
+
+		}
+
 	}
 
 	public List<TbQoTasacion> findAllTasacion(PaginatedWrapper pw) throws RelativeException {
@@ -1404,7 +1641,8 @@ public class QuskiOroService {
 		try {
 			return tasacionRepository.countAll(TbQoTasacion.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1415,14 +1653,16 @@ public class QuskiOroService {
 				persisted = this.findTasacionById(send.getId());
 				return this.updateTasacion(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				send.setFechaActualizacion(new Date(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				return tasacionRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
 	}
@@ -1443,11 +1683,11 @@ public class QuskiOroService {
 			persisted.setValorRealizacion(send.getValorRealizacion());
 			persisted.setFechaCreacion(persisted.getFechaCreacion());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setTipoOro(send.getTipoOro());
 			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
 			return tasacionRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -1465,7 +1705,8 @@ public class QuskiOroService {
 		try {
 			return documentoHabilitanteRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1475,7 +1716,8 @@ public class QuskiOroService {
 			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso,
 					referencia);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1498,24 +1740,27 @@ public class QuskiOroService {
 		try {
 			return documentoHabilitanteRepository.countAll(TbQoDocumentoHabilitante.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
 	public TbQoDocumentoHabilitante manageDocumentoHabilitante(TbQoDocumentoHabilitante send) throws RelativeException {
 		try {
 			if (send != null && send.getId() != null) {
-				TbQoDocumentoHabilitante persisted; 
+				TbQoDocumentoHabilitante persisted;
 				persisted = this.findDocumentoHabilitanteById(send.getId());
 				return this.updateDocumentoHabilitante(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return documentoHabilitanteRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -1539,7 +1784,8 @@ public class QuskiOroService {
 			}
 			return documentoHabilitanteRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -1554,7 +1800,8 @@ public class QuskiOroService {
 		try {
 			return tipoDocumentoRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1568,7 +1815,8 @@ public class QuskiOroService {
 		try {
 			return tipoDocumentoRepository.countAll(TbQoTipoDocumento.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1608,10 +1856,12 @@ public class QuskiOroService {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return tipoDocumentoRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -1626,7 +1876,8 @@ public class QuskiOroService {
 			persisted.setPlantilla(send.getPlantilla());
 			return tipoDocumentoRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -1702,16 +1953,20 @@ public class QuskiOroService {
 			return documentoHabilitanteRepository.findByTipoDocumentoAndCliAndCotAndNeg(idTipoDocumento,
 					identificacionCliente, idCotizador, idNegociacion);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}		
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
 	}
+
 	public TbQoCreditoNegociacion findCreditoNegociacionById(Long id) throws RelativeException {
 		try {
 			return creditoNegociacionRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * Metodo q lista todos los Creditos.
 	 * 
@@ -1730,33 +1985,32 @@ public class QuskiOroService {
 	 */
 
 	public List<TbQoCreditoNegociacion> findCreditoNegociacionByParams(PaginatedWrapper pw, String fechaDesde,
-			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
-			EstadoEnum estado)
-			throws RelativeException {
+			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia,
+			String cliente, EstadoEnum estado) throws RelativeException {
 
 		if (pw == null) {
-			return this.creditoNegociacionRepository.findAllBySpecification(
-					new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
+			return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
+					fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
 
 		} else {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta, identificacion, proceso, codigoOperacion, agencia , cliente, estado);
+				return this.creditoNegociacionRepository.findPorCustomFilterCreditos(pw, fechaDesde, fechaHasta,
+						identificacion, proceso, codigoOperacion, agencia, cliente, estado);
 
 			} else {
-				return this.creditoNegociacionRepository.findAllBySpecification(
-						new CreditoNegociacionByParamsSpec(fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
+				return this.creditoNegociacionRepository.findAllBySpecification(new CreditoNegociacionByParamsSpec(
+						fechaDesde, fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado));
 
 			}
 		}
 
 	}
 
+	public Integer countCreditoNegociacionByParams(String fechaDesde, String fechaHasta, String codigoOperacion,
+			ProcesoEnum proceso, String identificacion, Long agencia, String cliente, EstadoEnum estado)
+			throws RelativeException {
 
-	public Integer countCreditoNegociacionByParams(String fechaDesde,
-			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
-			EstadoEnum estado) throws RelativeException {
-
-		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde, 
+		return this.creditoNegociacionRepository.countBySpecification(new CreditoNegociacionByParamsSpec(fechaDesde,
 				fechaHasta, identificacion, agencia, codigoOperacion, proceso, cliente, estado)).intValue();
 
 	}
@@ -1773,7 +2027,8 @@ public class QuskiOroService {
 		try {
 			return referenciaPersonalRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1802,7 +2057,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,	QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1817,7 +2073,8 @@ public class QuskiOroService {
 		try {
 			return referenciaPersonalRepository.countAll(TbQoReferenciaPersonal.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1841,10 +2098,12 @@ public class QuskiOroService {
 				send.setEstado(EstadoEnum.ACT.toString());
 				return referenciaPersonalRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -1869,9 +2128,11 @@ public class QuskiOroService {
 			persisted.setTelefonoFijo(send.getTelefonoFijo());
 			return referenciaPersonalRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * Archivos Cliente
 	 * 
@@ -1884,7 +2145,8 @@ public class QuskiOroService {
 		try {
 			return archivoClienteRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -1929,7 +2191,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 
 	}
@@ -1954,10 +2217,12 @@ public class QuskiOroService {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return archivoClienteRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -1977,7 +2242,8 @@ public class QuskiOroService {
 
 			return archivoClienteRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 
 	}
@@ -1988,7 +2254,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2007,7 +2274,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2024,7 +2292,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2039,10 +2308,12 @@ public class QuskiOroService {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return tipoArchivoRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -2057,9 +2328,11 @@ public class QuskiOroService {
 
 			return tipoArchivoRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * * * * * * *** * * ** ** * *@Tracking
 	 */
@@ -2086,7 +2359,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2105,7 +2379,8 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2119,7 +2394,8 @@ public class QuskiOroService {
 		try {
 			return trackingRepository.countAll(TbQoTracking.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2142,10 +2418,12 @@ public class QuskiOroService {
 				}
 				return this.trackingRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -2189,7 +2467,8 @@ public class QuskiOroService {
 			}
 			return this.trackingRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -2209,7 +2488,8 @@ public class QuskiOroService {
 		try {
 			return parametroRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2260,10 +2540,12 @@ public class QuskiOroService {
 				parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
 				return persisted;
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -2293,7 +2575,8 @@ public class QuskiOroService {
 				persisted.setOrden(send.getOrden());
 			return parametroRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -2306,9 +2589,11 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
 	 * @param nombre
@@ -2327,7 +2612,8 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2342,7 +2628,8 @@ public class QuskiOroService {
 		try {
 			return parametroRepository.countByParamPaged(nombre, tipo, estado, caracteriticaUno, caracteristicaDos);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2350,7 +2637,8 @@ public class QuskiOroService {
 		try {
 			return parametroRepository.countAll(TbMiParametro.class);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2375,7 +2663,8 @@ public class QuskiOroService {
 			parametrosSingleton.setParametros(this.parametroRepository.findAll(TbMiParametro.class));
 			return tmp;
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2392,7 +2681,31 @@ public class QuskiOroService {
 		try {
 			return ingresoEgresoClienteRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	public List<TbQoIngresoEgresoCliente> manageListIngresoEgresoCliente(List<TbQoIngresoEgresoCliente> send)
+			throws RelativeException {
+		try {
+			List<TbQoIngresoEgresoCliente> persisted = new ArrayList<>();
+			send.forEach(element -> {
+				element.setEstado(EstadoEnum.ACT);
+				element.setId(null);
+				try {
+					if (element.getTbQoCliente() != null) {
+						persisted.add(this.ingresoEgresoClienteRepository.add(element));
+					} else {
+						throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.FALTA_RELACION);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+			return persisted;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
 	}
 
@@ -2409,14 +2722,16 @@ public class QuskiOroService {
 				persisted = this.findIngresoEgresoClienteById(send.getId());
 				return this.updateIngresoEgresoCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				send.setEstado(EstadoEnum.ACT.toString());
+				send.setEstado(EstadoEnum.ACT);
 				return this.ingresoEgresoClienteRepository.add(send);
 
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -2433,10 +2748,11 @@ public class QuskiOroService {
 			persisted.setValor(send.getValor());
 			persisted.setEsEgreso(send.getEsEgreso());
 			persisted.setEsIngreso(send.getEsIngreso());
-			persisted.setEstado(EstadoEnum.ACT.toString());
+			persisted.setEstado(EstadoEnum.ACT);
 			return this.ingresoEgresoClienteRepository.update(persisted);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -2454,7 +2770,8 @@ public class QuskiOroService {
 		try {
 			return patrimonioRepository.findById(id);
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2468,7 +2785,7 @@ public class QuskiOroService {
 		try {
 			TbQoPatrimonio persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.findPatrimonioById( send.getId());
+				persisted = this.findPatrimonioById(send.getId());
 				return this.updatePatrimonio(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
@@ -2476,10 +2793,12 @@ public class QuskiOroService {
 				send.setEstado(EstadoEnum.ACT.toString());
 				return this.patrimonioRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -2497,16 +2816,28 @@ public class QuskiOroService {
 			persisted.setPasivos(send.getPasivos());
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			if (persisted.getActivos() != null && persisted.getPasivos() == null && !persisted.getActivos().equalsIgnoreCase("")) {
+			if (persisted.getActivos() != null && persisted.getPasivos() == null
+					&& !persisted.getActivos().equalsIgnoreCase("")) {
 				return this.patrimonioRepository.update(persisted);
 			} else if (persisted.getActivos() == null && persisted.getPasivos() != null
 					&& !persisted.getPasivos().equalsIgnoreCase("")) {
 				return this.patrimonioRepository.update(persisted);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	
+	public List<TbQoDireccionCliente> findPatrimonioClienteByIdCliente(Long id) throws RelativeException {
+		try {
+			return direccionClienteRepository.findByIdCliente(id);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2524,7 +2855,8 @@ public class QuskiOroService {
 		try {
 			return direccionClienteRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2538,7 +2870,8 @@ public class QuskiOroService {
 		try {
 			return direccionClienteRepository.findByIdCliente(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2553,22 +2886,25 @@ public class QuskiOroService {
 			TbQoDireccionCliente persisted = null;
 			List<TbQoDireccionCliente> cambioInac = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.findDireccionClienteById( send.getId() );
-				cambioInac = this.findDireccionClienteByIdCliente( send.getTbQoCliente().getId() );
+				persisted = this.findDireccionClienteById(send.getId());
+				cambioInac = this.findDireccionClienteByIdCliente(send.getTbQoCliente().getId());
 				this.ponerInactivoDireccionCliente(send, cambioInac);
 				return this.updateDireccionCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				cambioInac = this.findDireccionClienteByIdCliente( send.getTbQoCliente().getId() );
+				cambioInac = this.findDireccionClienteByIdCliente(send.getTbQoCliente().getId());
 				this.ponerInactivoDireccionCliente(send, cambioInac);
 				send.setEstado(EstadoEnum.ACT.toString());
 				return this.direccionClienteRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
+
 	/**
 	 * @param send
 	 * @param cambioInac
@@ -2584,7 +2920,8 @@ public class QuskiOroService {
 				}
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMensaje());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMensaje());
 		}
 	}
 
@@ -2614,15 +2951,18 @@ public class QuskiOroService {
 			persisted.setEstado(EstadoEnum.ACT.toString());
 			return this.direccionClienteRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
-	public List<TbQoDireccionCliente> findDireccionClienteByIdClienteAndTipoDireccion(Long idC, String tipoDireccion) throws RelativeException {
+	public List<TbQoDireccionCliente> findDireccionClienteByIdClienteAndTipoDireccion(Long idC, String tipoDireccion)
+			throws RelativeException {
 		try {
 			return direccionClienteRepository.findByIdClienteAndTipoDireccion(idC, tipoDireccion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2634,51 +2974,58 @@ public class QuskiOroService {
 	 * @Comment Busca los Riesgos Acumulados relacionados a un cliente.
 	 * @author Jeroham Cadenas
 	 * @param PaginatedWrapper pw
-	 * @param Long idCliente
+	 * @param Long             idCliente
 	 * @return List<TbQoRiesgoAcumulado>
 	 * @throws RelativeException
 	 */
-	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(PaginatedWrapper pw, Long idCliente) throws RelativeException {
+	public List<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente(PaginatedWrapper pw, Long idCliente)
+			throws RelativeException {
 		try {
 			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente, pw.getStartRecord(),
-						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+				return this.riesgoAcumuladoRepository.findByIdCliente(idCliente, pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
 			} else {
-				return this.riesgoAcumuladoRepository.findByIdCliente( idCliente );					
+				return this.riesgoAcumuladoRepository.findByIdCliente(idCliente);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+
 	/**
 	 * 
-	 * @author  Jeroham Cadenas - Developer Twelve
-	 * @param 	Long idCliente
-	 * @return	Long
-	 * @throws  RelativeException
+	 * @author Jeroham Cadenas - Developer Twelve
+	 * @param Long idCliente
+	 * @return Long
+	 * @throws RelativeException
 	 */
-	public Long countRiesgoAcumuladoByIdCliente( Long idCliente ) throws RelativeException {
+	public Long countRiesgoAcumuladoByIdCliente(Long idCliente) throws RelativeException {
 		try {
-			return riesgoAcumuladoRepository.countByIdCotizador( idCliente );
+			return riesgoAcumuladoRepository.countByIdCotizador(idCliente);
 		} catch (RelativeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
-	public List<TbQoRiesgoAcumulado> manageListRiesgoAcumulados( List<TbQoRiesgoAcumulado> send ) throws RelativeException {
+
+	public List<TbQoRiesgoAcumulado> manageListRiesgoAcumulados(List<TbQoRiesgoAcumulado> send)
+			throws RelativeException {
 		try {
 			List<TbQoRiesgoAcumulado> persisted = new ArrayList<>();
-			send.forEach(element ->{
-				element.setEstado( EstadoEnum.ACT );
-				element.setId( null );
-				element.setFechaCreacion( new Date(System.currentTimeMillis()) );
+			send.forEach(element -> {
+				element.setEstado(EstadoEnum.ACT);
+				element.setId(null);
+				element.setFechaCreacion(new Date(System.currentTimeMillis()));
 				try {
-					if(element.getTbQoCliente() != null) {
-						persisted.add( this.riesgoAcumuladoRepository.add( element ));
-					}else {
-						throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.FALTA_CLIENTE);
+					if (element.getTbQoCliente() != null) {
+						persisted.add(this.riesgoAcumuladoRepository.add(element));
+					} else if (element.getTbQoNegociacion() != null) {
+						persisted.add(this.riesgoAcumuladoRepository.add(element));
+					} else {
+						throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.FALTA_RELACION);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -2688,7 +3035,7 @@ public class QuskiOroService {
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
-}
+	}
 
 	/**
 	 * **************************************** @Excepciones
@@ -2706,7 +3053,8 @@ public class QuskiOroService {
 		try {
 			return excepcionesRepository.findById(id);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2737,7 +3085,8 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2786,7 +3135,8 @@ public class QuskiOroService {
 				return excepcionesRepository.findByIdNegociacion(idNegociacion);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2801,7 +3151,8 @@ public class QuskiOroService {
 		try {
 			return excepcionesRepository.countByIdNegociacion(idNegociacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2824,7 +3175,8 @@ public class QuskiOroService {
 				return excepcionesRepository.findByIdCliente(idCliente);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2839,7 +3191,8 @@ public class QuskiOroService {
 		try {
 			return excepcionesRepository.countByIdCliente(idCliente);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2863,10 +3216,11 @@ public class QuskiOroService {
 				return excepcionesRepository.findByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @author Jeroham Cadenas
@@ -2880,10 +3234,11 @@ public class QuskiOroService {
 		try {
 			return excepcionesRepository.countByTipoExcepcionAndIdNegociacion(tipoExcepcion, idNegociacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @author Diego Serrano
@@ -2893,21 +3248,24 @@ public class QuskiOroService {
 	 * @return List<TbQoExcepcione>
 	 * @throws RelativeException
 	 */
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(PaginatedWrapper pw, String tipoExcepcion,
-			Long idNegociacion, String caracteristica) throws RelativeException {
+	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(PaginatedWrapper pw,
+			String tipoExcepcion, Long idNegociacion, String caracteristica) throws RelativeException {
 		try {
 			if (pw != null && pw.getIsPaginated() != null
 					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion, caracteristica);
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(pw.getStartRecord(),
+						pw.getPageSize(), pw.getSortFields(), pw.getSortDirections(), tipoExcepcion, idNegociacion,
+						caracteristica);
 			} else {
-				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion, idNegociacion, caracteristica);
+				return excepcionesRepository.findByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion,
+						idNegociacion, caracteristica);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @author Jeroham Cadenas
@@ -2916,12 +3274,14 @@ public class QuskiOroService {
 	 * @return Long
 	 * @throws RelativeException
 	 */
-	public Long countExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion, Long idNegociacion, String caracteristica)
-			throws RelativeException {
+	public Long countExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion,
+			Long idNegociacion, String caracteristica) throws RelativeException {
 		try {
-			return excepcionesRepository.countByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion, idNegociacion, caracteristica);
+			return excepcionesRepository.countByTipoExcepcionAndIdNegociacionAndCaracteristica(tipoExcepcion,
+					idNegociacion, caracteristica);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -2949,7 +3309,8 @@ public class QuskiOroService {
 			persisted.setObservacionAprobador(send.getObservacionAprobador());
 			return this.excepcionesRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -2961,7 +3322,6 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
-		log.info("Valor del send en manageExcepcion===> "+send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
@@ -2976,11 +3336,162 @@ public class QuskiOroService {
 				persisted.setTbQoNegociacion(send.getTbQoNegociacion());
 				return persisted;
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
+	}
+
+	/**
+	 * * * * * * * * * * ********************************** * @EXCEPCION_ROL
+	 */
+	/**
+	 * Método que realiza la busqueda de la Excepcion Rol por id
+	 * 
+	 * @author Kléber Guerra Developer Four
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol findById(Long id) throws RelativeException {
+		try {
+			return excepcionRolRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que busca todos los ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param pw
+	 * @return
+	 * @throws RelativeException
+	 */
+	public List<TbQoExcepcionRol> findAllExcepcionRol(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.excepcionRolRepository.findAll(TbQoExcepcionRol.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza el conteo de los ExcepcionRol
+	 * 
+	 * @author Kléber Guerra -Relative Engine
+	 * @return
+	 * @throws RelativeException
+	 */
+	public Long countExcepcionRol() throws RelativeException {
+		try {
+			return excepcionRolRepository.countAll(TbQoExcepcionRol.class);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza la administración del ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param send
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol manageExcepcionRol(TbQoExcepcionRol send) throws RelativeException {
+
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoExcepcionRol persisted = this.excepcionRolRepository.findById(send.getId());
+				if (persisted != null && persisted.getId() != null) {
+					return this.updateExcepcionRol(send, persisted);
+				} else {
+					send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+					send.setEstado(EstadoEnum.ACT);
+					return excepcionRolRepository.add(send);
+				}
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * Método que realiza la actualización de la ExcepcionRol
+	 * 
+	 * @author Kléber Guerra - Relative Engine
+	 * @param send
+	 * @param persisted
+	 * @return
+	 * @throws RelativeException
+	 */
+	public TbQoExcepcionRol updateExcepcionRol(TbQoExcepcionRol send, TbQoExcepcionRol persisted)
+			throws RelativeException {
+		try {
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(EstadoEnum.ACT);
+			persisted.setExcepcion(send.getExcepcion());
+			if (!StringUtils.isEmpty(send.getRol())) {
+				persisted.setRol(send.getRol());
+			}
+			return excepcionRolRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * @author Kléber Guerra - Relative Engine
+	 * @param pw
+	 * @param rol
+	 * @param identificacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	public List<ExcepcionRolWrapper> findExcepcionByRolAndIdentificacion(PaginatedWrapper pw, String rol,
+			String identificacion) throws RelativeException {
+		try {
+			if (pw != null && pw.getIsPaginated() != null
+					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.excepcionRolRepository.findByRolAndIdentificacion(pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections(), rol, identificacion);
+			} else {
+				return this.excepcionRolRepository.findByRolAndIdentificacion(rol, identificacion);
+			}
+		} catch (RelativeException e) {
+
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+"todos los Abonos " + e.getMessage());
+
+		}
+	}
+
+	public Integer countExcepcionByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
+		return this.excepcionRolRepository.countByRolAndIdentificacion(rol, identificacion);
 	}
 
 	/**
@@ -3007,54 +3518,27 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
 	}
 
-	/**
-	 * Metodo que busca la entidad por su PK
-	 * 
-	 * @param id Pk de la entidad
-	 * @return Entidad encontrada
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @throws RelativeException
-	 */
-	public TbQoFunda findFundaById(Long id) throws RelativeException {
+	public TbQoTasacion eliminarJoya(Long id) throws RelativeException {
+		TbQoTasacion tasacion = this.tasacionRepository.findById(id);
+		tasacion.setEstado(EstadoEnum.INA);
 		try {
-			return fundaRepository.findById(id);
+			return this.tasacionRepository.update(tasacion);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
+
 	}
 
-	/**
-	 * Metodo que lista la informacion de las entidades encontradas
-	 * 
-	 * @param pw Objeto generico que tiene la informacion que determina si el
-	 *           resultado es total o paginado
-	 * @return Listado de entidades encontradas
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @throws RelativeException
-	 */
-	public List<TbQoFunda> findAllFunda(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.fundaRepository.findAll(TbQoFunda.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.fundaRepository.findAll(TbQoFunda.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return this.fundaRepository.findAll(TbQoFunda.class, pw.getSortFields(),
-							pw.getSortDirections());
-				}
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-			
-		}
-		}
-	 /*
+	/*
 	 * @author Jeroham Cadenas - Developer Twelve
+	 * 
 	 * @param PaginatedWrapper pw
-	 * @param Long             idNegociacion
+	 * 
+	 * @param Long idNegociacion
+	 * 
 	 * @return List<TbQoTasacion>
+	 * 
 	 * @throws RelativeException
 	 */
 	public List<TbQoTasacion> findTasacionByIdNegociacion(PaginatedWrapper pw, Long idNegociacion)
@@ -3068,136 +3552,867 @@ public class QuskiOroService {
 				return this.tasacionRepository.findByIdNegociacion(idNegociacion);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
-	/**
-	 * Metodo que cuenta la cantidad de entidades existentes
-	 * 
-	 * @author DIEGO SERRANO - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public Long countFunda() throws RelativeException {
-		try {
-			return fundaRepository.countAll(TbQoFunda.class);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
-	 * 
-	 * @author BRAYAN MONGE - Relative Engine
-	 * @param send entidad con la informacion de creacion o actualizacion
-	 * @return Entidad modificada o actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoFunda manageFunda(TbQoFunda send) throws RelativeException {
-		try {
-			TbQoFunda persisted = null;
-			if (send != null && send.getId() != null) {
-				persisted = this.fundaRepository.findById(send.getId());
-				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-				return this.updateFunda(send, persisted);
-			} else if (send != null && send.getId() == null) {
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return fundaRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-	public TbQoFunda updateFunda(TbQoFunda send, TbQoFunda persisted) throws RelativeException {
-		try {
-			persisted.setCodigo(send.getCodigo());
-			persisted.setEstado(send.getEstado());
-			persisted.setPeso(send.getPeso());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			return fundaRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+ e.getMessage());
-		}
-	}
-	
-	public List<TbQoFunda> findFundaByParams(PaginatedWrapper pw, String codigo,
-			BigDecimal peso, EstadoEnum estado)
-			throws RelativeException {
-
-		if (pw == null) {
-			return this.fundaRepository.findAllBySpecification(new FundaByParamsSpec(
-					codigo, peso, estado));
-
-		} else {
-			if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.fundaRepository.findPorCustomFilterFundas(pw, codigo, peso,
-						estado);
-
-			} else {
-				return this.fundaRepository.findAllBySpecification(new FundaByParamsSpec(
-						codigo, peso, estado));
-
-			}
-		}
-
-	}
-
-	public Integer countFundaByParams(String codigo, BigDecimal peso, EstadoEnum estado) throws RelativeException {
-		try {
-			return this.fundaRepository.countBySpecification(new FundaByParamsSpec(codigo, peso, estado)).intValue();		
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	public TbQoFunda reservarFunda(BigDecimal peso, String usuario) throws RelativeException {
-		try {
-			TbQoFunda fundaReservada = null;
-			fundaReservada = fundaRepository.reservarFunda(peso);
-			return fundaReservada;		
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-
-	}
-	
-	
-	 /*
+	/*
 	 * @author Jeroham Cadenas - Developer Twelve
+	 * 
 	 * @param Long idNegociacion
+	 * 
 	 * @return Long
+	 * 
 	 * @throws RelativeException
 	 */
 	public Long countTasacionByByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
 			return this.tasacionRepository.countFindByIdNegociacion(idNegociacion);
 		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * * * ** * * * * * * * * * * * * * * * * * * * * @SOFTBANK
+	 */
+	/**
+	 * 
+	 * @param datosOperacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion)
+			throws RelativeException {
+		CrearOperacionRespuestaWrapper operacionWrapper = null;
+		try {
+			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(
+					QuskiOroConstantes.URLCLOUDSTUDIO + "credito/operacion/crear", "", datosOperacion);
+			return operacionWrapper;
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS);
+		}
+	}
+
+	/**
+	 * 
+	 * @param identificacion
+	 * @return
+	 * @throws RelativeException
+	 */
+	public SoftbankClienteWrapper findClienteSoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
+			SoftbankClienteWrapper persisted = SoftBankApiClient
+					.callConsultaClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE, null, consulta);
+			log.info("=========> QUE JESTO? ========> " + persisted.getIdentificacion());
+			if (persisted.getIdentificacion() != null) {
+				return persisted;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
+
+	public List<SoftbankOperacionWrapper> consultarRiesgoSoftbank(String identificacion) throws RelativeException {
+		try {
+			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
+			SoftbankRiesgoWrapper persisted = SoftBankApiClient.callConsultaRiesgoRest(consulta);
+			if (!persisted.getOperaciones().isEmpty()) {
+				return persisted.getOperaciones();
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	private List<TbQoRiesgoAcumulado> createRiesgoFrontSoftBank(List<SoftbankOperacionWrapper> operaciones,
+			TbQoNegociacion negociacion) throws RelativeException {
+		try {
+			if (operaciones != null) {
+				List<TbQoRiesgoAcumulado> list = new ArrayList<>();
+				operaciones.forEach(e -> {
+					TbQoRiesgoAcumulado r = new TbQoRiesgoAcumulado(negociacion);
+					r.setReferencia(e.getReferencia());
+					r.setNumeroOperacion(e.getNumeroOperacion());
+					r.setCodigoCarteraQuski(e.getCodigoCarteraQuski());
+					r.setTipoOperacion(e.getTipoOperacion());
+					r.setEsDemandada(e.getEsDemandada());
+					try {
+						r.setFechaEfectiva(QuskiOroUtil.formatSringToDate(e.getFechaEfectiva()));
+					} catch (RelativeException e1) {
+						e1.printStackTrace();
+					}
+					try {
+						r.setFechaVencimiento(QuskiOroUtil.formatSringToDate(e.getFechaVencimiento()));
+					} catch (RelativeException e1) {
+						e1.printStackTrace();
+					}
+					r.setInteresMora(e.getInteresMora());
+					r.setSaldo(e.getSaldo());
+					r.setValorAlDia(e.getValorAlDia());
+					r.setValorAlDiaMasCuotaActual(e.getValorAlDiaMasCuotaActual());
+					r.setValorProyectadoCuotaActual(e.getValorProyectadoCuotaActual());
+					r.setValorCancelaPrestamo(e.getValorCancelaPrestamo());
+					r.setDiasMoraActual(e.getDiasMoraActual());
+					r.setNumeroCuotasTotales(e.getNumeroCuotasTotales());
+					r.setNumeroCuotasFaltantes(e.getNumeroCuotasFaltantes());
+					r.setEstadoPrimeraCuotaVigente(e.getEstadoPrimeraCuotaVigente());
+					r.setNombreProducto(e.getNombreProducto());
+					r.setPrimeraCuotaVigente(e.getPrimeraCuotaVigente());
+					r.setNumeroGarantiasReales(e.getNumeroGarantiasReales());
+					r.setEstadoOperacion(e.getEstadoOperacion());
+					r.setIdMoneda(e.getIdMoneda());
+					list.add(r);
+				});
+				return this.manageListRiesgoAcumulados(list);
+			} else {
+				return null;
+			}
+
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+
+	}
+
+	private TbQoCliente clienteSoftToTbQoCliente(SoftbankClienteWrapper s) throws RelativeException {
+		try {
+			if (s != null) {
+				TbQoCliente c = new TbQoCliente();
+				c.setApellidoMaterno(s.getSegundoApellido());
+				c.setApellidoPaterno(s.getPrimerApellido());
+				c.setCedulaCliente(s.getIdentificacion());
+				c.setEdad(BigDecimal
+						.valueOf(QuskiOroUtil.calculateEdad(QuskiOroUtil.formatSringToDate(s.getFechaNacimiento()))));
+				c.setEmail(s.getEmail());
+				c.setFechaNacimiento(QuskiOroUtil.formatSringToDate(s.getFechaNacimiento()));
+				c.setPrimerNombre(s.getPrimerNombre());
+				c.setNacionalidad(s.getIdPaisNacimiento().toString());
+				c.setSegundoNombre(s.getSegundoNombre());
+				c.setNombreCompleto(s.getNombreCompleto());
+				return c;
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+	}
+
+	public SoftbankRespuestaWrapper crearClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
+		try {
+			return SoftBankApiClient.callCrearClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE, null,
+					cliente);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+
+	}
+
+	public SoftbankRespuestaWrapper editarClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
+		try {
+			if (!cliente.getIdTipoIdentificacion().equals(0) && cliente.getIdTipoIdentificacion() != null) {
+				if (!cliente.getIdentificacion().equals("") && cliente.getIdentificacion() != null) {
+					if (!cliente.getCodigoUsuario().equals("") && cliente.getCodigoUsuario() != null) {
+						return SoftBankApiClient.callEditarClienteRest(
+								QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE, null, cliente);
+					} else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA CODIGO USUARIO");
+					}
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA IDENTIFICACION");
+				}
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA ID DE TIPO IDENTIFICACION");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id_pago Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoRegistrarPago findRegistrarPagoById(Long id) throws RelativeException {
+		try {
+			return registrarPagoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoRegistrarPago> findAllRegistrarPago(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.registrarPagoRepository.findAll(TbQoRegistrarPago.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + "TODOS LOS ABONOS" + e.getMessage());
+		}
+	}
+
+	/**
+	 * * * ** * * * * * * * * * * * * * * * * * * * * @APIGATEWAY
+	 */
+	public CalculadoraRespuestaWrapper simularOfertasCalculadoraPrueba(CalculadoraEntradaWrapper wrapper)
+			throws RelativeException {
+		try {
+			return CalculadoraRespuestaWrapper.generateMockupEstandar();
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
+
+	// TODO: Testear metodo por conflictos
+	public CalculadoraRespuestaWrapper simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper)
+			throws RelativeException {
+		try {
+			wrapper.generateMockup();
+			StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
+			TokenWrapper token = ApiGatewayClient.getToken();
+			return ApiGatewayClient.callCalculadoraRest(token.getAccessToken(), wrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countRegistrarPago() throws RelativeException {
+		try {
+			return registrarPagoRepository.countAll(TbQoRegistrarPago.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.CLIENTE_PAGO_NO_ENCONTRADO + e.getMessage());
+		}
+	}
+
+	/**
+	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o
+	 *              actualizacion
+	 * @author Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoRegistrarPago manageRegistrarPago(TbQoRegistrarPago send) throws RelativeException {
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoRegistrarPago persisted = this.registrarPagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
+				return this.updateRegistrarPago(send, persisted);
+			} else {
+				log.info("==================>   INGRESA A CREACION manageClientePago ===================> ");
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return registrarPagoRepository.add(send);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + " ClientePago" + e.getMessage());
+		}
+	}
+
+	/**
+	 * @author
+	 * @param TbQoRegistrarPago send
+	 * @param TbQoRegistrarPago persisted
+	 * @return TbQoRegistrarPago
+	 * @throws RelativeException
+	 */
+	public TbQoRegistrarPago updateRegistrarPago(TbQoRegistrarPago send, TbQoRegistrarPago persisted)
+			throws RelativeException {
+		try {
+			return registrarPagoRepository.update(persisted);
+		} catch (Exception e) {
+
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+
+		}
+	}
+
+	/**
+	 * Metodo que busca la entidad por su PK
+	 * 
+	 * @param id_pago Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoClientePago findClientePagoById(Long id) throws RelativeException {
+		try {
+			return clientePagoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoClientePago> findAllClientePago(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.clientePagoRepository.findAll(TbQoClientePago.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.clientePagoRepository.findAll(TbQoClientePago.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.clientePagoRepository.findAll(TbQoClientePago.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countClientePago() throws RelativeException {
+		try {
+			return clientePagoRepository.countAll(TbQoClientePago.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.CLIENTE_PAGO_NO_ENCONTRADO + e.getMessage());
+		}
+
+	}
+
+	/**
+	 * @Description Metodo que se encarga de gestionar la entidad sea creacion o
+	 *              actualizacion
+	 * 
+	 * @author Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoClientePago manageClientePago(TbQoClientePago send) throws RelativeException {
+		try {
+			if (send.getId() != null) {
+				TbQoClientePago persisted = this.clientePagoRepository.findById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
+				return this.updateClientePago(send, persisted);
+			} else {
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				TbQoClientePago persisted = this.clientePagoRepository.add(send);
+				return persisted;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + "CLIENTE PAGO" + e.getMessage());
+		}
+	}
+
+	/**
+	 * @author
+	 * @param TbQoClientePago send
+	 * @param TbQoClientePago persisted
+	 * @return TbQoClientePago
+	 * @throws RelativeException
+	 */
+	public TbQoClientePago updateClientePago(TbQoClientePago send, TbQoClientePago persisted) throws RelativeException {
+		try {
+
+			return clientePagoRepository.update(persisted);
+		} catch (Exception e) {
+
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					" ERROR ACTUALIZANDO ClientePago ===> " + e.getMessage());
+
+		}
+	}
+
+	/** ********************************************** @CREDITONEGOCIACION */
+
+	public TbQoCreditoNegociacion manageCreditoNegociacion(TbQoCreditoNegociacion send) throws RelativeException {
+		try {
+			TbQoCreditoNegociacion persisted = null;
+			if (send.getId() != null) {
+				persisted = this.creditoNegociacionRepository.findById(send.getId());
+				return this.updateCreditoNegociacion(send, persisted);
+			} else if (send.getId() == null) {
+				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT);
+				send.setSituacion(SituacionEnum.EN_PROCESO);
+				return crearCodigoCreditoNuevo(this.creditoNegociacionRepository.add(send));
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+
+	}
+
+	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
+		String cod = "NUEV0000000";
+		Long id = persisted.getId();
+		log.info(" ID EN crearCodigoCotizacion =======================> " + persisted.getId() + " <============== ");
+		try {
+			if (id < 9) {
+				cod = "NUEV000000";
+			} else if (id < 99) {
+				cod = "NUEV00000" + id;
+			} else if (id < 999) {
+				cod = "NUEV0000" + id;
+			} else if (id < 9999) {
+				cod = "NUEV000" + id;
+			} else if (id < 99999) {
+				cod = "NUEV00" + id;
+			} else if (id < 999999) {
+				cod = "NUEV0" + id;
+			} else if (id < 9999999) {
+				cod = "NUEV" + id;
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+						"Error. Codigo de Credito supera los 7 digitos numericos");
+			}
+			persisted.setCodigo(cod);
+			return this.creditoNegociacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	private TbQoCreditoNegociacion updateCreditoNegociacion(TbQoCreditoNegociacion send,
+			TbQoCreditoNegociacion persisted) throws RelativeException {
+		try {
+			return this.creditoNegociacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	public AprobacionWrapper traerCreditoNegociacionExistente(Long id) throws RelativeException {
+		try {
+			AprobacionWrapper tmp = new AprobacionWrapper();
+			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
+			log.info("VALORES EN TRAER CREDITO");
+			if (tmp.getCredito() != null) {
+				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(id));
+				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(id));
+				tmp.setJoyas(this.tasacionRepository.findByIdNegociacion(id));
+				tmp.setDirecciones(this.findDireccionClienteByIdCliente(id));
+				//tmp.setPatrimonios(this.findPatrimonioByIdCliente(id));
+				return tmp;
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+		}
+	}
+
+	/**
+	 * ********************w************************** @CRM
+	 ****************************************************/
+	public CrmProspectoCortoWrapper findProspectoCrm(String cedula) throws RelativeException {
+		try {
+			CrmProspectoCortoWrapper prospecto = CrmApiClient.callConsultaProspectoRest(cedula);
+			if (prospecto != null) {
+				return prospecto;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
+
+	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper p) {
+		if (p != null) {
+			TbQoCliente c = new TbQoCliente();
+			c.setCedulaCliente(p.getCedula());
+			c.setNombreCompleto(p.getNombreCompleto());
+			c.setEmail(p.getEmail());
+			c.setTelefonoAdicional(p.getPhoneOther());
+			c.setTelefonoFijo(p.getPhoneHome());
+			c.setTelefonoMovil(p.getPhoneMobile());
+			c.setTelefonoTrabajo(p.getPhoneWork());
+			return c;
+		} else {
+			return null;
+		}
+	}
+
+	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException, UnsupportedEncodingException {
+		try {
+			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
+			entidad.setCedulaC( cliente.getCedulaCliente() );
+			entidad.setEmailAddress( cliente.getEmail() );
+			entidad.setEmailAddressCaps( cliente.getEmail().toUpperCase() );
+			entidad.setFirstName( cliente.getNombreCompleto() );
+			entidad.setLeadSourceDescription( "GESTION QUSKI");
+			entidad.setPhoneMobile( cliente.getTelefonoMovil() );
+			entidad.setPhoneHome( cliente.getTelefonoFijo() );
+			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper( entidad );
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
+			return pro != null ? Boolean.TRUE : Boolean.FALSE ;
+		}catch(RelativeException e ) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(Constantes.ERROR_CODE_CREATE);
+
+		}
+	}
+
+	/**
+	 * ********************************************* @INTEGRACION
+	 ****************************************************/
+
+	public TbQoCliente createClienteFromEquifax(IntegracionEntidadWrapper entidad) throws RelativeException {
+		if (entidad != null) {
+			IntegracionDatosClienteWrapper datos = entidad.getDatoscliente();
+			List<IntegracionRubroWrapper> rubros = entidad.getIngresosegresos().getRubros();
+			if (datos != null) {
+				TbQoCliente c = new TbQoCliente();
+				c.setCedulaCliente(datos.getIdentificacion().toString());
+				c.setNombreCompleto(datos.getNombrescompletos());
+				c.setNacionalidad(datos.getNacionalidad());
+				c.setEmail(datos.getCorreoelectronico());
+				c.setCargo(datos.getCargo());
+				c.setCargasFamiliares(BigDecimal.valueOf(datos.getCargasfamiliares()));
+				c.setProfesion(datos.getProfesion());
+				c = this.manageCliente(c);
+				if (c.getId() != null && !rubros.isEmpty()) {
+					this.createIngresosEgresosFromEquifax(rubros, c);
+				}
+				return c;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	private List<TbQoIngresoEgresoCliente> createIngresosEgresosFromEquifax(List<IntegracionRubroWrapper> rubros,
+			TbQoCliente cliente) throws RelativeException {
+		List<TbQoIngresoEgresoCliente> list = new ArrayList<>();
+		if (rubros != null) {
+			rubros.forEach(e -> {
+				TbQoIngresoEgresoCliente r = new TbQoIngresoEgresoCliente(cliente);
+				r.setValor(e.getValor());
+				if (e.getTiporubroeconomico().equalsIgnoreCase(TipoRubroEnum.EGR.toString())) {
+					r.setEsEgreso(true);
+					r.setEsIngreso(false);
+				} else if (e.getTiporubroeconomico().equalsIgnoreCase(TipoRubroEnum.ING.toString())) {
+					r.setEsEgreso(false);
+					r.setEsIngreso(true);
+				} else {
+					r.setEsEgreso(false);
+					r.setEsIngreso(false);
+				}
+				list.add(r);
+			});
+			return this.manageListIngresoEgresoCliente(list);
+		} else {
+			return null;
+		}
+	}
+
+	private IntegracionEntidadWrapper traerEntidadPersonaEquifax(String cedula) throws RelativeException {
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
+			return data != null ? data : null;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	private List<IntegracionVariableWrapper> traerVariablesEquifax(String cedula) throws RelativeException {
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
+			if (data != null) {
+				List<IntegracionVariableWrapper> list = data.getXmlVariablesInternas().getVariablesInternas()
+						.getVariables();
+				return !list.isEmpty() ? list : null;
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	private List<TbQoVariablesCrediticia> createVariablesFromEquifax(List<IntegracionVariableWrapper> equifax,
+			TbQoNegociacion negociacion) throws RelativeException {
+		try {
+			if (equifax != null) {
+				List<TbQoVariablesCrediticia> list = new ArrayList<>();
+				equifax.forEach(e -> {
+					TbQoVariablesCrediticia v = new TbQoVariablesCrediticia(negociacion);
+					v.setCodigo(e.getCodigo());
+					v.setNombre(e.getNombre());
+					v.setOrden(e.getOrden().toString());
+					v.setValor(e.getValor());
+					list.add(v);
+				});
+				return this.manageListVariablesCrediticias(list);
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	private String traerExcepcionEquifax(String cedula) throws RelativeException {
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
+			if (data != null) {
+				if (data.getCodigoError() == 3) {
+					return data.getMensaje();
+				} else {
+					return null;
+				}
+			} else {
+				return null;
+			}
+
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	public void mailNotificacion(String[] para, String asunto, String contenido, Map<String, byte[]> adjunto)
+			throws RelativeException {
+		try {
+			log.info("=====>>> ENTRA A NOTIFICACIONES MAIL");
+			log.info("=====>>> PARA: " + para);
+			log.info("=====>>> ASUNTO: " + asunto);
+			log.info("=====>>> CONTENIDO: " + contenido);
+			log.info("=====>>> ADJUNTO: " + adjunto);
+			log.info("=====>>> Inicializa mail");
+
+			String emailSecurityType = this.parametroRepository.findByNombre(QuskiOroConstantes.emailSecurityType).getValor();
+			String smtpHostServer =	this.parametroRepository.findByNombre(QuskiOroConstantes.smtpHostServer).getValor();
+			String portEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
+			String sfPortEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
+			String userEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
+			String fromEmailDesa=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
+			String authEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
+			String passwordEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
+			 log.info("parametro email emailSecurityType ===> "+emailSecurityType);
+			 log.info("parametro email smtpHostServer    ===> "+smtpHostServer);
+			 log.info("parametro email portEmail         ===> "+portEmail);
+			 log.info("parametro email sfPortEmail       ===> "+sfPortEmail);
+			 log.info("parametro email userEmail         ===> "+userEmail);
+			 log.info("parametro email fromEmailDesa     ===> "+fromEmailDesa);
+			 log.info("parametro email authEmail         ===> "+authEmail);
+			 log.info("parametro email passwordEmail     ===> "+passwordEmail);
+			 if(adjunto != null) {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
+						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
+						  ) .fromEmail( fromEmailDesa ) .message( contenido )
+						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  Transport.send(null, null, passwordEmail, passwordEmail);
+						  EmailUtil.sendEmail( ed );  
+			 }else {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail.equalsIgnoreCase("TRUE") ).password(passwordEmail)
+						  .user(userEmail).subject(asunto).tos( Arrays.asList(para) ) 
+						  .fromEmail( fromEmailDesa ) .message( contenido )
+						  .hasFiles(Boolean.FALSE).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  EmailUtil.sendEmail( ed ); 
+			 }
+			
+		} catch (RelativeException e) {
+
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());			
+		} catch (Exception e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+
+	}
+	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido, Map<java.lang.String,byte[]> adjunto) throws RelativeException {
+		try {
+			String[] array = new String[1];
+			array[0] = para;
+			
+			this.mailNotificacion(array, asunto, contenido, adjunto);
+			return Boolean.TRUE;
+		} catch (RelativeException e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());
+
+		}
+	}
+	/**
+	 * ************************** @PROCESO
+	 */
+	public TbQoProceso findProcesoById(Long id) throws RelativeException {
+		try {
+			return procesoRepository.findById( id );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,	QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	public TbQoProceso manageProceso(TbQoProceso send) throws RelativeException {
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoProceso persisted = this.findProcesoById( send.getId() );
+				return this.updateProceso(send, persisted);
+			} else if (send.getId() == null) {
+				send.setEstado(EstadoEnum.ACT);
+				send.setFechaCreacion( new Timestamp(System.currentTimeMillis() ));
+				return this.procesoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+	public TbQoProceso updateProceso(TbQoProceso send, TbQoProceso persisted) throws RelativeException {
+		try {
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(EstadoEnum.ACT);
+			if(send.getEstadoProceso() != null) {
+				persisted.setEstadoProceso( send.getEstadoProceso() );
+			}
+			if( send.getUsuario() != null ) {
+				persisted.setUsuario( send.getUsuario() );				
+			}
+			return procesoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	public List<TbQoProceso> findAllProceso(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.procesoRepository.findAll(TbQoProceso.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.procesoRepository.findAll(TbQoProceso.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.procesoRepository.findAll(TbQoProceso.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	
-	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion) throws RelativeException{
-		CrearOperacionRespuestaWrapper operacionWrapper = null;
+	public Long countProceso() throws RelativeException {
 		try {
-			log.info("llega hasta aqui");
-			operacionWrapper = SoftBankApiClient.callCrearOperacion01Rest(QuskiOroConstantes.URLCLOUDSTUDIO+"credito/operacion/crear", "", datosOperacion);
-			return operacionWrapper;
-		} catch (RelativeException | UnsupportedEncodingException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					": ERROR AL CONSUMIR SERVICIO" );
+			return procesoRepository.countAll(TbQoProceso.class);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-	
-		
-		
+
 	}
-	
-	
-	
 }

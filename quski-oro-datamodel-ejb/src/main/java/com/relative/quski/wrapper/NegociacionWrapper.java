@@ -1,59 +1,71 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.util.List;
 
-import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.model.TbQoRiesgoAcumulado;
+import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 
-
-
-/**
- * The persistent class for the tb_qo_negociacion database table.
- * 
- */
-//@Entity
-//@Table(name="tb_qo_negociacion")
-public class NegociacionWrapper implements Serializable{
-
+public class NegociacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	//@Id
-	//@SequenceGenerator(name="TB_QO_NEGOCIACION_ID_GENERATOR", sequenceName="SEG_TB_QO_NEGOCIACION")
-	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_NEGOCIACION_ID_GENERATOR")
-	private Long id;
-
-	private String estado;
-
-	//bi-directional many-to-one association to TbQoCliente
-	//@ManyToOne
-	//@JoinColumn(name="id_cliente")
-	private TbQoCliente tbQoCliente;
-
 	
+	private List<TbQoTasacion> joyas;
+	private List<TbQoVariablesCrediticia> variables;
+	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<TbQoExcepcione> excepciones;
+	private TbQoCreditoNegociacion credito;
+	private String excepcionBre;
+	private Boolean respuesta;
+
+	public NegociacionWrapper(Boolean respuesta) {
+		super();
+		this.respuesta = respuesta;
+	}
 	public NegociacionWrapper() {
-			
-		}
-
-	public Long getId() {
-		return this.id;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
+	public List<TbQoVariablesCrediticia> getVariables() {
+		return variables;
 	}
-
-	public String getEstado() {
-		return this.estado;
+	public void setVariables(List<TbQoVariablesCrediticia> variables) {
+		this.variables = variables;
 	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public List<TbQoRiesgoAcumulado> getRiesgos() {
+		return riesgos;
 	}
-
-	public TbQoCliente getTbQoCliente() {
-		return this.tbQoCliente;
+	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
+		this.riesgos = riesgos;
 	}
-
-	public void setTbQoCliente(TbQoCliente tbQoCliente) {
-		this.tbQoCliente = tbQoCliente;
+	public TbQoCreditoNegociacion getCredito() {
+		return credito;
+	}
+	public void setCredito(TbQoCreditoNegociacion credito) {
+		this.credito = credito;
+	}
+	public Boolean getRespuesta() {
+		return respuesta;
+	}
+	public void setRespuesta(Boolean respuesta) {
+		this.respuesta = respuesta;
+	}
+	public String getExcepcionBre() {
+		return excepcionBre;
+	}
+	public void setExcepcionBre(String excepcionBre) {
+		this.excepcionBre = excepcionBre;
+	}
+	public List<TbQoTasacion> getJoyas() {
+		return joyas;
+	}
+	public void setJoyas(List<TbQoTasacion> joyas) {
+		this.joyas = joyas;
+	}
+	public List<TbQoExcepcione> getExcepciones() {
+		return excepciones;
+	}
+	public void setExcepciones(List<TbQoExcepcione> excepciones) {
+		this.excepciones = excepciones;
 	}
 }

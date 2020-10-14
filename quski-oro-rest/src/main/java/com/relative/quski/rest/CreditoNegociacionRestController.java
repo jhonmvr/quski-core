@@ -26,8 +26,10 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.NegociacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -118,10 +120,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return plw;
 	}
 	@Override
-	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> arg0)
+	@POST
+	@Path("/persistEntity")
+	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> wp)
 			throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.manageCreditoNegociacion(wp.getEntidad()));
+		return loc;
 	}
 	@POST
 	@Path("/crearOperacion")
@@ -129,6 +134,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion)throws RelativeException {
 		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
+		return loc;
+	}
+	
+	@GET
+	@Path("/traerCreditoNegociacionExistente")
+	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
+		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+		loc.setEntidad(a);
 		return loc;
 	}
 }

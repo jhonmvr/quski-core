@@ -63,7 +63,10 @@ public class ReRestClient<T> {
 	
 	public static final String RETURN_OBJECT="resultado";
 	public static final String RETURN_MESSAGE="message";
-	public static final String RETURN_STATUS="estado";
+	public static final String RETURN_ENTIDAD="entidad";
+
+	// public static final String RETURN_STATUS="estado";
+	public static final String RETURN_STATUS="codigoServicio";
 	
 
 	static {
@@ -179,6 +182,7 @@ public class ReRestClient<T> {
 			cw.setTransform(transform);
 			logger.info("==>Wrapper generado " );
 			ReRestClient<T> b= new ReRestClient<>( cw );
+			logger.info("==> holis? " );
 			return b.execute(classType);
 		} catch (RelativeException e) {
 			throw e;
@@ -194,8 +198,13 @@ public class ReRestClient<T> {
 			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_JSON );
 		} else if( RestClientWrapper.CONTENT_TYPE_XML.equalsIgnoreCase( contentType ) ) {
 			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_XML );
-		} else {
+		} else if( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM.equalsIgnoreCase( contentType )){
+			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM );
+		} else if( RestClientWrapper.CONTENT_TYPE_TEXT_XML.equalsIgnoreCase( contentType ) ){
+			cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_TEXT_XML );
+		}else {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"DEBE DEFINIR TIPO DE CONTENIDO CONTENT-TYPE" );
+			
 		}
 	}
 	
@@ -206,7 +215,9 @@ public class ReRestClient<T> {
 			cw.setContentType( RestClientWrapper.CONTENT_TYPE_XML );
 		} else if( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM.equalsIgnoreCase( contentType ) ) {
 			cw.setContentType( RestClientWrapper.CONTENT_TYPE_X_WWW_FORM );
-		} else {
+		} else if(RestClientWrapper.CONTENT_TYPE_TEXT_XML.equalsIgnoreCase( contentType ) ) {
+			cw.setContentType( RestClientWrapper.CONTENT_TYPE_TEXT_XML );
+		}else {			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"DEBE DEFINIR TIPO DE CONTENIDO CONTENT-TYPE" );
 		}
 	}
@@ -377,8 +388,7 @@ public class ReRestClient<T> {
 			try {
 				return httpclient.execute(request);
 			} catch (Exception e) {
-				throw new RuntimeException(
-						"Could not execute request [" + request.getMethod() + "] " + request.getURI(), e);
+				throw new RuntimeException("Could not execute request [" + request.getMethod() + "] " + request.getURI(), e);
 			}
 		}
 

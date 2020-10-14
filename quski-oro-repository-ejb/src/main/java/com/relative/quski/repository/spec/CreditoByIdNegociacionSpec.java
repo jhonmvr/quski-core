@@ -1,10 +1,14 @@
 package com.relative.quski.repository.spec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 
 public class CreditoByIdNegociacionSpec extends AbstractSpecification<TbQoCreditoNegociacion> {
@@ -25,8 +29,11 @@ public class CreditoByIdNegociacionSpec extends AbstractSpecification<TbQoCredit
 
 	@Override
 	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
-		// TODO Auto-generated method stub
-		return cb.and(cb.equal(poll.get("tbQoNegociacion").get("id"), this.idNegociacion));
+		List<Predicate> where = new ArrayList<>();
+		where.add(cb.equal(poll.get("tbQoNegociacion").get("id"), this.idNegociacion));
+		where.add(cb.equal(poll.get("tbQoNegociacion").get("estado"), EstadoEnum.ACT));
+		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
+		return cb.and(where.toArray(new Predicate[0]));
 	}
 
 }

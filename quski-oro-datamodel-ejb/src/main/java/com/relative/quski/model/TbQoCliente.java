@@ -43,6 +43,9 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "canal_contacto")
 	private String canalContacto;
 
+	@Column(name = "nombre_completo")
+	private String nombreCompleto;
+	
 	@Column(name = "cargas_familiares")
 	private BigDecimal cargasFamiliares;
 
@@ -183,6 +186,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setActividadEconomicaEmpresa(String actividadEconomicaEmpresa) {
 		this.actividadEconomicaEmpresa = actividadEconomicaEmpresa;
+	}
+
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
 	}
 
 	public String getApellidoMaterno() {
@@ -614,7 +625,6 @@ public class TbQoCliente implements Serializable {
 	public TbQoReferenciaPersonal addTbQoReferenciaPersonal(TbQoReferenciaPersonal tbQoReferenciaPersonal) {
 		getTbQoReferenciaPersonals().add(tbQoReferenciaPersonal);
 		tbQoReferenciaPersonal.setTbQoCliente(this);
-
 		return tbQoReferenciaPersonal;
 	}
 

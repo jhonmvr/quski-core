@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -32,12 +36,16 @@ public class TbQoTasacion implements Serializable {
 	private Long id;
 
 	private String descripcion;
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Column(name="descuento_peso_piedra")
 	private BigDecimal descuentoPesoPiedra;
 
 	@Column(name="descuento_peso_piedra_retasacion")
 	private BigDecimal descuentoPesoPiedraRetasacion;
+	
 
 	@Column(name="descuento_suelda")
 	private BigDecimal descuentoSuelda;
@@ -100,6 +108,9 @@ public class TbQoTasacion implements Serializable {
 
 	@Column(name="valor_realizacion_retasacion")
 	private BigDecimal valorRealizacionRetasacion;
+	
+	@Column(name="tipo_oro")
+	private String tipoOro;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
@@ -107,10 +118,17 @@ public class TbQoTasacion implements Serializable {
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 
 
-	@ManyToOne
-	@JoinColumn(name="id_funda")
-	private TbQoFunda tbQoFunda;
+	@Column(name="id_funda")
+	private BigDecimal idFunda;
 	
+	public EstadoEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+
 	public TbQoTasacion() {
 	}
 
@@ -314,13 +332,25 @@ public class TbQoTasacion implements Serializable {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
 	}
 
-	public TbQoFunda getTbQoFunda() {
-		return tbQoFunda;
+	public BigDecimal getTbQoFunda() {
+		return idFunda;
 	}
 
-	public void setTbQoFunda(TbQoFunda tbQoFunda) {
-		this.tbQoFunda = tbQoFunda;
+	public void setTbQoFunda(BigDecimal idFunda) {
+		this.idFunda = idFunda;
 	}
+
+	public String getTipoOro() {
+		return tipoOro;
+	}
+
+	public void setTipoOro(String tipoOro) {
+		this.tipoOro = tipoOro;
+	}
+
+
+	
+	
 	
 	
 

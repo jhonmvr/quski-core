@@ -11,6 +11,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.spec.RiesgoAcumuladoByIdClienteSpec;
+import com.relative.quski.repository.spec.RiesgoAcumuladoByIdNegociacionSpec;
 import com.relative.quski.repository.spec.RiesgoAcumuladoByIdSpec;
 
 /**
@@ -70,6 +71,19 @@ public class RiesgoAcumuladoRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 			log.info("NUMERO DE EXCEPCIONES RECUPERADAS ---------------------------> " + listRiesgoAcumulado.size());
 			if (!listRiesgoAcumulado.isEmpty()) {
 				return listRiesgoAcumulado;
+		} else {
+			return null;
+		}
+    	} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar riesgos acumulados no paginados");
+    	}
+	}
+	@Override
+	public List<TbQoRiesgoAcumulado> findByIdNegociacion( Long idNegociacion ) throws RelativeException {
+		try {
+			List<TbQoRiesgoAcumulado> list = this.findAllBySpecification( new RiesgoAcumuladoByIdNegociacionSpec( idNegociacion ) );
+			if (!list.isEmpty()) {
+				return list;
 		} else {
 			return null;
 		}

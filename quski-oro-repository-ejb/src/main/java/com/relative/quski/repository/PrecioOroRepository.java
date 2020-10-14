@@ -7,7 +7,6 @@ import javax.ejb.Local;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.quski.model.TbQoPrecioOro;
-import com.relative.quski.wrapper.PrecioOroWrapper;
 
 @Local
 public interface PrecioOroRepository extends CrudRepository<Long, TbQoPrecioOro> {
@@ -24,6 +23,5 @@ public interface PrecioOroRepository extends CrudRepository<Long, TbQoPrecioOro>
 
 	public Long countfindByIdCotizacion(Long idCotizador) throws RelativeException;
 	
-	public List<PrecioOroWrapper>  findByIdCotizadorCustom( Long idCotizador) throws RelativeException;
 
 }

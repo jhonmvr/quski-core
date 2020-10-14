@@ -11,6 +11,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.wrapper.ExceptionWrapper;
 /**
  * 
  * @author Jeroham Cadenas - Developer twelve 
@@ -38,5 +39,7 @@ public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcio
 	public Long countByTipoExcepcionAndIdNegociacionAndCaracteristica( String tipoExcepcion, Long idNegociacion, String caracteristica ) throws RelativeException ;
 	
 	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion ) throws RelativeException;
+
+
 	
 }

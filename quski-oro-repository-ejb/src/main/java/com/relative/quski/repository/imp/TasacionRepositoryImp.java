@@ -10,6 +10,7 @@ import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
 import com.relative.quski.repository.spec.TasacionByIdNegociacionSpec;
+import com.relative.quski.repository.spec.TasacionByIdSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -46,6 +47,19 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 		}
 		return null;
 	}
+	@Override
+	public TbQoTasacion findById(Long id) throws RelativeException {
+		List<TbQoTasacion> tmp;
+		try {
+			tmp = this.findAllBySpecification( new TasacionByIdSpec( id ) );
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp.get(0);
+			}
+		} catch (Exception e) {
+			throw new RelativeException("Error al buscar contrato por id Credito Negociacion" + e.getMessage());
+		}
+		return null;
+	}
 
 	@Override
 	public Long countFindByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException {
@@ -64,7 +78,12 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 	@Override
 	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			return this.findAllBySpecification( new TasacionByIdNegociacionSpec( idNegociacion ) );
+			List<TbQoTasacion> list = this.findAllBySpecification( new TasacionByIdNegociacionSpec( idNegociacion ) );
+			if( !list.isEmpty() ) {
+				return list;
+			} else {
+				return null;				
+			}
 		}catch (Exception e) {
 			throw new RelativeException(": Al buscar tasacion por id de negociacion imp " + e.getMessage());
 		}

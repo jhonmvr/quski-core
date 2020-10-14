@@ -23,7 +23,6 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.service.CotizacionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -45,8 +44,6 @@ public class ClienteRestController extends BaseRestController
 
 	@Inject
 	QuskiOroService qos;
-	@Inject
-	CotizacionService cos;
 	@Inject
 	Logger log;
 
@@ -102,27 +99,6 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(this.qos.manageCliente(wp.getEntidad()));
 		return loc;
 	}
-
-//	/**
-//	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION CON COTIZACION
-//	 * 
-//	 * @author KLÉBER GUERRA - Relative Engine
-//	 * @param String identificacion
-//	 * @return GenericWrapper<TbQoCliente>
-//	 * @throws RelativeException
-//	 */
-//	@GET
-//	@Path("/findClienteByIdentificacionCotizacion")
-//	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findClienteByIdentificacionWithCotizacion Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
-//	public GenericWrapper<TbQoCliente> findClienteByIdentificacionCotizacion(
-//			@QueryParam("identificacion") String identificacion) throws RelativeException {
-//		log.info("INGRESA A LA BUSQUEDA findClienteByIdentificacionCotizacion ");
-//		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
-//		TbQoCliente a = this.qos.findClienteByIdentificacionWithCotizacion(identificacion);
-//		loc.setEntidad(a);
-//		return loc;
-//	}
-
 	/**
 	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
 	 * 

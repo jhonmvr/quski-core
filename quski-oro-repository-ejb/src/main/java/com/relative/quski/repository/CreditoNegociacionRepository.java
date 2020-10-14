@@ -11,6 +11,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoDireccionCliente;
 @Local
 public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoCreditoNegociacion>{
 	
@@ -20,7 +21,9 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 			String fechaHasta, String codigoOperacion, ProcesoEnum proceso, String identificacion, Long agencia, String cliente,
 			EstadoEnum estado) throws RelativeException;
 	public Long countByParams(Date fechaDesde, Date fechaHasta, EstadoOperacionEnum estado, String identificacion)throws RelativeException;
-	public List<TbQoCreditoNegociacion> findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException;
+	public TbQoCreditoNegociacion findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException;
+	public List<TbQoCreditoNegociacion> findCreditoNegociacionByIdCliente(Long id) throws RelativeException ;
+
 
 }
 

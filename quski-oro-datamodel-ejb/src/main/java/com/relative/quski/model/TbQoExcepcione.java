@@ -37,6 +37,7 @@ public class TbQoExcepcione implements Serializable {
 	@Column(name="id_asesor")
 	private String idAsesor;
 
+
 	@Column(name="tipo_excepcion")
 	private String tipoExcepcion;
 	
@@ -44,6 +45,9 @@ public class TbQoExcepcione implements Serializable {
 	
 	@Column(name="observacion_asesor")
 	private String observacionAsesor;
+	
+	@Column(name="mensaje_bre")
+	private String mensajeBre;
 	
 	@Column(name="observacion_aprobador")
 	private String observacionAprobador;
@@ -142,6 +146,14 @@ public class TbQoExcepcione implements Serializable {
 
 	public void setObservacionAprobador(String observacionAprobador) {
 		this.observacionAprobador = observacionAprobador;
+	}
+
+	public String getMensajeBre() {
+		return mensajeBre;
+	}
+
+	public void setMensajeBre(String mensajeBre) {
+		this.mensajeBre = mensajeBre;
 	}
 
 	public String getCaracteristica() {
