@@ -2414,7 +2414,7 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT.toString());
 				if (send.getFechaInicio() != null && send.getFechaFin() != null) {
-					send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
+					//send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
 				}
 				return this.trackingRepository.add(send);
 			} else {
@@ -2440,7 +2440,7 @@ public class QuskiOroService {
 				persisted.setActividad(send.getActividad());
 			}
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			if (send.getSituacion() != null) {
+			/*if (send.getSituacion() != null) {
 				persisted.setSituacion(send.getSituacion());
 			}
 			if (send.getFechaInicio() != null) {
@@ -2464,7 +2464,7 @@ public class QuskiOroService {
 			}
 			if (send.getUsuario() != null) {
 				persisted.setUsuario(send.getUsuario());
-			}
+			}*/
 			return this.trackingRepository.update(persisted);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
