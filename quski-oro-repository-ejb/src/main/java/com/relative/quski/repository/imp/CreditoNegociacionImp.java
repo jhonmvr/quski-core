@@ -65,6 +65,16 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 		
 	}
 
+	@Override
+	public List<TbQoCreditoNegociacion> findCreditoNegociacionByIdCliente(Long id) throws RelativeException {
+	try {
+	//	return CreditoNegociacionRepository.
+	}catch (Exception e) {
+		// TODO: handle exception
+	}
+		return null;
+	}
+
 //	@Override
 //	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado, int startRecord,
 //			Integer pageSize, String sortFields, String sortDirections) throws RelativeException {

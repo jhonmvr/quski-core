@@ -26,8 +26,10 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.NegociacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -133,6 +135,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("usuario") String usuario)throws RelativeException {
 		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
+		return loc;
+	}
+	
+	@GET
+	@Path("/traerCreditoNegociacionExistente")
+	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
+		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+		loc.setEntidad(a);
 		return loc;
 	}
 }
