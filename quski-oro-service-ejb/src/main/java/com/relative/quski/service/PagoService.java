@@ -29,6 +29,7 @@ import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 import com.relative.quski.wrapper.RegistroBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistroPagoWrapper;
+import com.relative.quski.wrapper.RespuestaObjectWrapper;
 
 @Stateless
 public class PagoService {
@@ -42,9 +43,7 @@ public class PagoService {
 	private ClientePagoRepository clientePagoRepository;
 	@Inject
 	private ParametroRepository parametroRepository;
-	//@Inject
-	//private FileLocalStorage fls;
-
+	
 	public RegistrarPagoWrapper crearRegistrarPago(RegistrarPagoWrapper registroPago, String autorizacion )
 			throws RelativeException, UnsupportedEncodingException {
 		try {
@@ -64,15 +63,12 @@ public class PagoService {
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
 				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {
-					List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
 					FileLocalStorage file = new FileLocalStorage();
-					file.setArchivo(registro.getArchivo());
-					file.setNombreArchivo(registro.getNombreArchivo());
-					file.setEstado(EstadoEnum.ACT);
-					
-					LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
-							.getValor().concat("?databaseName=").concat("localStorage&").concat("collectionName=").concat("col_file&").
-							concat("objectEncripted=").concat(""),
+					file.setFileBase64(registro.getArchivo());
+					file.setName(registro.getNombreArchivo());
+					file.setProcess(EstadoEnum.ACT);
+					RespuestaObjectWrapper objeto = LocalStorageClient.createObject(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
+							.getValor().concat("?databaseName=").concat("testrest&").concat("collectionName=").concat("documento-habilitante"),file,
 							autorizacion);
 					
 					TbQoRegistrarPago pago = new TbQoRegistrarPago();
@@ -83,10 +79,10 @@ public class PagoService {
 					pago.setValorPagado(registro.getValorPagado());
 					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 					pago.setEstado(EstadoEnum.ACT);
+					pago.setIdComprobante(objeto.getEntidad());
 					pago.setTbQoClientePago(cliente);
-					//pago.setIdComprobante();
+					registro.setArchivo(objeto.getEntidad());
 					qos.manageRegistrarPago(pago);
-					
 				}
 			}
 			
@@ -120,13 +116,11 @@ public class PagoService {
 				for (RegistroBloqueoFondoWrapper registro : bloqueoFondo.getBloqueos()) {
 					List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
 					FileLocalStorage file = new FileLocalStorage();
-					file.setArchivo(registro.getArchivo());
-					file.setNombreArchivo(registro.getNombreArchivo());
-					file.setEstado(EstadoEnum.ACT);
-					
-					LocalStorageClient.saveFileSotage(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
-							.getValor().concat("?databaseName=").concat("localStorage&").concat("collectionName=").concat("col_file&").
-							concat("objectEncripted=").concat("el archivo en base 64"),
+					file.setFileBase64(registro.getArchivo());
+					file.setName(registro.getNombreArchivo());
+					file.setProcess(EstadoEnum.ACT);
+					LocalStorageClient.createObject(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE)
+							.getValor().concat("?databaseName=").concat("testrest&").concat("collectionName=").concat("documento-habilitante"),file,
 							autorizacion);
 					
 					TbQoRegistrarPago bloqueo = new TbQoRegistrarPago();
