@@ -1,8 +1,7 @@
 package com.relative.quski.rest;
 
-
-
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -30,21 +29,16 @@ import io.swagger.annotations.ApiOperation;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "archivoClienteController - REST CRUD")
-public class ArchivoClienteRestController  extends BaseRestController
-implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoArchivoCliente>> {
+public class ArchivoClienteRestController extends BaseRestController
+		implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoArchivoCliente>> {
 
 	public ArchivoClienteRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
 	@Inject
 	QuskiOroService qos;
-
-
-
-
 
 	@Override
 	@GET
@@ -56,7 +50,7 @@ implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoAr
 		loc.setEntidad(a);
 		return loc;
 	}
-	
+
 	@Override
 	@GET
 	@Path("/listAllEntities")
@@ -82,7 +76,6 @@ implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoAr
 		return plw;
 	}
 
-
 	@Override
 	@POST
 	@Path("/persistEntity")
@@ -97,50 +90,16 @@ implements CrudRestControllerInterface<TbQoArchivoCliente, GenericWrapper<TbQoAr
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-
-	/*
-	
 	@GET
-	@Path("/downloadHabilitante")
-	@ApiOperation(value = "byte ", notes = "Metodo findByIdDocumentoHabilitante Retorna wrapper de entidades encontradas en TbQoDocumentoHabilitante", response = byte.class)
-	public byte[] downloadHabilitante(
-			@QueryParam("id") String idTipoDocumento,
-			@QueryParam("identificacionCliente") String identificacionCliente,
-			@QueryParam("idCotizacion") String idCotizacion,
-			@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
-		log.info("===> idTipoDocumento " + idTipoDocumento);
-		log.info("===> codigoContrato " + identificacionCliente);
-		log.info("===> idCotizacion " + idCotizacion);
-		log.info("===> idNegociacion " + idNegociacion);
-		
-		if (idTipoDocumento != null &&  identificacionCliente != null && !identificacionCliente.isEmpty() ) {
-			TbQoDocumentoHabilitante a = this.qos.findDocumentoHabilitanteByTipoDocumentoAndCodigoContrato(codigoContrato, Long.valueOf( idTipoDocumento));
-			return getArchivo(a);
-		} else if (idTipoDocumento != null &&  idJoya != null && !idJoya.isEmpty() ) { 
-			TbMiDocumentoHabilitante a = this.mis.findDocumentoHabilitanteByTipoDocumentoAndIdJoyaAndIdAbono(
-					Long.valueOf( idJoya ),null,null,null, Long.valueOf( idTipoDocumento));
-			return getArchivo(a);
-		} else if (idTipoDocumento != null &&  StringUtils.isNotBlank(idAbono) ) { 
-			TbMiDocumentoHabilitante a = this.mis.findDocumentoHabilitanteByTipoDocumentoAndIdJoyaAndIdAbono(
-					null ,Long.valueOf( idAbono ), null,null,Long.valueOf( idTipoDocumento));
-			return getArchivo(a);
-		}else if (idTipoDocumento != null &&  StringUtils.isNotBlank(idVentaLote) ) { 
-			TbMiDocumentoHabilitante a = this.mis.findDocumentoHabilitanteByTipoDocumentoAndIdJoyaAndIdAbono(
-					null ,null,Long.valueOf( idVentaLote ),null,Long.valueOf( idTipoDocumento));
-			return getArchivo(a);
-		} 
-		else if (idTipoDocumento != null &&  StringUtils.isNotBlank(idCorteCaja) ) { 
-			TbMiDocumentoHabilitante a = this.mis.findDocumentoHabilitanteByTipoDocumentoAndIdJoyaAndIdAbono(
-					null ,null,null,Long.valueOf( idCorteCaja ),Long.valueOf( idTipoDocumento));
-			return getArchivo(a);
-			
-		} 
-		else {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "EL ID DE DOCUMENTOS NO PUEDE SER NULO O VACIO ");
-		}
-
-	}*/
+	@Path("/enviarCorreoPrueba")
+	public GenericWrapper<Boolean> enviarCorreoPrueba(@QueryParam("para") String para,
+			@QueryParam("asunto") String asunto, @QueryParam("contenido") String contenido, Map<String, byte[]> adjunto) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.qos.enviarCorreoPruebas(para, asunto, contenido,adjunto);
+		loc.setEntidad(a);
+		return loc;
+	}
 }

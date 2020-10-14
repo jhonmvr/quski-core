@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,6 +50,7 @@ import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoPrecioOro;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
@@ -72,6 +74,7 @@ import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.PatrimonioRepository;
 import com.relative.quski.repository.PrecioOroRepository;
+import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
@@ -162,6 +165,8 @@ public class QuskiOroService {
 	private RegistrarPagoRepository registrarPagoRepository;
 	@Inject
 	private ExcepcionRolRepository excepcionRolRepository;
+	@Inject
+	private ProcesoRepository procesoRepository;
 
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
@@ -493,14 +498,6 @@ public class QuskiOroService {
 	/**
 	 * * * * * * * * * * * @COTIZADOR
 	 */
-
-	/**
-	 * 
-	 * @author Developer Twelve
-	 * @param Long id
-	 * @return TbQoCotizador
-	 * @throws RelativeException
-	 */
 	public TbQoCotizador findCotizadorById(Long id) throws RelativeException {
 		try {
 			return cotizadorRepository.findById(id);
@@ -509,27 +506,12 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
-	/**
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param identificacion
-	 * @return {@link TbQoPrecioOro}
-	 * @throws RelativeException
-	 */
 	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
 		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
 		po.setTbQoCotizador(cot);
 		return this.managePrecioOro(po);
 	}
 
-	/**
-	 * 
-	 * @author KLÉBER GUERRA - Relative Engine
-	 * @param id
-	 * @return {@link TbQoPrecioOro}
-	 * @throws RelativeException
-	 */
 	public TbQoPrecioOro eliminarPrecioOro(Long id) throws RelativeException {
 		TbQoPrecioOro precioOro = this.precioOroRepository.findById(id);
 		precioOro.setEstado(EstadoEnum.INA);
@@ -541,16 +523,6 @@ public class QuskiOroService {
 		}
 
 	}
-
-	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION METODO QUE BUSCA
-	 * LOS PRECIOS OROS LIGADOS A LA COTIZACION PARA RECUPERAR LOS PRECIOS ORO
-	 * 
-	 * @param pw
-	 * @param idCotizador
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
 
 	public List<TbQoPrecioOro> findByIdCotizacion(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
@@ -721,9 +693,7 @@ public class QuskiOroService {
 		}
 	}
 
-	/**
-	 * * * * * * * * * * * @DETALLE @CREDITO
-	 */
+	/** * * * * * * * * * * * @DETALLE @CREDITO */
 	/**
 	 * 
 	 * @author Jeroham Cadenas - Developer Twelve
@@ -1375,7 +1345,6 @@ public class QuskiOroService {
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 
 		try {
-			log.info("ID QUE INGRESA findNegociacionById===> " + id);
 			return negociacionRepository.findById(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -1481,18 +1450,17 @@ public class QuskiOroService {
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
-			persisted.setTbQoCliente(send.getTbQoCliente());
-			persisted.setEstado(send.getEstado());
-			persisted.setIdAsesor(send.getIdAsesor());
-			persisted.setSituacion(send.getSituacion());
-			persisted.setTipo(send.getTipo());
-			persisted.setId(persisted.getId());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			if(send.getIdAsesor() != null ) {
+				persisted.setIdAsesor(send.getIdAsesor());				
+			}
+			if( send.getSituacion() != null ) {
+				persisted.setSituacion(send.getSituacion());				
+			}
+			persisted.setEstado( EstadoEnum.ACT );				
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			return negociacionRepository.update(persisted);
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -1513,10 +1481,11 @@ public class QuskiOroService {
 	 */
 	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor) throws RelativeException {
 		try {
-			TbQoCliente cliente = this.createCliente(cedula);
-			if (cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
-				return generarTablasIniciales(cliente, asesor);
+
+			TbQoCliente cliente = this.createCliente( cedula );
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -1528,10 +1497,10 @@ public class QuskiOroService {
 
 	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor) throws RelativeException {
 		try {
-			TbQoCliente cliente = this.createClienteFromEquifax(this.traerEntidadPersonaEquifax(cedula));
-			if (cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
-				return generarTablasIniciales(cliente, asesor);
+ 			TbQoCliente cliente = this.createClienteFromEquifax( this.traerEntidadPersonaEquifax( cedula ) ); 
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -1543,10 +1512,11 @@ public class QuskiOroService {
 
 	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor) throws RelativeException {
 		try {
-			TbQoCliente cliente = this.findClienteByCotizador(id);
-			if (cliente != null) {
-				log.info("1) INICIAR NEGOCIACION, CREAMOS EL CLIENTE ====> " + cliente);
-				return generarTablasIniciales(cliente, asesor);
+ 
+			TbQoCliente cliente = this.findClienteByCotizador( id );
+			if( cliente != null) {
+				return generarTablasIniciales( cliente, asesor);
+
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -1617,10 +1587,10 @@ public class QuskiOroService {
 			} else {
 				return new NegociacionWrapper(false);
 			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
+
 		}
 
 	}
@@ -1646,9 +1616,9 @@ public class QuskiOroService {
 						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());			
+
 		}
 
 	}
@@ -3352,7 +3322,6 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	public TbQoExcepcione manageExcepcion(TbQoExcepcione send) throws RelativeException {
-		log.info("Valor del send en manageExcepcion===> " + send);
 		TbQoExcepcione persisted = null;
 		try {
 			if (send != null && send.getId() != null) {
@@ -3515,12 +3484,9 @@ public class QuskiOroService {
 				return this.excepcionRolRepository.findByRolAndIdentificacion(rol, identificacion);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + "todos los Abonos " + e.getMessage());
+
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA+"todos los Abonos " + e.getMessage());
+
 		}
 	}
 
@@ -4163,32 +4129,24 @@ public class QuskiOroService {
 		}
 	}
 
-	private Boolean guardarProspectoCrm(TbQoCliente cliente) throws RelativeException {
+	private Boolean guardarProspectoCrm( TbQoCliente cliente ) throws RelativeException, UnsupportedEncodingException {
 		try {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
-			entidad.setCedulaC(cliente.getCedulaCliente());
-			entidad.setEmailAddress(cliente.getEmail());
-			entidad.setEmailAddressCaps(cliente.getEmail().toUpperCase());
-			entidad.setFirstName(cliente.getNombreCompleto());
-			entidad.setLeadSourceDescription("GESTION QUSKI");
-			entidad.setPhoneMobile(cliente.getTelefonoMovil());
-			entidad.setPhoneHome(cliente.getTelefonoFijo());
-			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
-			try {
-				CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
-				if (pro != null) {
-					return true;
-				} else {
-					return false;
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+			entidad.setCedulaC( cliente.getCedulaCliente() );
+			entidad.setEmailAddress( cliente.getEmail() );
+			entidad.setEmailAddressCaps( cliente.getEmail().toUpperCase() );
+			entidad.setFirstName( cliente.getNombreCompleto() );
+			entidad.setLeadSourceDescription( "GESTION QUSKI");
+			entidad.setPhoneMobile( cliente.getTelefonoMovil() );
+			entidad.setPhoneHome( cliente.getTelefonoFijo() );
+			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper( entidad );
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(tmp);
+			return pro != null ? Boolean.TRUE : Boolean.FALSE ;
+		}catch(RelativeException e ) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(Constantes.ERROR_CODE_CREATE);
+
 		}
 	}
 
@@ -4328,53 +4286,132 @@ public class QuskiOroService {
 			log.info("=====>>> CONTENIDO: " + contenido);
 			log.info("=====>>> ADJUNTO: " + adjunto);
 			log.info("=====>>> Inicializa mail");
-			String emailSecurityType = this.parametroRepository.findByNombre(QuskiOroConstantes.emailSecurityType)
-					.getValor();
-			String smtpHostServer = this.parametroRepository.findByNombre(QuskiOroConstantes.smtpHostServer).getValor();
-			String portEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
-			String sfPortEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
-			String userEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
-			String fromEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmail).getValor();
-			String authEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
-			String passwordEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
-			log.info("parametro email smtpHostServer==>>" + emailSecurityType);
-			log.info("parametro email smtpHostServer==>>" + smtpHostServer);
-			log.info("parametro email portEmail==>>" + portEmail);
-			log.info("parametro email sfPortEmail==>>" + sfPortEmail);
-			log.info("parametro email sfPortEmail==>>" + sfPortEmail);
-			log.info("parametro email userEmail==>>" + userEmail);
-			log.info("parametro email fromEmail==>>" + fromEmail);
-			log.info("parametro email authEmail==>>" + authEmail);
-			log.info("parametro email passwordEmail==>>" + passwordEmail);
-			if (adjunto != null) {
-				EmailDefinition ed = new EmailDefinition.Builder()
-						.emailSecurityType(
-								QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
-						.smtpHostServer(smtpHostServer).port(portEmail).sfPort(sfPortEmail)
-						.auth(StringUtils.isNotBlank(authEmail) && authEmail == "TRUE").password(passwordEmail)
-						.user(userEmail).subject(asunto).tos(Arrays.asList(para)).fromEmail(fromEmail)
-						.message(contenido).hasFiles(Boolean.TRUE).attachments(adjunto).build();
-				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
-				EmailUtil.sendEmail(ed);
-			} else {
-				EmailDefinition ed = new EmailDefinition.Builder()
-						.emailSecurityType(
-								QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
-						.smtpHostServer(smtpHostServer).port(portEmail).sfPort(sfPortEmail)
-						.auth(StringUtils.isNotBlank(authEmail) && authEmail == "TRUE").password(passwordEmail)
-						.user(userEmail).subject(asunto).tos(Arrays.asList(para)).fromEmail(fromEmail)
-						.message(contenido).hasFiles(Boolean.FALSE).build();
-				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
-				EmailUtil.sendEmail(ed);
-			}
 
+			String emailSecurityType = this.parametroRepository.findByNombre(QuskiOroConstantes.emailSecurityType).getValor();
+			String smtpHostServer =	this.parametroRepository.findByNombre(QuskiOroConstantes.smtpHostServer).getValor();
+			String portEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.portEmail).getValor();
+			String sfPortEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.sfPortEmail).getValor();
+			String userEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.userEmail).getValor();
+			String fromEmailDesa=this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
+			String authEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
+			String passwordEmail=this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
+			 log.info("parametro email emailSecurityType ===> "+emailSecurityType);
+			 log.info("parametro email smtpHostServer    ===> "+smtpHostServer);
+			 log.info("parametro email portEmail         ===> "+portEmail);
+			 log.info("parametro email sfPortEmail       ===> "+sfPortEmail);
+			 log.info("parametro email userEmail         ===> "+userEmail);
+			 log.info("parametro email fromEmailDesa     ===> "+fromEmailDesa);
+			 log.info("parametro email authEmail         ===> "+authEmail);
+			 log.info("parametro email passwordEmail     ===> "+passwordEmail);
+			 if(adjunto != null) {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail =="TRUE") .password(passwordEmail)
+						  .user(userEmail) .subject(asunto) .tos( Arrays.asList(para)
+						  ) .fromEmail( fromEmailDesa ) .message( contenido )
+						  .hasFiles(Boolean.TRUE).attachments(adjunto).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  Transport.send(null, null, passwordEmail, passwordEmail);
+						  EmailUtil.sendEmail( ed );  
+			 }else {
+				 EmailDefinition ed = new EmailDefinition.Builder()
+						  .emailSecurityType(QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
+						  .smtpHostServer(smtpHostServer) .port(portEmail) .sfPort(sfPortEmail)
+						  .auth(StringUtils.isNotBlank(authEmail) && authEmail.equalsIgnoreCase("TRUE") ).password(passwordEmail)
+						  .user(userEmail).subject(asunto).tos( Arrays.asList(para) ) 
+						  .fromEmail( fromEmailDesa ) .message( contenido )
+						  .hasFiles(Boolean.FALSE).build();
+						  ed.setSession( EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL) );
+						  EmailUtil.sendEmail( ed ); 
+			 }
+			
 		} catch (RelativeException e) {
-			log.info("=====>>> error en envio " + e);
+
 			e.getStackTrace();
-			throw e;
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());			
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
+		}
+
+	}
+	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido, Map<java.lang.String,byte[]> adjunto) throws RelativeException {
+		try {
+			String[] array = new String[1];
+			array[0] = para;
+			
+			this.mailNotificacion(array, asunto, contenido, adjunto);
+			return Boolean.TRUE;
+		} catch (RelativeException e) {
+			e.getStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS+ e.getMessage());
+
+		}
+	}
+	/**
+	 * ************************** @PROCESO
+	 */
+	public TbQoProceso findProcesoById(Long id) throws RelativeException {
+		try {
+			return procesoRepository.findById( id );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,	QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	public TbQoProceso manageProceso(TbQoProceso send) throws RelativeException {
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoProceso persisted = this.findProcesoById( send.getId() );
+				return this.updateProceso(send, persisted);
+			} else if (send.getId() == null) {
+				send.setEstado(EstadoEnum.ACT);
+				send.setFechaCreacion( new Timestamp(System.currentTimeMillis() ));
+				return this.procesoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+	public TbQoProceso updateProceso(TbQoProceso send, TbQoProceso persisted) throws RelativeException {
+		try {
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado(EstadoEnum.ACT);
+			if(send.getEstadoProceso() != null) {
+				persisted.setEstadoProceso( send.getEstadoProceso() );
+			}
+			if( send.getUsuario() != null ) {
+				persisted.setUsuario( send.getUsuario() );				
+			}
+			return procesoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	public List<TbQoProceso> findAllProceso(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.procesoRepository.findAll(TbQoProceso.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.procesoRepository.findAll(TbQoProceso.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return this.procesoRepository.findAll(TbQoProceso.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	public Long countProceso() throws RelativeException {
+		try {
+			return procesoRepository.countAll(TbQoProceso.class);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 
 	}
