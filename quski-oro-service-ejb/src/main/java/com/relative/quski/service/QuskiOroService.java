@@ -2413,7 +2413,7 @@ public class QuskiOroService {
 				return this.updateTracking(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT.toString());
-				if (send.getFechaInicio() != null && send.getFechaFin() != null) {
+				if (send.getFechaCreacion() != null && send.getFechaActualizacion() != null) {
 					//send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
 				}
 				return this.trackingRepository.add(send);
@@ -2440,18 +2440,14 @@ public class QuskiOroService {
 				persisted.setActividad(send.getActividad());
 			}
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			/*if (send.getSituacion() != null) {
-				persisted.setSituacion(send.getSituacion());
+			
+			if (send.getSeccion() != null) {
+				persisted.setSeccion(send.getSeccion());
 			}
 			if (send.getFechaInicio() != null) {
 				persisted.setFechaInicio(send.getFechaInicio());
 			}
-			if (send.getFechaAsignacion() != null) {
-				persisted.setFechaAsignacion(send.getFechaAsignacion());
-			}
-			if (send.getFechaInicioAtencion() != null) {
-				persisted.setFechaInicioAtencion(send.getFechaInicioAtencion());
-			}
+			
 			if (send.getFechaFin() != null) {
 				persisted.setFechaFin(send.getFechaFin());
 			}
@@ -2460,11 +2456,11 @@ public class QuskiOroService {
 
 			}
 			if (send.getFechaInicio() != null && send.getFechaFin() != null) {
-				persisted.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
+				persisted.setTiempoTranscurrido(new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
 			}
-			if (send.getUsuario() != null) {
-				persisted.setUsuario(send.getUsuario());
-			}*/
+			if (send.getNombreAsesor() != null) {
+				persisted.setNombreAsesor(send.getNombreAsesor());
+			}
 			return this.trackingRepository.update(persisted);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,

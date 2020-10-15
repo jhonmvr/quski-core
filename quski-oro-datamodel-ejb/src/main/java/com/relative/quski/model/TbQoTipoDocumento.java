@@ -21,7 +21,7 @@ public class TbQoTipoDocumento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEQ_TIPO_DOCUMENTO")
+	@SequenceGenerator(name="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR", sequenceName="SEQ_TIPO_DOCUMENTO", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_DOCUMENTO_ID_GENERATOR")
 	private Long id;
 

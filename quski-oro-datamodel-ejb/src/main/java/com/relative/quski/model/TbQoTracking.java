@@ -2,6 +2,7 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -17,6 +18,15 @@ public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String actividad;
+	private String observacion;
+	
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
 
 	@Column(name="codigo_bpm")
 	private String codigoBpm;
@@ -27,7 +37,12 @@ public class TbQoTracking implements Serializable {
 	private String estado;
 
 	@Temporal(TemporalType.DATE)
-	private Date fecha;
+	@Column(name="fecha_actualizacion")
+	private Date fechaActualizacion;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_creacion")
+	private Date fechaCreacion;
 
 	@Column(name="fecha_fin")
 	private Timestamp fechaFin;
@@ -37,15 +52,21 @@ public class TbQoTracking implements Serializable {
 
 	private Long id;
 
+	@Column(name="nombre_asesor")
+	private String nombreAsesor;
+
 	private String proceso;
 
 	private String seccion;
 
 	@Column(name="tiempo_transcurrido")
-	private String tiempoTranscurrido;
+	private BigDecimal tiempoTranscurrido;
 
-	@Column(name="usuario_ejecutor")
-	private String usuarioEjecutor;
+	@Column(name="usuario_actualizacion")
+	private String usuarioActualizacion;
+
+	@Column(name="usuario_creacion")
+	private String usuarioCreacion;
 
 	public TbQoTracking() {
 	}
@@ -82,12 +103,20 @@ public class TbQoTracking implements Serializable {
 		this.estado = estado;
 	}
 
-	public Date getFecha() {
-		return this.fecha;
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Timestamp getFechaFin() {
@@ -114,6 +143,14 @@ public class TbQoTracking implements Serializable {
 		this.id = id;
 	}
 
+	public String getNombreAsesor() {
+		return this.nombreAsesor;
+	}
+
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
+	}
+
 	public String getProceso() {
 		return this.proceso;
 	}
@@ -130,20 +167,28 @@ public class TbQoTracking implements Serializable {
 		this.seccion = seccion;
 	}
 
-	public String getTiempoTranscurrido() {
+	public BigDecimal getTiempoTranscurrido() {
 		return this.tiempoTranscurrido;
 	}
 
-	public void setTiempoTranscurrido(String tiempoTranscurrido) {
+	public void setTiempoTranscurrido(BigDecimal tiempoTranscurrido) {
 		this.tiempoTranscurrido = tiempoTranscurrido;
 	}
 
-	public String getUsuarioEjecutor() {
-		return this.usuarioEjecutor;
+	public String getUsuarioActualizacion() {
+		return this.usuarioActualizacion;
 	}
 
-	public void setUsuarioEjecutor(String usuarioEjecutor) {
-		this.usuarioEjecutor = usuarioEjecutor;
+	public void setUsuarioActualizacion(String usuarioActualizacion) {
+		this.usuarioActualizacion = usuarioActualizacion;
+	}
+
+	public String getUsuarioCreacion() {
+		return this.usuarioCreacion;
+	}
+
+	public void setUsuarioCreacion(String usuarioCreacion) {
+		this.usuarioCreacion = usuarioCreacion;
 	}
 
 }
