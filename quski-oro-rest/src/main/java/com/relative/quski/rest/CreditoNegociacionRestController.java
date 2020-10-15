@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -44,6 +45,8 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	QuskiOroService qos;
 	@Inject
 	SoftBankApiClient sbac;
+	@Inject
+	Logger log;
 	
 	public CreditoNegociacionRestController() throws RelativeException {
 		super();
@@ -141,6 +144,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+		log.info("INGRESA A traerCreditoNegociacionExistente ");
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
 		loc.setEntidad(a);

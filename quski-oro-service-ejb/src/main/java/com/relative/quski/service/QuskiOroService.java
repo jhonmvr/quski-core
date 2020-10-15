@@ -4077,12 +4077,17 @@ public class QuskiOroService {
 		try {
 			AprobacionWrapper tmp = new AprobacionWrapper();
 			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
-			log.info("VALORES EN TRAER CREDITO");
+			
 			if (tmp.getCredito() != null) {
-				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(id));
-				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(id));
+				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "+tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
+				log.info("***INGRESA AL IF *****");
+				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setDirecciones(this.findDireccionClienteByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setReferencias(this.referenciaPersonalRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				
 				tmp.setJoyas(this.tasacionRepository.findByIdNegociacion(id));
-				tmp.setDirecciones(this.findDireccionClienteByIdCliente(id));
+				
 				//tmp.setPatrimonios(this.findPatrimonioByIdCliente(id));
 				return tmp;
 			} else {
