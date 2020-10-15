@@ -16,17 +16,11 @@ import java.sql.Timestamp;
 @NamedQuery(name="TbQoTracking.findAll", query="SELECT t FROM TbQoTracking t")
 public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private String actividad;
-	private String observacion;
+	@Id
+	@SequenceGenerator(name = "TB_QO_TRACKING_ID_GENERATOR", sequenceName = "SEQ_TRACKING", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
 	
-	public String getObservacion() {
-		return observacion;
-	}
-
-	public void setObservacion(String observacion) {
-		this.observacion = observacion;
-	}
+	private String actividad;
 
 	@Column(name="codigo_bpm")
 	private String codigoBpm;
@@ -54,6 +48,8 @@ public class TbQoTracking implements Serializable {
 
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
+
+	private String observacion;
 
 	private String proceso;
 
@@ -149,6 +145,14 @@ public class TbQoTracking implements Serializable {
 
 	public void setNombreAsesor(String nombreAsesor) {
 		this.nombreAsesor = nombreAsesor;
+	}
+
+	public String getObservacion() {
+		return this.observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
 	}
 
 	public String getProceso() {
