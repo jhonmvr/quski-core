@@ -1,10 +1,19 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 /**
@@ -13,9 +22,14 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="tb_qo_tracking")
-@NamedQuery(name="TbQoTracking.findAll", query="SELECT t FROM TbQoTracking t")
+
 public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@SequenceGenerator(name="TB_QO_TRACKING_ID_GENERATOR", sequenceName="SEQ_TRACKING", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TRACKING_ID_GENERATOR")
+	private long id;
 
 	private String actividad;
 	private String observacion;
@@ -50,7 +64,6 @@ public class TbQoTracking implements Serializable {
 	@Column(name="fecha_inicio")
 	private Timestamp fechaInicio;
 
-	private Long id;
 
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
