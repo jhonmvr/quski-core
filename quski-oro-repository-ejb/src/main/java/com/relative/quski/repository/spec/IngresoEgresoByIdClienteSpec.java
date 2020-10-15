@@ -12,27 +12,27 @@ import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoIngresoEgresoCliente;
 
 /**
  * @author KLÉBER GUERRA relative Engine
  *
  */
-public class ReferenciaPersonalByIdClienteSpec extends AbstractSpecification<TbQoReferenciaPersonal> {
+public class IngresoEgresoByIdClienteSpec extends AbstractSpecification<TbQoIngresoEgresoCliente> {
 	private Long id;
 
-	public ReferenciaPersonalByIdClienteSpec(Long id) {
+	public IngresoEgresoByIdClienteSpec(Long id) {
 		this.id = id;
 	}
 
 	@Override
-	public boolean isSatisfiedBy(TbQoReferenciaPersonal arg0) {
-		// TODO Auto-generated method stub
+	public boolean isSatisfiedBy(TbQoIngresoEgresoCliente arg0) {
+
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoReferenciaPersonal> poll, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<TbQoIngresoEgresoCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		Long a = this.id;
 		where.add(cb.equal(poll.get("tbQoCliente").get("id"), a));

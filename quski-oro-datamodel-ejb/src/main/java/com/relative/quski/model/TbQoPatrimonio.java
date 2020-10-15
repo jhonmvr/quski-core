@@ -2,6 +2,9 @@ package com.relative.quski.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -38,7 +41,8 @@ public class TbQoPatrimonio implements Serializable {
 
 	private String pasivos;
 	
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -112,13 +116,15 @@ public class TbQoPatrimonio implements Serializable {
 		this.pasivos = pasivos;
 	}
 
-	public String getEstado() {
+
+	public EstadoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
+
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
 	}

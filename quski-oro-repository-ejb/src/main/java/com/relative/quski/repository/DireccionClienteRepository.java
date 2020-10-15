@@ -11,9 +11,11 @@ import com.relative.quski.model.TbQoDireccionCliente;
 @Local
 public interface DireccionClienteRepository extends CrudRepository<Long, TbQoDireccionCliente> {
 
-	List<TbQoDireccionCliente> findByIdCliente(Long id) throws RelativeException ;
+	public List<TbQoDireccionCliente> findByIdCliente(Long id) throws RelativeException ;
 
-	List<TbQoDireccionCliente> findByIdClienteAndTipoDireccion(Long idC, String tipoDireccion) throws RelativeException;
+	public List<TbQoDireccionCliente> findByIdClienteAndTipoDireccion(Long idC, String tipoDireccion) throws RelativeException;
+	
+	
 	
 }
 

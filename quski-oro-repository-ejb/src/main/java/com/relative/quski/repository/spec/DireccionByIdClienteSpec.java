@@ -28,10 +28,9 @@ private Long id;
 	@Override
 	public Predicate toPredicate(Root<TbQoDireccionCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-		String e = EstadoEnum.ACT.toString();
 		Long a = this.id;
 			where.add(cb.equal(poll.get("tbQoCliente").get("id"), a));
-			where.add(cb.equal(poll.get("estado"), e));
+			where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 }
