@@ -22,6 +22,8 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.OperacionesWrapper;
 
 
 @Path("/procesoRestController")
@@ -82,5 +84,12 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 			plw.setList(actions);
 		}
 		return plw;
+	}
+	@POST
+	@Path("/buscarOperaciones")
+	public GenericWrapper<OperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
+		GenericWrapper<OperacionesWrapper> loc = new GenericWrapper<>();
+		loc.setEntidades( this.qos.findOperaciones( wp ) );
+		return loc;
 	}
 }

@@ -83,11 +83,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 	
-	// Ususario Asesor que creo la negociacion.
-	@Column(name="id_usuario")
-	private String idUsuario;
+	private String usuario;
 	
-	@Column(name="codigo")
 	private String codigo;
 
 	@Column(name="joyas_seleccionadas")
@@ -220,12 +217,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
-	public String getIdUsuario() {
-		return this.idUsuario;
+	public String getUsuario() {
+		return this.usuario;
 	}
 
-	public void setIdUsuario(String idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getJoyasSeleccionadas() {
