@@ -5,8 +5,6 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-import com.relative.quski.enums.TipoExcepcionEnum;
-
 /**
  * @author KLÉBER GUERRA relative Engine
  *
