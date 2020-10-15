@@ -3,7 +3,7 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.util.Date;
 import java.sql.Timestamp;
 
 
@@ -13,25 +13,36 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="tb_qo_tracking")
+@NamedQuery(name="TbQoTracking.findAll", query="SELECT t FROM TbQoTracking t")
 public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name="TB_QO_TRACKING_ID_GENERATOR", sequenceName="SEQ_TRACKING", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TRACKING_ID_GENERATOR")
-	private Long id;
-
 	private String actividad;
+	private String observacion;
+	
+	public String getObservacion() {
+		return observacion;
+	}
 
-	@Column(name="codigo_registro")
-	private BigDecimal codigoRegistro;
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	@Column(name="codigo_bpm")
+	private String codigoBpm;
+
+	@Column(name="codigo_operacion_softbank")
+	private String codigoOperacionSoftbank;
 
 	private String estado;
-	
-	private String situacion;
 
-	@Column(name="fecha_asignacion")
-	private Timestamp fechaAsignacion;
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_actualizacion")
+	private Date fechaActualizacion;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_creacion")
+	private Date fechaCreacion;
 
 	@Column(name="fecha_fin")
 	private Timestamp fechaFin;
@@ -39,27 +50,25 @@ public class TbQoTracking implements Serializable {
 	@Column(name="fecha_inicio")
 	private Timestamp fechaInicio;
 
-	@Column(name="fecha_inicio_atencion")
-	private Timestamp fechaInicioAtencion;
+	private Long id;
 
-	private String observacion;
+	@Column(name="nombre_asesor")
+	private String nombreAsesor;
 
 	private String proceso;
 
-	@Column(name="total_tiempo")
-	private Time totalTiempo;
+	private String seccion;
 
-	private String usuario;
+	@Column(name="tiempo_transcurrido")
+	private BigDecimal tiempoTranscurrido;
+
+	@Column(name="usuario_actualizacion")
+	private String usuarioActualizacion;
+
+	@Column(name="usuario_creacion")
+	private String usuarioCreacion;
 
 	public TbQoTracking() {
-	}
-
-	public Long getId() {
-		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getActividad() {
@@ -70,12 +79,20 @@ public class TbQoTracking implements Serializable {
 		this.actividad = actividad;
 	}
 
-	public BigDecimal getCodigoRegistro() {
-		return this.codigoRegistro;
+	public String getCodigoBpm() {
+		return this.codigoBpm;
 	}
 
-	public void setCodigoRegistro(BigDecimal codigoRegistro) {
-		this.codigoRegistro = codigoRegistro;
+	public void setCodigoBpm(String codigoBpm) {
+		this.codigoBpm = codigoBpm;
+	}
+
+	public String getCodigoOperacionSoftbank() {
+		return this.codigoOperacionSoftbank;
+	}
+
+	public void setCodigoOperacionSoftbank(String codigoOperacionSoftbank) {
+		this.codigoOperacionSoftbank = codigoOperacionSoftbank;
 	}
 
 	public String getEstado() {
@@ -86,12 +103,20 @@ public class TbQoTracking implements Serializable {
 		this.estado = estado;
 	}
 
-	public Timestamp getFechaAsignacion() {
-		return this.fechaAsignacion;
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
 	}
 
-	public void setFechaAsignacion(Timestamp fechaAsignacion) {
-		this.fechaAsignacion = fechaAsignacion;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Timestamp getFechaFin() {
@@ -110,20 +135,20 @@ public class TbQoTracking implements Serializable {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Timestamp getFechaInicioAtencion() {
-		return this.fechaInicioAtencion;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setFechaInicioAtencion(Timestamp fechaInicioAtencion) {
-		this.fechaInicioAtencion = fechaInicioAtencion;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getObservacion() {
-		return this.observacion;
+	public String getNombreAsesor() {
+		return this.nombreAsesor;
 	}
 
-	public void setObservacion(String observacion) {
-		this.observacion = observacion;
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
 	}
 
 	public String getProceso() {
@@ -134,28 +159,36 @@ public class TbQoTracking implements Serializable {
 		this.proceso = proceso;
 	}
 
-	public Time getTotalTiempo() {
-		return this.totalTiempo;
+	public String getSeccion() {
+		return this.seccion;
 	}
 
-	public void setTotalTiempo(Time totalTiempo) {
-		this.totalTiempo = totalTiempo;
+	public void setSeccion(String seccion) {
+		this.seccion = seccion;
 	}
 
-	public String getUsuario() {
-		return this.usuario;
+	public BigDecimal getTiempoTranscurrido() {
+		return this.tiempoTranscurrido;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setTiempoTranscurrido(BigDecimal tiempoTranscurrido) {
+		this.tiempoTranscurrido = tiempoTranscurrido;
 	}
 
-	public String getSituacion() {
-		return situacion;
+	public String getUsuarioActualizacion() {
+		return this.usuarioActualizacion;
 	}
 
-	public void setSituacion(String situacion) {
-		this.situacion = situacion;
+	public void setUsuarioActualizacion(String usuarioActualizacion) {
+		this.usuarioActualizacion = usuarioActualizacion;
+	}
+
+	public String getUsuarioCreacion() {
+		return this.usuarioCreacion;
+	}
+
+	public void setUsuarioCreacion(String usuarioCreacion) {
+		this.usuarioCreacion = usuarioCreacion;
 	}
 
 }
