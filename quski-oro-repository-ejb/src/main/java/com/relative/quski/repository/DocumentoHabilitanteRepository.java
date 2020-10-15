@@ -14,4 +14,5 @@ public interface DocumentoHabilitanteRepository extends CrudRepository<Long, TbQ
 
 	public TbQoDocumentoHabilitante findByTipoDocumentoAndReferenciaAndProceso(Long idTipoDocumento,
 			ProcessEnum proceso, Long referencia);
+	public TbQoDocumentoHabilitante findByIdCreditoNegociacion(Long idCreditoNegociacion);
 }

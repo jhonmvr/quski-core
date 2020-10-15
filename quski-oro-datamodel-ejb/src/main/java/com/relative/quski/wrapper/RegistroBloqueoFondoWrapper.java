@@ -17,9 +17,44 @@ public class RegistroBloqueoFondoWrapper implements Serializable{
 	private BigDecimal numeroDeposito;
 	private BigDecimal valorPagado;
 	private String nombreArchivo;
-	private String archivo;
+	private String Archivo;
+	public String getArchivo() {
+		return Archivo;
+	}
+	public void setArchivo(String archivo) {
+		Archivo = archivo;
+	}
+	private byte[] idComprobante;
+	private String fileBase64;
+	private String estado;
 	
-	
+	public byte[] getIdComprobante() {
+		return idComprobante;
+	}
+	public void setIdComprobante(byte[] idComprobante) {
+		this.idComprobante = idComprobante;
+	}
+	public String getFileBase64() {
+		return fileBase64;
+	}
+	public void setFileBase64(String fileBase64) {
+		this.fileBase64 = fileBase64;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public void setFechaPago(Date fechaPago) {
+		this.fechaPago = fechaPago;
+	}
+	public void setNumeroDeposito(BigDecimal numeroDeposito) {
+		this.numeroDeposito = numeroDeposito;
+	}
+	public void setValorPagado(BigDecimal valorPagado) {
+		this.valorPagado = valorPagado;
+	}
 	public String getCuentas() {
 		return cuentas;
 	}
@@ -56,13 +91,6 @@ public class RegistroBloqueoFondoWrapper implements Serializable{
 	public void setNombreArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
 	}
-	public String getArchivo() {
-		return archivo;
-	}
-	public void setArchivo(String archivo) {
-		this.archivo = archivo;
-	}
-	
 	
 
 }

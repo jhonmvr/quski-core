@@ -286,6 +286,7 @@ public class QuskiOroConstantes {
 	public static final String authEmail = "authEmail";
 	public static final String passwordEmail = "passwordEmail";
 	public static final String TIPO = "MAIL";
+	public static final String TEXTO_APROBACION_PAGO = "TEXTO_APROBACION_PAGO";
 	
 	
 

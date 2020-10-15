@@ -36,7 +36,7 @@ public class TbQoRegistrarPago implements Serializable {
 	private Long id;
 
 	@Lob
-	private byte[] comprobante;
+	private String idComprobante;
 
 	private String cuentas;
 
@@ -86,12 +86,12 @@ public class TbQoRegistrarPago implements Serializable {
 		this.id = id;
 	}
 
-	public byte[] getComprobante() {
-		return this.comprobante;
+	public String getIdComprobante() {
+		return this.idComprobante;
 	}
 
-	public void setComprobante(byte[] comprobante) {
-		this.comprobante = comprobante;
+	public void setIdComprobante(String idComprobante) {
+		this.idComprobante = idComprobante;
 	}
 
 	public String getCuentas() {

@@ -15,12 +15,19 @@ public class RegistroPagoWrapper implements Serializable{
 	private String cuentas;
 	private Date fechaPago;
 	private BigDecimal numeroDeposito;
-	private BigDecimal valorpagado;
-	private String comprobante;
-	//private String estado;
-	private byte[] archivo;
+	private BigDecimal valorPagado;
+	private byte[] idComprobante;
 	private String fileBase64;
 	private String nombreArchivo;
+	private String archivo;
+	
+	public String getArchivo() {
+		return archivo;
+	}
+	public void setArchivo(String archivo) {
+		this.archivo = archivo;
+	}
+	private String estado;
 	
 	public String getFileBase64() {
 		return fileBase64;
@@ -28,18 +35,18 @@ public class RegistroPagoWrapper implements Serializable{
 	public void setFileBase64(String fileBase64) {
 		this.fileBase64 = fileBase64;
 	}
-	public String getComprobante() {
-		return comprobante;
+	public byte[] getIdComprobante() {
+		return idComprobante;
 	}
-	public void setComprobante(String comprobante) {
-		this.comprobante = comprobante;
+	public void setIdComprobante(byte[] idComprobante) {
+		this.idComprobante = idComprobante;
 	}
-	/*public String getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
-	}*/
+	}
 	public String getCuentas() {
 		return cuentas;
 	}
@@ -64,11 +71,11 @@ public class RegistroPagoWrapper implements Serializable{
 	public void setNumeroDeposito(BigDecimal numeroDeposito) {
 		this.numeroDeposito = numeroDeposito;
 	}
-	public BigDecimal getValorpagado() {
-		return valorpagado;
+	public BigDecimal getValorPagado() {
+		return valorPagado;
 	}
-	public void setValorpagado(BigDecimal valorpagado) {
-		this.valorpagado = valorpagado;
+	public void setValorPagado(BigDecimal valorPagado) {
+		this.valorPagado = valorPagado;
 	}
 	public String getNombreArchivo() {
 		return nombreArchivo;
@@ -76,12 +83,7 @@ public class RegistroPagoWrapper implements Serializable{
 	public void setNombreArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
 	}
-	public byte[] getArchivo() {
-		return archivo;
-	}
-	public void setArchivo(byte[] archivo) {
-		this.archivo = archivo;
-	}
+
 	
 	
 
