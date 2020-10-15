@@ -51,6 +51,7 @@ public class TbQoProceso implements Serializable {
 
 	private String usuario;
 
+
 	public TbQoProceso() {
 	}
 
@@ -119,7 +120,7 @@ public class TbQoProceso implements Serializable {
 	}
 
 	public String getUsuario() {
-		return this.usuario;
+		return usuario;
 	}
 
 	public void setUsuario(String usuario) {
