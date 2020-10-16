@@ -4451,44 +4451,18 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-
 	}
-
 	public List<OperacionesWrapper> findOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			if (wp.getAsesor() != null) {
-				if (wp.getProceso() != null) {
-					if (wp.getProceso() == ProcesoEnum.NUEVO) {
-						List<OperacionesWrapper> list = this.procesoRepository.findOperacionJoinNegociacion(wp);
-						return list;
-					} else if (wp.getProceso() == ProcesoEnum.RENOVACION) {
-						return null;
-						// List<OperacionesWrapper> list =
-						// this.procesoRepository.findOperacionJoinRenovacion( wp );
-					} else if (wp.getProceso() == ProcesoEnum.DEVOLUCION) {
-						return null;
-						// List<OperacionesWrapper> list =
-						// this.procesoRepository.findOperacionJoinDevolucion( wp );
-					} else {
-						throw new RelativeException(Constantes.ERROR_CODE_READ,
-								QuskiOroConstantes.ERROR_INGRESE_PROCESO);
-					}
-				} else {
-					return null;
-					// BUSCAR EN TODOS Y FUCIONAR
-				}
-			} else {
+			if(wp.getAsesor() != null) {
+				return this.procesoRepository.findOperacion( wp ); 
+			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
-
-	}
-
-	public Long countOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
-		return procesoRepository.countOperaciones(wp);
+		
 	}
 
 	/**

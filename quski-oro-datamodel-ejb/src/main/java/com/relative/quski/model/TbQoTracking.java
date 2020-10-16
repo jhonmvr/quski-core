@@ -28,6 +28,7 @@ public class TbQoTracking implements Serializable {
 	@Id
 	@SequenceGenerator(name = "TB_QO_TRACKING_ID_GENERATOR", sequenceName = "SEQ_TRACKING", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
+	private Long id;
 	
 	private Long id;
 	
