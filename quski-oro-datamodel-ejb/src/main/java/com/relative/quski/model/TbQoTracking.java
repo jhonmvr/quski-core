@@ -32,13 +32,13 @@ public class TbQoTracking implements Serializable {
 	
 	private String actividad;
 
-	private String estado;
-	
-	private String observacion;
-	
 	private String proceso;
 	
 	private String seccion;
+
+	private String estado;
+	
+	private String observacion;
 
 	@Column(name="codigo_bpm")
 	private String codigoBpm;

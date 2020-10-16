@@ -95,7 +95,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	@GET
 	@Path("/findByParametros")
 	@ApiOperation(value = "GenericWrapper<TbQoTracking>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoTracking", response = GenericWrapper.class)
-	public GenericWrapper<TbQoTracking> findClienteByIdentificacion(@QueryParam("proceso") String proceso)
+	public GenericWrapper<TbQoTracking> findTrackingByProceso(@QueryParam("proceso") String proceso)
 			throws RelativeException {
 		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
 		TbQoTracking a = this.qos.findAllTracking(proceso);
