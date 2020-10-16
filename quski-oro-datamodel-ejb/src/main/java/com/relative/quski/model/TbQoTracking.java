@@ -30,8 +30,6 @@ public class TbQoTracking implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
 	private Long id;
 	
-	private Long id;
-	
 	private String actividad;
 
 	private String estado;
