@@ -19,5 +19,10 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 	public Long countByParams(String proceso,
 			String actividad, String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
 			String fechaAprobacion, String usuario) throws RelativeException;
-	public TbQoTracking findTrackingByProceso(String proceso)  throws RelativeException;
+
+
+	TbQoTracking findTrackingByProceso(String proceso) throws RelativeException;
+	
+	
+
 }
