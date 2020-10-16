@@ -19,4 +19,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public Long countOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException;
 
 	public List<OperacionesWrapper> findOperacionJoinNegociacion( BusquedaOperacionesWrapper wp ) throws RelativeException;
+	
+	public TbQoProceso findByIdNegociacion(Long id)throws RelativeException;
 }

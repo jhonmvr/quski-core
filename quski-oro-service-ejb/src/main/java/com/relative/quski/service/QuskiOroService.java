@@ -2458,14 +2458,14 @@ public class QuskiOroService {
 				persisted.setActividad(send.getActividad());
 			}
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			
+
 			if (send.getSeccion() != null) {
 				persisted.setSeccion(send.getSeccion());
 			}
 			if (send.getFechaInicio() != null) {
 				persisted.setFechaInicio(send.getFechaInicio());
 			}
-			
+
 			if (send.getFechaFin() != null) {
 				persisted.setFechaFin(send.getFechaFin());
 			}
@@ -2474,7 +2474,8 @@ public class QuskiOroService {
 
 			}
 			if (send.getFechaInicio() != null && send.getFechaFin() != null) {
-				persisted.setTiempoTranscurrido(new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
+				persisted.setTiempoTranscurrido(
+						new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
 			}
 			if (send.getNombreAsesor() != null) {
 				persisted.setNombreAsesor(send.getNombreAsesor());
@@ -4086,23 +4087,41 @@ public class QuskiOroService {
 		}
 	}
 
+	/**
+	 * Metodo que trae los CreditosNegociacion existentes, tambien trae las
+	 * variables,Riesgos Direcciones Referencias Ingresos Egresos Patrimonios
+	 * 
+	 * @author Kléber Guerra Relative Engine
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
 	public AprobacionWrapper traerCreditoNegociacionExistente(Long id) throws RelativeException {
 		try {
 			AprobacionWrapper tmp = new AprobacionWrapper();
 			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
 
 			if (tmp.getCredito() != null) {
-				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "+ tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
+				log.info("VALORES EN TRAER CREDITO NEGOCIACION TASACION==> "
+						+ tmp.getCredito().getTbQoNegociacion().getId());
 				log.info("***INGRESA AL IF *****");
-				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
-				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
-				tmp.setDirecciones(direccionClienteRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setReferencias(this.referenciaPersonalRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setIngresosEgresos(this.ingresoEgresoClienteRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setPatrimonios(this.patrimonioRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setJoyas(this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setVariables(this.variablesCrediticiaRepository
+						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setRiesgos(this.riesgoAcumuladoRepository
+						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setDirecciones(direccionClienteRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setReferencias(this.referenciaPersonalRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setIngresosEgresos(this.ingresoEgresoClienteRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setPatrimonios(this.patrimonioRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setJoyas(
+						this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setProceso(this.procesoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				// tmp.setHabilitantes(this.documentoHabilitanteRepository.findBy);
 
-			
 				return tmp;
 			} else {
 				return null;
