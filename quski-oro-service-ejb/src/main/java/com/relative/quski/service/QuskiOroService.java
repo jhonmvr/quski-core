@@ -2432,7 +2432,8 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT.toString());
 				if (send.getFechaCreacion() != null && send.getFechaActualizacion() != null) {
-					//send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
+					// send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(),
+					// send.getFechaFin())));
 				}
 				return this.trackingRepository.add(send);
 			} else {
@@ -2458,14 +2459,14 @@ public class QuskiOroService {
 				persisted.setActividad(send.getActividad());
 			}
 			persisted.setEstado(EstadoEnum.ACT.toString());
-			
+
 			if (send.getSeccion() != null) {
 				persisted.setSeccion(send.getSeccion());
 			}
 			if (send.getFechaInicio() != null) {
 				persisted.setFechaInicio(send.getFechaInicio());
 			}
-			
+
 			if (send.getFechaFin() != null) {
 				persisted.setFechaFin(send.getFechaFin());
 			}
@@ -2474,7 +2475,8 @@ public class QuskiOroService {
 
 			}
 			if (send.getFechaInicio() != null && send.getFechaFin() != null) {
-				persisted.setTiempoTranscurrido(new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
+				persisted.setTiempoTranscurrido(
+						new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
 			}
 			if (send.getNombreAsesor() != null) {
 				persisted.setNombreAsesor(send.getNombreAsesor());
@@ -4092,17 +4094,24 @@ public class QuskiOroService {
 			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
 
 			if (tmp.getCredito() != null) {
-				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "+ tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
+				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "
+						+ tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
 				log.info("***INGRESA AL IF *****");
-				tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
-				tmp.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
-				tmp.setDirecciones(direccionClienteRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setReferencias(this.referenciaPersonalRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setIngresosEgresos(this.ingresoEgresoClienteRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setPatrimonios(this.patrimonioRepository.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
-				tmp.setJoyas(this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setVariables(this.variablesCrediticiaRepository
+						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setRiesgos(this.riesgoAcumuladoRepository
+						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				tmp.setDirecciones(direccionClienteRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setReferencias(this.referenciaPersonalRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setIngresosEgresos(this.ingresoEgresoClienteRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setPatrimonios(this.patrimonioRepository
+						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
+				tmp.setJoyas(
+						this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
 
-			
 				return tmp;
 			} else {
 				return null;
@@ -4480,5 +4489,43 @@ public class QuskiOroService {
 
 	public Long countOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
 		return procesoRepository.countOperaciones(wp);
+	}
+
+	/**
+	 * 
+	 * METODO QUE BUSCA POR MEDIO DE UN PARAMETRO
+	 * 
+	 * @param pw
+	 * @param proceso
+	 * @param actividad
+	 * @param seccion
+	 * @param codigoBPM
+	 * @param codigoOperacionSoftbank
+	 * @param fechaCreacion
+	 * @param fechaAprobacion
+	 * @param usuario
+	 * @return List<TbQoTracking>countTrackingByParams
+	 * @throws RelativeException
+	 */
+	public List<TbQoTracking> findTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
+			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
+			String fechaAprobacion, String usuario) throws RelativeException {
+		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
+				fechaCreacion, fechaAprobacion, usuario);
+	}
+
+	public List<TbQoTracking> countTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
+			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
+			String fechaAprobacion, String usuario) throws RelativeException {
+		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
+				fechaCreacion, fechaAprobacion, usuario);
+	}
+
+	public TbQoTracking findAllTracking(String proceso) throws RelativeException {
+		try {
+			return this.trackingRepository.findTrackingByProceso(proceso);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ + " Mi error EN SERVICE -> " + proceso);
+		}
 	}
 }

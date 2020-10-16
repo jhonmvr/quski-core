@@ -29,15 +29,23 @@ public class TbQoTracking implements Serializable {
 	@SequenceGenerator(name = "TB_QO_TRACKING_ID_GENERATOR", sequenceName = "SEQ_TRACKING", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
 	
+	private Long id;
+	
 	private String actividad;
+
+	private String estado;
+	
+	private String observacion;
+	
+	private String proceso;
+	
+	private String seccion;
 
 	@Column(name="codigo_bpm")
 	private String codigoBpm;
 
 	@Column(name="codigo_operacion_softbank")
 	private String codigoOperacionSoftbank;
-
-	private String estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -53,15 +61,8 @@ public class TbQoTracking implements Serializable {
 	@Column(name="fecha_inicio")
 	private Timestamp fechaInicio;
 
-
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
-
-	private String observacion;
-
-	private String proceso;
-
-	private String seccion;
 
 	@Column(name="tiempo_transcurrido")
 	private BigDecimal tiempoTranscurrido;
@@ -71,9 +72,6 @@ public class TbQoTracking implements Serializable {
 
 	@Column(name="usuario_creacion")
 	private String usuarioCreacion;
-
-	public TbQoTracking() {
-	}
 
 	public String getActividad() {
 		return this.actividad;
