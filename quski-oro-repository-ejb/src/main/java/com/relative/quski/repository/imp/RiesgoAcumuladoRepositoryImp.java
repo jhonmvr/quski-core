@@ -80,6 +80,7 @@ public class RiesgoAcumuladoRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 	}
 	@Override
 	public List<TbQoRiesgoAcumulado> findByIdNegociacion( Long idNegociacion ) throws RelativeException {
+		log.info("VALOR QUE LLEGA A findByIdNegociacion===> "+idNegociacion);
 		try {
 			List<TbQoRiesgoAcumulado> list = this.findAllBySpecification( new RiesgoAcumuladoByIdNegociacionSpec( idNegociacion ) );
 			if (!list.isEmpty()) {

@@ -1,6 +1,7 @@
 package com.relative.quski.bpms.api;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -8,10 +9,15 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.EquifaxPersonaWrapper;
+import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
 public class LocalStorageClient {
@@ -38,6 +44,34 @@ public class LocalStorageClient {
 		}
 
 	}
+
+	public static RespuestaObjectWrapper createObject(String urlService,FileLocalStorage wrapper, String authorization)
+			throws RelativeException, UnsupportedEncodingException {
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(wrapper);
+		String service = urlService.
+				concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes()));
+		log.info("===> callBpmsInitProcesss con servcio " + service);
+		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+				RestClientWrapper.CONTENT_TYPE_JSON, authorization, null, RestClientWrapper.METHOD_GET, null, null,
+				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
+		log.info("===> REspuesta de servicio " + response);
+		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+		
+		
+		
+		if(status>=200 && status < 300) {
+			Gson gsons = new GsonBuilder().create();
+			return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+			
+		}else {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE NOTIFICACION:"+
+					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+		}
+	}
+	
+	
 
 	public static String saveFileSotage(String urlService, String authorization)
 			throws RelativeException, UnsupportedEncodingException {

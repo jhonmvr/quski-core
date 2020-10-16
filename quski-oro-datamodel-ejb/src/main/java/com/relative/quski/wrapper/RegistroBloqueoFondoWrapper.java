@@ -11,35 +11,30 @@ public class RegistroBloqueoFondoWrapper implements Serializable{
 	 */
 	private static final long serialVersionUID = -3205114036416526081L;
 	
+	private String institucionFinanciera;
 	private String cuentas;
 	private Date fechaPago;
-	private String institucionFinanciera;
 	private BigDecimal numeroDeposito;
 	private BigDecimal valorPagado;
+	private String idComprobante;
 	private String nombreArchivo;
-	private String Archivo;
+	private String archivo;
+	
 	public String getArchivo() {
-		return Archivo;
+		return archivo;
 	}
 	public void setArchivo(String archivo) {
-		Archivo = archivo;
+		this.archivo = archivo;
 	}
-	private byte[] idComprobante;
-	private String fileBase64;
 	private String estado;
 	
-	public byte[] getIdComprobante() {
+	public String getIdComprobante() {
 		return idComprobante;
 	}
-	public void setIdComprobante(byte[] idComprobante) {
+	public void setIdComprobante(String idComprobante) {
 		this.idComprobante = idComprobante;
 	}
-	public String getFileBase64() {
-		return fileBase64;
-	}
-	public void setFileBase64(String fileBase64) {
-		this.fileBase64 = fileBase64;
-	}
+
 	public String getEstado() {
 		return estado;
 	}
