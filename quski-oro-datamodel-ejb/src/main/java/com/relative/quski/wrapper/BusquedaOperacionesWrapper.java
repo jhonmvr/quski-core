@@ -10,15 +10,15 @@ import com.relative.quski.enums.ProcesoEnum;
 public class BusquedaOperacionesWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private ProcesoEnum proceso; 		// Proceso
-	private Date fechaCreacionDesde;	// Proceso
-	private Date fechaCreacionHasta; 	// Proceso
-	private EstadoProcesoEnum estado;   // Proceso
-	private String asesor; 				// Proceso
+	private ProcesoEnum proceso; 		// Proceso //
+	private Date fechaCreacionDesde;	// Proceso //
+	private Date fechaCreacionHasta; 	// Proceso //
+	private EstadoProcesoEnum estado;   // Proceso //
+	private String asesor; 				// Proceso // 
 
-	private String nombreCompleto; 		// Cliente
-	private String identificacion; 		// Cliente
-	private String actividad; 			// Tracking
+	private String nombreCompleto; 		// Cliente //
+	private String identificacion; 		// Cliente //
+	private String actividad; 			// Tracking //
 	
 	public String getNombreCompleto() {
 		return nombreCompleto;

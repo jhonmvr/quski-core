@@ -2,29 +2,47 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
 
 public class OperacionesWrapper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-    private Long   id;
+    private BigDecimal   id;
     private String codigoOperacion;
     private String nombreCliente;
-    private String identificacion;
-    private BigDecimal montoPreAprobado;
+    private String cedulaCliente;
+    private BigDecimal montoPreaprobado;
     private Date fechaCreacion;
-    private String situacion;
-    private String agencia;
+    private BigDecimal idAgencia;
     private String estadoProceso;
     private String proceso;
     private String asesor;
-    private String aprobador;
+    private String usuarioEjecutor;
+    private String actividad;
     
-	public Long getId() {
+	public OperacionesWrapper(BigDecimal id, String codigoOperacion, String nombreCliente, String cedulaCliente,
+			BigDecimal montoPreaprobado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
+			String asesor, String usuarioEjecutor, String actividad) {
+		super();
+		this.id = id;
+		this.codigoOperacion = codigoOperacion;
+		this.nombreCliente = nombreCliente;
+		this.cedulaCliente = cedulaCliente;
+		this.montoPreaprobado = montoPreaprobado;
+		this.fechaCreacion = fechaCreacion;
+		this.idAgencia = idAgencia;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
+		this.asesor = asesor;
+		this.usuarioEjecutor = usuarioEjecutor;
+		this.actividad = actividad;
+	}
+	
+	public BigDecimal getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(BigDecimal id) {
 		this.id = id;
 	}
 	public String getCodigoOperacion() {
@@ -39,17 +57,17 @@ public class OperacionesWrapper implements Serializable {
 	public void setNombreCliente(String nombreCliente) {
 		this.nombreCliente = nombreCliente;
 	}
-	public String getIdentificacion() {
-		return identificacion;
+	public String getCedulaCliente() {
+		return cedulaCliente;
 	}
-	public void setIdentificacion(String identificacion) {
-		this.identificacion = identificacion;
+	public void setCedulaCliente(String cedulaCliente) {
+		this.cedulaCliente = cedulaCliente;
 	}
-	public BigDecimal getMontoPreAprobado() {
-		return montoPreAprobado;
+	public BigDecimal getMontoPreaprobado() {
+		return montoPreaprobado;
 	}
-	public void setMontoPreAprobado(BigDecimal montoPreAprobado) {
-		this.montoPreAprobado = montoPreAprobado;
+	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
+		this.montoPreaprobado = montoPreaprobado;
 	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;
@@ -57,17 +75,11 @@ public class OperacionesWrapper implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	public String getSituacion() {
-		return situacion;
+	public BigDecimal getIdAgencia() {
+		return idAgencia;
 	}
-	public void setSituacion(String situacion) {
-		this.situacion = situacion;
-	}
-	public String getAgencia() {
-		return agencia;
-	}
-	public void setAgencia(String agencia) {
-		this.agencia = agencia;
+	public void setIdAgencia(BigDecimal idAgencia) {
+		this.idAgencia = idAgencia;
 	}
 	public String getEstadoProceso() {
 		return estadoProceso;
@@ -87,10 +99,17 @@ public class OperacionesWrapper implements Serializable {
 	public void setAsesor(String asesor) {
 		this.asesor = asesor;
 	}
-	public String getAprobador() {
-		return aprobador;
+	public String getUsuarioEjecutor() {
+		return usuarioEjecutor;
 	}
-	public void setAprobador(String aprobador) {
-		this.aprobador = aprobador;
+	public void setUsuarioEjecutor(String usuarioEjecutor) {
+		this.usuarioEjecutor = usuarioEjecutor;
 	}
+	public String getActividad() {
+		return actividad;
+	}
+	public void setActividad(String actividad) {
+		this.actividad = actividad;
+	}
+
 }
