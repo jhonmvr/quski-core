@@ -2,6 +2,8 @@ package com.relative.quski.rest;
 
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,6 +22,9 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.ActividadEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
@@ -92,4 +97,36 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidades( this.qos.findOperaciones( wp ) );
 		return loc;
 	}
+	@GET	
+	@Path("/getProcesos")
+	public GenericWrapper<String> getProcesos() throws RelativeException {
+		GenericWrapper<String> w = new GenericWrapper<>();
+		List<ProcesoEnum> enumProcesos = Arrays.asList(ProcesoEnum.values());
+		List<String> stringsProcesos = new ArrayList<String>();
+		enumProcesos.forEach(f -> stringsProcesos.add(f.toString().replace('_', ' ')));
+		w.setEntidades(stringsProcesos);
+		return w;
+	}
+	@GET	
+	@Path("/getEstadosProceso")
+	public GenericWrapper<String> getEstadosProceso() throws RelativeException {
+		GenericWrapper<String> w = new GenericWrapper<>();
+		List<EstadoProcesoEnum> enumEstadosProceso = Arrays.asList(EstadoProcesoEnum.values());
+		List<String> stringsEstadosProceso = new ArrayList<String>();
+		enumEstadosProceso.forEach(f -> stringsEstadosProceso.add(f.toString().replace('_', ' ')));
+		w.setEntidades(stringsEstadosProceso);
+		return w;
+	}
+	@GET	
+	@Path("/getActividades")
+	public GenericWrapper<String> getActividades() throws RelativeException {
+		GenericWrapper<String> w = new GenericWrapper<>();
+		List<ActividadEnum> enumActividades = Arrays.asList(ActividadEnum.values());
+		List<String> stringsActividades = new ArrayList<String>();
+		enumActividades.forEach(f -> stringsActividades.add(f.toString().replace('_', ' ')));
+		w.setEntidades(stringsActividades);
+		return w;
+	}
+
+	
 }
