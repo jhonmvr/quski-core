@@ -119,6 +119,13 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/reasignarNegociacion")
+	public GenericWrapper<TbQoNegociacion> reasignarNegociacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario) throws RelativeException {
+		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.reasignarNegociacion( Long.valueOf( id ), usuario ) );
+		return loc;
+	}	
 	
 	
 

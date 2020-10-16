@@ -1445,6 +1445,20 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
+	}	
+	public TbQoNegociacion reasignarNegociacion(Long id, String usuario) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = this.findNegociacionById( id );
+			if( persisted != null) {
+				persisted.setAsesor( usuario );
+				return negociacionRepository.update(persisted);
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
 	}
 
 	/**
