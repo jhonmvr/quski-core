@@ -1445,6 +1445,20 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
+	}	
+	public TbQoNegociacion reasignarNegociacion(Long id, String usuario) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = this.findNegociacionById( id );
+			if( persisted != null) {
+				persisted.setAsesor( usuario );
+				return negociacionRepository.update(persisted);
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
 	}
 
 	/**
@@ -2432,7 +2446,8 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT.toString());
 				if (send.getFechaCreacion() != null && send.getFechaActualizacion() != null) {
-					//send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(), send.getFechaFin())));
+					// send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(),
+					// send.getFechaFin())));
 				}
 				return this.trackingRepository.add(send);
 			} else {
@@ -4104,6 +4119,10 @@ public class QuskiOroService {
 			if (tmp.getCredito() != null) {
 				log.info("VALORES EN TRAER CREDITO NEGOCIACION TASACION==> "
 						+ tmp.getCredito().getTbQoNegociacion().getId());
+
+				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "
+						+ tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
+
 				log.info("***INGRESA AL IF *****");
 				tmp.setVariables(this.variablesCrediticiaRepository
 						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
@@ -4119,8 +4138,10 @@ public class QuskiOroService {
 						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
 				tmp.setJoyas(
 						this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+
 				tmp.setProceso(this.procesoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
 				// tmp.setHabilitantes(this.documentoHabilitanteRepository.findBy);
+
 
 				return tmp;
 			} else {
@@ -4461,43 +4482,55 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-
 	}
-
 	public List<OperacionesWrapper> findOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			if (wp.getAsesor() != null) {
-				if (wp.getProceso() != null) {
-					if (wp.getProceso() == ProcesoEnum.NUEVO) {
-						List<OperacionesWrapper> list = this.procesoRepository.findOperacionJoinNegociacion(wp);
-						return list;
-					} else if (wp.getProceso() == ProcesoEnum.RENOVACION) {
-						return null;
-						// List<OperacionesWrapper> list =
-						// this.procesoRepository.findOperacionJoinRenovacion( wp );
-					} else if (wp.getProceso() == ProcesoEnum.DEVOLUCION) {
-						return null;
-						// List<OperacionesWrapper> list =
-						// this.procesoRepository.findOperacionJoinDevolucion( wp );
-					} else {
-						throw new RelativeException(Constantes.ERROR_CODE_READ,
-								QuskiOroConstantes.ERROR_INGRESE_PROCESO);
-					}
-				} else {
-					return null;
-					// BUSCAR EN TODOS Y FUCIONAR
-				}
-			} else {
+			if(wp.getAsesor() != null) {
+				return this.procesoRepository.findOperacion( wp ); 
+			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
-
+		
 	}
 
-	public Long countOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
-		return procesoRepository.countOperaciones(wp);
+	/**
+	 * 
+	 * METODO QUE BUSCA POR MEDIO DE UN PARAMETRO
+	 * 
+	 * @param pw
+	 * @param proceso
+	 * @param actividad
+	 * @param seccion
+	 * @param codigoBPM
+	 * @param codigoOperacionSoftbank
+	 * @param fechaCreacion
+	 * @param fechaAprobacion
+	 * @param usuario
+	 * @return List<TbQoTracking>countTrackingByParams
+	 * @throws RelativeException
+	 */
+	public List<TbQoTracking> findTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
+			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
+			String fechaAprobacion, String usuario) throws RelativeException {
+		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
+				fechaCreacion, fechaAprobacion, usuario);
+	}
+
+	public List<TbQoTracking> countTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
+			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
+			String fechaAprobacion, String usuario) throws RelativeException {
+		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
+				fechaCreacion, fechaAprobacion, usuario);
+	}
+
+	public TbQoTracking findAllTracking(String proceso) throws RelativeException {
+		try {
+			return this.trackingRepository.findTrackingByProceso(proceso);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ + " Mi error EN SERVICE -> " + proceso);
+		}
 	}
 }

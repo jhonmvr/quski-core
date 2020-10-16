@@ -15,6 +15,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.relative.quski.enums.ActividadEnum;
+import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.enums.SeccionEnum;
+
 
 /**
  * The persistent class for the tb_qo_tracking database table.
@@ -25,30 +30,26 @@ import javax.persistence.TemporalType;
 
 public class TbQoTracking implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
 	@Id
-	@SequenceGenerator(name="TB_QO_TRACKING_ID_GENERATOR", sequenceName="SEQ_TRACKING", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TRACKING_ID_GENERATOR")
-	private long id;
-
-	private String actividad;
-	private String observacion;
+	@SequenceGenerator(name = "TB_QO_TRACKING_ID_GENERATOR", sequenceName = "SEQ_TRACKING", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
+	private Long id;
 	
-	public String getObservacion() {
-		return observacion;
-	}
+	private ActividadEnum actividad;
 
-	public void setObservacion(String observacion) {
-		this.observacion = observacion;
-	}
+	private ProcesoEnum proceso;
+	
+	private SeccionEnum seccion;
+
+	private String estado;
+	
+	private String observacion;
 
 	@Column(name="codigo_bpm")
 	private String codigoBpm;
 
 	@Column(name="codigo_operacion_softbank")
 	private String codigoOperacionSoftbank;
-
-	private String estado;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -64,13 +65,8 @@ public class TbQoTracking implements Serializable {
 	@Column(name="fecha_inicio")
 	private Timestamp fechaInicio;
 
-
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
-
-	private String proceso;
-
-	private String seccion;
 
 	@Column(name="tiempo_transcurrido")
 	private BigDecimal tiempoTranscurrido;
@@ -81,14 +77,11 @@ public class TbQoTracking implements Serializable {
 	@Column(name="usuario_creacion")
 	private String usuarioCreacion;
 
-	public TbQoTracking() {
-	}
-
-	public String getActividad() {
+	public ActividadEnum getActividad() {
 		return this.actividad;
 	}
 
-	public void setActividad(String actividad) {
+	public void setActividad(ActividadEnum actividad) {
 		this.actividad = actividad;
 	}
 
@@ -164,19 +157,27 @@ public class TbQoTracking implements Serializable {
 		this.nombreAsesor = nombreAsesor;
 	}
 
-	public String getProceso() {
+	public String getObservacion() {
+		return this.observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	public ProcesoEnum getProceso() {
 		return this.proceso;
 	}
 
-	public void setProceso(String proceso) {
+	public void setProceso(ProcesoEnum proceso) {
 		this.proceso = proceso;
 	}
 
-	public String getSeccion() {
+	public SeccionEnum getSeccion() {
 		return this.seccion;
 	}
 
-	public void setSeccion(String seccion) {
+	public void setSeccion(SeccionEnum seccion) {
 		this.seccion = seccion;
 	}
 
