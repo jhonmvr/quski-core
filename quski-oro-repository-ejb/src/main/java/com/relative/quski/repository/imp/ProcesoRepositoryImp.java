@@ -209,5 +209,18 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		}
 	}
 
+	@Override
+	public Long countOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OperacionesWrapper> findOperacionJoinNegociacion(BusquedaOperacionesWrapper wp)
+			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }
