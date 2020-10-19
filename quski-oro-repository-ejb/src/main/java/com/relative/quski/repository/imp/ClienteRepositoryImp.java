@@ -12,9 +12,12 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.repository.ClienteRepository;
+import com.relative.quski.repository.spec.ClienteByIdNegociacionSpect;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.ClienteByParamsSpec;
+import com.relative.quski.repository.spec.ClientePagoByIdAndEstadoSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -90,4 +93,24 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 			throw new RelativeException(Constantes.ERROR_CODE_READ," Ocurrio un error al leer cliente, " + e.getMessage());
 		}
 	}
+
+	@Override
+	public TbQoCliente findByIdNegociacion(Long id) throws RelativeException {
+		
+		try {
+			List<TbQoCliente> tmp;
+			tmp= this.findAllBySpecification(new ClienteByIdNegociacionSpect(id));
+			
+			if(tmp != null && !tmp.isEmpty()) {
+				return tmp.get(0);
+			}
+			
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL INTENTAR BUSCAR EN TB_QO_CLIENTE POR ID Y ESTADO");
+		}
+	}
 }
+	

@@ -1444,6 +1444,20 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
+	}	
+	public TbQoNegociacion reasignarNegociacion(Long id, String usuario) throws RelativeException {
+		try {
+			TbQoNegociacion persisted = this.findNegociacionById( id );
+			if( persisted != null) {
+				persisted.setAsesor( usuario );
+				return negociacionRepository.update(persisted);
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
 	}
 
 	/**
@@ -4087,14 +4101,27 @@ public class QuskiOroService {
 		}
 	}
 
+	/**
+	 * Metodo que trae los CreditosNegociacion existentes, tambien trae las
+	 * variables,Riesgos Direcciones Referencias Ingresos Egresos Patrimonios
+	 * 
+	 * @author Kléber Guerra Relative Engine
+	 * @param id
+	 * @return
+	 * @throws RelativeException
+	 */
 	public AprobacionWrapper traerCreditoNegociacionExistente(Long id) throws RelativeException {
 		try {
 			AprobacionWrapper tmp = new AprobacionWrapper();
 			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
 
 			if (tmp.getCredito() != null) {
+				log.info("VALORES EN TRAER CREDITO NEGOCIACION TASACION==> "
+						+ tmp.getCredito().getTbQoNegociacion().getId());
+
 				log.info("VALORES EN TRAER CREDITO NEGOCIACION REFERENCIA==> "
 						+ tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId());
+
 				log.info("***INGRESA AL IF *****");
 				tmp.setVariables(this.variablesCrediticiaRepository
 						.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
@@ -4110,6 +4137,10 @@ public class QuskiOroService {
 						.findByIdCliente(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId()));
 				tmp.setJoyas(
 						this.tasacionRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+
+				tmp.setProceso(this.procesoRepository.findByIdNegociacion(tmp.getCredito().getTbQoNegociacion().getId()));
+				// tmp.setHabilitantes(this.documentoHabilitanteRepository.findBy);
+
 
 				return tmp;
 			} else {
