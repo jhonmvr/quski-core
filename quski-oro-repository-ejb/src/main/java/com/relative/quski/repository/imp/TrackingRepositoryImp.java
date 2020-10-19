@@ -2,6 +2,8 @@ package com.relative.quski.repository.imp;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
@@ -11,7 +13,7 @@ import com.relative.quski.repository.TrackingWrapper;
 import com.relative.quski.repository.spec.TrackingByParamsSpec;
 import com.relative.quski.wrapper.BusquedaTrackingWrapper;
 
-
+@Stateless(mappedName = "TrackingRepository")
 public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracking> implements TrackingRepository  {
 
 	@Override
