@@ -12,7 +12,9 @@ import com.relative.quski.wrapper.OperacionesWrapper;
 
 @Local
 public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
+	
 	public TbQoProceso findById(Long id) throws RelativeException;
+	
 	public List<TbQoProceso> findProcesosByAsesor(String asesor) throws RelativeException;
 
 

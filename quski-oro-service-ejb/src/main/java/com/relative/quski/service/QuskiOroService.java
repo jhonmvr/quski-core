@@ -159,7 +159,6 @@ public class QuskiOroService {
 	private DireccionClienteRepository direccionClienteRepository;
 	@Inject
 	private ExcepcionesRepository excepcionesRepository;
-
 	@Inject
 	private ClientePagoRepository clientePagoRepository;
 	@Inject
@@ -4493,5 +4492,13 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
 		
+	}
+
+	public List<TbQoTracking> findBusquedaParametros(Long id) throws RelativeException {
+		
+			if (id == null) {
+				return this.trackingRepository.findAll(TbQoTracking.class);
+			}
+			return null; 
 	}
 }
