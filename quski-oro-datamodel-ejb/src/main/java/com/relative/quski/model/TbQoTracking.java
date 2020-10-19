@@ -41,7 +41,7 @@ public class TbQoTracking implements Serializable {
 	
 	private SeccionEnum seccion;
 
-	private String estado;
+	private EstadoEnum estado;
 	
 	private String observacion;
 
@@ -101,11 +101,11 @@ public class TbQoTracking implements Serializable {
 		this.codigoOperacionSoftbank = codigoOperacionSoftbank;
 	}
 
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
