@@ -89,6 +89,7 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.BusquedaTrackingWrapper;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
@@ -4494,10 +4495,10 @@ public class QuskiOroService {
 		
 	}
 
-	public List<TbQoTracking> findBusquedaParametros(Long id) throws RelativeException {
+	public List<TbQoTracking> findBusquedaParametros(BusquedaTrackingWrapper wp) throws RelativeException {
 		
-			if (id == null) {
-				return this.trackingRepository.findAll(TbQoTracking.class);
+			if (wp != null) {
+				return this.trackingRepository.findByParams(wp);
 			}
 			return null; 
 	}

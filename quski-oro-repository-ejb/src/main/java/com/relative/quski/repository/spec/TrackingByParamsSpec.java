@@ -29,12 +29,12 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 	
 	public TrackingByParamsSpec(BusquedaTrackingWrapper wp) {
 		super();
-		this.proceso = proceso;
-		this.actividad = actividad;
-		this.seccion = seccion;
-		this.estado = estado;
-		this.codigoBpm = codigoBpm;
-		this.codigoOperacionSoftbank = codigoOperacionSoftbank;
+		this.proceso = wp.getProceso();
+		this.actividad = wp.getActividad();
+		this.seccion = wp.getSeccion();
+		this.estado = wp.getEstado();
+		this.codigoBpm = wp.getCodigoBpm();
+		this.codigoOperacionSoftbank = wp.getCodigoOperacionSoftbank();
 }
 
 

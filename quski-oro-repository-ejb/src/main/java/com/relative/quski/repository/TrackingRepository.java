@@ -16,7 +16,5 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 	
 	public Long countTracking(BusquedaTrackingWrapper wp) throws RelativeException;
 	
-	public List<TrackingWrapper> findBusquedaParametros( BusquedaTrackingWrapper wp ) throws RelativeException;
-
-	List<TrackingWrapper> findByParams(BusquedaTrackingWrapper wp) throws RelativeException;
+	public List<TbQoTracking> findByParams(BusquedaTrackingWrapper wp) throws RelativeException;
 }

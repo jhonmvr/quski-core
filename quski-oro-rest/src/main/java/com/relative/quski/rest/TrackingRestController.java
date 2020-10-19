@@ -14,8 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -24,6 +22,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.BusquedaTrackingWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,15 +88,15 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		return loc;
 	}
 	
-	@GET
+	@POST
 	@Path("/busqueda")
 	@ApiOperation(value = "GenericWrapper<TbQoTracking>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTracking", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoTracking> findBusquedaParametros(@QueryParam("proceso")  String proceso) throws RelativeException {
+	public GenericWrapper<TbQoTracking> findBusquedaParametros(BusquedaTrackingWrapper wp) throws RelativeException {
 		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
 		
-		loc.setEntidades( this.qos.findBusquedaParametros(StringUtils.isNotBlank(proceso)?Long.valueOf(proceso):null) );
+		loc.setEntidades( this.qos.findBusquedaParametros(wp) );
 		return loc;
 	}
 }
