@@ -56,8 +56,6 @@ public class TbQoTasacion implements Serializable {
 	@Column(name="estado_joya")
 	private String estadoJoya;
 	
-	@Column(name="tipo_Oro")
-	private String tipoOro;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -260,13 +258,6 @@ public class TbQoTasacion implements Serializable {
 		this.valorAvaluo = valorAvaluo;
 	}
 	
-	public String getTipoOro() {
-		return tipoOro;
-	}
-
-	public void setTipoOro(String tipoOro) {
-		this.tipoOro = tipoOro;
-	}
 
 	public BigDecimal getValorAvaluoRetasacion() {
 		return this.valorAvaluoRetasacion;
