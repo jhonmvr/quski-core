@@ -22,7 +22,8 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 			EstadoEnum estado) throws RelativeException;
 	public Long countByParams(Date fechaDesde, Date fechaHasta, EstadoOperacionEnum estado, String identificacion)throws RelativeException;
 	public TbQoCreditoNegociacion findCreditoByIdNegociacion(Long idNegociacion) throws RelativeException;
-	public List<TbQoCreditoNegociacion> findCreditoNegociacionByIdCliente(Long id) throws RelativeException ;
+	
+	
 
 
 }

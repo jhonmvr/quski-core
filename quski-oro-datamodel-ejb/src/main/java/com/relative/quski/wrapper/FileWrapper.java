@@ -12,19 +12,19 @@ public class FileWrapper implements Serializable {
 	
 	private String name;
 	private String type;
-	private String typeAction;
 	private String process;
+	private Long relatedId;
+	private String relatedIdStr;
+	private String typeAction;
+	private String fileBase64;
+	private String objectId;
     private Long size;
     private String url;
     private String thumbnailUrl;
     private String deleteUrl;
     private String deleteType;
     private byte[] file;
-    private String fileBase64;
-    private Long relatedId;
-    private String relatedIdStr;
     private String estadoOperacion;
-    private String objectId;
     
     public FileWrapper() {}
     

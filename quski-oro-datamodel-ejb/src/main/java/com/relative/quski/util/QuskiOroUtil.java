@@ -210,7 +210,9 @@ public class QuskiOroUtil {
 	public static Long diasFecha(Date fechaIni, Date fechaFin) {
 		return ((fechaFin.getTime() - fechaIni.getTime()) / 86400000);
 	}
-
+	public static Long horasFecha(Date fechaIni, Date fechaFin) {
+		return ((fechaFin.getTime() - fechaIni.getTime()) / 86400000);
+	}
 	public static Long getEdad(Date fecha) {
 		Date toDate = new Date();
 		Long anios = (((toDate.getTime() - fecha.getTime()) / 86400000) / 365);

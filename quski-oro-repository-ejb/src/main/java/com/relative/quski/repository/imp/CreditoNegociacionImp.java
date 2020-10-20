@@ -15,6 +15,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.CreditoByIdNegociacionSpec;
+import com.relative.quski.repository.spec.CreditoNegociacionByIdSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 
 /**
@@ -65,15 +66,9 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 		
 	}
 
-	@Override
-	public List<TbQoCreditoNegociacion> findCreditoNegociacionByIdCliente(Long id) throws RelativeException {
-	try {
-	//	return CreditoNegociacionRepository.
-	}catch (Exception e) {
-		// TODO: handle exception
-	}
-		return null;
-	}
+
+
+
 
 //	@Override
 //	public List<TbQoCreditoNegociacion> findBycodigOpEstado(String codigOp, EstadoOperacionEnum estado, int startRecord,

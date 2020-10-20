@@ -3,6 +3,8 @@ package com.relative.quski.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.relative.quski.enums.EstadoEnum;
+
 
 /**
  * The persistent class for the tb_qo_direccion_cliente database table.
@@ -28,7 +30,8 @@ public class TbQoDireccionCliente implements Serializable {
 
 	private String canton;
 	
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Column(name="direccion_envio_correspondencia")
 	private Boolean direccionEnvioCorrespondencia;
@@ -181,12 +184,14 @@ public class TbQoDireccionCliente implements Serializable {
 		this.tbQoCliente = tbQoCliente;
 	}
 
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
+
+ 
 
 }

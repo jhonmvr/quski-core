@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,49 +18,50 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
+import com.relative.quski.enums.EstadoEnum;
 
 /**
  * The persistent class for the tb_qo_referencia_personal database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_referencia_personal")
-@NamedQuery(name=".findAll", query="SELECT t FROM TbQoReferenciaPersonal t")
+@Table(name = "tb_qo_referencia_personal")
+@NamedQuery(name = ".findAll", query = "SELECT t FROM TbQoReferenciaPersonal t")
 public class TbQoReferenciaPersonal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR", sequenceName="SEQ_REFERENCIA_PERSONAL",initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR", sequenceName = "SEQ_REFERENCIA_PERSONAL", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_REFERENCIA_PERSONAL_ID_GENERATOR")
 	private Long id;
 
 	private String direccion;
 
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoEnum estado;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="nombres_completos")
+	@Column(name = "nombres_completos")
 	private String nombresCompletos;
 
 	private String parentesco;
 
-	@Column(name="telefono_fijo")
+	@Column(name = "telefono_fijo")
 	private String telefonoFijo;
 
-	@Column(name="telefono_movil")
+	@Column(name = "telefono_movil")
 	private String telefonoMovil;
 
-	//bi-directional many-to-one association to TbQoCliente
+	// bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
-	@JoinColumn(name="id_cliente")
+	@JoinColumn(name = "id_cliente")
 	private TbQoCliente tbQoCliente;
 
 	public TbQoReferenciaPersonal() {
@@ -80,13 +83,11 @@ public class TbQoReferenciaPersonal implements Serializable {
 		this.direccion = direccion;
 	}
 
- 
-
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 

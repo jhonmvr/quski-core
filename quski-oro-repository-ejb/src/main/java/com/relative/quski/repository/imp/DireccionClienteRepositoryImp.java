@@ -33,10 +33,12 @@ public class DireccionClienteRepositoryImp extends GeneralRepositoryImp<Long, Tb
 			return findAllBySpecification(
 					new DireccionByIdClienteAndTipoDireccionSpec( idC, tipoDireccion ));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
 	}
+
+
 	
 	
 

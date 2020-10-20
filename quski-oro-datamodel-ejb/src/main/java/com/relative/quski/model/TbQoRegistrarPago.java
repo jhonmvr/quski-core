@@ -35,7 +35,7 @@ public class TbQoRegistrarPago implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_REGISTRAR_PAGO_ID_GENERATOR")
 	private Long id;
 
-	@Lob
+	@Column(name="id_comprobante")
 	private String idComprobante;
 
 	private String cuentas;

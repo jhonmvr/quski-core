@@ -12,6 +12,7 @@ import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoPatrimonio;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
@@ -35,6 +36,7 @@ public class AprobacionWrapper implements Serializable {
 	private List <TbQoPatrimonio> patrimonios;
 	private TbQoCliente cliente;
 	private TbQoCreditoNegociacion credito;
+	private TbQoProceso proceso;
 	
 	
 	public AprobacionWrapper() {
@@ -100,6 +102,14 @@ public class AprobacionWrapper implements Serializable {
 	public void setCredito(TbQoCreditoNegociacion credito) {
 		this.credito = credito;
 	}
+	public TbQoProceso getProceso() {
+		return proceso;
+	}
+	public void setProceso(TbQoProceso proceso) {
+		this.proceso = proceso;
+	}
+	
+	
 	
 	
 	

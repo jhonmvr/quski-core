@@ -35,16 +35,13 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name="id_asesor")
-	private String idAsesor;
-
-	@Column(name="proceso_actual")
-	private String procesoActual;
+	private String asesor;
+	
+	private String aprobador;
 
 	@Enumerated(EnumType.STRING)
 	private SituacionEnum situacion;
 
-	private String tipo;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
@@ -98,12 +95,19 @@ public class TbQoNegociacion implements Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	public String getIdAsesor() {
-		return idAsesor;
+	public String getAsesor() {
+		return asesor;
 	}
 
-	public void setIdAsesor(String idAsesor) {
-		this.idAsesor = idAsesor;
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
+	}
+	public String getAprobador() {
+		return aprobador;
+	}
+
+	public void setAprobador(String aprobador) {
+		this.aprobador = aprobador;
 	}
 
 	public Date getFechaCreacion() {
@@ -113,13 +117,6 @@ public class TbQoNegociacion implements Serializable {
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	public String getProcesoActual() {
-		return this.procesoActual;
-	}
-
-	public void setProcesoActual(String procesoActual) {
-		this.procesoActual = procesoActual;
-	}
 
 	public SituacionEnum getSituacion() {
 		return this.situacion;
@@ -128,15 +125,6 @@ public class TbQoNegociacion implements Serializable {
 	public void setSituacion(SituacionEnum situacion) {
 		this.situacion = situacion;
 	}
-
-	public String getTipo() {
-		return this.tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
 		return this.tbQoCreditoNegociacions;
 	}
