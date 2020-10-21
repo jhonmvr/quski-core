@@ -65,13 +65,14 @@ public class QuskiOroConstantes {
 	
 	
 	/**
-	 * CONTRATO
+	 * CODIGOS DE OPERACION BPM
 	 */
-	public static final  String CODIGO_COMPRA_DIRECTO_PREFIX="CD";
-	public static final  String CODIGO_COMPRA_PLAZO_PREFIX="CP";
-	public static final String COMPRA_DIRECTA = "CODIGO_COMPRA_DIRECTA";
-	public static final String COMPRA_PLAZOS = "CODIGO_COMPRA_PLAZOS";
-	public static final String PARAM_DIAS_FERIADOS = "DIAS_FERIADOS";
+	public static final String CODIGO_COTIZADOR					= "COTZ";
+	public static final String CODIGO_NUEVO						= "NUEV";
+	public static final String CODIGO_RENOVACION				= "RENV";
+	public static final String CODIGO_DEVOLUCION 				= "DEVC";
+	public static final String CODIGO_PAGO 						= "PAGO";
+	public static final String CODIGO_VERIFICACION_TELEFONICA 	= "VETF";
 	
 	/**
 	 * FUNDAS

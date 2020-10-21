@@ -627,24 +627,24 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	private TbQoCotizador crearCodigoCotizacion(TbQoCotizador persisted) throws RelativeException {
-		String cod = "COD0000000";
+		String cod = "COTZ0000000";
 		Long id = persisted.getId();
 		log.info("id en crearCodigoCotizacion " + persisted.getId());
 		try {
 			if (id < 9) {
-				cod = "COD000000";
+				cod = "COTZ000000";
 			} else if (id < 99) {
-				cod = "COD00000" + id;
+				cod = "COTZ00000" + id;
 			} else if (id < 999) {
-				cod = "COD0000" + id;
+				cod = "COTZ0000" + id;
 			} else if (id < 9999) {
-				cod = "COD000" + id;
+				cod = "COTZ000" + id;
 			} else if (id < 99999) {
-				cod = "COD00" + id;
+				cod = "COTZ00" + id;
 			} else if (id < 999999) {
-				cod = "COD0" + id;
+				cod = "COTZ0" + id;
 			} else if (id < 9999999) {
-				cod = "COD" + id;
+				cod = "COTZ" + id;
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 						"Error. Codigo de cotizacion supera los 7 digitos numericos");
@@ -4065,7 +4065,7 @@ public class QuskiOroService {
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		String cod = "NUEV0000000";
 		Long id = persisted.getId();
-		log.info(" ID EN crearCodigoCotizacion =======================> " + persisted.getId() + " <============== ");
+		log.info(" ID EN crearCodigoCreditoNuevo =======================> " + persisted.getId() + " <============== ");
 		try {
 			if (id < 9) {
 				cod = "NUEV000000";

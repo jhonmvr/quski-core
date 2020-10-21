@@ -17,10 +17,12 @@ public class OpPorAprobarWrapper implements Serializable {
     private BigDecimal   idAgencia;
     private String asesor;
     private String aprobador;
+    private Integer orden;
+
     
 	public OpPorAprobarWrapper(	BigDecimal id, String codigo, String proceso, 
 								Date fechaSolicitud, String cedulaCliente,
-								String nombreCliente, BigDecimal idAgencia, String asesor, String aprobador) {
+								String nombreCliente, BigDecimal idAgencia, String asesor, String aprobador, Integer orden) {
 		super();
 		this.id = id;
 		this.codigo = codigo;
@@ -31,6 +33,13 @@ public class OpPorAprobarWrapper implements Serializable {
 		this.idAgencia = idAgencia;
 		this.asesor = asesor;
 		this.aprobador = aprobador;
+		this.orden = orden;
+	}
+	public Integer getOrden() {
+		return orden;
+	}
+	public void setOrden(Integer orden) {
+		this.orden = orden;
 	}
 	public BigDecimal getId() {
 		return id;
