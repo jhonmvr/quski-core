@@ -3,7 +3,6 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +89,7 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
@@ -105,6 +105,7 @@ import com.relative.quski.wrapper.IntegracionEntidadWrapper;
 import com.relative.quski.wrapper.IntegracionRubroWrapper;
 import com.relative.quski.wrapper.IntegracionVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
@@ -4493,7 +4494,13 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
-		
+	}
+	public List<OpPorAprobarWrapper> findOperacionesPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
+		try {
+			return this.procesoRepository.findOperacionPorAprobar( wp ); 
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
+		}
 	}
 
 	/**
