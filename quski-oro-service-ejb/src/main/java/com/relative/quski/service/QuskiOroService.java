@@ -90,6 +90,7 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.BusquedaTrackingWrapper;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
@@ -161,7 +162,6 @@ public class QuskiOroService {
 	private DireccionClienteRepository direccionClienteRepository;
 	@Inject
 	private ExcepcionesRepository excepcionesRepository;
-
 	@Inject
 	private ClientePagoRepository clientePagoRepository;
 	@Inject
@@ -2445,7 +2445,7 @@ public class QuskiOroService {
 				persisted = this.findTrackingById(send.getId());
 				return this.updateTracking(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				send.setEstado(EstadoEnum.ACT.toString());
+				send.setEstado(EstadoEnum.ACT);
 				if (send.getFechaCreacion() != null && send.getFechaActualizacion() != null) {
 					// send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(),
 					// send.getFechaFin())));
@@ -2473,7 +2473,7 @@ public class QuskiOroService {
 			if (send.getActividad() != null) {
 				persisted.setActividad(send.getActividad());
 			}
-			persisted.setEstado(EstadoEnum.ACT.toString());
+			persisted.setEstado(EstadoEnum.ACT);
 
 			if (send.getSeccion() != null) {
 				persisted.setSeccion(send.getSeccion());
@@ -4503,41 +4503,11 @@ public class QuskiOroService {
 		}
 	}
 
-	/**
-	 * 
-	 * METODO QUE BUSCA POR MEDIO DE UN PARAMETRO
-	 * 
-	 * @param pw
-	 * @param proceso
-	 * @param actividad
-	 * @param seccion
-	 * @param codigoBPM
-	 * @param codigoOperacionSoftbank
-	 * @param fechaCreacion
-	 * @param fechaAprobacion
-	 * @param usuario
-	 * @return List<TbQoTracking>countTrackingByParams
-	 * @throws RelativeException
-	 */
-	public List<TbQoTracking> findTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
-			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
-			String fechaAprobacion, String usuario) throws RelativeException {
-		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
-				fechaCreacion, fechaAprobacion, usuario);
-	}
-
-	public List<TbQoTracking> countTrackingByParams(PaginatedWrapper pw, String proceso, String actividad,
-			String seccion, String codigoBPM, String codigoOperacionSoftbank, String fechaCreacion,
-			String fechaAprobacion, String usuario) throws RelativeException {
-		return this.trackingRepository.findByParams(pw, proceso, actividad, seccion, codigoBPM, codigoOperacionSoftbank,
-				fechaCreacion, fechaAprobacion, usuario);
-	}
-
-	public TbQoTracking findAllTracking(String proceso) throws RelativeException {
-		try {
-			return this.trackingRepository.findTrackingByProceso(proceso);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ + " Mi error EN SERVICE -> " + proceso);
-		}
+	public List<TbQoTracking> findBusquedaParametros(BusquedaTrackingWrapper wp) throws RelativeException {
+		
+			if (wp != null) {
+				return this.trackingRepository.findByParams(wp);
+			}
+			return null; 
 	}
 }

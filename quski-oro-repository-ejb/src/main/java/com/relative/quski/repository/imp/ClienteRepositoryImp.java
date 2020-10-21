@@ -12,12 +12,10 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.repository.ClienteRepository;
 import com.relative.quski.repository.spec.ClienteByIdNegociacionSpect;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.ClienteByParamsSpec;
-import com.relative.quski.repository.spec.ClientePagoByIdAndEstadoSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp

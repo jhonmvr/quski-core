@@ -33,6 +33,7 @@ public class TbQoTracking implements Serializable {
 	@Id
 	@SequenceGenerator(name = "TB_QO_TRACKING_ID_GENERATOR", sequenceName = "SEQ_TRACKING", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_TRACKING_ID_GENERATOR")
+	
 	private Long id;
 	
 	private ActividadEnum actividad;
@@ -41,7 +42,7 @@ public class TbQoTracking implements Serializable {
 	
 	private SeccionEnum seccion;
 
-	private String estado;
+	private EstadoEnum estado;
 	
 	private String observacion;
 
@@ -101,11 +102,11 @@ public class TbQoTracking implements Serializable {
 		this.codigoOperacionSoftbank = codigoOperacionSoftbank;
 	}
 
-	public String getEstado() {
+	public EstadoEnum getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
 	}
 
