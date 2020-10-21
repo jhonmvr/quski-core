@@ -4,79 +4,111 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.relative.quski.enums.ActividadEnum;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.SeccionEnum;
 
-public class BusquedaTrackingWrapper implements Serializable {
+public class TrackingWrapper implements Serializable {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8521675590542981249L;
-	private ActividadEnum actividad;
+	private static final long serialVersionUID = 1L;
+
+
 	private ProcesoEnum proceso;
+	private ActividadEnum actividad;
 	private SeccionEnum seccion;
-	private EstadoEnum estado;
 	private String codigoBpm;
 	private String codigoOperacionSoftbank;
 	private String usuarioCreacion;
+	//private String nombreAsesor;
 	private Date fechaCreacion;
-	private Date fechaActualizacion;
+	private Date fechaInicio;
+	private Date fechaFin;
+
+	public TrackingWrapper() {
 	
+
+	}
+/*
+	public String getNombreAsesor() {
+		return nombreAsesor;
+	}
+
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
+	}
+*/
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
 	public ActividadEnum getActividad() {
 		return actividad;
 	}
+
 	public void setActividad(ActividadEnum actividad) {
 		this.actividad = actividad;
 	}
+
 	public ProcesoEnum getProceso() {
 		return proceso;
 	}
+
 	public void setProceso(ProcesoEnum proceso) {
 		this.proceso = proceso;
 	}
+
 	public SeccionEnum getSeccion() {
 		return seccion;
 	}
+
 	public void setSeccion(SeccionEnum seccion) {
 		this.seccion = seccion;
 	}
-	public EstadoEnum getEstado() {
-		return estado;
-	}
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
-	}
+
 	public String getCodigoBpm() {
 		return codigoBpm;
 	}
+
 	public void setCodigoBpm(String codigoBpm) {
 		this.codigoBpm = codigoBpm;
 	}
+
 	public String getCodigoOperacionSoftbank() {
 		return codigoOperacionSoftbank;
 	}
+
 	public void setCodigoOperacionSoftbank(String codigoOperacionSoftbank) {
 		this.codigoOperacionSoftbank = codigoOperacionSoftbank;
 	}
+
 	public String getUsuarioCreacion() {
 		return usuarioCreacion;
 	}
+
 	public void setUsuarioCreacion(String usuarioCreacion) {
 		this.usuarioCreacion = usuarioCreacion;
 	}
+
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
+
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-	
-	
+
 }
