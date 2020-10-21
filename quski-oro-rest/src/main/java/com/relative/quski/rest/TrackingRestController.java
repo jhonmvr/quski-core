@@ -20,9 +20,12 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.ActividadEnum;
+import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.BusquedaTrackingWrapper;
+import com.relative.quski.wrapper.TrackingWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +52,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	@Override
 	@GET
 	@Path("/getEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoTracking>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTracking", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTracking> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
 		TbQoTracking a = this.qos.findTrackingById(Long.valueOf(id));
@@ -59,6 +63,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	@Override
 	@GET
 	@Path("/listAllEntities")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoTracking>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoTracking", response = PaginatedListWrapper.class)
 	public PaginatedListWrapper<TbQoTracking> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -82,6 +87,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	@Override
 	@POST
 	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoTracking>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTracking", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTracking> persistEntity(GenericWrapper<TbQoTracking> wp) throws RelativeException {
 		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageTracking(wp.getEntidad()));
@@ -93,10 +99,47 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	@ApiOperation(value = "GenericWrapper<TbQoTracking>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTracking", 
 	response = GenericWrapper.class)
-	public GenericWrapper<TbQoTracking> findBusquedaParametros(BusquedaTrackingWrapper wp) throws RelativeException {
-		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
-		
-		loc.setEntidades( this.qos.findBusquedaParametros(wp) );
+	public PaginatedListWrapper<TbQoTracking> findBusquedaParametros(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			TrackingWrapper wp) throws RelativeException {
+		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
+		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wp,plw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTracking().intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	
+	@GET
+	@Path("/listProceso")
+	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de procesos encontrados en TbQoTraking", response = GenericWrapper.class)
+	public GenericWrapper<ProcesoEnum> listProceso() throws RelativeException {
+		GenericWrapper<ProcesoEnum> loc = new GenericWrapper<>();
+		List<ProcesoEnum> a = this.qos.findListProcesos();
+		loc.setEntidades(a);
+		return loc;
+	}
+	@GET
+	@Path("/listActividad")
+	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de actividades encontradas en TbQoTraking", response = GenericWrapper.class)
+	public GenericWrapper<ActividadEnum> listActividad(@QueryParam("proceso") String proceso) throws RelativeException {
+		GenericWrapper<ActividadEnum> loc = new GenericWrapper<>();
+		List<ActividadEnum> a = this.qos.findListActividadByProceso(proceso);
+		loc.setEntidades(a);
+		return loc;
+	}
+	@GET
+	@Path("/listSeccion")
+	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de secciones encontradas en TbQoTraking", response = GenericWrapper.class)
+	public GenericWrapper<SeccionEnum> listSeccion(@QueryParam("actividad") String actividad) throws RelativeException {
+		GenericWrapper<SeccionEnum> loc = new GenericWrapper<>();
+		List<SeccionEnum> a = this.qos.findListSeccionByActividad(actividad);
+		loc.setEntidades(a);
 		return loc;
 	}
 }

@@ -1,4 +1,3 @@
-
 package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
@@ -17,6 +16,7 @@ import javax.inject.Inject;
 import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jfree.util.Log;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.enums.EmailSecurityTypeEnum;
@@ -28,10 +28,12 @@ import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
 import com.relative.quski.bpms.api.IntegracionApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
+import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.enums.TipoRubroEnum;
 import com.relative.quski.model.TbMiParametro;
@@ -90,7 +92,6 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
-import com.relative.quski.wrapper.BusquedaTrackingWrapper;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
@@ -115,6 +116,7 @@ import com.relative.quski.wrapper.SoftbankOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
+import com.relative.quski.wrapper.TrackingWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -2370,32 +2372,6 @@ public class QuskiOroService {
 	 * * * * * * *** * * ** ** * *@Tracking
 	 */
 
-	/**
-	 * 
-	 * @param pw PaginatedWrapper
-	 * @return List<TbQoTracking>
-	 * @throws RelativeException
-	 * @param pw
-	 * @return
-	 * @throws RelativeException
-	 */
-	public List<TbQoTracking> findAllTracking(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return trackingRepository.findAll(TbQoTracking.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return trackingRepository.findAll(TbQoTracking.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return trackingRepository.findAll(TbQoTracking.class, pw.getSortFields(), pw.getSortDirections());
-				}
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
 
 	/**
 	 * 
@@ -4503,11 +4479,76 @@ public class QuskiOroService {
 		}
 	}
 
-	public List<TbQoTracking> findBusquedaParametros(BusquedaTrackingWrapper wp) throws RelativeException {
-		
-			if (wp != null) {
-				return this.trackingRepository.findByParams(wp);
+	public List<TbQoTracking> findBusquedaParametros(TrackingWrapper wp, PaginatedWrapper pw) throws RelativeException {
+		if(wp == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS PARAMETROS DE BUSQUEDA");
+		}
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			
+				return this.trackingRepository.findByParams(wp,pw.getStartRecord(), pw.getPageSize(),
+						pw.getSortFields(), pw.getSortDirections());
+			
+		}else {
+			return this.trackingRepository.findByParams(wp);
+		}
+	}
+
+	public List<TbQoTracking> findAllTracking(PaginatedWrapper pw) throws RelativeException {
+		Log.info("Ingreso a FindAllTracking");
+		try {
+			if (pw != null) {
+				return trackingRepository.findAll(TbQoTracking.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return trackingRepository.findAll(TbQoTracking.class, pw.getStartRecord(), pw.getPageSize(),
+							pw.getSortFields(), pw.getSortDirections());
+				} else {
+					return trackingRepository.findAll(TbQoTracking.class, pw.getSortFields(), pw.getSortDirections());
+				}
 			}
-			return null; 
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	public List<ProcesoEnum> findListProcesos() throws RelativeException{
+		// TODO Auto-generated method stub
+		return trackingRepository.findListProcesos();
+	}
+
+	public List<ActividadEnum> findListActividadByProceso(String proceso) throws RelativeException{
+		try {
+			if(StringUtils.isBlank(proceso)) {
+				return null;
+			}
+			// TODO Auto-generated method stub
+			return trackingRepository.findListActividadByProceso(QuskiOroUtil.getEnumFromString(ProcesoEnum.class, proceso));
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR CONVERTIR STRING A ENUM");
+		}
+	}
+
+	public List<SeccionEnum> findListSeccionByActividad(String actividad) throws RelativeException{
+		try {
+			if(StringUtils.isBlank(actividad)) {
+				return null;
+			}
+			return trackingRepository.findListSeccionByActividad(QuskiOroUtil.getEnumFromString(ActividadEnum.class, actividad));
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR CONVERTIR STRING A ENUM");
+		}
 	}
 }
