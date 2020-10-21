@@ -28,6 +28,8 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 
 
@@ -95,6 +97,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	public GenericWrapper<OperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
 		GenericWrapper<OperacionesWrapper> loc = new GenericWrapper<>();
 		loc.setEntidades( this.qos.findOperaciones( wp ) );
+		return loc;
+	}
+	@POST
+	@Path("/buscarOperacionesAprobador")
+	public GenericWrapper<OpPorAprobarWrapper> buscarOperacionesAprobador( BusquedaPorAprobarWrapper wp) throws RelativeException {
+		GenericWrapper<OpPorAprobarWrapper> loc = new GenericWrapper<>();
+		loc.setEntidades( this.qos.findOperacionesPorAprobar( wp ) );
 		return loc;
 	}
 	@GET	
