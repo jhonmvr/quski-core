@@ -51,6 +51,25 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
 		}
 	}
+	@Override
+	public TbQoProceso findByIdReferencia(Long id) throws RelativeException {
+		try {
+			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdSpec(id));
+			if (!list.isEmpty()) {
+				if (list.size() == 1) {
+					return list.get(0);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,
+							QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
+				}
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+		}
+	}
 
 	@Override
 	public List<TbQoProceso> findProcesosByAsesor(String asesor) throws RelativeException {

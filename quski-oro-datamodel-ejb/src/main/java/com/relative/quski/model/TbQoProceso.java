@@ -54,6 +54,9 @@ public class TbQoProceso implements Serializable {
 
 	public TbQoProceso() {
 	}
+	public TbQoProceso( BigDecimal idReferencia) {
+		this.idReferencia = idReferencia;
+	}
 
 	public Long getId() {
 		return this.id;

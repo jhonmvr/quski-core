@@ -55,20 +55,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidad(this.qos.manageNegociacion(wp.getEntidad()));
 		return loc;
 	}	
-	@POST
-	@Path("/cancelarNegociacion")
-	public GenericWrapper<TbQoNegociacion> cancelarNegociacion(GenericWrapper<TbQoNegociacion> wp) throws RelativeException {
-		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.cancelarNegociacion( wp.getEntidad() ) );
-		return loc;
-	}	
-	@POST
-	@Path("/finalizarNegociacion")
-	public GenericWrapper<TbQoNegociacion> finalizarNegociacion(GenericWrapper<TbQoNegociacion> wp) throws RelativeException {
-		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.finalizarNegociacion( wp.getEntidad() ) );
-		return loc;
-	}	
+
 	
 	@Override
 	@GET
@@ -119,13 +106,13 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidad(a);
 		return loc;
 	}
-	@GET
-	@Path("/reasignarNegociacion")
-	public GenericWrapper<TbQoNegociacion> reasignarNegociacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario) throws RelativeException {
-		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.reasignarNegociacion( Long.valueOf( id ), usuario ) );
-		return loc;
-	}	
+//	@GET
+//	@Path("/reasignarNegociacion")
+//	public GenericWrapper<TbQoNegociacion> reasignarNegociacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario) throws RelativeException {
+//		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
+//		loc.setEntidad( this.qos.reasignarNegociacion( Long.valueOf( id ), usuario ) );
+//		return loc;
+//	}	
 	
 	
 

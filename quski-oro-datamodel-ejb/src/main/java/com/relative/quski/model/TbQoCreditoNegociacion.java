@@ -21,8 +21,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 
@@ -64,12 +62,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-	
-	@Enumerated(EnumType.STRING)
-	private SituacionEnum situacion;
-	
-	@Enumerated(EnumType.STRING)
-	private ProcesoEnum proceso;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
@@ -82,9 +74,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
-	
-	private String usuario;
-	
+		
 	private String codigo;
 
 	@Column(name="joyas_seleccionadas")
@@ -217,14 +207,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
-	public String getUsuario() {
-		return this.usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
 	public String getJoyasSeleccionadas() {
 		return this.joyasSeleccionadas;
 	}
@@ -247,24 +229,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setPlazoCredito(BigDecimal plazoCredito) {
 		this.plazoCredito = plazoCredito;
-	}
-
-	
-	
-	public SituacionEnum getSituacion() {
-		return situacion;
-	}
-
-	public void setSituacion(SituacionEnum situacion) {
-		this.situacion = situacion;
-	}
-
-	public ProcesoEnum getProceso() {
-		return proceso;
-	}
-
-	public void setProceso(ProcesoEnum proceso) {
-		this.proceso = proceso;
 	}
 
 	public String getCodigo() {

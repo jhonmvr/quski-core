@@ -31,10 +31,10 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SeccionEnum;
-import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.enums.TipoRubroEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
@@ -1357,16 +1357,6 @@ public class QuskiOroService {
 	/**
 	 * * * * * * * * * * * @NEGOCIACION
 	 */
-
-	/**
-	 * @author Desconocido - Creacion
-	 * @editor Jeroham Cadenas - Actualizacion
-	 * @param Long id
-	 * @return TbQoNegociacion
-	 * @throws RelativeException
-	 * @comment Metodo Busca la negociacion y las variables crediticias asociadas
-	 * @comment Preguntar antes de editar.
-	 */
 	public TbQoNegociacion findNegociacionById(Long id) throws RelativeException {
 
 		try {
@@ -1412,74 +1402,67 @@ public class QuskiOroService {
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-				send.setSituacion(SituacionEnum.EN_PROCESO);
 				if (send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
+				TbQoProceso proceso = createProcesoNegociacion(send.getId(), send.getAsesor());
+				if( proceso == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				}
 				return negociacionRepository.add(send);
 			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
 	}
-
-	/**
-	 * @author Jeroham Cadenas - Actualizacion
-	 * @param Long id
-	 * @return TbQoNegociacion
-	 * @throws RelativeException
-	 * @comment Finaliza una negociacion en caso de que sea completado el flujo de
-	 *          negociacion.
-	 * @comment Preguntar antes de editar.
-	 */
-	public TbQoNegociacion finalizarNegociacion(TbQoNegociacion send) throws RelativeException {
+	
+	private TbQoProceso createProcesoNegociacion( Long idReferencia, String usuario) throws RelativeException {
 		try {
-			TbQoNegociacion persisted = null;
-			persisted = this.findNegociacionById(send.getId());
-			persisted.setSituacion(SituacionEnum.FINALIZADO);
-			persisted.setFechaActualizacion(new Date(System.currentTimeMillis()));
-			return negociacionRepository.update(persisted);
+			TbQoProceso send = new TbQoProceso( BigDecimal.valueOf( idReferencia ));
+			send.setProceso( ProcesoEnum.NUEVO );
+			send.setEstadoProceso( EstadoProcesoEnum.CREADO );
+			send.setUsuario( usuario );
+			return this.manageProceso( send );
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
-		}
-	}	
-	public TbQoNegociacion reasignarNegociacion(Long id, String usuario) throws RelativeException {
-		try {
-			TbQoNegociacion persisted = this.findNegociacionById( id );
-			if( persisted != null) {
-				persisted.setAsesor( usuario );
-				return negociacionRepository.update(persisted);
-			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
 	}
+	
 
-	/**
-	 * @author Jeroham Cadenas - Actualizacion
-	 * @param Long id
-	 * @return TbQoNegociacion
-	 * @throws RelativeException
-	 * @comment Cancela una negociacion en caso de que se detenga el flujo de
-	 *          negociacion.
-	 * @comment Preguntar antes de editar.
-	 */
-	public TbQoNegociacion cancelarNegociacion(TbQoNegociacion send) throws RelativeException {
+	//TODO: Jeroham
+//	public Boolean reasignarOperacion(Long id, ProcesoEnum proceso, String usuario) throws RelativeException {
+//		try {
+//			if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
+//				TbQoNegociacion persisted = this.findNegociacionById( id );
+//				persisted.setAsesor( usuario );
+//				TbQoNegociacion nego = this.manageNegociacion(persisted);
+//				if(nego != null) {
+//					return true;					
+//				}else {
+//					throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+//							QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+//				}
+//			}
+//			if(proceso == ProcesoEnum.DEVOLUCION) {
+//				
+//				
+//			}
+//		} catch (RelativeException e) {
+//			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+//					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+//		}
+//	}
+	public TbQoProceso cancelarNegociacion(Long id, String usuario) throws RelativeException {
 		try {
-			TbQoNegociacion persisted = null;
-			persisted = this.findNegociacionById(send.getId());
-			persisted.setSituacion(SituacionEnum.CANCELADO);
+			TbQoProceso persisted = this.findProcesoByIdReferencia( id );
+			persisted.setEstadoProceso( EstadoProcesoEnum.CANCELADO );
 			persisted.setFechaActualizacion(new Date(System.currentTimeMillis()));
-			return negociacionRepository.update(persisted);
+			persisted.setUsuario(usuario);
+			return this.manageProceso( persisted );
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
@@ -1491,9 +1474,6 @@ public class QuskiOroService {
 		try {
 			if (send.getAsesor() != null) {
 				persisted.setAsesor(send.getAsesor());
-			}
-			if (send.getSituacion() != null) {
-				persisted.setSituacion(send.getSituacion());
 			}
 			persisted.setEstado(EstadoEnum.ACT);
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
@@ -1640,7 +1620,6 @@ public class QuskiOroService {
 				TbQoNegociacion negociacion = this.manageNegociacion(ng);
 				if (negociacion != null) {
 					TbQoCreditoNegociacion cr = new TbQoCreditoNegociacion();
-					cr.setUsuario(asesor);
 					cr.setTbQoNegociacion(negociacion);
 					return this.manageCreditoNegociacion(cr);
 				} else {
@@ -4025,7 +4004,6 @@ public class QuskiOroService {
 			} else if (send.getId() == null) {
 				send.setFechaCreacion(new Date(System.currentTimeMillis()));
 				send.setEstado(EstadoEnum.ACT);
-				send.setSituacion(SituacionEnum.EN_PROCESO);
 				return crearCodigoCreditoNuevo(this.creditoNegociacionRepository.add(send));
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -4391,6 +4369,14 @@ public class QuskiOroService {
 	public TbQoProceso findProcesoById(Long id) throws RelativeException {
 		try {
 			return procesoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	public TbQoProceso findProcesoByIdReferencia(Long id) throws RelativeException {
+		try {
+			return procesoRepository.findByIdReferencia(id);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());

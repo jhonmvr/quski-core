@@ -50,7 +50,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		//NO UTILIZABLE
 	}
 
-	 	
+	@GET
+	@Path("/cancelarNegociacion")
+	public GenericWrapper<TbQoProceso> cancelarNegociacion(@QueryParam("idNegociacion") String idNegociacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.cancelarNegociacion( Long.valueOf( idNegociacion ), usuario ) );
+		return loc;
+	}	
 	@GET
 	@Path("/getEntity")
 	public GenericWrapper<TbQoProceso> getEntity(@QueryParam("id") String id) throws RelativeException {
