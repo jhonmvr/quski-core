@@ -142,6 +142,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		w.setEntidades(stringsActividades);
 		return w;
 	}
+	@GET
+	@Path("/reasignarOperacion")
+	public GenericWrapper<Boolean> reasignarOperacion(@QueryParam("id") String id, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("usuario") String usuario) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.reasignarOperacion( Long.valueOf( id ),proceso, usuario ) );
+		return loc;
+	}	
 
 	
 }
