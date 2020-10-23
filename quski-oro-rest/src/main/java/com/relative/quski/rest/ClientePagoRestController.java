@@ -77,7 +77,6 @@ public class ClientePagoRestController extends BaseRestController
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoClientePago>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoClientePago", response = GenericWrapper.class)
 	public GenericWrapper<TbQoClientePago> persistEntity(GenericWrapper<TbQoClientePago> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<>();
@@ -89,7 +88,6 @@ public class ClientePagoRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoClientePago>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoClientePago", response = GenericWrapper.class)
 	public GenericWrapper<TbQoClientePago> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<>();
 		TbQoClientePago a = this.qos.findClientePagoById(Long.valueOf(id));
@@ -98,9 +96,6 @@ public class ClientePagoRestController extends BaseRestController
 	}
 	@GET
 	@Path("/findByIdClientePago")
-	@ApiOperation(value = "GenericWrapper<TbQoClientePago>", 
-	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoClientePago", 
-	response = GenericWrapper.class)
 	public GenericWrapper<TbQoClientePago> findByIdClientePago(@QueryParam("cedula")  String cedula) throws RelativeException {
 		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<>();
 		loc.setEntidades( this.ps.findClientePagoByIdClientePago(StringUtils.isNotBlank(cedula)?Long.valueOf(cedula):null) );

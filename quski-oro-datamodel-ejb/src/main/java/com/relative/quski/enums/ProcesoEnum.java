@@ -2,8 +2,8 @@ package com.relative.quski.enums;
 
 public enum ProcesoEnum {
 	
-	CREDITO_NUEVO,
-	NOVACION,
+	NUEVO,
+	RENOVACION,
 	DEVOLUCION,
 	COTIZACION,
 	PAGO,

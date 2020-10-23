@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.SituacionEnum;
 
 import java.util.Date;
 import java.util.List;
@@ -38,10 +37,6 @@ public class TbQoNegociacion implements Serializable {
 	private String asesor;
 	
 	private String aprobador;
-
-	@Enumerated(EnumType.STRING)
-	private SituacionEnum situacion;
-
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
@@ -118,13 +113,6 @@ public class TbQoNegociacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public SituacionEnum getSituacion() {
-		return this.situacion;
-	}
-
-	public void setSituacion(SituacionEnum situacion) {
-		this.situacion = situacion;
-	}
 	public List<TbQoCreditoNegociacion> getTbQoCreditoNegociacions() {
 		return this.tbQoCreditoNegociacions;
 	}

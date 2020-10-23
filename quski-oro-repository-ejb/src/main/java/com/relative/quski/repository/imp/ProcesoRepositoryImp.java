@@ -15,6 +15,7 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.spec.ProcesoByAsesorSpec;
 import com.relative.quski.repository.spec.ProcesoByIdNegociacion;
+import com.relative.quski.repository.spec.ProcesoByIdReferenciaSpec;
 import com.relative.quski.repository.spec.ProcesoByIdSpec;
 import com.relative.quski.util.QueryConstantes;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -42,6 +43,25 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				} else {
 					throw new RelativeException(Constantes.ERROR_CODE_READ,
 							QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
+				}
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+		}
+	}
+	@Override
+	public TbQoProceso findByIdReferencia(Long id) throws RelativeException {
+		try {
+			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdReferenciaSpec(id));
+			if (!list.isEmpty()) {
+				if (list.size() == 1) {
+					return list.get(0);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,
+							QuskiOroConstantes.ERROR_ID_NO_EXISTE);
 				}
 			} else {
 				return null;
@@ -217,7 +237,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			StringBuilder strQry = crearSelect().append(" where proceso.ESTADO_PROCESO =:estado ");
+			StringBuilder strQry = crearSelect().append(" where (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado ) ");
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
 						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
@@ -254,10 +274,12 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"					(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
 						"					else 0 end end end end =:idAgencia ");
 			}
+			strQry.append(" ORDER BY ORDEN ");
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
-			query.setParameter("estado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
+			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
+			query.setParameter("segundoEstado", EstadoProcesoEnum.DEVUELTO.toString() );
 			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				query.setParameter("codigo", wp.getCodigo() );
@@ -280,7 +302,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	}
 	private StringBuilder crearSelect () {
 		String subQueryId = "case when "+QueryConstantes.WHEN_NEGO+"  then " + 
-				"(select nego.ID from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
+				"(select cre.ID from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
 				"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 				"		(select devo.ID from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
 				"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
@@ -334,17 +356,37 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				"			(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
 				"			else ' ' end end end end ASESOR, ";
 			String subQueryAprobador = "case when "+QueryConstantes.WHEN_NEGO+" then " + 
-				" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'Libre') " + 
+				" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') " + 
 				"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-				"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'Libre') " + 
+				"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'null') " + 
 				"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-				"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'Libre')" + 
+				"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'null')" + 
 				"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-				"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ),'Libre') " + 
-				"			else ' ' end end end end APROBADOR ";
+				"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ),'null') " + 
+				"			else ' ' end end end end APROBADOR, ";
+			String subQueryOrden = " "+ 
+					" 		CASE WHEN (proceso.proceso ='NUEVO') THEN" + 
+					"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
+					"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') then 1 ELSE 8 end" + 
+					"			ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
+					"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') then 2 ELSE 9 end" + 
+					"			ELSE 0 END END" + 
+					"		ELSE CASE WHEN (proceso.proceso ='RENOVACION') THEN " + 
+					"				CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
+					"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') then 3 ELSE 10 end" + 
+					"				ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
+					"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') then 4 ELSE 11 end" + 
+					"				ELSE 0 END END" + 
+					"		ELSE CASE WHEN (proceso.proceso ='PAGO') THEN " + 
+					"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'null') = 'null') then 5  ELSE 12 end" + 
+					"		ELSE CASE WHEN (proceso.proceso ='DEVOLUCION') THEN " + 
+					"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'null') = 'null' ) then 6  ELSE 13 end" + 
+					"		ELSE CASE WHEN (proceso.proceso ='VERIFICACION_TELEFONICA') THEN " + 
+					"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'null') = 'null') then 7  ELSE 14 end" + 
+					"		ELSE 0 END END END END END AS orden ";
 			
 			
-			return new StringBuilder( " select " + subQueryId + subQueryCodigo + " proceso.PROCESO,	proceso.FECHA_ACTUALIZACION, "+ subQueryCedula + subQueryNombre + subQueryAgencia + subQueryAsesor + subQueryAprobador + "from tb_qo_proceso proceso ");
+			return new StringBuilder( " select " + subQueryId + subQueryCodigo + " proceso.PROCESO,	proceso.FECHA_ACTUALIZACION, "+ subQueryCedula + subQueryNombre + subQueryAgencia + subQueryAsesor + subQueryAprobador + subQueryOrden + "from tb_qo_proceso proceso ");
 	}
 
 	
