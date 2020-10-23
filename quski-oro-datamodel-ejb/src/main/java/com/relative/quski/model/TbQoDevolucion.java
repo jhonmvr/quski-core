@@ -1,282 +1,140 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+
 /**
- * The persistent class for the tb_qo_detalle_credito database table.
+ * The persistent class for the tb_qo_devolucion database table.
  * 
  */
 @Entity
-@Table(name = "tb_qo_devolucion")
+@Table(name="tb_qo_devolucion")
 public class TbQoDevolucion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "TB_QO_DEVOLUCION_ID_GENERATOR", sequenceName = "SEQ_DEVOLUCION", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_DEVOLUCION_ID_GENERATOR")
+	@SequenceGenerator(name="TB_QO_DEVOLUCION_ID_GENERATOR", sequenceName="SEQ_DEVOLUCION",initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_DEVOLUCION_ID_GENERATOR")
 	private Long id;
 
-	@Column(name = "codigo")
-	private String codigo;
+	@Column(name="agencia_entrega")
+	private String agenciaEntrega;
 
-	@Column(name = "asesor")
+	private String aprobador;
+
 	private String asesor;
 
-	@Column(name = "aprobador")
-	private BigDecimal aprobador;
-	
-	@Column(name = "id_agencia")
-	private Long idAgencia;
+	@Column(name="cedula_cliente")
+	private String cedulaCliente;
 
-	@Column(name = "nombre_cliente")
-	private BigDecimal nombreCliente;
+	@Column(name="code_detalle_credito")
+	private String codeDetalleCredito;
 
-	@Column(name = "cedula_cliente")
-	private BigDecimal cedulaCliente;
+	@Column(name="code_detalle_garantia")
+	private String codeDetalleGarantia;
 
-	@Column(name = "codigo_operacion")
-	private BigDecimal codigoOperacion;
+	@Column(name="code_herederos")
+	private String codeHerederos;
 
-	@Column(name = "nivel_educacion")
-	private BigDecimal nivelEducacion;
+	private String codigo;
 
-	@Column(name = "estado_civil")
-	private BigDecimal estadoCivil;
-
-	@Column(name = "separacion_bienes")
-	private BigDecimal separacionBienes;
+	@Column(name="codigo_operacion")
+	private String codigoOperacion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
+	@Column(name="estado_civil")
+	private String estadoCivil;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_actualizacion")
+	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_creacion")
+	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
-	
+
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fechaNacimiento")
+	@Column(name="fecha_nacimiento")
 	private Date fechaNacimiento;
 
-	@Column(name = "nacionalidad")
+	@Column(name="id_agencia")
+	private BigDecimal idAgencia;
+
+	@Column(name="lugar_nacimiento")
+	private String lugarNacimiento;
+
 	private String nacionalidad;
 
-	@Column(name = "lugar_nacimiento")
-	private String lugarNacimiento;
-	
-	@Column(name = "tipo_cliente")
-	private String tipoCliente;
-	
-	@Column(name = "observaciones")
+	@Column(name="nivel_educacion")
+	private String nivelEducacion;
+
+	@Column(name="nombre_cliente")
+	private String nombreCliente;
+
 	private String observaciones;
 
-	@Column(name = "agencia_entrega")
-	private String agenciaEntrega;
+	@Column(name="separacion_bienes")
+	private String separacionBienes;
 
-	@Column(name = "valor_custodia")
-	private BigDecimal valorCustodia;
+	@Column(name="tipo_cliente")
+	private String tipoCliente;
 
-	@Column(name = "code_herederos")
-	private String codeHerederos;
-	
-	@Column(name = "code_detalle_credito")
-	private String codeDetalleCredito;
-	
-	@Column(name = "code_detalle_garantia")
-	private String codeDetalleGarantia;
-	
+	@Column(name="valor_custodia_aprox")
+	private BigDecimal valorCustodiaAprox;
+
 	public TbQoDevolucion() {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getAsesor() {
-		return asesor;
-	}
-
-	public void setAsesor(String asesor) {
-		this.asesor = asesor;
-	}
-
-	public BigDecimal getAprobador() {
-		return aprobador;
-	}
-
-	public void setAprobador(BigDecimal aprobador) {
-		this.aprobador = aprobador;
-	}
-
-	public Long getIdAgencia() {
-		return idAgencia;
-	}
-
-	public void setIdAgencia(Long idAgencia) {
-		this.idAgencia = idAgencia;
-	}
-
-	public BigDecimal getNombreCliente() {
-		return nombreCliente;
-	}
-
-	public void setNombreCliente(BigDecimal nombreCliente) {
-		this.nombreCliente = nombreCliente;
-	}
-
-	public BigDecimal getCedulaCliente() {
-		return cedulaCliente;
-	}
-
-	public void setCedulaCliente(BigDecimal cedulaCliente) {
-		this.cedulaCliente = cedulaCliente;
-	}
-
-	public BigDecimal getCodigoOperacion() {
-		return codigoOperacion;
-	}
-
-	public void setCodigoOperacion(BigDecimal codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
-	}
-
-	public BigDecimal getNivelEducacion() {
-		return nivelEducacion;
-	}
-
-	public void setNivelEducacion(BigDecimal nivelEducacion) {
-		this.nivelEducacion = nivelEducacion;
-	}
-
-	public BigDecimal getEstadoCivil() {
-		return estadoCivil;
-	}
-
-	public void setEstadoCivil(BigDecimal estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
-
-	public BigDecimal getSeparacionBienes() {
-		return separacionBienes;
-	}
-
-	public void setSeparacionBienes(BigDecimal separacionBienes) {
-		this.separacionBienes = separacionBienes;
-	}
-
-	public EstadoEnum getEstado() {
-		return estado;
-	}
-
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	
-	public Date getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
-	public String getNacionalidad() {
-		return nacionalidad;
-	}
-
-	public void setNacionalidad(String nacionalidad) {
-		this.nacionalidad = nacionalidad;
-	}
-
-	public String getLugarNacimiento() {
-		return lugarNacimiento;
-	}
-
-	public void setLugarNacimiento(String lugarNacimiento) {
-		this.lugarNacimiento = lugarNacimiento;
-	}
-
-	public String getTipoCliente() {
-		return tipoCliente;
-	}
-
-	public void setTipoCliente(String tipoCliente) {
-		this.tipoCliente = tipoCliente;
-	}
-
-	public String getObservaciones() {
-		return observaciones;
-	}
-
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
-	}
-
-	
-
-	public BigDecimal getValorCustodia() {
-		return valorCustodia;
-	}
-
-	public void setValorCustodia(BigDecimal valorCustodia) {
-		this.valorCustodia = valorCustodia;
-	}
-
 	public String getAgenciaEntrega() {
-		return agenciaEntrega;
+		return this.agenciaEntrega;
 	}
 
 	public void setAgenciaEntrega(String agenciaEntrega) {
 		this.agenciaEntrega = agenciaEntrega;
 	}
 
-	public String getCodeHerederos() {
-		return codeHerederos;
+	public String getAprobador() {
+		return this.aprobador;
 	}
 
-	public void setCodeHerederos(String codeHerederos) {
-		this.codeHerederos = codeHerederos;
+	public void setAprobador(String aprobador) {
+		this.aprobador = aprobador;
+	}
+
+	public String getAsesor() {
+		return this.asesor;
+	}
+
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
+	}
+
+	public String getCedulaCliente() {
+		return this.cedulaCliente;
+	}
+
+	public void setCedulaCliente(String cedulaCliente) {
+		this.cedulaCliente = cedulaCliente;
 	}
 
 	public String getCodeDetalleCredito() {
-		return codeDetalleCredito;
+		return this.codeDetalleCredito;
 	}
 
 	public void setCodeDetalleCredito(String codeDetalleCredito) {
@@ -284,15 +142,147 @@ public class TbQoDevolucion implements Serializable {
 	}
 
 	public String getCodeDetalleGarantia() {
-		return codeDetalleGarantia;
+		return this.codeDetalleGarantia;
 	}
 
 	public void setCodeDetalleGarantia(String codeDetalleGarantia) {
 		this.codeDetalleGarantia = codeDetalleGarantia;
 	}
 
+	public String getCodeHerederos() {
+		return this.codeHerederos;
+	}
 
+	public void setCodeHerederos(String codeHerederos) {
+		this.codeHerederos = codeHerederos;
+	}
 
-	
+	public String getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getCodigoOperacion() {
+		return this.codigoOperacion;
+	}
+
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
+	}
+
+	public EstadoEnum getEstado() {
+		return this.estado;
+	}
+
+	public void setEstado(EstadoEnum estado) {
+		this.estado = estado;
+	}
+
+	public String getEstadoCivil() {
+		return this.estadoCivil;
+	}
+
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+	public Date getFechaActualizacion() {
+		return this.fechaActualizacion;
+	}
+
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	public Date getFechaCreacion() {
+		return this.fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Date getFechaNacimiento() {
+		return this.fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public BigDecimal getIdAgencia() {
+		return this.idAgencia;
+	}
+
+	public void setIdAgencia(BigDecimal idAgencia) {
+		this.idAgencia = idAgencia;
+	}
+
+	public String getLugarNacimiento() {
+		return this.lugarNacimiento;
+	}
+
+	public void setLugarNacimiento(String lugarNacimiento) {
+		this.lugarNacimiento = lugarNacimiento;
+	}
+
+	public String getNacionalidad() {
+		return this.nacionalidad;
+	}
+
+	public void setNacionalidad(String nacionalidad) {
+		this.nacionalidad = nacionalidad;
+	}
+
+	public String getNivelEducacion() {
+		return this.nivelEducacion;
+	}
+
+	public void setNivelEducacion(String nivelEducacion) {
+		this.nivelEducacion = nivelEducacion;
+	}
+
+	public String getNombreCliente() {
+		return this.nombreCliente;
+	}
+
+	public void setNombreCliente(String nombreCliente) {
+		this.nombreCliente = nombreCliente;
+	}
+
+	public String getObservaciones() {
+		return this.observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	public String getSeparacionBienes() {
+		return this.separacionBienes;
+	}
+
+	public void setSeparacionBienes(String separacionBienes) {
+		this.separacionBienes = separacionBienes;
+	}
+
+	public String getTipoCliente() {
+		return this.tipoCliente;
+	}
+
+	public void setTipoCliente(String tipoCliente) {
+		this.tipoCliente = tipoCliente;
+	}
+
+	public BigDecimal getValorCustodiaAprox() {
+		return this.valorCustodiaAprox;
+	}
+
+	public void setValorCustodiaAprox(BigDecimal valorCustodiaAprox) {
+		this.valorCustodiaAprox = valorCustodiaAprox;
+	}
 
 }

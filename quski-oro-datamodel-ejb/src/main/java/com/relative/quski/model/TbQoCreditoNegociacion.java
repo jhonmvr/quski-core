@@ -21,101 +21,114 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.enums.SituacionEnum;
 import com.relative.quski.enums.TipoCreditoNegociacionEnum;
-
 
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 
  */
 @Entity
-@Table(name="tb_qo_credito_negociacion")
+@Table(name = "tb_qo_credito_negociacion")
 public class TbQoCreditoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName="SEQ_CREDITO_NEGOCIACION",initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName = "SEQ_CREDITO_NEGOCIACION", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
 
-	@Column(name="costo_credito")
+	@Column(name = "costo_credito")
 	private BigDecimal costoCredito;
 
-	@Column(name="costo_custodia")
+	@Column(name = "costo_custodia")
 	private BigDecimal costoCustodia;
 
-	@Column(name="costo_estimado")
+	@Column(name = "costo_estimado")
 	private BigDecimal costoEstimado;
 
-	@Column(name="costo_nueva_operacion")
+	@Column(name = "costo_nueva_operacion")
 	private BigDecimal costoNuevaOperacion;
 
-	@Column(name="costo_resguardado")
+	@Column(name = "costo_resguardado")
 	private BigDecimal costoResguardado;
 
-	@Column(name="costo_seguro")
+	@Column(name = "costo_seguro")
 	private BigDecimal costoSeguro;
 
-	@Column(name="costo_transporte")
+	@Column(name = "costo_transporte")
 	private BigDecimal costoTransporte;
-	
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
-	
-	@Enumerated(EnumType.STRING)
-	private SituacionEnum situacion;
-	
-	@Enumerated(EnumType.STRING)
-	private ProcesoEnum proceso;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_actualizacion")
+	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_creacion")
+	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecha_vencimiento")
+	@Column(name = "fecha_vencimiento")
 	private Date fechaVencimiento;
-	
-	private String usuario;
-	
+
 	private String codigo;
 
-	@Column(name="joyas_seleccionadas")
+	@Column(name = "joyas_seleccionadas")
 	private String joyasSeleccionadas;
 
-	@Column(name="monto_preaprobado")
+	@Column(name = "monto_preaprobado")
 	private BigDecimal montoPreaprobado;
+	
+	@Column(name = "monto_solicitado")
+	private BigDecimal montoSolicitado;
+	
+	@Column(name = "monto_diferido")
+	private BigDecimal montoDiferido;
 
-	@Column(name="plazo_credito")
+	@Column(name = "plazo_credito")
 	private BigDecimal plazoCredito;
+	
+	@Column(name = "tipo_operacion")
+	private String tipoOperacion;
 
-	@Column(name="recibir_cliente")
+	public BigDecimal getMontoDiferido() {
+		return montoDiferido;
+	}
+
+	public void setMontoDiferido(BigDecimal montoDiferido) {
+		this.montoDiferido = montoDiferido;
+	}
+
+	public BigDecimal getMontoSolicitado() {
+		return montoSolicitado;
+	}
+
+	public void setMontoSolicitado(BigDecimal montoSolicitado) {
+		this.montoSolicitado = montoSolicitado;
+	}
+
+	@Column(name = "recibir_cliente")
 	private BigDecimal recibirCliente;
 
-	@Column(name="tipo")
+	@Column(name = "tipo")
 	@Enumerated(EnumType.STRING)
 	private TipoCreditoNegociacionEnum tipo;
 
-	@Column(name="valor_cuota")
+	@Column(name = "valor_cuota")
 	private BigDecimal valorCuota;
 
-	@Column(name="id_agencia")
+	@Column(name = "id_agencia")
 	private int idAgencia;
-	
-	//bi-directional many-to-one association to TbQoNegociacion
+
+	// bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
-	@JoinColumn(name="id_negociacion")
+	@JoinColumn(name = "id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	//bi-directional many-to-one association to TbQoTasacion
-	@OneToMany(mappedBy="tbQoCreditoNegociacion")
+	// bi-directional many-to-one association to TbQoTasacion
+	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoTasacion> tbQoTasacions;
 
 	public TbQoCreditoNegociacion() {
@@ -217,14 +230,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
-	public String getUsuario() {
-		return this.usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
 	public String getJoyasSeleccionadas() {
 		return this.joyasSeleccionadas;
 	}
@@ -249,24 +254,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.plazoCredito = plazoCredito;
 	}
 
-	
-	
-	public SituacionEnum getSituacion() {
-		return situacion;
-	}
-
-	public void setSituacion(SituacionEnum situacion) {
-		this.situacion = situacion;
-	}
-
-	public ProcesoEnum getProceso() {
-		return proceso;
-	}
-
-	public void setProceso(ProcesoEnum proceso) {
-		this.proceso = proceso;
-	}
-
 	public String getCodigo() {
 		return codigo;
 	}
@@ -286,7 +273,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public TipoCreditoNegociacionEnum getTipo() {
 		return tipo;
 	}
-
 
 	public void setTipo(TipoCreditoNegociacionEnum tipo) {
 		this.tipo = tipo;
@@ -337,5 +323,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 		return tbQoTasacion;
 	}
+	
+	
 
 }

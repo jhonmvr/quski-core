@@ -7,6 +7,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,13 +38,18 @@ public class TbQoTracking implements Serializable {
 	
 	private Long id;
 	
+	@Enumerated(EnumType.STRING)
 	private ActividadEnum actividad;
-
+	
+	@Enumerated(EnumType.STRING)
 	private ProcesoEnum proceso;
 	
+	@Enumerated(EnumType.STRING)
 	private SeccionEnum seccion;
-
+	
+	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
+	
 	
 	private String observacion;
 

@@ -65,13 +65,14 @@ public class QuskiOroConstantes {
 	
 	
 	/**
-	 * CONTRATO
+	 * CODIGOS DE OPERACION BPM
 	 */
-	public static final  String CODIGO_COMPRA_DIRECTO_PREFIX="CD";
-	public static final  String CODIGO_COMPRA_PLAZO_PREFIX="CP";
-	public static final String COMPRA_DIRECTA = "CODIGO_COMPRA_DIRECTA";
-	public static final String COMPRA_PLAZOS = "CODIGO_COMPRA_PLAZOS";
-	public static final String PARAM_DIAS_FERIADOS = "DIAS_FERIADOS";
+	public static final String CODIGO_COTIZADOR					= "COTZ";
+	public static final String CODIGO_NUEVO						= "NUEV";
+	public static final String CODIGO_RENOVACION				= "RENV";
+	public static final String CODIGO_DEVOLUCION 				= "DEVC";
+	public static final String CODIGO_PAGO 						= "PAGO";
+	public static final String CODIGO_VERIFICACION_TELEFONICA 	= "VETF";
 	
 	/**
 	 * FUNDAS
@@ -234,10 +235,13 @@ public class QuskiOroConstantes {
 	// MENSAJES DE EXCEPCIONES
 	public static final String ACCION_NO_ENCONTRADA = ": ACCION NO ENCONTRADA -> ";
 	public static final String ERROR_AL_REALIZAR_BUSQUEDA = ": ERROR AL REALIZAR BUSQUEDA -> ";
+	public static final String ERROR_SIN_PROCESO = "NO POSEE UN PROCESO RELACIONADO";
 	public static final String ERROR_AL_REALIZAR_CREACION = ": ERROR AL REALIZAR CREACION -> ";
 	public static final String ERROR_CREATE_CLIENTE = ": ERROR AL CREAR AL CLIENTE -> ";
 	public static final String ERROR_NEGOCIACION = ": ERROR AL CREAR TODA LA GESTION -> ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
+	public static final String ERROR_VALOR_NO_VALIDO = " INGRESE UN VALOR VALIDO";
+	public static final String ERROR_ID_NO_EXISTE = " ID INGRESADO NO EXISTE ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
 	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
 	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";

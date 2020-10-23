@@ -28,6 +28,8 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 
 
@@ -48,7 +50,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		//NO UTILIZABLE
 	}
 
-	 	
+	@GET
+	@Path("/cancelarNegociacion")
+	public GenericWrapper<TbQoProceso> cancelarNegociacion(@QueryParam("idNegociacion") String idNegociacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.cancelarNegociacion( Long.valueOf( idNegociacion ), usuario ) );
+		return loc;
+	}	
 	@GET
 	@Path("/getEntity")
 	public GenericWrapper<TbQoProceso> getEntity(@QueryParam("id") String id) throws RelativeException {
@@ -97,6 +105,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidades( this.qos.findOperaciones( wp ) );
 		return loc;
 	}
+	@POST
+	@Path("/buscarOperacionesAprobador")
+	public GenericWrapper<OpPorAprobarWrapper> buscarOperacionesAprobador( BusquedaPorAprobarWrapper wp) throws RelativeException {
+		GenericWrapper<OpPorAprobarWrapper> loc = new GenericWrapper<>();
+		loc.setEntidades( this.qos.findOperacionesPorAprobar( wp ) );
+		return loc;
+	}
 	@GET	
 	@Path("/getProcesos")
 	public GenericWrapper<String> getProcesos() throws RelativeException {
@@ -127,6 +142,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		w.setEntidades(stringsActividades);
 		return w;
 	}
+	@GET
+	@Path("/reasignarOperacion")
+	public GenericWrapper<Boolean> reasignarOperacion(@QueryParam("id") String id, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("usuario") String usuario) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.reasignarOperacion( Long.valueOf( id ),proceso, usuario ) );
+		return loc;
+	}	
 
 	
 }
