@@ -102,7 +102,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 				fechaDesde, fechaHasta, StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
 						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(ProcesoEnum.class, proceso)
 						: null, identificacion,  Long.valueOf(agencia), cliente, 
-						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado)
+						StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado)
 								: null);
 		
 	}
