@@ -323,14 +323,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 		return tbQoTasacion;
 	}
-
-	public String getTipoOperacion() {
-		return tipoOperacion;
-	}
-
-	public void setTipoOperacion(String tipoOperacion) {
-		this.tipoOperacion = tipoOperacion;
-	}
 	
 	
 
