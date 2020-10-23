@@ -109,7 +109,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
 		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wp,plw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countTracking().intValue());
+			plw.setTotalResults(this.qos.countTracking(wp).intValue());
 			plw.setList(actions);
 		}
 		return plw;
