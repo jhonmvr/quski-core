@@ -29,7 +29,7 @@ private String tipoDireccion;
 	@Override
 	public Predicate toPredicate(Root<TbQoDireccionCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-		String e = EstadoEnum.ACT.toString();
+		EstadoEnum e = EstadoEnum.ACT;
 		Long a = this.id;
 		String d = this.tipoDireccion;
 			where.add(cb.equal(poll.get("tbQoCliente").get("id"), a));

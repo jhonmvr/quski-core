@@ -49,6 +49,15 @@ public class TbQoClientePago implements Serializable {
 	private String observacion;
 
 	private String tipo;
+	
+	private String asesor;
+	
+	private String aprobador;
+	
+	private String codigo;
+	
+	@Column(name="id_agencia")
+	private BigDecimal idAgencia;
 
 	@Column(name="tipo_credito")
 	private String tipoCredito;
@@ -212,6 +221,38 @@ public class TbQoClientePago implements Serializable {
 		tbQoRegistrarPago.setTbQoClientePago(null);
 
 		return tbQoRegistrarPago;
+	}
+
+	public String getAsesor() {
+		return asesor;
+	}
+
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
+	}
+
+	public String getAprobador() {
+		return aprobador;
+	}
+
+	public void setAprobador(String aprobador) {
+		this.aprobador = aprobador;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public BigDecimal getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(BigDecimal idAgencia) {
+		this.idAgencia = idAgencia;
 	}
 
 }
