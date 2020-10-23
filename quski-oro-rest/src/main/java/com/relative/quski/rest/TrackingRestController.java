@@ -104,7 +104,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
-			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
 			TrackingWrapper wp) throws RelativeException {
 		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
 		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wp,plw);

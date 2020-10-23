@@ -23,8 +23,8 @@ public class TrackingWrapper implements Serializable {
 	private String usuarioCreacion;
 	//private String nombreAsesor;
 	private Date fechaCreacion;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private Date fechaDesde;
+	private Date fechaHasta;
 
 	public TrackingWrapper() {
 	
@@ -39,20 +39,20 @@ public class TrackingWrapper implements Serializable {
 		this.nombreAsesor = nombreAsesor;
 	}
 */
-	public Date getFechaInicio() {
-		return fechaInicio;
+	public Date getFechaDesde() {
+		return fechaDesde;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
-		this.fechaInicio = fechaInicio;
+	public void setFechaDesde(Date fechaDesde) {
+		this.fechaDesde = fechaDesde;
 	}
 
-	public Date getFechaFin() {
-		return fechaFin;
+	public Date getFechaHasta() {
+		return fechaHasta;
 	}
 
-	public void setFechaFin(Date fechaFin) {
-		this.fechaFin = fechaFin;
+	public void setFechaHasta(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
 	}
 
 	public ActividadEnum getActividad() {
