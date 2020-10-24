@@ -23,6 +23,7 @@ import com.relative.core.util.enums.EmailSecurityTypeEnum;
 import com.relative.core.util.mail.EmailDefinition;
 import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
+import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
@@ -4522,6 +4523,15 @@ public class QuskiOroService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR CONVERTIR STRING A ENUM");
+		}
+	}
+
+	public Long countTracking(TrackingWrapper wp)throws RelativeException {
+		try {
+			return trackingRepository.countByParamPaged(wp);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 }

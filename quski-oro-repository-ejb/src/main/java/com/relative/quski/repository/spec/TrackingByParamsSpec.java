@@ -1,5 +1,7 @@
 package com.relative.quski.repository.spec;
 
+//import java.time.Period;
+//import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +25,9 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 	private String codigoBpm;
 	private String codigoOperacionSoftbank;
 	private String usuarioCreacion;
-	private String nombreAsesor;
-	private Date fechaInicio;
-	private Date fechaFin;
+
+	private Date fechaDesde;
+	private Date fechaHasta;
 	
 	public TrackingByParamsSpec(TrackingWrapper wp) {
 		super();
@@ -35,14 +37,14 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 		this.codigoBpm = wp.getCodigoBpm();
 		this.codigoOperacionSoftbank = wp.getCodigoOperacionSoftbank();
 		this.usuarioCreacion = wp.getUsuarioCreacion();
-		//this.nombreAsesor = wp.getNombreAsesor();
-		this.fechaInicio = wp.getFechaInicio();
-		this.fechaFin = wp.getFechaFin();
+		this.fechaDesde = wp.getFechaDesde();
+		this.fechaHasta = wp.getFechaHasta();
 		
 }
 
 	@Override
 	public Predicate toPredicate(Root<TbQoTracking> poll, CriteriaBuilder cb) {
+		
 		List<Predicate> where = new ArrayList<Predicate>();
 		
 		if (this.proceso != null) {
@@ -64,15 +66,16 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 			where.add(cb.equal(poll.<String>get("usuarioCreacion"), this.usuarioCreacion));
 		}
 		
-		if (this.fechaInicio != null) {
-			where.add(cb.greaterThanOrEqualTo(poll.<Date>get("fechaCreacion"), this.fechaInicio));
+		if (this.fechaDesde != null) {
+			where.add(cb.greaterThanOrEqualTo(poll.<Date>get("fechaCreacion"),this.fechaDesde));
 		}
-		if (this.fechaFin != null) {
-			where.add(cb.lessThanOrEqualTo(poll.<Date>get("fechaCreacion"), this.fechaFin));
+		
+		if (this.fechaHasta != null) {
+			where.add(cb.lessThanOrEqualTo(poll.<Date>get("fechaCreacion"),this.fechaHasta));
 		}
+			
 		return cb.and(where.toArray(new Predicate[] {}));
 	}
-
 
 	@Override
 	public boolean isSatisfiedBy(TbQoTracking arg0) {

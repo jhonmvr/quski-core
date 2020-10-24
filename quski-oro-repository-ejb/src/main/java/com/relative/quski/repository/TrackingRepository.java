@@ -28,6 +28,8 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 
 	public List<SeccionEnum> findListSeccionByActividad(ActividadEnum actividad)throws RelativeException;
 
+	public Long countByParamPaged(TrackingWrapper wp)throws RelativeException;
+
 	
 	
 }
