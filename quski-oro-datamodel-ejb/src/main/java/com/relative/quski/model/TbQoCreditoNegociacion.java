@@ -90,8 +90,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name = "plazo_credito")
 	private BigDecimal plazoCredito;
 	
-	@Column(name = "tipo_operacion")
-	private String tipoOperacion;
 
 	public BigDecimal getMontoDiferido() {
 		return montoDiferido;
