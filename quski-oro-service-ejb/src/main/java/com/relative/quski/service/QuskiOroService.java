@@ -110,6 +110,8 @@ import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
+import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
+import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankOperacionWrapper;
@@ -1583,7 +1585,7 @@ public class QuskiOroService {
 			NegociacionWrapper tmp = new NegociacionWrapper();
 			tmp.setCredito(this.creditoNegociacionRepository.findCreditoByIdNegociacion(id));
 			if (tmp.getCredito() != null) {
-				TbQoProceso  proceso = this.findProcesoByIdReferencia( id );
+				TbQoProceso  proceso = this.findProcesoByIdReferencia( id, ProcesoEnum.NUEVO);
 				if(proceso != null) {
 					EstadoProcesoEnum estado = proceso.getEstadoProceso();
 					if( estado == EstadoProcesoEnum.APROBADO || estado == EstadoProcesoEnum.CANCELADO) {
@@ -4243,9 +4245,9 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	public TbQoProceso findProcesoByIdReferencia(Long id) throws RelativeException {
+	public TbQoProceso findProcesoByIdReferencia(Long id, ProcesoEnum proceso) throws RelativeException {
 		try {
-			return procesoRepository.findByIdReferencia(id);
+			return procesoRepository.findByIdReferencia(id, proceso);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
@@ -4311,27 +4313,30 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	public List<OperacionesWrapper> findOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
+	public ResultOperacionesWrapper findOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			if(wp.getAsesor() != null) {
-				return this.procesoRepository.findOperacion( wp ); 
-			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_INGRESE_ASESOR);
-			}
+			ResultOperacionesWrapper result = new ResultOperacionesWrapper();
+			result.setOperaciones(this.procesoRepository.findOperacion( wp ) );
+			result.setResult( this.procesoRepository.countOperacion( wp ));
+			return result;
+			 
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
 	}
-	public List<OpPorAprobarWrapper> findOperacionesPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
+	public ResultOperacionesAprobarWrapper findOperacionesPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			return this.procesoRepository.findOperacionPorAprobar( wp ); 
+			ResultOperacionesAprobarWrapper result = new ResultOperacionesAprobarWrapper();
+			result.setOperaciones( this.procesoRepository.findOperacionPorAprobar( wp )  );
+			result.setResult( this.procesoRepository.countOperacionAprobar( wp ));
+			return result;
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
 	}
-	public TbQoProceso cambiarEstado( Long idReferencia, EstadoProcesoEnum newEstado) throws RelativeException {
+	public TbQoProceso cambiarEstado( Long idReferencia, ProcesoEnum proceso, EstadoProcesoEnum newEstado) throws RelativeException {
 		try {
-			TbQoProceso persisted = this.findProcesoByIdReferencia( idReferencia );
+			TbQoProceso persisted = this.findProcesoByIdReferencia( idReferencia, proceso );
 			persisted.setEstadoProceso( newEstado );
 			return this.manageProceso(persisted);
 		}catch(RelativeException e) {
@@ -4372,9 +4377,42 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
+	public String asignarAprobador(Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
+		try {
+			TbQoProceso persistedProceso = this.findProcesoByIdReferencia(id, proceso);
+			if(persistedProceso != null) {
+				persistedProceso.setUsuario( aprobador );
+				TbQoProceso cambioProceso = this.manageProceso(persistedProceso);
+				
+				if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
+					TbQoNegociacion persistedOperacion = this.findNegociacionById( id );
+					if(persistedOperacion != null) {
+						persistedOperacion.setAprobador(aprobador);
+						this.manageNegociacion(persistedOperacion);
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+								QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+					}
+				}				
+				if(proceso == ProcesoEnum.PAGO) {
+					TbQoClientePago persisted = this.findClientePagoById( id );
+					persisted.setAprobador(aprobador);
+					this.manageClientePago( persisted );
+				}
+				if(proceso == ProcesoEnum.DEVOLUCION) {}
+				if(proceso == ProcesoEnum.VERIFICACION_TELEFONICA) {}
+				return cambioProceso.getUsuario();
+			}else {
+				return "SIN PROCESO";
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
 	public TbQoProceso cancelarNegociacion(Long id, String usuario) throws RelativeException {
 		if(id != null && usuario != null){
-			TbQoProceso persisted = this.findProcesoByIdReferencia( id );
+			TbQoProceso persisted = this.findProcesoByIdReferencia( id, ProcesoEnum.NUEVO );
 			if(persisted != null) {
 				persisted.setEstadoProceso( EstadoProcesoEnum.CANCELADO );
 				persisted.setFechaActualizacion(new Date(System.currentTimeMillis()));
