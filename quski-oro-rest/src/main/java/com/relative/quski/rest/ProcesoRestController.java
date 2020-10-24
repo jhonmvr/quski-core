@@ -29,8 +29,8 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
-import com.relative.quski.wrapper.OpPorAprobarWrapper;
-import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
+import com.relative.quski.wrapper.ResultOperacionesWrapper;
 
 
 @Path("/procesoRestController")
@@ -55,6 +55,22 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	public GenericWrapper<TbQoProceso> cancelarNegociacion(@QueryParam("idNegociacion") String idNegociacion, @QueryParam("usuario") String usuario) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.cancelarNegociacion( Long.valueOf( idNegociacion ), usuario ) );
+		return loc;
+	}	
+	@GET
+	@Path("/findByIdReferencia")
+	public GenericWrapper<TbQoProceso> findByIdReferencia(@QueryParam("id") String id, @QueryParam("proceso") ProcesoEnum proceso) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.findProcesoByIdReferencia( Long.valueOf( id ), proceso ) );
+		return loc;
+	}	
+	@GET
+	@Path("/cambiarEstadoProceso")
+	public GenericWrapper<TbQoProceso> cambiarEstadoProceso(@QueryParam("idReferencia") String idReferencia, 
+			@QueryParam("proceso") ProcesoEnum proceso, 
+			@QueryParam("newEstado") EstadoProcesoEnum newEstado) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.cambiarEstado( Long.valueOf( idReferencia ), proceso, newEstado ) );
 		return loc;
 	}	
 	@GET
@@ -100,16 +116,28 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@POST
 	@Path("/buscarOperaciones")
-	public GenericWrapper<OperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
-		GenericWrapper<OperacionesWrapper> loc = new GenericWrapper<>();
-		loc.setEntidades( this.qos.findOperaciones( wp ) );
+	public GenericWrapper<ResultOperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
+		GenericWrapper<ResultOperacionesWrapper> loc = new GenericWrapper<>();
+		if(wp.getNumberPage() == null ) {
+			wp.setNumberPage( Long.valueOf(0) );
+		}
+		if(wp.getNumberItems() == null) {
+			wp.setNumberItems(Long.valueOf(5));
+		}
+		loc.setEntidad( this.qos.findOperaciones( wp ) );
 		return loc;
 	}
 	@POST
 	@Path("/buscarOperacionesAprobador")
-	public GenericWrapper<OpPorAprobarWrapper> buscarOperacionesAprobador( BusquedaPorAprobarWrapper wp) throws RelativeException {
-		GenericWrapper<OpPorAprobarWrapper> loc = new GenericWrapper<>();
-		loc.setEntidades( this.qos.findOperacionesPorAprobar( wp ) );
+	public GenericWrapper<ResultOperacionesAprobarWrapper> buscarOperacionesAprobador( BusquedaPorAprobarWrapper wp) throws RelativeException {
+		GenericWrapper<ResultOperacionesAprobarWrapper> loc = new GenericWrapper<>();
+		if(wp.getNumberPage() == null ) {
+			wp.setNumberPage( Long.valueOf(0) );
+		}
+		if(wp.getNumberItems() == null) {
+			wp.setNumberItems(Long.valueOf(5));
+		}
+		loc.setEntidad( this.qos.findOperacionesPorAprobar( wp ) );
 		return loc;
 	}
 	@GET	
@@ -149,6 +177,14 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad( this.qos.reasignarOperacion( Long.valueOf( id ),proceso, usuario ) );
 		return loc;
 	}	
+	@GET
+	@Path("/asignarAprobador")
+	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("aprobador") String aprobador) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador ) );
+		return loc;
+	}	
+	
 
 	
 }
