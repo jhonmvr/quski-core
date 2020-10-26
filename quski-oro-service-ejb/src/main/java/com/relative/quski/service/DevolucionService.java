@@ -106,7 +106,7 @@ public class DevolucionService {
 			persisted.setObservaciones(send.getObservaciones());
 			persisted.setEstado(send.getEstado());
 			persisted.setAgenciaEntrega(send.getAgenciaEntrega());
-			persisted.setValorCustodia(send.getValorCustodia());
+			persisted.setValorCustodiaAprox(send.getValorCustodiaAprox());
 			persisted.setCodeHerederos(send.getCodeHerederos());
 			persisted.setCodeDetalleCredito(send.getCodeDetalleCredito());
 			persisted.setCodeDetalleGarantia(send.getCodeDetalleGarantia());
