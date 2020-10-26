@@ -11,6 +11,8 @@ public class BusquedaPorAprobarWrapper implements Serializable {
 	private String codigo;
 	private Long idAgencia; 	
 	private String cedula;
+	private Long numberPage;
+	private Long numberItems;
 	
 	public ProcesoEnum getProceso() {
 		return proceso;
@@ -36,5 +38,17 @@ public class BusquedaPorAprobarWrapper implements Serializable {
 	public void setCedula(String cedula) {
 		this.cedula = cedula;
 	} 	
+	public Long getNumberPage() {
+		return numberPage;
+	}
+	public void setNumberPage(Long numberPage) {
+		this.numberPage = numberPage;
+	}
+	public Long getNumberItems() {
+		return numberItems;
+	}
+	public void setNumberItems(Long numberItems) {
+		this.numberItems = numberItems;
+	}
 	
 }

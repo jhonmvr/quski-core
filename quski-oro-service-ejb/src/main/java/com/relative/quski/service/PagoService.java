@@ -18,6 +18,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.bpms.api.LocalStorageClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
@@ -199,7 +200,7 @@ public class PagoService {
 			log.info("Aprobador ---->>>>"+ nombreAprobador);
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
-			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(), EstadoProcesoEnum.APROBADO);
+			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
 			if(proceso == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}
@@ -257,7 +258,7 @@ public class PagoService {
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
 			clientePago.setEstado(EstadoEnum.ACT);
-			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(), EstadoProcesoEnum.RECHAZADO);
+			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(),  ProcesoEnum.PAGO, EstadoProcesoEnum.RECHAZADO);
 			if(proceso == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}

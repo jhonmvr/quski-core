@@ -49,7 +49,9 @@ public class SoftbankClienteWrapper implements Serializable{
 		private Long ingresos;                               
 		private Long egresos;   
 		private String mensaje; 
-		private String codigoServicio;   
+		private String codigoServicio;  
+		
+		//------------------->>Hasta aqui segun el body de Cloud
 		private Boolean existeError; 
 		private String validaciones; 
 		
