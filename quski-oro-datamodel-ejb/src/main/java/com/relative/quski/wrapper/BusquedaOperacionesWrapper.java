@@ -19,6 +19,9 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	private String nombreCompleto; 		// Cliente //
 	private String identificacion; 		// Cliente //
 	private String actividad; 			// Tracking //
+	private Long numberPage;
+	private Long numberItems;
+	
 	
 	public String getNombreCompleto() {
 		return nombreCompleto;
@@ -67,6 +70,18 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	}
 	public void setAsesor(String asesor) {
 		this.asesor = asesor;
+	}
+	public Long getNumberPage() {
+		return numberPage;
+	}
+	public void setNumberPage(Long numberPage) {
+		this.numberPage = numberPage;
+	}
+	public Long getNumberItems() {
+		return numberItems;
+	}
+	public void setNumberItems(Long numberItems) {
+		this.numberItems = numberItems;
 	}
 	
 
