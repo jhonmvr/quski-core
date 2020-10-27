@@ -23,7 +23,6 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 	private String telefono;
 	private String celular;
 	private String correo;
-
 	private EstadoEnum estado;
 	
 	public ClienteByParamsSpec(String identificacion, String primerNombre, String segundoNombre, String apellidoPaterno, String apellidoMaterno,

@@ -1,21 +1,32 @@
 package com.relative.quski.rest;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
+import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankTelefonosWrapper;
+
+import io.swagger.annotations.ApiOperation;
 
 @Path("/softbankClienteRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -23,41 +34,111 @@ import com.relative.quski.wrapper.SoftbankClienteWrapper;
 public class SoftbankClienteRestController extends BaseRestController
 		implements CrudRestControllerInterface<SoftbankClienteWrapper, GenericWrapper<SoftbankClienteWrapper>> {
 
+
 	public SoftbankClienteRestController() throws RelativeException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	@Inject
-	QuskiOroService qos;
 
+	@Inject
+	SoftBankApiClient csfs;
+	@Inject
+	Logger log;
+	
+	
+	@POST
+	@Path("/consultarClienteSoftbank")
+	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
+			throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
+		SoftbankClienteWrapper a = this.csfs.callConsultaClienteRest(null, autentication, wrapper);
+		return loc;
+	}
+	
+	@POST
+	@Path("/crearClienteSoftbank")
+	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", 
+	notes = "Metodo Post ", 
+	response = GenericWrapper.class)
+	public GenericWrapper<SoftbankClienteWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper,String autentication) 
+			throws RelativeException {
+		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
+		try {
+			List<SoftbankClienteWrapper> a = (List<SoftbankClienteWrapper>) SoftBankApiClient.callCrearClienteRest(null, autentication, wrapper);
+			loc.setEntidades(a);
+			return loc;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
+		}
+	}
+
+	@POST
+	@Path("/ActualizarClienteSoftbank")
+	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", 
+	notes = "Metodo Post ", 
+	response = GenericWrapper.class)
+	public GenericWrapper<SoftbankTelefonosWrapper> actualizarClienteSoftbank(SoftbankConsultaWrapper consulta, List<SoftbankTelefonosWrapper> wp)
+			throws RelativeException, UnsupportedEncodingException {
+		
+		GenericWrapper<SoftbankTelefonosWrapper> telefono = new GenericWrapper<>();
+		List<SoftbankTelefonosWrapper> a =(List<SoftbankTelefonosWrapper>) SoftBankApiClient.callEditarClienteRest(null, null, consulta, wp);
+		telefono.setEntidades(a);		
+		return telefono;
+		
+	}
+	
 	@Override
 	public void deleteEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@GET
+	@Path("/getEntity")
+	public GenericWrapper<SoftbankClienteWrapper> getEntity(SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
+	
+		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(null, null, wrapper);
+		loc.setEntidad(a);
+		
+		return loc;
+	}
 
+	@GET
+	@Path("/listAllEntities")
+	@ApiOperation(value = "PaginatedListWrapper<SoftbankClienteWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en SoftbankClienteWrapper", response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<SoftbankClienteWrapper> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated) throws RelativeException {
+		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
+		return findAll(
+				new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
+
+	}
+	
+	private PaginatedListWrapper<SoftbankClienteWrapper> findAll(PaginatedWrapper pw) {
+		PaginatedListWrapper<SoftbankClienteWrapper> plw = new PaginatedListWrapper<>(pw);
+		return plw;
+	}
+	
+	@Override
+	@POST
+	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas SoftbankClienteWrapper", response = GenericWrapper.class)
+	public GenericWrapper<SoftbankClienteWrapper> persistEntity(GenericWrapper<SoftbankClienteWrapper> pw) {
+		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
+		return loc;
 	}
 	@Override
 	public GenericWrapper<SoftbankClienteWrapper> getEntity(String arg0) throws RelativeException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public PaginatedListWrapper<SoftbankClienteWrapper> listAllEntities(String arg0, String arg1, String arg2,
-			String arg3, String arg4) throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public GenericWrapper<SoftbankClienteWrapper> persistEntity(GenericWrapper<SoftbankClienteWrapper> arg0)
-			throws RelativeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@GET
-	@Path("/getClienteSoftbank")
-	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(@QueryParam("cedula") String cedula) throws RelativeException {
-		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
-		SoftbankClienteWrapper a = this.qos.findClienteSoftbank(cedula);
-		loc.setEntidad(a);
-		return loc;
-	}
+	
 }

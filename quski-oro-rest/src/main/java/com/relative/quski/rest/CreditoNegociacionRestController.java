@@ -102,7 +102,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 				fechaDesde, fechaHasta, StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
 						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(ProcesoEnum.class, proceso)
 						: null, identificacion,  Long.valueOf(agencia), cliente, 
-						StringUtils.isNotBlank(proceso) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado)
+						StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado)
 								: null);
 		
 	}
@@ -131,11 +131,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(this.qos.manageCreditoNegociacion(wp.getEntidad()));
 		return loc;
 	}
-	@GET
+	@POST
 	@Path("/crearOperacion")
 	@ApiOperation(value = "GenericWrapper<CrearOperacionRespuestaWrapper>", notes = "Metodo Post perfeccionarContrato Retorna GenericWrapper de informacion TbMiContrato", response = GenericWrapper.class)
-	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion,
-			@QueryParam("usuario") String usuario)throws RelativeException {
+	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion)throws RelativeException {
 		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
 		return loc;
