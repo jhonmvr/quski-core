@@ -146,7 +146,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
 		log.info("INGRESA A traerCreditoNegociacionExistente ");
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
+		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+
 		loc.setEntidad(a);
 		return loc;
 	}

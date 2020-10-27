@@ -8,3 +8,5 @@
 .metadata/
 .recommenders/caches/identified-project-coordinates.json
 .recommenders/caches/manual-mappings.json
+quski-oro-datamodel-ejb/.dbeaver/
+.sonarlint/
