@@ -164,7 +164,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 					return list.get(0);
 				} else {
 					throw new RelativeException(Constantes.ERROR_CODE_READ,
-							QuskiOroConstantes.ERROR_ID_NO_EXISTE);
+							QuskiOroConstantes.ERROR_MAS_DE_UN_REGISTRO);
 				}
 			} else {
 				return null;

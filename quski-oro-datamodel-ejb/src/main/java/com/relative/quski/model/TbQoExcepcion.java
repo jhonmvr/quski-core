@@ -14,13 +14,13 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="tb_qo_excepciones")
-public class TbQoExcepcione implements Serializable {
+@Table(name="tb_qo_excepcion")
+public class TbQoExcepcion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "TB_QO_EXCEPCIONE_ID_GENERATOR", sequenceName = "SEQ_EXCEPCIONE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_EXCEPCIONE_ID_GENERATOR")
+	@SequenceGenerator(name = "TB_QO_EXCEPCION_ID_GENERATOR", sequenceName = "SEQ_EXCEPCION", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_EXCEPCION_ID_GENERATOR")
 	private Long id; 
 	
 	@Enumerated(EnumType.STRING)
@@ -65,7 +65,7 @@ public class TbQoExcepcione implements Serializable {
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
-	public TbQoExcepcione() {
+	public TbQoExcepcion() {
 	}
 
 	public EstadoEnum getEstado() {

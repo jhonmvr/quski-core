@@ -15,7 +15,6 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.CreditoByIdNegociacionSpec;
-import com.relative.quski.repository.spec.CreditoNegociacionByIdSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 
 /**
@@ -61,7 +60,7 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDO ENCONTRAR CREDITO POPR ID_NEGOCIACION");
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDO ENCONTRAR CREDITO POR ID_NEGOCIACION");
 		}
 		
 	}

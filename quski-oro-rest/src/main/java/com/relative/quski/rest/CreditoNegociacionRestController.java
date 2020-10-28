@@ -30,7 +30,7 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
-import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -148,6 +148,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
 
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/traerCreditoNuevo")
+	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<OperacionCreditoNuevoWrapper> loc = new GenericWrapper<>();
+		log.info("INGRESA A traerCreditoNuevo  -----> "+ Long.valueOf( idNegociacion ));
+		OperacionCreditoNuevoWrapper a = this.qos.traerCreditoNuevo(Long.valueOf( idNegociacion ));
 		loc.setEntidad(a);
 		return loc;
 	}

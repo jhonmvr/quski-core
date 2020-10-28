@@ -43,33 +43,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="a_recibir_cliente")
 	private BigDecimal aRecibirCliente;
 
-	@Column(name = "costo_credito")
-	private BigDecimal costoCredito;
-
-	@Column(name = "costo_custodia")
-	private BigDecimal costoCustodia;
-
-	@Column(name = "costo_estimado")
-	private BigDecimal costoEstimado;
-
-	@Column(name = "costo_nueva_operacion")
-	private BigDecimal costoNuevaOperacion;
-
-	@Column(name = "costo_resguardado")
-	private BigDecimal costoResguardado;
-
-	@Column(name = "costo_seguro")
-	private BigDecimal costoSeguro;
-
-	@Column(name = "costo_transporte")
-	private BigDecimal costoTransporte;
-	
-	@Column(name="costo_valoracion")
-	private BigDecimal costoValoracion;
-	
-	@Column(name="costo_tasacion")
-	private String costoTasacion;
-
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -84,27 +57,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "fecha_vencimiento")
 	private Date fechaVencimiento;
-	
-	@Column(name="forma_pago_custodia")
-	private String formaPagoCustodia;
-
-	@Column(name="forma_pago_resguardo")
-	private String formaPagoResguardo;
-
-	@Column(name="forma_pago_seguro")
-	private String formaPagoSeguro;
-
-	@Column(name="forma_pago_solca")
-	private String formaPagoSolca;
-
-	@Column(name="forma_pago_tasacion")
-	private String formaPagoTasacion;
-
-	@Column(name="forma_pago_transporte")
-	private String formaPagoTransporte;
-
-	@Column(name="forma_pago_valoracion")
-	private String formaPagoValoracion;
 
 	private String codigo;
 
@@ -120,8 +72,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name = "monto_diferido")
 	private BigDecimal montoDiferido;
 	
-
-
 	@Column(name="monto_desembolso_ballon")
 	private BigDecimal montoDesembolsoBallon;
 	
@@ -134,12 +84,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="riesgo_total_cliente")
 	private BigDecimal riesgoTotalCliente;
 	
-
-
-	@Column(name = "solca")
-	private BigDecimal solca;
-	
-
 	public BigDecimal getMontoDiferido() {
 		return montoDiferido;
 	}
@@ -177,6 +121,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 	// bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoTasacion> tbQoTasacions;
+	
+	// bi-directional many-to-one association to TbQoTasacion
+	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
+	private List<TbQoRubro> tbQoRubros;
 
 	public TbQoCreditoNegociacion() {
 	}
@@ -219,81 +167,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
 		this.riesgoTotalCliente = riesgoTotalCliente;
 	}
-	
-
-	public BigDecimal getCostoValoracion() {
-		return costoValoracion;
-	}
-
-	public void setCostoValoracion(BigDecimal costoValoracion) {
-		this.costoValoracion = costoValoracion;
-	}
-
-	public BigDecimal getCostoCredito() {
-		return this.costoCredito;
-	}
-
-	public void setCostoCredito(BigDecimal costoCredito) {
-		this.costoCredito = costoCredito;
-	}
-
-	public BigDecimal getCostoCustodia() {
-		return this.costoCustodia;
-	}
-
-	public void setCostoCustodia(BigDecimal costoCustodia) {
-		this.costoCustodia = costoCustodia;
-	}
-
-	public BigDecimal getCostoEstimado() {
-		return this.costoEstimado;
-	}
-
-	public void setCostoEstimado(BigDecimal costoEstimado) {
-		this.costoEstimado = costoEstimado;
-	}
-
-	public BigDecimal getCostoNuevaOperacion() {
-		return this.costoNuevaOperacion;
-	}
-
-	public void setCostoNuevaOperacion(BigDecimal costoNuevaOperacion) {
-		this.costoNuevaOperacion = costoNuevaOperacion;
-	}
-
-	public BigDecimal getCostoResguardado() {
-		return this.costoResguardado;
-	}
-
-	public void setCostoResguardado(BigDecimal costoResguardado) {
-		this.costoResguardado = costoResguardado;
-	}
-
-	public BigDecimal getCostoSeguro() {
-		return this.costoSeguro;
-	}
-
-	public void setCostoSeguro(BigDecimal costoSeguro) {
-		this.costoSeguro = costoSeguro;
-	}
-	
-	
-
-	public String getCostoTasacion() {
-		return costoTasacion;
-	}
-
-	public void setCostoTasacion(String costoTasacion) {
-		this.costoTasacion = costoTasacion;
-	}
-
-	public BigDecimal getCostoTransporte() {
-		return this.costoTransporte;
-	}
-
-	public void setCostoTransporte(BigDecimal costoTransporte) {
-		this.costoTransporte = costoTransporte;
-	}
 
 	public EstadoEnum getEstado() {
 		return this.estado;
@@ -325,62 +198,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
-	}
-
-	public String getFormaPagoCustodia() {
-		return formaPagoCustodia;
-	}
-
-	public void setFormaPagoCustodia(String formaPagoCustodia) {
-		this.formaPagoCustodia = formaPagoCustodia;
-	}
-
-	public String getFormaPagoResguardo() {
-		return formaPagoResguardo;
-	}
-
-	public void setFormaPagoResguardo(String formaPagoResguardo) {
-		this.formaPagoResguardo = formaPagoResguardo;
-	}
-
-	public String getFormaPagoSeguro() {
-		return formaPagoSeguro;
-	}
-
-	public void setFormaPagoSeguro(String formaPagoSeguro) {
-		this.formaPagoSeguro = formaPagoSeguro;
-	}
-
-	public String getFormaPagoSolca() {
-		return formaPagoSolca;
-	}
-
-	public void setFormaPagoSolca(String formaPagoSolca) {
-		this.formaPagoSolca = formaPagoSolca;
-	}
-
-	public String getFormaPagoTasacion() {
-		return formaPagoTasacion;
-	}
-
-	public void setFormaPagoTasacion(String formaPagoTasacion) {
-		this.formaPagoTasacion = formaPagoTasacion;
-	}
-
-	public String getFormaPagoTransporte() {
-		return formaPagoTransporte;
-	}
-
-	public void setFormaPagoTransporte(String formaPagoTransporte) {
-		this.formaPagoTransporte = formaPagoTransporte;
-	}
-
-	public String getFormaPagoValoracion() {
-		return formaPagoValoracion;
-	}
-
-	public void setFormaPagoValoracion(String formaPagoValoracion) {
-		this.formaPagoValoracion = formaPagoValoracion;
 	}
 
 	public int getIdAgencia() {
@@ -437,15 +254,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setRecibirCliente(BigDecimal recibirCliente) {
 		this.recibirCliente = recibirCliente;
 	}
-	
-
-	public BigDecimal getSolca() {
-		return solca;
-	}
-
-	public void setSolca(BigDecimal solca) {
-		this.solca = solca;
-	}
 
 	public TipoCreditoNegociacionEnum getTipo() {
 		return tipo;
@@ -499,6 +307,28 @@ public class TbQoCreditoNegociacion implements Serializable {
 		tbQoTasacion.setTbQoCreditoNegociacion(null);
 
 		return tbQoTasacion;
+	}
+	
+	
+	
+	public List<TbQoRubro> getTbQoRubros() {
+		return this.tbQoRubros;
+	}
+
+	public void setTbQoRubros(List<TbQoRubro> tbQoRubros) {
+		this.tbQoRubros = tbQoRubros;
+	}
+
+	public TbQoRubro addTbQoRubro(TbQoRubro tbQoRubro) {
+		getTbQoRubros().add(tbQoRubro);
+		tbQoRubro.setTbQoCreditoNegociacion(this);
+		return tbQoRubro;
+	}
+
+	public TbQoRubro removeTbQoRubro(TbQoRubro tbQoRubro) {
+		getTbQoRubros().remove(tbQoRubro);
+		tbQoRubro.setTbQoCreditoNegociacion(null);
+		return tbQoRubro;
 	}
 	
 	

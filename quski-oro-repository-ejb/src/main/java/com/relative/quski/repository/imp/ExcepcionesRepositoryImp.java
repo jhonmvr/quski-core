@@ -1,28 +1,17 @@
 package com.relative.quski.repository.imp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoExcepcionEnum;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoExcepcionRol;
-import com.relative.quski.model.TbQoExcepcione;
-import com.relative.quski.model.TbQoNegociacion;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.spec.ExcepcionByIdSpec;
 import com.relative.quski.repository.spec.ExcepcionesByIdClienteSpec;
@@ -30,13 +19,12 @@ import com.relative.quski.repository.spec.ExcepcionesByIdNegociacionSpec;
 import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec;
 import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec;
 import com.relative.quski.repository.spec.ExcepcionesByTipoExcepcionAndIdNegociacionSpec;
-import com.relative.quski.wrapper.ExceptionWrapper;
 
 /**
  * Session Bean implementation class AgenciaRepositoryImp
  */
 @Stateless(mappedName = "excepcionesRepository")
-public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcione>
+public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcion>
 		implements ExcepcionesRepository {
 	@Inject
 	Logger log;
@@ -50,9 +38,9 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public TbQoExcepcione findById(Long id) throws RelativeException {
+	public TbQoExcepcion findById(Long id) throws RelativeException {
 		try {
-			List<TbQoExcepcione> listExcepciones = this.findAllBySpecification(new ExcepcionByIdSpec(id));
+			List<TbQoExcepcion> listExcepciones = this.findAllBySpecification(new ExcepcionByIdSpec(id));
 			if (!listExcepciones.isEmpty()) {
 				if (listExcepciones.size() <= 1) {
 					return listExcepciones.get(0);
@@ -69,7 +57,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByIdNegociacion(int startRecord, Integer pageSize, String sortFields,
+	public List<TbQoExcepcion> findByIdNegociacion(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, Long idNegociacion) throws RelativeException {
 		try {
 			return findAllBySpecificationPaged(new ExcepcionesByIdNegociacionSpec(idNegociacion), startRecord, pageSize,
@@ -80,9 +68,14 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByIdNegociacion(Long idNegociacion) throws RelativeException {
+	public List<TbQoExcepcion> findByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			return findAllBySpecification(new ExcepcionesByIdNegociacionSpec(idNegociacion));
+			List<TbQoExcepcion>  list = findAllBySpecification(new ExcepcionesByIdNegociacionSpec(idNegociacion));
+			if( !list.isEmpty() ) {
+				return list;
+			}else {
+				return null;
+			}
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ + this.mensaje + e.getMessage());
 		}
@@ -98,7 +91,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByIdCliente(int startRecord, Integer pageSize, String sortFields,
+	public List<TbQoExcepcion> findByIdCliente(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, Long idCliente) throws RelativeException {
 		try {
 			return findAllBySpecificationPaged(new ExcepcionesByIdClienteSpec(idCliente), startRecord, pageSize,
@@ -109,7 +102,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByIdCliente(Long idCliente) throws RelativeException {
+	public List<TbQoExcepcion> findByIdCliente(Long idCliente) throws RelativeException {
 		try {
 			return findAllBySpecification(new ExcepcionesByIdClienteSpec(idCliente));
 		} catch (Exception e) {
@@ -128,7 +121,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion)
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion)
 			throws RelativeException {
 		try {
 			return findAllBySpecification(
@@ -140,7 +133,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion(int startRecord, Integer pageSize,
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacion(int startRecord, Integer pageSize,
 			String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion)
 			throws RelativeException {
 		try {
@@ -166,10 +159,10 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion,
+	public TbQoExcepcion findByTipoExcepcionAndIdNegociacionAndestadoExcepcion(Long idNegociacion,
 			String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion) throws RelativeException {
 		try {
-			List<TbQoExcepcione> listExcepciones = this.findAllBySpecification(
+			List<TbQoExcepcion> listExcepciones = this.findAllBySpecification(
 					new ExcepcionesByTipoExcepcionAndIdNegociacionAndestadoExcepcionSpec(tipoExcepcion, idNegociacion,
 							estadoExcepcion));
 			if (!listExcepciones.isEmpty()) {
@@ -189,7 +182,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(int startRecord, Integer pageSize,
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacionAndCaracteristica(int startRecord, Integer pageSize,
 			String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion, String caracteristica)
 			throws RelativeException {
 		try {
@@ -214,7 +207,7 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 	}
 
 	@Override
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion,
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacionAndCaracteristica(String tipoExcepcion,
 			Long idNegociacion, String caracteristica) throws RelativeException {
 		try {
 			return findAllBySpecification(new ExcepcionesByTipoExcepcionAndIdNegociacionAndCaracteristicaSpec(

@@ -11,7 +11,6 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoDireccionCliente;
 @Local
 public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoCreditoNegociacion>{
 	

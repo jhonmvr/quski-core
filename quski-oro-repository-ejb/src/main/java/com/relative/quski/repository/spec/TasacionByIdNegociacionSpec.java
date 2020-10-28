@@ -13,11 +13,11 @@ import com.relative.quski.model.TbQoTasacion;
 
 public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasacion> {
 
-	private Long idNegociacion;
+	private Long id;
 
-	public TasacionByIdNegociacionSpec(Long idNegociacion) {
+	public TasacionByIdNegociacionSpec(Long id) {
 
-		this.idNegociacion = idNegociacion;
+		this.id = id;
 	}
 
 	public TasacionByIdNegociacionSpec() {
@@ -35,8 +35,7 @@ public class TasacionByIdNegociacionSpec extends AbstractSpecification<TbQoTasac
 	@Override
 	public Predicate toPredicate(Root<TbQoTasacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-		//where.add(cb.equal(poll.get("tbQoCreditoNegociacion").get("tbQoNegociacion").get("id"), this.idNegociacion));
-		where.add(cb.equal(poll.get("tbQoCreditoNegociacion").get("id"), this.idNegociacion));
+		where.add(cb.equal(poll.get("tbQoCreditoNegociacion").get("id"), this.id));
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}

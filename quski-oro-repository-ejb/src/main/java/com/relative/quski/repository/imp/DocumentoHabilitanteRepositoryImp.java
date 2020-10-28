@@ -8,7 +8,6 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
-import com.relative.quski.repository.spec.DocumentoById;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndClienteAndCotAndNegSpec;
 import com.relative.quski.repository.spec.DocumentoByTipoDocumentoAndProRefEstOpSpec;
 
@@ -45,7 +44,7 @@ public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long
 
 	@Override
 	public TbQoDocumentoHabilitante findByIdCreditoNegociacion(Long idCreditoNegociacion) {
-		List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(new DocumentoById(idCreditoNegociacion));
+		// List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(new DocumentoById(idCreditoNegociacion));
 		return null;
 	}
 

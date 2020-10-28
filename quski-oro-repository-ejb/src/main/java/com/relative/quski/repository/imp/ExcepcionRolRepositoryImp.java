@@ -22,11 +22,10 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoExcepcionRol;
-import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
-import com.relative.quski.wrapper.ExceptionWrapper;
 
 /**
  * @author KLÉBER GUERRA relative Engine
@@ -52,8 +51,8 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
 			// ~~> FROM
-			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
-			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
+			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
+			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE
@@ -115,9 +114,9 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 
 			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
 			// ~~> FROM
-			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
+			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
 
-			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
+			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE
@@ -169,9 +168,9 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 			CriteriaQuery<Long> query = cb.createQuery(Long.class);
 			// ~~> FROM
-			Root<TbQoExcepcione> poll = query.from(TbQoExcepcione.class);
+			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
 
-			Join<TbQoExcepcione, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
+			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
 			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
 			// ~~> WHERE

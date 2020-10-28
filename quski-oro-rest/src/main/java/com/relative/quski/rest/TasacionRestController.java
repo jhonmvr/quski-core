@@ -119,26 +119,26 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		return plw;
 	}
 	@GET
-	@Path("/findByIdNegociacion")
+	@Path("/findByIdCredito")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbMiCotizacion", response = GenericWrapper.class)
-	public PaginatedListWrapper<TbQoTasacion> findByIdNegociacion(
+	public PaginatedListWrapper<TbQoTasacion> findByIdCredito(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, 
-			@QueryParam("idNegociacion") String idNegociacion)
+			@QueryParam("idNegociacion") String idCredito)
 			throws RelativeException {
 		return findByIdNegociacionPW(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize),
-				sortFields, sortDirections, isPaginated),Long.valueOf( idNegociacion ));
+				sortFields, sortDirections, isPaginated),Long.valueOf( idCredito ));
 	}
-	private PaginatedListWrapper<TbQoTasacion> findByIdNegociacionPW(PaginatedWrapper pw, Long idNegociacion)
+	private PaginatedListWrapper<TbQoTasacion> findByIdNegociacionPW(PaginatedWrapper pw, Long idCredito)
 			throws RelativeException {
 		PaginatedListWrapper<TbQoTasacion> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoTasacion> actions = null;
-		actions = this.qos.findTasacionByIdNegociacion(pw, idNegociacion);
+		actions = this.qos.findTasacionByIdCredito(pw, idCredito);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countTasacionByByIdNegociacion(idNegociacion).intValue());
+			plw.setTotalResults(this.qos.countTasacionByByIdNegociacion(idCredito).intValue());
 			plw.setList(actions);
 		}
 		return plw;
