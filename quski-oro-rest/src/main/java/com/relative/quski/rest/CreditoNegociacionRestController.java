@@ -30,6 +30,8 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.DatosCreditoSoftbankWrapper;
+import com.relative.quski.wrapper.DatosCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
@@ -160,4 +162,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;
 	}
+//	@POST
+//	@Path("/crearOperacionNuevo")
+//	public GenericWrapper<DatosCreditoSoftbankWrapper> crearOperacionNuevo(DatosCreditoWrapper wp) throws RelativeException {
+//		GenericWrapper<DatosCreditoSoftbankWrapper> loc = new GenericWrapper<>();
+//		log.info("======> INGRESA A DatosCreditoSoftbankWrapper  -----> ");
+//		DatosCreditoSoftbankWrapper a = this.qos.crearOperacionNuevoMock( wp );
+//		loc.setEntidad(a);
+//		return loc;
+//	}
 }

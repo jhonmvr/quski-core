@@ -102,6 +102,8 @@ import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.CrmProspectoWrapper;
+import com.relative.quski.wrapper.DatosCreditoSoftbankWrapper;
+import com.relative.quski.wrapper.DatosCreditoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.IntegracionDatosClienteWrapper;
@@ -640,29 +642,8 @@ public class QuskiOroService {
 	 * @throws RelativeException
 	 */
 	private TbQoCotizador crearCodigoCotizacion(TbQoCotizador persisted) throws RelativeException {
-		String cod = QuskiOroConstantes.CODIGO_COTIZADOR+"0000000";
-		Long id = persisted.getId();
-		log.info("id en crearCodigoCotizacion " + persisted.getId());
 		try {
-			if (id < 9) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"000000";
-			} else if (id < 99) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"00000" + id;
-			} else if (id < 999) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"0000" + id;
-			} else if (id < 9999) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"000" + id;
-			} else if (id < 99999) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"00" + id;
-			} else if (id < 999999) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"0" + id;
-			} else if (id < 9999999) {
-				cod = QuskiOroConstantes.CODIGO_COTIZADOR+"" + id;
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de cotizacion supera los 7 digitos numericos");
-			}
-			persisted.setCodigoCotizacion(cod);
+			persisted.setCodigoCotizacion( QuskiOroConstantes.CODIGO_COTIZADOR.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.cotizadorRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -4013,6 +3994,25 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
 		}
 	}
+//	public DatosCreditoSoftbankWrapper crearOperacionNuevoMock( DatosCreditoWrapper wp ) throws RelativeException{
+//		try {
+//			DatosCreditoSoftbankWrapper result = new DatosCreditoSoftbankWrapper();
+//			result.setTipoCarteraQuski( "MO2" );
+//			result.setEstado( "CREADO" );
+//			
+//			return result;
+//			
+//		}catch(RelativeException e ){
+//			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+//		}
+//	}
+//	public DatosCreditoSoftbankWrapper crearOperacionNuevo( DatosCreditoWrapper wp ) throws RelativeException{
+//		try {
+//			
+//		}catch(RelativeException e ){
+//			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+//		}
+//	}
 
 	/** ********************************************* @CRM ************ */
 	public CrmProspectoCortoWrapper findProspectoCrm(String cedula) throws RelativeException {
