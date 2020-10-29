@@ -98,10 +98,12 @@ import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.CreditoSoftbankWrapper;
 import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.CrmProspectoWrapper;
+import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCreditoSoftbankWrapper;
 import com.relative.quski.wrapper.DatosCreditoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
@@ -3912,6 +3914,60 @@ public class QuskiOroService {
 	private TbQoCreditoNegociacion updateCreditoNegociacion(TbQoCreditoNegociacion send,
 			TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
+			if(send.getAPagarCliente() != null) {
+				persisted.setAPagarCliente( send.getAPagarCliente());
+			}
+			if(send.getTipoCarteraQuski() != null) {
+				persisted.setTipoCarteraQuski( send.getTipoCarteraQuski());
+			}
+			if(send.getEstadoSoftbank() != null) {
+				persisted.setEstadoSoftbank( send.getEstadoSoftbank());
+			}
+			if(send.getPlazoCredito() != null) {
+				persisted.setPlazoCredito( send.getPlazoCredito());
+			}
+			if(send.getDestinoOperacion() != null) {
+				persisted.setDestinoOperacion( send.getDestinoOperacion());
+			}
+			if(send.getFechaEfectiva() != null) {
+				persisted.setFechaEfectiva( send.getFechaEfectiva());
+			}
+			if(send.getFechaVencimiento() != null) {
+				persisted.setFechaVencimiento( send.getFechaVencimiento());
+			}
+			if(send.getMontoPreaprobado() != null) {
+				persisted.setMontoPreaprobado( send.getMontoPreaprobado());
+			}
+			if(send.getMontoDesembolso() != null) {
+				persisted.setMontoDesembolso( send.getMontoDesembolso());
+			}
+			if(send.getTotalCostoNuevaOperacion() != null) {
+				persisted.setTotalCostoNuevaOperacion( send.getTotalCostoNuevaOperacion());
+			}
+			if(send.getValorCuota() != null) {
+				persisted.setValorCuota( send.getValorCuota());
+			}
+			if(send.getRiesgoTotalCliente() != null) {
+				persisted.setRiesgoTotalCliente( send.getRiesgoTotalCliente());
+			}
+			if(send.getARecibirCliente() != null) {
+				persisted.setARecibirCliente( send.getARecibirCliente());
+			}
+			if(send.getNetoAlCliente() != null) {
+				persisted.setNetoAlCliente( send.getNetoAlCliente());
+			}
+			if(send.getNumeroFunda() != null) {
+				persisted.setNumeroFunda( send.getNumeroFunda());
+			}
+			if(send.getPesoFunda() != null) {
+				persisted.setPesoFunda( send.getPesoFunda());
+			}
+			if(send.getDescripcionProducto() != null) {
+				persisted.setDescripcionProducto( send.getDescripcionProducto());
+			}
+						
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			persisted.setEstado( EstadoEnum.ACT );
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -3994,25 +4050,76 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
 		}
 	}
-//	public DatosCreditoSoftbankWrapper crearOperacionNuevoMock( DatosCreditoWrapper wp ) throws RelativeException{
-//		try {
-//			DatosCreditoSoftbankWrapper result = new DatosCreditoSoftbankWrapper();
-//			result.setTipoCarteraQuski( "MO2" );
-//			result.setEstado( "CREADO" );
-//			
-//			return result;
-//			
-//		}catch(RelativeException e ){
-//			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
-//		}
-//	}
-//	public DatosCreditoSoftbankWrapper crearOperacionNuevo( DatosCreditoWrapper wp ) throws RelativeException{
-//		try {
-//			
-//		}catch(RelativeException e ){
-//			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
-//		}
-//	}
+	public CreditoSoftbankWrapper crearOperacionNuevoMock( DatosCreditoWrapper wp ) throws RelativeException{
+		try {
+			DatosCreditoSoftbankWrapper r = new DatosCreditoSoftbankWrapper();
+			r.setTipoCarteraQuski( "MO2" );
+			r.setEstado( "CREADO" );
+			r.setaPagarPorCliente( BigDecimal.valueOf( 122323.23) );
+			r.setPlazo( Long.valueOf( 23 ) );
+			r.setDestinoOperacion("No tengo este dato");
+			r.setFechaEfectiva( new Date(System.currentTimeMillis()) );
+			r.setFechaVencimiento( new Date(System.currentTimeMillis()) );
+			r.setMontoPreaprobado( BigDecimal.valueOf( 122343.23) );
+			r.setMontoDeDesembolso( BigDecimal.valueOf( 134223.233) );
+			r.setTotalDeCostosNuevaOperacion( BigDecimal.valueOf( 56.23));
+			r.setValorDeCuota( BigDecimal.valueOf( 34.23));
+			r.setRiesgoTotalCliente(  BigDecimal.valueOf( 4000.23) );
+			r.setaRecibirCliente(  BigDecimal.valueOf( 5126.23) );
+			r.setMontoAEntregar( BigDecimal.valueOf( 4000.23) );
+			
+			r.setNumeroFunda( Long.valueOf( 233445566 ));
+			r.setPesoFunda(wp.getPesoFunda() );
+			r.setDescripcionProducto( "descripcion prueba Producto");
+			
+			TbQoCreditoNegociacion credito = wp.getCredito();
+			credito.setTipoCarteraQuski( r.getTipoCarteraQuski() );
+			credito.setEstadoSoftbank( r.getEstado() );
+			credito.setAPagarCliente( r.getaPagarPorCliente() );
+			credito.setPlazoCredito( r.getPlazo() );
+			credito.setDestinoOperacion( r.getDestinoOperacion() );
+			credito.setFechaEfectiva( r.getFechaEfectiva() );
+			credito.setFechaVencimiento( r.getFechaVencimiento() );
+			credito.setMontoPreaprobado( r.getMontoPreaprobado() );
+			credito.setMontoDesembolso( r.getMontoDeDesembolso() );
+			credito.setTotalCostoNuevaOperacion( r.getTotalDeCostosNuevaOperacion() );
+			credito.setValorCuota( r.getValorDeCuota() );
+			credito.setRiesgoTotalCliente( r.getRiesgoTotalCliente() );
+			credito.setARecibirCliente( r.getaRecibirCliente() );
+			credito.setNetoAlCliente( r.getMontoAEntregar() );
+			credito.setNumeroFunda( r.getNumeroFunda() );
+			credito.setPesoFunda( r.getPesoFunda() );
+			credito.setDescripcionProducto( r.getDescripcionProducto() );
+			
+			
+			CreditoSoftbankWrapper tmp = new CreditoSoftbankWrapper();
+			
+			CuotasAmortizacionWrapper cuota1 = new CuotasAmortizacionWrapper();
+			cuota1.setCuota( Long.valueOf(1) );
+			cuota1.setFechaPago( new Date(System.currentTimeMillis()) );
+			cuota1.setSaldoCapital( BigDecimal.valueOf( 0.00 ) );
+			cuota1.setCapital( BigDecimal.valueOf( 4100.00 ) );
+			cuota1.setInteres( BigDecimal.valueOf(  105.14 ) ); 
+			cuota1.setSeguro( BigDecimal.valueOf( 2.64 ) );
+			cuota1.setTotal( BigDecimal.valueOf( 0.0 ));
+			cuota1.setOtros( BigDecimal.valueOf( 4207.78 ) );
+			
+			List<CuotasAmortizacionWrapper> listCuotas = new ArrayList<>();
+			
+			listCuotas.add( cuota1 );
+			listCuotas.add( cuota1 );
+			listCuotas.add( cuota1 );
+			tmp.setCuotasAmortizacion( listCuotas );
+			tmp.setCredito( this.manageCreditoNegociacion( credito ) );
+			tmp.setHabilitante( " " );
+			return tmp;
+		}catch(RelativeException e ){
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		}
+	}
+	public DatosCreditoSoftbankWrapper crearOperacionNuevo( DatosCreditoWrapper wp ) throws RelativeException{
+		return null;
+	}
 
 	/** ********************************************* @CRM ************ */
 	public CrmProspectoCortoWrapper findProspectoCrm(String cedula) throws RelativeException {

@@ -1,6 +1,8 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.relative.quski.model.TbQoRubro;
@@ -12,22 +14,50 @@ public class DatosCreditoSoftbankWrapper  implements Serializable {
 	private Boolean esProductoOro;
 	private String codigoTablaAmortizacionQuski;
 	private String tipoCarteraQuski;
-	private String montoPreaprobado;
-	private String montoAEntregar;
-	private String plazo;
+	private BigDecimal montoPreaprobado;
+	private BigDecimal montoAEntregar;
+	private Long plazo;
+	private String tipoOperacion;
 	private String estado;
-	private String valorDeCuota;
-	private String aRecibirCliente;
-	private String aPagarPorCliente;
-	private String valorCreditoAnterior;
-	private String totalDeCostosNuevaOperacion;
+	private Date fechaEfectiva;
+	private Date fechaVencimiento;
+	private BigDecimal valorDeCuota;
+	private String destinoOperacion;
+	private BigDecimal riesgoTotalCliente;
+	private BigDecimal aRecibirCliente;
+	private BigDecimal aPagarPorCliente;
+	private BigDecimal valorCreditoAnterior;
+	private BigDecimal totalDeCostosNuevaOperacion;
 	private List<TbQoRubro> rubros; 
-	private String saldoCapitalDeOperacionAnterior;
-	private String saldoInteresOperacionAnterior;
-	private String montoDeDesembolso;
+	private BigDecimal saldoCapitalDeOperacionAnterior;
+	private BigDecimal saldoInteresOperacionAnterior;
+	private BigDecimal montoDeDesembolso;
 	private String documentosHabilitantes;
 	private String ListaNumerosGarantia;
 	private String NumeroDeformaNumerada;
+	
+	private Long numeroFunda;
+	private String pesoFunda;
+	private String descripcionProducto;
+	
+	public Long getNumeroFunda() {
+		return numeroFunda;
+	}
+	public void setNumeroFunda(Long numeroFunda) {
+		this.numeroFunda = numeroFunda;
+	}
+	public String getPesoFunda() {
+		return pesoFunda;
+	}
+	public void setPesoFunda(String pesoFunda) {
+		this.pesoFunda = pesoFunda;
+	}
+	public String getDescripcionProducto() {
+		return descripcionProducto;
+	}
+	public void setDescripcionProducto(String descripcionProducto) {
+		this.descripcionProducto = descripcionProducto;
+	}
 	public String getNumeroOperacion() {
 		return numeroOperacion;
 	}
@@ -52,72 +82,14 @@ public class DatosCreditoSoftbankWrapper  implements Serializable {
 	public void setTipoCarteraQuski(String tipoCarteraQuski) {
 		this.tipoCarteraQuski = tipoCarteraQuski;
 	}
-	public String getMontoPreaprobado() {
-		return montoPreaprobado;
-	}
-	public void setMontoPreaprobado(String montoPreaprobado) {
-		this.montoPreaprobado = montoPreaprobado;
-	}
-	public String getMontoAEntregar() {
-		return montoAEntregar;
-	}
-	public void setMontoAEntregar(String montoAEntregar) {
-		this.montoAEntregar = montoAEntregar;
-	}
-	public String getValorDeCuota() {
-		return valorDeCuota;
-	}
-	public void setValorDeCuota(String valorDeCuota) {
-		this.valorDeCuota = valorDeCuota;
-	}
-	public String getaRecibirCliente() {
-		return aRecibirCliente;
-	}
-	public void setaRecibirCliente(String aRecibirCliente) {
-		this.aRecibirCliente = aRecibirCliente;
-	}
-	public String getaPagarPorCliente() {
-		return aPagarPorCliente;
-	}
-	public void setaPagarPorCliente(String aPagarPorCliente) {
-		this.aPagarPorCliente = aPagarPorCliente;
-	}
-	public String getValorCreditoAnterior() {
-		return valorCreditoAnterior;
-	}
-	public void setValorCreditoAnterior(String valorCreditoAnterior) {
-		this.valorCreditoAnterior = valorCreditoAnterior;
-	}
-	public String getTotalDeCostosNuevaOperacion() {
-		return totalDeCostosNuevaOperacion;
-	}
-	public void setTotalDeCostosNuevaOperacion(String totalDeCostosNuevaOperacion) {
-		this.totalDeCostosNuevaOperacion = totalDeCostosNuevaOperacion;
-	}
+	
 	public List<TbQoRubro> getRubros() {
 		return rubros;
 	}
 	public void setRubros(List<TbQoRubro> rubros) {
 		this.rubros = rubros;
 	}
-	public String getSaldoCapitalDeOperacionAnterior() {
-		return saldoCapitalDeOperacionAnterior;
-	}
-	public void setSaldoCapitalDeOperacionAnterior(String saldoCapitalDeOperacionAnterior) {
-		this.saldoCapitalDeOperacionAnterior = saldoCapitalDeOperacionAnterior;
-	}
-	public String getSaldoInteresOperacionAnterior() {
-		return saldoInteresOperacionAnterior;
-	}
-	public void setSaldoInteresOperacionAnterior(String saldoInteresOperacionAnterior) {
-		this.saldoInteresOperacionAnterior = saldoInteresOperacionAnterior;
-	}
-	public String getMontoDeDesembolso() {
-		return montoDeDesembolso;
-	}
-	public void setMontoDeDesembolso(String montoDeDesembolso) {
-		this.montoDeDesembolso = montoDeDesembolso;
-	}
+	
 	public String getDocumentosHabilitantes() {
 		return documentosHabilitantes;
 	}
@@ -142,11 +114,102 @@ public class DatosCreditoSoftbankWrapper  implements Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public String getPlazo() {
+
+	public String getTipoOperacion() {
+		return tipoOperacion;
+	}
+	public void setTipoOperacion(String tipoOperacion) {
+		this.tipoOperacion = tipoOperacion;
+	}
+	public Date getFechaVencimiento() {
+		return fechaVencimiento;
+	}
+	public void setFechaVencimiento(Date fechaVencimiento) {
+		this.fechaVencimiento = fechaVencimiento;
+	}
+	public Date getFechaEfectiva() {
+		return fechaEfectiva;
+	}
+	public void setFechaEfectiva(Date fechaEfectiva) {
+		this.fechaEfectiva = fechaEfectiva;
+	}
+	public String getDestinoOperacion() {
+		return destinoOperacion;
+	}
+	public void setDestinoOperacion(String destinoOperacion) {
+		this.destinoOperacion = destinoOperacion;
+	}
+	public BigDecimal getMontoPreaprobado() {
+		return montoPreaprobado;
+	}
+	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
+		this.montoPreaprobado = montoPreaprobado;
+	}
+	public BigDecimal getMontoAEntregar() {
+		return montoAEntregar;
+	}
+	public void setMontoAEntregar(BigDecimal montoAEntregar) {
+		this.montoAEntregar = montoAEntregar;
+	}
+	public Long getPlazo() {
 		return plazo;
 	}
-	public void setPlazo(String plazo) {
+	public void setPlazo(Long plazo) {
 		this.plazo = plazo;
+	}
+	public BigDecimal getValorDeCuota() {
+		return valorDeCuota;
+	}
+	public void setValorDeCuota(BigDecimal valorDeCuota) {
+		this.valorDeCuota = valorDeCuota;
+	}
+	public BigDecimal getaRecibirCliente() {
+		return aRecibirCliente;
+	}
+	public void setaRecibirCliente(BigDecimal aRecibirCliente) {
+		this.aRecibirCliente = aRecibirCliente;
+	}
+	public BigDecimal getaPagarPorCliente() {
+		return aPagarPorCliente;
+	}
+	public void setaPagarPorCliente(BigDecimal aPagarPorCliente) {
+		this.aPagarPorCliente = aPagarPorCliente;
+	}
+	public BigDecimal getValorCreditoAnterior() {
+		return valorCreditoAnterior;
+	}
+	public void setValorCreditoAnterior(BigDecimal valorCreditoAnterior) {
+		this.valorCreditoAnterior = valorCreditoAnterior;
+	}
+	public BigDecimal getTotalDeCostosNuevaOperacion() {
+		return totalDeCostosNuevaOperacion;
+	}
+	public void setTotalDeCostosNuevaOperacion(BigDecimal totalDeCostosNuevaOperacion) {
+		this.totalDeCostosNuevaOperacion = totalDeCostosNuevaOperacion;
+	}
+	public BigDecimal getSaldoCapitalDeOperacionAnterior() {
+		return saldoCapitalDeOperacionAnterior;
+	}
+	public void setSaldoCapitalDeOperacionAnterior(BigDecimal saldoCapitalDeOperacionAnterior) {
+		this.saldoCapitalDeOperacionAnterior = saldoCapitalDeOperacionAnterior;
+	}
+	public BigDecimal getSaldoInteresOperacionAnterior() {
+		return saldoInteresOperacionAnterior;
+	}
+	public void setSaldoInteresOperacionAnterior(BigDecimal saldoInteresOperacionAnterior) {
+		this.saldoInteresOperacionAnterior = saldoInteresOperacionAnterior;
+	}
+	public BigDecimal getMontoDeDesembolso() {
+		return montoDeDesembolso;
+	}
+	public void setMontoDeDesembolso(BigDecimal montoDeDesembolso) {
+		this.montoDeDesembolso = montoDeDesembolso;
+	}
+	public BigDecimal getRiesgoTotalCliente() {
+		return riesgoTotalCliente;
+	}
+	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
+		this.riesgoTotalCliente = riesgoTotalCliente;
 	}
 
 	

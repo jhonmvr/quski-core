@@ -19,9 +19,11 @@ public class DatosCreditoWrapper implements Serializable {
 	 private  String firmanteOperacion;
 	 private  String identificacionCodeudor;
 	 private  String nombreCompletoCodeudor;
-	 private  String fechaNacimientoCodeudor;
+	 private  Date fechaNacimientoCodeudor;
 	 private  String identificacionApoderado;
 	 private  String nombreCompletoApoderado;
+	 private  Date fechaNacimientoApoderado;
+
 	 private  String usuario;
 	 private  Long idAgencia;
 	 
@@ -77,6 +79,18 @@ public class DatosCreditoWrapper implements Serializable {
 	public String getFirmanteOperacion() {
 		return firmanteOperacion;
 	}
+	public Date getFechaNacimientoCodeudor() {
+		return fechaNacimientoCodeudor;
+	}
+	public void setFechaNacimientoCodeudor(Date fechaNacimientoCodeudor) {
+		this.fechaNacimientoCodeudor = fechaNacimientoCodeudor;
+	}
+	public Date getFechaNacimientoApoderado() {
+		return fechaNacimientoApoderado;
+	}
+	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
+		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
+	}
 	public void setFirmanteOperacion(String firmanteOperacion) {
 		this.firmanteOperacion = firmanteOperacion;
 	}
@@ -92,12 +106,7 @@ public class DatosCreditoWrapper implements Serializable {
 	public void setNombreCompletoCodeudor(String nombreCompletoCodeudor) {
 		this.nombreCompletoCodeudor = nombreCompletoCodeudor;
 	}
-	public String getFechaNacimientoCodeudor() {
-		return fechaNacimientoCodeudor;
-	}
-	public void setFechaNacimientoCodeudor(String fechaNacimientoCodeudor) {
-		this.fechaNacimientoCodeudor = fechaNacimientoCodeudor;
-	}
+
 	public String getIdentificacionApoderado() {
 		return identificacionApoderado;
 	}

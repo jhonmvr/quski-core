@@ -1,34 +1,22 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.TipoCreditoNegociacionEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 
  */
 @Entity
-@Table(name = "tb_qo_credito_negociacion")
+@Table(name="tb_qo_credito_negociacion")
 public class TbQoCreditoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -36,83 +24,89 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@SequenceGenerator(name = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName = "SEQ_CREDITO_NEGOCIACION", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
-	
+
 	@Column(name="a_pagar_cliente")
 	private BigDecimal aPagarCliente;
 
 	@Column(name="a_recibir_cliente")
 	private BigDecimal aRecibirCliente;
 
+	private String codigo;
+
+	@Column(name="destino_operacion")
+	private String destinoOperacion;
+
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
+	@Column(name="estado_softbank")
+	private String estadoSoftbank;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_actualizacion")
+	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_creacion")
+	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_vencimiento")
+	@Column(name="fecha_efectiva")
+	private Date fechaEfectiva;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
-	private String codigo;
+	@Column(name="id_agencia")
+	private Long idAgencia;
+	
+	@Column(name="numero_funda")
+	private Long numeroFunda;
+	
+	@Column(name="peso_funda")
+	private String pesoFunda;
+	
+	@Column(name="descripcion_producto")
+	private String descripcionProducto;
 
-	@Column(name = "joyas_seleccionadas")
+	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;
 
-	@Column(name = "monto_preaprobado")
-	private BigDecimal montoPreaprobado;
-	
-	@Column(name = "monto_solicitado")
-	private BigDecimal montoSolicitado;
-	
-	@Column(name = "monto_diferido")
+	@Column(name="monto_desembolso")
+	private BigDecimal montoDesembolso;
+
+	@Column(name="monto_diferido")
 	private BigDecimal montoDiferido;
-	
-	@Column(name="monto_desembolso_ballon")
-	private BigDecimal montoDesembolsoBallon;
-	
+
+	@Column(name="monto_preaprobado")
+	private BigDecimal montoPreaprobado;
+
+	@Column(name="monto_solicitado")
+	private BigDecimal montoSolicitado;
+
 	@Column(name="neto_al_cliente")
 	private BigDecimal netoAlCliente;
 
-	@Column(name = "plazo_credito")
-	private BigDecimal plazoCredito;
-	
+	@Column(name="plazo_credito")
+	private Long plazoCredito;
+
 	@Column(name="riesgo_total_cliente")
 	private BigDecimal riesgoTotalCliente;
-	
-	public BigDecimal getMontoDiferido() {
-		return montoDiferido;
-	}
-
-	public void setMontoDiferido(BigDecimal montoDiferido) {
-		this.montoDiferido = montoDiferido;
-	}
-
-	public BigDecimal getMontoSolicitado() {
-		return montoSolicitado;
-	}
-
-	public void setMontoSolicitado(BigDecimal montoSolicitado) {
-		this.montoSolicitado = montoSolicitado;
-	}
-
-	@Column(name = "recibir_cliente")
-	private BigDecimal recibirCliente;
 
 	@Column(name = "tipo")
 	@Enumerated(EnumType.STRING)
 	private TipoCreditoNegociacionEnum tipo;
 
-	@Column(name = "valor_cuota")
+	@Column(name="tipo_cartera_quski")
+	private String tipoCarteraQuski;
+
+	@Column(name="total_costo_nueva_operacion")
+	private BigDecimal totalCostoNuevaOperacion;
+
+	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
-
-	@Column(name = "id_agencia")
-	private int idAgencia;
-
+	
 	// bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name = "id_negociacion")
@@ -136,44 +130,93 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public BigDecimal getaPagarCliente() {
-		return aPagarCliente;
+
+	public BigDecimal getAPagarCliente() {
+		return this.aPagarCliente;
 	}
 
-	public void setaPagarCliente(BigDecimal aPagarCliente) {
+	public void setAPagarCliente(BigDecimal aPagarCliente) {
 		this.aPagarCliente = aPagarCliente;
 	}
 
-	public BigDecimal getaRecibirCliente() {
-		return aRecibirCliente;
-	}
-
-	public void setaRecibirCliente(BigDecimal aRecibirCliente) {
-		this.aRecibirCliente = aRecibirCliente;
-	}
-
-	public BigDecimal getNetoAlCliente() {
-		return netoAlCliente;
-	}
-
-	public void setNetoAlCliente(BigDecimal netoAlCliente) {
-		this.netoAlCliente = netoAlCliente;
-	}
-
-	public BigDecimal getRiesgoTotalCliente() {
-		return riesgoTotalCliente;
-	}
-
-	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
-		this.riesgoTotalCliente = riesgoTotalCliente;
-	}
-
 	public EstadoEnum getEstado() {
-		return this.estado;
+		return estado;
 	}
 
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
+	}
+
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
+	}
+
+	public TipoCreditoNegociacionEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoCreditoNegociacionEnum tipo) {
+		this.tipo = tipo;
+	}
+
+	public BigDecimal getARecibirCliente() {
+		return this.aRecibirCliente;
+	}
+
+	public void setARecibirCliente(BigDecimal aRecibirCliente) {
+		this.aRecibirCliente = aRecibirCliente;
+	}
+
+	public String getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public Long getNumeroFunda() {
+		return numeroFunda;
+	}
+
+	public void setNumeroFunda(Long numeroFunda) {
+		this.numeroFunda = numeroFunda;
+	}
+
+	public String getPesoFunda() {
+		return pesoFunda;
+	}
+
+	public void setPesoFunda(String pesoFunda) {
+		this.pesoFunda = pesoFunda;
+	}
+
+	public String getDescripcionProducto() {
+		return descripcionProducto;
+	}
+
+	public void setDescripcionProducto(String descripcionProducto) {
+		this.descripcionProducto = descripcionProducto;
+	}
+
+	public String getDestinoOperacion() {
+		return this.destinoOperacion;
+	}
+
+	public void setDestinoOperacion(String destinoOperacion) {
+		this.destinoOperacion = destinoOperacion;
+	}
+
+	public String getEstadoSoftbank() {
+		return this.estadoSoftbank;
+	}
+
+	public void setEstadoSoftbank(String estadoSoftbank) {
+		this.estadoSoftbank = estadoSoftbank;
 	}
 
 	public Date getFechaActualizacion() {
@@ -192,20 +235,20 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public Date getFechaEfectiva() {
+		return this.fechaEfectiva;
+	}
+
+	public void setFechaEfectiva(Date fechaEfectiva) {
+		this.fechaEfectiva = fechaEfectiva;
+	}
+
 	public Date getFechaVencimiento() {
 		return this.fechaVencimiento;
 	}
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
-	}
-
-	public int getIdAgencia() {
-		return idAgencia;
-	}
-
-	public void setIdAgencia(int idAgencia) {
-		this.idAgencia = idAgencia;
 	}
 
 	public String getJoyasSeleccionadas() {
@@ -216,6 +259,22 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.joyasSeleccionadas = joyasSeleccionadas;
 	}
 
+	public BigDecimal getMontoDesembolso() {
+		return this.montoDesembolso;
+	}
+
+	public void setMontoDesembolso(BigDecimal montoDesembolso) {
+		this.montoDesembolso = montoDesembolso;
+	}
+
+	public BigDecimal getMontoDiferido() {
+		return this.montoDiferido;
+	}
+
+	public void setMontoDiferido(BigDecimal montoDiferido) {
+		this.montoDiferido = montoDiferido;
+	}
+
 	public BigDecimal getMontoPreaprobado() {
 		return this.montoPreaprobado;
 	}
@@ -223,44 +282,53 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
 		this.montoPreaprobado = montoPreaprobado;
 	}
-	public BigDecimal getMontoDesembolsoBallon() {
-		return montoDesembolsoBallon;
+
+	public BigDecimal getMontoSolicitado() {
+		return this.montoSolicitado;
 	}
 
-	public void setMontoDesembolsoBallon(BigDecimal montoDesembolsoBallon) {
-		this.montoDesembolsoBallon = montoDesembolsoBallon;
+	public void setMontoSolicitado(BigDecimal montoSolicitado) {
+		this.montoSolicitado = montoSolicitado;
 	}
 
-	public BigDecimal getPlazoCredito() {
+	public BigDecimal getNetoAlCliente() {
+		return this.netoAlCliente;
+	}
+
+	public void setNetoAlCliente(BigDecimal netoAlCliente) {
+		this.netoAlCliente = netoAlCliente;
+	}
+
+	public Long getPlazoCredito() {
 		return this.plazoCredito;
 	}
 
-	public void setPlazoCredito(BigDecimal plazoCredito) {
+	public void setPlazoCredito(Long plazoCredito) {
 		this.plazoCredito = plazoCredito;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public BigDecimal getRiesgoTotalCliente() {
+		return this.riesgoTotalCliente;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
+		this.riesgoTotalCliente = riesgoTotalCliente;
 	}
 
-	public BigDecimal getRecibirCliente() {
-		return this.recibirCliente;
+	public String getTipoCarteraQuski() {
+		return this.tipoCarteraQuski;
 	}
 
-	public void setRecibirCliente(BigDecimal recibirCliente) {
-		this.recibirCliente = recibirCliente;
+	public void setTipoCarteraQuski(String tipoCarteraQuski) {
+		this.tipoCarteraQuski = tipoCarteraQuski;
 	}
 
-	public TipoCreditoNegociacionEnum getTipo() {
-		return tipo;
+	public BigDecimal getTotalCostoNuevaOperacion() {
+		return this.totalCostoNuevaOperacion;
 	}
 
-	public void setTipo(TipoCreditoNegociacionEnum tipo) {
-		this.tipo = tipo;
+	public void setTotalCostoNuevaOperacion(BigDecimal totalCostoNuevaOperacion) {
+		this.totalCostoNuevaOperacion = totalCostoNuevaOperacion;
 	}
 
 	public BigDecimal getValorCuota() {
@@ -270,15 +338,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setValorCuota(BigDecimal valorCuota) {
 		this.valorCuota = valorCuota;
 	}
-
-	public int getTbQoAgencia() {
-		return this.idAgencia;
-	}
-
-	public void setTbQoAgencia(int tbQoAgencia) {
-		this.idAgencia = tbQoAgencia;
-	}
-
 	public TbQoNegociacion getTbQoNegociacion() {
 		return this.tbQoNegociacion;
 	}
@@ -308,9 +367,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 		return tbQoTasacion;
 	}
-	
-	
-	
+
 	public List<TbQoRubro> getTbQoRubros() {
 		return this.tbQoRubros;
 	}
@@ -330,7 +387,5 @@ public class TbQoCreditoNegociacion implements Serializable {
 		tbQoRubro.setTbQoCreditoNegociacion(null);
 		return tbQoRubro;
 	}
-	
-	
 
 }
