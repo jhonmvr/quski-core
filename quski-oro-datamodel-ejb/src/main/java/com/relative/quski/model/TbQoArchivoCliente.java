@@ -15,7 +15,7 @@ public class TbQoArchivoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR", sequenceName="SEG_TB_QO_ARCHIVO_CLIENTE")
+	@SequenceGenerator(name="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_ARCHIVO_CLIENTE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_ARCHIVO_CLIENTE_ID_GENERATOR")
 	private Long id;
 	

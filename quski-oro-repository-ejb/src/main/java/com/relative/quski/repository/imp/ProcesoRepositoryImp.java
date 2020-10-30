@@ -35,94 +35,103 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Inject
 	Logger log;
 	private final String ID_OP = " case when "+QueryConstantes.WHEN_NEGO+"  then " + 
-			"(select nego.ID from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
+			"COALESCE( (select nego.ID from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 0) " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"		(select devo.ID from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+			"		COALESCE( (select devo.ID from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 0) " + 
 			"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"			(select pago.ID from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
+			"			COALESCE( (select pago.ID from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 0) " + 
 			"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"				(select veri.ID from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+			"				COALESCE( (select veri.ID from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 0) " + 
 			"				else 0 end end end end ID ";
-	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+	private final String CODIGO_BPM = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+			"COALESCE( (select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+			"	COALESCE( (select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
+			"		COALESCE( (select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 'NULL')  " + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+			"			COALESCE( (select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
+			"			else ' ' end end end end CODIGO_BPM ";
+	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+			"COALESCE( (select cre.CODIGO_OPERACION from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
+			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+			"	COALESCE( (select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
+			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+			"		COALESCE( (select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 'NULL')  " + 
+			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
+			"			COALESCE( (select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
 			"			else ' ' end end end end CODIGO_OPERACION ";
 	private final String CEDULA_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
+			"COALESCE( (select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
+			"	COALESCE( (select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL')  " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		(select pago.CEDULA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
+			"		COALESCE( (select pago.CEDULA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL')  " + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			(select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
+			"			COALESCE( (select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL')  " + 
 			"			else ' ' end end end end cedula_cliente ";
 	private final String NOMBRE_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
+			"COALESCE( (select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL') " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
+			"	COALESCE( (select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL') " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		(select pago.NOMBRE_CLIENTE  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
+			"		COALESCE( (select pago.NOMBRE_CLIENTE  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') " + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			(select veri.NOMBRE_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
+			"			COALESCE( (select veri.NOMBRE_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
 			"			else ' ' end end end end nombre_cliente ";
 	private final String AGENCIA_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"(select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+			" COALESCE( (select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0) " + 
 			"else case when  "+QueryConstantes.WHEN_DEVO+"  then " + 
-			"	(select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+			"	COALESCE( (select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 0)  " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		(select pago.ID_AGENCIA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
+			"		COALESCE( (select pago.ID_AGENCIA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 0)  " + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
+			"			COALESCE( (select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 0)  " + 
 			"			else 0 end end end end AGENCIA	";
 	private final String ASESOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"(select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
+			"COALESCE( (select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	(select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+			"	COALESCE((select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
+			"		COALESCE( (select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') " + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
+			"			COALESCE( (select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
 			"			else ' ' end end end end ASESOR ";
 	private final String APROBADOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') " + 
+			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'null') " + 
+			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'null')" + 
+			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL')" + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ),'null') " + 
+			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
 			"			else ' ' end end end end APROBADOR ";
 	private final String ORDEN_OP = " CASE WHEN (proceso.proceso ='NUEVO') THEN" + 
 			"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = '') then 1 ELSE 8 end" + 
+			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 1 ELSE 8 end" + 
 			"			ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = '') then 2 ELSE 9 end" + 
+			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 2 ELSE 9 end" + 
 			"			ELSE 0 END END" + 
 			"		ELSE CASE WHEN (proceso.proceso ='RENOVACION') THEN " + 
 			"				CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = '') then 3 ELSE 10 end" + 
+			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 3 ELSE 10 end" + 
 			"				ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = 'null') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'null') = '') then 4 ELSE 11 end" + 
+			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 4 ELSE 11 end" + 
 			"				ELSE 0 END END" + 
 			"		ELSE CASE WHEN (proceso.proceso ='PAGO') THEN " + 
-			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'null') = 'null') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'null') = '') then 5  ELSE 12 end" + 
+			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'NULL') = 'NULL') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') = '') then 5  ELSE 12 end" + 
 			"		ELSE CASE WHEN (proceso.proceso ='DEVOLUCION') THEN " + 
-			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'null') = 'null' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'null') = '' ) then 6  ELSE 13 end" + 
+			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'NULL') = 'NULL' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') = '' ) then 6  ELSE 13 end" + 
 			"		ELSE CASE WHEN (proceso.proceso ='VERIFICACION_TELEFONICA') THEN " + 
-			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'null') = 'null') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'null') = '') then 7  ELSE 14 end" + 
+			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'NULL') = 'NULL') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') = '') then 7  ELSE 14 end" + 
 			"		ELSE 0 END END END END END AS orden ";
 	private final String MONTO_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-			"			COALESCE((select cre.MONTO_PREAPROBADO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia),0)" + 
+			"			COALESCE((select cre.MONTO_PREAPROBADO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0)" + 
 			"			else 0 end MONTO_PREAPROBADO ";
 	private final String ACTIVIDAD_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1),'null')" + 
+			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL') " + 
 			"			else case when (proceso.proceso ='DEVOLUCION') then " + 
-			"				COALESCE((select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1),'null')" + 
+			"				COALESCE((select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL')" + 
 			"				else ' ' end  end ACTIVIDAD ";
 	private final String COUNT_OP = "SELECT  COUNT(case when "+QueryConstantes.WHEN_NEGO+"  then " + 
 			"(select cre.ID from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
@@ -191,6 +200,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		try {
 			String querySelect = "SELECT "+ 
 									ID_OP 		+ "," + 
+									CODIGO_BPM 	+ "," + 
 									CODIGO_OP 	+ "," + 
 									NOMBRE_OP   + "," + 
 									CEDULA_OP   + "," +
@@ -326,6 +336,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		try {
 			String querySelect = "SELECT " + 
 									ID_OP 							+ "," + 
+									CODIGO_BPM 						+ "," + 
 									CODIGO_OP 						+ "," +
 									" PROCESO.PROCESO " 			+ "," +
 									" PROCESO.FECHA_ACTUALIZACION " + "," +
