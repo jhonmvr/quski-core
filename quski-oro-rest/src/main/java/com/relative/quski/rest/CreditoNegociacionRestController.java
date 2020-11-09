@@ -30,7 +30,9 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
-import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.CreditoSoftbankWrapper;
+import com.relative.quski.wrapper.DatosCreditoWrapper;
+import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -145,7 +147,27 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
 		log.info("INGRESA A traerCreditoNegociacionExistente ");
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
+		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/traerCreditoNuevo")
+	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<OperacionCreditoNuevoWrapper> loc = new GenericWrapper<>();
+		log.info("INGRESA A traerCreditoNuevo  -----> "+ Long.valueOf( idNegociacion ));
+		OperacionCreditoNuevoWrapper a = this.qos.traerCreditoNuevo(Long.valueOf( idNegociacion ));
+		loc.setEntidad(a);
+		return loc;
+	}
+	@POST
+	@Path("/crearOperacionNuevo")
+	public GenericWrapper<CreditoSoftbankWrapper> crearOperacionNuevo(DatosCreditoWrapper wp) throws RelativeException {
+		GenericWrapper<CreditoSoftbankWrapper> loc = new GenericWrapper<>();
+		log.info("======> INGRESA A DatosCreditoSoftbankWrapper  -----> ");
+		CreditoSoftbankWrapper a = this.qos.crearOperacionNuevoMock( wp );
 		loc.setEntidad(a);
 		return loc;
 	}

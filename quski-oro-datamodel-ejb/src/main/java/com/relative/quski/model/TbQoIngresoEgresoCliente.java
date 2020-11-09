@@ -19,7 +19,7 @@ public class TbQoIngresoEgresoCliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_INGRESO_EGRESO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_INGRESO_EGRESO_CLIENTE",initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name="TB_QO_INGRESO_EGRESO_CLIENTE_ID_GENERATOR", sequenceName="SEQ_INGRESO_EGRESO_CLIENTE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_INGRESO_EGRESO_CLIENTE_ID_GENERATOR")
 	private Long id;
 

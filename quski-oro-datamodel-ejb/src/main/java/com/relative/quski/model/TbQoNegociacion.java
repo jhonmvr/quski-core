@@ -46,9 +46,9 @@ public class TbQoNegociacion implements Serializable {
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-	//bi-directional many-to-one association to TbQoExcepcione
+	//bi-directional many-to-one association to TbQoExcepcion
 	@OneToMany(mappedBy="tbQoNegociacion")
-	private List<TbQoExcepcione> tbQoExcepciones;
+	private List<TbQoExcepcion> tbQoExcepcions;
 
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -157,26 +157,26 @@ public class TbQoNegociacion implements Serializable {
 		return tbQoDocumentoHabilitante;
 	}
 
-	public List<TbQoExcepcione> getTbQoExcepciones() {
-		return this.tbQoExcepciones;
+	public List<TbQoExcepcion> getTbQoExcepciones() {
+		return this.tbQoExcepcions;
 	}
 
-	public void setTbQoExcepciones(List<TbQoExcepcione> tbQoExcepciones) {
-		this.tbQoExcepciones = tbQoExcepciones;
+	public void setTbQoExcepciones(List<TbQoExcepcion> tbQoExcepcions) {
+		this.tbQoExcepcions = tbQoExcepcions;
 	}
 
-	public TbQoExcepcione addTbQoExcepcione(TbQoExcepcione tbQoExcepcione) {
-		getTbQoExcepciones().add(tbQoExcepcione);
-		tbQoExcepcione.setTbQoNegociacion(this);
+	public TbQoExcepcion addTbQoExcepcion(TbQoExcepcion tbQoExcepcion) {
+		getTbQoExcepciones().add(tbQoExcepcion);
+		tbQoExcepcion.setTbQoNegociacion(this);
 
-		return tbQoExcepcione;
+		return tbQoExcepcion;
 	}
 
-	public TbQoExcepcione removeTbQoExcepcione(TbQoExcepcione tbQoExcepcione) {
-		getTbQoExcepciones().remove(tbQoExcepcione);
-		tbQoExcepcione.setTbQoNegociacion(null);
+	public TbQoExcepcion removeTbQoExcepcion(TbQoExcepcion tbQoExcepcion) {
+		getTbQoExcepciones().remove(tbQoExcepcion);
+		tbQoExcepcion.setTbQoNegociacion(null);
 
-		return tbQoExcepcione;
+		return tbQoExcepcion;
 	}
 
 	public TbQoCliente getTbQoCliente() {

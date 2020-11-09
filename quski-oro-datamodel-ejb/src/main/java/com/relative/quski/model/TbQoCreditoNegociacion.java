@@ -1,34 +1,22 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
+
+import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.TipoCreditoNegociacionEnum;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 
 /**
  * The persistent class for the tb_qo_credito_negociacion database table.
  * 
  */
 @Entity
-@Table(name = "tb_qo_credito_negociacion")
+@Table(name="tb_qo_credito_negociacion")
 public class TbQoCreditoNegociacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -36,139 +24,89 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@SequenceGenerator(name = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR", sequenceName = "SEQ_CREDITO_NEGOCIACION", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_CREDITO_NEGOCIACION_ID_GENERATOR")
 	private Long id;
-	
+
 	@Column(name="a_pagar_cliente")
 	private BigDecimal aPagarCliente;
 
 	@Column(name="a_recibir_cliente")
 	private BigDecimal aRecibirCliente;
 
-	@Column(name = "costo_credito")
-	private BigDecimal costoCredito;
+	private String codigo;
 
-	@Column(name = "costo_custodia")
-	private BigDecimal costoCustodia;
-
-	@Column(name = "costo_estimado")
-	private BigDecimal costoEstimado;
-
-	@Column(name = "costo_nueva_operacion")
-	private BigDecimal costoNuevaOperacion;
-
-	@Column(name = "costo_resguardado")
-	private BigDecimal costoResguardado;
-
-	@Column(name = "costo_seguro")
-	private BigDecimal costoSeguro;
-
-	@Column(name = "costo_transporte")
-	private BigDecimal costoTransporte;
-	
-	@Column(name="costo_valoracion")
-	private BigDecimal costoValoracion;
-	
-	@Column(name="costo_tasacion")
-	private String costoTasacion;
+	@Column(name="destino_operacion")
+	private String destinoOperacion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
+	@Column(name="estado_softbank")
+	private String estadoSoftbank;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_actualizacion")
+	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_creacion")
+	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fecha_vencimiento")
+	@Column(name="fecha_efectiva")
+	private Date fechaEfectiva;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
+
+	@Column(name="id_agencia")
+	private Long idAgencia;
 	
-	@Column(name="forma_pago_custodia")
-	private String formaPagoCustodia;
+	@Column(name="numero_funda")
+	private Long numeroFunda;
+	
+	@Column(name="peso_funda")
+	private String pesoFunda;
+	
+	@Column(name="descripcion_producto")
+	private String descripcionProducto;
 
-	@Column(name="forma_pago_resguardo")
-	private String formaPagoResguardo;
-
-	@Column(name="forma_pago_seguro")
-	private String formaPagoSeguro;
-
-	@Column(name="forma_pago_solca")
-	private String formaPagoSolca;
-
-	@Column(name="forma_pago_tasacion")
-	private String formaPagoTasacion;
-
-	@Column(name="forma_pago_transporte")
-	private String formaPagoTransporte;
-
-	@Column(name="forma_pago_valoracion")
-	private String formaPagoValoracion;
-
-	private String codigo;
-
-	@Column(name = "joyas_seleccionadas")
+	@Column(name="joyas_seleccionadas")
 	private String joyasSeleccionadas;
 
-	@Column(name = "monto_preaprobado")
-	private BigDecimal montoPreaprobado;
-	
-	@Column(name = "monto_solicitado")
-	private BigDecimal montoSolicitado;
-	
-	@Column(name = "monto_diferido")
+	@Column(name="monto_desembolso")
+	private BigDecimal montoDesembolso;
+
+	@Column(name="monto_diferido")
 	private BigDecimal montoDiferido;
-	
 
+	@Column(name="monto_preaprobado")
+	private BigDecimal montoPreaprobado;
 
-	@Column(name="monto_desembolso_ballon")
-	private BigDecimal montoDesembolsoBallon;
-	
+	@Column(name="monto_solicitado")
+	private BigDecimal montoSolicitado;
+
 	@Column(name="neto_al_cliente")
 	private BigDecimal netoAlCliente;
 
-	@Column(name = "plazo_credito")
-	private BigDecimal plazoCredito;
-	
+	@Column(name="plazo_credito")
+	private Long plazoCredito;
+
 	@Column(name="riesgo_total_cliente")
 	private BigDecimal riesgoTotalCliente;
-	
-
-
-	@Column(name = "solca")
-	private BigDecimal solca;
-	
-
-	public BigDecimal getMontoDiferido() {
-		return montoDiferido;
-	}
-
-	public void setMontoDiferido(BigDecimal montoDiferido) {
-		this.montoDiferido = montoDiferido;
-	}
-
-	public BigDecimal getMontoSolicitado() {
-		return montoSolicitado;
-	}
-
-	public void setMontoSolicitado(BigDecimal montoSolicitado) {
-		this.montoSolicitado = montoSolicitado;
-	}
-
-	@Column(name = "recibir_cliente")
-	private BigDecimal recibirCliente;
 
 	@Column(name = "tipo")
 	@Enumerated(EnumType.STRING)
 	private TipoCreditoNegociacionEnum tipo;
 
-	@Column(name = "valor_cuota")
+	@Column(name="tipo_cartera_quski")
+	private String tipoCarteraQuski;
+
+	@Column(name="total_costo_nueva_operacion")
+	private BigDecimal totalCostoNuevaOperacion;
+
+	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
-
-	@Column(name = "id_agencia")
-	private int idAgencia;
-
+	
 	// bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name = "id_negociacion")
@@ -177,6 +115,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 	// bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoTasacion> tbQoTasacions;
+	
+	// bi-directional many-to-one association to TbQoTasacion
+	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
+	private List<TbQoRubro> tbQoRubros;
 
 	public TbQoCreditoNegociacion() {
 	}
@@ -188,119 +130,93 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public BigDecimal getaPagarCliente() {
-		return aPagarCliente;
+
+	public BigDecimal getAPagarCliente() {
+		return this.aPagarCliente;
 	}
 
-	public void setaPagarCliente(BigDecimal aPagarCliente) {
+	public void setAPagarCliente(BigDecimal aPagarCliente) {
 		this.aPagarCliente = aPagarCliente;
 	}
 
-	public BigDecimal getaRecibirCliente() {
-		return aRecibirCliente;
-	}
-
-	public void setaRecibirCliente(BigDecimal aRecibirCliente) {
-		this.aRecibirCliente = aRecibirCliente;
-	}
-
-	public BigDecimal getNetoAlCliente() {
-		return netoAlCliente;
-	}
-
-	public void setNetoAlCliente(BigDecimal netoAlCliente) {
-		this.netoAlCliente = netoAlCliente;
-	}
-
-	public BigDecimal getRiesgoTotalCliente() {
-		return riesgoTotalCliente;
-	}
-
-	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
-		this.riesgoTotalCliente = riesgoTotalCliente;
-	}
-	
-
-	public BigDecimal getCostoValoracion() {
-		return costoValoracion;
-	}
-
-	public void setCostoValoracion(BigDecimal costoValoracion) {
-		this.costoValoracion = costoValoracion;
-	}
-
-	public BigDecimal getCostoCredito() {
-		return this.costoCredito;
-	}
-
-	public void setCostoCredito(BigDecimal costoCredito) {
-		this.costoCredito = costoCredito;
-	}
-
-	public BigDecimal getCostoCustodia() {
-		return this.costoCustodia;
-	}
-
-	public void setCostoCustodia(BigDecimal costoCustodia) {
-		this.costoCustodia = costoCustodia;
-	}
-
-	public BigDecimal getCostoEstimado() {
-		return this.costoEstimado;
-	}
-
-	public void setCostoEstimado(BigDecimal costoEstimado) {
-		this.costoEstimado = costoEstimado;
-	}
-
-	public BigDecimal getCostoNuevaOperacion() {
-		return this.costoNuevaOperacion;
-	}
-
-	public void setCostoNuevaOperacion(BigDecimal costoNuevaOperacion) {
-		this.costoNuevaOperacion = costoNuevaOperacion;
-	}
-
-	public BigDecimal getCostoResguardado() {
-		return this.costoResguardado;
-	}
-
-	public void setCostoResguardado(BigDecimal costoResguardado) {
-		this.costoResguardado = costoResguardado;
-	}
-
-	public BigDecimal getCostoSeguro() {
-		return this.costoSeguro;
-	}
-
-	public void setCostoSeguro(BigDecimal costoSeguro) {
-		this.costoSeguro = costoSeguro;
-	}
-	
-	
-
-	public String getCostoTasacion() {
-		return costoTasacion;
-	}
-
-	public void setCostoTasacion(String costoTasacion) {
-		this.costoTasacion = costoTasacion;
-	}
-
-	public BigDecimal getCostoTransporte() {
-		return this.costoTransporte;
-	}
-
-	public void setCostoTransporte(BigDecimal costoTransporte) {
-		this.costoTransporte = costoTransporte;
-	}
-
 	public EstadoEnum getEstado() {
-		return this.estado;
+		return estado;
 	}
 
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;
+	}
+
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
+	}
+
+	public TipoCreditoNegociacionEnum getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoCreditoNegociacionEnum tipo) {
+		this.tipo = tipo;
+	}
+
+	public BigDecimal getARecibirCliente() {
+		return this.aRecibirCliente;
+	}
+
+	public void setARecibirCliente(BigDecimal aRecibirCliente) {
+		this.aRecibirCliente = aRecibirCliente;
+	}
+
+	public String getCodigo() {
+		return this.codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public Long getNumeroFunda() {
+		return numeroFunda;
+	}
+
+	public void setNumeroFunda(Long numeroFunda) {
+		this.numeroFunda = numeroFunda;
+	}
+
+	public String getPesoFunda() {
+		return pesoFunda;
+	}
+
+	public void setPesoFunda(String pesoFunda) {
+		this.pesoFunda = pesoFunda;
+	}
+
+	public String getDescripcionProducto() {
+		return descripcionProducto;
+	}
+
+	public void setDescripcionProducto(String descripcionProducto) {
+		this.descripcionProducto = descripcionProducto;
+	}
+
+	public String getDestinoOperacion() {
+		return this.destinoOperacion;
+	}
+
+	public void setDestinoOperacion(String destinoOperacion) {
+		this.destinoOperacion = destinoOperacion;
+	}
+
+	public String getEstadoSoftbank() {
+		return this.estadoSoftbank;
+	}
+
+	public void setEstadoSoftbank(String estadoSoftbank) {
+		this.estadoSoftbank = estadoSoftbank;
 	}
 
 	public Date getFechaActualizacion() {
@@ -319,76 +235,20 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
+	public Date getFechaEfectiva() {
+		return this.fechaEfectiva;
+	}
+
+	public void setFechaEfectiva(Date fechaEfectiva) {
+		this.fechaEfectiva = fechaEfectiva;
+	}
+
 	public Date getFechaVencimiento() {
 		return this.fechaVencimiento;
 	}
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
-	}
-
-	public String getFormaPagoCustodia() {
-		return formaPagoCustodia;
-	}
-
-	public void setFormaPagoCustodia(String formaPagoCustodia) {
-		this.formaPagoCustodia = formaPagoCustodia;
-	}
-
-	public String getFormaPagoResguardo() {
-		return formaPagoResguardo;
-	}
-
-	public void setFormaPagoResguardo(String formaPagoResguardo) {
-		this.formaPagoResguardo = formaPagoResguardo;
-	}
-
-	public String getFormaPagoSeguro() {
-		return formaPagoSeguro;
-	}
-
-	public void setFormaPagoSeguro(String formaPagoSeguro) {
-		this.formaPagoSeguro = formaPagoSeguro;
-	}
-
-	public String getFormaPagoSolca() {
-		return formaPagoSolca;
-	}
-
-	public void setFormaPagoSolca(String formaPagoSolca) {
-		this.formaPagoSolca = formaPagoSolca;
-	}
-
-	public String getFormaPagoTasacion() {
-		return formaPagoTasacion;
-	}
-
-	public void setFormaPagoTasacion(String formaPagoTasacion) {
-		this.formaPagoTasacion = formaPagoTasacion;
-	}
-
-	public String getFormaPagoTransporte() {
-		return formaPagoTransporte;
-	}
-
-	public void setFormaPagoTransporte(String formaPagoTransporte) {
-		this.formaPagoTransporte = formaPagoTransporte;
-	}
-
-	public String getFormaPagoValoracion() {
-		return formaPagoValoracion;
-	}
-
-	public void setFormaPagoValoracion(String formaPagoValoracion) {
-		this.formaPagoValoracion = formaPagoValoracion;
-	}
-
-	public int getIdAgencia() {
-		return idAgencia;
-	}
-
-	public void setIdAgencia(int idAgencia) {
-		this.idAgencia = idAgencia;
 	}
 
 	public String getJoyasSeleccionadas() {
@@ -399,6 +259,22 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.joyasSeleccionadas = joyasSeleccionadas;
 	}
 
+	public BigDecimal getMontoDesembolso() {
+		return this.montoDesembolso;
+	}
+
+	public void setMontoDesembolso(BigDecimal montoDesembolso) {
+		this.montoDesembolso = montoDesembolso;
+	}
+
+	public BigDecimal getMontoDiferido() {
+		return this.montoDiferido;
+	}
+
+	public void setMontoDiferido(BigDecimal montoDiferido) {
+		this.montoDiferido = montoDiferido;
+	}
+
 	public BigDecimal getMontoPreaprobado() {
 		return this.montoPreaprobado;
 	}
@@ -406,53 +282,53 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
 		this.montoPreaprobado = montoPreaprobado;
 	}
-	public BigDecimal getMontoDesembolsoBallon() {
-		return montoDesembolsoBallon;
+
+	public BigDecimal getMontoSolicitado() {
+		return this.montoSolicitado;
 	}
 
-	public void setMontoDesembolsoBallon(BigDecimal montoDesembolsoBallon) {
-		this.montoDesembolsoBallon = montoDesembolsoBallon;
+	public void setMontoSolicitado(BigDecimal montoSolicitado) {
+		this.montoSolicitado = montoSolicitado;
 	}
 
-	public BigDecimal getPlazoCredito() {
+	public BigDecimal getNetoAlCliente() {
+		return this.netoAlCliente;
+	}
+
+	public void setNetoAlCliente(BigDecimal netoAlCliente) {
+		this.netoAlCliente = netoAlCliente;
+	}
+
+	public Long getPlazoCredito() {
 		return this.plazoCredito;
 	}
 
-	public void setPlazoCredito(BigDecimal plazoCredito) {
+	public void setPlazoCredito(Long plazoCredito) {
 		this.plazoCredito = plazoCredito;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public BigDecimal getRiesgoTotalCliente() {
+		return this.riesgoTotalCliente;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
+		this.riesgoTotalCliente = riesgoTotalCliente;
 	}
 
-	public BigDecimal getRecibirCliente() {
-		return this.recibirCliente;
+	public String getTipoCarteraQuski() {
+		return this.tipoCarteraQuski;
 	}
 
-	public void setRecibirCliente(BigDecimal recibirCliente) {
-		this.recibirCliente = recibirCliente;
-	}
-	
-
-	public BigDecimal getSolca() {
-		return solca;
+	public void setTipoCarteraQuski(String tipoCarteraQuski) {
+		this.tipoCarteraQuski = tipoCarteraQuski;
 	}
 
-	public void setSolca(BigDecimal solca) {
-		this.solca = solca;
+	public BigDecimal getTotalCostoNuevaOperacion() {
+		return this.totalCostoNuevaOperacion;
 	}
 
-	public TipoCreditoNegociacionEnum getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoCreditoNegociacionEnum tipo) {
-		this.tipo = tipo;
+	public void setTotalCostoNuevaOperacion(BigDecimal totalCostoNuevaOperacion) {
+		this.totalCostoNuevaOperacion = totalCostoNuevaOperacion;
 	}
 
 	public BigDecimal getValorCuota() {
@@ -462,15 +338,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setValorCuota(BigDecimal valorCuota) {
 		this.valorCuota = valorCuota;
 	}
-
-	public int getTbQoAgencia() {
-		return this.idAgencia;
-	}
-
-	public void setTbQoAgencia(int tbQoAgencia) {
-		this.idAgencia = tbQoAgencia;
-	}
-
 	public TbQoNegociacion getTbQoNegociacion() {
 		return this.tbQoNegociacion;
 	}
@@ -500,7 +367,25 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 		return tbQoTasacion;
 	}
-	
-	
+
+	public List<TbQoRubro> getTbQoRubros() {
+		return this.tbQoRubros;
+	}
+
+	public void setTbQoRubros(List<TbQoRubro> tbQoRubros) {
+		this.tbQoRubros = tbQoRubros;
+	}
+
+	public TbQoRubro addTbQoRubro(TbQoRubro tbQoRubro) {
+		getTbQoRubros().add(tbQoRubro);
+		tbQoRubro.setTbQoCreditoNegociacion(this);
+		return tbQoRubro;
+	}
+
+	public TbQoRubro removeTbQoRubro(TbQoRubro tbQoRubro) {
+		getTbQoRubros().remove(tbQoRubro);
+		tbQoRubro.setTbQoCreditoNegociacion(null);
+		return tbQoRubro;
+	}
 
 }

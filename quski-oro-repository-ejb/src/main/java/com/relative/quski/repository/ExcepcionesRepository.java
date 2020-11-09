@@ -10,35 +10,34 @@ import javax.ejb.Local;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.quski.enums.EstadoExcepcionEnum;
-import com.relative.quski.model.TbQoExcepcione;
-import com.relative.quski.wrapper.ExceptionWrapper;
+import com.relative.quski.model.TbQoExcepcion;
 /**
  * 
  * @author Jeroham Cadenas - Developer twelve 
  *
  */
 @Local
-public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcione> {
+public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcion> {
 	
-	public TbQoExcepcione findById(Long id)throws RelativeException;
+	public TbQoExcepcion findById(Long id)throws RelativeException;
 	
-	public List<TbQoExcepcione> findByIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, Long idNegociacion ) throws RelativeException;
-	public List<TbQoExcepcione> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
+	public List<TbQoExcepcion> findByIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, Long idNegociacion ) throws RelativeException;
+	public List<TbQoExcepcion> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
 	public Long countByIdNegociacion(Long idNegociacion) throws RelativeException ;
 	
-	public List<TbQoExcepcione> findByIdCliente(int startRecord, Integer pageSize, String sortFields, String sortDirections,  Long idCliente ) throws RelativeException;
-	public List<TbQoExcepcione> findByIdCliente( Long idCliente ) throws RelativeException;
+	public List<TbQoExcepcion> findByIdCliente(int startRecord, Integer pageSize, String sortFields, String sortDirections,  Long idCliente ) throws RelativeException;
+	public List<TbQoExcepcion> findByIdCliente( Long idCliente ) throws RelativeException;
 	public Long countByIdCliente(Long idCliente) throws RelativeException ;
 	
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException;
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion) throws RelativeException;
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException;
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacion( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion) throws RelativeException;
 	public Long countByTipoExcepcionAndIdNegociacion( String tipoExcepcion, Long idNegociacion ) throws RelativeException ;
 	
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica( String tipoExcepcion, Long idNegociacion, String caracteristica ) throws RelativeException;
-	public List<TbQoExcepcione> findByTipoExcepcionAndIdNegociacionAndCaracteristica( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion, String caracteristica) throws RelativeException;
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacionAndCaracteristica( String tipoExcepcion, Long idNegociacion, String caracteristica ) throws RelativeException;
+	public List<TbQoExcepcion> findByTipoExcepcionAndIdNegociacionAndCaracteristica( int startRecord, Integer pageSize, String sortFields, String sortDirections, String tipoExcepcion, Long idNegociacion, String caracteristica) throws RelativeException;
 	public Long countByTipoExcepcionAndIdNegociacionAndCaracteristica( String tipoExcepcion, Long idNegociacion, String caracteristica ) throws RelativeException ;
 	
-	public TbQoExcepcione findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion ) throws RelativeException;
+	public TbQoExcepcion findByTipoExcepcionAndIdNegociacionAndestadoExcepcion( Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estadoExcepcion ) throws RelativeException;
 
 
 	

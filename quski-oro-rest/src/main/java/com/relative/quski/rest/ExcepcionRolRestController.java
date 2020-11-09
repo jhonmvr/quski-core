@@ -103,7 +103,7 @@ public class ExcepcionRolRestController extends BaseRestController
 	
 	@GET
 	@Path("/findByRolAndIdentificacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcione>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcione por id de Negociacion", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = GenericWrapper.class)
 	public PaginatedListWrapper<ExcepcionRolWrapper> findByRolAndIdentificacion( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

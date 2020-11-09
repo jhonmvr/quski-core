@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
@@ -16,7 +16,7 @@ public class NegociacionWrapper implements Serializable {
 	private List<TbQoTasacion> joyas;
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
-	private List<TbQoExcepcione> excepciones;
+	private List<TbQoExcepcion> excepciones;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
 	private String excepcionBre;
@@ -64,10 +64,10 @@ public class NegociacionWrapper implements Serializable {
 	public void setJoyas(List<TbQoTasacion> joyas) {
 		this.joyas = joyas;
 	}
-	public List<TbQoExcepcione> getExcepciones() {
+	public List<TbQoExcepcion> getExcepciones() {
 		return excepciones;
 	}
-	public void setExcepciones(List<TbQoExcepcione> excepciones) {
+	public void setExcepciones(List<TbQoExcepcion> excepciones) {
 		this.excepciones = excepciones;
 	}
 	public TbQoProceso getProceso() {

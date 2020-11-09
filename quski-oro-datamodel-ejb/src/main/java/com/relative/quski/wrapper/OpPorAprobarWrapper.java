@@ -9,7 +9,8 @@ public class OpPorAprobarWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private BigDecimal  id;
-    private String codigo;
+    private String codigoBpm;
+    private String codigoOperacion;
     private String proceso;
     private Date fechaSolicitud;
     private String cedulaCliente;
@@ -20,12 +21,13 @@ public class OpPorAprobarWrapper implements Serializable {
     private Integer orden;
 
     
-	public OpPorAprobarWrapper(	BigDecimal id, String codigo, String proceso, 
+	public OpPorAprobarWrapper(	BigDecimal id, String codigoBpm, String codigoOperacion, String proceso, 
 								Date fechaSolicitud, String cedulaCliente,
 								String nombreCliente, BigDecimal idAgencia, String asesor, String aprobador, Integer orden) {
 		super();
 		this.id = id;
-		this.codigo = codigo;
+		this.codigoBpm = codigoBpm;
+		this.codigoOperacion = codigoOperacion;
 		this.proceso = proceso;
 		this.fechaSolicitud = fechaSolicitud;
 		this.cedulaCliente = cedulaCliente;
@@ -46,12 +48,6 @@ public class OpPorAprobarWrapper implements Serializable {
 	}
 	public void setId(BigDecimal id) {
 		this.id = id;
-	}
-	public String getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
 	}
 	public String getProceso() {
 		return proceso;
@@ -94,6 +90,18 @@ public class OpPorAprobarWrapper implements Serializable {
 	}
 	public void setAprobador(String aprobador) {
 		this.aprobador = aprobador;
+	}
+	public String getCodigoBpm() {
+		return codigoBpm;
+	}
+	public void setCodigoBpm(String codigoBpm) {
+		this.codigoBpm = codigoBpm;
+	}
+	public String getCodigoOperacion() {
+		return codigoOperacion;
+	}
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
 	}
 
 

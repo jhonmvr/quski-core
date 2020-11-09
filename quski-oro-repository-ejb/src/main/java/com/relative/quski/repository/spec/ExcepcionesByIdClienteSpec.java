@@ -9,9 +9,9 @@ import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.model.TbQoExcepcione;
+import com.relative.quski.model.TbQoExcepcion;
 
-public class ExcepcionesByIdClienteSpec extends AbstractSpecification<TbQoExcepcione> {
+public class ExcepcionesByIdClienteSpec extends AbstractSpecification<TbQoExcepcion> {
 	private Long idCliente;
 
 	public ExcepcionesByIdClienteSpec(Long idCliente) {
@@ -20,12 +20,12 @@ public class ExcepcionesByIdClienteSpec extends AbstractSpecification<TbQoExcepc
 
 	}
 	@Override
-	public boolean isSatisfiedBy(TbQoExcepcione arg0) {
+	public boolean isSatisfiedBy(TbQoExcepcion arg0) {
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoExcepcione> poll, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<TbQoExcepcion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 
 		if (this.idCliente != null && this.idCliente != 0) {

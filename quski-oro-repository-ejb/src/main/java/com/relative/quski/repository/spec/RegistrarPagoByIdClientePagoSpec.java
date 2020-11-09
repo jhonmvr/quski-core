@@ -10,12 +10,10 @@ import com.relative.quski.model.TbQoRegistrarPago;
 public class RegistrarPagoByIdClientePagoSpec extends AbstractSpecification<TbQoRegistrarPago> {
 	
 	private Long idClientePago;
-	private String tipo;
 
 	public RegistrarPagoByIdClientePagoSpec(Long idClientePago) {
 		super();
 		this.idClientePago = idClientePago;
-		//this.tipo= tipo;
 	}
 
 	@Override
@@ -26,7 +24,6 @@ public class RegistrarPagoByIdClientePagoSpec extends AbstractSpecification<TbQo
 
 	@Override
 	public Predicate toPredicate(Root<TbQoRegistrarPago> poll, CriteriaBuilder cb) {
-		//cb.and(cb.equal(poll.get("tbQoClientePago").get(tipo), this.tipo));
 		return cb.and(cb.equal(poll.get("tbQoClientePago").get("id"), this.idClientePago));
 	}
 

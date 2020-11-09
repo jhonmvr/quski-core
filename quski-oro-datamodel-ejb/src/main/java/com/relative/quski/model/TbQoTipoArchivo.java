@@ -16,7 +16,7 @@ public class TbQoTipoArchivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TB_QO_TIPO_ARCHIVO_ID_GENERATOR", sequenceName="SEG_TB_QO_TIPO_ARCHIVO")
+	@SequenceGenerator(name="TB_QO_TIPO_ARCHIVO_ID_GENERATOR", sequenceName="SEQ_TIPO_ARCHIVO", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TB_QO_TIPO_ARCHIVO_ID_GENERATOR")
 	private Long id;
 

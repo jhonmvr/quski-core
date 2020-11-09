@@ -76,9 +76,9 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 	}
 	
 	@Override
-	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion) throws RelativeException {
+	public List<TbQoTasacion> findByIdCredito(Long id) throws RelativeException {
 		try {
-			List<TbQoTasacion> list = this.findAllBySpecification( new TasacionByIdNegociacionSpec( idNegociacion ) );
+			List<TbQoTasacion> list = this.findAllBySpecification( new TasacionByIdNegociacionSpec( id ) );
 			if( !list.isEmpty() ) {
 				return list;
 			} else {

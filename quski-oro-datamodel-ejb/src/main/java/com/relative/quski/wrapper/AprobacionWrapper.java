@@ -10,6 +10,7 @@ import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoProceso;
@@ -37,11 +38,21 @@ public class AprobacionWrapper implements Serializable {
 	private TbQoCliente cliente;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
-	
-	
+	private String mensaje;
+	private List<TbQoExcepcion> excepciones;
+
 	public AprobacionWrapper() {
 		super();
 	}
+	
+	
+	public List<TbQoExcepcion> getExcepciones() {
+		return excepciones;
+	}
+	public void setExcepciones(List<TbQoExcepcion> excepciones) {
+		this.excepciones = excepciones;
+	}
+
 	public List<TbQoTasacion> getJoyas() {
 		return joyas;
 	}
@@ -108,10 +119,10 @@ public class AprobacionWrapper implements Serializable {
 	public void setProceso(TbQoProceso proceso) {
 		this.proceso = proceso;
 	}
-	
-	
-	
-	
-	
-
+	public String getMensaje() {
+		return mensaje;
+	}
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
 }

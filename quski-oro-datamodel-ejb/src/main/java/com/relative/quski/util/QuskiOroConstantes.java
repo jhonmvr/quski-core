@@ -233,22 +233,23 @@ public class QuskiOroConstantes {
 	public static final String MONEDA = "MONEDA";
 	
 	// MENSAJES DE EXCEPCIONES
-	public static final String ACCION_NO_ENCONTRADA = ": ACCION NO ENCONTRADA -> ";
-	public static final String ERROR_AL_REALIZAR_BUSQUEDA = ": ERROR AL REALIZAR BUSQUEDA -> ";
+	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA -> ";
+	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "AL REALIZAR BUSQUEDA -> ";
 	public static final String ERROR_SIN_PROCESO = "NO POSEE UN PROCESO RELACIONADO";
-	public static final String ERROR_AL_REALIZAR_CREACION = ": ERROR AL REALIZAR CREACION -> ";
-	public static final String ERROR_CREATE_CLIENTE = ": ERROR AL CREAR AL CLIENTE -> ";
-	public static final String ERROR_NEGOCIACION = ": ERROR AL CREAR TODA LA GESTION -> ";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = ": ERROR AL REALIZAR ACTUALIZACION -> ";
-	public static final String ERROR_VALOR_NO_VALIDO = " INGRESE UN VALOR VALIDO";
-	public static final String ERROR_ID_NO_EXISTE = " ID INGRESADO NO EXISTE ";
-	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = ": ERROR AL REALIZAR ACTUALIZACION O CREACION -> ";
-	public static final String FALTA_RELACION = ": FALTA RELACION PARA CREAR. -> ";
-	public static final String FALTA_CLIENTE = ": FALTA RELACION AL CLIENTE PARA CREAR. -> ";
-	public static final String CLIENTE_PAGO_NO_ENCONTRADO = ": CLIENTE PAGO NO ENCONTRADO. -> ";	
-	public static final String ERROR_AL_CONSUMIR_SERVICIOS = ": ERROR AL CONSUMIR SERVICIOS. -> ";
+	public static final String ERROR_AL_REALIZAR_CREACION = "AL REALIZAR CREACION -> ";
+	public static final String ERROR_CREATE_CLIENTE = "AL CREAR AL CLIENTE -> ";
+	public static final String ERROR_NEGOCIACION = "AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "AL REALIZAR ACTUALIZACION -> ";
+	public static final String ERROR_VALOR_NO_VALIDO = "INGRESE UN VALOR VALIDO";
+	public static final String ERROR_ID_NO_EXISTE = "ID INGRESADO NO EXISTE ";
+	public static final String ERROR_MAS_DE_UN_REGISTRO = "EL ID POSEE MAS DE UN REGISTRO. REVISAR BASE DE DATOS.";
+	public static final String ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION = "AL REALIZAR ACTUALIZACION O CREACION -> ";
+	public static final String FALTA_RELACION = "FALTA RELACION PARA CREAR. -> ";
+	public static final String FALTA_CLIENTE = "FALTA RELACION AL CLIENTE PARA CREAR. -> ";
+	public static final String CLIENTE_PAGO_NO_ENCONTRADO = "CLIENTE PAGO NO ENCONTRADO. -> ";	
+	public static final String ERROR_AL_CONSUMIR_SERVICIOS = "ERROR AL CONSUMIR SERVICIOS. -> ";
 	public static final String ERROR_INGRESE_ASESOR = "INGRESE UN CAMPO DE ASESOR VALIDO.";	
-	public static final String ERROR_INGRESE_PROCESO = ": INGRESE UN CAMPO DE PROCESO VALIDO.";
+	public static final String ERROR_INGRESE_PROCESO = "INGRESE UN CAMPO DE PROCESO VALIDO.";
 
 
 	
