@@ -13,8 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -22,17 +20,13 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
-import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.util.QuskiOroUtil;
-import com.relative.quski.wrapper.AprobacionWrapper;
-import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
-import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
+import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.ResultOperacionesWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -88,6 +82,17 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	
 	
+	@POST
+	@Path("/registrarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> registrarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("usuario") String usuario)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.registrarSolicitudDevolucion(wp.getEntidad(), usuario));
+		return loc;
+	}
+	
+	
 	
 
 	@Override
@@ -114,6 +119,59 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		}
 		return plw;
 	}
+	
+	@POST
+	@Path("/aprobarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> aprobarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("id") String id)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
+		return loc;
+	}
+	
+	@POST
+	@Path("/rechazarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> rechazarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("id") String id)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
+		return loc;
+	}
+	
+	@POST
+	@Path("/buscarDevolucion")
+	public GenericWrapper<ResultOperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
+		GenericWrapper<ResultOperacionesWrapper> loc = new GenericWrapper<>();
+		if(wp.getNumberPage() == null ) {
+			wp.setNumberPage( Long.valueOf(0) );
+		}
+		if(wp.getNumberItems() == null) {
+			wp.setNumberItems(Long.valueOf(5));
+		}
+		loc.setEntidad( this.qos.findOperaciones( wp ) );
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/buscarDevolucion")
+	@ApiOperation(value = "PaginatedListWrapper<ResultOperacionesWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiContrato", response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(BusquedaDevolucionWrapper bqw, @QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated) throws RelativeException {
+		return listarSeleccionFecha(bqw);
+	}
 
+	private PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(BusquedaDevolucionWrapper bdw ) throws RelativeException {
+		PaginatedListWrapper<DevolucionProcesoWrapper> plw = this.dos.findOperacion(bdw);
+	
+		return plw;
+	}
+	
 
+	
 }
