@@ -58,6 +58,9 @@ public class TbQoReferenciaPersonal implements Serializable {
 
 	@Column(name = "telefono_movil")
 	private String telefonoMovil;
+	
+	@Column(name="id_softbank")
+	private Long idSoftbank;
 
 	// bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -145,6 +148,14 @@ public class TbQoReferenciaPersonal implements Serializable {
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
+	}
+
+	public Long getIdSoftbank() {
+		return idSoftbank;
+	}
+
+	public void setIdSoftbank(Long idSoftbank) {
+		this.idSoftbank = idSoftbank;
 	}
 
 }

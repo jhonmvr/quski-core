@@ -19,8 +19,12 @@ public class DireccionClienteRepositoryImp extends GeneralRepositoryImp<Long, Tb
 	@Override
 	public List<TbQoDireccionCliente> findByIdCliente(Long id) throws RelativeException {
 		try {
-			return findAllBySpecification(
-					new DireccionByIdClienteSpec( id ));
+			List<TbQoDireccionCliente> list = findAllBySpecification(new DireccionByIdClienteSpec( id ));
+			if(!list.isEmpty()) {
+				return list;
+			}else {
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");

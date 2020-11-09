@@ -8,6 +8,7 @@ import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 
 public class NegociacionWrapper implements Serializable {
@@ -17,6 +18,7 @@ public class NegociacionWrapper implements Serializable {
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
 	private List<TbQoExcepcion> excepciones;
+	private List<TbQoTelefonoCliente> telefonos;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
 	private String excepcionBre;
@@ -27,6 +29,12 @@ public class NegociacionWrapper implements Serializable {
 		this.respuesta = respuesta;
 	}
 	public NegociacionWrapper() {
+	}
+	public List<TbQoTelefonoCliente> getTelefonos() {
+		return telefonos;
+	}
+	public void setTelefonos(List<TbQoTelefonoCliente> telefonos) {
+		this.telefonos = telefonos;
 	}
 	public List<TbQoVariablesCrediticia> getVariables() {
 		return variables;

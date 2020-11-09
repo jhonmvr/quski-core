@@ -19,8 +19,12 @@ public class PatrimonioRepositoryImp extends GeneralRepositoryImp<Long, TbQoPatr
 	@Override
 	public List<TbQoPatrimonio> findByIdCliente(Long id) throws RelativeException {
 		try {
-			return findAllBySpecification(
-					new PatrimonioByIdClienteSpec( id ));
+			List<TbQoPatrimonio> list = findAllBySpecification( new PatrimonioByIdClienteSpec( id ));
+			if( !list.isEmpty() ) {
+				return list;
+			}else {
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");

@@ -15,6 +15,11 @@ public class SoftbankActividadEconomicaWrapper implements Serializable{
 		return idActividadEconomica;
 	}
 
+	public SoftbankActividadEconomicaWrapper(Long idActividadEconomica) {
+		super();
+		this.idActividadEconomica = idActividadEconomica;
+	}
+
 	public void setIdActividadEconomica(Long idActividadEconomica) {
 		this.idActividadEconomica = idActividadEconomica;
 	}

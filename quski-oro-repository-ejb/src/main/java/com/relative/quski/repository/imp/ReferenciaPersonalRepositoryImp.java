@@ -18,7 +18,12 @@ public class ReferenciaPersonalRepositoryImp extends GeneralRepositoryImp<Long, 
 	@Override
 	public List<TbQoReferenciaPersonal> findByIdCliente(Long id) throws RelativeException {
 		try {
-			return findAllBySpecification(new ReferenciaPersonalByIdClienteSpec(id));
+			List<TbQoReferenciaPersonal> list = findAllBySpecification(new ReferenciaPersonalByIdClienteSpec(id));
+			if(!list.isEmpty() ) {
+				return list;
+			}else {
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR referencias personales");
