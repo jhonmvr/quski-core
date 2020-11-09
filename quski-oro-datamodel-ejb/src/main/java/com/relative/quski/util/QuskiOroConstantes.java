@@ -256,7 +256,7 @@ public class QuskiOroConstantes {
 	// SOFTBANK
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 	public static final Integer TIPO_CEDULA = 1;
-	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
+	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
 	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
 	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "http://201.183.238.73:1991/api/cliente/consultar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/crear";

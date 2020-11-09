@@ -15,7 +15,7 @@ public class TokenWrapper implements Serializable {
 	private String accessToken;
 	private String scope;
 	private String tokenType;
-	private String expiresIn;
+	private Long expiresIn;
 	
 	private String errorDescription;
 	private String error;
@@ -45,10 +45,10 @@ public class TokenWrapper implements Serializable {
 	}
 	
 	@JsonProperty("expires_in")
-	public String getExpiresIn() {
+	public Long getExpiresIn() {
 		return expiresIn;
 	}
-	public void setExpiresIn(String expiresIn) {
+	public void setExpiresIn(Long expiresIn) {
 		this.expiresIn = expiresIn;
 	}
 	
