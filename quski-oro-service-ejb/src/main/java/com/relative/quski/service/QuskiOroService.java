@@ -363,6 +363,9 @@ public class QuskiOroService {
 			if (send.getRelacionDependencia() != null) {
 				persisted.setRelacionDependencia(send.getRelacionDependencia());
 			}
+			if (send.getCargasFamiliares() != null) {
+				persisted.setCargasFamiliares(send.getCargasFamiliares());
+			}
 			if( send.getApellidoPaterno() != null || send.getApellidoMaterno() != null || send.getPrimerNombre() != null || send.getSegundoNombre() != null) {
 				String apP = send.getApellidoPaterno() != null ? send.getApellidoPaterno() + " ": "";
 				String apM = send.getApellidoMaterno() != null ? send.getApellidoMaterno() + " ": "";
@@ -1448,6 +1451,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
+				
 				return this.datoTrabajoClienteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -1498,6 +1502,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
+				send.setEstado( EstadoEnum.ACT );
 				return this.telefonoClienteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -1528,6 +1533,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
+				send.setEstado( EstadoEnum.ACT );
 				return this.cuentaBancariaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -1737,7 +1743,7 @@ public class QuskiOroService {
 				tmp.setDirecciones( this.direccionClienteRepository.findByIdCliente( tmp.getCliente().getId() ) );
 				tmp.setPatrimonios( this.patrimonioRepository.findByIdCliente( tmp.getCliente().getId() ) );
 				tmp.setReferencias( this.referenciaPersonalRepository.findByIdCliente( tmp.getCliente().getId() ) );
-				tmp.setDatosTrabajo( this.datoTrabajoClienteRepository.findByIdCliente(  tmp.getCliente().getId() ).get(0) );
+				tmp.setDatosTrabajo( this.datoTrabajoClienteRepository.findByIdCliente(  tmp.getCliente().getId() ) );
 				tmp.setTelefonos( this.telefonoClienteRepository.findByIdCliente(  tmp.getCliente().getId() ));
 				tmp.setCuentas( this.cuentaBancariaRepository.findByIdCliente(  tmp.getCliente().getId() ));
 				return tmp;
@@ -1769,7 +1775,7 @@ public class QuskiOroService {
 			tmp.setDirecciones( this.direccionClienteRepository.findByIdCliente( cliente.getId() ) );
 			tmp.setPatrimonios( this.patrimonioRepository.findByIdCliente( cliente.getId() ) );
 			tmp.setReferencias( this.referenciaPersonalRepository.findByIdCliente( cliente.getId() ) );
-			tmp.setDatosTrabajo( this.datoTrabajoClienteRepository.findByIdCliente( cliente.getId() ).get(0) );
+			tmp.setDatosTrabajo( this.datoTrabajoClienteRepository.findByIdCliente( cliente.getId() ) );
 			tmp.setTelefonos( this.telefonoClienteRepository.findByIdCliente( cliente.getId() ));
 			tmp.setCuentas( this.cuentaBancariaRepository.findByIdCliente( cliente.getId() ));
 			return tmp;
@@ -1780,7 +1786,7 @@ public class QuskiOroService {
 	public CreacionClienteRespuestaCoreWp registrarCliente(ClienteCompletoWrapper wp) throws RelativeException {
 		try {
 			TbQoCliente persistedCli =  this.manageCliente( wp.getCliente() ) ;
-
+			
 			Map<String, String> erroresD = this.createDireccionesCliente(persistedCli, wp.getDirecciones() );
 			if (erroresD.size() > 0) {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresD.toString());
@@ -1802,9 +1808,11 @@ public class QuskiOroService {
 			if (erroresT.size() > 0) {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresT.toString());
 			}
-			Map<String, String> erroresC = this.createCuentasBancarias(persistedCli, wp.getCuentas() );
-			if (erroresC.size() > 0) {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresC.toString());
+			if(wp.getCuentas() != null) {
+				Map<String, String> erroresC = this.createCuentasBancarias(persistedCli, wp.getCuentas() );
+				if (erroresC.size() > 0) {
+					throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + erroresC.toString());
+				}				
 			}
 			CreacionClienteRespuestaCoreWp rp = new CreacionClienteRespuestaCoreWp();
 			rp.setIsCore(true);
@@ -2772,12 +2780,14 @@ public class QuskiOroService {
 	 */
 	public TbQoIngresoEgresoCliente manageIngresoEgresoCliente(TbQoIngresoEgresoCliente send) throws RelativeException {
 		try {
-			log.info("==========> SI ENTRE A MANAGE DE INGRESO =======" + send);
+			log.info("==========> SI ENTRE A MANAGE DE INGRESO =======" + send.getId());
 			TbQoIngresoEgresoCliente persisted = null;
 			if (send != null && send.getId() != null) {
-				persisted = this.findIngresoEgresoClienteById(send.getId());
+				log.info("==========> SI ENTRE A UPDATE DE INGRESO =======" + send.getId());
+				persisted = this.findIngresoEgresoClienteById( Long.valueOf( send.getId() ) );
 				return this.updateIngresoEgresoCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
+				log.info("==========> SI ENTRE A CREATE DE INGRESO =======" + send.getId());
 				send.setEstado(EstadoEnum.ACT);
 				return this.ingresoEgresoClienteRepository.add(send);
 
@@ -2805,6 +2815,7 @@ public class QuskiOroService {
 			persisted.setEsEgreso(send.getEsEgreso());
 			persisted.setEsIngreso(send.getEsIngreso());
 			persisted.setEstado(EstadoEnum.ACT);
+			log.info("==========> SI ENTRE A METODO UPDATE DE INGRESO =======>" + persisted.getId());
 			return this.ingresoEgresoClienteRepository.update(persisted);
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -2948,7 +2959,9 @@ public class QuskiOroService {
 				return this.updateDireccionCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				cambioInac = this.findDireccionClienteByIdCliente(send.getTbQoCliente().getId());
-				this.ponerInactivoDireccionCliente(send, cambioInac);
+				if(cambioInac != null) {
+					this.ponerInactivoDireccionCliente(send, cambioInac);					
+				}
 				send.setEstado(EstadoEnum.ACT);
 				return this.direccionClienteRepository.add(send);
 			} else {
@@ -3756,11 +3769,13 @@ public class QuskiOroService {
 				sof.setSegundoNombre( cli.getSegundoNombre() );                               
 				sof.setEsCliente( true );              
 				sof.setCodigoMotivoVisita( null );                             
-				sof.setFechaIngreso( QuskiOroUtil.dateToString( cli.getFechaActualizacion() ) );                                  
+				sof.setFechaIngreso( QuskiOroUtil.dateToString( cli.getFechaActualizacion(), QuskiOroConstantes.SOFTBANK_DATE_FORMAT ) );                                  
 				sof.setIdPaisNacimiento( cli.getNacionalidad() );                            
 				sof.setIdPais( cli.getNacionalidad() );                                      
-				sof.setIdLugarNacimiento( Long.valueOf( cli.getLugarNacimiento() ) );                           
-				sof.setFechaNacimiento( QuskiOroUtil.dateToString( cli.getFechaNacimiento() ));                            
+				sof.setIdLugarNacimiento( Long.valueOf( cli.getLugarNacimiento() ) ); 
+				log.info("FECHA DE NACIMIENTO QUE ESTOY ENVIANDO NORMALIZADA ===========> "+ QuskiOroUtil.dateToString( cli.getFechaNacimiento(), QuskiOroConstantes.SOFTBANK_DATE_FORMAT ) );
+
+				sof.setFechaNacimiento( QuskiOroUtil.dateToString( cli.getFechaNacimiento(), QuskiOroConstantes.SOFTBANK_DATE_FORMAT  ));                            
 				sof.setCodigoSexo( cli.getGenero() );                               
 				sof.setCodigoProfesion( cli.getProfesion() );                          
 				sof.setCodigoEstadoCivil( cli.getEstadoCivil() );                       
@@ -3820,7 +3835,6 @@ public class QuskiOroService {
 						direccionSof.setReferencia( e.getReferenciaUbicacion() );
 						direccionSof.setEsDireccionLegal( e.getDireccionLegal() );
 						direccionSof.setEsDireccionEnvio( e.getDireccionEnvioCorrespondencia() );
-						direccionSof.setActivo( true );
 						direcciones.add( direccionSof );
 					});
 					sof.setDirecciones( direcciones );
@@ -3833,7 +3847,6 @@ public class QuskiOroService {
 						telSof.setId( e.getIdSoftbank() );
 						telSof.setCodigoTipoTelefono( e.getTipoTelefono() );
 						telSof.setNumero( e.getNumero() );
-						telSof.setActivo( true );
 						telefonos.add( telSof );
 					});
 					sof.setTelefonos( telefonos );
@@ -3847,7 +3860,6 @@ public class QuskiOroService {
 						cu.setIdBanco( e.getBanco() );
 						cu.setCuenta( e.getCuenta() );
 						cu.setEsAhorros( e.getEsAhorros() );
-						cu.setActivo( true );
 						cuentasBancarias.add(cu);
 					});
 					sof.setCuentasBancariasCliente(cuentasBancarias);
@@ -3866,20 +3878,19 @@ public class QuskiOroService {
 						subList.add( new TelefonosContactoClienteWrapper( "F", e.getTelefonoFijo() ) );
 						subList.add( new TelefonosContactoClienteWrapper( "M", e.getTelefonoMovil()) );
 						ref.setTelefonos( subList );
-						ref.setActivo( true );
 						contactosCliente.add(ref);
 					});
 					sof.setContactosCliente( contactosCliente );
 					
 				}
-				List<TbQoDatoTrabajoCliente> listDatos = this.datoTrabajoClienteRepository.findByIdCliente( cli.getId() );
+				List<TbQoDatoTrabajoCliente> listDatos = this.datoTrabajoClienteRepository.findByIdClienteList( cli.getId() );
 				if(listDatos != null) {
 					List<SoftbankDatosTrabajoWrapper> datosTrabajo = new ArrayList<>();
 					listDatos.forEach(e->{
 						SoftbankDatosTrabajoWrapper da = new SoftbankDatosTrabajoWrapper();
-						da.setActivo( true );
-						da.setCargo( e.getCargo() );
-						da.setCodigoActividadEconomicaClienteMupi( e.getActividadEconomicaMupi() );
+						log.info("DATOS DEL CARGO QUE SE SUPONE QUE ESTOY GUARDANDO ======> "+ e.getCargo() );
+						da.setCodigoCargo( e.getCargo() );
+						da.setCodigoActividadEconomicaClienteMupi( "001" );
 						da.setCodigoOcupacion( e.getOcupacion() );
 						da.setCodigoOrigenIngreso( e.getOrigenIngreso() );
 						da.setEsPrincipal(e.getEsprincipal() );
@@ -3903,15 +3914,14 @@ public class QuskiOroService {
 
 	public Boolean crearClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
 		try {			
-			if (!cliente.getIdTipoIdentificacion().equals(0) && cliente.getIdTipoIdentificacion() != null) {
-				if (!cliente.getIdentificacion().equals("") && cliente.getIdentificacion() != null) {
-					if (!cliente.getCodigoUsuario().equals("") && cliente.getCodigoUsuario() != null) {
-						SoftbankRespuestaWrapper result = SoftBankApiClient.callCrearClienteRest(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE, null,
-								cliente);
+			if (cliente.getIdTipoIdentificacion() != null) {
+				if (cliente.getIdentificacion() != null) {
+					if (cliente.getCodigoUsuario() != null && cliente.getCodigoUsuarioAsesor() != null ) {
+						SoftbankRespuestaWrapper result = SoftBankApiClient.callCrearClienteRest(cliente);
 						if(!result.getExisteError()) {
 							return Boolean.TRUE;
 						}else {
-							return Boolean.FALSE;
+							throw new RelativeException(Constantes.ERROR_CODE_CREATE + result.getMensaje() );
 						}
 					} else {
 						throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA CODIGO USUARIO");
@@ -3932,15 +3942,14 @@ public class QuskiOroService {
 
 	public Boolean editarClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
 		try {
-			if (!cliente.getIdTipoIdentificacion().equals(0) && cliente.getIdTipoIdentificacion() != null) {
-				if (!cliente.getIdentificacion().equals("") && cliente.getIdentificacion() != null) {
-					if (!cliente.getCodigoUsuario().equals("") && cliente.getCodigoUsuario() != null) {
-						SoftbankRespuestaWrapper result = SoftBankApiClient.callEditarClienteRest(
-								QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE, null, cliente);
+			if (cliente.getIdTipoIdentificacion() != null) {
+				if (cliente.getIdentificacion() != null) {
+					if (cliente.getCodigoUsuario() != null) {
+						SoftbankRespuestaWrapper result = SoftBankApiClient.callEditarClienteRest(cliente);
 						if(!result.getExisteError()) {
 							return Boolean.TRUE;
 						}else {
-							return Boolean.FALSE;
+							throw new RelativeException(Constantes.ERROR_CODE_CREATE + result.getMensaje() );
 						}
 					} else {
 						throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA CODIGO USUARIO");

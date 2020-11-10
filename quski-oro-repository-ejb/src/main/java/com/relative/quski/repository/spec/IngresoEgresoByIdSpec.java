@@ -35,7 +35,7 @@ public class IngresoEgresoByIdSpec extends AbstractSpecification<TbQoIngresoEgre
 	public Predicate toPredicate(Root<TbQoIngresoEgresoCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		Long a = this.id;
-		where.add(cb.equal(poll.get("id").get("id"), a));
+		where.add(cb.equal(poll.get("id"), a));
 		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}

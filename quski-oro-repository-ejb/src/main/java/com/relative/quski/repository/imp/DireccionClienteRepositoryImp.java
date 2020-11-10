@@ -1,8 +1,10 @@
 package com.relative.quski.repository.imp;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -15,11 +17,13 @@ import com.relative.quski.repository.spec.DireccionByIdClienteSpec;
 
 @Stateless(mappedName = "direccionClienteRepository")
 public class DireccionClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoDireccionCliente> implements DireccionClienteRepository {
-
+	@Inject
+	Logger log;
 	@Override
 	public List<TbQoDireccionCliente> findByIdCliente(Long id) throws RelativeException {
 		try {
 			List<TbQoDireccionCliente> list = findAllBySpecification(new DireccionByIdClienteSpec( id ));
+			log.info("ESTOY BUSCANDO DIRECCIONES SIZE =====> " + list.size());
 			if(!list.isEmpty()) {
 				return list;
 			}else {

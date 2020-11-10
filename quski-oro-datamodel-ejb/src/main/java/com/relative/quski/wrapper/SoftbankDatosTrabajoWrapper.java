@@ -14,7 +14,7 @@ public class SoftbankDatosTrabajoWrapper implements Serializable{
 	private Boolean esRelacionDependencia;
 	private String codigoOrigenIngreso;
 	private String codigoOcupacion;
-	private String cargo;
+	private String codigoCargo;
 	private Boolean esPrincipal;
 	private Boolean activo;
 	
@@ -54,11 +54,12 @@ public class SoftbankDatosTrabajoWrapper implements Serializable{
 	public void setCodigoOcupacion(String codigoOcupacion) {
 		this.codigoOcupacion = codigoOcupacion;
 	}
-	public String getCargo() {
-		return cargo;
+
+	public String getCodigoCargo() {
+		return codigoCargo;
 	}
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
+	public void setCodigoCargo(String codigoCargo) {
+		this.codigoCargo = codigoCargo;
 	}
 	public Boolean getEsPrincipal() {
 		return esPrincipal;

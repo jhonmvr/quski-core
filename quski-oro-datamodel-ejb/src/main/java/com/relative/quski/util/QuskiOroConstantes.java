@@ -32,6 +32,8 @@ public class QuskiOroConstantes {
 	public static final String SINIESTRO_AGRICOLA_CONF_DIR="/portalservicios_dir/midas_oro/";
 	
 	public static final String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
+	public static final String SOFTBANK_DATE_FORMAT="yyyy-MM-dd";
+
 	
 	/**
 	 * Formato de envio JSON
