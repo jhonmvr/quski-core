@@ -30,8 +30,7 @@ import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
-import com.relative.quski.wrapper.CreditoSoftbankWrapper;
-import com.relative.quski.wrapper.DatosCreditoWrapper;
+import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
@@ -145,7 +144,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
-		log.info("INGRESA A traerCreditoNegociacionExistente ");
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
 		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
@@ -153,6 +151,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;
 	}
+	
+	
+	
 	@GET
 	@Path("/traerCreditoNuevo")
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
@@ -164,10 +165,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionNuevo")
-	public GenericWrapper<CreditoSoftbankWrapper> crearOperacionNuevo(DatosCreditoWrapper wp) throws RelativeException {
-		GenericWrapper<CreditoSoftbankWrapper> loc = new GenericWrapper<>();
-		log.info("======> INGRESA A DatosCreditoSoftbankWrapper  -----> ");
-		CreditoSoftbankWrapper a = this.qos.crearOperacionNuevoMock( wp );
+	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
+		CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
 		loc.setEntidad(a);
 		return loc;
 	}

@@ -2,31 +2,52 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.model.TbQoRubro;
+
 
 public class CrearOperacionEntradaWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public CrearOperacionEntradaWrapper() {
-		
-	}
+
 	private Long idTipoIdentificacion;
 	private String identificacion;
 	private String nombreCliente;
-	private Boolean esProductoOro;
+	private List<DatosImpComWrapper> datosImpCom;
+	private DatosGarantiasWrapper datosGarantias;
+	
 	private String fechaEfectiva;
 	private String codigoTablaAmortizacionQuski;
 	private String codigoTipoCarteraQuski;
 	private String codigoTipoPrestamo;
 	private BigDecimal montoFinanciado;
-	private Integer pagoDia;
+	private BigDecimal montoSolicitado;
+	private Long pagoDia;
 	private String codigoGradoInteres;
-	private Double valorCuota;
-	private EstadoEnum estado;
 	private DatosRegistroWrapper datosRegistro; 
-	private DatosImpComWrapper datosImpCom;
-	private SoftbankDatosCuentaWrapper datosCuentaCliente;
-	private GarantiasWrapper garantias;
+	private List<DatosCuentaClienteWrapper> datosCuentaCliente;
+	
+	
+	public CrearOperacionEntradaWrapper(String identificacion, String nombreCliente) {
+		super();
+		this.identificacion = identificacion;
+		this.nombreCliente = nombreCliente;
+		this.idTipoIdentificacion = Long.valueOf( 1 );
+		
+	}
+	
+	public void cargarImpCom(List<TbQoRubro> rubros) {
+		List<DatosImpComWrapper> list = new ArrayList<>();
+		rubros.forEach(e->{
+			DatosImpComWrapper impCom = new DatosImpComWrapper(e.getCodigo(), e.getFormaPago(), e.getValor() );
+			list.add( impCom );
+		});
+		this.setDatosImpCom(list);
+	}
+
+
+
 	public Long getIdTipoIdentificacion() {
 		return idTipoIdentificacion;
 	}
@@ -44,12 +65,6 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	}
 	public void setNombreCliente(String nombreCliente) {
 		this.nombreCliente = nombreCliente;
-	}
-	public Boolean getEsProductoOro() {
-		return esProductoOro;
-	}
-	public void setEsProductoOro(Boolean esProductoOro) {
-		this.esProductoOro = esProductoOro;
 	}
 	public String getFechaEfectiva() {
 		return fechaEfectiva;
@@ -81,10 +96,10 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	public void setMontoFinanciado(BigDecimal montoFinanciado) {
 		this.montoFinanciado = montoFinanciado;
 	}
-	public Integer getPagoDia() {
+	public Long getPagoDia() {
 		return pagoDia;
 	}
-	public void setPagoDia(Integer pagoDia) {
+	public void setPagoDia(Long pagoDia) {
 		this.pagoDia = pagoDia;
 	}
 	public String getCodigoGradoInteres() {
@@ -93,17 +108,18 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	public void setCodigoGradoInteres(String codigoGradoInteres) {
 		this.codigoGradoInteres = codigoGradoInteres;
 	}
-	public Double getValorCuota() {
-		return valorCuota;
+
+	public BigDecimal getMontoSolicitado() {
+		return montoSolicitado;
 	}
-	public void setValorCuota(Double valorCuota) {
-		this.valorCuota = valorCuota;
+	public void setMontoSolicitado(BigDecimal montoSolicitado) {
+		this.montoSolicitado = montoSolicitado;
 	}
-	public EstadoEnum getEstado() {
-		return estado;
+	public DatosGarantiasWrapper getDatosGarantias() {
+		return datosGarantias;
 	}
-	public void setEstado(EstadoEnum estado) {
-		this.estado = estado;
+	public void setDatosGarantias(DatosGarantiasWrapper datosGarantias) {
+		this.datosGarantias = datosGarantias;
 	}
 	public DatosRegistroWrapper getDatosRegistro() {
 		return datosRegistro;
@@ -111,27 +127,16 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	public void setDatosRegistro(DatosRegistroWrapper datosRegistro) {
 		this.datosRegistro = datosRegistro;
 	}
-	public DatosImpComWrapper getDatosImpCom() {
+	public List<DatosImpComWrapper> getDatosImpCom() {
 		return datosImpCom;
 	}
-	public void setDatosImpCom(DatosImpComWrapper datosImpCom) {
+	public void setDatosImpCom(List<DatosImpComWrapper> datosImpCom) {
 		this.datosImpCom = datosImpCom;
 	}
-	public SoftbankDatosCuentaWrapper getDatosCuentaCliente() {
+	public List<DatosCuentaClienteWrapper> getDatosCuentaCliente() {
 		return datosCuentaCliente;
 	}
-	public void setDatosCuentaCliente(SoftbankDatosCuentaWrapper datosCuentaCliente) {
+	public void setDatosCuentaCliente(List<DatosCuentaClienteWrapper> datosCuentaCliente) {
 		this.datosCuentaCliente = datosCuentaCliente;
 	}
-	public GarantiasWrapper getGarantias() {
-		return garantias;
-	}
-	public void setGarantias(GarantiasWrapper garantias) {
-		this.garantias = garantias;
-	} 
-	
-	
-	
-	
-
 }

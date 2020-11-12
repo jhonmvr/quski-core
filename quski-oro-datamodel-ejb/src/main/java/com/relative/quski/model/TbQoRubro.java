@@ -44,8 +44,6 @@ public class TbQoRubro implements Serializable {
 	@JoinColumn(name = "id_credito")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
 	
-	
-	
 	private BigDecimal valor;
 
 	public TbQoRubro() {
