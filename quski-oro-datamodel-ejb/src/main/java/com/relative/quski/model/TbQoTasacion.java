@@ -109,6 +109,49 @@ public class TbQoTasacion implements Serializable {
 	
 	@Column(name="tipo_oro")
 	private String tipoOro;
+	
+	@Column(name="tiene_piedras")
+	private Boolean tienePiedras;
+	
+	@Column(name="detalle_piedras")
+	private String detallePiedras;
+	
+	
+	@Column(name="numero_garantia")
+	private Long numeroGarantia;
+	
+	@Column(name="sub_tipo_garantia")
+	private String subTipoGarantia;
+	
+	public Long getNumeroGarantia() {
+		return numeroGarantia;
+	}
+
+	public void setNumeroGarantia(Long numeroGarantia) {
+		this.numeroGarantia = numeroGarantia;
+	}
+
+	public Long getNumeroExpediente() {
+		return numeroExpediente;
+	}
+
+	public void setNumeroExpediente(Long numeroExpediente) {
+		this.numeroExpediente = numeroExpediente;
+	}
+
+	public String getTipoGarantia() {
+		return tipoGarantia;
+	}
+
+	public void setTipoGarantia(String tipoGarantia) {
+		this.tipoGarantia = tipoGarantia;
+	}
+
+	@Column(name="numero_expediente")
+	private Long numeroExpediente;
+	
+	@Column(name="tipo_garantia")
+	private String tipoGarantia;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
@@ -117,6 +160,14 @@ public class TbQoTasacion implements Serializable {
 	
 	public EstadoEnum getEstado() {
 		return estado;
+	}
+
+	public String getSubTipoGarantia() {
+		return subTipoGarantia;
+	}
+
+	public void setSubTipoGarantia(String subTipoGarantia) {
+		this.subTipoGarantia = subTipoGarantia;
 	}
 
 	public void setEstado(EstadoEnum estado) {
@@ -325,6 +376,22 @@ public class TbQoTasacion implements Serializable {
 
 	public void setTipoOro(String tipoOro) {
 		this.tipoOro = tipoOro;
+	}
+
+	public Boolean getTienePiedras() {
+		return tienePiedras;
+	}
+
+	public void setTienePiedras(Boolean tienePiedras) {
+		this.tienePiedras = tienePiedras;
+	}
+
+	public String getDetallePiedras() {
+		return detallePiedras;
+	}
+
+	public void setDetallePiedras(String detallePiedras) {
+		this.detallePiedras = detallePiedras;
 	}
 
 

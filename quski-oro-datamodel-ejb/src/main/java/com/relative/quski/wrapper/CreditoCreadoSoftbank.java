@@ -5,13 +5,17 @@ import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
 
-public class CreditoSoftbankWrapper  implements Serializable {
+public class CreditoCreadoSoftbank  implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private TbQoCreditoNegociacion credito;
 	private List<CuotasAmortizacionWrapper>  cuotasAmortizacion;
-	private String habilitante;
 	
+	public CreditoCreadoSoftbank(TbQoCreditoNegociacion credito) {
+		super();
+		this.credito = credito;
+	}
+
 	public TbQoCreditoNegociacion getCredito() {
 		return credito;
 	}
@@ -24,12 +28,5 @@ public class CreditoSoftbankWrapper  implements Serializable {
 	public void setCuotasAmortizacion(List<CuotasAmortizacionWrapper> cuotasAmortizacion) {
 		this.cuotasAmortizacion = cuotasAmortizacion;
 	}
-	public String getHabilitante() {
-		return habilitante;
-	}
-	public void setHabilitante(String habilitante) {
-		this.habilitante = habilitante;
-	}
-	
 	
 }

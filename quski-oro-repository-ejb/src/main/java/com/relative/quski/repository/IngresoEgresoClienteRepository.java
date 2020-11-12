@@ -13,6 +13,6 @@ import com.relative.quski.model.TbQoIngresoEgresoCliente;
 public interface IngresoEgresoClienteRepository extends CrudRepository<Long, TbQoIngresoEgresoCliente> {
 	
 	public List<TbQoIngresoEgresoCliente> findByIdCliente(Long id) throws RelativeException;
-	
+	public TbQoIngresoEgresoCliente findById(Long id) throws RelativeException;
 }
 

@@ -164,7 +164,6 @@ public class ReRestClient<T> {
 			Integer readTimeout, Integer connectTimeout, Boolean requireLogin, Boolean transform,
 			String serviceUrl, Class<T> classType) throws RelativeException{
 		try {
-			logger.info("==>Ingreaa a callRestApi "); 
 			RestClientWrapper cw= new RestClientWrapper();
 			cw.setAcceptCharset( QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET );
 			setContentTypeAccept(contentTypeAccept,cw);
@@ -180,9 +179,7 @@ public class ReRestClient<T> {
 			cw.setRequireLogin(requireLogin);
 			cw.setUrlStr(serviceUrl);
 			cw.setTransform(transform);
-			logger.info("==>Wrapper generado " );
 			ReRestClient<T> b= new ReRestClient<>( cw );
-			logger.info("==> holis? " );
 			return b.execute(classType);
 		} catch (RelativeException e) {
 			throw e;

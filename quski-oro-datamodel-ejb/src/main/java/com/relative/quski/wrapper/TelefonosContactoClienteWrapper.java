@@ -11,6 +11,14 @@ public class TelefonosContactoClienteWrapper implements Serializable{
 	
 	private String codigoTipoTelefono;
     private String numero;
+    
+    
+	public TelefonosContactoClienteWrapper(String codigoTipoTelefono, String numero) {
+		super();
+		this.codigoTipoTelefono = codigoTipoTelefono;
+		this.numero = numero;
+	}
+	
 	public String getCodigoTipoTelefono() {
 		return codigoTipoTelefono;
 	}

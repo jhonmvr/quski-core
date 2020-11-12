@@ -32,6 +32,7 @@ public class QuskiOroConstantes {
 	public static final String SINIESTRO_AGRICOLA_CONF_DIR="/portalservicios_dir/midas_oro/";
 	
 	public static final String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
+
 	
 	/**
 	 * Formato de envio JSON
@@ -254,13 +255,21 @@ public class QuskiOroConstantes {
 
 	
 	// SOFTBANK
+	public static final String SOFT_TIPO_PRESTAMO = "001" ;
+	public static final String SOFT_GRADO_INTERES = "000" ;
+	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
+	public static final String SOFT_POR_DEFECTO="REFERENCIA POR DEFECTO";
+	public static final String SOFT_COBERTURA="001";
+
+
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 	public static final Integer TIPO_CEDULA = 1;
-	public static final String AUTORIZACION = "Basic UnVfQVAwSnRqVzV6RWRqaWIwVWVJWm1vUk5FYTo1X3JlTmQ4WVBnSW9oR0VwRGhodW1EZnQyZ2th";
+	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
 	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
 	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "http://201.183.238.73:1991/api/cliente/consultar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/crear";
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
+	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
 
 	// INTEGRACION
 	public static final String URL_PERSONA ="http://localhost:8080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";

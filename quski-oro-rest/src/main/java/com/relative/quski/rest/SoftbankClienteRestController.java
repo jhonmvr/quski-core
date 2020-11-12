@@ -24,7 +24,6 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
-import com.relative.quski.wrapper.SoftbankTelefonosWrapper;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -51,20 +50,17 @@ public class SoftbankClienteRestController extends BaseRestController
 	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
 			throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
-		SoftbankClienteWrapper a = this.csfs.callConsultaClienteRest(null, autentication, wrapper);
+		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(null, autentication, wrapper);
+		loc.setEntidad( a );
 		return loc;
 	}
 	
 	@POST
 	@Path("/crearClienteSoftbank")
-	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", 
-	notes = "Metodo Post ", 
-	response = GenericWrapper.class)
-	public GenericWrapper<SoftbankClienteWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper,String autentication) 
-			throws RelativeException {
+	public GenericWrapper<SoftbankClienteWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper) throws RelativeException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 		try {
-			List<SoftbankClienteWrapper> a = (List<SoftbankClienteWrapper>) SoftBankApiClient.callCrearClienteRest(null, autentication, wrapper);
+			List<SoftbankClienteWrapper> a = (List<SoftbankClienteWrapper>) SoftBankApiClient.callCrearClienteRest(wrapper);
 			loc.setEntidades(a);
 			return loc;
 		} catch (UnsupportedEncodingException e) {
@@ -74,21 +70,6 @@ public class SoftbankClienteRestController extends BaseRestController
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
 		}
-	}
-
-	@POST
-	@Path("/ActualizarClienteSoftbank")
-	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", 
-	notes = "Metodo Post ", 
-	response = GenericWrapper.class)
-	public GenericWrapper<SoftbankTelefonosWrapper> actualizarClienteSoftbank(SoftbankConsultaWrapper consulta, List<SoftbankTelefonosWrapper> wp)
-			throws RelativeException, UnsupportedEncodingException {
-		
-		GenericWrapper<SoftbankTelefonosWrapper> telefono = new GenericWrapper<>();
-		List<SoftbankTelefonosWrapper> a =(List<SoftbankTelefonosWrapper>) SoftBankApiClient.callEditarClienteRest(null, null, consulta, wp);
-		telefono.setEntidades(a);		
-		return telefono;
-		
 	}
 	
 	@Override

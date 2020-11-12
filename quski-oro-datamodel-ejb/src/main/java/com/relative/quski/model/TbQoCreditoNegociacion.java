@@ -30,6 +30,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="a_recibir_cliente")
 	private BigDecimal aRecibirCliente;
+	
+	@Column(name="tabla_amortizacion")
+	private String tablaAmortizacion;
+	
+	@Column(name="monto_financiado")
+	private BigDecimal montoFinanciado;
 
 	private String codigo;
 
@@ -49,6 +55,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="pago_dia")
+	private Date pagoDia;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_efectiva")
@@ -69,9 +79,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	
 	@Column(name="descripcion_producto")
 	private String descripcionProducto;
-
-	@Column(name="joyas_seleccionadas")
-	private String joyasSeleccionadas;
 
 	@Column(name="monto_desembolso")
 	private BigDecimal montoDesembolso;
@@ -107,6 +114,63 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
 	
+	@Column(name="id_banco")
+	private Long idBanco;
+	
+	@Column(name="numero_banco")
+	private String numeroBanco;
+	
+	@Column(name="banco_es_ahorro")
+	private Boolean bancoEsAhorro;
+	
+	@Column(name="total_peso_bruto_garantia")
+	private BigDecimal totalPesoBrutoGarantia;
+	
+	@Column(name="total_peso_bruto_con_funda")
+	private BigDecimal totalPesoBrutoConFunda;
+	
+	@Column(name="total_peso_neto")
+	private BigDecimal totalPesoNeto;
+	
+	@Column(name="tota_peso_neto_con_funda")
+	private BigDecimal totaPesoNetoConFunda;
+	
+	@Column(name="codigo_tipo_funda")
+	private String codigoTipoFunda;
+	
+	@Column(name="total_valor_avaluo")
+	private BigDecimal totalValorAvaluo;
+	
+	@Column(name="total_valor_comercial")
+	private BigDecimal totalValorComercial;
+	
+	@Column(name="total_valor_realizacion")
+	private BigDecimal totalValorRealizacion;
+	
+	@Column(name="uri_imagen_sin_funda")
+	private String uriImagenSinFunda;
+	
+	@Column(name="uri_imagen_con_funda")
+	private String uriImagenConFunda;
+	
+	@Column(name="identificacion_codeudor")
+	private  String identificacionCodeudor;
+	
+	@Column(name="nombre_completo_codeudor")
+	private  String nombreCompletoCodeudor;
+	
+	@Column(name="fecha_nacimiento_codeudor")
+	private  Date   fechaNacimientoCodeudor;
+
+	@Column(name="identificacion_apoderado")
+	private  String identificacionApoderado;
+	
+	@Column(name="nombre_completo_apoderado")
+	private  String nombreCompletoApoderado;
+	
+	@Column(name="fecha_nacimiento_apoderado")
+	private  Date   fechaNacimientoApoderado;
+	
 	// bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name = "id_negociacion")
@@ -131,14 +195,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.id = id;
 	}
 
-	public BigDecimal getAPagarCliente() {
-		return this.aPagarCliente;
-	}
-
-	public void setAPagarCliente(BigDecimal aPagarCliente) {
-		this.aPagarCliente = aPagarCliente;
-	}
-
 	public EstadoEnum getEstado() {
 		return estado;
 	}
@@ -161,14 +217,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setTipo(TipoCreditoNegociacionEnum tipo) {
 		this.tipo = tipo;
-	}
-
-	public BigDecimal getARecibirCliente() {
-		return this.aRecibirCliente;
-	}
-
-	public void setARecibirCliente(BigDecimal aRecibirCliente) {
-		this.aRecibirCliente = aRecibirCliente;
 	}
 
 	public String getCodigo() {
@@ -249,14 +297,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
-	}
-
-	public String getJoyasSeleccionadas() {
-		return this.joyasSeleccionadas;
-	}
-
-	public void setJoyasSeleccionadas(String joyasSeleccionadas) {
-		this.joyasSeleccionadas = joyasSeleccionadas;
 	}
 
 	public BigDecimal getMontoDesembolso() {
@@ -386,6 +426,198 @@ public class TbQoCreditoNegociacion implements Serializable {
 		getTbQoRubros().remove(tbQoRubro);
 		tbQoRubro.setTbQoCreditoNegociacion(null);
 		return tbQoRubro;
+	}
+
+	public Date getPagoDia() {
+		return pagoDia;
+	}
+
+	public void setPagoDia(Date pagoDia) {
+		this.pagoDia = pagoDia;
+	}
+
+	public Long getIdBanco() {
+		return idBanco;
+	}
+
+	public void setIdBanco(Long idBanco) {
+		this.idBanco = idBanco;
+	}
+
+	public String getNumeroBanco() {
+		return numeroBanco;
+	}
+
+	public void setNumeroBanco(String numeroBanco) {
+		this.numeroBanco = numeroBanco;
+	}
+
+	public Boolean getBancoEsAhorro() {
+		return bancoEsAhorro;
+	}
+
+	public void setBancoEsAhorro(Boolean bancoEsAhorro) {
+		this.bancoEsAhorro = bancoEsAhorro;
+	}
+
+	public BigDecimal getTotalPesoBrutoGarantia() {
+		return totalPesoBrutoGarantia;
+	}
+
+	public void setTotalPesoBrutoGarantia(BigDecimal totalPesoBrutoGarantia) {
+		this.totalPesoBrutoGarantia = totalPesoBrutoGarantia;
+	}
+
+	public BigDecimal getTotalPesoBrutoConFunda() {
+		return totalPesoBrutoConFunda;
+	}
+
+	public void setTotalPesoBrutoConFunda(BigDecimal totalPesoBrutoConFunda) {
+		this.totalPesoBrutoConFunda = totalPesoBrutoConFunda;
+	}
+
+	public BigDecimal getTotalPesoNeto() {
+		return totalPesoNeto;
+	}
+
+	public void setTotalPesoNeto(BigDecimal totalPesoNeto) {
+		this.totalPesoNeto = totalPesoNeto;
+	}
+
+	public BigDecimal getTotaPesoNetoConFunda() {
+		return totaPesoNetoConFunda;
+	}
+
+	public void setTotaPesoNetoConFunda(BigDecimal totaPesoNetoConFunda) {
+		this.totaPesoNetoConFunda = totaPesoNetoConFunda;
+	}
+
+	public String getCodigoTipoFunda() {
+		return codigoTipoFunda;
+	}
+
+	public void setCodigoTipoFunda(String codigoTipoFunda) {
+		this.codigoTipoFunda = codigoTipoFunda;
+	}
+
+	public BigDecimal getTotalValorAvaluo() {
+		return totalValorAvaluo;
+	}
+
+	public void setTotalValorAvaluo(BigDecimal totalValorAvaluo) {
+		this.totalValorAvaluo = totalValorAvaluo;
+	}
+
+	public BigDecimal getTotalValorComercial() {
+		return totalValorComercial;
+	}
+
+	public void setTotalValorComercial(BigDecimal totalValorComercial) {
+		this.totalValorComercial = totalValorComercial;
+	}
+
+	public BigDecimal getTotalValorRealizacion() {
+		return totalValorRealizacion;
+	}
+
+	public void setTotalValorRealizacion(BigDecimal totalValorRealizacion) {
+		this.totalValorRealizacion = totalValorRealizacion;
+	}
+
+	public String getUriImagenSinFunda() {
+		return uriImagenSinFunda;
+	}
+
+	public void setUriImagenSinFunda(String uriImagenSinFunda) {
+		this.uriImagenSinFunda = uriImagenSinFunda;
+	}
+
+	public String getUriImagenConFunda() {
+		return uriImagenConFunda;
+	}
+
+	public void setUriImagenConFunda(String uriImagenConFunda) {
+		this.uriImagenConFunda = uriImagenConFunda;
+	}
+
+	public BigDecimal getaPagarCliente() {
+		return aPagarCliente;
+	}
+
+	public void setaPagarCliente(BigDecimal aPagarCliente) {
+		this.aPagarCliente = aPagarCliente;
+	}
+
+	public BigDecimal getaRecibirCliente() {
+		return aRecibirCliente;
+	}
+
+	public void setaRecibirCliente(BigDecimal aRecibirCliente) {
+		this.aRecibirCliente = aRecibirCliente;
+	}
+
+	public String getTablaAmortizacion() {
+		return tablaAmortizacion;
+	}
+
+	public void setTablaAmortizacion(String tablaAmortizacion) {
+		this.tablaAmortizacion = tablaAmortizacion;
+	}
+
+	public BigDecimal getMontoFinanciado() {
+		return montoFinanciado;
+	}
+
+	public void setMontoFinanciado(BigDecimal montoFinanciado) {
+		this.montoFinanciado = montoFinanciado;
+	}
+
+	public String getIdentificacionCodeudor() {
+		return identificacionCodeudor;
+	}
+
+	public void setIdentificacionCodeudor(String identificacionCodeudor) {
+		this.identificacionCodeudor = identificacionCodeudor;
+	}
+
+	public String getNombreCompletoCodeudor() {
+		return nombreCompletoCodeudor;
+	}
+
+	public void setNombreCompletoCodeudor(String nombreCompletoCodeudor) {
+		this.nombreCompletoCodeudor = nombreCompletoCodeudor;
+	}
+
+	public Date getFechaNacimientoCodeudor() {
+		return fechaNacimientoCodeudor;
+	}
+
+	public void setFechaNacimientoCodeudor(Date fechaNacimientoCodeudor) {
+		this.fechaNacimientoCodeudor = fechaNacimientoCodeudor;
+	}
+
+	public String getIdentificacionApoderado() {
+		return identificacionApoderado;
+	}
+
+	public void setIdentificacionApoderado(String identificacionApoderado) {
+		this.identificacionApoderado = identificacionApoderado;
+	}
+
+	public String getNombreCompletoApoderado() {
+		return nombreCompletoApoderado;
+	}
+
+	public void setNombreCompletoApoderado(String nombreCompletoApoderado) {
+		this.nombreCompletoApoderado = nombreCompletoApoderado;
+	}
+
+	public Date getFechaNacimientoApoderado() {
+		return fechaNacimientoApoderado;
+	}
+
+	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
+		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
 	}
 
 }

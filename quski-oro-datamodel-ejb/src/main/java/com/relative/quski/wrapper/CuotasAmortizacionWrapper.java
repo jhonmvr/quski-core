@@ -14,6 +14,7 @@ public class CuotasAmortizacionWrapper  implements Serializable {
 	private BigDecimal interes;
 	private BigDecimal seguro;
 	private BigDecimal otros;
+	private BigDecimal total;
 	
 	
 	public Long getCuota() {
@@ -64,5 +65,5 @@ public class CuotasAmortizacionWrapper  implements Serializable {
 	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
-	private BigDecimal total;
+
 }
