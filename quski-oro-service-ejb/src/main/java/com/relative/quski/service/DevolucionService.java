@@ -1,6 +1,7 @@
 
 package com.relative.quski.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -139,6 +140,10 @@ public class DevolucionService {
 			persisted.setCodeDetalleGarantia(send.getCodeDetalleGarantia());
 			persisted.setFechaArribo(send.getFechaArribo());
 			persisted.setFechaAprobacionSolicitud(send.getFechaAprobacionSolicitud());
+			persisted.setFundaActual(send.getFundaActual());
+			persisted.setFundaMadre(send.getFundaMadre());
+			persisted.setCodigoOperacionMadre(send.getCodigoOperacionMadre());
+			persisted.setArribo(send.getArribo());
 			
 
 			return devolucionRepository.update(persisted);
@@ -198,6 +203,43 @@ public class DevolucionService {
 		
 		return devolucionRepository.countOperaciones(bdw);
 	}
+	
+	public List<TbQoDevolucion> registrarFechaSolicitud(List<Long> idDevoluciones, Date fechaArriboAgencia  ) throws RelativeException {
+		List<TbQoDevolucion> devoluciones = new ArrayList<>();
+		for(Long id : idDevoluciones) {
+			TbQoDevolucion devolucion = devolucionRepository.findById(id);
+			if(devolucion.getFechaArribo() == null || devolucion.getFechaArribo().toString().isEmpty()) {
+				devolucion.setFechaArribo(fechaArriboAgencia);
+				devolucion= manageDevolucion(devolucion);
+				devoluciones.add(devolucion);
+			}else {
+				
+			}
+				
+			
+		}
+	
+		
+		return devoluciones;
+	}
+	
+	public List<TbQoDevolucion> registrarArriboAgencia(List<Long> idDevoluciones) throws RelativeException {
+		List<TbQoDevolucion> devoluciones = new ArrayList<>();
+		for(Long id : idDevoluciones) {
+			TbQoDevolucion devolucion = devolucionRepository.findById(id);
+			if(devolucion.getArribo() == null ) {
+				devolucion.setArribo(true);
+				devolucion= manageDevolucion(devolucion);
+				devoluciones.add(devolucion);
+			}else {
+				
+			}
+		}
+	
+		
+		return devoluciones;
+	}
+	
 	
 	
 	

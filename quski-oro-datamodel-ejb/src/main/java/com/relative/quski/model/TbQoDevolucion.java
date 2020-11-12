@@ -103,9 +103,22 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="fecha_arribo")
 	private Date fechaArribo;
 	
+	@Column(name="funda_actual")
+	private String fundaActual;
+	
+	@Column(name="funda_madre")
+	private String fundaMadre;
+	
+	@Column(name="codigo_operacion_madre")
+	private String codigoOperacionMadre;
 
 	@Column(name="valor_custodia_aprox")
 	private BigDecimal valorCustodiaAprox;
+	
+
+	@Column(name="arribo")
+	private Boolean arribo;
+	
 
 	public TbQoDevolucion() {
 	}
@@ -341,6 +354,38 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setFechaArribo(Date fechaArribo) {
 		this.fechaArribo = fechaArribo;
+	}
+
+	public String getFundaActual() {
+		return fundaActual;
+	}
+
+	public void setFundaActual(String fundaActual) {
+		this.fundaActual = fundaActual;
+	}
+
+	public String getFundaMadre() {
+		return fundaMadre;
+	}
+
+	public void setFundaMadre(String fundaMadre) {
+		this.fundaMadre = fundaMadre;
+	}
+
+	public String getCodigoOperacionMadre() {
+		return codigoOperacionMadre;
+	}
+
+	public void setCodigoOperacionMadre(String codigoOperacionMadre) {
+		this.codigoOperacionMadre = codigoOperacionMadre;
+	}
+
+	public Boolean getArribo() {
+		return arribo;
+	}
+
+	public void setArribo(Boolean arribo) {
+		this.arribo = arribo;
 	}
 	
 	
