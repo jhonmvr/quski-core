@@ -3788,10 +3788,7 @@ public class QuskiOroService {
 				log.info("==================>   Ingresa a actualizacion manageCliente ===================> ");
 				return this.updateClientePago(send, persisted);
 			} else {
-				TbQoProceso proceso = createProcesoPago( send.getId(), send.getAsesor());
-				if(proceso == null) {
-					throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
-				}
+				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				return crearCodigoPago( this.clientePagoRepository.add(send) );
 			}
@@ -4159,7 +4156,7 @@ public class QuskiOroService {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
 			entidad.setCedulaC(cliente.getCedulaCliente());
 			entidad.setEmailAddress(cliente.getEmail());
-			entidad.setEmailAddressCaps(cliente.getEmail().toUpperCase());
+			entidad.setEmailAddressCaps(StringUtils.isNotBlank(cliente.getEmail())?cliente.getEmail().toUpperCase():null);
 			entidad.setFirstName(cliente.getNombreCompleto());
 			entidad.setLeadSourceDescription("GESTION QUSKI");
 			entidad.setPhoneMobile(cliente.getTelefonoMovil());
@@ -4579,7 +4576,7 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
 	}
-	private TbQoProceso createProcesoPago( Long idReferencia, String usuario) throws RelativeException {
+	public TbQoProceso createProcesoPago( Long idReferencia, String usuario) throws RelativeException {
 		try {
 			TbQoProceso send = new TbQoProceso( BigDecimal.valueOf( idReferencia ));
 			send.setProceso( ProcesoEnum.PAGO );
