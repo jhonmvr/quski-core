@@ -27,8 +27,6 @@ public class TbQoDireccionCliente implements Serializable {
 
 	@Column(name="calle_segundaria")
 	private String calleSegundaria;
-
-	private String canton;
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -41,12 +39,11 @@ public class TbQoDireccionCliente implements Serializable {
 
 	private String numeracion;
 
-	private String parroquia;
-
-	private String provincia;
-
 	@Column(name="referencia_ubicacion")
 	private String referenciaUbicacion;
+	
+	@Column(name="division_politica")
+	private Long divisionPolitica;
 
 	private String sector;
 
@@ -60,6 +57,9 @@ public class TbQoDireccionCliente implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
 	private TbQoCliente tbQoCliente;
+	
+	@Column(name="id_softbank")
+	private Long idSoftbank;
 
 	public TbQoDireccionCliente() {
 	}
@@ -80,6 +80,14 @@ public class TbQoDireccionCliente implements Serializable {
 		this.barrio = barrio;
 	}
 
+	public Long getDivisionPolitica() {
+		return divisionPolitica;
+	}
+
+	public void setDivisionPolitica(Long divisionPolitica) {
+		this.divisionPolitica = divisionPolitica;
+	}
+
 	public String getCallePrincipal() {
 		return this.callePrincipal;
 	}
@@ -94,14 +102,6 @@ public class TbQoDireccionCliente implements Serializable {
 
 	public void setCalleSegundaria(String calleSegundaria) {
 		this.calleSegundaria = calleSegundaria;
-	}
-
-	public String getCanton() {
-		return this.canton;
-	}
-
-	public void setCanton(String canton) {
-		this.canton = canton;
 	}
 
 	public Boolean getDireccionEnvioCorrespondencia() {
@@ -126,22 +126,6 @@ public class TbQoDireccionCliente implements Serializable {
 
 	public void setNumeracion(String numeracion) {
 		this.numeracion = numeracion;
-	}
-
-	public String getParroquia() {
-		return this.parroquia;
-	}
-
-	public void setParroquia(String parroquia) {
-		this.parroquia = parroquia;
-	}
-
-	public String getProvincia() {
-		return this.provincia;
-	}
-
-	public void setProvincia(String provincia) {
-		this.provincia = provincia;
 	}
 
 	public String getReferenciaUbicacion() {
@@ -170,6 +154,14 @@ public class TbQoDireccionCliente implements Serializable {
 
 	public String getTipoVivienda() {
 		return this.tipoVivienda;
+	}
+
+	public Long getIdSoftbank() {
+		return idSoftbank;
+	}
+
+	public void setIdSoftbank(Long idSoftbank) {
+		this.idSoftbank = idSoftbank;
 	}
 
 	public void setTipoVivienda(String tipoVivienda) {

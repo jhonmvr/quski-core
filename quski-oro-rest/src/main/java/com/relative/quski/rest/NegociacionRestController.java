@@ -107,4 +107,5 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidad(a);
 		return loc;
 	}
+
 }

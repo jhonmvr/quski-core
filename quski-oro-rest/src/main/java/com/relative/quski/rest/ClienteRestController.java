@@ -25,6 +25,8 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.ClienteCompletoWrapper;
+import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 import io.swagger.annotations.Api;
@@ -99,14 +101,6 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(this.qos.manageCliente(wp.getEntidad()));
 		return loc;
 	}
-	/**
-	 * METODO QUE BUSCA AL CLIENTE POR IDENTIFICACION
-	 * 
-	 * @author JEROHAM CADENAS - Relative Engine
-	 * @param String identificacion.
-	 * @return GenericWrapper<TbQoCliente>
-	 * @throws RelativeException.
-	 */
 	@GET
 	@Path("/findClienteByIdentificacion")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
@@ -117,7 +111,6 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
-
 	@GET
 	@Path("/findByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbMiCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiCliente", response = PaginatedListWrapper.class)
@@ -164,6 +157,29 @@ public class ClienteRestController extends BaseRestController
 		GenericWrapper<RespuestaCrearClienteWrapper> loc = new GenericWrapper<>();
 		
 		loc.setEntidad( this.qos.crearCliente(wp.getEntidad(), StringUtils.isNotBlank(idNegociacion)? Long.valueOf(idNegociacion):null) );
+		return loc;
+	}
+	@GET
+	@Path("/traerClienteByIdNegociacion")
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByIdNegociacion(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
+		ClienteCompletoWrapper a = this.qos.traerClienteByIdNegociacion(Long.valueOf( id ));
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/traerClienteByCedula")
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
+		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
+		ClienteCompletoWrapper a = this.qos.traerClienteByCedula( cedula );
+		loc.setEntidad(a);
+		return loc;
+	}
+	@POST
+	@Path("/registrarCliente")
+	public GenericWrapper<CreacionClienteRespuestaCoreWp> registrarCliente(ClienteCompletoWrapper wp ) throws RelativeException {
+		GenericWrapper<CreacionClienteRespuestaCoreWp> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.registrarCliente(wp) );
 		return loc;
 	}
 }

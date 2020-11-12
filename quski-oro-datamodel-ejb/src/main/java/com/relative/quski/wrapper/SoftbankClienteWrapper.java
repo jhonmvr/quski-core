@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.relative.quski.util.QuskiOroConstantes;
@@ -12,7 +13,7 @@ public class SoftbankClienteWrapper implements Serializable{
 	 */
 	private static final long serialVersionUID = -365985272182192369L;
 	public SoftbankClienteWrapper( String identificacion ) {
-		this.setIdTipoIdentificacion( QuskiOroConstantes.TIPO_CEDULA );
+		this.idTipoIdentificacion = QuskiOroConstantes.TIPO_CEDULA;
 		this.identificacion = identificacion;
 	}
 		private Integer idTipoIdentificacion;
@@ -44,18 +45,17 @@ public class SoftbankClienteWrapper implements Serializable{
 		private List<SoftbankCuentasBancariasWrapper> cuentasBancariasCliente;
 		private List<SoftbankContactosWrapper> contactosCliente;
 		private List<SoftbankDatosTrabajoWrapper> datosTrabajoCliente;
-		private Long activos;                              
-		private Long pasivos;                               
-		private Long ingresos;                               
-		private Long egresos;   
-		private String mensaje; 
-		private String codigoServicio;  
+		private BigDecimal activos;                              
+		private BigDecimal pasivos;                               
+		private BigDecimal ingresos;                               
+		private BigDecimal egresos;
+		
 		
 		//------------------->>Hasta aqui segun el body de Cloud
+		private String mensaje; 
+		private String codigoServicio;  
 		private Boolean existeError; 
 		private String validaciones; 
-		
-		// CAMPOS ESTAN SOBRANDO
 		private String integrantes; 
 		private String representantes; 
 		private String nombreComercial; 
@@ -204,28 +204,28 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setCodigoUsuarioAsesor(String codigoUsuarioAsesor) {
 			this.codigoUsuarioAsesor = codigoUsuarioAsesor;
 		}
-		public Long getActivos() {
+		public BigDecimal getActivos() {
 			return activos;
 		}
-		public void setActivos(Long activos) {
+		public void setActivos(BigDecimal activos) {
 			this.activos = activos;
 		}
-		public Long getPasivos() {
+		public BigDecimal getPasivos() {
 			return pasivos;
 		}
-		public void setPasivos(Long pasivos) {
+		public void setPasivos(BigDecimal pasivos) {
 			this.pasivos = pasivos;
 		}
-		public Long getIngresos() {
+		public BigDecimal getIngresos() {
 			return ingresos;
 		}
-		public void setIngresos(Long ingresos) {
+		public void setIngresos(BigDecimal ingresos) {
 			this.ingresos = ingresos;
 		}
-		public Long getEgresos() {
+		public BigDecimal getEgresos() {
 			return egresos;
 		}
-		public void setEgresos(Long egresos) {
+		public void setEgresos(BigDecimal egresos) {
 			this.egresos = egresos;
 		}
 		public String getMensaje() {
