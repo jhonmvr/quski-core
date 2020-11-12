@@ -3,8 +3,6 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.relative.quski.enums.EstadoEnum;
-
 public class CrearOperacionRespuestaWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public CrearOperacionRespuestaWrapper() {
@@ -12,9 +10,9 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	}
 	private String numeroOperacion;
 	private Integer periodo ;
-	private Integer plazo;
+	private Long plazo;
 	private String producto;
-	private EstadoEnum estado;
+	private String estado;
 	private BigDecimal deudaInicial;
 	private BigDecimal montoEntregar;
 	private BigDecimal aPagarPorCliente;
@@ -25,11 +23,13 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	private String codigoTablaAmortizacionQuski;
 	private String codigoTipoCarteraQuski;
 	private Boolean esProductoOro;
+	private String uriHabilitantes;
 	private DatosImpComWrapper datosImpCom;
 	private Boolean existeError;
 	private String mensaje;
-	private Integer codigoServicio ;
-	private String validaciones;
+	private Integer codigoServicio;
+	
+	
 	public String getNumeroOperacion() {
 		return numeroOperacion;
 	}
@@ -42,10 +42,10 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setPeriodo(Integer periodo) {
 		this.periodo = periodo;
 	}
-	public Integer getPlazo() {
+	public Long getPlazo() {
 		return plazo;
 	}
-	public void setPlazo(Integer plazo) {
+	public void setPlazo(Long plazo) {
 		this.plazo = plazo;
 	}
 	public String getProducto() {
@@ -54,10 +54,10 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setProducto(String producto) {
 		this.producto = producto;
 	}
-	public EstadoEnum getEstado() {
+	public String getEstado() {
 		return estado;
 	}
-	public void setEstado(EstadoEnum estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 	public BigDecimal getDeudaInicial() {
@@ -144,15 +144,10 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setCodigoServicio(Integer codigoServicio) {
 		this.codigoServicio = codigoServicio;
 	}
-	public String getValidaciones() {
-		return validaciones;
+	public String getUriHabilitantes() {
+		return uriHabilitantes;
 	}
-	public void setValidaciones(String validaciones) {
-		this.validaciones = validaciones;
+	public void setUriHabilitantes(String uriHabilitantes) {
+		this.uriHabilitantes = uriHabilitantes;
 	}
-	
-	
-	
-	
-
 }

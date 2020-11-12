@@ -36,8 +36,7 @@ public class OperacionCreditoNuevoWrapper implements Serializable {
 			this.existe = false;
 		}
 	}
-	
-	
+
 	public List<TbQoExcepcion> getExcepciones() {
 		return excepciones;
 	}
