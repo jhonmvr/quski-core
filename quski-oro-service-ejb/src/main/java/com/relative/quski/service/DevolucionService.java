@@ -1,20 +1,29 @@
 
 package com.relative.quski.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
+import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroConstantes;
-import java.util.Date;
+import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 
 @Stateless
 public class DevolucionService {
@@ -24,7 +33,8 @@ public class DevolucionService {
 	private CotizadorRepository cotizadorRepository;
 	@Inject 
 	private DevolucionRepository devolucionRepository;
-
+	@Inject
+	private QuskiOroService qos;
 	
 	
 	
@@ -87,6 +97,21 @@ public class DevolucionService {
 		}
 	}
 	
+	public TbQoDevolucion registrarSolicitudDevolucion(TbQoDevolucion send , String usuario) throws RelativeException {
+		TbQoDevolucion devolucion = manageDevolucion(send);
+		devolucion = crearCodigoDev(devolucion);
+		TbQoProceso proceso = new TbQoProceso();
+		proceso.setIdReferencia(devolucion.getId());
+		proceso.setProceso(ProcesoEnum.DEVOLUCION);
+		proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+		proceso.setUsuario(usuario);
+		qos.manageProceso(proceso);
+		
+		return devolucion;
+	}
+	
+	
+	
 	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion persisted) throws RelativeException {
 		try {
 			persisted.setCodigo(send.getCodigo());
@@ -104,12 +129,21 @@ public class DevolucionService {
 			persisted.setLugarNacimiento(send.getLugarNacimiento());
 			persisted.setTipoCliente(send.getTipoCliente());
 			persisted.setObservaciones(send.getObservaciones());
+			persisted.setIdAgenciaEntrega(send.getIdAgenciaEntrega());
+			persisted.setNombreAgenciaSolicitud(send.getNombreAgenciaSolicitud());
 			persisted.setEstado(send.getEstado());
+			persisted.setGenero(send.getGenero());
 			persisted.setAgenciaEntrega(send.getAgenciaEntrega());
 			persisted.setValorCustodiaAprox(send.getValorCustodiaAprox());
 			persisted.setCodeHerederos(send.getCodeHerederos());
 			persisted.setCodeDetalleCredito(send.getCodeDetalleCredito());
 			persisted.setCodeDetalleGarantia(send.getCodeDetalleGarantia());
+			persisted.setFechaArribo(send.getFechaArribo());
+			persisted.setFechaAprobacionSolicitud(send.getFechaAprobacionSolicitud());
+			persisted.setFundaActual(send.getFundaActual());
+			persisted.setFundaMadre(send.getFundaMadre());
+			persisted.setCodigoOperacionMadre(send.getCodigoOperacionMadre());
+			persisted.setArribo(send.getArribo());
 			
 
 			return devolucionRepository.update(persisted);
@@ -119,4 +153,94 @@ public class DevolucionService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando Agente " + e.getMessage());
 		}
 	}
+	
+	
+	private TbQoDevolucion crearCodigoDev(TbQoDevolucion persisted) throws RelativeException {
+		
+		try {
+			String cod = QuskiOroConstantes.CODIGO_DEVOLUCION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0"));
+			persisted.setCodigo(cod);
+			return this.devolucionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	
+	public TbQoDevolucion aprobarSolicitudDevolucion(Long id ) throws RelativeException {
+		TbQoDevolucion devolucion = new TbQoDevolucion();
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
+	
+		
+		return devolucion;
+	}
+	
+	
+	public TbQoDevolucion rechazarSolicitudDevolucion(Long id ) throws RelativeException {
+		TbQoDevolucion devolucion = new TbQoDevolucion();
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+	
+		
+		return devolucion;
+	}
+	
+	
+	public PaginatedListWrapper<DevolucionProcesoWrapper> findOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
+		
+		PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
+		List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
+			plw.setList(actions);
+		}
+		
+		return plw;
+	}
+	
+	public Integer countOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
+	
+	
+		
+		return devolucionRepository.countOperaciones(bdw);
+	}
+	
+	public List<TbQoDevolucion> registrarFechaSolicitud(List<Long> idDevoluciones, Date fechaArriboAgencia  ) throws RelativeException {
+		List<TbQoDevolucion> devoluciones = new ArrayList<>();
+		for(Long id : idDevoluciones) {
+			TbQoDevolucion devolucion = devolucionRepository.findById(id);
+			if(devolucion.getFechaArribo() == null || devolucion.getFechaArribo().toString().isEmpty()) {
+				devolucion.setFechaArribo(fechaArriboAgencia);
+				devolucion= manageDevolucion(devolucion);
+				devoluciones.add(devolucion);
+			}else {
+				
+			}
+				
+			
+		}
+	
+		
+		return devoluciones;
+	}
+	
+	public List<TbQoDevolucion> registrarArriboAgencia(List<Long> idDevoluciones) throws RelativeException {
+		List<TbQoDevolucion> devoluciones = new ArrayList<>();
+		for(Long id : idDevoluciones) {
+			TbQoDevolucion devolucion = devolucionRepository.findById(id);
+			if(devolucion.getArribo() == null ) {
+				devolucion.setArribo(true);
+				devolucion= manageDevolucion(devolucion);
+				devoluciones.add(devolucion);
+			}else {
+				
+			}
+		}
+	
+		
+		return devoluciones;
+	}
+	
+	
+	
+	
 }

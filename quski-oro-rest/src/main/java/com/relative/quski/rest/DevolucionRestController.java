@@ -1,5 +1,7 @@
 package com.relative.quski.rest;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -13,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -24,6 +25,8 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,6 +82,17 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	
 	
+	@POST
+	@Path("/registrarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> registrarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("usuario") String usuario)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.registrarSolicitudDevolucion(wp.getEntidad(), usuario));
+		return loc;
+	}
+	
+	
 	
 
 	@Override
@@ -105,6 +119,49 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		}
 		return plw;
 	}
+	
+	@POST
+	@Path("/aprobarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> aprobarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("id") String id)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
+		return loc;
+	}
+	
+	@POST
+	@Path("/rechazarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> rechazarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+			@QueryParam("id") String id)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/buscarDevolucion")
+	@ApiOperation(value = "PaginatedListWrapper<ResultOperacionesWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiContrato", response = PaginatedListWrapper.class)
+	private PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(BusquedaDevolucionWrapper bdw ) throws RelativeException {
+		PaginatedListWrapper<DevolucionProcesoWrapper> plw = this.dos.findOperacion(bdw);
+	
+		return plw;
+	}
 
-
+	@POST
+	@Path("/registrarFechaArribo")
+	public List<TbQoDevolucion> registrarFechaArribo( List<Long> idDevoluciones, Date fechaArribo) throws RelativeException {
+		List<TbQoDevolucion> loc = new ArrayList<>();
+		loc= this.dos.registrarFechaSolicitud(idDevoluciones, fechaArribo);
+		return loc;
+	}
+	@POST
+	@Path("/registrarArribo")
+	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones) throws RelativeException {
+		List<TbQoDevolucion> loc = new ArrayList<>();
+		loc= this.dos.registrarArriboAgencia(idDevoluciones);
+		return loc;
+	}
 }

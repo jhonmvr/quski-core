@@ -46,6 +46,9 @@ public class TbQoDevolucion implements Serializable {
 
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
+	
+	@Column(name="genero")
+	private String genero;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -66,7 +69,13 @@ public class TbQoDevolucion implements Serializable {
 	private Date fechaNacimiento;
 
 	@Column(name="id_agencia")
-	private BigDecimal idAgencia;
+	private Long idAgencia;
+	
+	@Column(name="nombre_agencia_solicitud")
+	private String nombreAgenciaSolicitud;
+	
+	@Column(name="id_agencia_entrega")
+	private Long idAgenciaEntrega;
 
 	@Column(name="lugar_nacimiento")
 	private String lugarNacimiento;
@@ -87,8 +96,29 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="tipo_cliente")
 	private String tipoCliente;
 
+	@Column(name="fecha_aprobacion_solicitud")
+	private Date fechaAprobacionSolicitud;
+	
+
+	@Column(name="fecha_arribo")
+	private Date fechaArribo;
+	
+	@Column(name="funda_actual")
+	private String fundaActual;
+	
+	@Column(name="funda_madre")
+	private String fundaMadre;
+	
+	@Column(name="codigo_operacion_madre")
+	private String codigoOperacionMadre;
+
 	@Column(name="valor_custodia_aprox")
 	private BigDecimal valorCustodiaAprox;
+	
+
+	@Column(name="arribo")
+	private Boolean arribo;
+	
 
 	public TbQoDevolucion() {
 	}
@@ -213,12 +243,28 @@ public class TbQoDevolucion implements Serializable {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-	public BigDecimal getIdAgencia() {
-		return this.idAgencia;
+	public Long getIdAgencia() {
+		return idAgencia;
 	}
 
-	public void setIdAgencia(BigDecimal idAgencia) {
+	public void setIdAgencia(Long idAgencia) {
 		this.idAgencia = idAgencia;
+	}
+
+	public String getNombreAgenciaSolicitud() {
+		return nombreAgenciaSolicitud;
+	}
+
+	public void setNombreAgenciaSolicitud(String nombreAgenciaSolicitud) {
+		this.nombreAgenciaSolicitud = nombreAgenciaSolicitud;
+	}
+
+	public Long getIdAgenciaEntrega() {
+		return idAgenciaEntrega;
+	}
+
+	public void setIdAgenciaEntrega(Long idAgenciaEntrega) {
+		this.idAgenciaEntrega = idAgenciaEntrega;
 	}
 
 	public String getLugarNacimiento() {
@@ -253,6 +299,15 @@ public class TbQoDevolucion implements Serializable {
 		this.nombreCliente = nombreCliente;
 	}
 
+	
+	public String getGenero() {
+		return genero;
+	}
+
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
+
 	public String getObservaciones() {
 		return this.observaciones;
 	}
@@ -285,4 +340,54 @@ public class TbQoDevolucion implements Serializable {
 		this.valorCustodiaAprox = valorCustodiaAprox;
 	}
 
+	public Date getFechaAprobacionSolicitud() {
+		return fechaAprobacionSolicitud;
+	}
+
+	public void setFechaAprobacionSolicitud(Date fechaAprobacionSolicitud) {
+		this.fechaAprobacionSolicitud = fechaAprobacionSolicitud;
+	}
+
+	public Date getFechaArribo() {
+		return fechaArribo;
+	}
+
+	public void setFechaArribo(Date fechaArribo) {
+		this.fechaArribo = fechaArribo;
+	}
+
+	public String getFundaActual() {
+		return fundaActual;
+	}
+
+	public void setFundaActual(String fundaActual) {
+		this.fundaActual = fundaActual;
+	}
+
+	public String getFundaMadre() {
+		return fundaMadre;
+	}
+
+	public void setFundaMadre(String fundaMadre) {
+		this.fundaMadre = fundaMadre;
+	}
+
+	public String getCodigoOperacionMadre() {
+		return codigoOperacionMadre;
+	}
+
+	public void setCodigoOperacionMadre(String codigoOperacionMadre) {
+		this.codigoOperacionMadre = codigoOperacionMadre;
+	}
+
+	public Boolean getArribo() {
+		return arribo;
+	}
+
+	public void setArribo(Boolean arribo) {
+		this.arribo = arribo;
+	}
+	
+	
+	
 }
