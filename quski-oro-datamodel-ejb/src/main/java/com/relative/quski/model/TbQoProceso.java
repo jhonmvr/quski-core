@@ -44,7 +44,7 @@ public class TbQoProceso implements Serializable {
 	private BigDecimal idProceso;
 
 	@Column(name="id_referencia")
-	private BigDecimal idReferencia;
+	private Long idReferencia;
 
 	@Enumerated(EnumType.STRING)
 	private ProcesoEnum proceso;
@@ -54,7 +54,7 @@ public class TbQoProceso implements Serializable {
 
 	public TbQoProceso() {
 	}
-	public TbQoProceso( BigDecimal idReferencia) {
+	public TbQoProceso( Long idReferencia) {
 		this.idReferencia = idReferencia;
 	}
 
@@ -105,15 +105,12 @@ public class TbQoProceso implements Serializable {
 	public void setIdProceso(BigDecimal idProceso) {
 		this.idProceso = idProceso;
 	}
-
-	public BigDecimal getIdReferencia() {
-		return this.idReferencia;
+	public Long getIdReferencia() {
+		return idReferencia;
 	}
-
-	public void setIdReferencia(BigDecimal idReferencia) {
+	public void setIdReferencia(Long idReferencia) {
 		this.idReferencia = idReferencia;
 	}
-
 	public ProcesoEnum getProceso() {
 		return this.proceso;
 	}

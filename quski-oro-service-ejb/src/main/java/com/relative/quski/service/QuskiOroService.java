@@ -5170,7 +5170,7 @@ public class QuskiOroService {
 	}
 	private TbQoProceso createProcesoNegociacion( Long idReferencia, String usuario) throws RelativeException {
 		try {
-			TbQoProceso send = new TbQoProceso( BigDecimal.valueOf( idReferencia ));
+			TbQoProceso send = new TbQoProceso( Long.valueOf( idReferencia ));
 			send.setProceso( ProcesoEnum.NUEVO );
 			send.setEstadoProceso( EstadoProcesoEnum.CREADO );
 			send.setUsuario( usuario );
@@ -5182,7 +5182,7 @@ public class QuskiOroService {
 	}
 	public TbQoProceso createProcesoPago( Long idReferencia, String usuario) throws RelativeException {
 		try {
-			TbQoProceso send = new TbQoProceso( BigDecimal.valueOf( idReferencia ));
+			TbQoProceso send = new TbQoProceso( Long.valueOf( idReferencia ));
 			send.setProceso( ProcesoEnum.PAGO );
 			send.setEstadoProceso( EstadoProcesoEnum.PENDIENTE_APROBACION );
 			send.setUsuario( usuario );
