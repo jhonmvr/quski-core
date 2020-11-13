@@ -50,20 +50,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		private BigDecimal ingresos;                               
 		private BigDecimal egresos;
 		
-		
-		//------------------->>Hasta aqui segun el body de Cloud
 		private String mensaje; 
 		private String codigoServicio;  
 		private Boolean existeError; 
 		private String validaciones; 
-		private String integrantes; 
-		private String representantes; 
-		private String nombreComercial; 
-		private String razonSocial; 
-		private Boolean esGrupo; 
-		private String registroLegal; 
-		private String fechaCreacion; 
-		private String fechaRegistroLegal; 
 
 		
 		public Integer getIdTipoIdentificacion() {
@@ -287,53 +277,5 @@ public class SoftbankClienteWrapper implements Serializable{
 		}
 		public void setValidaciones(String validaciones) {
 			this.validaciones = validaciones;
-		}
-		public String getIntegrantes() {
-			return integrantes;
-		}
-		public void setIntegrantes(String integrantes) {
-			this.integrantes = integrantes;
-		}
-		public String getRepresentantes() {
-			return representantes;
-		}
-		public void setRepresentantes(String representantes) {
-			this.representantes = representantes;
-		}
-		public String getNombreComercial() {
-			return nombreComercial;
-		}
-		public void setNombreComercial(String nombreComercial) {
-			this.nombreComercial = nombreComercial;
-		}
-		public String getRazonSocial() {
-			return razonSocial;
-		}
-		public void setRazonSocial(String razonSocial) {
-			this.razonSocial = razonSocial;
-		}
-		public Boolean getEsGrupo() {
-			return esGrupo;
-		}
-		public void setEsGrupo(Boolean esGrupo) {
-			this.esGrupo = esGrupo;
-		}
-		public String getRegistroLegal() {
-			return registroLegal;
-		}
-		public void setRegistroLegal(String registroLegal) {
-			this.registroLegal = registroLegal;
-		}
-		public String getFechaCreacion() {
-			return fechaCreacion;
-		}
-		public void setFechaCreacion(String fechaCreacion) {
-			this.fechaCreacion = fechaCreacion;
-		}
-		public String getFechaRegistroLegal() {
-			return fechaRegistroLegal;
-		}
-		public void setFechaRegistroLegal(String fechaRegistroLegal) {
-			this.fechaRegistroLegal = fechaRegistroLegal;
 		}
 }

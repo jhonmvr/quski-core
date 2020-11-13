@@ -50,7 +50,7 @@ public class SoftbankClienteRestController extends BaseRestController
 	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
 			throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
-		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(null, autentication, wrapper);
+		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(wrapper);
 		loc.setEntidad( a );
 		return loc;
 	}
@@ -83,7 +83,7 @@ public class SoftbankClienteRestController extends BaseRestController
 	public GenericWrapper<SoftbankClienteWrapper> getEntity(SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 	
-		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(null, null, wrapper);
+		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(wrapper);
 		loc.setEntidad(a);
 		
 		return loc;
