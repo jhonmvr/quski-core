@@ -29,6 +29,10 @@ public class JoyaWrapper implements Serializable {
     private String detallePiedras;
     private BigDecimal descuentoPiedras;
     private BigDecimal pesoNeto;
+    private String codigoEstadoProceso;
+    private String codigoEstadoUbicacion;
+    private String numeroFundaMadre;
+    private String numeroFundaJoya;
     private Long numeroPiezas;
     private BigDecimal descuentoSuelda;
     
@@ -234,6 +238,38 @@ public class JoyaWrapper implements Serializable {
 
 	public void setDescuentoSuelda(BigDecimal descuentoSuelda) {
 		this.descuentoSuelda = descuentoSuelda;
+	}
+
+	public String getCodigoEstadoProceso() {
+		return codigoEstadoProceso;
+	}
+
+	public void setCodigoEstadoProceso(String codigoEstadoProceso) {
+		this.codigoEstadoProceso = codigoEstadoProceso;
+	}
+
+	public String getCodigoEstadoUbicacion() {
+		return codigoEstadoUbicacion;
+	}
+
+	public void setCodigoEstadoUbicacion(String codigoEstadoUbicacion) {
+		this.codigoEstadoUbicacion = codigoEstadoUbicacion;
+	}
+
+	public String getNumeroFundaMadre() {
+		return numeroFundaMadre;
+	}
+
+	public void setNumeroFundaMadre(String numeroFundaMadre) {
+		this.numeroFundaMadre = numeroFundaMadre;
+	}
+
+	public String getNumeroFundaJoya() {
+		return numeroFundaJoya;
+	}
+
+	public void setNumeroFundaJoya(String numeroFundaJoya) {
+		this.numeroFundaJoya = numeroFundaJoya;
 	}
 	
 

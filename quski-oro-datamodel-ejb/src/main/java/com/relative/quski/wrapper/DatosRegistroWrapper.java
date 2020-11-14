@@ -22,6 +22,7 @@ public class DatosRegistroWrapper implements Serializable{
 		this.idAgencia = idAgencia;
 		this.fecha = fecha;
 		this.canalNegociacion = QuskiOroConstantes.SOFT_POR_DEFECTO;
+		this.referencia = QuskiOroConstantes.SOFT_POR_DEFECTO;
 	}
 	private Long idAgencia;
 	
