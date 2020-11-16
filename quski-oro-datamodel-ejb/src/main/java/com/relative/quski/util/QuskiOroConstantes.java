@@ -272,7 +272,7 @@ public class QuskiOroConstantes {
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
 
 	// INTEGRACION
-	public static final String URL_PERSONA ="http://localhost:8080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
+	public static final String URL_PERSONA ="http://localhost:28080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
 	public static final String PARAMETRO_1 ="?tipoIdentificacion=";
 	public static final String PARAMETRO_2 ="&identificacion=";
 	public static final String PARAMETRO_3 ="&tipoConsulta=";
