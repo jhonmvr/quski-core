@@ -12,6 +12,7 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.ConsultaTablaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
@@ -80,15 +81,15 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static SoftbankClienteWrapper callConsultaClienteRest(String urlService, String authorization, SoftbankConsultaWrapper consulta)
+	public static SoftbankClienteWrapper callConsultaClienteRest(SoftbankConsultaWrapper consulta)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			String service = urlService;
+			String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClienteWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -150,14 +151,13 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String numero)
-			throws RelativeException, UnsupportedEncodingException {
+	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(ConsultaTablaWrapper cont)	throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
-			String jsonString = gson.toJson(numero);
+			String jsonString = gson.toJson(cont);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CONSULTA TABLA AMORTIZACION ========> " + new String(content));
-			String service = QuskiOroConstantes.URL_SOFTBANK_RIESGO_ACUMULADO;
+			String service = QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
@@ -217,7 +217,10 @@ public class SoftBankApiClient {
 				Gson gsons = new GsonBuilder().create();
 				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				SoftbankRespuestaWrapper res = new SoftbankRespuestaWrapper();
+				res.setExisteError(true);
+				return res;
+				// throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -255,7 +258,6 @@ public class SoftBankApiClient {
 			log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
 			if(respuestaWrapper.getExisteError() ) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
-	
 			}
 			return respuestaWrapper;
 		}else {
