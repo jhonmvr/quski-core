@@ -46,8 +46,8 @@ import com.relative.quski.model.TbQoDatoTrabajoCliente;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
-import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoExcepcion;
+import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoPatrimonio;
@@ -115,6 +115,8 @@ import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
 import com.relative.quski.wrapper.DatosGarantiasWrapper;
 import com.relative.quski.wrapper.DatosRegistroWrapper;
+import com.relative.quski.wrapper.EquifaxPersonaWrapper;
+import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.IntegracionDatosClienteWrapper;
@@ -4524,7 +4526,7 @@ public class QuskiOroService {
 	public CalculadoraRespuestaWrapper simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper)
 			throws RelativeException {
 		try {
-			wrapper.generateMockup();
+			//wrapper.generateMockup();
 			//StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
 			String content ="<soap:Envelope\r\n" + 
 					"	xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n" + 
@@ -4593,8 +4595,10 @@ public class QuskiOroService {
 					"		</CalculadoraQuski>\r\n" + 
 					"	</soap:Body>\r\n" + 
 					"</soap:Envelope>";
-			TokenWrapper token = ApiGatewayClient.getToken();
-			return ApiGatewayClient.callCalculadoraRest(token.getTokenType() +" "+ token.getAccessToken(), content);
+			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+			return ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
+					token.getTokenType() +" "+ token.getAccessToken(), content);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -5235,13 +5239,21 @@ public class QuskiOroService {
 		}
 	}
 
-	private List<IntegracionVariableWrapper> traerVariablesEquifax(String cedula) throws RelativeException {
+	public List<EquifaxVariableWrapper> traerVariablesEquifax(String cedula) throws RelativeException, UnsupportedEncodingException {
 		try {
-			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
+			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+			String content = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_PERSONA).getValor()
+					.replace("--tipoidentificacion--", "C")
+					.replace("--identificacion--", cedula)
+					.replace("--tipoconsulta--", "CC")
+					.replace("--calificacionmupi--","N");
+			
+			EquifaxPersonaWrapper data = ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+					token.getTokenType()+" "+token.getAccessToken(), content);
 			if (data != null) {
-				List<IntegracionVariableWrapper> list = data.getXmlVariablesInternas().getVariablesInternas()
-						.getVariables();
-				return !list.isEmpty() ? list : null;
+				List<EquifaxVariableWrapper> list = data.getVariablesInternas().getVariables();
+				return list;
 			} else {
 				return null;
 			}

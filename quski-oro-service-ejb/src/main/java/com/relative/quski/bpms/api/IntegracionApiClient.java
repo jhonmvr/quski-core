@@ -63,4 +63,6 @@ public class IntegracionApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
+	
+	
 }
