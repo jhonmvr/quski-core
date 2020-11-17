@@ -634,11 +634,38 @@ public class QuskiOroService {
 		}
 		return errores;
 	}
-	private Map<String, String> createCuentasBancarias(TbQoCliente cliente, List<TbQoCuentaBancariaCliente> cuentas) {
+	private Map<String, String> createCuentasBancarias(TbQoCliente cliente, List<TbQoCuentaBancariaCliente> cuentas) throws RelativeException {
 		Map<String, String> errores = new HashMap<>();
+		List<TbQoCuentaBancariaCliente> existentes = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
+		if(existentes != null) {
+			existentes.forEach(f->{
+				f.setEstado( EstadoEnum.INA );
+			});			
+		}
 		if (cuentas != null && !cuentas.isEmpty()) {
 			cuentas.forEach(re -> {
 				re.setTbQoCliente(cliente);
+				if( re.getId() != null && existentes != null ) {
+					existentes.forEach(e->{
+						if( re.getId().equals( e.getId() ) ) {
+							e.setEstado( EstadoEnum.ACT );
+							try {
+								this.manageCuentaBancariaCliente( e );
+							} catch (RelativeException e1) {
+								errores.put("Cuenta " + e.getId()," ERROR REGISTRO Cuenta " + e1.getMensaje());
+							}
+						}
+					});
+					existentes.forEach(a->{
+						if(a.getEstado().equals( EstadoEnum.INA)) {
+							try {
+								this.manageCuentaBancariaCliente( a );
+							} catch (RelativeException e1) {
+								errores.put("Cuenta " + a.getId()," ERROR REGISTRO Cuenta " + e1.getMensaje());
+							}
+						}
+					});
+				}
 				try {
 					this.manageCuentaBancariaCliente(re);
 				} catch (RelativeException e) {
@@ -1765,6 +1792,23 @@ public class QuskiOroService {
 			if (send.getIdSoftbank() != null) {
 				persisted.setIdSoftbank(send.getIdSoftbank());
 			}
+			if(send.getBanco() != null ){
+				persisted.setBanco( send.getBanco() );
+			}
+			if(send.getEsAhorros() != null ) {
+				persisted.setEsAhorros( send.getEsAhorros() );
+			}
+			if(!StringUtils.isBlank( send.getCuenta()) )  {
+				persisted.setCuenta( send.getCuenta() );
+			}
+			if( send.getTbQoCliente() != null ) {
+				persisted.setTbQoCliente( send.getTbQoCliente() );
+			}
+			if( send.getEstado() != null ) {
+				persisted.setEstado( send.getEstado());
+			}else {
+				persisted.setEstado( EstadoEnum.ACT );
+			}
 			return cuentaBancariaRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
@@ -2452,8 +2496,11 @@ public class QuskiOroService {
 	public TbQoReferenciaPersonal updateReferenciaPersonal(TbQoReferenciaPersonal send,
 			TbQoReferenciaPersonal persisted) throws RelativeException {
 		try {
-			if(!StringUtils.isBlank( send.getNombresCompletos()) ) {
-				persisted.setNombresCompletos(send.getNombresCompletos());				
+			if(!StringUtils.isBlank( send.getNombres()) ) {
+				persisted.setNombres(send.getNombres());				
+			}
+			if(!StringUtils.isBlank( send.getApellidos()) ) {
+				persisted.setApellidos(send.getApellidos());				
 			}
 			if(!StringUtils.isBlank( send.getParentesco() ) ) {
 				persisted.setParentesco(send.getParentesco());
@@ -4033,6 +4080,8 @@ public class QuskiOroService {
 					if( !s.getTelefonos().isEmpty() ) { this.tlfSoftToTlfCore(s.getTelefonos(), cliente); }
 					if( !s.getContactosCliente().isEmpty() ) { this.contactoToReferenciaPersonal(s.getContactosCliente(), cliente);	}
 					if( !s.getDatosTrabajoCliente().isEmpty() ) { this.trabajoSoftToTrabajoCore(s.getDatosTrabajoCliente(), cliente); }
+					if( !s.getCuentasBancariasCliente().isEmpty() ) { this.cuentasSoftToCuentasCore(s.getCuentasBancariasCliente(), cliente); }
+
 					return this.manageCliente( cliente);				
 				}else {
 					return null;
@@ -4042,6 +4091,44 @@ public class QuskiOroService {
 			}
 		
 	}
+	private void cuentasSoftToCuentasCore(List<SoftbankCuentasBancariasWrapper> list, TbQoCliente cliente) throws RelativeException {
+		try {
+			List<TbQoCuentaBancariaCliente> listUpdate = this.cuentaBancariaRepository.findByIdCliente(cliente.getId() );
+			List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
+
+			list.forEach(e ->{
+				if(listUpdate != null) {
+					listUpdate.forEach(l ->{
+						if( e.getCuenta().equals( l.getCuenta() ) ) {
+							l.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
+							l.setIdSoftbank( e.getId() );
+							l.setBanco( e.getIdBanco() );
+							l.setEsAhorros( e.getEsAhorros() );
+							l.setIdSoftbank( e.getId() );
+						}
+					});
+				}else {
+					TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
+					cuenta.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
+					cuenta.setIdSoftbank( e.getId() );
+					cuenta.setBanco( e.getIdBanco() );
+					cuenta.setEsAhorros( e.getEsAhorros() );
+					cuenta.setIdSoftbank( e.getId() );
+					cuenta.setCuenta( e.getCuenta() );
+					listCreate.add( cuenta );
+				}
+			});
+			if(listUpdate != null ) {
+				this.createCuentasBancarias(cliente, listUpdate);
+			}else {
+				this.createCuentasBancarias(cliente, listCreate);
+			}
+		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+	}
+
 	private void tlfSoftToTlfCore( List<SoftbankTelefonosWrapper>  list, TbQoCliente cliente) throws RelativeException{
 		try {
 			List<TbQoTelefonoCliente> listUpdate = this.telefonoClienteRepository.findByIdCliente(cliente.getId() );
@@ -4137,7 +4224,7 @@ public class QuskiOroService {
 			list.forEach(e->{
 				if(listUpdate != null) {
 					listUpdate.forEach(l ->{
-						if( e.getNombres().equals( l.getNombresCompletos() ) ) {
+						if( e.getNombres().equals( l.getNombres()) && e.getApellidos().equals( l.getApellidos())  ) {
 							l.setDireccion( e.getDireccion() );
 							l.setEstado(  e.getActivo()  ? EstadoEnum.ACT : EstadoEnum.INA );
 							l.setIdSoftbank( e.getId() );
@@ -4158,7 +4245,9 @@ public class QuskiOroService {
 					TbQoReferenciaPersonal referencia = new TbQoReferenciaPersonal();
 					referencia.setDireccion( e.getDireccion() );
 					referencia.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
-					referencia.setNombresCompletos( e.getNombres().concat( e.getApellidos() ));
+					referencia.setNombres( e.getNombres() );
+
+					referencia.setApellidos( e.getApellidos() );
 					referencia.setParentesco( e.getCodigoTipoReferencia() );
 					if(e.getTelefonos() != null ) {
 						e.getTelefonos().forEach(t ->{
@@ -4359,8 +4448,8 @@ public class QuskiOroService {
 					listReferencia.forEach(e->{
 						SoftbankContactosWrapper ref = new SoftbankContactosWrapper();
 						ref.setId( e.getIdSoftbank() );
-						ref.setApellidos( e.getNombresCompletos() );
-						ref.setNombres( e.getNombresCompletos() );
+						ref.setApellidos( e.getApellidos() );
+						ref.setNombres( e.getNombres() );
 						ref.setCodigoTipoReferencia( e.getParentesco() );
 						ref.setDireccion( e.getDireccion() );
 						List<TelefonosContactoClienteWrapper> subList = new ArrayList<>();
@@ -5062,7 +5151,14 @@ public class QuskiOroService {
 						result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
 						result.setDatosRegistro( new DatosRegistroWrapper(credito.getTbQoNegociacion().getAsesor(), credito.getIdAgencia(),  QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) )  ); 
 						List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
-						listCuenta.add( new DatosCuentaClienteWrapper( credito.getIdBanco(),credito.getNumeroBanco(),credito.getBancoEsAhorro() ) );
+						List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
+						if(cuentaCliente != null ) {
+							cuentaCliente.forEach(c->{
+								if( credito.getNumeroCuenta().equals( c.getCuenta() )) {
+									listCuenta.add( new DatosCuentaClienteWrapper( c.getBanco(),c.getCuenta(),c.getEsAhorros() ) );									
+								}
+							});
+						}
 						result.setDatosCuentaCliente( listCuenta );
 						log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 2 ");
 						DatosGarantiasWrapper datos = new DatosGarantiasWrapper();

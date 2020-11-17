@@ -114,15 +114,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
 	
-	@Column(name="id_banco")
-	private Long idBanco;
-	
-	@Column(name="numero_banco")
-	private String numeroBanco;
-	
-	@Column(name="banco_es_ahorro")
-	private Boolean bancoEsAhorro;
-	
 	@Column(name="total_peso_bruto_garantia")
 	private BigDecimal totalPesoBrutoGarantia;
 	
@@ -149,6 +140,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	
 	@Column(name="uri_imagen_sin_funda")
 	private String uriImagenSinFunda;
+	
+	@Column(name="numero_cuenta")
+	private String numeroCuenta;
 	
 	@Column(name="uri_imagen_con_funda")
 	private String uriImagenConFunda;
@@ -436,30 +430,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.pagoDia = pagoDia;
 	}
 
-	public Long getIdBanco() {
-		return idBanco;
-	}
-
-	public void setIdBanco(Long idBanco) {
-		this.idBanco = idBanco;
-	}
-
-	public String getNumeroBanco() {
-		return numeroBanco;
-	}
-
-	public void setNumeroBanco(String numeroBanco) {
-		this.numeroBanco = numeroBanco;
-	}
-
-	public Boolean getBancoEsAhorro() {
-		return bancoEsAhorro;
-	}
-
-	public void setBancoEsAhorro(Boolean bancoEsAhorro) {
-		this.bancoEsAhorro = bancoEsAhorro;
-	}
-
 	public BigDecimal getTotalPesoBrutoGarantia() {
 		return totalPesoBrutoGarantia;
 	}
@@ -618,6 +588,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
 		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
+	}
+
+	public String getNumeroCuenta() {
+		return numeroCuenta;
+	}
+
+	public void setNumeroCuenta(String numeroCuenta) {
+		this.numeroCuenta = numeroCuenta;
 	}
 
 }
