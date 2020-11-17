@@ -48,8 +48,9 @@ public class TbQoReferenciaPersonal implements Serializable {
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Column(name = "nombres_completos")
-	private String nombresCompletos;
+	private String nombres;
+	
+	private String apellidos;
 
 	private String parentesco;
 
@@ -110,14 +111,6 @@ public class TbQoReferenciaPersonal implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getNombresCompletos() {
-		return this.nombresCompletos;
-	}
-
-	public void setNombresCompletos(String nombresCompletos) {
-		this.nombresCompletos = nombresCompletos;
-	}
-
 	public String getParentesco() {
 		return this.parentesco;
 	}
@@ -156,6 +149,22 @@ public class TbQoReferenciaPersonal implements Serializable {
 
 	public void setIdSoftbank(Long idSoftbank) {
 		this.idSoftbank = idSoftbank;
+	}
+
+	public String getNombres() {
+		return nombres;
+	}
+
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
 	}
 
 }
