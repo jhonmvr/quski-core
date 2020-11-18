@@ -11,6 +11,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.repository.TelefonoClienteRepository;
+import com.relative.quski.repository.spec.TelefonoByClienteAndTipoSpec;
 import com.relative.quski.repository.spec.TelefonoByIdClienteSpec;
 
 
@@ -29,6 +30,23 @@ public class TelefonoClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 			}else {
 				return null;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+		}
+	}
+
+	@Override
+	public List<TbQoTelefonoCliente> findByClienteAndTipo(String identificacion, String tipoTelefono)
+			throws RelativeException {
+		try {
+			List<TbQoTelefonoCliente> list = findAllBySpecification(new TelefonoByClienteAndTipoSpec( identificacion,tipoTelefono ));
+		
+			if(list != null && !list.isEmpty()) {
+				return list;
+			}
+			return null;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");

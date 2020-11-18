@@ -36,14 +36,14 @@ public class CrmApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static CrmProspectoCortoWrapper callConsultaProspectoRest(String cedula) throws RelativeException, UnsupportedEncodingException {
+	public static CrmProspectoCortoWrapper callConsultaProspectoRest(String service,String cedula) throws RelativeException, UnsupportedEncodingException {
 		try {
 			CrmConsultaWrapper wrapper = new CrmConsultaWrapper(cedula);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=====> WRAPPER CRM CONSULTA " + new String(content));
-			String service = QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO;
+			//String service = QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO;
 			log.info("===> URL CRM " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
@@ -72,14 +72,14 @@ public class CrmApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static CrmProspectoWrapper callPersistProspectoRest(CrmGuardarProspectoWrapper wrapper ) throws RelativeException, UnsupportedEncodingException {
+	public static CrmProspectoWrapper callPersistProspectoRest(String service,CrmGuardarProspectoWrapper wrapper ) throws RelativeException, UnsupportedEncodingException {
 		try {
 	
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=====> WRAPPER CRM CONSULTA " + new String(content));
-			String service = QuskiOroConstantes.URL_CRM_PERSIST;
+			//String service = QuskiOroConstantes.URL_CRM_PERSIST;
 			log.info("===> URL CRM " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
