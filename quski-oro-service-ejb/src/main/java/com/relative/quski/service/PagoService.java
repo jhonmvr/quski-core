@@ -63,7 +63,10 @@ public class PagoService {
 			cliente.setEstado(EstadoEnum.ACT);
 
 			log.info(" ID de registro cliente: >>>>> " + cliente.getId());
-			
+			TbQoProceso proceso = qos.createProcesoPago( cliente.getId(), cliente.getAsesor());
+			if(proceso == null) {
+				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
 				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {

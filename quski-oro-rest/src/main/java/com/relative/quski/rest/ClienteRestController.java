@@ -182,4 +182,15 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad( this.qos.registrarCliente(wp) );
 		return loc;
 	}
+	
+	@POST
+	@Path("/updateCliente")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> updateCliente(TbQoCliente cliente) throws RelativeException {
+		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		
+		loc.setEntidad( this.qos.updateCliente(cliente) );
+		return loc;
+	}
+	
 }

@@ -44,17 +44,15 @@ public class ApiGatewayClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static EquifaxPersonaWrapper callConsultarClienteEquifaxRest(String urlService, String authorization,EquifaxConsultaPersonaWrapper wrapper)
+	public static EquifaxPersonaWrapper callConsultarClienteEquifaxRest(String urlService, String authorization,String content)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(wrapper);
-			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> wrapper " + new String(content));
+			
+			log.info("=====> wrapper " + content);
 			String service = urlService;
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
-					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, EquifaxConsultaPersonaWrapper.class);
 			log.info("===> Respuesta de servicio " + response);
@@ -71,15 +69,12 @@ public class ApiGatewayClient {
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static CalculadoraRespuestaWrapper callCalculadoraRest(String authorization, String wrapper)
+	public static CalculadoraRespuestaWrapper callCalculadoraRest(String urlService,String authorization, String wrapper)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			//Gson gson = new Gson();
@@ -152,11 +147,11 @@ public class ApiGatewayClient {
 					"	</soap:Body>\r\n" + 
 					"</soap:Envelope>";
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			String service = urlHost + urlPort + urlCalculadora;			
+
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
 					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, String.class);
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, urlService, String.class);
 	        
 			log.info("==========>  RESPONSE =================> " + response + " <==================="); 
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -180,15 +175,11 @@ public class ApiGatewayClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static TokenWrapper getToken() throws RelativeException{
-		
-		RestClientWrapper rest = new RestClientWrapper();
-		rest.setAuthorization(QuskiOroConstantes.AUTORIZACION);
-        StringBuilder param = new StringBuilder();
-        param.append( "grant_type" ).append("=").append("client_credentials");
-        String service = urlHost + urlPort + urlToken + param.toString();
+	public static TokenWrapper getToken(String urlService,String autorizacion) throws RelativeException{		
+       
+        String service = urlService;
         Map<String,Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-        		RestClientWrapper.CONTENT_TYPE_X_WWW_FORM, rest.getAuthorization(), 
+        		RestClientWrapper.CONTENT_TYPE_X_WWW_FORM, autorizacion, 
         		empty, RestClientWrapper.METHOD_POST, 
       		   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
       		   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
