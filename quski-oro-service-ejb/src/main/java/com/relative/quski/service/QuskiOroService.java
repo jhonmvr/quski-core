@@ -5217,6 +5217,7 @@ public class QuskiOroService {
 					return op;
 				}
 			}
+			op.setCuentas( this.cuentaBancariaRepository.findByIdCliente( op.getCredito().getTbQoNegociacion().getTbQoCliente().getId() ) );
 			return op;
 		}catch(RelativeException e ){
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());

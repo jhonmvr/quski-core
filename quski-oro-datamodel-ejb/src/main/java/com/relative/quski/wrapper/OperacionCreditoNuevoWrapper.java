@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoTasacion;
@@ -17,6 +18,7 @@ public class OperacionCreditoNuevoWrapper implements Serializable {
 	
 	private List<TbQoExcepcion> excepciones;
 	private TbQoCreditoNegociacion credito;
+	private List<TbQoCuentaBancariaCliente> cuentas;
 	private List<TbQoTasacion> joyas;
 	private TbQoProceso proceso;
 	private String mensaje;
@@ -72,6 +74,14 @@ public class OperacionCreditoNuevoWrapper implements Serializable {
 	}
 	public void setExiste(Boolean existe) {
 		this.existe = existe;
+	}
+
+	public List<TbQoCuentaBancariaCliente> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(List<TbQoCuentaBancariaCliente> cuentas) {
+		this.cuentas = cuentas;
 	}
 
 	
