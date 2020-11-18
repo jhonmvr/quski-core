@@ -53,10 +53,7 @@ public class TbQoVariablesCrediticia implements Serializable {
 
 	public TbQoVariablesCrediticia() {
 	}
-	public TbQoVariablesCrediticia( TbQoNegociacion negociacion) {
-		this.tbQoNegociacion = negociacion;
-	}
-
+	
 	public Long getId() {
 		return this.id;
 	}

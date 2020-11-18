@@ -117,8 +117,8 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@Path("/pruebaWSPersona")
 	public GenericWrapper<EquifaxVariableWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula) throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<EquifaxVariableWrapper> loc = new GenericWrapper<>();
-		List<EquifaxVariableWrapper> a = this.qos.traerVariablesEquifax(cedula);
-		loc.setEntidades(a);
+		//List<EquifaxVariableWrapper> a = this.qos.traerVariablesEquifax(cedula);
+		//loc.setEntidades(a);
 		return loc;
 	}
 	

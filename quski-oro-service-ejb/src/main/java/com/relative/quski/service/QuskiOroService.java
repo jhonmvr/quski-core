@@ -119,6 +119,12 @@ import com.relative.quski.wrapper.EquifaxPersonaWrapper;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.Informacion;
+import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
+import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS;
+import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS.RUBRO;
+import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas;
+import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
 import com.relative.quski.wrapper.IntegracionDatosClienteWrapper;
 import com.relative.quski.wrapper.IntegracionEntidadWrapper;
 import com.relative.quski.wrapper.IntegracionRubroWrapper;
@@ -1899,27 +1905,143 @@ public class QuskiOroService {
 	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.createCliente(cedula);
+			Informacion data = informacionCliente(cedula);
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor);
+				return generarTablasIniciales(cliente, asesor,data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
 		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
 		}
 	}
 
+	/** ******************************* @INTEGRACION **********************/
+	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente, INGRESOSEGRESOS ingresos) throws RelativeException {
+		if (cliente != null) {
+				TbQoCliente c = new TbQoCliente();
+				c.setCedulaCliente(StringUtils.leftPad(String.valueOf(cliente.getIDENTIFICACION()), 10, "0"));
+				c.setNombreCompleto(cliente.getNOMBRESCOMPLETOS());
+				c.setEmail(cliente.getCORREOELECTRONICO());
+				c.setCargasFamiliares(Long.valueOf(cliente.getCARGASFAMILIARES()));
+				c = this.manageCliente(c);
+				if (c.getId() != null && ingresos != null && ingresos.getRUBRO() != null && !ingresos.getRUBRO().isEmpty()) {
+					this.createIngresosEgresosFromEquifax(ingresos.getRUBRO(), c);
+				}
+				return c;
+			
+		} else {
+			return null;
+		}
+	}
+
+	private List<TbQoIngresoEgresoCliente> createIngresosEgresosFromEquifax(List<RUBRO> rubros,
+			TbQoCliente cliente) throws RelativeException {
+		List<TbQoIngresoEgresoCliente> list = new ArrayList<>();
+		if (rubros != null) {
+			rubros.forEach(e -> {
+				try {
+					TbQoIngresoEgresoCliente r = new TbQoIngresoEgresoCliente();
+					r.setValor(BigDecimal.valueOf(e.getVALOR()));
+					r.setTbQoCliente(cliente);
+					if (e.getTIPORUBROECONOMICO().equalsIgnoreCase(TipoRubroEnum.EGR.toString())) {
+						r.setEsEgreso(true);
+						r.setEsIngreso(false);
+					} else if (e.getTIPORUBROECONOMICO().equalsIgnoreCase(TipoRubroEnum.ING.toString())) {
+						r.setEsEgreso(false);
+						r.setEsIngreso(true);
+					} else {
+						r.setEsEgreso(false);
+						r.setEsIngreso(false);
+					}
+					list.add(this.manageIngresoEgresoCliente(r));
+				} catch (RelativeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					log.info("ERROR AL GUARDAR RUBROS DEL CLIENTE ==== >>>");
+				}
+			});
+			return list;
+		} else {
+			return null;
+		}
+	}
+
+	/*private IntegracionEntidadWrapper traerEntidadPersonaEquifax(String cedula) throws RelativeException {
+		try {
+			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
+			return data != null ? data : null;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}*/
+
+	public Informacion informacionCliente(String cedula) throws RelativeException, UnsupportedEncodingException {
+		try {
+			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+			String content = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_PERSONA).getValor()
+					.replace("--tipoidentificacion--", "C")
+					.replace("--identificacion--", cedula)
+					.replace("--tipoconsulta--", "CC")
+					.replace("--calificacionmupi--","N");
+			return ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_PERSONA).getValor(),
+					token.getTokenType()+" "+token.getAccessToken(), content);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	private List<TbQoVariablesCrediticia> createVariablesFromEquifax(List<Variable> variables,
+			TbQoNegociacion negociacion) throws RelativeException {
+			if (variables != null) {
+				List<TbQoVariablesCrediticia> list = new ArrayList<>();
+				variables.forEach(e -> {
+					TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
+					v.setCodigo(e.getCodigo());
+					v.setNombre(e.getNombre());
+					v.setOrden(String.valueOf(e.getOrden()));
+					v.setValor(e.getValor());
+					v.setTbQoNegociacion(negociacion);
+					try {
+						list.add(this.manageVariablesCrediticia(v));						
+					} catch (RelativeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						log.info("ERROR AL INTENTRAR GUARDAR VARIABLE CREDITICIA ");
+					}
+					
+				});
+				return list;
+			} else {
+				return null;
+			}
+		
+	}
+	
 	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor) throws RelativeException {
 		try {
-
-			TbQoCliente cliente = this.createClienteFromEquifax(this.traerEntidadPersonaEquifax(cedula));
+			Informacion data = informacionCliente(cedula);
+			
+			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE(),data.getINGRESOSEGRESOS());
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor);
+				return generarTablasIniciales(cliente, asesor,data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
 		} catch (RelativeException e) {
+			throw e;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
 		}
@@ -1929,11 +2051,16 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador(id);
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor);
+				Informacion data = informacionCliente(cliente.getCedulaCliente());
+				return generarTablasIniciales(cliente, asesor,data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
 		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
 		}
@@ -2081,19 +2208,20 @@ public class QuskiOroService {
 
 	}
 
-	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor) throws RelativeException {
+	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Informacion data) throws RelativeException {
 		try {
 			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
 				List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente());
-				//List<IntegracionVariableWrapper> variables = this.traerVariablesEquifax(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
 				wrapper.setCredito(credito);
 				wrapper.setRiesgos(this.createRiesgoFrontSoftBank(riesgos, credito.getTbQoNegociacion()));
-				//wrapper.setVariables(this.createVariablesFromEquifax(variables, credito.getTbQoNegociacion()));
+				wrapper.setVariables(this.createVariablesFromEquifax(data.getXmlVariablesInternas().getVariablesInternas().getVariable(), credito.getTbQoNegociacion()));
 				//traer excepcion 
-				//wrapper.setExcepcionBre(this.traerExcepcionEquifax(cliente.getCedulaCliente()));
+				if(data.getCodigoError()== 3) {
+					wrapper.setExcepcionBre(data.getMensaje());
+				}
 				wrapper.setRespuesta(true);
 				wrapper.setProceso( proceso );
 				this.guardarProspectoCrm(cliente);
@@ -4688,10 +4816,13 @@ public class QuskiOroService {
 					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
 			return ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
 					token.getTokenType() +" "+ token.getAccessToken(), content);
-		} catch (Exception e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
 		}
 	}
 
@@ -5275,116 +5406,9 @@ public class QuskiOroService {
 		}
 	}
 
-	/** ******************************* @INTEGRACION **********************/
-	public TbQoCliente createClienteFromEquifax(IntegracionEntidadWrapper entidad) throws RelativeException {
-		if (entidad != null) {
-			IntegracionDatosClienteWrapper datos = entidad.getDatoscliente();
-			List<IntegracionRubroWrapper> rubros = entidad.getIngresosegresos().getRubros();
-			if (datos != null) {
-				TbQoCliente c = new TbQoCliente();
-				c.setCedulaCliente(datos.getIdentificacion().toString());
-				c.setNombreCompleto(datos.getNombrescompletos());
-				c.setEmail(datos.getCorreoelectronico());
-				c.setCargasFamiliares(datos.getCargasfamiliares());
-				c = this.manageCliente(c);
-				if (c.getId() != null && !rubros.isEmpty()) {
-					this.createIngresosEgresosFromEquifax(rubros, c);
-				}
-				return c;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
+	
 
-	private List<TbQoIngresoEgresoCliente> createIngresosEgresosFromEquifax(List<IntegracionRubroWrapper> rubros,
-			TbQoCliente cliente) throws RelativeException {
-		List<TbQoIngresoEgresoCliente> list = new ArrayList<>();
-		if (rubros != null) {
-			rubros.forEach(e -> {
-				TbQoIngresoEgresoCliente r = new TbQoIngresoEgresoCliente(cliente);
-				r.setValor(e.getValor());
-				if (e.getTiporubroeconomico().equalsIgnoreCase(TipoRubroEnum.EGR.toString())) {
-					r.setEsEgreso(true);
-					r.setEsIngreso(false);
-				} else if (e.getTiporubroeconomico().equalsIgnoreCase(TipoRubroEnum.ING.toString())) {
-					r.setEsEgreso(false);
-					r.setEsIngreso(true);
-				} else {
-					r.setEsEgreso(false);
-					r.setEsIngreso(false);
-				}
-				list.add(r);
-			});
-			return this.manageListIngresoEgresoCliente(list);
-		} else {
-			return null;
-		}
-	}
-
-	private IntegracionEntidadWrapper traerEntidadPersonaEquifax(String cedula) throws RelativeException {
-		try {
-			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
-			return data != null ? data : null;
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	public List<EquifaxVariableWrapper> traerVariablesEquifax(String cedula) throws RelativeException, UnsupportedEncodingException {
-		try {
-			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
-					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
-			String content = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_PERSONA).getValor()
-					.replace("--tipoidentificacion--", "C")
-					.replace("--identificacion--", cedula)
-					.replace("--tipoconsulta--", "CC")
-					.replace("--calificacionmupi--","N");
-			
-			EquifaxPersonaWrapper data = ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
-					token.getTokenType()+" "+token.getAccessToken(), content);
-			if (data != null) {
-				List<EquifaxVariableWrapper> list = data.getVariablesInternas().getVariables();
-				return list;
-			} else {
-				return null;
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	private List<TbQoVariablesCrediticia> createVariablesFromEquifax(List<IntegracionVariableWrapper> equifax,
-			TbQoNegociacion negociacion) throws RelativeException {
-		try {
-			if (equifax != null) {
-				List<TbQoVariablesCrediticia> list = new ArrayList<>();
-				equifax.forEach(e -> {
-					TbQoVariablesCrediticia v = new TbQoVariablesCrediticia(negociacion);
-					v.setCodigo(e.getCodigo());
-					v.setNombre(e.getNombre());
-					v.setOrden(e.getOrden().toString());
-					v.setValor(e.getValor());
-					list.add(v);
-				});
-				return this.manageListVariablesCrediticias(list);
-			} else {
-				return null;
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	private String traerExcepcionEquifax(String cedula) throws RelativeException {
+	/*private String traerExcepcionEquifax(String cedula) throws RelativeException {
 		try {
 			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
 			if (data != null) {
@@ -5402,7 +5426,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
-	}
+	}*/
 
 	public void mailNotificacion(String[] para, String asunto, String contenido, Map<String, byte[]> adjunto)
 			throws RelativeException {
