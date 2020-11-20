@@ -4,35 +4,44 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.relative.quski.enums.EstadoEnum;
-
 public class DevolucionProcesoWrapper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
     private Long   id;
-    private Date  fechaSolicitud;
+    private Date   fechaSolicitud;
     private String nombreAgenciaSolicitud;
     private String codigoOperacionMadre;
-    private String nombreCliente;
     private String codigoOperacion;
+    private String nombreCliente;
 	private String cedulaCliente;
-	private String fundaActual;
 	private String fundaMadre;
-	
+	private String fundaActual;	
 	private String ciudadTevcol;
-    private Date  fechaArriboAgencia;
+    private String fechaArriboAgencia;
 	private String asesor;
-	private Date  fechaAprobacion;
-	private String codeDetalleCredito;
-	private String valorAvaluo;
-	private String pesoBruto;
+	private String fechaAprobacion;
+	
+
+	public DevolucionProcesoWrapper(BigDecimal id, Date fechaSolicitud, String nombreAgenciaSolicitud,
+			String codigoOperacionMadre, String codigoOperacion, String nombreCliente, String cedulaCliente,
+			String fundaMadre, String fundaActual, String ciudadTevcol, String fechaArriboAgencia, String asesor,
+			String fechaAprobacion) {
+		super();
+		this.id = id.longValue();
+		this.fechaSolicitud = fechaSolicitud;
+		this.nombreAgenciaSolicitud = nombreAgenciaSolicitud;
+		this.codigoOperacionMadre = codigoOperacionMadre;
+		this.codigoOperacion = codigoOperacion;
+		this.nombreCliente = nombreCliente;
+		this.cedulaCliente = cedulaCliente;
+		this.fundaMadre = fundaMadre;
+		this.fundaActual = fundaActual;
+		this.ciudadTevcol = ciudadTevcol;
+		this.fechaArriboAgencia = fechaArriboAgencia;
+		this.asesor = asesor;
+		this.fechaAprobacion = fechaAprobacion;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -57,17 +66,17 @@ public class DevolucionProcesoWrapper implements Serializable {
 	public void setCodigoOperacionMadre(String codigoOperacionMadre) {
 		this.codigoOperacionMadre = codigoOperacionMadre;
 	}
-	public String getNombreCliente() {
-		return nombreCliente;
-	}
-	public void setNombreCliente(String nombreCliente) {
-		this.nombreCliente = nombreCliente;
-	}
 	public String getCodigoOperacion() {
 		return codigoOperacion;
 	}
 	public void setCodigoOperacion(String codigoOperacion) {
 		this.codigoOperacion = codigoOperacion;
+	}
+	public String getNombreCliente() {
+		return nombreCliente;
+	}
+	public void setNombreCliente(String nombreCliente) {
+		this.nombreCliente = nombreCliente;
 	}
 	public String getCedulaCliente() {
 		return cedulaCliente;
@@ -93,10 +102,10 @@ public class DevolucionProcesoWrapper implements Serializable {
 	public void setCiudadTevcol(String ciudadTevcol) {
 		this.ciudadTevcol = ciudadTevcol;
 	}
-	public Date getFechaArriboAgencia() {
+	public String getFechaArriboAgencia() {
 		return fechaArriboAgencia;
 	}
-	public void setFechaArriboAgencia(Date fechaArriboAgencia) {
+	public void setFechaArriboAgencia(String fechaArriboAgencia) {
 		this.fechaArriboAgencia = fechaArriboAgencia;
 	}
 	public String getAsesor() {
@@ -105,34 +114,14 @@ public class DevolucionProcesoWrapper implements Serializable {
 	public void setAsesor(String asesor) {
 		this.asesor = asesor;
 	}
-	public Date getFechaAprobacion() {
+	public String getFechaAprobacion() {
 		return fechaAprobacion;
 	}
-	public void setFechaAprobacion(Date fechaAprobacion) {
+	public void setFechaAprobacion(String fechaAprobacion) {
 		this.fechaAprobacion = fechaAprobacion;
 	}
-	public String getCodeDetalleCredito() {
-		return codeDetalleCredito;
-	}
-	public void setCodeDetalleCredito(String codeDetalleCredito) {
-		this.codeDetalleCredito = codeDetalleCredito;
-	}
-	public String getValorAvaluo() {
-		return valorAvaluo;
-	}
-	public void setValorAvaluo(String valorAvaluo) {
-		this.valorAvaluo = valorAvaluo;
-	}
-	public String getPesoBruto() {
-		return pesoBruto;
-	}
-	public void setPesoBruto(String pesoBruto) {
-		this.pesoBruto = pesoBruto;
-	}
-
 	
-
-
+	
 	
 
 }

@@ -187,15 +187,25 @@ public class DevolucionService {
 	
 	public PaginatedListWrapper<DevolucionProcesoWrapper> findOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
 		
-		PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
-		List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
-		log.info(""+ actions.get(0).getCodeDetalleCredito());
-		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
-			plw.setList(actions);
+		try {
+			PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
+			List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
+			log.info("========>>>>>>> actions >>>>" + actions);
+			if (actions != null && !actions.isEmpty()) {
+				plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
+				plw.setList(actions);
+			}
+			
+			return plw;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
 		}
-		
-		return plw;
 	}
 	
 	public Integer countOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
