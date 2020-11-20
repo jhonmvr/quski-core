@@ -75,17 +75,12 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 		try {
 			
 			List<TbQoCliente>  listCliente = this.findAllBySpecification(new ClienteByIdentificacionSpec(identificacion));
-			if (!listCliente.isEmpty()) {
-				if (listCliente.size() == 1) {
-					return listCliente.get(0);
-				} else {
-					throw new RelativeException(Constantes.ERROR_CODE_READ," LA VALIDACION DE CEDULA NO FUNCIONA ");			
-					}
-			} else {
-				return  null;
+			if (listCliente != null && !listCliente.isEmpty()) {
+				return listCliente.get(0);
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ," Ocurrio un error al leer cliente, " + e.getMessage());
+			return null;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ," AL BUSCAR CLIENTE POR IDENTIFICACION " + e.getMessage());
 		}
 	}
 

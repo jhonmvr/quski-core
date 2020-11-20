@@ -171,7 +171,7 @@ public class ClienteRestController extends BaseRestController
 	@Path("/traerClienteByCedula")
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
-		ClienteCompletoWrapper a = this.qos.traerClienteByCedula( cedula );
+		ClienteCompletoWrapper a = this.qos.buscarGuardarTraerCliente( cedula );
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -182,4 +182,15 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad( this.qos.registrarCliente(wp) );
 		return loc;
 	}
+	
+	@POST
+	@Path("/updateCliente")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	public GenericWrapper<TbQoCliente> updateCliente(TbQoCliente cliente) throws RelativeException {
+		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
+		
+		loc.setEntidad( this.qos.updateCliente(cliente) );
+		return loc;
+	}
+	
 }

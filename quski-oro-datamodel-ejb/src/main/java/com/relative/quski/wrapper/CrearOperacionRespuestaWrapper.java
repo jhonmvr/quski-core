@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CrearOperacionRespuestaWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -9,7 +10,7 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 		
 	}
 	private String numeroOperacion;
-	private Integer periodo ;
+	private Long periodo ;
 	private Long plazo;
 	private String producto;
 	private String estado;
@@ -23,11 +24,17 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	private String codigoTablaAmortizacionQuski;
 	private String codigoTipoCarteraQuski;
 	private Boolean esProductoOro;
+	private String numeroFundaJoya;
 	private String uriHabilitantes;
-	private DatosImpComWrapper datosImpCom;
+	private List<DatosImpComWrapper> datosImpCom;
+	private List<JoyaWrapper> garantias;
+
 	private Boolean existeError;
 	private String mensaje;
+	private String descripcion;
 	private Integer codigoServicio;
+    private String validaciones;
+
 	
 	
 	public String getNumeroOperacion() {
@@ -36,12 +43,7 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setNumeroOperacion(String numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
-	public Integer getPeriodo() {
-		return periodo;
-	}
-	public void setPeriodo(Integer periodo) {
-		this.periodo = periodo;
-	}
+
 	public Long getPlazo() {
 		return plazo;
 	}
@@ -120,12 +122,6 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setEsProductoOro(Boolean esProductoOro) {
 		this.esProductoOro = esProductoOro;
 	}
-	public DatosImpComWrapper getDatosImpCom() {
-		return datosImpCom;
-	}
-	public void setDatosImpCom(DatosImpComWrapper datosImpCom) {
-		this.datosImpCom = datosImpCom;
-	}
 	public Boolean getExisteError() {
 		return existeError;
 	}
@@ -149,5 +145,41 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	}
 	public void setUriHabilitantes(String uriHabilitantes) {
 		this.uriHabilitantes = uriHabilitantes;
+	}
+	public Long getPeriodo() {
+		return periodo;
+	}
+	public void setPeriodo(Long periodo) {
+		this.periodo = periodo;
+	}
+	public String getNumeroFundaJoya() {
+		return numeroFundaJoya;
+	}
+	public void setNumeroFundaJoya(String numeroFundaJoya) {
+		this.numeroFundaJoya = numeroFundaJoya;
+	}
+	public List<DatosImpComWrapper> getDatosImpCom() {
+		return datosImpCom;
+	}
+	public void setDatosImpCom(List<DatosImpComWrapper> datosImpCom) {
+		this.datosImpCom = datosImpCom;
+	}
+	public List<JoyaWrapper> getGarantias() {
+		return garantias;
+	}
+	public void setGarantias(List<JoyaWrapper> garantias) {
+		this.garantias = garantias;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	public String getValidaciones() {
+		return validaciones;
+	}
+	public void setValidaciones(String validaciones) {
+		this.validaciones = validaciones;
 	}
 }

@@ -24,7 +24,6 @@ public class IngresoEgresoClienteRepositoryImp extends GeneralRepositoryImp<Long
 	public List<TbQoIngresoEgresoCliente> findByIdCliente(Long id) throws RelativeException {
 		try {
 			List<TbQoIngresoEgresoCliente>  list =  findAllBySpecification(new IngresoEgresoByIdClienteSpec( id ));
-			log.info("ESTOY BUSCANDO EL INGRESOS =====> " + list.size());
 			if(!list.isEmpty() ) {
 				return list;
 			}else {
@@ -40,7 +39,6 @@ public class IngresoEgresoClienteRepositoryImp extends GeneralRepositoryImp<Long
 		try {
 			List<TbQoIngresoEgresoCliente>  list =  findAllBySpecification(new IngresoEgresoByIdSpec( id ));
 			if(!list.isEmpty() ) {
-				log.info("ESTOY BUSCANDO EL INGRESO PARA ACTUALIZAR =====> " + list.size());
 				if(list.size() <= 1) {
 					return list.get(0);
 				}else {

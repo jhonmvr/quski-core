@@ -2,6 +2,9 @@ package com.relative.quski.rest;
 
 
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -17,6 +21,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 
 import io.swagger.annotations.Api;
@@ -108,4 +113,13 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		return loc;
 	}
 
+	@GET
+	@Path("/pruebaWSPersona")
+	public GenericWrapper<EquifaxVariableWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<EquifaxVariableWrapper> loc = new GenericWrapper<>();
+		//List<EquifaxVariableWrapper> a = this.qos.traerVariablesEquifax(cedula);
+		//loc.setEntidades(a);
+		return loc;
+	}
+	
 }

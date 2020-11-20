@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +35,6 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "apellido_paterno")
 	private String apellidoPaterno;
 
-	@Column(name = "apoderado_cliente")
-	private String apoderadoCliente;
-
 	private String campania;
 
 	@Column(name = "canal_contacto")
@@ -53,7 +49,7 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "cedula_cliente")
 	private String cedulaCliente;
 
-	private BigDecimal edad;
+	private Long edad;
 
 	private String email;
 	
@@ -85,18 +81,12 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "nivel_educacion")
 	private String nivelEducacion;
 
-	@Column(name = "origen_ingreso")
-	private String origenIngreso;
-
 	@Column(name = "primer_nombre")
 	private String primerNombre;
 
 	private String profesion;
 
 	private String publicidad;
-
-	@Column(name = "relacion_dependencia")
-	private String relacionDependencia;
 
 	@Column(name = "segundo_nombre")
 	private String segundoNombre;
@@ -214,14 +204,6 @@ public class TbQoCliente implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public String getApoderadoCliente() {
-		return this.apoderadoCliente;
-	}
-
-	public void setApoderadoCliente(String apoderadoCliente) {
-		this.apoderadoCliente = apoderadoCliente;
-	}
-
 	public String getCampania() {
 		return this.campania;
 	}
@@ -254,11 +236,11 @@ public class TbQoCliente implements Serializable {
 		this.cedulaCliente = cedulaCliente;
 	}
 
-	public BigDecimal getEdad() {
+	public Long getEdad() {
 		return this.edad;
 	}
 
-	public void setEdad(BigDecimal edad) {
+	public void setEdad(Long edad) {
 		this.edad = edad;
 	}
 
@@ -350,14 +332,6 @@ public class TbQoCliente implements Serializable {
 		this.nivelEducacion = nivelEducacion;
 	}
 
-	public String getOrigenIngreso() {
-		return this.origenIngreso;
-	}
-
-	public void setOrigenIngreso(String origenIngreso) {
-		this.origenIngreso = origenIngreso;
-	}
-
 	public String getPrimerNombre() {
 		return this.primerNombre;
 	}
@@ -380,14 +354,6 @@ public class TbQoCliente implements Serializable {
 
 	public void setPublicidad(String publicidad) {
 		this.publicidad = publicidad;
-	}
-
-	public String getRelacionDependencia() {
-		return this.relacionDependencia;
-	}
-
-	public void setRelacionDependencia(String relacionDependencia) {
-		this.relacionDependencia = relacionDependencia;
 	}
 
 	public String getSegundoNombre() {

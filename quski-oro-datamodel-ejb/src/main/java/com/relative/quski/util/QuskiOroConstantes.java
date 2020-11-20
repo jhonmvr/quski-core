@@ -266,21 +266,28 @@ public class QuskiOroConstantes {
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
 	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
-	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "http://201.183.238.73:1991/api/cliente/consultar";
-	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/crear";
+	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE";
+	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "URL_SERVICIO_SOFTBANK_CREAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
+	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "http://201.183.238.73:1991/api/prestamo/operacion/tablaamortizacion";
+	public static final String URL_APIGW = "URL_APIGW";
+	public static final String AUTH_APIGW = "AUTH_APIGW";
+	public static final String URL_WS_PERSONA = "URL_WS_PERSONA";
+	public static final String URL_WS_QUSKI_CALCULADORA = "URL_WS_QUSKI_CALCULADORA";
+	public static final String CONTENT_XML_PERSONA = "CONTENT_XML_PERSONA";
+	public static final String CONTENT_XML_QUSKI_CALCULADORA = "CONTENT_XML_QUSKI_CALCULADORA";
 
 	// INTEGRACION
-	public static final String URL_PERSONA ="http://localhost:8080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
+	public static final String URL_PERSONA ="http://localhost:28080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
 	public static final String PARAMETRO_1 ="?tipoIdentificacion=";
 	public static final String PARAMETRO_2 ="&identificacion=";
 	public static final String PARAMETRO_3 ="&tipoConsulta=";
 	public static final String PARAMETRO_4 ="&calificacion=";
 
 	// CRM SERVICES 
-	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
-	public static final String URL_CRM_PERSIST ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/persistEntity";
+	public static final String URL_CRM_PROSPECTO_CORTO ="URL_CRM_PROSPECTO_CORTO";
+	public static final String URL_CRM_PERSIST ="URL_CRM_PERSIST";
 
 	
 	//STORAGE

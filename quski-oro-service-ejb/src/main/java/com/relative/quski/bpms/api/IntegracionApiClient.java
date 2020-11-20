@@ -29,7 +29,7 @@ public class IntegracionApiClient {
 	 * @return
 	 * @throws RelativeException
 	 */
-	public static IntegracionEntidadWrapper callPersonaRest(String cedula) throws RelativeException {
+	public static IntegracionEntidadWrapper xcallPersonaRest(String cedula) throws RelativeException {
 		try {
 			IntegracionConsultaWrapper wrapper = new IntegracionConsultaWrapper(cedula);
 			String service = QuskiOroConstantes.URL_PERSONA + QuskiOroConstantes.PARAMETRO_1 + wrapper.getTipoIdentificacion() + QuskiOroConstantes.PARAMETRO_2 + wrapper.getIdentificacion() + QuskiOroConstantes.PARAMETRO_3 + wrapper.getTipoConsulta() + QuskiOroConstantes.PARAMETRO_4 + wrapper.getCalificacion();
@@ -63,4 +63,6 @@ public class IntegracionApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
+	
+	
 }
