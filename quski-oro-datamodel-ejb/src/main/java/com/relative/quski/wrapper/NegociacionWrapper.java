@@ -18,11 +18,12 @@ public class NegociacionWrapper implements Serializable {
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
 	private List<TbQoExcepcion> excepciones;
-	private List<TbQoTelefonoCliente> telefonos;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
 	private String excepcionBre;
 	private Boolean respuesta;
+	private TbQoTelefonoCliente telefonoMovil;
+	private TbQoTelefonoCliente telefonoDomicilio;
 
 	public NegociacionWrapper(Boolean respuesta) {
 		super();
@@ -30,12 +31,7 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public NegociacionWrapper() {
 	}
-	public List<TbQoTelefonoCliente> getTelefonos() {
-		return telefonos;
-	}
-	public void setTelefonos(List<TbQoTelefonoCliente> telefonos) {
-		this.telefonos = telefonos;
-	}
+	
 	public List<TbQoVariablesCrediticia> getVariables() {
 		return variables;
 	}
@@ -83,5 +79,17 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public void setProceso(TbQoProceso proceso) {
 		this.proceso = proceso;
+	}
+	public TbQoTelefonoCliente getTelefonoMovil() {
+		return telefonoMovil;
+	}
+	public void setTelefonoMovil(TbQoTelefonoCliente telefonoMovil) {
+		this.telefonoMovil = telefonoMovil;
+	}
+	public TbQoTelefonoCliente getTelefonoDomicilio() {
+		return telefonoDomicilio;
+	}
+	public void setTelefonoDomicilio(TbQoTelefonoCliente telefonoDomicilio) {
+		this.telefonoDomicilio = telefonoDomicilio;
 	}
 }

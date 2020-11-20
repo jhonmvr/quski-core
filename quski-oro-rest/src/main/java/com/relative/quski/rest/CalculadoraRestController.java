@@ -15,6 +15,7 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
+import com.relative.quski.wrapper.SimularResponse;
 
 
 @Path("/calculadoraRestController")
@@ -54,9 +55,9 @@ public class CalculadoraRestController extends BaseRestController
 	}
 	@POST
 	@Path("/simularOferta")
-	public GenericWrapper<CalculadoraRespuestaWrapper> simularOferta(GenericWrapper<CalculadoraEntradaWrapper> wrapper) throws RelativeException {
-		GenericWrapper<CalculadoraRespuestaWrapper> loc = new GenericWrapper<>();
-		CalculadoraRespuestaWrapper a = this.qos.simularOfertasCalculadora(wrapper.getEntidad());
+	public GenericWrapper<SimularResponse> simularOferta(GenericWrapper<CalculadoraEntradaWrapper> wrapper) throws RelativeException {
+		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
+		SimularResponse a = this.qos.simularOfertasCalculadora(wrapper.getEntidad());
 		loc.setEntidad(a);
 		return loc;
 	}

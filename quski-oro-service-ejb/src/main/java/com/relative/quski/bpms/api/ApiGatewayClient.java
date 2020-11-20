@@ -1,11 +1,13 @@
 package com.relative.quski.bpms.api;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -13,16 +15,16 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.integracion.calculadora.util.IntegracionUtil;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
 import com.relative.quski.wrapper.EquifaxConsultaPersonaWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.RestClientWrapper;
+import com.relative.quski.wrapper.SimularResponse;
 import com.relative.quski.wrapper.TokenWrapper;
 
 public class ApiGatewayClient {
@@ -39,107 +41,7 @@ public class ApiGatewayClient {
 
 	public static void main(String[] args) {
 		try {
-			String content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" + 
-					"<soap:Envelope\r\n" + 
-					"	xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n" + 
-					"	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n" + 
-					"	xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n" + 
-					"	<soap:Body>\r\n" + 
-					"		<ConsultaNuevoCliente\r\n" + 
-					"			xmlns=\"http://tempuri.org/\">\r\n" + 
-					"			<XMlConsulta>\r\n" + 
-					"				<![CDATA[ <carga>\r\n" + 
-					"					<XmlConsultaClienteNuevo>\r\n" + 
-					"						<DatosClienteNuevo>\r\n" + 
-					"							<TIPO_IDENTIFICACION>--tipoidentificacion--</TIPO_IDENTIFICACION>\r\n" + 
-					"							<IDENTIFICACION>--identificacion--</IDENTIFICACION>\r\n" + 
-					"							<TIPO_CONSULTA>--tipoconsulta--</TIPO_CONSULTA>\r\n" + 
-					"							<CALIFICACION_MUPI>--calificacionmupi--</CALIFICACION_MUPI>\r\n" + 
-					"						</DatosClienteNuevo>\r\n" + 
-					"					</XmlConsultaClienteNuevo>\r\n" + 
-					"				</carga> ]]>\r\n" + 
-					"			</XMlConsulta>\r\n" + 
-					"		</ConsultaNuevoCliente>\r\n" + 
-					"	</soap:Body>\r\n" + 
-					"</soap:Envelope>";
-			content =	content.replace("--tipoidentificacion--", "C")
-					.replace("--identificacion--", "1721395125")
-					.replace("--tipoconsulta--", "CC")
-					.replace("--calificacionmupi--","N");
-			TokenWrapper token = getToken("https://apigw.quski.ec:8243/token?grant_type=client_credentials", "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh");
-			
-			ApiGatewayClient.callConsultarClienteEquifaxRest("https://apigw.quski.ec:8243/service-persona/1.0",
-					token.getTokenType()+" "+token.getAccessToken(), content);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	/**
-	 * 
-	 * @param urlService
-	 * @param authorization
-	 * @param wrapper
-	 * @return
-	 * @throws RelativeException
-	 * @throws UnsupportedEncodingException
-	 */
-	public static Informacion callConsultarClienteEquifaxRest(String urlService, String authorization,String content)
-			throws RelativeException, UnsupportedEncodingException {
-		try {
-			
-			log.info("=====> wrapper " + content);
-			String service = urlService;
-			log.info("===> callBpmsInitProcesss con servcio " + service);
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
-					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
-					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, EquifaxConsultaPersonaWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
-			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
-			if(status>=200 && status < 300) {
-				String respuesta = String.valueOf(response.get(ReRestClient.RETURN_OBJECT));
-				//log.info("nuevo resp " + respuesta);
-				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				ByteArrayInputStream input =  new ByteArrayInputStream(respuesta.getBytes("UTF-8"));
-				Document doc = builder.parse(input);
-				Element root = doc.getDocumentElement();
-				//log.info( "mensaje x " + root.getElementsByTagName("ConsultaNuevoClienteResult") );
-				NodeList chn=root.getElementsByTagName("ConsultaNuevoClienteResult");
-				for( int i=0; i<chn.getLength();i++) {
-					log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
-					return ReRestClient.fromXml( chn.item(i).getTextContent(), Informacion.class);
-				}
-				return null;
-				
-			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-	public static CalculadoraRespuestaWrapper callCalculadoraRest(String urlService,String authorization, String wrapper)
-			throws RelativeException, UnsupportedEncodingException {
-		try {
-			//Gson gson = new Gson();
-			//String jsonString = gson.toJson(wrapper);
-			String jsonString = "<soap:Envelope\r\n" + 
+			String content ="<soap:Envelope\r\n" + 
 					"	xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n" + 
 					"	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n" + 
 					"	xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n" + 
@@ -206,10 +108,86 @@ public class ApiGatewayClient {
 					"		</CalculadoraQuski>\r\n" + 
 					"	</soap:Body>\r\n" + 
 					"</soap:Envelope>";
-			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-
+		/*	content =	content.replace("--tipoidentificacion--", "C")
+					.replace("--identificacion--", "1721395125")
+					.replace("--tipoconsulta--", "CC")
+					.replace("--calificacionmupi--","N");*/
+			TokenWrapper token = getToken("https://apigw.quski.ec:8243/token?grant_type=client_credentials", "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh");
+			
+			ApiGatewayClient.callCalculadoraRest("https://apigw.quski.ec:8243/quski-calculadora/1.0",
+					token.getTokenType()+" "+token.getAccessToken(), content);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * 
+	 * @param urlService
+	 * @param authorization
+	 * @param wrapper
+	 * @return
+	 * @throws RelativeException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static Informacion callConsultarClienteEquifaxRest(String urlService, String authorization,String content)
+			throws RelativeException, UnsupportedEncodingException {
+		try {
+			
+			log.info("=====> wrapper " + content);
+			String service = urlService;
+			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
-					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, EquifaxConsultaPersonaWrapper.class);
+			log.info("===> Respuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				String respuesta = String.valueOf(response.get(ReRestClient.RETURN_OBJECT));
+				//log.info("nuevo resp " + respuesta);
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				ByteArrayInputStream input =  new ByteArrayInputStream(respuesta.getBytes("UTF-8"));
+				Document doc = builder.parse(input);
+				Element root = doc.getDocumentElement();
+				//log.info( "mensaje x " + root.getElementsByTagName("ConsultaNuevoClienteResult") );
+				NodeList chn=root.getElementsByTagName("ConsultaNuevoClienteResult");
+				for( int i=0; i<chn.getLength();i++) {
+					log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
+					return ReRestClient.fromXml( chn.item(i).getTextContent(), Informacion.class);
+				}
+				return null;
+				
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static SimularResponse callCalculadoraRest(String urlService,String authorization, String content)
+			throws RelativeException, UnsupportedEncodingException {
+		try {
+			//Gson gson = new Gson();
+			//String jsonString = gson.toJson(wrapper);
+		
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
+					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, urlService, String.class);
 	        
@@ -218,8 +196,17 @@ public class ApiGatewayClient {
 			if(status>=200 && status < 300) {
 				//Gson gsons = new GsonBuilder().create();
 				//return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CalculadoraRespuestaWrapper.class);
-				String stringResult = StringEscapeUtils.unescapeXml( String.valueOf(response.get("resultado")));
-				log.info("===============> STRING RESULT ======> " + stringResult );
+				String stringResult =String.valueOf(response.get("resultado"));
+				//log.info("===============> STRING RESULT ======> " + stringResult );
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				ByteArrayInputStream input =  new ByteArrayInputStream(stringResult.getBytes("UTF-8"));
+				Document doc = builder.parse(input);
+				Element root = doc.getDocumentElement();
+				NodeList chn=root.getElementsByTagName("CalculadoraQuskiResult");
+				for( int i=0; i<chn.getLength();i++) {
+					log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
+					return ReRestClient.fromXml( chn.item(i).getTextContent(), SimularResponse.class);
+				}
 				return null;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -233,6 +220,10 @@ public class ApiGatewayClient {
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 	public static TokenWrapper getToken(String urlService,String autorizacion) throws RelativeException{		
