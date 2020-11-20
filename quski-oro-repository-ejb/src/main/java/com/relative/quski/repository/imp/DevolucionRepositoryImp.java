@@ -32,13 +32,19 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 	public List<DevolucionProcesoWrapper> findOperaciones(BusquedaDevolucionWrapper  bdw) throws RelativeException {
 			//List<MovimientosDetalleCierreCajaWrapper> listMovimientos = null;
 		try {
-			String querySelect ="select j.fecha_solicitud,j.agencia_solicitud,j.codigo_operacion_madre"
-					+ ", j.codigo_operacion, j.nombre_cliente, j.cedula_cliente, j.funda_madre, j.funda_actual"
-					+ "j.ciudad_tevcol, j.fecha_arribo, j.asesor, j,fecha_aprobacion_solicitud "
-					+ "from TbQoDevolucion j inner join (select d from TbQoProceso d where d.proceso = 'DEVOLUCION')";
 			
+			log.info("Empieza xd");
+			String querySelect ="select j.fecha_creacion,j.nombre_agencia_solicitud,j.codigo_operacion_madre"
+					+ ", j.codigo_operacion, j.nombre_cliente, j.cedula_cliente, j.funda_madre, j.funda_actual,"
+					+ "j.ciudad_tevcol, j.fecha_arribo, j.asesor, j.fecha_aprobacion_solicitud "
+					+ "from tb_qo_devolucion j inner join (select * from tb_qo_proceso d  where d.proceso = 'DEVOLUCION') as foo "
+					+ "on foo.id_referencia  =  j.id ";
+			
+			
+			log.info("El select" + querySelect);
 			StringBuilder strQry = new StringBuilder( querySelect );
 			if (bdw.getCodigoOperacion() != null) {
+				log.info("codigo" + bdw.getCodigoOperacion());
 				strQry.append(" where j.codigo_operacion =:c  ");
 			} 
 			if(bdw.getAgencia() != null) {
@@ -60,7 +66,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 				strQry.append(" and d.estado =:estado ");
 			}
 
-			strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
+			strQry.append("ORDER BY j.fecha_creacion LIMIT :limite OFFSET :salto");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
 			if (bdw.getCodigoOperacion() != null) {
@@ -89,11 +95,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 				query.setParameter("agencia", bdw.getAgencia());
 			}
 
-
-			query.setParameter("limite", bdw.getNumberItems() );
-			Long salto = bdw.getNumberItems() * (bdw.getNumberPage());
-			query.setParameter("salto", salto );
 			
+			query.setFirstResult(bdw.getNumberPage());
+			query.setMaxResults(bdw.getNumberItems());
+			log.info("q paso q paso" +  QuskiOroUtil.getResultList(query.getResultList(), DevolucionProcesoWrapper.class));
 			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionProcesoWrapper.class) ;
 		}catch (Exception e) {
 			e.getStackTrace();
@@ -107,10 +112,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 	public Integer countOperaciones(BusquedaDevolucionWrapper  bdw) throws RelativeException {
 		//List<MovimientosDetalleCierreCajaWrapper> listMovimientos = null;
 	try {
-		String querySelect ="select j.fecha_solicitud,j.agencia_solicitud,j.codigo_operacion_madre"
-				+ ", j.codigo_operacion, j.nombre_cliente, j.cedula_cliente, j.funda_madre, j.funda_actual"
-				+ "j.ciudad_tevcol, j.fecha_arribo, j.asesor, j,fecha_aprobacion_solicitud "
-				+ "from TbQoDevolucion j inner join (select d from TbQoProceso d where d.proceso = 'DEVOLUCION')";
+		String querySelect ="select COUNT j.fecha_creacion,j.nombre_agencia_solicitud,j.codigo_operacion_madre"
+				+ ", j.codigo_operacion, j.nombre_cliente, j.cedula_cliente, j.funda_madre, j.funda_actual,"
+				+ "j.ciudad_tevcol, j.fecha_arribo, j.asesor, j.fecha_aprobacion_solicitud "
+				+ "from TbQoDevolucion j inner join (select * from tb_qo_proceso d  where d.proceso = 'DEVOLUCION') as foo "
+				+ "on j.id = foo.id_referencia ";
 		
 		StringBuilder strQry = new StringBuilder( querySelect );
 		if (bdw.getCodigoOperacion() != null) {
@@ -119,7 +125,6 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 		if(bdw.getAgencia() != null) {
 			strQry.append(" and j.agencia_entrega=:agencia ");
 		}
-
 		
 		if (bdw.getIdentificacion() != null) {
 			strQry.append(" and j.cedula_cliente=:identificacion   ");
@@ -135,7 +140,6 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			strQry.append(" and d.estado =:estado ");
 		}
 
-		strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
 		Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
 		if (bdw.getCodigoOperacion() != null) {
@@ -165,9 +169,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 		}
 
 
-		query.setParameter("limite", bdw.getNumberItems() );
-		Long salto = bdw.getNumberItems() * (bdw.getNumberPage());
-		query.setParameter("salto", salto );
+	
 		
 		return ((BigInteger) query.getSingleResult()).intValue();
 		

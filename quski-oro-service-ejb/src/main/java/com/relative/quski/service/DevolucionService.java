@@ -189,6 +189,7 @@ public class DevolucionService {
 		
 		PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
 		List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
+		log.info(""+ actions.get(0).getCodeDetalleCredito());
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
 			plw.setList(actions);

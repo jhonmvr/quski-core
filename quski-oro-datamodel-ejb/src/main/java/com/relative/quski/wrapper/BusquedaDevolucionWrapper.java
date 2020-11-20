@@ -16,8 +16,8 @@ public class BusquedaDevolucionWrapper implements Serializable {
 	private Date fechaAprobacionDesde; 	// Proceso //
 	private Date fechaAprobacionHasta;
 	private ProcesoEnum estado;
-	private Long numberPage;
-	private Long numberItems;
+	private Integer numberPage;
+	private Integer numberItems;
 	public String getCodigoOperacion() {
 		return codigoOperacion;
 	}
@@ -54,17 +54,18 @@ public class BusquedaDevolucionWrapper implements Serializable {
 	public void setEstado(ProcesoEnum estado) {
 		this.estado = estado;
 	}
-	public Long getNumberPage() {
+	public Integer getNumberPage() {
 		return numberPage;
 	}
-	public void setNumberPage(Long numberPage) {
+	public void setNumberPage(Integer numberPage) {
 		this.numberPage = numberPage;
 	}
-	public Long getNumberItems() {
+	public Integer getNumberItems() {
 		return numberItems;
 	}
-	public void setNumberItems(Long numberItems) {
+	public void setNumberItems(Integer numberItems) {
 		this.numberItems = numberItems;
-	} 	
+	}
+	
 	
 }

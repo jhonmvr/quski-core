@@ -23,8 +23,9 @@ public class DevolucionProcesoWrapper implements Serializable {
     private String nombreCliente;
     private String codigoOperacion;
 	private String cedulaCliente;
-	private String fundaMadre;
 	private String fundaActual;
+	private String fundaMadre;
+	
 	private String ciudadTevcol;
     private Date  fechaArriboAgencia;
 	private String asesor;
