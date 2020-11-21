@@ -28,6 +28,19 @@ public class SoftBankApiClient {
 
 	public static void main(String[] args) {
 		
+		try {
+			
+			
+			
+			SoftbankClienteWrapper x= callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar","131166441");
+			System.out.println("==============>>>"+ x.getNombreCompleto());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * 
@@ -38,13 +51,13 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static SoftbankRespuestaWrapper callCrearClienteRest(SoftbankClienteWrapper wrapper)
+	public static SoftbankRespuestaWrapper callCrearClienteRest(String service,SoftbankClienteWrapper wrapper)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE;
+			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE;
 			log.info("=========> WRAPPER CREAR ========> " + new String(content));
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
@@ -81,13 +94,14 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static SoftbankClienteWrapper callConsultaClienteRest(SoftbankConsultaWrapper consulta)
+	public static SoftbankClienteWrapper callConsultaClienteRest(String service,String identificacion)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
+			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE;
+			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,

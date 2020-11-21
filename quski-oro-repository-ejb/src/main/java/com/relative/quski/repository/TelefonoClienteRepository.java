@@ -13,6 +13,8 @@ public interface TelefonoClienteRepository extends CrudRepository<Long, TbQoTele
 
 	public List<TbQoTelefonoCliente> findByIdCliente(Long id) throws RelativeException ;
 
+	public TbQoTelefonoCliente findByClienteAndTipo(String identificacion, String tipoTelefono)throws RelativeException ;
+
 	
 	
 	

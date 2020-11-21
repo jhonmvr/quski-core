@@ -1,7 +1,6 @@
 package com.relative.quski.rest;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -22,8 +21,12 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
+import com.relative.quski.repository.ParametroRepository;
+import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -40,9 +43,11 @@ public class SoftbankClienteRestController extends BaseRestController
 	}
 
 	@Inject
-	SoftBankApiClient csfs;
+	QuskiOroService qos;
 	@Inject
 	Logger log;
+	@Inject
+	ParametroRepository parametroRepository;
 	
 	
 	@POST
@@ -50,18 +55,19 @@ public class SoftbankClienteRestController extends BaseRestController
 	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
 			throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
-		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(wrapper);
+		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion());
 		loc.setEntidad( a );
 		return loc;
 	}
 	
 	@POST
 	@Path("/crearClienteSoftbank")
-	public GenericWrapper<SoftbankClienteWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper) throws RelativeException {
-		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
+	public GenericWrapper<SoftbankRespuestaWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper) throws RelativeException {
+		GenericWrapper<SoftbankRespuestaWrapper> loc = new GenericWrapper<>();
 		try {
-			List<SoftbankClienteWrapper> a = (List<SoftbankClienteWrapper>) SoftBankApiClient.callCrearClienteRest(wrapper);
-			loc.setEntidades(a);
+			SoftbankRespuestaWrapper a = SoftBankApiClient.callCrearClienteRest(this.parametroRepository
+					.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE).getValor(),wrapper);
+			loc.setEntidad(a);
 			return loc;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -83,7 +89,7 @@ public class SoftbankClienteRestController extends BaseRestController
 	public GenericWrapper<SoftbankClienteWrapper> getEntity(SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 	
-		SoftbankClienteWrapper a = SoftBankApiClient.callConsultaClienteRest(wrapper);
+		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion());
 		loc.setEntidad(a);
 		
 		return loc;

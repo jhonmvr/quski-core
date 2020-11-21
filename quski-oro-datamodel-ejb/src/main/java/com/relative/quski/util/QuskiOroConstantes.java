@@ -266,8 +266,8 @@ public class QuskiOroConstantes {
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
 	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
-	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "http://201.183.238.73:1991/api/cliente/consultar";
-	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/crear";
+	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE";
+	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "URL_SERVICIO_SOFTBANK_CREAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
 	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "http://201.183.238.73:1991/api/prestamo/operacion/tablaamortizacion";
@@ -286,8 +286,8 @@ public class QuskiOroConstantes {
 	public static final String PARAMETRO_4 ="&calificacion=";
 
 	// CRM SERVICES 
-	public static final String URL_CRM_PROSPECTO_CORTO ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/findProspectoCorto";
-	public static final String URL_CRM_PERSIST ="http://localhost:8080/quski-oro-satelite-crm-rest/resources/prospectoQuskiRestController/persistEntity";
+	public static final String URL_CRM_PROSPECTO_CORTO ="URL_CRM_PROSPECTO_CORTO";
+	public static final String URL_CRM_PERSIST ="URL_CRM_PERSIST";
 
 	
 	//STORAGE

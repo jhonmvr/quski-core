@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -470,5 +473,20 @@ public class ReRestClient<T> {
 				((CloseableHttpClient) httpClient).close();
 			}
 	}
+	
+	public static <T> T fromXml(String xml, Class<T> clazz) throws RelativeException {
+        try {
+            JAXBContext context = JAXBContext.newInstance(clazz);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            unmarshaller.setAdapter(new NormalizedStringAdapter());
+            
+            Object o = unmarshaller.unmarshal(new StringReader(xml));
+            return clazz.cast(o);
+        } catch(IllegalStateException e) {
+            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error while deserializing a XML text to Object of type " + clazz +  " " +  e.getMessage());
+        } catch (JAXBException e) {
+        	throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error while deserializing a XML text to Object of type " + clazz +  " " +  e.getMessage());
+		}
+    }
 
 }
