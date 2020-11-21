@@ -1872,21 +1872,48 @@ public class QuskiOroService {
 
 	private TbQoTasacion updateTasacion(TbQoTasacion send, TbQoTasacion persisted) throws RelativeException {
 		try {
-			persisted.setId(send.getId());
-			persisted.setDescripcion(send.getDescripcion());
-			persisted.setDescuentoPesoPiedra(send.getDescuentoPesoPiedra());
-			persisted.setDescuentoSuelda(send.getDescuentoSuelda());
-			persisted.setEstadoJoya(send.getEstadoJoya());
-			persisted.setNumeroPiezas(send.getNumeroPiezas());
-			persisted.setPesoBruto(send.getPesoBruto());
-			persisted.setPesoNeto(send.getPesoNeto());
-			persisted.setValorAvaluo(send.getValorAvaluo());
-			persisted.setValorComercial(send.getValorComercial());
-			persisted.setValorOro(send.getValorOro());
-			persisted.setValorRealizacion(send.getValorRealizacion());
-			persisted.setFechaCreacion(persisted.getFechaCreacion());
+			if(send.getDescripcion() != null) {
+				persisted.setDescripcion(send.getDescripcion());
+			}
+			if(send.getDescuentoPesoPiedra() != null) {
+				persisted.setDescuentoPesoPiedra(send.getDescuentoPesoPiedra());
+			}
+			if(send.getDescuentoSuelda() != null) {
+				persisted.setDescuentoSuelda(send.getDescuentoSuelda());
+			}
+			if(send.getEstadoJoya() != null) {
+				persisted.setEstadoJoya(send.getEstadoJoya());
+			}
+			if(send.getNumeroPiezas() != null) {
+				persisted.setNumeroPiezas(send.getNumeroPiezas());
+			}
+			if(send.getPesoBruto() != null) {
+				persisted.setPesoBruto(send.getPesoBruto());
+			}
+			if(send.getPesoNeto() != null) {
+				persisted.setPesoNeto(send.getPesoNeto());
+			}
+			if(send.getValorAvaluo() != null) {
+				persisted.setValorAvaluo(send.getValorAvaluo());
+			}
+			if(send.getValorComercial() != null) {
+				persisted.setValorComercial(send.getValorComercial());
+			}
+			if(send.getValorOro() != null) {
+				persisted.setValorOro(send.getValorOro());
+			}
+			if(send.getValorRealizacion() != null) {
+				persisted.setValorRealizacion(send.getValorRealizacion());
+			}
+			if(persisted.getFechaCreacion() != null) {
+				persisted.setFechaCreacion(persisted.getFechaCreacion());
+			}
+			if( send.getEstado() != null) {
+				persisted.setEstado( send.getEstado() );
+			}else {
+				persisted.setEstado( EstadoEnum.INA );
+			}
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
 			return tasacionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -4962,56 +4989,113 @@ public class QuskiOroService {
 	private TbQoCreditoNegociacion updateCreditoNegociacion(TbQoCreditoNegociacion send,
 			TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			if(send.getaPagarCliente() != null) {
-				persisted.setaPagarCliente( send.getaPagarCliente());
+
+			if( send.getaPagarCliente() != null ) {
+			    persisted.setaPagarCliente(  send.getaPagarCliente() );
 			}
-			if(send.getTipoCarteraQuski() != null) {
-				persisted.setTipoCarteraQuski( send.getTipoCarteraQuski());
+			if( send.getaRecibirCliente() != null ) {
+			    persisted.setaRecibirCliente(  send.getaRecibirCliente() );
 			}
-			if(send.getEstadoSoftbank() != null) {
-				persisted.setEstadoSoftbank( send.getEstadoSoftbank());
+			if( send.getDeudaInicial() != null ) {
+			    persisted.setDeudaInicial(  send.getDeudaInicial() );
 			}
-			if(send.getPlazoCredito() != null) {
-				persisted.setPlazoCredito( send.getPlazoCredito());
+			if( !StringUtils.isBlank( send.getTablaAmortizacion() ) ) {
+			    persisted.setTablaAmortizacion(  send.getTablaAmortizacion() );
 			}
-			if(send.getDestinoOperacion() != null) {
-				persisted.setDestinoOperacion( send.getDestinoOperacion());
+			if( send.getMontoFinanciado() != null ) {
+			    persisted.setMontoFinanciado(  send.getMontoFinanciado() );
 			}
-			if(send.getFechaEfectiva() != null) {
-				persisted.setFechaEfectiva( send.getFechaEfectiva());
+			if( send.getEstado() != null ) {
+			    persisted.setEstado(  send.getEstado() );
+			}else {
+				persisted.setEstado( EstadoEnum.ACT );
 			}
-			if(send.getFechaVencimiento() != null) {
-				persisted.setFechaVencimiento( send.getFechaVencimiento());
+			if( !StringUtils.isBlank( send.getEstadoSoftbank() ) ) {
+			    persisted.setEstadoSoftbank(  send.getEstadoSoftbank() );
 			}
-			if(send.getMontoPreaprobado() != null) {
-				persisted.setMontoPreaprobado( send.getMontoPreaprobado());
+			if( send.getPagoDia() != null ) {
+			    persisted.setPagoDia(  send.getPagoDia() );
 			}
-			if(send.getMontoDesembolso() != null) {
-				persisted.setMontoDesembolso( send.getMontoDesembolso());
+			if( send.getFechaEfectiva() != null ) {
+			    persisted.setFechaEfectiva(  send.getFechaEfectiva() );
 			}
-			if(send.getTotalCostoNuevaOperacion() != null) {
-				persisted.setTotalCostoNuevaOperacion( send.getTotalCostoNuevaOperacion());
+			if( send.getFechaVencimiento() != null ) {
+			    persisted.setFechaVencimiento(  send.getFechaVencimiento() );
 			}
-			if(send.getValorCuota() != null) {
-				persisted.setValorCuota( send.getValorCuota());
+			if( send.getIdAgencia() != null ) {
+			    persisted.setIdAgencia(  send.getIdAgencia() );
 			}
-			if(send.getRiesgoTotalCliente() != null) {
-				persisted.setRiesgoTotalCliente( send.getRiesgoTotalCliente());
+			if( !StringUtils.isBlank( send.getNumeroOperacion() ) ) {
+			    persisted.setNumeroOperacion(  send.getNumeroOperacion() );
 			}
-			if(send.getaRecibirCliente() != null) {
-				persisted.setaRecibirCliente( send.getaRecibirCliente());
+			if( send.getTotalInteresVencimiento() != null ) {
+			    persisted.setTotalInteresVencimiento(  send.getTotalInteresVencimiento() );
 			}
-			if(send.getNetoAlCliente() != null) {
-				persisted.setNetoAlCliente( send.getNetoAlCliente());
+			if( send.getTotalCostoNuevaOperacion() != null ) {
+			    persisted.setTotalCostoNuevaOperacion(  send.getTotalCostoNuevaOperacion() );
 			}
-			if(send.getNumeroFunda() != null) {
-				persisted.setNumeroFunda( send.getNumeroFunda());
+			if( send.getNumeroFunda() != null  ) {
+			    persisted.setNumeroFunda(  send.getNumeroFunda() );
 			}
-			if(send.getPesoFunda() != null) {
-				persisted.setPesoFunda( send.getPesoFunda());
+			if( !StringUtils.isBlank( send.getDescripcionProducto() ) ) {
+			    persisted.setDescripcionProducto(  send.getDescripcionProducto() );
 			}
-			if(send.getDescripcionProducto() != null) {
-				persisted.setDescripcionProducto( send.getDescripcionProducto());
+			if( send.getMontoDiferido() != null ) {
+			    persisted.setMontoDiferido(  send.getMontoDiferido() );
+			}
+			if( send.getMontoPreaprobado() != null ) {
+			    persisted.setMontoPreaprobado(  send.getMontoPreaprobado() );
+			}
+			if( send.getMontoSolicitado() != null ) {
+			    persisted.setMontoSolicitado(  send.getMontoSolicitado() );
+			}
+			if( send.getPlazoCredito() != null ) {
+			    persisted.setPlazoCredito(  send.getPlazoCredito() );
+			}
+			if( send.getRiesgoTotalCliente() != null ) {
+			    persisted.setRiesgoTotalCliente(  send.getRiesgoTotalCliente() );
+			}
+			if( send.getTipo() != null ) {
+			    persisted.setTipo(  send.getTipo() );
+			}
+			if( !StringUtils.isBlank( send.getTipoCarteraQuski() ) ) {
+			    persisted.setTipoCarteraQuski(  send.getTipoCarteraQuski() );
+			}
+			if( send.getValorCuota() != null ) {
+			    persisted.setValorCuota(  send.getValorCuota() );
+			}
+			if( !StringUtils.isBlank( send.getCodigoTipoFunda() ) ) {
+			    persisted.setCodigoTipoFunda(  send.getCodigoTipoFunda() );
+			}
+			if( !StringUtils.isBlank( send.getUriImagenSinFunda() ) ) {
+			    persisted.setUriImagenSinFunda(  send.getUriImagenSinFunda() );
+			}
+			if( !StringUtils.isBlank( send.getNumeroCuenta() ) ) {
+			    persisted.setNumeroCuenta(  send.getNumeroCuenta() );
+			}
+			if( !StringUtils.isBlank( send.getUriImagenConFunda() ) ) {
+			    persisted.setUriImagenConFunda(  send.getUriImagenConFunda() );
+			}
+			if( !StringUtils.isBlank( send.getIdentificacionCodeudor() ) ) {
+			    persisted.setIdentificacionCodeudor(  send.getIdentificacionCodeudor() );
+			}
+			if( !StringUtils.isBlank( send.getNombreCompletoCodeudor() ) ) {
+			    persisted.setNombreCompletoCodeudor(  send.getNombreCompletoCodeudor() );
+			}
+			if( send.getFechaNacimientoCodeudor() != null ) {
+			    persisted.setFechaNacimientoCodeudor(  send.getFechaNacimientoCodeudor() );
+			}
+			if( !StringUtils.isBlank( send.getIdentificacionApoderado() ) ) {
+			    persisted.setIdentificacionApoderado(  send.getIdentificacionApoderado() );
+			}
+			if( !StringUtils.isBlank( send.getNombreCompletoApoderado() ) ) {
+			    persisted.setNombreCompletoApoderado(  send.getNombreCompletoApoderado() );
+			}
+			if( send.getFechaNacimientoApoderado() != null ) {
+			    persisted.setFechaNacimientoApoderado(  send.getFechaNacimientoApoderado() );
+			}
+			if( send.getTbQoNegociacion() != null ) {
+			    persisted.setTbQoNegociacion(  send.getTbQoNegociacion() );
 			}
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
@@ -5075,6 +5159,7 @@ public class QuskiOroService {
 					op.setJoyas( this.tasacionRepository.findByIdCredito( op.getCredito().getId() ));
 					if(op.getJoyas() != null ) {
 						op.setExcepciones( this.excepcionesRepository.findByIdNegociacion( op.getCredito().getTbQoNegociacion().getId() ));
+						op.setCuentas( this.cuentaBancariaRepository.findByIdCliente( op.getCredito().getTbQoNegociacion().getTbQoCliente().getId() ) );
 					}else {
 						op.setExiste(false);
 						op.setMensaje("No Posee joyas, Error en base, revisar.");
@@ -5086,7 +5171,6 @@ public class QuskiOroService {
 					return op;
 				}
 			}
-			op.setCuentas( this.cuentaBancariaRepository.findByIdCliente( op.getCredito().getTbQoNegociacion().getTbQoCliente().getId() ) );
 			return op;
 		}catch(RelativeException e ){
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
@@ -5095,7 +5179,8 @@ public class QuskiOroService {
 	
 	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp ) throws RelativeException{
 		try {
-			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( wp ); 
+			
+			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
 			if(op != null ) {
 				CrearOperacionRespuestaWrapper operacion = this.crearOperacion( op );
 				
@@ -5109,20 +5194,78 @@ public class QuskiOroService {
 		}
 		return null;
 	}
+	
+	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion(String numeroOperacion, String usuario, Long agencia) throws RelativeException{
+		try {
+			
+			DatosRegistroWrapper datos = new DatosRegistroWrapper(usuario, agencia,  QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) );
+			return this.consultarTablaAmortizacion(numeroOperacion,  "Referencia", datos ); 
+			
+		}catch(RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
 
 	private TbQoCreditoNegociacion guardarOperacion(CrearOperacionRespuestaWrapper operacion, TbQoCreditoNegociacion credito) throws RelativeException {
 		try {
-			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
-			credito.setaRecibirCliente( operacion.getMontoEntregar() );
-			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
-			credito.setEstadoSoftbank( operacion.getEstado() );
-			credito.setDescripcionProducto( operacion.getProducto() );
+			credito.setNumeroOperacion( operacion.getNumeroOperacion() );
 			credito.setPlazoCredito( operacion.getPlazo() );
-			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
-			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
+			credito.setDescripcionProducto( operacion.getProducto() );
+			credito.setEstadoSoftbank( operacion.getEstado() );
+			credito.setDeudaInicial( operacion.getDeudaInicial() );
+			credito.setaRecibirCliente( operacion.getMontoEntregar() );
+			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
 			credito.setValorCuota( operacion.getValorCuota() );
+			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
+			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
+			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
+			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
+			credito.setNumeroFunda( Long.valueOf( operacion.getNumeroFundaJoya() ) );
 			
+			if(operacion.getGarantias() != null ) {
+				List<TbQoTasacion> list = this.tasacionRepository.findByIdCredito( credito.getId() );
+				if(list != null) { 
+					list.forEach(l->{
+						l.setEstado( EstadoEnum.INA );
+						try {
+							this.tasacionRepository.update( l );
+						} catch (RelativeException e) {
+							e.printStackTrace();
+						}
+					});
+				}
+				operacion.getGarantias().forEach( g ->{
+					TbQoTasacion joya = new TbQoTasacion();
+					joya.setNumeroGarantia( g.getNumeroGarantia() );
+					joya.setNumeroExpediente( g.getNumeroExpediente() );
+					joya.setTipoGarantia( g.getCodigoTipoGarantia() );
+					joya.setDescripcion( g.getDescripcion() );
+					joya.setSubTipoGarantia( g.getCodigoSubTipoGarantia() );
+					joya.setValorComercial( g.getValorComercial() );
+					joya.setValorAvaluo( g.getValorAvaluo() );
+					joya.setValorRealizacion( g.getValorRealizacion() );
+					joya.setValorOro( g.getValorOro() );
+					joya.setTipoJoya( g.getCodigoTipoJoya() );
+					joya.setEstadoJoya( g.getCodigoEstadoJoya() );
+					joya.setTipoOro( g.getCodigoTipoOro() );
+					joya.setPesoBruto( g.getPesoBruto() );
+					joya.setTienePiedras( g.getTienePiedras() );
+					joya.setDetallePiedras( g.getDetallePiedras() );
+					joya.setDescuentoPesoPiedra( g.getDescuentoPiedras() );
+					joya.setPesoNeto( g.getPesoNeto() );
+					joya.setNumeroPiezas( g.getNumeroPiezas() );
+					joya.setDescuentoSuelda( g.getDescuentoSuelda() );
+					joya.setTbQoCreditoNegociacion( credito );
+					try {
+						this.manageTasacion( joya );
+					} catch (RelativeException e) {
+						e.printStackTrace();
+					}
+					
+				});
+			}
 			return this.manageCreditoNegociacion( credito );
+			
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
@@ -5145,10 +5288,14 @@ public class QuskiOroService {
 						result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 						result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  );
 						result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
+						if(credito.getNumeroOperacion() != null ) {
+							result.setNumeroOperacion( credito.getNumeroOperacion() );
+						}
 						result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
 						result.setMontoSolicitado( credito.getMontoSolicitado() );
 						result.setMontoFinanciado( credito.getMontoFinanciado() );
-						result.setPagoDia( Long.valueOf( credito.getPagoDia().getDate() ));
+						int dia = credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1;
+						result.setPagoDia( Long.valueOf( dia ) );
 						result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
 						result.setDatosRegistro( new DatosRegistroWrapper(credito.getTbQoNegociacion().getAsesor(), credito.getIdAgencia(),  QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) )  ); 
 						List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
@@ -5163,22 +5310,18 @@ public class QuskiOroService {
 						result.setDatosCuentaCliente( listCuenta );
 						log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 2 ");
 						DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
-					    datos.setTotaPesoBruto( credito.getTotalPesoBrutoGarantia() );
-						datos.setTotalPesoBrutoConFunda( credito.getTotalPesoBrutoConFunda() ); 
-						datos.setTotalPesoNeto( credito.getTotalPesoNeto() ); 
-						datos.setTotaPesoNetoConFunda( credito.getTotaPesoNetoConFunda() ); 
+						if( credito.getNumeroFunda() != Long.valueOf( 0 ) && credito.getNumeroFunda() != null ) {
+							datos.setNumeroFundaJoya( credito.getNumeroFunda().toString() );								
+						}
 						datos.setCodigoTipoFunda( credito.getCodigoTipoFunda() ); 
-						datos.setTotalValorAvaluo( credito.getTotalValorAvaluo() ); 
-						datos.setTotalValorComercial( credito.getTotalValorComercial() );
-						datos.setTotalValorRealizacion( credito.getTotalValorRealizacion() );
 						datos.setUriImagenSinFunda( credito.getUriImagenSinFunda() );
 						datos.setUriImagenConFunda( credito.getUriImagenConFunda() );
 						List<JoyaWrapper> listjoyas = new ArrayList<>();
 						joyas.forEach(e->{
 							log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 3 ");
 							JoyaWrapper joyaSoft = new JoyaWrapper();
-						    joyaSoft.setNumeroGarantia( e.getNumeroGarantia() );
-						    joyaSoft.setNumeroExpediente( e.getNumeroExpediente() );
+						    // joyaSoft.setNumeroGarantia( e.getNumeroGarantia() );
+						    // joyaSoft.setNumeroExpediente( e.getNumeroExpediente() );
 						    joyaSoft.setCodigoTipoGarantia( e.getTipoGarantia() );
 						    joyaSoft.setDescripcion( e.getDescripcion());
 						    joyaSoft.setCodigoSubTipoGarantia( e.getSubTipoGarantia() );

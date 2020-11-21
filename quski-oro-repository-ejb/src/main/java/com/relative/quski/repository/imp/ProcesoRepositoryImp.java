@@ -53,7 +53,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			COALESCE( (select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
 			"			else ' ' end end end end CODIGO_BPM ";
 	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"COALESCE( (select cre.CODIGO_OPERACION from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
+			"COALESCE( (select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 			"	COALESCE( (select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 

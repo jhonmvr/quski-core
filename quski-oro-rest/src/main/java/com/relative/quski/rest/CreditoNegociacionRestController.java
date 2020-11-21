@@ -31,6 +31,7 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
+import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
@@ -161,6 +162,18 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		log.info("INGRESA A traerCreditoNuevo  -----> "+ Long.valueOf( idNegociacion ));
 		OperacionCreditoNuevoWrapper a = this.qos.traerCreditoNuevo(Long.valueOf( idNegociacion ));
 		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/consultarTablaAmortizacion")
+	public GenericWrapper<CuotasAmortizacionWrapper> consultarTablaAmortizacion(
+			@QueryParam("numeroOperacion") String numeroOperacion,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("agencia") String agencia
+			) throws RelativeException {
+		GenericWrapper<CuotasAmortizacionWrapper> loc = new GenericWrapper<>();
+		List<CuotasAmortizacionWrapper> list = this.qos.consultarTablaAmortizacion(numeroOperacion, usuario, Long.valueOf( agencia ));
+		loc.setEntidades( list );
 		return loc;
 	}
 	@POST
