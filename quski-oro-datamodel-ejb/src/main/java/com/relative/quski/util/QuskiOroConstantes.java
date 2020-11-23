@@ -260,6 +260,7 @@ public class QuskiOroConstantes {
 	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
 	public static final String SOFT_POR_DEFECTO="REFERENCIA POR DEFECTO";
 	public static final String SOFT_COBERTURA="001";
+	public static final String URL_CATALOGO_TIPO_ORO="URL_CATALOGO_TIPO_ORO";
 
 
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
@@ -277,6 +278,7 @@ public class QuskiOroConstantes {
 	public static final String URL_WS_QUSKI_CALCULADORA = "URL_WS_QUSKI_CALCULADORA";
 	public static final String CONTENT_XML_PERSONA = "CONTENT_XML_PERSONA";
 	public static final String CONTENT_XML_QUSKI_CALCULADORA = "CONTENT_XML_QUSKI_CALCULADORA";
+	public static final String CONTENT_XML_GARANTIA = "CONTENT_XML_GARANTIA";
 
 	// INTEGRACION
 	public static final String URL_PERSONA ="http://localhost:28080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";

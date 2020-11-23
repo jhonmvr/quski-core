@@ -696,7 +696,7 @@ public class SimularResponse implements Serializable{
             public static class Garantias {
 
                 @XmlElement(name = "Garantia", required = true)
-                protected SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia garantia;
+                protected List<SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia> garantia;
 
                 /**
                  * Gets the value of the garantia property.
@@ -706,7 +706,7 @@ public class SimularResponse implements Serializable{
                  *     {@link SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia }
                  *     
                  */
-                public SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia getGarantia() {
+                public List<SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia> getGarantia() {
                     return garantia;
                 }
 
@@ -718,7 +718,7 @@ public class SimularResponse implements Serializable{
                  *     {@link SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia }
                  *     
                  */
-                public void setGarantia(SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia value) {
+                public void setGarantia(List<SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia> value) {
                     this.garantia = value;
                 }
 

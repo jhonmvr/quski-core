@@ -28,6 +28,7 @@ import com.relative.quski.wrapper.YearMonthDay;
 public class QuskiOroUtil {
 
 	public final static String DATE_FORMAT = "yyyy-MM-dd";
+	public final static String DATE_FORMAT_QUSKI = "dd/MM/yyyy";
 	public final static String DATE_FORMAT_FULL = "yyyy-MM-dd HH:mm:ss";
 	public static String garantias = "";
 

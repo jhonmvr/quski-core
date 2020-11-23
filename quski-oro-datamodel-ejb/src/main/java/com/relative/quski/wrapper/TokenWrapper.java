@@ -12,23 +12,34 @@ public class TokenWrapper implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 7651564738281595660L;
-	private String accessToken;
+	private String access_token;
 	private String scope;
-	private String tokenType;
-	private Long expiresIn;
+	private String token_type;
+	private Long expires_in;
 	
-	private String errorDescription;
+	private String error_description;
 	private String error;
 	
-	@JsonProperty("access_token")
-	public String getAccessToken() {
-		return accessToken;
-	}
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
 	
-	@JsonProperty("scope")
+
+	public String getToken_type() {
+		return token_type;
+	}
+	public void setToken_type(String token_type) {
+		this.token_type = token_type;
+	}
+	public Long getExpires_in() {
+		return expires_in;
+	}
+	public void setExpires_in(Long expires_in) {
+		this.expires_in = expires_in;
+	}
+	public String getError_description() {
+		return error_description;
+	}
+	public void setError_description(String error_description) {
+		this.error_description = error_description;
+	}
 	public String getScope() {
 		return scope;
 	}
@@ -36,36 +47,17 @@ public class TokenWrapper implements Serializable {
 		this.scope = scope;
 	}
 	
-	@JsonProperty("token_type")
-	public String getTokenType() {
-		return tokenType;
-	}
-	public void setTokenType(String tokenType) {
-		this.tokenType = tokenType;
-	}
-	
-	@JsonProperty("expires_in")
-	public Long getExpiresIn() {
-		return expiresIn;
-	}
-	public void setExpiresIn(Long expiresIn) {
-		this.expiresIn = expiresIn;
-	}
-	
-	@JsonProperty("error_description")
-	public String getErrorDescription() {
-		return errorDescription;
-	}
-	public void setErrorDescription(String errorDescription) {
-		this.errorDescription = errorDescription;
-	}
-	
-	@JsonProperty("error")
 	public String getError() {
 		return error;
 	}
 	public void setError(String error) {
 		this.error = error;
+	}
+	public String getAccess_token() {
+		return access_token;
+	}
+	public void setAccess_token(String access_token) {
+		this.access_token = access_token;
 	}
 	
 	

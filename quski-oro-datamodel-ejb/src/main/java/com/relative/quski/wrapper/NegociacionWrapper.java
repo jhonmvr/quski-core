@@ -24,6 +24,9 @@ public class NegociacionWrapper implements Serializable {
 	private Boolean respuesta;
 	private TbQoTelefonoCliente telefonoMovil;
 	private TbQoTelefonoCliente telefonoDomicilio;
+	private List<TipoOroWrapper> tipoOro;
+	
+	
 
 	public NegociacionWrapper(Boolean respuesta) {
 		super();
@@ -91,5 +94,11 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public void setTelefonoDomicilio(TbQoTelefonoCliente telefonoDomicilio) {
 		this.telefonoDomicilio = telefonoDomicilio;
+	}
+	public List<TipoOroWrapper> getTipoOro() {
+		return tipoOro;
+	}
+	public void setTipoOro(List<TipoOroWrapper> tipoOro) {
+		this.tipoOro = tipoOro;
 	}
 }

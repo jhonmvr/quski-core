@@ -455,8 +455,8 @@ public class ReRestClient<T> {
 	private Object transformResult(Class<?> clazz, String contentType, String content) throws Exception {
 
 		if (contentType.toLowerCase().contains(RestClientWrapper.CONTENT_TYPE_JSON)) {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(content, clazz);
+			//ObjectMapper mapper = new ObjectMapper();
+			return content;
 		} else if (contentType.toLowerCase().contains(RestClientWrapper.CONTENT_TYPE_XML)) {
 			StringReader result = new StringReader(content);
 			JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] { clazz });

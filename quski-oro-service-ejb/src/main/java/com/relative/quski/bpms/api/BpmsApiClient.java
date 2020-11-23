@@ -302,9 +302,9 @@ public class BpmsApiClient {
         if( response != null && response.get("message") != null && response.get("message").toString().indexOf( "Unsuccessful" ) <0 ) {
         	TokenWrapper tmp= (TokenWrapper)response.get(ReRestClient.RETURN_OBJECT);
         	if( tmp.getError() != null ) {
-        		throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LA OBTENCION DEL TOKEN DE SEGURIDAD, POR FAVOR CONSULTE A SU ADMINISTRADOR " + tmp.getErrorDescription() );
+        		throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LA OBTENCION DEL TOKEN DE SEGURIDAD, POR FAVOR CONSULTE A SU ADMINISTRADOR " + tmp.getError_description() );
 
-        	} else if( Long.valueOf(tmp.getExpiresIn() ) <=60 ) {
+        	} else if( Long.valueOf(tmp.getExpires_in() ) <=60 ) {
         		throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, "POR RAZONES DE SEGURIDAD SU TOKEN ESTA A PUNTO DE CADUCAR, POR FAVOR INTENTE EN 60 SEGUNDOS"  );
 
         	}

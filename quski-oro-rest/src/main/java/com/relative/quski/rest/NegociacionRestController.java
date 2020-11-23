@@ -20,6 +20,7 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoNegociacion;
+import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
@@ -121,5 +122,16 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		//loc.setEntidades(a);
 		return loc;
 	}
+	
+	@POST
+	@Path("/agregarJoya")
+	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
+		List<TbQoTasacion> a = this.qos.agregarJoya(joya, asesor);
+		loc.setEntidades(a);
+		return loc;
+	}
+	
+	
 	
 }
