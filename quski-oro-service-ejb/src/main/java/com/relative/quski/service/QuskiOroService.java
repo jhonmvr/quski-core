@@ -4121,15 +4121,15 @@ public class QuskiOroService {
 	public List<TbQoTasacion> findTasacionByIdCreditoNegociacion(PaginatedWrapper pw, Long idCreditoNegociacion)
 			throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return this.tasacionRepository.findByIdCreditoNegociacionPaged(idCreditoNegociacion, pw.getStartRecord(),
+			return this.tasacionRepository.findByIdCredito(idCreditoNegociacion, pw.getStartRecord(),
 					pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 		} else {
-			return this.tasacionRepository.findByIdCreditoNegociacion(idCreditoNegociacion);
+			return this.tasacionRepository.findByIdCredito(idCreditoNegociacion);
 		}
 	}
 
 	public Long countTasacionByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException {
-		return this.tasacionRepository.countFindByIdCreditoNegociacion(idCreditoNegociacion);
+		return this.tasacionRepository.countFindByIdCredito(idCreditoNegociacion);
 	}
 
 	public TbQoTasacion eliminarJoya(Long id) throws RelativeException {
@@ -4148,7 +4148,7 @@ public class QuskiOroService {
 		try {
 			if (pw != null && pw.getIsPaginated() != null
 					&& pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-				return this.tasacionRepository.findByIdNegociacion(idCredito, pw.getStartRecord(), pw.getPageSize(),
+				return this.tasacionRepository.findByIdCredito(idCredito, pw.getStartRecord(), pw.getPageSize(),
 						pw.getSortFields(), pw.getSortDirections());
 			} else {
 				return this.tasacionRepository.findByIdCredito(idCredito);
