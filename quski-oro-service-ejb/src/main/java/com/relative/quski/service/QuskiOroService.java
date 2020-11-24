@@ -1955,15 +1955,14 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE LA JOYA");
 		}
 		
-		TbQoNegociacion negociacion = this.findNegociacionById(joya.getTbQoCreditoNegociacion().getId());
+		TbQoCreditoNegociacion credito = this.findCreditoNegociacionById(joya.getTbQoCreditoNegociacion().getId());
 		
-		if(negociacion == null) {
+		if(credito == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA LA NEGOCIACION");
 		}
 		
-		
-		// TODO Auto-generated method stub
-		return null;
+		return this.getDetalleJoya(credito.getTbQoNegociacion().getTbQoCliente(), joya);
+	
 	}
 
 	
@@ -4860,18 +4859,7 @@ public class QuskiOroService {
 		}
 
 	} */
-	/**
-	 * 
-	 * @param tipoOro
-	 * @param idNegociacion
-	 * @return
-	 * @throws RelativeException
-	 */
-	public SimularResponse valorDelOroByTipo(String tipoOro, Long idNegociacion) throws RelativeException {
-		//this.variablesCrediticiaRepository.findByIdNegociacionAndCodigo(idNegociacion,"");
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	public List<TipoOroWrapper> tipoOro(TbQoCliente cliente) throws RelativeException {		
 		
@@ -4943,75 +4931,83 @@ public class QuskiOroService {
 	
 	
 
-	public List<TipoOroWrapper> getDetalleJoya(TbQoCliente cliente, TbQoTasacion joya) throws RelativeException {		
+	public List<TbQoTasacion> getDetalleJoya(TbQoCliente cliente, TbQoTasacion joya) throws RelativeException {		
 		
-		String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
-		contentXMLGarantia= contentXMLGarantia
-				.replace( "--tipo-joya--" ,joya.getTipoJoya())
-				.replace("--descripcion--",joya.getDescripcion())
-				.replace("--estado-joya--", joya.getEstadoJoya())
-				.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-				.replace("--peso-gr--", joya.getPesoBruto().toString())
-				.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
-				.replace("--detalle-piedras--", joya.getDetallePiedras())
-				.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-				.replace("--peso-neto--", joya.getPesoNeto().toString())
-				.replace("--precio-oro--", joya.getValorOro().toString())
-				.replace("--valor-aplicable-credito--", "293.02")
-				.replace("--valor-realizacion--", "232.07")
-				.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-				.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+		try {
+			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
+			contentXMLGarantia= contentXMLGarantia
+					.replace( "--tipo-joya--" ,joya.getTipoJoya())
+					.replace("--descripcion--",joya.getDescripcion())
+					.replace("--estado-joya--", joya.getEstadoJoya())
+					.replace("--tipo-oro-quilataje--", joya.getTipoOro())
+					.replace("--peso-gr--", joya.getPesoBruto().toString())
+					.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
+					.replace("--detalle-piedras--", joya.getDetallePiedras())
+					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
+					.replace("--peso-neto--", joya.getPesoNeto().toString())
+					.replace("--precio-oro--", joya.getValorOro().toString())
+					.replace("--valor-aplicable-credito--", "293.02")
+					.replace("--valor-realizacion--", "232.07")
+					.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
+					.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+				log.info("==============>>>>> XML garantia");
+			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
+			contentXMLcalculadora = contentXMLcalculadora
+					.replace("--perfil-riesgo--", "1")
+					.replace("--origen-operacion--", "N")
+					.replace("--riesgo-total--", "0.00")
+					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(cliente.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+					.replace("--perfil-preferencia--", "A")
+					.replace("--agencia-originacion--", "01")
+					.replace("--identificacion-cliente--",cliente.getCedulaCliente())
+					.replace("--calificacion-mupi--", cliente.getAprobacionMupi())
+					.replace("--cobertura-exepcionada--", "0")
+					.replace("--garanttias-detalle--", contentXMLGarantia)
+					.replace("--monto-solicitado--", "0");
+				log.info("==============>>>>> XML calculadora");
+				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+						this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+				SimularResponse responseSimulador = ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
+						token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
+				if(responseSimulador != null && responseSimulador.getSimularResult() != null && responseSimulador.getSimularResult().getXmlGarantias() != null
+						 && responseSimulador.getSimularResult().getXmlGarantias().getGarantias() != null && responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia() != null
+						 && !responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia().isEmpty()) {
+					log.info("==============> Resultado de garantias calculadora ");
+					for ( Garantia g : responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia()) {
+						TbQoTasacion j = new TbQoTasacion();
+						j.setDescripcion(g.getDescripcion());
+						j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
+						j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
+						j.setDetallePiedras(g.getDetallePiedras());
+						j.setEstado(EstadoEnum.ACT);
+						j.setEstadoJoya(g.getEstadoJoya());
+						j.setId(joya.getId());
+						j.setNumeroPiezas(Long.valueOf(g.getNumeroPiezas()) );
+						j.setPesoBruto(BigDecimal.valueOf(g.getPesoGr()) );
+						j.setTienePiedras(StringUtils.isNotBlank(g.getTienePiedras()) && g.getTienePiedras().equalsIgnoreCase("S")?Boolean.TRUE:Boolean.FALSE);
+						j.setPesoNeto(BigDecimal.valueOf(g.getPesoNeto()) );
+						j.setTipoJoya(g.getTipoJoya());
+						j.setTipoOro(g.getTipoOroKilataje());
+						j.setValorAvaluo(BigDecimal.valueOf(g.getValorAvaluo()) );
+						j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
+						j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
+						j.setTbQoCreditoNegociacion(joya.getTbQoCreditoNegociacion());
+						this.manageTasacion(j);
+						
+					}
+					return this.tasacionRepository.findByIdCredito(joya.getTbQoCreditoNegociacion().getId());
+				}	
 			
-		String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
-		contentXMLcalculadora = contentXMLcalculadora
-				.replace("--perfil-riesgo--", "1")
-				.replace("--origen-operacion--", "N")
-				.replace("--riesgo-total--", "0.00")
-				.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(cliente.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
-				.replace("--perfil-preferencia--", "A")
-				.replace("--agencia-originacion--", "01")
-				.replace("--identificacion-cliente--",cliente.getCedulaCliente())
-				.replace("--calificacion-mupi--", cliente.getAprobacionMupi())
-				.replace("--cobertura-exepcionada--", "0")
-				.replace("--garanttias-detalle--", contentXMLGarantia)
-				.replace("--monto-solicitado--", "0");
-			
-			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
-					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
-			SimularResponse responseSimulador = ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
-					token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
-			if(responseSimulador != null && responseSimulador.getSimularResult() != null && responseSimulador.getSimularResult().getXmlGarantias() != null
-					 && responseSimulador.getSimularResult().getXmlGarantias().getGarantias() != null && responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia() != null
-					 && !responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia().isEmpty()) {
-				List<TbQoTasacion> joyas = new ArrayList<>();
-				for ( Garantia g : responseSimulador.getSimularResult().getXmlGarantias().getGarantias().getGarantia()) {
-					TbQoTasacion j = new TbQoTasacion();
-					j.setDescripcion(g.getDescripcion());
-					j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
-					j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
-					j.setDetallePiedras(g.getDetallePiedras());
-					j.setEstado(EstadoEnum.ACT);
-					j.setEstadoJoya(g.getEstadoJoya());
-					j.setId(joya.getId());
-					j.setNumeroPiezas(Long.valueOf(g.getNumeroPiezas()) );
-					j.setPesoBruto(BigDecimal.valueOf(g.getPesoGr()) );
-					j.setTienePiedras(StringUtils.isNotBlank(g.getTienePiedras()) && g.getTienePiedras().equalsIgnoreCase("S")?Boolean.TRUE:Boolean.FALSE);
-					j.setPesoNeto(BigDecimal.valueOf(g.getPesoNeto()) );
-					j.setTipoJoya(g.getTipoJoya());
-					j.setTipoOro(g.getTipoOroKilataje());
-					j.setValorAvaluo(BigDecimal.valueOf(g.getValorAvaluo()) );
-					j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
-					j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
-					this.manageTasacion(j);
-					
-				}
-				//return this.tasacionRepository.findByIdCredito(id);
-			}
-			
-		
-	
-		
-		return null;
+			return null;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
+		}
 		
 	}
 	
