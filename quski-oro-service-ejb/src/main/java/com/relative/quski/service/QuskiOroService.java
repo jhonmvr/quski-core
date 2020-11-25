@@ -4942,7 +4942,7 @@ public class QuskiOroService {
 					.replace("--tipo-oro-quilataje--", joya.getTipoOro())
 					.replace("--peso-gr--", joya.getPesoBruto().toString())
 					.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
-					.replace("--detalle-piedras--", joya.getDetallePiedras())
+					.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
 					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
 					.replace("--peso-neto--", joya.getPesoNeto().toString())
 					.replace("--precio-oro--", joya.getValorOro().toString())
@@ -4992,6 +4992,7 @@ public class QuskiOroService {
 						j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
 						j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
 						j.setTbQoCreditoNegociacion(joya.getTbQoCreditoNegociacion());
+						j.setValorOro(BigDecimal.valueOf(g.getValorOro()));
 						this.manageTasacion(j);
 						
 					}
@@ -5012,90 +5013,62 @@ public class QuskiOroService {
 	}
 	
 	// TODO: Testear metodo por conflictos
-	public SimularResponse simularOfertasCalculadora(CalculadoraEntradaWrapper wrapper)
-			throws RelativeException {
+	public SimularResponse simularOfertasCalculadora(Long idCredito, String riesgoTotal,String codigoAgencia) throws RelativeException {				
 		try {
-			//wrapper.generateMockup();
-			//StringBuilder xml = QuskiOroUtil.CalculadoraToStringXml(wrapper);
-			String content ="<soap:Envelope\r\n" + 
-					"	xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n" + 
-					"	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n" + 
-					"	xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n" + 
-					"	<soap:Body>\r\n" + 
-					"		<CalculadoraQuski\r\n" + 
-					"			xmlns=\"http://tempuri.org/\">\r\n" + 
-					"			<XMlConsulta>\r\n" + 
-					"			<![CDATA[	<carga>\r\n" + 
-					"					<XmlParametrosRiesgo>\r\n" + 
-					"						<ParametrosRiesgo>\r\n" + 
-					"				              <PerfilRiesgo>4</PerfilRiesgo>\r\n" + 
-					"				              <OrigenOperacion>N</OrigenOperacion>\r\n" + 
-					"				              <RiesgoTotal>15323.65</RiesgoTotal>\r\n" + 
-					"				              <FechaNacimiento>28/07/1990</FechaNacimiento>\r\n" + 
-					"				              <PerfilPreferencia>B</PerfilPreferencia>\r\n" + 
-					"				              <AgenciaOriginacion>014</AgenciaOriginacion>\r\n" + 
-					"				              <IdentificacionCliente>1722668702</IdentificacionCliente>\r\n" + 
-					"				              <CalificacionMupi>S</CalificacionMupi>\r\n" + 
-					"				              <CoberturaExcepcionada>0</CoberturaExcepcionada>\r\n" + 
-					"				            </ParametrosRiesgo>\r\n" + 
-					"					</XmlParametrosRiesgo>\r\n" + 
-					"					<XmlGarantias>\r\n" + 
-					"						<Garantias>\r\n" + 
-					"							<Garantia>\r\n" + 
-					"								<TipoJoya>ANI</TipoJoya>\r\n" + 
-					"								<Descripcion>BUEN ESTADO</Descripcion>\r\n" + 
-					"								<EstadoJoya>BUE</EstadoJoya>\r\n" + 
-					"								<TipoOroKilataje>18K</TipoOroKilataje>\r\n" + 
-					"								<PesoGr>7.73</PesoGr>\r\n" + 
-					"								<TienePiedras>S</TienePiedras>\r\n" + 
-					"								<DetallePiedras>PIEDRAS</DetallePiedras>\r\n" + 
-					"								<DescuentoPesoPiedras>0.73</DescuentoPesoPiedras>\r\n" + 
-					"								<PesoNeto>7.00</PesoNeto>\r\n" + 
-					"								<PrecioOro>263.72</PrecioOro>\r\n" + 
-					"								<ValorAplicableCredito>293.02</ValorAplicableCredito>\r\n" + 
-					"								<ValorRealizacion>232.07</ValorRealizacion>\r\n" + 
-					"								<NumeroPiezas>1</NumeroPiezas>\r\n" + 
-					"								<DescuentoSuelda>0.00</DescuentoSuelda>\r\n" + 
-					"							</Garantia>\r\n" + 
-					"						</Garantias>\r\n" + 
-					"					</XmlGarantias>\r\n" + 
-					"					<XmlDescuentosNuevaOperacion>\r\n" + 
-					"						<DescuentosOperacion>\r\n" + 
-					"							<SaldoMontoCreditoAnterior></SaldoMontoCreditoAnterior>\r\n" + 
-					"							<SaldoInteresCreditoAnterior></SaldoInteresCreditoAnterior>\r\n" + 
-					"							<MoraCreditoAnterior></MoraCreditoAnterior>\r\n" + 
-					"							<CobranzaCreditoAnterior></CobranzaCreditoAnterior>\r\n" + 
-					"							<TipoCartera></TipoCartera>\r\n" + 
-					"							<MontoFinanciadoCreditoAnterior></MontoFinanciadoCreditoAnterior>\r\n" + 
-					"							<PlazoCreditoAnterior></PlazoCreditoAnterior>\r\n" + 
-					"							<TipoCreditoAnterior></TipoCreditoAnterior>\r\n" + 
-					"							<EstadoCreditoAnterior></EstadoCreditoAnterior>\r\n" + 
-					"							<FechaEfectivaCreditoAnterior></FechaEfectivaCreditoAnterior>\r\n" + 
-					"							<FechaVencimientoCreditoAnterior></FechaVencimientoCreditoAnterior>\r\n" + 
-					"							<MontoSolicitadoCliente>0</MontoSolicitadoCliente>\r\n" + 
-					"							<NumeroOperacionMadre></NumeroOperacionMadre>\r\n" + 
-					"							<NumeroOperacionRenovar></NumeroOperacionRenovar>\r\n" + 
-					"							<REFERENCIA_ADICIONAL></REFERENCIA_ADICIONAL>\r\n" + 
-					"							<OperacionPropia></OperacionPropia>\r\n" + 
-					"						</DescuentosOperacion>\r\n" + 
-					"					</XmlDescuentosNuevaOperacion>\r\n" + 
-					"				</carga> ]]>\r\n" + 
-					"			</XMlConsulta>\r\n" + 
-					"		</CalculadoraQuski>\r\n" + 
-					"	</soap:Body>\r\n" + 
-					"</soap:Envelope>";
-			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
-					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
-			return ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
-					token.getToken_type() +" "+ token.getAccess_token(), content);
+			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
+			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito(idCredito);
+			if( joyas == null || joyas.isEmpty()) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
+			}
+			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
+			StringBuilder XMLGarantias = new StringBuilder();
+			for(TbQoTasacion joya:joyas) {
+				String x = contentXMLGarantia
+						.replace( "--tipo-joya--" ,joya.getTipoJoya())
+						.replace("--descripcion--",joya.getDescripcion())
+						.replace("--estado-joya--", joya.getEstadoJoya())
+						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
+						.replace("--peso-gr--", joya.getPesoBruto().toString())
+						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
+						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
+						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
+						.replace("--peso-neto--", joya.getPesoNeto().toString())
+						.replace("--precio-oro--", joya.getValorOro().toString())
+						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
+						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
+						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+				XMLGarantias.append(x);
+			}
+			log.info("==============>>>>> XML garantia");
+			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
+			contentXMLcalculadora = contentXMLcalculadora
+					.replace("--perfil-riesgo--", "1")//donde saco el perfil
+					.replace("--origen-operacion--", "N")
+					.replace("--riesgo-total--", StringUtils.isBlank(riesgoTotal)?"0.00":riesgoTotal)
+					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+					.replace("--perfil-preferencia--", "A") //donde saco el tipo
+					.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
+					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
+					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
+					.replace("--cobertura-exepcionada--", "0")//de donde saco esto
+					.replace("--garanttias-detalle--", XMLGarantias.toString())
+					.replace("--monto-solicitado--", "0");//de donde saco el monto
+				log.info("==============>>>>> XML calculadora");
+				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+						this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+				return ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
+						token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
 		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
 		}
+		
 	}
 
 	/**
