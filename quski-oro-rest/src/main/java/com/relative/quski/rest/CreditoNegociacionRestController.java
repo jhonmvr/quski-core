@@ -180,8 +180,12 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@Path("/crearOperacionNuevo")
 	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
-		CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
-		loc.setEntidad(a);
-		return loc;
+		if(wp.getEntidad().getId() != null) {
+			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
+			loc.setEntidad(a);
+		}else {
+			loc.setEntidad(null);			
+		}
+		return loc;			
 	}
 }
