@@ -118,6 +118,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="uri_imagen_sin_funda")
 	private String uriImagenSinFunda;
 	
+	@Column(name="firmante_operacion")
+	private String firmanteOperacion;
+	
+	@Column(name="tipo_cliente")
+	private String tipoCliente;
+	
 	@Column(name="numero_cuenta")
 	private String numeroCuenta;
 	
@@ -1053,6 +1059,22 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setValorARecibir(BigDecimal valorARecibir) {
 		this.valorARecibir = valorARecibir;
+	}
+
+	public String getFirmanteOperacion() {
+		return firmanteOperacion;
+	}
+
+	public void setFirmanteOperacion(String firmanteOperacion) {
+		this.firmanteOperacion = firmanteOperacion;
+	}
+
+	public String getTipoCliente() {
+		return tipoCliente;
+	}
+
+	public void setTipoCliente(String tipoCliente) {
+		this.tipoCliente = tipoCliente;
 	}
 	
 	
