@@ -98,6 +98,7 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
@@ -1966,7 +1967,62 @@ public class QuskiOroService {
 	
 	}
 
-	
+	/**
+	 * Metodo que guarda la opcion del credito seleccionado
+	 * @param opcionCredito
+	 * @param asesor
+	 * @param valueOf
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoCreditoNegociacion guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, String asesor,
+			Long idCredito) throws RelativeException {
+		
+		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
+		CalculadoraOpcionWrapper opcion = opcionCredito.get(0);
+		TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
+		credito.setId(idCredito);
+		credito.setPlazoCredito(opcion.getPlazo());
+		credito.setPeriodoPlazo(opcion.getPeriodoPlazo());
+		credito.setPeriodicidadPlazo(opcion.getPeriodicidadPlazo());
+		credito.setMontoFinanciado(opcion.getMontoFinanciado());
+		credito.setValorARecibir(opcion.getValorARecibir());
+		credito.setValorAPagar(opcion.getValorAPagar());
+		credito.setCostoCustodia(opcion.getCostoCustodia());
+		credito.setCostoFideicomiso(opcion.getCostoFideicomiso());
+		credito.setCostoSeguro(opcion.getCostoSeguro());
+		credito.setCostoTasacion(opcion.getCostoTasacion());
+		credito.setCostoTransporte(opcion.getCostoTransporte());
+		credito.setCostoValoracion(opcion.getCostoValoracion());
+		credito.setImpuestoSolca(opcion.getImpuestoSolca());
+		credito.setFormaPagoImpuestoSolca(opcion.getFormaPagoImpuestoSolca());
+		credito.setFormaPagoCapital(opcion.getFormaPagoCapital());
+		credito.setFormaPagoCustodia(opcion.getFormaPagoCustodia());
+		credito.setFormaPagoFideicomiso(opcion.getFormaPagoFideicomiso());
+		credito.setFormaPagoInteres(opcion.getFormaPagoInteres());
+		credito.setFormaPagoMora(opcion.getFormaPagoMora());
+		credito.setFormaPagoGastoCobranza(opcion.getFormaPagoGastoCobranza());
+		credito.setFormaPagoSeguro(opcion.getFormaPagoSeguro());
+		credito.setFormaPagoTasador(opcion.getFormaPagoTasador());
+		credito.setFormaPagoTransporte(opcion.getFormaPagoTransporte());
+		credito.setFormaPagoValoracion(opcion.getFormaPagoValoracion());
+		credito.setSaldoInteres(opcion.getSaldoInteres());
+		credito.setSaldoMora(opcion.getSaldoMora());
+		credito.setGastoCobranza(opcion.getGastoCobranza());
+		credito.setCuota(opcion.getCuota());
+		credito.setSaldoCapitalRenov(opcion.getSaldoCapitalRenov());
+		credito.setMontoPrevioDesembolso(opcion.getMontoPrevioDesembolso());
+		credito.setTotalGastosNuevaOperacion(opcion.getTotalGastosNuevaOperacion());
+		credito.setTotalCostosOperacionAnterior(opcion.getTotalCostosOperacionAnterior());
+		credito.setCustodiaDevengada(opcion.getCustodiaDevengada());
+		credito.setFormaPagoCustodiaDevengada(opcion.getFormaPagoCustodiaDevengada());
+		credito.setTipoOferta(opcion.getTipooferta());
+		credito.setPorcentajeFlujoPlaneado(opcion.getPorcentajeflujoplaneado());
+		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
+		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
+		return this.manageCreditoNegociacion(credito);
+	}
+
 	
 	/** ******************************* @INTEGRACION **********************/
 	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente, INGRESOSEGRESOS ingresos) throws RelativeException {
@@ -6164,5 +6220,6 @@ public class QuskiOroService {
 		}
 	}
 
+	
 	
 }
