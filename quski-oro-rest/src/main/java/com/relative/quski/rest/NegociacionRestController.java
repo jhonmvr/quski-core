@@ -14,14 +14,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 
@@ -132,6 +137,17 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		return loc;
 	}
 	
+	@POST
+	@Path("/guardarOpcionCredito")
+	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idCredito)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CREDITO");
+		}
+		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) );
+		loc.setEntidad(a);
+		return loc;
+	}
 	
 	
 }

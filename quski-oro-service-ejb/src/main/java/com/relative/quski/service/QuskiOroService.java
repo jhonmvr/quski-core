@@ -99,6 +99,7 @@ import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
 import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
+import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
@@ -1965,7 +1966,22 @@ public class QuskiOroService {
 	
 	}
 
-	
+	/**
+	 * Metodo que guarda la opcion del credito seleccionado
+	 * @param opcionCredito
+	 * @param asesor
+	 * @param valueOf
+	 * @return
+	 */
+	public TbQoCreditoNegociacion guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, String asesor,
+			Long valueOf) {
+		
+		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	/** ******************************* @INTEGRACION **********************/
 	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente, INGRESOSEGRESOS ingresos) throws RelativeException {
@@ -6154,5 +6170,6 @@ public class QuskiOroService {
 		}
 	}
 
+	
 	
 }
