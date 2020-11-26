@@ -11,6 +11,8 @@ public class CatalogoWrapper implements Serializable{
 	
 	private String codigo;
 	private String nombre;
+	
+	
 	public String getCodigo() {
 		return codigo;
 	}

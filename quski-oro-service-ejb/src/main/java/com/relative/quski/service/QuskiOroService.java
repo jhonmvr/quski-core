@@ -98,9 +98,9 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
-import com.relative.quski.wrapper.CalculadoraEntradaWrapper;
 import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
+import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.ConsultaTablaWrapper;
@@ -115,6 +115,7 @@ import com.relative.quski.wrapper.CrmProspectoWrapper;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
 import com.relative.quski.wrapper.DatosGarantiasWrapper;
+import com.relative.quski.wrapper.DatosImpComWrapper;
 import com.relative.quski.wrapper.DatosRegistroWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
@@ -1940,6 +1941,7 @@ public class QuskiOroService {
 				return new NegociacionWrapper(false);
 			}
 		} catch (RelativeException e) {
+			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -4314,7 +4316,24 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
+	private List<CatalogoTablaAmortizacionWrapper>  catalogoTablaAmotizacion () throws RelativeException {
+		try {
+			return SoftBankApiClient.callCatalogoTablaAmortizacionRest();
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	private List<CatalogoWrapper>  catalogoImpCom() throws RelativeException {
+		try {
+			return SoftBankApiClient.callCatalogoImpComRest();
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
 	private List<TbQoRiesgoAcumulado> createRiesgoFrontSoftBank(List<SoftbankOperacionWrapper> operaciones,
 			TbQoNegociacion negociacion) throws RelativeException {
 		try {
@@ -4966,11 +4985,11 @@ public class QuskiOroService {
 					.replace("--perfil-riesgo--", "1")
 					.replace("--origen-operacion--", "N")
 					.replace("--riesgo-total--", "0.00")
-					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(cliente.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+					 		.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(cliente.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 					.replace("--perfil-preferencia--", "A")
 					.replace("--agencia-originacion--", "01")
 					.replace("--identificacion-cliente--",cliente.getCedulaCliente())
-					.replace("--calificacion-mupi--", cliente.getAprobacionMupi())
+							.replace("--calificacion-mupi--", cliente.getAprobacionMupi()) // error
 					.replace("--cobertura-exepcionada--", "0")
 					.replace("--garanttias-detalle--", garantiaXML.toString())
 					.replace("--monto-solicitado--", "0");
@@ -5506,6 +5525,12 @@ public class QuskiOroService {
 			if( !StringUtils.isBlank( send.getNombreCompletoCodeudor() ) ) {
 			    persisted.setNombreCompletoCodeudor(  send.getNombreCompletoCodeudor() );
 			}
+			if( !StringUtils.isBlank( send.getFirmanteOperacion() ) ) {
+				persisted.setFirmanteOperacion(  send.getFirmanteOperacion() );
+			}
+			if( !StringUtils.isBlank( send.getTipoCliente() ) ) {
+				persisted.setTipoCliente(  send.getTipoCliente() );
+			}
 			if( send.getFechaNacimientoCodeudor() != null ) {
 			    persisted.setFechaNacimientoCodeudor(  send.getFechaNacimientoCodeudor() );
 			}
@@ -5698,96 +5723,186 @@ public class QuskiOroService {
 	}
 
 	private CrearOperacionEntradaWrapper convertirCreditoCoreToCreditoSoftbank( TbQoCreditoNegociacion credito )  throws RelativeException {
-		try {
-			if(credito.getId() != null && credito.getTbQoNegociacion() != null ) {
-				List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito( credito.getId() ); 
-				List<TbQoRubro> rubros = this.rubroRepository.findByIdCredito(credito.getId() );
-				TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
-				if(credito.getTbQoNegociacion().getTbQoCliente() != null) {
-					CrearOperacionEntradaWrapper result = new CrearOperacionEntradaWrapper(cliente.getCedulaCliente(), cliente.getNombreCompleto() ); 
-					if( joyas != null ) {
-						if( rubros != null ) {
-							log.info(" ====> CARGAR RUBROS ");
-							result.cargarImpCom( rubros ) ;
-						}
-						log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 1 ");
-						result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
-						result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  );
-						result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
-						if(credito.getNumeroOperacion() != null ) {
-							result.setNumeroOperacion( credito.getNumeroOperacion() );
-						}
-						result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
-						result.setMontoSolicitado( credito.getMontoSolicitado() );
-						result.setMontoFinanciado( credito.getMontoFinanciado() );
-						int dia = credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1;
-						result.setPagoDia( Long.valueOf( dia ) );
-						result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
-						result.setDatosRegistro( new DatosRegistroWrapper(credito.getTbQoNegociacion().getAsesor(), credito.getIdAgencia(),  QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) )  ); 
-						List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
-						List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
-						if(cuentaCliente != null ) {
-							cuentaCliente.forEach(c->{
-								if( credito.getNumeroCuenta().equals( c.getCuenta() )) {
-									listCuenta.add( new DatosCuentaClienteWrapper( c.getBanco(),c.getCuenta(),c.getEsAhorros() ) );									
-								}
-							});
-						}
-						result.setDatosCuentaCliente( listCuenta );
-						log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 2 ");
-						DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
-						if( credito.getNumeroFunda() != Long.valueOf( 0 ) && credito.getNumeroFunda() != null ) {
-							datos.setNumeroFundaJoya( credito.getNumeroFunda().toString() );								
-						}
-						datos.setCodigoTipoFunda( credito.getCodigoTipoFunda() ); 
-						datos.setUriImagenSinFunda( credito.getUriImagenSinFunda() );
-						datos.setUriImagenConFunda( credito.getUriImagenConFunda() );
-						List<JoyaWrapper> listjoyas = new ArrayList<>();
-						joyas.forEach(e->{
-							log.info(" ====> ESTOY LLEGANDO HASTA AQUI PARTE 3 ");
-							JoyaWrapper joyaSoft = new JoyaWrapper();
-						    // joyaSoft.setNumeroGarantia( e.getNumeroGarantia() );
-						    // joyaSoft.setNumeroExpediente( e.getNumeroExpediente() );
-						    joyaSoft.setCodigoTipoGarantia( e.getTipoGarantia() );
-						    joyaSoft.setDescripcion( e.getDescripcion());
-						    joyaSoft.setCodigoSubTipoGarantia( e.getSubTipoGarantia() );
-						    joyaSoft.setTipoCobertura( QuskiOroConstantes.SOFT_COBERTURA );
-						    joyaSoft.setValorComercial( e.getValorComercial());
-						    joyaSoft.setValorAvaluo( e.getValorAvaluo());
-						    joyaSoft.setValorRealizacion( e.getValorRealizacion());
-						    joyaSoft.setValorOro( e.getValorOro());
-						    try {
-								joyaSoft.setFechaAvaluo( QuskiOroUtil.dateToString( e.getFechaCreacion() , QuskiOroConstantes.SOFT_DATE_FORMAT ) );
-							} catch (RelativeException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						    joyaSoft.setIdAgenciaRegistro( credito.getIdAgencia() );
-						    joyaSoft.setIdAgenciaCustodia( credito.getIdAgencia() );
-						    joyaSoft.setReferencia( QuskiOroConstantes.SOFT_POR_DEFECTO );
-						    joyaSoft.setCodigoTipoJoya( e.getTipoJoya() );
-						    joyaSoft.setDescripcionJoya( QuskiOroConstantes.SOFT_POR_DEFECTO );
-						    joyaSoft.setCodigoEstadoJoya( e.getEstadoJoya());
-						    joyaSoft.setCodigoTipoOro( e.getTipoOro());
-						    joyaSoft.setPesoBruto( e.getPesoBruto());
-						    joyaSoft.setTienePiedras( e.getTienePiedras() );
-						    joyaSoft.setDetallePiedras( e.getDetallePiedras() );
-						    joyaSoft.setDescuentoPiedras( e.getDescuentoPesoPiedra());
-						    joyaSoft.setPesoNeto( e.getPesoNeto());
-						    joyaSoft.setNumeroPiezas( Long.valueOf(e.getNumeroPiezas()));
-						    joyaSoft.setDescuentoSuelda( e.getDescuentoSuelda());
-						    listjoyas.add( joyaSoft );
-						});
-						datos.setGarantias( listjoyas );
-						result.setDatosGarantias( datos );
-						return result;
-					}else {return null;}					
-				}else {return null;}
-			}else {return null;}
+		try {			
+			TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
+			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito( credito.getId() ); 
+			List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
+			if( joyas == null )        { return null; }
+			if( cuentaCliente == null ){ return null; }
+			CrearOperacionEntradaWrapper result = new CrearOperacionEntradaWrapper(cliente.getCedulaCliente(), cliente.getNombreCompleto() ); 
+			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
+			List<CatalogoTablaAmortizacionWrapper>  listTablas = this.catalogoTablaAmotizacion();
+			listTablas.forEach(e->{
+				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+					e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+					e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+					e.getPlazo() == credito.getPlazoCredito() 
+				){
+					credito.setTablaAmortizacion( e.getCodigo() );
+					result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 					
+				}
+			});
+			result.setDatosImpCom( this.generarImpCom( credito ) );
+			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
+			if(credito.getNumeroOperacion() != null ) {
+				result.setNumeroOperacion( credito.getNumeroOperacion() );
+			}
+			result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
+			result.setMontoSolicitado( credito.getMontoSolicitado() );
+			result.setMontoFinanciado( credito.getMontoFinanciado() );
+			result.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
+			result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
+			result.setDatosRegistro( 
+					new DatosRegistroWrapper(
+							credito.getTbQoNegociacion().getAsesor(), 
+							credito.getIdAgencia(),  
+							QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) ) 
+					); 
+			List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
+			cuentaCliente.forEach(c->{
+				if( credito.getNumeroCuenta().equals( c.getCuenta() )) {
+					listCuenta.add( new DatosCuentaClienteWrapper( c.getBanco(),c.getCuenta(),c.getEsAhorros() ) );									
+				}
+			});
+			result.setDatosCuentaCliente( listCuenta );
+			DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
+			if( credito.getNumeroFunda() != Long.valueOf( 0 ) && credito.getNumeroFunda() != null ) {
+				datos.setNumeroFundaJoya( credito.getNumeroFunda().toString() );								
+			}
+			datos.setCodigoTipoFunda( credito.getCodigoTipoFunda() ); 
+			datos.setUriImagenSinFunda( credito.getUriImagenSinFunda() );
+			datos.setUriImagenConFunda( credito.getUriImagenConFunda() );
+			List<JoyaWrapper> listjoyas = generarJoyas(credito, joyas);
+			datos.setGarantias( listjoyas );
+			result.setDatosGarantias( datos );
+			return result;
 		}catch(RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
+	}
+	private List<DatosImpComWrapper> generarImpCom(TbQoCreditoNegociacion credito) throws RelativeException {
+		try {
+			List<DatosImpComWrapper> listImpCom = new ArrayList<DatosImpComWrapper>();
+			List<CatalogoWrapper>  listCatalogo = this.catalogoImpCom();
+			listCatalogo.forEach(e->{
+				DatosImpComWrapper item = new DatosImpComWrapper();
+				log.info("==========> El valor de CUSTODIA ====> " + credito.getCostoCustodia() );
+				log.info("==========> El valor de COMPARACION CUSTODIA ====> " + credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) );
+
+				if( e.getCodigo().equalsIgnoreCase("O") && credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
+					item.setValor( credito.getCostoCustodia() );
+					listImpCom.add( item );
+				}
+				
+				if( e.getCodigo().equals("FI") && credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
+					item.setValor( credito.getCostoFideicomiso() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("SE") && credito.getCostoSeguro().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoSeguro() );
+					item.setValor( credito.getCostoSeguro() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("T") && credito.getCostoTasacion().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoTasador() );
+					item.setValor( credito.getCostoTasacion() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("TR") && credito.getCostoTransporte().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoTransporte() );
+					item.setValor( credito.getCostoTransporte() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("V") && credito.getCostoValoracion().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoValoracion() );
+					item.setValor( credito.getCostoValoracion() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("C") && credito.getSaldoCapitalRenov().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCapital() );
+					item.setValor( credito.getSaldoCapitalRenov() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("I") && credito.getSaldoInteres().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoInteres() );
+					item.setValor( credito.getSaldoInteres() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("003") && credito.getSaldoMora().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoMora() );
+					item.setValor( credito.getSaldoMora() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("GC") && credito.getGastoCobranza().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoGastoCobranza() );
+					item.setValor( credito.getGastoCobranza() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals("CD") && credito.getCustodiaDevengada().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
+					item.setValor( credito.getCustodiaDevengada() );
+					listImpCom.add( item );
+				}
+			});
+			return listImpCom;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+
+	}
+	private List<JoyaWrapper> generarJoyas(TbQoCreditoNegociacion credito, List<TbQoTasacion> joyas) {
+		List<JoyaWrapper> listjoyas = new ArrayList<>();
+		joyas.forEach(e->{
+			log.info(" ====> GENERANDO JOYAS ");
+			JoyaWrapper joyaSoft = new JoyaWrapper();
+			// joyaSoft.setNumeroGarantia( e.getNumeroGarantia() );
+			// joyaSoft.setNumeroExpediente( e.getNumeroExpediente() );
+			joyaSoft.setCodigoTipoGarantia( e.getTipoGarantia() );
+			joyaSoft.setDescripcion( e.getDescripcion());
+			joyaSoft.setCodigoSubTipoGarantia( e.getSubTipoGarantia() );
+			joyaSoft.setTipoCobertura( QuskiOroConstantes.SOFT_COBERTURA );
+			joyaSoft.setValorComercial( e.getValorComercial());
+			joyaSoft.setValorAvaluo( e.getValorAvaluo());
+			joyaSoft.setValorRealizacion( e.getValorRealizacion());
+			joyaSoft.setValorOro( e.getValorOro());
+			try {
+				joyaSoft.setFechaAvaluo( QuskiOroUtil.dateToString( e.getFechaCreacion() , QuskiOroConstantes.SOFT_DATE_FORMAT ) );
+			} catch (RelativeException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			joyaSoft.setIdAgenciaRegistro( credito.getIdAgencia() );
+			joyaSoft.setIdAgenciaCustodia( credito.getIdAgencia() );
+			joyaSoft.setReferencia( QuskiOroConstantes.SOFT_POR_DEFECTO );
+			joyaSoft.setCodigoTipoJoya( e.getTipoJoya() );
+			joyaSoft.setDescripcionJoya( QuskiOroConstantes.SOFT_POR_DEFECTO );
+			joyaSoft.setCodigoEstadoJoya( e.getEstadoJoya());
+			joyaSoft.setCodigoTipoOro( e.getTipoOro());
+			joyaSoft.setPesoBruto( e.getPesoBruto());
+			joyaSoft.setTienePiedras( e.getTienePiedras() );
+			joyaSoft.setDetallePiedras( e.getDetallePiedras() );
+			joyaSoft.setDescuentoPiedras( e.getDescuentoPesoPiedra());
+			joyaSoft.setPesoNeto( e.getPesoNeto());
+			joyaSoft.setNumeroPiezas( Long.valueOf(e.getNumeroPiezas()));
+			joyaSoft.setDescuentoSuelda( e.getDescuentoSuelda());
+			listjoyas.add( joyaSoft );
+		});
+		return listjoyas;
 	}
 
 
