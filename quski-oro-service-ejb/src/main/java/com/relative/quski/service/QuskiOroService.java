@@ -5775,6 +5775,7 @@ public class QuskiOroService {
 					item.setValor( credito.getCostoCustodia() );
 					listImpCom.add( item );
 				}
+				
 				if( e.getCodigo().equals("FI") && credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
 					item.setCodigo( e.getCodigo() );
 					item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
