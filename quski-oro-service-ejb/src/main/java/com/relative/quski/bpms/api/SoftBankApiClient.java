@@ -146,7 +146,11 @@ public class SoftBankApiClient {
 			log.info("=========> VALOR DEL STATUS ========> "+ status);
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRiesgoWrapper.class);
+				SoftbankRiesgoWrapper resp = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRiesgoWrapper.class);
+				if(resp.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,resp.getMensaje());
+				}
+				return resp;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -162,7 +166,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw e;
 		}
 	}
 	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(ConsultaTablaWrapper cont)	throws RelativeException, UnsupportedEncodingException {

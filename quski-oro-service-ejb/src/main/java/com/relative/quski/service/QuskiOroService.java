@@ -1965,6 +1965,25 @@ public class QuskiOroService {
 		return this.getDetalleJoya(credito.getTbQoNegociacion().getTbQoCliente(), joya);
 	
 	}
+	
+
+	public List<TipoOroWrapper> verPrecio(TbQoCliente cliente) throws RelativeException {
+		
+		if(cliente == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CLIENTE");
+		}
+		
+		if(cliente.getFechaNacimiento() == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA FECHA DE NACIMIENTO DEL CLIENTE");
+		}
+		
+		if(StringUtils.isBlank( cliente.getAprobacionMupi() ) ) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE APROBACION MUPI DEL CLIENTE");
+		}
+		
+		return this.tipoOro(this.manageCliente(cliente));
+	}
+
 
 	/**
 	 * Metodo que guarda la opcion del credito seleccionado
@@ -1979,7 +1998,7 @@ public class QuskiOroService {
 		
 		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
 		CalculadoraOpcionWrapper opcion = opcionCredito.get(0);
-		TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
+		TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(idCredito);
 		credito.setId(idCredito);
 		credito.setPlazoCredito(opcion.getPlazo());
 		credito.setPeriodoPlazo(opcion.getPeriodoPlazo());
@@ -2019,7 +2038,7 @@ public class QuskiOroService {
 		credito.setPorcentajeFlujoPlaneado(opcion.getPorcentajeflujoplaneado());
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
-		return this.manageCreditoNegociacion(credito);
+		return this.creditoNegociacionRepository.update(credito);
 	}
 
 	
@@ -2331,7 +2350,7 @@ public class QuskiOroService {
 				wrapper.setProceso( proceso );
 				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "F"));
 				wrapper.setTelefonoMovil(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "M"));
-				wrapper.setTipoOro(this.tipoOro(cliente));
+				//wrapper.setTipoOro(this.tipoOro(cliente));
 				try {
 					this.guardarProspectoCrm(cliente);
 				} catch (Exception e) {
@@ -5502,6 +5521,8 @@ public class QuskiOroService {
 			if( send.getTbQoNegociacion() != null ) {
 			    persisted.setTbQoNegociacion(  send.getTbQoNegociacion() );
 			}
+			
+		
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );

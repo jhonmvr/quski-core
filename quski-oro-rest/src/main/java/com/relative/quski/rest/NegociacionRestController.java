@@ -22,6 +22,7 @@ import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoTasacion;
@@ -29,6 +30,7 @@ import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.TipoOroWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -136,7 +138,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidades(a);
 		return loc;
 	}
-	
+
 	@POST
 	@Path("/guardarOpcionCredito")
 	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException, UnsupportedEncodingException {
@@ -146,6 +148,15 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		}
 		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) );
 		loc.setEntidad(a);
+		return loc;
+	}
+	@POST
+	@Path("/verPrecio")
+	public GenericWrapper<TipoOroWrapper> verPrecio(TbQoCliente cliente, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<TipoOroWrapper> loc = new GenericWrapper<>();
+	
+		List<TipoOroWrapper> a = this.qos.verPrecio(cliente);
+		loc.setEntidades(a);
 		return loc;
 	}
 	
