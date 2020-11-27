@@ -5642,11 +5642,12 @@ public class QuskiOroService {
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
 				return result; 
 			}
+			return null;
+			
 				
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
-		return null;
 	}
 	
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion(String numeroOperacion, String usuario, Long agencia) throws RelativeException{
@@ -5669,8 +5670,10 @@ public class QuskiOroService {
 			credito.setDeudaInicial( operacion.getDeudaInicial() );
 			credito.setaRecibirCliente( operacion.getMontoEntregar() );
 			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
-			credito.setValorCuota( operacion.getValorCuota() );
+			credito.setValorCuota(  operacion.getValorCuota() );
 			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
+			credito.setFechaEfectiva( QuskiOroUtil.formatSringToDate( operacion.getFechaEfectiva(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
+			credito.setFechaVencimiento( QuskiOroUtil.formatSringToDate( operacion.getFechaVencimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
@@ -5745,6 +5748,7 @@ public class QuskiOroService {
 					result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 					
 				}
 			});
+			if(result.getCodigoTablaAmortizacionQuski() == null) { return null;}
 			result.setDatosImpCom( this.generarImpCom( credito ) );
 			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
 			if(credito.getNumeroOperacion() != null ) {
