@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 
 /**
@@ -34,6 +35,7 @@ public class ProcesoByIdNegociacion extends AbstractSpecification<TbQoProceso>  
 	public Predicate toPredicate(Root<TbQoProceso> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.get("idReferencia"), this.idNegociacion));
+		where.add(cb.equal(poll.get("proceso"), ProcesoEnum.NUEVO));
 		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[] {}));
 

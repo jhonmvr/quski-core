@@ -6,10 +6,11 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import com.relative.quski.model.TbQoCliente;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoCuentaBancariaCliente;
+import com.relative.quski.model.TbQoDatoTrabajoCliente;
 import com.relative.quski.model.TbQoDireccionCliente;
-import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoIngresoEgresoCliente;
 import com.relative.quski.model.TbQoPatrimonio;
@@ -17,6 +18,7 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 
 /**
@@ -26,98 +28,168 @@ import com.relative.quski.model.TbQoVariablesCrediticia;
 public class AprobacionWrapper implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	
-	private List<TbQoTasacion> joyas;
-	private List<TbQoVariablesCrediticia> variables;
-	private List<TbQoRiesgoAcumulado> riesgos;
-	private List<TbQoReferenciaPersonal> referencias;
-	private List<TbQoIngresoEgresoCliente>ingresosEgresos;
-	private List<TbQoDocumentoHabilitante>habilitantes;
-	private List <TbQoDireccionCliente>direcciones;
-	private List <TbQoPatrimonio> patrimonios;
-	private TbQoCliente cliente;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
-	private String mensaje;
+	private List<TbQoTelefonoCliente> telefonos;
+	private List<TbQoDireccionCliente> direcciones;
+	private List<TbQoDatoTrabajoCliente> trabajos;
+	private List<TbQoPatrimonio> patrimonios;
+	private List<TbQoIngresoEgresoCliente> ingresosEgresos;
+	private List<TbQoReferenciaPersonal> referencias;
 	private List<TbQoExcepcion> excepciones;
-
-	public AprobacionWrapper() {
+	private List<TbQoVariablesCrediticia> variables;
+	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<TbQoTasacion> joyas;
+	private TbQoCuentaBancariaCliente cuenta;
+	private Boolean existeError;
+	private String mensaje;
+	
+	
+	
+	public AprobacionWrapper(Boolean existeError) {
 		super();
+		this.existeError = existeError;
 	}
 	
+	public TbQoCreditoNegociacion getCredito() {
+		return credito;
+	}
+	public void setCredito(TbQoCreditoNegociacion credito) {
+		this.credito = credito;			
+		if( credito == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE CREDITO";
+		}
+	}
 	
-	public List<TbQoExcepcion> getExcepciones() {
-		return excepciones;
+	public TbQoProceso getProceso() {
+		return proceso;
 	}
-	public void setExcepciones(List<TbQoExcepcion> excepciones) {
-		this.excepciones = excepciones;
+	public void setProceso(TbQoProceso proceso) {
+		this.proceso = proceso;
+		if( proceso == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE PROCESO";
+		}else if( proceso.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION){
+			this.existeError = true;
+			this.mensaje = "EL CREDITO SE ENCUENTRA EN ESTADO: ".concat( proceso.getEstadoProceso().toString() );
+		}
 	}
-
-	public List<TbQoTasacion> getJoyas() {
-		return joyas;
+	
+	public List<TbQoTelefonoCliente> getTelefonos() {
+		return telefonos;
 	}
-	public void setJoyas(List<TbQoTasacion> joyas) {
-		this.joyas = joyas;
-	}
-	public List<TbQoVariablesCrediticia> getVariables() {
-		return variables;
-	}
-	public void setVariables(List<TbQoVariablesCrediticia> variables) {
-		this.variables = variables;
-	}
-	public List<TbQoRiesgoAcumulado> getRiesgos() {
-		return riesgos;
-	}
-	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
-		this.riesgos = riesgos;
-	}
-	public List<TbQoReferenciaPersonal> getReferencias() {
-		return referencias;
-	}
-	public void setReferencias(List<TbQoReferenciaPersonal> referencias) {
-		this.referencias = referencias;
-	}
-	public List<TbQoIngresoEgresoCliente> getIngresosEgresos() {
-		return ingresosEgresos;
-	}
-	public void setIngresosEgresos(List<TbQoIngresoEgresoCliente> ingresosEgresos) {
-		this.ingresosEgresos = ingresosEgresos;
-	}
-	public List<TbQoDocumentoHabilitante> getHabilitantes() {
-		return habilitantes;
-	}
-	public void setHabilitantes(List<TbQoDocumentoHabilitante> habilitantes) {
-		this.habilitantes = habilitantes;
+	public void setTelefonos(List<TbQoTelefonoCliente> telefonos) {
+		this.telefonos = telefonos;
+		if( telefonos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN TELEFONOS";
+		}
 	}
 	public List<TbQoDireccionCliente> getDirecciones() {
 		return direcciones;
 	}
 	public void setDirecciones(List<TbQoDireccionCliente> direcciones) {
 		this.direcciones = direcciones;
+		if( direcciones == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN DIRECCIONES";
+		}
+	}
+	public List<TbQoDatoTrabajoCliente> getTrabajos() {
+		return trabajos;
+	}
+	public void setTrabajos(List<TbQoDatoTrabajoCliente> trabajos) {
+		this.trabajos = trabajos;
+		if( trabajos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN TRABAJOS";
+		}
 	}
 	public List<TbQoPatrimonio> getPatrimonios() {
 		return patrimonios;
 	}
 	public void setPatrimonios(List<TbQoPatrimonio> patrimonios) {
 		this.patrimonios = patrimonios;
+		if( patrimonios == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN PATRIMONIOS";
+		}
 	}
-	public TbQoCliente getCliente() {
-		return cliente;
+	public List<TbQoIngresoEgresoCliente> getIngresosEgresos() {
+		return ingresosEgresos;
 	}
-	public void setCliente(TbQoCliente cliente) {
-		this.cliente = cliente;
+	public void setIngresosEgresos(List<TbQoIngresoEgresoCliente> ingresosEgresos) {
+		this.ingresosEgresos = ingresosEgresos;
+		if( ingresosEgresos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN INGRESOS O EGRESOS";
+		}
 	}
-	public TbQoCreditoNegociacion getCredito() {
-		return credito;
+	public List<TbQoReferenciaPersonal> getReferencias() {
+		return referencias;
 	}
-	public void setCredito(TbQoCreditoNegociacion credito) {
-		this.credito = credito;
+	public void setReferencias(List<TbQoReferenciaPersonal> referencias) {
+		this.referencias = referencias;
+		if( referencias == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN REFERENCIAS";
+		}
 	}
-	public TbQoProceso getProceso() {
-		return proceso;
+	public List<TbQoExcepcion> getExcepciones() {
+		return excepciones;
 	}
-	public void setProceso(TbQoProceso proceso) {
-		this.proceso = proceso;
+	public void setExcepciones(List<TbQoExcepcion> excepciones) {
+		this.excepciones = excepciones;
+		if( excepciones == null) {
+			this.mensaje = "NO EXISTEN EXCEPCIONES";
+		}
+	}
+	public List<TbQoVariablesCrediticia> getVariables() {
+		return variables;
+	}
+	public void setVariables(List<TbQoVariablesCrediticia> variables) {
+		this.variables = variables;
+		if( variables == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN VARIABLES CREDITICIAS";
+		}
+	}
+	public List<TbQoRiesgoAcumulado> getRiesgos() {
+		return riesgos;
+	}
+	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
+		this.riesgos = riesgos;
+		if( riesgos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE RIESGO ACUMULADO";
+		}
+	}
+	public List<TbQoTasacion> getJoyas() {
+		return joyas;
+	}
+	public void setJoyas(List<TbQoTasacion> joyas) {
+		this.joyas = joyas;
+		if( joyas == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN JOYAS";
+		}
+	}
+	public TbQoCuentaBancariaCliente getCuenta() {
+		return cuenta;
+	}
+	public void setCuentas(TbQoCuentaBancariaCliente cuenta) {
+		this.cuenta = cuenta;
+		if( cuenta == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE CUENTA BANCARIA";
+		}
+	}
+	public Boolean getExisteError() {
+		return existeError;
+	}
+	public void setExisteError(Boolean existeError) {
+		this.existeError = existeError;
 	}
 	public String getMensaje() {
 		return mensaje;
@@ -125,4 +197,6 @@ public class AprobacionWrapper implements Serializable {
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
+
+
 }

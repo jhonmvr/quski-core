@@ -103,11 +103,15 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 	@Override
 	public List<TbQoVariablesCrediticia> findByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			return findAllBySpecification(new VariablesCrediticiasByIdNegociacionSpec( idNegociacion ));
+			List<TbQoVariablesCrediticia> list = findAllBySpecification(new VariablesCrediticiasByIdNegociacionSpec( idNegociacion ));
+			if(list.isEmpty()) {
+				return null;
+			}
+			return list;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR VARIABLES CREDITICIAS POR ID DE NEGOCIACION");
 		}
 	}
 

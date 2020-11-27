@@ -85,9 +85,9 @@ public class RiesgoAcumuladoRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 			List<TbQoRiesgoAcumulado> list = this.findAllBySpecification( new RiesgoAcumuladoByIdNegociacionSpec( idNegociacion ) );
 			if (!list.isEmpty()) {
 				return list;
-		} else {
-			return null;
-		}
+			} else {
+				return null;
+			}
     	} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al buscar riesgos acumulados no paginados");
     	}

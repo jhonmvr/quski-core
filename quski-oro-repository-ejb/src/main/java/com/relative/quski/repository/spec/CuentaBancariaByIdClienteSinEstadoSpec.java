@@ -12,11 +12,11 @@ import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCuentaBancariaCliente;
 
-public class CuentaBancariaByIdClienteSpec extends AbstractSpecification<TbQoCuentaBancariaCliente> {
+public class CuentaBancariaByIdClienteSinEstadoSpec extends AbstractSpecification<TbQoCuentaBancariaCliente> {
 
 private Long id;
 	
-	public CuentaBancariaByIdClienteSpec(Long id){
+	public CuentaBancariaByIdClienteSinEstadoSpec(Long id){
 		this.id=id;
 	}
 	
@@ -31,9 +31,6 @@ private Long id;
 	public Predicate toPredicate(Root<TbQoCuentaBancariaCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 			where.add(cb.equal(poll.get("tbQoCliente").get("id"), this.id ));
-			where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
-
-
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 }

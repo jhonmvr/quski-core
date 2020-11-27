@@ -28,10 +28,7 @@ public class VariablesCrediticiasByIdNegociacionSpec extends AbstractSpecificati
 	@Override
 	public Predicate toPredicate(Root<TbQoVariablesCrediticia> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-
-		if (this.idNegociacion != null && this.idNegociacion != 0) {
-			where.add(cb.equal(poll.get("tbQoNegociacion"), this.idNegociacion));			
-		}	
+		where.add(cb.equal(poll.get("tbQoNegociacion").get("id"), this.idNegociacion));			
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}

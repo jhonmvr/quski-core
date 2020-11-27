@@ -144,10 +144,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
-	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
-		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
-		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( idNegociacion ));
 
 		loc.setEntidad(a);
 		return loc;

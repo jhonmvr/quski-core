@@ -11,7 +11,9 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.repository.CuentaBancariaRepository;
+import com.relative.quski.repository.spec.CuentaBancariaByIdClienteSinEstadoSpec;
 import com.relative.quski.repository.spec.CuentaBancariaByIdClienteSpec;
+import com.relative.quski.repository.spec.CuentaByClienteAndCuentaSpec;
 
 
 @Stateless(mappedName = "cuentaBancariaRepository")
@@ -32,6 +34,36 @@ public class CuentaBancariaClienteRepositoryImp extends GeneralRepositoryImp<Lon
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+		}
+	}
+	public List<TbQoCuentaBancariaCliente> findByIdClienteSinEstado(Long id) throws RelativeException {
+		try {
+			List<TbQoCuentaBancariaCliente> list = findAllBySpecification(new CuentaBancariaByIdClienteSinEstadoSpec( id ));
+			log.info("ESTOY BUSCANDO CUENTAS SIZE =====> " + list.size());
+
+			if(!list.isEmpty()) {
+				return list;
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+		}
+	}
+	@Override
+	public TbQoCuentaBancariaCliente findByClienteAndCuenta(Long id, String cuenta) throws RelativeException {
+		try {
+			List<TbQoCuentaBancariaCliente> list = findAllBySpecification( new CuentaByClienteAndCuentaSpec( id, cuenta) );
+			if(list.isEmpty() || list.size() > 1) {
+				return null;
+			}
+			return list.get(0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+
 		}
 	}
 

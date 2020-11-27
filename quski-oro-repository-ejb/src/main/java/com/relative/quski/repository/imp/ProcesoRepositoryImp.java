@@ -311,7 +311,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	}
 
 	@Override
-	public TbQoProceso findByIdNegociacion(Long id) throws RelativeException {
+	public TbQoProceso findByIdCreditoNuevo(Long id) throws RelativeException {
 		try {
 			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdNegociacion(id));
 			if (!list.isEmpty()) {
