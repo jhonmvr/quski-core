@@ -12,8 +12,6 @@ import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.model.TbQoDatoTrabajoCliente;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoExcepcion;
-import com.relative.quski.model.TbQoIngresoEgresoCliente;
-import com.relative.quski.model.TbQoPatrimonio;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
@@ -33,8 +31,6 @@ public class AprobacionWrapper implements Serializable {
 	private List<TbQoTelefonoCliente> telefonos;
 	private List<TbQoDireccionCliente> direcciones;
 	private List<TbQoDatoTrabajoCliente> trabajos;
-	private List<TbQoPatrimonio> patrimonios;
-	private List<TbQoIngresoEgresoCliente> ingresosEgresos;
 	private List<TbQoReferenciaPersonal> referencias;
 	private List<TbQoExcepcion> excepciones;
 	private List<TbQoVariablesCrediticia> variables;
@@ -104,26 +100,6 @@ public class AprobacionWrapper implements Serializable {
 		if( trabajos == null) {
 			this.existeError = true;
 			this.mensaje = "NO EXISTEN TRABAJOS";
-		}
-	}
-	public List<TbQoPatrimonio> getPatrimonios() {
-		return patrimonios;
-	}
-	public void setPatrimonios(List<TbQoPatrimonio> patrimonios) {
-		this.patrimonios = patrimonios;
-		if( patrimonios == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTEN PATRIMONIOS";
-		}
-	}
-	public List<TbQoIngresoEgresoCliente> getIngresosEgresos() {
-		return ingresosEgresos;
-	}
-	public void setIngresosEgresos(List<TbQoIngresoEgresoCliente> ingresosEgresos) {
-		this.ingresosEgresos = ingresosEgresos;
-		if( ingresosEgresos == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTEN INGRESOS O EGRESOS";
 		}
 	}
 	public List<TbQoReferenciaPersonal> getReferencias() {
