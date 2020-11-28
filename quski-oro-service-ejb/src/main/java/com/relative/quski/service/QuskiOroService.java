@@ -2044,6 +2044,24 @@ public class QuskiOroService {
 		credito.setPorcentajeFlujoPlaneado(opcion.getPorcentajeflujoplaneado());
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
+		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(
+				this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION).getValor());
+		if(listTablas == null || listTablas.isEmpty()) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
+		}
+		listTablas.forEach(e->{
+			if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+				e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+				e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+				e.getPlazo() == credito.getPlazoCredito() 
+			){
+				credito.setTablaAmortizacion( e.getCodigo() );
+				credito.setNumeroCuotas(e.getNumeroCuotas());					
+			}
+		});
+		if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+		}
 		return this.creditoNegociacionRepository.update(credito);
 	}
 
@@ -4308,7 +4326,8 @@ public class QuskiOroService {
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion (String numeroOperacion, String urlHabilitantes, DatosRegistroWrapper registro) throws RelativeException {
 		try {
 			ConsultaTablaWrapper entrada = new 	ConsultaTablaWrapper(numeroOperacion, urlHabilitantes != null ? urlHabilitantes : QuskiOroConstantes.SOFT_POR_DEFECTO, registro);
-			SoftbankTablaAmortizacionWrapper persisted = SoftBankApiClient.callConsultaTablaAmortizacionRest(entrada);
+			SoftbankTablaAmortizacionWrapper persisted = SoftBankApiClient.callConsultaTablaAmortizacionRest(
+					this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION).getValor(),entrada);
 			if (!persisted.getCuotas().isEmpty()) {
 				return persisted.getCuotas();
 			} else {
@@ -4320,15 +4339,7 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	private List<CatalogoTablaAmortizacionWrapper>  catalogoTablaAmotizacion () throws RelativeException {
-		try {
-			return SoftBankApiClient.callCatalogoTablaAmortizacionRest();
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
+
 	private List<CatalogoWrapper>  catalogoImpCom() throws RelativeException {
 		try {
 			return SoftBankApiClient.callCatalogoImpComRest();
@@ -5734,17 +5745,8 @@ public class QuskiOroService {
 			if( cuentaCliente == null ){ return null; }
 			CrearOperacionEntradaWrapper result = new CrearOperacionEntradaWrapper(cliente.getCedulaCliente(), cliente.getNombreCompleto() ); 
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
-			List<CatalogoTablaAmortizacionWrapper>  listTablas = this.catalogoTablaAmotizacion();
-			listTablas.forEach(e->{
-				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
-					e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
-					e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-					e.getPlazo() == credito.getPlazoCredito() 
-				){
-					credito.setTablaAmortizacion( e.getCodigo() );
-					result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 					
-				}
-			});
+		
+			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
 			result.setDatosImpCom( this.generarImpCom( credito ) );
 			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
 			if(credito.getNumeroOperacion() != null ) {
