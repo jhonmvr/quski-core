@@ -4439,7 +4439,7 @@ public class QuskiOroService {
 	
 	private void cuentasSoftToCuentasCore(List<SoftbankCuentasBancariasWrapper> list, TbQoCliente cliente) throws RelativeException {
 		try {
-			List<TbQoCuentaBancariaCliente> listUpdate = this.cuentaBancariaRepository.findByIdCliente(cliente.getId() );
+			List<TbQoCuentaBancariaCliente> listUpdate = this.cuentaBancariaRepository.findByIdClienteSinEstado(cliente.getId() );
 			List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
 
 			list.forEach(e ->{
