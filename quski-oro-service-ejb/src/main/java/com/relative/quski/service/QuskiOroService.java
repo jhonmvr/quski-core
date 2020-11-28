@@ -4450,7 +4450,7 @@ public class QuskiOroService {
 	
 	private void cuentasSoftToCuentasCore(List<SoftbankCuentasBancariasWrapper> list, TbQoCliente cliente) throws RelativeException {
 		try {
-			List<TbQoCuentaBancariaCliente> listUpdate = this.cuentaBancariaRepository.findByIdCliente(cliente.getId() );
+			List<TbQoCuentaBancariaCliente> listUpdate = this.cuentaBancariaRepository.findByIdClienteSinEstado(cliente.getId() );
 			List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
 
 			list.forEach(e ->{
@@ -5653,11 +5653,12 @@ public class QuskiOroService {
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
 				return result; 
 			}
+			return null;
+			
 				
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
-		return null;
 	}
 	
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion(String numeroOperacion, String usuario, Long agencia) throws RelativeException{
@@ -5680,8 +5681,10 @@ public class QuskiOroService {
 			credito.setDeudaInicial( operacion.getDeudaInicial() );
 			credito.setaRecibirCliente( operacion.getMontoEntregar() );
 			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
-			credito.setValorCuota( operacion.getValorCuota() );
+			credito.setValorCuota(  operacion.getValorCuota() );
 			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
+			credito.setFechaEfectiva( QuskiOroUtil.formatSringToDate( operacion.getFechaEfectiva(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
+			credito.setFechaVencimiento( QuskiOroUtil.formatSringToDate( operacion.getFechaVencimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
@@ -5747,6 +5750,7 @@ public class QuskiOroService {
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 		
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
+			if(result.getCodigoTablaAmortizacionQuski() == null) { return null;}
 			result.setDatosImpCom( this.generarImpCom( credito ) );
 			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
 			if(credito.getNumeroOperacion() != null ) {

@@ -25,6 +25,9 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	private String codigoTipoCarteraQuski;
 	private Boolean esProductoOro;
 	private String numeroFundaJoya;
+	private String codigoFirmanteOperacion;
+	private String fechaEfectiva;
+	private String fechaVencimiento;
 	private String uriHabilitantes;
 	private List<DatosImpComWrapper> datosImpCom;
 	private List<JoyaWrapper> garantias;
@@ -181,5 +184,23 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	}
 	public void setValidaciones(String validaciones) {
 		this.validaciones = validaciones;
+	}
+	public String getCodigoFirmanteOperacion() {
+		return codigoFirmanteOperacion;
+	}
+	public void setCodigoFirmanteOperacion(String codigoFirmanteOperacion) {
+		this.codigoFirmanteOperacion = codigoFirmanteOperacion;
+	}
+	public String getFechaEfectiva() {
+		return fechaEfectiva;
+	}
+	public void setFechaEfectiva(String fechaEfectiva) {
+		this.fechaEfectiva = fechaEfectiva;
+	}
+	public String getFechaVencimiento() {
+		return fechaVencimiento;
+	}
+	public void setFechaVencimiento(String fechaVencimiento) {
+		this.fechaVencimiento = fechaVencimiento;
 	}
 }
