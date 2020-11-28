@@ -174,13 +174,13 @@ public class SoftBankApiClient {
 			throw e;
 		}
 	}
-	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(ConsultaTablaWrapper cont)	throws RelativeException, UnsupportedEncodingException {
+	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service, ConsultaTablaWrapper cont)	throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(cont);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CONSULTA TABLA AMORTIZACION ========> " + new String(content));
-			String service = QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION;
+			//String service = QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
@@ -210,9 +210,9 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest() throws RelativeException {
+	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest(String service) throws RelativeException {
 		try {
-			String service = QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION;
+			//String service = QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String("{}"), RestClientWrapper.METHOD_POST, null, null,

@@ -313,7 +313,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="total_valor_realizacion")
 	private BigDecimal totalValorRealizacion;
 
-
+	@Column(name="numero_coutas")
+	private Long numeroCuotas;
 
 	@Column(name="valor_a_pagar")
 	private BigDecimal valorAPagar;
@@ -1075,6 +1076,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setTipoCliente(String tipoCliente) {
 		this.tipoCliente = tipoCliente;
+	}
+
+	public Long getNumeroCuotas() {
+		return numeroCuotas;
+	}
+
+	public void setNumeroCuotas(Long numeroCuotas) {
+		this.numeroCuotas = numeroCuotas;
 	}
 	
 	

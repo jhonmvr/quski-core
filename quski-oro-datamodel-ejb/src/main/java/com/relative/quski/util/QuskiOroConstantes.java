@@ -271,8 +271,8 @@ public class QuskiOroConstantes {
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "URL_SERVICIO_SOFTBANK_CREAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
-	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "http://201.183.238.73:1991/api/prestamo/operacion/tablaamortizacion";
-	public static final String URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION= "http://201.183.238.73:1991/api/catalogo/tablaamortizacion";
+	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "URL_SOFTBANK_TABLA_AMORTIZACION";
+	public static final String URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION= "URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION";
 	public static final String URL_SOFTBANK_CATALOGO_IMP_COM= "http://201.183.238.73:1991/api/catalogo/impcom";
 
 	public static final String URL_APIGW = "URL_APIGW";
