@@ -5521,6 +5521,52 @@ public class QuskiOroService {
 		}
 	}
 	
+	public TbQoCreditoNegociacion optenerNumeroDeFunda(TbQoCreditoNegociacion c) throws RelativeException {
+		TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(c.getId());
+		CrearOperacionEntradaWrapper operacionSoftBank = 
+				new CrearOperacionEntradaWrapper(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente(),
+						credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() ); 
+		operacionSoftBank.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
+	
+		operacionSoftBank.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
+
+		operacionSoftBank.setDatosImpCom( this.generarImpCom( credito ) );
+		operacionSoftBank.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
+		operacionSoftBank.setNumeroOperacion( credito.getNumeroOperacion() );
+		operacionSoftBank.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
+		operacionSoftBank.setMontoSolicitado( credito.getMontoSolicitado() );
+		operacionSoftBank.setMontoFinanciado( credito.getMontoFinanciado() );
+		operacionSoftBank.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
+		operacionSoftBank.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
+		operacionSoftBank.setDatosRegistro( 
+				new DatosRegistroWrapper(
+						credito.getTbQoNegociacion().getAsesor(), 
+						c.getIdAgencia(),  
+						QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) ) 
+				); 
+		DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
+
+		datos.setCodigoTipoFunda( c.getCodigoTipoFunda() ); 
+		datos.setGarantias(new ArrayList<>());
+		operacionSoftBank.setDatosGarantias( datos );
+		CrearOperacionRespuestaWrapper result;
+		try {
+			result = SoftBankApiClient.callCrearOperacion01Rest(operacionSoftBank);
+		} catch (UnsupportedEncodingException | RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL CREAR OPERACION EN SOFTBANK Y ASIGNAR NUMERO DE FUNDA");
+		}
+		if(StringUtils.isBlank(result.getNumeroFundaJoya())) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL NUMERO DE FUNDA ASIGNADO ESTA VACIO");
+		}
+		credito.setNumeroFunda(Long.valueOf(result.getNumeroFundaJoya()) );
+		credito.setCodigoTipoFunda(c.getCodigoTipoFunda());
+		return this.manageCreditoNegociacion(credito);
+	}
+
+	
+	
 	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp ) throws RelativeException{
 		try {
 			
@@ -6234,6 +6280,6 @@ public class QuskiOroService {
 		}
 	}
 
-	
+
 	
 }

@@ -187,4 +187,17 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		}
 		return loc;			
 	}
+	
+	@POST
+	@Path("/optenerNumeroDeFunda")
+	public GenericWrapper<TbQoCreditoNegociacion> optenerNumeroDeFunda(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		if(wp.getEntidad().getId() != null) {
+			TbQoCreditoNegociacion a = this.qos.optenerNumeroDeFunda( wp.getEntidad() );
+			loc.setEntidad(a);
+		}else {
+			loc.setEntidad(null);			
+		}
+		return loc;			
+	}
 }
