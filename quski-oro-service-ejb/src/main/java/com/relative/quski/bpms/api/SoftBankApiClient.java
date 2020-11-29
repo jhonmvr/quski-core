@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,6 +14,14 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.CatalogoActividadWrapper;
+import com.relative.quski.wrapper.CatalogoAgenciaWrapper;
+import com.relative.quski.wrapper.CatalogoDivicionWrapper;
+import com.relative.quski.wrapper.CatalogoIdResponseWrapper;
+import com.relative.quski.wrapper.CatalogoIdWrapper;
+import com.relative.quski.wrapper.CatalogoResponseActividadWrapper;
+import com.relative.quski.wrapper.CatalogoResponseAgenciaWrapper;
+import com.relative.quski.wrapper.CatalogoResponseDivicionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmoritzacionResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
@@ -30,7 +39,6 @@ import com.relative.quski.wrapper.SoftbankTablaAmortizacionWrapper;
 public class SoftBankApiClient {
 
 	private static final Log log = LogFactory.getLog(SoftBankApiClient.class);
-
 	public static void main(String[] args) {
 		
 		try {
@@ -243,39 +251,76 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoWrapper> callCatalogoImpComRest() throws RelativeException {
+	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service ) throws RelativeException {
 		try {
-			String service = QuskiOroConstantes.URL_SOFTBANK_CATALOGO_IMP_COM;
-			log.info("=========> SERVICIO URL ========> " + service);
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, new String("{}"), RestClientWrapper.METHOD_POST, null, null,
-					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CatalogoResponseWrapper.class);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+					service, CatalogoResponseAgenciaWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
-			log.info("=========> VALOR DEL STATUS ========> "+ status);
-			if(status>=200 && status < 300) {
-				Gson gsons = new GsonBuilder().create();
-				CatalogoResponseWrapper  wrapper =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseWrapper.class);
-				if( wrapper.getExisteError() && wrapper.getCatalogo().isEmpty() ) {
-					return null;
-				}
-				return wrapper.getCatalogo();
-			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
-						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			Gson gsons = new GsonBuilder().create();
+			CatalogoResponseAgenciaWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseAgenciaWrapper.class) : null;
+			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
 		} catch (RelativeException e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
+	public static List<CatalogoActividadWrapper> callCatalogoActividadEconomicaRest( String service ) throws RelativeException {
+		try {
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+					service, CatalogoResponseActividadWrapper.class);
+			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			Gson gsons = new GsonBuilder().create();
+			CatalogoResponseActividadWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseActividadWrapper.class) : null;
+			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		}
+	}
+	public static List<CatalogoDivicionWrapper> callCatalogoDivicionPoliticaRest( String service ) throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson("{}");
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=========> WRAPPER CONSULTA ========> " + new String(content));
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
+					service, CatalogoResponseDivicionWrapper.class);
+			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			Gson gsons = new GsonBuilder().create();
+			CatalogoResponseDivicionWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseDivicionWrapper.class) : null;
+			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		}
+	}
+	public static List<CatalogoIdWrapper> callCatalogoConIdRest(String service) throws RelativeException {
+		try {
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+					service, CatalogoIdResponseWrapper.class);
+			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			Gson gsons = new GsonBuilder().create();
+			CatalogoIdResponseWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoIdResponseWrapper.class) : null;
+			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		}
+	}
+	public static List<CatalogoWrapper> callCatalogoRest(String service) throws RelativeException {
+		try {
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
+					service, CatalogoResponseWrapper.class);
+			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			Gson gsons = new GsonBuilder().create();
+			CatalogoResponseWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseWrapper.class) : null;
+			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		}
+	}
+	
 	/**
 	 * 
 	 * @param urlService

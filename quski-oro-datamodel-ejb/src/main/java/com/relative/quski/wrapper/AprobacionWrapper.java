@@ -117,9 +117,6 @@ public class AprobacionWrapper implements Serializable {
 	}
 	public void setExcepciones(List<TbQoExcepcion> excepciones) {
 		this.excepciones = excepciones;
-		if( excepciones == null) {
-			this.mensaje = "NO EXISTEN EXCEPCIONES";
-		}
 	}
 	public List<TbQoVariablesCrediticia> getVariables() {
 		return variables;
@@ -136,10 +133,6 @@ public class AprobacionWrapper implements Serializable {
 	}
 	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
 		this.riesgos = riesgos;
-		if( riesgos == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTE RIESGO ACUMULADO";
-		}
 	}
 	public List<TbQoTasacion> getJoyas() {
 		return joyas;

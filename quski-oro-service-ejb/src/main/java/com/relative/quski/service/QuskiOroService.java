@@ -98,6 +98,7 @@ import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
+import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.ConsultaTablaWrapper;
 import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
@@ -1930,7 +1931,7 @@ public class QuskiOroService {
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
 		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(
-				this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION).getValor());
+				this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor());
 		if(listTablas == null || listTablas.isEmpty()) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
 		}
@@ -4245,6 +4246,72 @@ public class QuskiOroService {
 		}
 
 	}
+	public CatalogosSoftbankWrapper traerCatalogos() throws RelativeException {
+		try {
+			String service;
+			CatalogosSoftbankWrapper wp = new CatalogosSoftbankWrapper();
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_AGENCIA).getValor();
+			wp.setCatAgencia( SoftBankApiClient.callCatalogoAgenciaRest( service ) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ACTIVIDAD_ECONOMICA).getValor();
+			wp.setCatActividadEconomica( SoftBankApiClient.callCatalogoActividadEconomicaRest( service ) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_DIVISION_POLITICA).getValor();
+			wp.setCatDivicionPolitica( SoftBankApiClient.callCatalogoDivicionPoliticaRest( service ) );
+			
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_BANCO).getValor();
+			wp.setCatBanco( SoftBankApiClient.callCatalogoConIdRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_PAIS).getValor();
+			wp.setCatPais( SoftBankApiClient.callCatalogoConIdRest(service) );
+			
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_PROFESION).getValor();
+			wp.setCatProfesion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_EDUCACION).getValor();
+			wp.setCatEducacion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ESTADO_CIVIL).getValor();
+			wp.setCatEstadoCivil( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_SECTOR_VIVIENDA).getValor();
+			wp.setCatSectorvivienda( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_VIVIENDA).getValor();
+			wp.setCatTipoVivienda( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_REFERENCIA).getValor();
+			wp.setCatTipoReferencia( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_DIRECCION).getValor();
+			wp.setCatTipoDireccion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_IMP_COM).getValor();
+			wp.setCatImpCom( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_JOYA).getValor();
+			wp.setCatTipoJoya( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ESTADO_JOYA).getValor();
+			wp.setCatEstadoJoya( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor();
+			wp.setCatTipoOro( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ESTADO_PROCESO).getValor();
+			wp.setCatEstadoProceso( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_FIRMANTE_OPERACION).getValor();
+			wp.setCatFirmanteOperacion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_MOTIVO_DEVOLUCION_APROBACION).getValor();
+			wp.setCatMotivoDevolucionAprobacion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ACTIVIDAD_ECONOMICA_MUPI).getValor();
+			wp.setCatActividadEconomicaMupi( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_SEXO).getValor();
+			wp.setCatSexo( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_FUNDA).getValor();
+			wp.setCatTipoFunda( SoftBankApiClient.callCatalogoRest(service) );
+			
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_CARGO).getValor();
+			wp.setCatCargo( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_OCUPACION).getValor();
+			wp.setCatOcupacion( SoftBankApiClient.callCatalogoRest(service) );
+			service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_ORIGEN_INGRESOS).getValor();
+			wp.setCatOrigenIngreso( SoftBankApiClient.callCatalogoRest(service) );
+			return wp;
+			
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+
+	}
 
 	public List<SoftbankOperacionWrapper> consultarRiesgoSoftbank(String identificacion) throws RelativeException {
 		try {
@@ -4281,7 +4348,8 @@ public class QuskiOroService {
 
 	private List<CatalogoWrapper>  catalogoImpCom() throws RelativeException {
 		try {
-			return SoftBankApiClient.callCatalogoImpComRest();
+			String service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_IMP_COM).getValor();
+			return SoftBankApiClient.callCatalogoRest( service );
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
@@ -4859,7 +4927,7 @@ public class QuskiOroService {
 
 	public List<TipoOroWrapper> tipoOro(TbQoCliente cliente) throws RelativeException {		
 		
-		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CATALOGO_TIPO_ORO).getValor());
+		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor());
 		
 		if(response != null && response.getCatalogo() != null && !response.getCatalogo().isEmpty()) {
 			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
@@ -5471,21 +5539,19 @@ public class QuskiOroService {
 	public AprobacionWrapper traerCreditoNegociacionExistente(Long idNego) throws RelativeException {
 		try {
 			AprobacionWrapper tmp = new AprobacionWrapper( Boolean.FALSE );
+			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
+			tmp.setRiesgos( this.riesgoAcumuladoRepository.findByIdNegociacion( idNego ) );
 			tmp.setCredito( this.creditoNegociacionRepository.findCreditoByIdNegociacion( idNego ) );
 			tmp.setProceso( this.procesoRepository.findByIdCreditoNuevo( idNego ) );
-			tmp.setRiesgos( this.riesgoAcumuladoRepository.findByIdNegociacion( idNego ) );
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
-			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
 			tmp.setJoyas( this.tasacionRepository.findByIdNegociacion( idNego ) );
-			if(tmp.getExisteError()) {
-				return tmp;
-			}
-			Long idCliente = tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId();
+			if(tmp.getExisteError()) {return tmp;}
 			
-			tmp.setCuentas( this.cuentaBancariaRepository.findByClienteAndCuenta( idCliente, tmp.getCredito().getNumeroCuenta() ));
+			Long idCliente = tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId();
+			tmp.setCuentas(     this.cuentaBancariaRepository.findByClienteAndCuenta( idCliente, tmp.getCredito().getNumeroCuenta() ));
 			tmp.setTelefonos(   this.telefonoClienteRepository.findByIdCliente( idCliente));
 			tmp.setDirecciones( this.direccionClienteRepository.findByIdCliente( idCliente));
-			tmp.setTrabajos( this.datoTrabajoClienteRepository.findByIdClienteList( idCliente));
+			tmp.setTrabajos(    this.datoTrabajoClienteRepository.findByIdClienteList( idCliente));
 			tmp.setReferencias( this.referenciaPersonalRepository.findByIdCliente( idCliente));
 			return tmp;
 		} catch (RelativeException e) {
@@ -5802,10 +5868,7 @@ public class QuskiOroService {
 	private List<JoyaWrapper> generarJoyas(TbQoCreditoNegociacion credito, List<TbQoTasacion> joyas) {
 		List<JoyaWrapper> listjoyas = new ArrayList<>();
 		joyas.forEach(e->{
-			log.info(" ====> GENERANDO JOYAS ");
 			JoyaWrapper joyaSoft = new JoyaWrapper();
-			// joyaSoft.setNumeroGarantia( e.getNumeroGarantia() );
-			// joyaSoft.setNumeroExpediente( e.getNumeroExpediente() );
 			joyaSoft.setCodigoTipoGarantia( e.getTipoGarantia() );
 			joyaSoft.setDescripcion( e.getDescripcion());
 			joyaSoft.setCodigoSubTipoGarantia( e.getSubTipoGarantia() );
