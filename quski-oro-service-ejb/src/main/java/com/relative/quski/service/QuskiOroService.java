@@ -5370,7 +5370,7 @@ public class QuskiOroService {
 			if( send.getIdAgencia() != null ) {
 			    persisted.setIdAgencia(  send.getIdAgencia() );
 			}
-			if( !StringUtils.isBlank( send.getNumeroOperacion() ) ) {
+			if( StringUtils.isNotBlank( send.getNumeroOperacion() ) ) {
 			    persisted.setNumeroOperacion(  send.getNumeroOperacion() );
 			}
 			if( send.getTotalInteresVencimiento() != null ) {
@@ -5448,7 +5448,6 @@ public class QuskiOroService {
 			if( send.getTbQoNegociacion() != null ) {
 			    persisted.setTbQoNegociacion(  send.getTbQoNegociacion() );
 			}
-			
 		
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
@@ -5562,6 +5561,7 @@ public class QuskiOroService {
 		}
 		credito.setNumeroFunda(Long.valueOf(result.getNumeroFundaJoya()) );
 		credito.setCodigoTipoFunda(c.getCodigoTipoFunda());
+		credito.setNumeroOperacion(result.getNumeroOperacion());
 		return this.manageCreditoNegociacion(credito);
 	}
 
@@ -5678,7 +5678,7 @@ public class QuskiOroService {
 			if(result.getCodigoTablaAmortizacionQuski() == null) { return null;}
 			result.setDatosImpCom( this.generarImpCom( credito ) );
 			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
-			if(credito.getNumeroOperacion() != null ) {
+			if(StringUtils.isNotBlank(credito.getNumeroOperacion() ) ) {
 				result.setNumeroOperacion( credito.getNumeroOperacion() );
 			}
 			result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
