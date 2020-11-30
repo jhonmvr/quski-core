@@ -19,5 +19,10 @@ public interface DevolucionRepository extends CrudRepository<Long, TbQoDevolucio
 
 	public Integer countOperaciones(BusquedaDevolucionWrapper  bdw) throws RelativeException;
 	
+	public List<DevolucionProcesoWrapper> findOperacionesArribos(BusquedaDevolucionWrapper  bdw) throws RelativeException;
+
+
+	public Integer countOperacionesArribos(BusquedaDevolucionWrapper  bdw) throws RelativeException;
+	
 
 }

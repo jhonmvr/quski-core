@@ -39,6 +39,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 					"	j.id, " + 
 					"	j.fecha_creacion, " + 
 					"	coalesce(j.nombre_agencia_solicitud, '') nombre_agencia_solicitud, " + 
+					"	coalesce(j.agencia_entrega, '') agencia_entrega, " + 
 					"	coalesce(j.codigo_operacion_madre, '') codigo_operacion_madre, " + 
 					"	coalesce(j.codigo_operacion, '') codigo_operacion, " + 
 					"	coalesce(j.nombre_cliente, '') nombre_cliente, " + 
@@ -203,6 +204,19 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
 		}
 
+	}
+
+	@Override
+	public List<DevolucionProcesoWrapper> findOperacionesArribos(BusquedaDevolucionWrapper bdw)
+			throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer countOperacionesArribos(BusquedaDevolucionWrapper bdw) throws RelativeException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

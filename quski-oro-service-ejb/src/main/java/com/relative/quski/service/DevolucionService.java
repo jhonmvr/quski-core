@@ -22,8 +22,10 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 
 @Stateless
 public class DevolucionService {
@@ -215,12 +217,43 @@ public class DevolucionService {
 		return devolucionRepository.countOperaciones(bdw);
 	}
 	
-	public List<TbQoDevolucion> registrarFechaSolicitud(List<Long> idDevoluciones, Date fechaArriboAgencia  ) throws RelativeException {
+	/*
+	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> findOperacionArribo(DevolucionPendienteArribosWrapper bdw) throws RelativeException {
+		
+		try {
+			PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
+			List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
+			log.info("========>>>>>>> actions >>>>" + actions);
+			if (actions != null && !actions.isEmpty()) {
+				plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
+				plw.setList(actions);
+			}
+			
+			return plw;
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	public Integer countOperacionArribo(BusquedaDevolucionWrapper bdw) throws RelativeException {
+	
+	
+		
+		return devolucionRepository.countOperaciones(bdw);
+	}
+	*/
+	public List<TbQoDevolucion> registrarFechaArribo(RegistroFechaArriboWrapper rfaw  ) throws RelativeException {
 		List<TbQoDevolucion> devoluciones = new ArrayList<>();
-		for(Long id : idDevoluciones) {
+		for(Long id : rfaw.getIdDevoluciones()) {
 			TbQoDevolucion devolucion = devolucionRepository.findById(id);
 			if(devolucion.getFechaArribo() == null || devolucion.getFechaArribo().toString().isEmpty()) {
-				devolucion.setFechaArribo(fechaArriboAgencia);
+				devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
 				devolucion= manageDevolucion(devolucion);
 				devoluciones.add(devolucion);
 			}else {

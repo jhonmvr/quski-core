@@ -1,7 +1,6 @@
 package com.relative.quski.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,6 +26,7 @@ import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -149,12 +149,22 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 		return plw;
 	}
-
+	
+	/*
+	@POST
+	@Path("/buscarDevolucionPendienteArribo")
+	@ApiOperation(value = "PaginatedListWrapper<ResultOperacionesWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiContrato", response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(BusquedaDevolucionWrapperArribo bdw ) throws RelativeException {
+		PaginatedListWrapper<DevolucionProcesoWrapper> plw = this.dos.findOperacion(bdw);
+	
+		return plw;
+	}
+*/
 	@POST
 	@Path("/registrarFechaArribo")
-	public List<TbQoDevolucion> registrarFechaArribo( List<Long> idDevoluciones, Date fechaArribo) throws RelativeException {
+	public List<TbQoDevolucion> registrarFechaArribo( RegistroFechaArriboWrapper rfaw ) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
-		loc= this.dos.registrarFechaSolicitud(idDevoluciones, fechaArribo);
+		loc= this.dos.registrarFechaArribo(rfaw);
 		return loc;
 	}
 	@POST
