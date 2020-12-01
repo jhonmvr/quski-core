@@ -266,10 +266,15 @@ public class QuskiOroConstantes {
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
 	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
-	public static final String URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE = "URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE";
+	public static final String SOFTBANK_CONSULTA_CLIENTE = "URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "URL_SERVICIO_SOFTBANK_CREAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "http://201.183.238.73:1991/api/credito/operacion/crear";
+	public static final String SOFTBANK_CONSULTA_GLOBAL = "SOFTBANK_CONSULTA_GLOBAL";
+	public static final String SOFTBANK_CONSULTA_GARANTIA = "SOFTBANK_CONSULTA_GARANTIA";
+	public static final String SOFTBANK_CONSULTA_RUBRO = "SOFTBANK_CONSULTA_RUBRO";
+
+
 	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "URL_SOFTBANK_TABLA_AMORTIZACION";
 	
 	public static final String CATALOGO_TABLA_AMOTIZACION = "URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION";

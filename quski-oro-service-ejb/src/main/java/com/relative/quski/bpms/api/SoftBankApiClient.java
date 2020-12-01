@@ -26,10 +26,18 @@ import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmoritzacionResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
+import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
+import com.relative.quski.wrapper.ConsultaOperacionGlobalWrapper;
+import com.relative.quski.wrapper.ConsultaRubrosWrapper;
 import com.relative.quski.wrapper.ConsultaTablaWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.GarantiaOperacionWrapper;
+import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
+import com.relative.quski.wrapper.RespuestaGarantiaWrapper;
+import com.relative.quski.wrapper.RespuestaRubroWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
+import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
@@ -400,7 +408,91 @@ public class SoftBankApiClient {
 		}
 	}
 	
-
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static RespuestaConsultaGlobalWrapper callConsultarOperacionRest(ConsultaOperacionGlobalWrapper entrada, String service)throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson( entrada );
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====> un01 " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaConsultaGlobalWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaConsultaGlobalWrapper.class);
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+		}
+	}
+	public static List<GarantiaOperacionWrapper> callConsultarGarantiasRest(ConsultaGarantiaWrapper entrada, String service)throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson( entrada );
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====> un01 " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaGarantiaWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				RespuestaGarantiaWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaGarantiaWrapper.class);
+				if( respuestaWrapper.getExisteError() ) {return null;}
+				return respuestaWrapper.getGarantias();
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+		}
+	}
+	public static List<RubroOperacionWrapper> callConsultarRubrosRest(ConsultaRubrosWrapper entrada, String service)throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson( entrada );
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====> un01 " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaRubroWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				RespuestaRubroWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaRubroWrapper.class);
+				if( result.getExisteError() ) {return null;}
+				return result.getRubros();
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+		}
+	}
 }

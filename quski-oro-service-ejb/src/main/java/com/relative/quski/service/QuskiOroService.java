@@ -100,6 +100,9 @@ import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
+import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
+import com.relative.quski.wrapper.ConsultaOperacionGlobalWrapper;
+import com.relative.quski.wrapper.ConsultaRubrosWrapper;
 import com.relative.quski.wrapper.ConsultaTablaWrapper;
 import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
@@ -114,6 +117,7 @@ import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
 import com.relative.quski.wrapper.DatosGarantiasWrapper;
 import com.relative.quski.wrapper.DatosImpComWrapper;
 import com.relative.quski.wrapper.DatosRegistroWrapper;
+import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.Informacion;
@@ -124,6 +128,7 @@ import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInte
 import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
@@ -4234,7 +4239,7 @@ public class QuskiOroService {
 		try {
 			
 			SoftbankClienteWrapper persisted = SoftBankApiClient.callConsultaClienteRest(this.parametroRepository
-					.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE).getValor(),identificacion);
+					.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_CLIENTE).getValor(),identificacion);
 			if (StringUtils.isNotBlank( persisted.getIdentificacion() ) ) {
 				return persisted;
 			} else {
@@ -5582,6 +5587,27 @@ public class QuskiOroService {
 			}
 			return op;
 		}catch(RelativeException e ){
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
+		}
+	}
+	public DetalleCreditoWrapper traerCreditoVigente( String numeroOperacion ) throws RelativeException{
+		try {
+			DetalleCreditoWrapper detalle = new DetalleCreditoWrapper();
+			String urlCredito  = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor();
+			String urlCliente  = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_CLIENTE).getValor();
+			String urlGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GARANTIA).getValor();
+			String urlRubro    = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_RUBRO).getValor();
+			
+			RespuestaConsultaGlobalWrapper rCredito = SoftBankApiClient.callConsultarOperacionRest( new ConsultaOperacionGlobalWrapper( numeroOperacion ), urlCredito); 
+			if(rCredito.getNumeroTotalRegistros() != Long.valueOf( 1 ) ) { return null;}
+			detalle.setCredito( rCredito.getOperaciones().get( 0 ));
+			detalle.setCliente( SoftBankApiClient.callConsultaClienteRest(urlCliente, rCredito.getOperaciones().get( 0 ).getIdentificacion() ) );
+			detalle.setGarantias( SoftBankApiClient.callConsultarGarantiasRest( new ConsultaGarantiaWrapper( numeroOperacion ), urlGarantia ) );
+			detalle.setRubros( SoftBankApiClient.callConsultarRubrosRest( new ConsultaRubrosWrapper( numeroOperacion ), urlRubro ) );
+			return detalle;
+			
+			
+		}catch(RelativeException | UnsupportedEncodingException e ){
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
 		}
 	}

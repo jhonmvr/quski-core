@@ -32,6 +32,7 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
+import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
@@ -151,9 +152,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;
 	}
-	
-	
-	
 	@GET
 	@Path("/traerCreditoNuevo")
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
@@ -199,5 +197,17 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			loc.setEntidad(null);			
 		}
 		return loc;			
+	}
+	@GET
+	@Path("/traerCreditoVigente")
+	public GenericWrapper<DetalleCreditoWrapper> traerCreditoVigente(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
+		GenericWrapper<DetalleCreditoWrapper> loc = new GenericWrapper<>();
+		if( !numeroOperacion.isEmpty() ) { 
+			DetalleCreditoWrapper a = this.qos.traerCreditoVigente( numeroOperacion );
+			loc.setEntidad(a);
+			return loc;
+		}
+		loc.setEntidad(null);
+		return loc;
 	}
 }
