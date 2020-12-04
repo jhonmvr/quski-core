@@ -36,10 +36,10 @@ public class CuentaBancariaClienteRepositoryImp extends GeneralRepositoryImp<Lon
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
 		}
 	}
-	public List<TbQoCuentaBancariaCliente> findByIdClienteSinEstado(Long id) throws RelativeException {
+	@Override
+	public List<TbQoCuentaBancariaCliente> findByAllIdCliente(Long id) throws RelativeException {
 		try {
 			List<TbQoCuentaBancariaCliente> list = findAllBySpecification(new CuentaBancariaByIdClienteSinEstadoSpec( id ));
-			log.info("ESTOY BUSCANDO CUENTAS SIZE =====> " + list.size());
 
 			if(!list.isEmpty()) {
 				return list;

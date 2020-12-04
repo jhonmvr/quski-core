@@ -11,6 +11,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.repository.DireccionClienteRepository;
+import com.relative.quski.repository.spec.DireccionAllByIdClienteSpec;
 import com.relative.quski.repository.spec.DireccionByIdClienteAndTipoDireccionSpec;
 import com.relative.quski.repository.spec.DireccionByIdClienteSpec;
 
@@ -42,6 +43,22 @@ public class DireccionClienteRepositoryImp extends GeneralRepositoryImp<Long, Tb
 					new DireccionByIdClienteAndTipoDireccionSpec( idC, tipoDireccion ));
 		} catch (Exception e) {
 
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+		}
+	}
+
+	@Override
+	public List<TbQoDireccionCliente> findAllByIdCliente(Long id) throws RelativeException {
+		try {
+			List<TbQoDireccionCliente> list = findAllBySpecification(new DireccionAllByIdClienteSpec( id ));
+			log.info("ESTOY BUSCANDO DIRECCIONES SIZE =====> " + list.size());
+			if(!list.isEmpty()) {
+				return list;
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
 		}
 	}

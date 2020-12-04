@@ -9,27 +9,25 @@ import javax.persistence.criteria.Root;
 
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.model.TbQoCuentaBancariaCliente;
+import com.relative.quski.model.TbQoDatoTrabajoCliente;
 
-public class CuentaBancariaByIdClienteSinEstadoSpec extends AbstractSpecification<TbQoCuentaBancariaCliente> {
+public class DatoTrabajoAllByIdClienteSpec extends AbstractSpecification<TbQoDatoTrabajoCliente> {
 
 private Long id;
 	
-	public CuentaBancariaByIdClienteSinEstadoSpec(Long id){
+	public DatoTrabajoAllByIdClienteSpec(Long id){
 		this.id=id;
 	}
-	
-	
 	@Override
-	public boolean isSatisfiedBy(TbQoCuentaBancariaCliente t) {
+	public boolean isSatisfiedBy(TbQoDatoTrabajoCliente t) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<TbQoCuentaBancariaCliente> poll, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<TbQoDatoTrabajoCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-			where.add(cb.equal(poll.get("tbQoCliente").get("id"), this.id ));
+		where.add(cb.equal(poll.get("tbQoCliente").get("id"), this.id));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 }

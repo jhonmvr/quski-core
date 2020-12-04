@@ -12,7 +12,7 @@ import com.relative.quski.model.TbQoCuentaBancariaCliente;
 public interface CuentaBancariaRepository extends CrudRepository<Long, TbQoCuentaBancariaCliente> {
 
 	public List<TbQoCuentaBancariaCliente> findByIdCliente(Long id) throws RelativeException ;
-	public List<TbQoCuentaBancariaCliente> findByIdClienteSinEstado(Long id) throws RelativeException ;
+	public List<TbQoCuentaBancariaCliente> findByAllIdCliente(Long id) throws RelativeException ;
 	public TbQoCuentaBancariaCliente findByClienteAndCuenta(Long id, String cuenta) throws RelativeException ;
 
 	
