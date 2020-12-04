@@ -6,8 +6,11 @@ import javax.ejb.Local;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
+import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 
 @Local
@@ -19,10 +22,11 @@ public interface DevolucionRepository extends CrudRepository<Long, TbQoDevolucio
 
 	public Integer countOperaciones(BusquedaDevolucionWrapper  bdw) throws RelativeException;
 	
-	public List<DevolucionProcesoWrapper> findOperacionesArribos(BusquedaDevolucionWrapper  bdw) throws RelativeException;
+	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String 
+			codigoOperacion, String agencia, EstadoProcesoEnum estado) throws RelativeException;
 
 
-	public Integer countOperacionesArribos(BusquedaDevolucionWrapper  bdw) throws RelativeException;
+	public Integer countOperacionArribo(String codigoOperacion, String agencia, EstadoProcesoEnum estado) throws RelativeException;
 	
 
 }

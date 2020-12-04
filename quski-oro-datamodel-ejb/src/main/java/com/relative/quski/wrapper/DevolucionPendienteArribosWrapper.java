@@ -22,12 +22,16 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 	private BigDecimal valorAvaluao;
 	private BigDecimal pesoBruto;
 	
-	public DevolucionPendienteArribosWrapper(Long id, Date fechaSolicitud, String codigoOperacionMadre,
+
+	
+	
+	
+	public DevolucionPendienteArribosWrapper(BigDecimal id, Date fechaSolicitud, String codigoOperacionMadre,
 			String codigoOperacion, String nombreCliente, String cedulaCliente, String fundaMadre, String fundaActual,
 			String ciudadTevcol, String fechaArriboAgencia, String fechaAprobacion, BigDecimal valorAvaluao,
 			BigDecimal pesoBruto) {
 		super();
-		this.id = id;
+		this.id = id.longValue();
 		this.fechaSolicitud = fechaSolicitud;
 		this.codigoOperacionMadre = codigoOperacionMadre;
 		this.codigoOperacion = codigoOperacion;
@@ -41,8 +45,6 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 		this.valorAvaluao = valorAvaluao;
 		this.pesoBruto = pesoBruto;
 	}
-	
-	
 	public Long getId() {
 		return id;
 	}
@@ -123,6 +125,8 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 	public void setPesoBruto(BigDecimal pesoBruto) {
 		this.pesoBruto = pesoBruto;
 	}
+
+
 	
 	
 	

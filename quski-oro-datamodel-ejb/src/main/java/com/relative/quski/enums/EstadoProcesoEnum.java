@@ -1,10 +1,11 @@
 package com.relative.quski.enums;
 
 public enum EstadoProcesoEnum {
+	
 	PENDIENTE_ARRIBO,
 	CUSTODIA_AGENCIA,
 	RECHAZADO,
-	
+	ARRIBADO,
 	CREADO,									// NUEVO = INICIO DE NEGOCIACION
 	APROBADO,								// NUEVO = FINAL DE NEGOCIACION    - RENOVACION  
 	PENDIENTE_APROBACION,					// NUEVO - RENOVACION	

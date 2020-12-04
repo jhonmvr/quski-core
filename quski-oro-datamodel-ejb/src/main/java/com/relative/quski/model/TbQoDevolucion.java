@@ -75,7 +75,7 @@ public class TbQoDevolucion implements Serializable {
 	private String nombreAgenciaSolicitud;
 	
 	@Column(name="id_agencia_entrega")
-	private Long idAgenciaEntrega;
+	private Long agenciaEntregaId;
 
 	@Column(name="lugar_nacimiento")
 	private String lugarNacimiento;
@@ -120,6 +120,13 @@ public class TbQoDevolucion implements Serializable {
 	private Boolean arribo;
 	
 
+	@Column(name="valor_avaluo")
+	private BigDecimal valorAvaluo;
+	
+	@Column(name="peso_bruto")
+	private BigDecimal pesoBruto;
+	
+	
 	public TbQoDevolucion() {
 	}
 
@@ -259,12 +266,14 @@ public class TbQoDevolucion implements Serializable {
 		this.nombreAgenciaSolicitud = nombreAgenciaSolicitud;
 	}
 
-	public Long getIdAgenciaEntrega() {
-		return idAgenciaEntrega;
+
+
+	public Long getAgenciaEntregaId() {
+		return agenciaEntregaId;
 	}
 
-	public void setIdAgenciaEntrega(Long idAgenciaEntrega) {
-		this.idAgenciaEntrega = idAgenciaEntrega;
+	public void setAgenciaEntregaId(Long agenciaEntregaId) {
+		this.agenciaEntregaId = agenciaEntregaId;
 	}
 
 	public String getLugarNacimiento() {
@@ -386,6 +395,22 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setArribo(Boolean arribo) {
 		this.arribo = arribo;
+	}
+
+	public BigDecimal getValorAvaluo() {
+		return valorAvaluo;
+	}
+
+	public void setValorAvaluo(BigDecimal valorAvaluo) {
+		this.valorAvaluo = valorAvaluo;
+	}
+
+	public BigDecimal getPesoBruto() {
+		return pesoBruto;
+	}
+
+	public void setPesoBruto(BigDecimal pesoBruto) {
+		this.pesoBruto = pesoBruto;
 	}
 	
 	

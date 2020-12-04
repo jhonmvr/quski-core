@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -25,6 +27,7 @@ import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 
@@ -114,7 +117,7 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		PaginatedListWrapper<TbQoDevolucion> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoDevolucion> actions = this.dos.findAllDevolucion(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countCliente().intValue());
+			plw.setTotalResults(this.dos.countDevolucion().intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -150,16 +153,40 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return plw;
 	}
 	
-	/*
-	@POST
+	@GET
 	@Path("/buscarDevolucionPendienteArribo")
-	@ApiOperation(value = "PaginatedListWrapper<ResultOperacionesWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiContrato", response = PaginatedListWrapper.class)
-	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(BusquedaDevolucionWrapperArribo bdw ) throws RelativeException {
-		PaginatedListWrapper<DevolucionProcesoWrapper> plw = this.dos.findOperacion(bdw);
-	
+	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
+	response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("codigoOperacion") String codigoOperacion,
+			@QueryParam("agencia") String agencia
+
+
+			) throws RelativeException {
+		return listarPendienteArribo(
+				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
+						isPaginated),
+				 StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
+						 StringUtils.isNotBlank(agencia)?agencia:null);
+		
+	}
+	private PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(PaginatedWrapper pw, String codigoOperacion, String agencia ) throws RelativeException {
+		
+		PaginatedListWrapper<DevolucionPendienteArribosWrapper> plw = new PaginatedListWrapper<>(pw);
+		
+		List<DevolucionPendienteArribosWrapper> actions = this.dos.findOperacionArribo(pw, codigoOperacion, agencia);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.dos.countOperacionArribo(codigoOperacion, agencia));
+			plw.setList(actions);
+		}
 		return plw;
 	}
-*/
+	
 	@POST
 	@Path("/registrarFechaArribo")
 	public List<TbQoDevolucion> registrarFechaArribo( RegistroFechaArriboWrapper rfaw ) throws RelativeException {
@@ -174,4 +201,60 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		loc= this.dos.registrarArriboAgencia(idDevoluciones);
 		return loc;
 	}
+	
+	@POST
+	@Path("/cancelarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> cancelarSolicitudDevolucion(@QueryParam("id") String idDevolucion)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.cancelarSolicitudDevolucion(Long.valueOf(idDevolucion)));
+		return loc;
+	}
+	@POST
+	@Path("/aprobarCancelacionSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> aprobarCancelacionSolicitudDevolucion(
+			@QueryParam("id") String idDevolucion)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
+		return loc;
+	}
+	
+	@POST
+	@Path("/rechazarCancelacionSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> rechazarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.rechazarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
+		return loc;
+	}
+	
+	@GET
+	@Path("/validateAprobarCancelarSolicitud")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<Boolean> validateAprobacionCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.validateAprobarCancelacionSolicitud(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	@GET
+	@Path("/validateCancelarSolicitud")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<Boolean> validateCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.validateCancelacionSolicitud(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	
 }
