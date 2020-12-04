@@ -31,6 +31,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="a_recibir_cliente")
 	private BigDecimal aRecibirCliente;
 	
+	@Column(name="deuda_inicial")
+	private BigDecimal deudaInicial;
+	
 	@Column(name="tabla_amortizacion")
 	private String tablaAmortizacion;
 	
@@ -38,9 +41,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private BigDecimal montoFinanciado;
 
 	private String codigo;
-
-	@Column(name="destino_operacion")
-	private String destinoOperacion;
 
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -71,17 +71,21 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="id_agencia")
 	private Long idAgencia;
 	
+	@Column(name="numero_operacion")
+	private String numeroOperacion;
+	
+	
+	@Column(name="total_interes_vencimiento")
+	private BigDecimal totalInteresVencimiento;
+	
+	@Column(name="total_costo_nueva_operacion")
+	private BigDecimal totalCostoNuevaOperacion;
+	
 	@Column(name="numero_funda")
 	private Long numeroFunda;
 	
-	@Column(name="peso_funda")
-	private String pesoFunda;
-	
 	@Column(name="descripcion_producto")
 	private String descripcionProducto;
-
-	@Column(name="monto_desembolso")
-	private BigDecimal montoDesembolso;
 
 	@Column(name="monto_diferido")
 	private BigDecimal montoDiferido;
@@ -91,9 +95,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="monto_solicitado")
 	private BigDecimal montoSolicitado;
-
-	@Column(name="neto_al_cliente")
-	private BigDecimal netoAlCliente;
 
 	@Column(name="plazo_credito")
 	private Long plazoCredito;
@@ -108,38 +109,20 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="tipo_cartera_quski")
 	private String tipoCarteraQuski;
 
-	@Column(name="total_costo_nueva_operacion")
-	private BigDecimal totalCostoNuevaOperacion;
-
 	@Column(name="valor_cuota")
 	private BigDecimal valorCuota;
-	
-	@Column(name="total_peso_bruto_garantia")
-	private BigDecimal totalPesoBrutoGarantia;
-	
-	@Column(name="total_peso_bruto_con_funda")
-	private BigDecimal totalPesoBrutoConFunda;
-	
-	@Column(name="total_peso_neto")
-	private BigDecimal totalPesoNeto;
-	
-	@Column(name="tota_peso_neto_con_funda")
-	private BigDecimal totaPesoNetoConFunda;
 	
 	@Column(name="codigo_tipo_funda")
 	private String codigoTipoFunda;
 	
-	@Column(name="total_valor_avaluo")
-	private BigDecimal totalValorAvaluo;
-	
-	@Column(name="total_valor_comercial")
-	private BigDecimal totalValorComercial;
-	
-	@Column(name="total_valor_realizacion")
-	private BigDecimal totalValorRealizacion;
-	
 	@Column(name="uri_imagen_sin_funda")
 	private String uriImagenSinFunda;
+	
+	@Column(name="firmante_operacion")
+	private String firmanteOperacion;
+	
+	@Column(name="tipo_cliente")
+	private String tipoCliente;
 	
 	@Column(name="numero_cuenta")
 	private String numeroCuenta;
@@ -178,6 +161,168 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoRubro> tbQoRubros;
 
+	
+	
+
+	@Column(name="codigo_operacion")
+	private String codigoOperacion;
+
+	@Column(name="costo_custodia")
+	private BigDecimal costoCustodia;
+
+	@Column(name="costo_fideicomiso")
+	private BigDecimal costoFideicomiso;
+
+	@Column(name="costo_seguro")
+	private BigDecimal costoSeguro;
+
+	@Column(name="costo_tasacion")
+	private BigDecimal costoTasacion;
+
+	@Column(name="costo_transporte")
+	private BigDecimal costoTransporte;
+
+	@Column(name="costo_valoracion")
+	private BigDecimal costoValoracion;
+
+	private BigDecimal cuota;
+
+	@Column(name="custodia_devengada")
+	private BigDecimal custodiaDevengada;
+
+	@Column(name="destino_operacion")
+	private String destinoOperacion;
+
+
+	@Column(name="dividendo_flujo_planeado")
+	private BigDecimal dividendoFlujoPlaneado;
+
+	@Column(name="dividendo_prorrateo")
+	private BigDecimal dividendoProrrateo;
+
+
+
+
+	@Column(name="forma_pago_capital")
+	private String formaPagoCapital;
+
+	@Column(name="forma_pago_custodia")
+	private String formaPagoCustodia;
+
+	@Column(name="forma_pago_custodia_devengada")
+	private String formaPagoCustodiaDevengada;
+
+	@Column(name="forma_pago_fideicomiso")
+	private String formaPagoFideicomiso;
+
+	@Column(name="forma_pago_gasto_cobranza")
+	private String formaPagoGastoCobranza;
+
+	@Column(name="forma_pago_impuesto_solca")
+	private String formaPagoImpuestoSolca;
+
+	@Column(name="forma_pago_interes")
+	private String formaPagoInteres;
+
+	@Column(name="forma_pago_mora")
+	private String formaPagoMora;
+
+	@Column(name="forma_pago_seguro")
+	private String formaPagoSeguro;
+
+	@Column(name="forma_pago_tasador")
+	private String formaPagoTasador;
+
+	@Column(name="forma_pago_transporte")
+	private String formaPagoTransporte;
+
+	@Column(name="forma_pago_valoracion")
+	private String formaPagoValoracion;
+
+	@Column(name="gasto_cobranza")
+	private BigDecimal gastoCobranza;
+
+
+
+	@Column(name="impuesto_solca")
+	private BigDecimal impuestoSolca;
+
+	@Column(name="monto_desembolso")
+	private BigDecimal montoDesembolso;
+
+	@Column(name="monto_previo_desembolso")
+	private BigDecimal montoPrevioDesembolso;
+
+
+	@Column(name="neto_al_cliente")
+	private BigDecimal netoAlCliente;
+
+
+	@Column(name="periodicidad_plazo")
+	private String periodicidadPlazo;
+
+	@Column(name="periodo_plazo")
+	private String periodoPlazo;
+
+	@Column(name="peso_funda")
+	private String pesoFunda;
+
+
+	@Column(name="porcentaje_flujo_planeado")
+	private BigDecimal porcentajeFlujoPlaneado;
+
+
+	@Column(name="saldo_capital_renov")
+	private BigDecimal saldoCapitalRenov;
+
+	@Column(name="saldo_interes")
+	private BigDecimal saldoInteres;
+
+	@Column(name="saldo_mora")
+	private BigDecimal saldoMora;
+
+
+	@Column(name="tipo_oferta")
+	private String tipoOferta;
+
+	@Column(name="tota_peso_neto_con_funda")
+	private BigDecimal totaPesoNetoConFunda;
+
+	@Column(name="total_costos_operacion_anterior")
+	private BigDecimal totalCostosOperacionAnterior;
+
+	@Column(name="total_gastos_nueva_operacion")
+	private BigDecimal totalGastosNuevaOperacion;
+
+
+	@Column(name="total_peso_bruto_con_funda")
+	private BigDecimal totalPesoBrutoConFunda;
+
+	@Column(name="total_peso_bruto_garantia")
+	private BigDecimal totalPesoBrutoGarantia;
+
+	@Column(name="total_peso_neto")
+	private BigDecimal totalPesoNeto;
+
+	@Column(name="total_valor_avaluo")
+	private BigDecimal totalValorAvaluo;
+
+	@Column(name="total_valor_comercial")
+	private BigDecimal totalValorComercial;
+
+	@Column(name="total_valor_realizacion")
+	private BigDecimal totalValorRealizacion;
+
+	@Column(name="numero_coutas")
+	private Long numeroCuotas;
+
+	@Column(name="valor_a_pagar")
+	private BigDecimal valorAPagar;
+
+	@Column(name="valor_a_recibir")
+	private BigDecimal valorARecibir;
+
+	
 	public TbQoCreditoNegociacion() {
 	}
 
@@ -229,14 +374,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.numeroFunda = numeroFunda;
 	}
 
-	public String getPesoFunda() {
-		return pesoFunda;
-	}
-
-	public void setPesoFunda(String pesoFunda) {
-		this.pesoFunda = pesoFunda;
-	}
-
 	public String getDescripcionProducto() {
 		return descripcionProducto;
 	}
@@ -244,15 +381,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setDescripcionProducto(String descripcionProducto) {
 		this.descripcionProducto = descripcionProducto;
 	}
-
-	public String getDestinoOperacion() {
-		return this.destinoOperacion;
-	}
-
-	public void setDestinoOperacion(String destinoOperacion) {
-		this.destinoOperacion = destinoOperacion;
-	}
-
 	public String getEstadoSoftbank() {
 		return this.estadoSoftbank;
 	}
@@ -292,15 +420,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
-
-	public BigDecimal getMontoDesembolso() {
-		return this.montoDesembolso;
-	}
-
-	public void setMontoDesembolso(BigDecimal montoDesembolso) {
-		this.montoDesembolso = montoDesembolso;
-	}
-
+	
 	public BigDecimal getMontoDiferido() {
 		return this.montoDiferido;
 	}
@@ -324,15 +444,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setMontoSolicitado(BigDecimal montoSolicitado) {
 		this.montoSolicitado = montoSolicitado;
 	}
-
-	public BigDecimal getNetoAlCliente() {
-		return this.netoAlCliente;
-	}
-
-	public void setNetoAlCliente(BigDecimal netoAlCliente) {
-		this.netoAlCliente = netoAlCliente;
-	}
-
+	
 	public Long getPlazoCredito() {
 		return this.plazoCredito;
 	}
@@ -355,14 +467,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setTipoCarteraQuski(String tipoCarteraQuski) {
 		this.tipoCarteraQuski = tipoCarteraQuski;
-	}
-
-	public BigDecimal getTotalCostoNuevaOperacion() {
-		return this.totalCostoNuevaOperacion;
-	}
-
-	public void setTotalCostoNuevaOperacion(BigDecimal totalCostoNuevaOperacion) {
-		this.totalCostoNuevaOperacion = totalCostoNuevaOperacion;
 	}
 
 	public BigDecimal getValorCuota() {
@@ -429,69 +533,13 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setPagoDia(Date pagoDia) {
 		this.pagoDia = pagoDia;
 	}
-
-	public BigDecimal getTotalPesoBrutoGarantia() {
-		return totalPesoBrutoGarantia;
-	}
-
-	public void setTotalPesoBrutoGarantia(BigDecimal totalPesoBrutoGarantia) {
-		this.totalPesoBrutoGarantia = totalPesoBrutoGarantia;
-	}
-
-	public BigDecimal getTotalPesoBrutoConFunda() {
-		return totalPesoBrutoConFunda;
-	}
-
-	public void setTotalPesoBrutoConFunda(BigDecimal totalPesoBrutoConFunda) {
-		this.totalPesoBrutoConFunda = totalPesoBrutoConFunda;
-	}
-
-	public BigDecimal getTotalPesoNeto() {
-		return totalPesoNeto;
-	}
-
-	public void setTotalPesoNeto(BigDecimal totalPesoNeto) {
-		this.totalPesoNeto = totalPesoNeto;
-	}
-
-	public BigDecimal getTotaPesoNetoConFunda() {
-		return totaPesoNetoConFunda;
-	}
-
-	public void setTotaPesoNetoConFunda(BigDecimal totaPesoNetoConFunda) {
-		this.totaPesoNetoConFunda = totaPesoNetoConFunda;
-	}
-
+	
 	public String getCodigoTipoFunda() {
 		return codigoTipoFunda;
 	}
 
 	public void setCodigoTipoFunda(String codigoTipoFunda) {
 		this.codigoTipoFunda = codigoTipoFunda;
-	}
-
-	public BigDecimal getTotalValorAvaluo() {
-		return totalValorAvaluo;
-	}
-
-	public void setTotalValorAvaluo(BigDecimal totalValorAvaluo) {
-		this.totalValorAvaluo = totalValorAvaluo;
-	}
-
-	public BigDecimal getTotalValorComercial() {
-		return totalValorComercial;
-	}
-
-	public void setTotalValorComercial(BigDecimal totalValorComercial) {
-		this.totalValorComercial = totalValorComercial;
-	}
-
-	public BigDecimal getTotalValorRealizacion() {
-		return totalValorRealizacion;
-	}
-
-	public void setTotalValorRealizacion(BigDecimal totalValorRealizacion) {
-		this.totalValorRealizacion = totalValorRealizacion;
 	}
 
 	public String getUriImagenSinFunda() {
@@ -597,5 +645,447 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setNumeroCuenta(String numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
+
+	public String getNumeroOperacion() {
+		return numeroOperacion;
+	}
+
+	public void setNumeroOperacion(String numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
+	}
+
+	public BigDecimal getTotalCostoNuevaOperacion() {
+		return totalCostoNuevaOperacion;
+	}
+
+	public void setTotalCostoNuevaOperacion(BigDecimal totalCostoNuevaOperacion) {
+		this.totalCostoNuevaOperacion = totalCostoNuevaOperacion;
+	}
+
+	public BigDecimal getTotalInteresVencimiento() {
+		return totalInteresVencimiento;
+	}
+
+	public void setTotalInteresVencimiento(BigDecimal totalInteresVencimiento) {
+		this.totalInteresVencimiento = totalInteresVencimiento;
+	}
+
+	public BigDecimal getDeudaInicial() {
+		return deudaInicial;
+	}
+
+	public void setDeudaInicial(BigDecimal deudaInicial) {
+		this.deudaInicial = deudaInicial;
+	}
+
+	public String getCodigoOperacion() {
+		return codigoOperacion;
+	}
+
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
+	}
+
+	public BigDecimal getCostoCustodia() {
+		return costoCustodia;
+	}
+
+	public void setCostoCustodia(BigDecimal costoCustodia) {
+		this.costoCustodia = costoCustodia;
+	}
+
+	public BigDecimal getCostoFideicomiso() {
+		return costoFideicomiso;
+	}
+
+	public void setCostoFideicomiso(BigDecimal costoFideicomiso) {
+		this.costoFideicomiso = costoFideicomiso;
+	}
+
+	public BigDecimal getCostoSeguro() {
+		return costoSeguro;
+	}
+
+	public void setCostoSeguro(BigDecimal costoSeguro) {
+		this.costoSeguro = costoSeguro;
+	}
+
+	public BigDecimal getCostoTasacion() {
+		return costoTasacion;
+	}
+
+	public void setCostoTasacion(BigDecimal costoTasacion) {
+		this.costoTasacion = costoTasacion;
+	}
+
+	public BigDecimal getCostoTransporte() {
+		return costoTransporte;
+	}
+
+	public void setCostoTransporte(BigDecimal costoTransporte) {
+		this.costoTransporte = costoTransporte;
+	}
+
+	public BigDecimal getCostoValoracion() {
+		return costoValoracion;
+	}
+
+	public void setCostoValoracion(BigDecimal costoValoracion) {
+		this.costoValoracion = costoValoracion;
+	}
+
+	public BigDecimal getCuota() {
+		return cuota;
+	}
+
+	public void setCuota(BigDecimal cuota) {
+		this.cuota = cuota;
+	}
+
+	public BigDecimal getCustodiaDevengada() {
+		return custodiaDevengada;
+	}
+
+	public void setCustodiaDevengada(BigDecimal custodiaDevengada) {
+		this.custodiaDevengada = custodiaDevengada;
+	}
+
+	public String getDestinoOperacion() {
+		return destinoOperacion;
+	}
+
+	public void setDestinoOperacion(String destinoOperacion) {
+		this.destinoOperacion = destinoOperacion;
+	}
+
+	public BigDecimal getDividendoFlujoPlaneado() {
+		return dividendoFlujoPlaneado;
+	}
+
+	public void setDividendoFlujoPlaneado(BigDecimal dividendoFlujoPlaneado) {
+		this.dividendoFlujoPlaneado = dividendoFlujoPlaneado;
+	}
+
+	public BigDecimal getDividendoProrrateo() {
+		return dividendoProrrateo;
+	}
+
+	public void setDividendoProrrateo(BigDecimal dividendoProrrateo) {
+		this.dividendoProrrateo = dividendoProrrateo;
+	}
+
+	public String getFormaPagoCapital() {
+		return formaPagoCapital;
+	}
+
+	public void setFormaPagoCapital(String formaPagoCapital) {
+		this.formaPagoCapital = formaPagoCapital;
+	}
+
+	public String getFormaPagoCustodia() {
+		return formaPagoCustodia;
+	}
+
+	public void setFormaPagoCustodia(String formaPagoCustodia) {
+		this.formaPagoCustodia = formaPagoCustodia;
+	}
+
+	public String getFormaPagoCustodiaDevengada() {
+		return formaPagoCustodiaDevengada;
+	}
+
+	public void setFormaPagoCustodiaDevengada(String formaPagoCustodiaDevengada) {
+		this.formaPagoCustodiaDevengada = formaPagoCustodiaDevengada;
+	}
+
+	public String getFormaPagoFideicomiso() {
+		return formaPagoFideicomiso;
+	}
+
+	public void setFormaPagoFideicomiso(String formaPagoFideicomiso) {
+		this.formaPagoFideicomiso = formaPagoFideicomiso;
+	}
+
+	public String getFormaPagoGastoCobranza() {
+		return formaPagoGastoCobranza;
+	}
+
+	public void setFormaPagoGastoCobranza(String formaPagoGastoCobranza) {
+		this.formaPagoGastoCobranza = formaPagoGastoCobranza;
+	}
+
+	public String getFormaPagoImpuestoSolca() {
+		return formaPagoImpuestoSolca;
+	}
+
+	public void setFormaPagoImpuestoSolca(String formaPagoImpuestoSolca) {
+		this.formaPagoImpuestoSolca = formaPagoImpuestoSolca;
+	}
+
+	public String getFormaPagoInteres() {
+		return formaPagoInteres;
+	}
+
+	public void setFormaPagoInteres(String formaPagoInteres) {
+		this.formaPagoInteres = formaPagoInteres;
+	}
+
+	public String getFormaPagoMora() {
+		return formaPagoMora;
+	}
+
+	public void setFormaPagoMora(String formaPagoMora) {
+		this.formaPagoMora = formaPagoMora;
+	}
+
+	public String getFormaPagoSeguro() {
+		return formaPagoSeguro;
+	}
+
+	public void setFormaPagoSeguro(String formaPagoSeguro) {
+		this.formaPagoSeguro = formaPagoSeguro;
+	}
+
+	public String getFormaPagoTasador() {
+		return formaPagoTasador;
+	}
+
+	public void setFormaPagoTasador(String formaPagoTasador) {
+		this.formaPagoTasador = formaPagoTasador;
+	}
+
+	public String getFormaPagoTransporte() {
+		return formaPagoTransporte;
+	}
+
+	public void setFormaPagoTransporte(String formaPagoTransporte) {
+		this.formaPagoTransporte = formaPagoTransporte;
+	}
+
+	public String getFormaPagoValoracion() {
+		return formaPagoValoracion;
+	}
+
+	public void setFormaPagoValoracion(String formaPagoValoracion) {
+		this.formaPagoValoracion = formaPagoValoracion;
+	}
+
+	public BigDecimal getGastoCobranza() {
+		return gastoCobranza;
+	}
+
+	public void setGastoCobranza(BigDecimal gastoCobranza) {
+		this.gastoCobranza = gastoCobranza;
+	}
+
+	public BigDecimal getImpuestoSolca() {
+		return impuestoSolca;
+	}
+
+	public void setImpuestoSolca(BigDecimal impuestoSolca) {
+		this.impuestoSolca = impuestoSolca;
+	}
+
+	public BigDecimal getMontoDesembolso() {
+		return montoDesembolso;
+	}
+
+	public void setMontoDesembolso(BigDecimal montoDesembolso) {
+		this.montoDesembolso = montoDesembolso;
+	}
+
+	public BigDecimal getMontoPrevioDesembolso() {
+		return montoPrevioDesembolso;
+	}
+
+	public void setMontoPrevioDesembolso(BigDecimal montoPrevioDesembolso) {
+		this.montoPrevioDesembolso = montoPrevioDesembolso;
+	}
+
+	public BigDecimal getNetoAlCliente() {
+		return netoAlCliente;
+	}
+
+	public void setNetoAlCliente(BigDecimal netoAlCliente) {
+		this.netoAlCliente = netoAlCliente;
+	}
+
+	public String getPeriodicidadPlazo() {
+		return periodicidadPlazo;
+	}
+
+	public void setPeriodicidadPlazo(String periodicidadPlazo) {
+		this.periodicidadPlazo = periodicidadPlazo;
+	}
+
+	public String getPeriodoPlazo() {
+		return periodoPlazo;
+	}
+
+	public void setPeriodoPlazo(String periodoPlazo) {
+		this.periodoPlazo = periodoPlazo;
+	}
+
+	public String getPesoFunda() {
+		return pesoFunda;
+	}
+
+	public void setPesoFunda(String pesoFunda) {
+		this.pesoFunda = pesoFunda;
+	}
+
+	public BigDecimal getPorcentajeFlujoPlaneado() {
+		return porcentajeFlujoPlaneado;
+	}
+
+	public void setPorcentajeFlujoPlaneado(BigDecimal porcentajeFlujoPlaneado) {
+		this.porcentajeFlujoPlaneado = porcentajeFlujoPlaneado;
+	}
+
+	public BigDecimal getSaldoCapitalRenov() {
+		return saldoCapitalRenov;
+	}
+
+	public void setSaldoCapitalRenov(BigDecimal saldoCapitalRenov) {
+		this.saldoCapitalRenov = saldoCapitalRenov;
+	}
+
+	public BigDecimal getSaldoInteres() {
+		return saldoInteres;
+	}
+
+	public void setSaldoInteres(BigDecimal saldoInteres) {
+		this.saldoInteres = saldoInteres;
+	}
+
+	public BigDecimal getSaldoMora() {
+		return saldoMora;
+	}
+
+	public void setSaldoMora(BigDecimal saldoMora) {
+		this.saldoMora = saldoMora;
+	}
+
+	public String getTipoOferta() {
+		return tipoOferta;
+	}
+
+	public void setTipoOferta(String tipoOferta) {
+		this.tipoOferta = tipoOferta;
+	}
+
+	public BigDecimal getTotaPesoNetoConFunda() {
+		return totaPesoNetoConFunda;
+	}
+
+	public void setTotaPesoNetoConFunda(BigDecimal totaPesoNetoConFunda) {
+		this.totaPesoNetoConFunda = totaPesoNetoConFunda;
+	}
+
+	public BigDecimal getTotalCostosOperacionAnterior() {
+		return totalCostosOperacionAnterior;
+	}
+
+	public void setTotalCostosOperacionAnterior(BigDecimal totalCostosOperacionAnterior) {
+		this.totalCostosOperacionAnterior = totalCostosOperacionAnterior;
+	}
+
+	public BigDecimal getTotalGastosNuevaOperacion() {
+		return totalGastosNuevaOperacion;
+	}
+
+	public void setTotalGastosNuevaOperacion(BigDecimal totalGastosNuevaOperacion) {
+		this.totalGastosNuevaOperacion = totalGastosNuevaOperacion;
+	}
+
+	public BigDecimal getTotalPesoBrutoConFunda() {
+		return totalPesoBrutoConFunda;
+	}
+
+	public void setTotalPesoBrutoConFunda(BigDecimal totalPesoBrutoConFunda) {
+		this.totalPesoBrutoConFunda = totalPesoBrutoConFunda;
+	}
+
+	public BigDecimal getTotalPesoBrutoGarantia() {
+		return totalPesoBrutoGarantia;
+	}
+
+	public void setTotalPesoBrutoGarantia(BigDecimal totalPesoBrutoGarantia) {
+		this.totalPesoBrutoGarantia = totalPesoBrutoGarantia;
+	}
+
+	public BigDecimal getTotalPesoNeto() {
+		return totalPesoNeto;
+	}
+
+	public void setTotalPesoNeto(BigDecimal totalPesoNeto) {
+		this.totalPesoNeto = totalPesoNeto;
+	}
+
+	public BigDecimal getTotalValorAvaluo() {
+		return totalValorAvaluo;
+	}
+
+	public void setTotalValorAvaluo(BigDecimal totalValorAvaluo) {
+		this.totalValorAvaluo = totalValorAvaluo;
+	}
+
+	public BigDecimal getTotalValorComercial() {
+		return totalValorComercial;
+	}
+
+	public void setTotalValorComercial(BigDecimal totalValorComercial) {
+		this.totalValorComercial = totalValorComercial;
+	}
+
+	public BigDecimal getTotalValorRealizacion() {
+		return totalValorRealizacion;
+	}
+
+	public void setTotalValorRealizacion(BigDecimal totalValorRealizacion) {
+		this.totalValorRealizacion = totalValorRealizacion;
+	}
+
+	public BigDecimal getValorAPagar() {
+		return valorAPagar;
+	}
+
+	public void setValorAPagar(BigDecimal valorAPagar) {
+		this.valorAPagar = valorAPagar;
+	}
+
+	public BigDecimal getValorARecibir() {
+		return valorARecibir;
+	}
+
+	public void setValorARecibir(BigDecimal valorARecibir) {
+		this.valorARecibir = valorARecibir;
+	}
+
+	public String getFirmanteOperacion() {
+		return firmanteOperacion;
+	}
+
+	public void setFirmanteOperacion(String firmanteOperacion) {
+		this.firmanteOperacion = firmanteOperacion;
+	}
+
+	public String getTipoCliente() {
+		return tipoCliente;
+	}
+
+	public void setTipoCliente(String tipoCliente) {
+		this.tipoCliente = tipoCliente;
+	}
+
+	public Long getNumeroCuotas() {
+		return numeroCuotas;
+	}
+
+	public void setNumeroCuotas(Long numeroCuotas) {
+		this.numeroCuotas = numeroCuotas;
+	}
+	
+	
 
 }

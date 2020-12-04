@@ -1,6 +1,8 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import javax.persistence.*;
 
 import com.relative.quski.enums.EstadoEnum;
@@ -96,6 +98,11 @@ public class TbQoCliente implements Serializable {
 
 	@Column(name = "aprobado_web_mupi")
 	private String aprobacionMupi;
+	
+	private BigDecimal ingresos;
+	private BigDecimal egresos;
+	private BigDecimal pasivos;
+	private BigDecimal activos;
 
 	// bi-directional many-to-one association to TbQoArchivoCliente
 	@OneToMany(mappedBy = "tbQoCliente")
@@ -113,17 +120,9 @@ public class TbQoCliente implements Serializable {
 	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-	// bi-directional many-to-one association to TbQoIngresoEgresoCliente
-	@OneToMany(mappedBy = "tbQoCliente")
-	private List<TbQoIngresoEgresoCliente> tbQoIngresoEgresoClientes;
-
 	// bi-directional many-to-one association to TbQoNegociacion
 	@OneToMany(mappedBy = "tbQoCliente")
 	private List<TbQoNegociacion> tbQoNegociacions;
-
-	// bi-directional many-to-one association to TbQoPatrimonio
-	@OneToMany(mappedBy = "tbQoCliente")
-	private List<TbQoPatrimonio> tbQoPatrimonios;
 
 	// bi-directional many-to-one association to TbQoReferenciaPersonal
 	@OneToMany(mappedBy = "tbQoCliente")
@@ -460,28 +459,6 @@ public class TbQoCliente implements Serializable {
 		return tbQoDocumentoHabilitante;
 	}
 
-	public List<TbQoIngresoEgresoCliente> getTbQoIngresoEgresoClientes() {
-		return this.tbQoIngresoEgresoClientes;
-	}
-
-	public void setTbQoIngresoEgresoClientes(List<TbQoIngresoEgresoCliente> tbQoIngresoEgresoClientes) {
-		this.tbQoIngresoEgresoClientes = tbQoIngresoEgresoClientes;
-	}
-
-	public TbQoIngresoEgresoCliente addTbQoIngresoEgresoCliente(TbQoIngresoEgresoCliente tbQoIngresoEgresoCliente) {
-		getTbQoIngresoEgresoClientes().add(tbQoIngresoEgresoCliente);
-		tbQoIngresoEgresoCliente.setTbQoCliente(this);
-
-		return tbQoIngresoEgresoCliente;
-	}
-
-	public TbQoIngresoEgresoCliente removeTbQoIngresoEgresoCliente(TbQoIngresoEgresoCliente tbQoIngresoEgresoCliente) {
-		getTbQoIngresoEgresoClientes().remove(tbQoIngresoEgresoCliente);
-		tbQoIngresoEgresoCliente.setTbQoCliente(null);
-
-		return tbQoIngresoEgresoCliente;
-	}
-
 	public List<TbQoNegociacion> getTbQoNegociacions() {
 		return this.tbQoNegociacions;
 	}
@@ -502,28 +479,6 @@ public class TbQoCliente implements Serializable {
 		tbQoNegociacion.setTbQoCliente(null);
 
 		return tbQoNegociacion;
-	}
-
-	public List<TbQoPatrimonio> getTbQoPatrimonios() {
-		return this.tbQoPatrimonios;
-	}
-
-	public void setTbQoPatrimonios(List<TbQoPatrimonio> tbQoPatrimonios) {
-		this.tbQoPatrimonios = tbQoPatrimonios;
-	}
-
-	public TbQoPatrimonio addTbQoPatrimonio(TbQoPatrimonio tbQoPatrimonio) {
-		getTbQoPatrimonios().add(tbQoPatrimonio);
-		tbQoPatrimonio.setTbQoCliente(this);
-
-		return tbQoPatrimonio;
-	}
-
-	public TbQoPatrimonio removeTbQoPatrimonio(TbQoPatrimonio tbQoPatrimonio) {
-		getTbQoPatrimonios().remove(tbQoPatrimonio);
-		tbQoPatrimonio.setTbQoCliente(null);
-
-		return tbQoPatrimonio;
 	}
 
 	public List<TbQoReferenciaPersonal> getTbQoReferenciaPersonals() {
@@ -591,6 +546,38 @@ public class TbQoCliente implements Serializable {
 
 	public void setTbQoDatoTrabajoClientes(List<TbQoDatoTrabajoCliente> tbQoDatoTrabajoClientes) {
 		this.tbQoDatoTrabajoClientes = tbQoDatoTrabajoClientes;
+	}
+
+	public BigDecimal getIngresos() {
+		return ingresos;
+	}
+
+	public void setIngresos(BigDecimal ingresos) {
+		this.ingresos = ingresos;
+	}
+
+	public BigDecimal getEgresos() {
+		return egresos;
+	}
+
+	public void setEgresos(BigDecimal egresos) {
+		this.egresos = egresos;
+	}
+
+	public BigDecimal getPasivos() {
+		return pasivos;
+	}
+
+	public void setPasivos(BigDecimal pasivos) {
+		this.pasivos = pasivos;
+	}
+
+	public BigDecimal getActivos() {
+		return activos;
+	}
+
+	public void setActivos(BigDecimal activos) {
+		this.activos = activos;
 	}
 
  

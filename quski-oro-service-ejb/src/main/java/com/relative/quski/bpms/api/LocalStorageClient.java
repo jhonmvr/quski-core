@@ -37,7 +37,7 @@ public class LocalStorageClient {
 			TokenWrapper sw = LocalStorageClient.getToken("https://172.16.101.60:8243/",
 					"Basic NmJkQU5TVVNNZF9ScW8xZnJralhxWGNOekxBYTplTHZwR2NvQlRLVDZjRk9FXzJpTEtqc05XcjBh");
 			if (sw != null) {
-				System.out.println("token: " + sw.getAccessToken());
+				System.out.println("token: " + sw.getAccess_token());
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -111,8 +111,8 @@ public class LocalStorageClient {
 			if (tmp.getError() != null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 						"ERROR EN LA OBTENCION DEL TOKEN DE SEGURIDAD, POR FAVOR CONSULTE A SU ADMINISTRADOR "
-								+ tmp.getErrorDescription());
-			} else if (Long.valueOf(tmp.getExpiresIn()) <= 60) {
+								+ tmp.getError_description());
+			} else if (Long.valueOf(tmp.getExpires_in()) <= 60) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 						"POR RAZONES DE SEGURIDAD SU TOKEN ESTA A PUNTO DE CADUCAR, POR FAVOR INTENTE EN 60 SEGUNDOS");
 			}

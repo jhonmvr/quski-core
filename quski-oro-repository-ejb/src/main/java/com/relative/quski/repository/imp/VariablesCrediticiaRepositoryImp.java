@@ -1,11 +1,18 @@
 package com.relative.quski.repository.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -96,11 +103,56 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 	@Override
 	public List<TbQoVariablesCrediticia> findByIdNegociacion(Long idNegociacion) throws RelativeException {
 		try {
-			return findAllBySpecification(new VariablesCrediticiasByIdNegociacionSpec( idNegociacion ));
+			List<TbQoVariablesCrediticia> list = findAllBySpecification(new VariablesCrediticiasByIdNegociacionSpec( idNegociacion ));
+			if(list.isEmpty()) {
+				return null;
+			}
+			return list;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR precios de oro por cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR VARIABLES CREDITICIAS POR ID DE NEGOCIACION");
 		}
+	}
+
+	@Override
+	public VariableCrediticiaWrapper findByIdNegociacionAndCodigo(Long idNegociacion, String codigo) throws RelativeException {
+
+
+		try {
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
+			CriteriaQuery<VariableCrediticiaWrapper> query = cb.createQuery(VariableCrediticiaWrapper.class);
+			Root<TbQoVariablesCrediticia> poll = query.from(TbQoVariablesCrediticia.class);
+			List<Predicate> where = new ArrayList<>();
+
+			if (StringUtils.isNotBlank(codigo)) {
+				where.add(cb.equal(poll.get("codigo"), codigo));
+			}
+			if (idNegociacion != null) {
+				where.add(cb.equal(poll.get("tbQoNegociacion").get("id"), idNegociacion));
+			}
+			
+
+			query.where(cb.and(where.toArray(new Predicate[] {})));
+
+			// 
+			query.multiselect(poll.get("id"),poll.get("tbQoCotizador").get("id"), poll.get("orden"), poll.get("nombre"), poll.get("valor"));
+
+			// ~~> EJECUTAR CONSULTA
+
+			TypedQuery<VariableCrediticiaWrapper> createQuery = this.getEntityManager().createQuery(query);
+			
+			List<VariableCrediticiaWrapper> tmp = createQuery.getResultList();
+			if(tmp != null && !tmp.isEmpty()) {
+				return tmp.get(0);
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL BUSCAR VARIABLE CREDITICIA POR ID NEGOCIACION Y CODIGO");
+		}
+	
 	}
 }

@@ -19,4 +19,6 @@ public interface VariablesCrediticiaRepository extends CrudRepository<Long, TbQo
 	public Long countByIdCotizacion(Long idCotizador) throws RelativeException ;
 	
 	public List<VariableCrediticiaWrapper> findByIdCotizadorCustom(Long idCotizador) throws RelativeException;
+
+	public VariableCrediticiaWrapper findByIdNegociacionAndCodigo(Long idNegociacion, String codigo)throws RelativeException;
 }

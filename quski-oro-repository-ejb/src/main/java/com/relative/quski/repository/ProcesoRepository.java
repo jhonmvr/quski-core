@@ -21,7 +21,7 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	
 	public List<TbQoProceso> findProcesosByAsesor(String asesor) throws RelativeException;
 	
-	public TbQoProceso findByIdNegociacion(Long id)throws RelativeException;
+	public TbQoProceso findByIdCreditoNuevo(Long id)throws RelativeException;
 
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException;
 	public Long countOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException;

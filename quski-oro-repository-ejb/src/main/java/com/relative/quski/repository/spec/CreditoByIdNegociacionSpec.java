@@ -31,7 +31,6 @@ public class CreditoByIdNegociacionSpec extends AbstractSpecification<TbQoCredit
 	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.get("tbQoNegociacion").get("id"), this.idNegociacion));
-		where.add(cb.equal(poll.get("tbQoNegociacion").get("estado"), EstadoEnum.ACT));
 		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[0]));
 	}

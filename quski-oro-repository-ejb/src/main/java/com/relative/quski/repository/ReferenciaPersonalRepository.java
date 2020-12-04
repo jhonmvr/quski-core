@@ -12,5 +12,7 @@ import com.relative.quski.model.TbQoReferenciaPersonal;
 public interface ReferenciaPersonalRepository extends CrudRepository<Long, TbQoReferenciaPersonal>  {
 	
 	public List<TbQoReferenciaPersonal> findByIdCliente(Long id) throws RelativeException;
+	
+	public List<TbQoReferenciaPersonal> findAllByIdCliente(Long id) throws RelativeException;
 
 }

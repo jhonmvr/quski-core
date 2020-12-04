@@ -66,7 +66,7 @@ public class TbQoTasacion implements Serializable {
 	private Date fechaCreacion;
 
 	@Column(name="numero_piezas")
-	private Integer numeroPiezas;
+	private Long numeroPiezas;
 
 	@Column(name="peso_bruto")
 	private BigDecimal pesoBruto;
@@ -249,11 +249,11 @@ public class TbQoTasacion implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Integer getNumeroPiezas() {
+	public Long getNumeroPiezas() {
 		return this.numeroPiezas;
 	}
 
-	public void setNumeroPiezas(Integer numeroPiezas) {
+	public void setNumeroPiezas(Long numeroPiezas) {
 		this.numeroPiezas = numeroPiezas;
 	}
 

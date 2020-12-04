@@ -31,6 +31,9 @@ import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
+import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
+import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 
 import io.swagger.annotations.Api;
@@ -143,17 +146,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
-	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
-		log.info("INGRESA A traerCreditoNegociacionExistente  -----> "+ Long.valueOf( id ));
-		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( id ));
+		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( idNegociacion ));
 
 		loc.setEntidad(a);
 		return loc;
 	}
-	
-	
-	
 	@GET
 	@Path("/traerCreditoNuevo")
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
@@ -163,11 +162,61 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/consultarTablaAmortizacion")
+	public GenericWrapper<CuotasAmortizacionWrapper> consultarTablaAmortizacion(
+			@QueryParam("numeroOperacion") String numeroOperacion,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("agencia") String agencia
+			) throws RelativeException {
+		GenericWrapper<CuotasAmortizacionWrapper> loc = new GenericWrapper<>();
+		List<CuotasAmortizacionWrapper> list = this.qos.consultarTablaAmortizacion(numeroOperacion, usuario, Long.valueOf( agencia ));
+		loc.setEntidades( list );
+		return loc;
+	}
 	@POST
 	@Path("/crearOperacionNuevo")
 	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
-		CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
+		if(wp.getEntidad().getId() != null) {
+			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
+			loc.setEntidad(a);
+		}else {
+			loc.setEntidad(null);			
+		}
+		return loc;			
+	}
+	
+	@POST
+	@Path("/optenerNumeroDeFunda")
+	public GenericWrapper<TbQoCreditoNegociacion> optenerNumeroDeFunda(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
+		if(wp.getEntidad().getId() != null) {
+			TbQoCreditoNegociacion a = this.qos.optenerNumeroDeFunda( wp.getEntidad() );
+			loc.setEntidad(a);
+		}else {
+			loc.setEntidad(null);			
+		}
+		return loc;			
+	}
+	@GET
+	@Path("/traerCreditoVigente")
+	public GenericWrapper<DetalleCreditoWrapper> traerCreditoVigente(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
+		GenericWrapper<DetalleCreditoWrapper> loc = new GenericWrapper<>();
+		if( !numeroOperacion.isEmpty() ) { 
+			DetalleCreditoWrapper a = this.qos.traerCreditoVigente( numeroOperacion );
+			loc.setEntidad(a);
+			return loc;
+		}
+		loc.setEntidad(null);
+		return loc;
+	}
+	@GET
+	@Path("/traerCreditoNegociacion")
+	public GenericWrapper<DetalleCreditoEnProcesoWrapper> traerCreditoNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<DetalleCreditoEnProcesoWrapper> loc = new GenericWrapper<>();
+		DetalleCreditoEnProcesoWrapper a = this.qos.traerCreditoNegociacion(Long.valueOf( idNegociacion ));
+
 		loc.setEntidad(a);
 		return loc;
 	}

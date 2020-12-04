@@ -9,19 +9,17 @@ import com.relative.quski.model.TbQoTasacion;
 
 @Local
 public interface TasacionRepository extends CrudRepository<Long, TbQoTasacion>{
-	public List<TbQoTasacion> findByIdCreditoNegociacion(Long idCreditoNegociacion)  throws RelativeException;
-	public List<TbQoTasacion> findByIdCreditoNegociacionPaged(Long idCreditoNegociacion, int page, int pageSize, String order,
-			String direction) throws RelativeException;
-	public Long countFindByIdCreditoNegociacion(Long idCreditoNegociacion) throws RelativeException;
-	
-	/**
-	 * @author  Jeroham Cadenas - Developer Twelve
-	 * @apiNote Metodos utilizados para consulta en excepcion de cobertura
-	 */
-	public List<TbQoTasacion> findByIdCredito(Long id)  throws RelativeException;
 	public TbQoTasacion findById(Long id)  throws RelativeException;
+	
+	public List<TbQoTasacion> findByIdCredito(Long id)  throws RelativeException;
+	public List<TbQoTasacion> findByIdCredito(Long id, int page, int pageSize, String order,
+			String direction) throws RelativeException;
+	public Long countFindByIdCredito(Long idCreditoNegociacion) throws RelativeException;
 
-	public List<TbQoTasacion> findByIdNegociacion(Long idNegociacion, int startRecord, Integer pageSize, String sortFields, String sortDirections ) throws RelativeException;
+
+	
+	
+	public List<TbQoTasacion> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
 	public Long countFindByIdNegociacion(Long idNegociacion) throws RelativeException;
 
 }

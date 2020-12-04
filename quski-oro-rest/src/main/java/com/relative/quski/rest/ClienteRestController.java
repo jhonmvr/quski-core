@@ -171,7 +171,7 @@ public class ClienteRestController extends BaseRestController
 	@Path("/traerClienteByCedula")
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
-		ClienteCompletoWrapper a = this.qos.buscarGuardarTraerCliente( cedula );
+		ClienteCompletoWrapper a = this.qos.traerCliente( cedula );
 		loc.setEntidad(a);
 		return loc;
 	}

@@ -24,6 +24,7 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
@@ -92,6 +93,14 @@ public class SoftbankClienteRestController extends BaseRestController
 		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion());
 		loc.setEntidad(a);
 		
+		return loc;
+	}
+	@GET
+	@Path("/traerCatalogos")
+	public GenericWrapper<CatalogosSoftbankWrapper> traerCatalogos() throws RelativeException {
+		GenericWrapper<CatalogosSoftbankWrapper> loc = new GenericWrapper<>();
+		CatalogosSoftbankWrapper a = qos.traerCatalogos();
+		loc.setEntidad(a);
 		return loc;
 	}
 

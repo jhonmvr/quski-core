@@ -24,7 +24,7 @@ public class CalculadoraRespuestaWrapper implements Serializable {
 	}
 	public static CalculadoraRespuestaWrapper generateMockupRiesgo() {
 		CalculadoraRespuestaWrapper tmp = new CalculadoraRespuestaWrapper();
-		tmp.setOpciones(	CalculadoraOpcionWrapper.generateMockup());
+		//tmp.setOpciones(	CalculadoraOpcionWrapper.generateMockup());
 		tmp.setGarantias( 	CalculadoraGarantiaWrapper.generateMockup() );
 		tmp.setVariables( 	CalculadoraVariableWrapper.generateMockup() );
 		tmp.setCodigoError( 3 );
@@ -34,7 +34,7 @@ public class CalculadoraRespuestaWrapper implements Serializable {
 	}
 	public static CalculadoraRespuestaWrapper generateMockupEstandar() {
 		CalculadoraRespuestaWrapper tmp = new CalculadoraRespuestaWrapper();
-		tmp.setOpciones(	CalculadoraOpcionWrapper.generateMockup());
+		//tmp.setOpciones(	CalculadoraOpcionWrapper.generateMockup());
 		tmp.setGarantias( 	CalculadoraGarantiaWrapper.generateMockup() );
 		tmp.setVariables( 	CalculadoraVariableWrapper.generateMockup() );
 		tmp.setCodigoError( 0 );

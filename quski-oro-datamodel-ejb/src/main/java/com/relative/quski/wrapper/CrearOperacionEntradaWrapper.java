@@ -16,7 +16,7 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	private String nombreCliente;
 	private List<DatosImpComWrapper> datosImpCom;
 	private DatosGarantiasWrapper datosGarantias;
-	
+	private String numeroOperacion;
 	private String fechaEfectiva;
 	private String codigoTablaAmortizacionQuski;
 	private String codigoTipoCarteraQuski;
@@ -138,5 +138,13 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	}
 	public void setDatosCuentaCliente(List<DatosCuentaClienteWrapper> datosCuentaCliente) {
 		this.datosCuentaCliente = datosCuentaCliente;
+	}
+
+	public String getNumeroOperacion() {
+		return numeroOperacion;
+	}
+
+	public void setNumeroOperacion(String numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
 	}
 }

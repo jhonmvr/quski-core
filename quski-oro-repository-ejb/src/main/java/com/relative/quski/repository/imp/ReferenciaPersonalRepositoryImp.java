@@ -11,6 +11,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
+import com.relative.quski.repository.spec.ReferenciaPersonalAllByIdClienteSpec;
 import com.relative.quski.repository.spec.ReferenciaPersonalByIdClienteSpec;
 
 @Stateless(mappedName = "referenciaPersonalRepository")
@@ -36,5 +37,21 @@ public class ReferenciaPersonalRepositoryImp extends GeneralRepositoryImp<Long, 
 
 		}
 
+	}
+
+	@Override
+	public List<TbQoReferenciaPersonal> findAllByIdCliente(Long id) throws RelativeException {
+		try {
+			List<TbQoReferenciaPersonal> list = findAllBySpecification(new ReferenciaPersonalAllByIdClienteSpec(id));
+
+			if(!list.isEmpty() ) {
+				return list;
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR referencias personales");
+		}
 	}
 }
