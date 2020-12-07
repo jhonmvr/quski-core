@@ -22,6 +22,7 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.EquifaxConsultaPersonaWrapper;
 import com.relative.quski.wrapper.Informacion;
+import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 import com.relative.quski.wrapper.TokenWrapper;
@@ -40,76 +41,21 @@ public class ApiGatewayClient {
 
 	public static void main(String[] args) {
 		try {
-			String carga = "<![CDATA[ <carga>\r\n" + 
-					"    <XmlParametrosRiesgo>\r\n" + 
-					"        <ParametrosRiesgo>\r\n" + 
-					"            <PerfilRiesgo>1</PerfilRiesgo>\r\n" + 
-					"            <OrigenOperacion>N</OrigenOperacion>\r\n" + 
-					"            <RiesgoTotal>0.00</RiesgoTotal>\r\n" + 
-					"            <FechaNacimiento>24/06/1991</FechaNacimiento>\r\n" + 
-					"            <PerfilPreferencia>A</PerfilPreferencia>\r\n" + 
-					"            <AgenciaOriginacion>01</AgenciaOriginacion>\r\n" + 
-					"            <IdentificacionCliente>1311066441</IdentificacionCliente>\r\n" + 
-					"            <CalificacionMupi>S</CalificacionMupi>\r\n" + 
-					"            <CoberturaExcepcionada>0</CoberturaExcepcionada>\r\n" + 
-					"        </ParametrosRiesgo>\r\n" + 
-					"    </XmlParametrosRiesgo>\r\n" + 
-					"    <XmlGarantias>\r\n" + 
-					"						<Garantias>\r\n" + 
-					"							<Garantia>\r\n" + 
-					"								<TipoJoya>ANI</TipoJoya>\r\n" + 
-					"								<Descripcion>BUEN ESTADO</Descripcion>\r\n" + 
-					"								<EstadoJoya>BUE</EstadoJoya>\r\n" + 
-					"								<TipoOroKilataje>18K</TipoOroKilataje>\r\n" + 
-					"								<PesoGr>7.73</PesoGr>\r\n" + 
-					"								<TienePiedras>S</TienePiedras>\r\n" + 
-					"								<DetallePiedras>PIEDRAS</DetallePiedras>\r\n" + 
-					"								<DescuentoPesoPiedras>0.73</DescuentoPesoPiedras>\r\n" + 
-					"								<PesoNeto>8.00</PesoNeto>\r\n" + 
-					"								<PrecioOro>263.72</PrecioOro>\r\n" + 
-					"								<ValorAplicableCredito>293.02</ValorAplicableCredito>\r\n" + 
-					"								<ValorRealizacion>232.07</ValorRealizacion>\r\n" + 
-					"								<NumeroPiezas>1</NumeroPiezas>\r\n" + 
-					"								<DescuentoSuelda>1.00</DescuentoSuelda>\r\n" + 
-					"							</Garantia>\r\n" + 
-					"						</Garantias>\r\n" + 
-					"    </XmlGarantias>\r\n" + 
-					"    <XmlDescuentosNuevaOperacion>\r\n" + 
-					"        <DescuentosOperacion>\r\n" + 
-					"            <SaldoMontoCreditoAnterior></SaldoMontoCreditoAnterior>\r\n" + 
-					"            <SaldoInteresCreditoAnterior></SaldoInteresCreditoAnterior>\r\n" + 
-					"            <MoraCreditoAnterior></MoraCreditoAnterior>\r\n" + 
-					"            <CobranzaCreditoAnterior></CobranzaCreditoAnterior>\r\n" + 
-					"            <TipoCartera></TipoCartera>\r\n" + 
-					"            <MontoFinanciadoCreditoAnterior></MontoFinanciadoCreditoAnterior>\r\n" + 
-					"            <PlazoCreditoAnterior></PlazoCreditoAnterior>\r\n" + 
-					"            <TipoCreditoAnterior></TipoCreditoAnterior>\r\n" + 
-					"            <EstadoCreditoAnterior></EstadoCreditoAnterior>\r\n" + 
-					"            <FechaEfectivaCreditoAnterior></FechaEfectivaCreditoAnterior>\r\n" + 
-					"            <FechaVencimientoCreditoAnterior></FechaVencimientoCreditoAnterior>\r\n" + 
-					"            <MontoSolicitadoCliente>0</MontoSolicitadoCliente>\r\n" + 
-					"            <NumeroOperacionMadre></NumeroOperacionMadre>\r\n" + 
-					"            <NumeroOperacionRenovar></NumeroOperacionRenovar>\r\n" + 
-					"            <REFERENCIA_ADICIONAL></REFERENCIA_ADICIONAL>\r\n" + 
-					"            <OperacionPropia></OperacionPropia>\r\n" + 
-					"        </DescuentosOperacion>\r\n" + 
-					"    </XmlDescuentosNuevaOperacion>\r\n" + 
-					"</carga> ]]>\r\n";
-			
-			
-			
-			String content ="<soap:Envelope\r\n" + 
-					"	xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n" + 
-					"	xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n" + 
-					"	xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n" + 
-					"	<soap:Body>\r\n" + 
-					"		<CalculadoraQuski\r\n" + 
-					"			xmlns=\"http://tempuri.org/\">\r\n" + 
-					"			<XMlConsulta>\r\n" + carga +
-					
-					"			</XMlConsulta>\r\n" + 
-					"		</CalculadoraQuski>\r\n" + 
-					"	</soap:Body>\r\n" + 
+		
+			String content ="<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\r\n" + 
+					"   <soap:Header/>\r\n" + 
+					"   <soap:Body>\r\n" + 
+					"      <tem:ConsultaCliente>\r\n" + 
+					"         <!--Optional:-->\r\n" + 
+					"         <tem:XMlConsulta>\r\n" + 
+					"         <![CDATA[\r\n" + 
+					"<carga>\r\n" + 
+					"    <XmlConsultaCliente><DatosCliente><TIPO_IDENTIFICACION>C</TIPO_IDENTIFICACION><IDENTIFICACION>1001161916</IDENTIFICACION><TIPO_CONSULTA>IF</TIPO_CONSULTA></DatosCliente></XmlConsultaCliente></carga>\r\n" + 
+					"]]>\r\n" + 
+					"       </tem:XMlConsulta>\r\n" + 
+					"      </tem:ConsultaCliente>\r\n" + 
+					" \r\n" + 
+					"   </soap:Body>\r\n" + 
 					"</soap:Envelope>";
 		/*	content =	content.replace("--tipoidentificacion--", "C")
 					.replace("--identificacion--", "1721395125")
@@ -121,9 +67,9 @@ public class ApiGatewayClient {
 			System.out.println("token======> getError " + token.getError());
 			System.out.println("token======> getErrorDescription " + token.getError_description());
 			System.out.println("token======> getExpires_in " + token.getExpires_in());
-			SimularResponse s= ApiGatewayClient.callCalculadoraRest("https://apigw.quski.ec:8243/quski-calculadora/1.0",
+			InformacionWrapper s= ApiGatewayClient.callCuentaRest("https://apigw.quski.ec:8243/service-cuenta/1.0",
 					token.getToken_type()+" "+token.getAccess_token(), content);
-			System.out.println("valor del oro === >>>" + s.getSimularResult().getXmlGarantias().getGarantias().getGarantia().get(0).getValorOro());
+			System.out.println("valor del oro === >>>" + s.getINFOFINAN().getNUMEROCUENTA());
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -213,6 +159,54 @@ public class ApiGatewayClient {
 				for( int i=0; i<chn.getLength();i++) {
 					log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
 					return ReRestClient.fromXml( chn.item(i).getTextContent(), SimularResponse.class);
+				}
+				return null;
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static InformacionWrapper callCuentaRest(String urlService,String authorization, String content)
+			throws RelativeException {
+		try {
+			log.info("<================>  CONTENT  <================>"); 
+			log.info(""+content); 
+			//Gson gson = new Gson();
+			//String jsonString = gson.toJson(wrapper);
+		
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
+					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, urlService, String.class);
+	        
+			log.info("==========>  RESPONSE =================> " + response + " <==================="); 
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				//Gson gsons = new GsonBuilder().create();
+				//return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CalculadoraRespuestaWrapper.class);
+				String stringResult =String.valueOf(response.get("resultado"));
+				//log.info("===============> STRING RESULT ======> " + stringResult );
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				ByteArrayInputStream input =  new ByteArrayInputStream(stringResult.getBytes("UTF-8"));
+				Document doc = builder.parse(input);
+				Element root = doc.getDocumentElement();
+				NodeList chn=root.getElementsByTagName("ConsultaClienteResult");
+				for( int i=0; i<chn.getLength();i++) {
+					log.info( "mensaje INFO_FINAN=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
+					return ReRestClient.fromXml( chn.item(i).getTextContent(), InformacionWrapper.class);
 				}
 				return null;
 			}else {

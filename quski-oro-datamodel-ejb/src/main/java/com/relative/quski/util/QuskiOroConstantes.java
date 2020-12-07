@@ -313,9 +313,11 @@ public class QuskiOroConstantes {
 	public static final String AUTH_APIGW = "AUTH_APIGW";
 	public static final String URL_WS_PERSONA = "URL_WS_PERSONA";
 	public static final String URL_WS_QUSKI_CALCULADORA = "URL_WS_QUSKI_CALCULADORA";
+	public static final String URL_WS_QUSKI_CUENTA_MUPI = "URL_WS_QUSKI_CUENTA_MUPI";
 	public static final String CONTENT_XML_PERSONA = "CONTENT_XML_PERSONA";
 	public static final String CONTENT_XML_QUSKI_CALCULADORA = "CONTENT_XML_QUSKI_CALCULADORA";
 	public static final String CONTENT_XML_GARANTIA = "CONTENT_XML_GARANTIA";
+	public static final String CONTENT_XML_CUENTA_MUPI = "CONTENT_XML_CUENTA_MUPI";
 
 	// INTEGRACION
 	public static final String URL_PERSONA ="http://localhost:28080/quski-oro-rest/resources/integracionRestController/getInformacionPersona";
