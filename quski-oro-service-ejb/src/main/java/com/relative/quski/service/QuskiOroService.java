@@ -2164,7 +2164,17 @@ public class QuskiOroService {
 				wr.setDirecciones( this.direccionClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
 				wr.setReferencias( this.referenciaPersonalRepository.findByIdCliente( wr.getCliente().getId() ) );
 				wr.setDatosTrabajo( this.datoTrabajoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
-				wr.setCuentas( this.cuentaBancariaRepository.findByIdCliente( wr.getCliente().getId() ) );
+				TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
+				String codigoCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
+				List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
+				CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cedula);
+				cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
+				cuenta.setCuenta(cuentaWS.getNumeroCuenta());
+				cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
+				cuenta.setEstado(EstadoEnum.ACT);
+				cuenta.setTbQoCliente( wr.getCliente() );
+				listCreate.add( cuenta );
+				wr.setCuentas( listCreate );
 				wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
 				return wr;
 			}else {
@@ -2210,7 +2220,6 @@ public class QuskiOroService {
 		CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cliente.getCedulaCliente());
 		TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
 		if(cuentaSoft != null && !cuentaSoft.isEmpty()) {
-			
 			cuenta.setIdSoftbank( cuentaSoft.get(0).getId() );
 		}
 		cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
