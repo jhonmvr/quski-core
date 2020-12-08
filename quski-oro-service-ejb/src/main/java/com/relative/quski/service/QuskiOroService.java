@@ -2204,18 +2204,21 @@ public class QuskiOroService {
 		});
 		return send.getIdSoftbank() != null ? send : null;
 	}
-	private List<TbQoCuentaBancariaCliente> mapearCuentas(List<SoftbankCuentasBancariasWrapper> cuentasBancariasCliente, TbQoCliente cliente ) {
+	private List<TbQoCuentaBancariaCliente> mapearCuentas(List<SoftbankCuentasBancariasWrapper> cuentaSoft, TbQoCliente cliente ) throws RelativeException {
 		List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
-		cuentasBancariasCliente.forEach(e ->{
-			TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
-			cuenta.setIdSoftbank( e.getId() );
-			cuenta.setBanco( e.getIdBanco() );
-			cuenta.setCuenta( e.getCuenta() );
-			cuenta.setEsAhorros( e.getEsAhorros() );
-			cuenta.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
-			cuenta.setTbQoCliente( cliente );
-			listCreate.add( cuenta );
-		});
+		String codigoCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
+		CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cliente.getCedulaCliente());
+		TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
+		if(cuentaSoft != null && !cuentaSoft.isEmpty()) {
+			
+			cuenta.setIdSoftbank( cuentaSoft.get(0).getId() );
+		}
+		cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
+		cuenta.setCuenta(cuentaWS.getNumeroCuenta());
+		cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
+		cuenta.setEstado(EstadoEnum.ACT);
+		cuenta.setTbQoCliente( cliente );
+		listCreate.add( cuenta );
 		return listCreate.isEmpty() ? null : listCreate;
 	}
 	private List<TbQoReferenciaPersonal> mapearReferencias(List<SoftbankContactosWrapper> contactosCliente, TbQoCliente cliente) {

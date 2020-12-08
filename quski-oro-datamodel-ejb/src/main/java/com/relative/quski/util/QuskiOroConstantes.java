@@ -349,6 +349,7 @@ public class QuskiOroConstantes {
 	public static final String passwordEmail = "passwordEmail";
 	public static final String TIPO = "MAIL";
 	public static final String TEXTO_APROBACION_PAGO = "TEXTO_APROBACION_PAGO";
+	public static final String CODIGO_BANCO_MUPI = "CODIGO_BANCO_MUPI";
 	
 	
 
