@@ -2622,8 +2622,7 @@ public class QuskiOroService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			return null;
 		}
 
 	}
@@ -5101,7 +5100,7 @@ public class QuskiOroService {
 					.replace("--peso-gr--", joya.getPesoBruto().toString())
 					.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 					.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
+					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ?joya.getDescuentoPesoPiedra().toString():"0")
 					.replace("--peso-neto--", joya.getPesoNeto().toString())
 					.replace("--precio-oro--", joya.getValorOro().toString())
 					.replace("--valor-aplicable-credito--", "293.02")
@@ -5135,7 +5134,7 @@ public class QuskiOroService {
 						TbQoTasacion j = new TbQoTasacion();
 						j.setDescripcion(g.getDescripcion());
 						j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
-						j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
+						j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoSuelda()) );
 						j.setDetallePiedras(g.getDetallePiedras());
 						j.setEstado(EstadoEnum.ACT);
 						j.setEstadoJoya(g.getEstadoJoya());
@@ -5171,7 +5170,7 @@ public class QuskiOroService {
 	}
 	
 	// TODO: Testear metodo por conflictos
-	public SimularResponse simularOfertasCalculadora(Long idCredito, String riesgoTotal,String codigoAgencia) throws RelativeException {				
+	public SimularResponse simularOfertasCalculadora(Long idCredito, BigDecimal montoSolicitado, String riesgoTotal,String codigoAgencia) throws RelativeException {				
 		try {
 			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
 			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito(idCredito);
@@ -5211,7 +5210,7 @@ public class QuskiOroService {
 					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
 					.replace("--cobertura-exepcionada--", "0")//de donde saco esto
 					.replace("--garanttias-detalle--", XMLGarantias.toString())
-					.replace("--monto-solicitado--", "0");//de donde saco el monto
+					.replace("--monto-solicitado--", montoSolicitado.toString());
 				log.info("==============>>>>> XML calculadora");
 				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
 						this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
