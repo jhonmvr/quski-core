@@ -67,7 +67,7 @@ public class ApiGatewayClient {
 			System.out.println("token======> getError " + token.getError());
 			System.out.println("token======> getErrorDescription " + token.getError_description());
 			System.out.println("token======> getExpires_in " + token.getExpires_in());
-			InformacionWrapper s= ApiGatewayClient.callCuentaRest("https://apigw.quski.ec:8243/service-cuenta/1.0",
+			InformacionWrapper s = ApiGatewayClient.callCuentaRest("https://apigw.quski.ec:8243/service-cuenta/1.0",
 					token.getToken_type()+" "+token.getAccess_token(), content);
 			System.out.println("valor del oro === >>>" + s.getINFOFINAN().getNUMEROCUENTA());
 		} catch (RelativeException e) {

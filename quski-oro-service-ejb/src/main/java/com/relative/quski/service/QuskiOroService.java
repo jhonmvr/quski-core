@@ -112,6 +112,7 @@ import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.CrmProspectoWrapper;
+import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
 import com.relative.quski.wrapper.DatosGarantiasWrapper;
@@ -126,6 +127,7 @@ import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
 import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS;
 import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS.RUBRO;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
+import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
@@ -5049,8 +5051,32 @@ public class QuskiOroService {
 		
 	}
 	
-	
+	public CuentaWrapper consultaCuentaApiGateWay(String cedula) throws RelativeException {		
+			try {
+				String contentXMLcuenta = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_CUENTA_MUPI ).getValor();
+				contentXMLcuenta = contentXMLcuenta.replace("--tipo-cliente--", "C").replace("--identificacion--", cedula).replace("--tipo-consulta--", "IF");
+				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+				InformacionWrapper response = ApiGatewayClient.callCuentaRest(
+						this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CUENTA_MUPI).getValor(),
+						token.getToken_type() +" "+ token.getAccess_token(),
+						contentXMLcuenta
+				);		
+				if(response != null && response.getCodigoError() == 0 && response.getINFOFINAN() != null) {
+					CuentaWrapper retorno = new CuentaWrapper( String.valueOf( response.getIdentificacion() )  );
+					retorno.setTipoPago( response.getINFOFINAN().getTIPOPAGO() );
+					retorno.setInstitucionFinanciera( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()  ));
+					retorno.setTipoCuenta( response.getINFOFINAN().getTIPOCUENTA() );
+					retorno.setNumeroCuenta( String.valueOf( response.getINFOFINAN().getNUMEROCUENTA() ) );
+					retorno.setFirmaRegularizada( response.getINFOFINAN().getFIRMAREGULARIZADA());
+					return retorno;
+				}
+				return null;
+			} catch (RelativeException e) {
+				e.printStackTrace();
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
 
+			}
+	}
 	public List<TbQoTasacion> getDetalleJoya(TbQoCliente cliente, TbQoTasacion joya) throws RelativeException {		
 		
 		try {

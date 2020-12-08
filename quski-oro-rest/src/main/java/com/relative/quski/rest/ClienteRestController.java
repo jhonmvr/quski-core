@@ -27,6 +27,7 @@ import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
+import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 import io.swagger.annotations.Api;
@@ -172,6 +173,14 @@ public class ClienteRestController extends BaseRestController
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
 		ClienteCompletoWrapper a = this.qos.traerCliente( cedula );
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/consultarCuentaMupi")
+	public GenericWrapper<CuentaWrapper> consultarCuentaMupi(@QueryParam("cedula") String cedula) throws RelativeException {
+		GenericWrapper<CuentaWrapper> loc = new GenericWrapper<>();
+		CuentaWrapper a = this.qos.consultaCuentaApiGateWay( cedula );
 		loc.setEntidad(a);
 		return loc;
 	}
