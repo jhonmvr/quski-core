@@ -12,10 +12,9 @@ import com.relative.quski.model.TbQoDatoTrabajoCliente;
 @Local
 public interface DatoTrabajoClienteRepository extends CrudRepository<Long, TbQoDatoTrabajoCliente> {
 
-	public TbQoDatoTrabajoCliente findByIdCliente(Long id) throws RelativeException ;
+	public List<TbQoDatoTrabajoCliente> findByIdCliente(Long id) throws RelativeException ;
 	public TbQoDatoTrabajoCliente findByIdSoftbank(Long id) throws RelativeException ;
 
-	public List<TbQoDatoTrabajoCliente> findByIdClienteList(Long id) throws RelativeException ;
 	public List<TbQoDatoTrabajoCliente> findAllByIdCliente(Long id) throws RelativeException ;
 
 	

@@ -21,16 +21,12 @@ public class DatoTrabajoClienteRepositoryImp extends GeneralRepositoryImp<Long, 
 	@Inject
 	Logger log;
 	@Override
-	public TbQoDatoTrabajoCliente findByIdCliente(Long id) throws RelativeException {
+	public List<TbQoDatoTrabajoCliente> findByIdCliente(Long id) throws RelativeException {
 		try {
 			List<TbQoDatoTrabajoCliente> list = findAllBySpecification(new DatoTrabajoByIdClienteSpec( id ));
 			log.info("ESTOY BUSCANDO DATOS TRABAJO SIZE =====> " + list.size());
 			if(!list.isEmpty()) {
-				if( list.size() <= 1) {
-					return list.get(0);
-				}else {
-				 return null;
-				}
+				return list;
 			}else {
 				return null;
 			}
@@ -50,21 +46,6 @@ public class DatoTrabajoClienteRepositoryImp extends GeneralRepositoryImp<Long, 
 				}else {
 				 return null;
 				}
-			}else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
-		}
-	}
-	@Override
-	public List<TbQoDatoTrabajoCliente> findByIdClienteList(Long id) throws RelativeException {
-		try {
-			List<TbQoDatoTrabajoCliente> list = findAllBySpecification(new DatoTrabajoByIdClienteSpec( id ));
-			log.info("ESTOY BUSCANDO DATOS TRABAJO SIZE =====> " + list.size());
-			if(!list.isEmpty()) {
-				return list;
 			}else {
 				return null;
 			}

@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-public class DevolucionProcesoWrapper implements Serializable {
+public class DevolucionPendienteArribosWrapper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
     private Long   id;
     private Date   fechaSolicitud;
-    private String nombreAgenciaSolicitud;
-    private String agenciaEntrega;
     private String codigoOperacionMadre;
     private String codigoOperacion;
     private String nombreCliente;
@@ -20,19 +18,21 @@ public class DevolucionProcesoWrapper implements Serializable {
 	private String fundaActual;	
 	private String ciudadTevcol;
     private String fechaArriboAgencia;
-	private String asesor;
 	private String fechaAprobacion;
+	private BigDecimal valorAvaluao;
+	private BigDecimal pesoBruto;
 	
 
-	public DevolucionProcesoWrapper(BigDecimal id, Date fechaSolicitud, String nombreAgenciaSolicitud, String agenciaEntrega,
-			String codigoOperacionMadre, String codigoOperacion, String nombreCliente, String cedulaCliente,
-			String fundaMadre, String fundaActual, String ciudadTevcol, String fechaArriboAgencia, String asesor,
-			String fechaAprobacion) {
+	
+	
+	
+	public DevolucionPendienteArribosWrapper(BigDecimal id, Date fechaSolicitud, String codigoOperacionMadre,
+			String codigoOperacion, String nombreCliente, String cedulaCliente, String fundaMadre, String fundaActual,
+			String ciudadTevcol, String fechaArriboAgencia, String fechaAprobacion, BigDecimal valorAvaluao,
+			BigDecimal pesoBruto) {
 		super();
 		this.id = id.longValue();
 		this.fechaSolicitud = fechaSolicitud;
-		this.nombreAgenciaSolicitud = nombreAgenciaSolicitud;
-		this.agenciaEntrega = agenciaEntrega;
 		this.codigoOperacionMadre = codigoOperacionMadre;
 		this.codigoOperacion = codigoOperacion;
 		this.nombreCliente = nombreCliente;
@@ -41,8 +41,9 @@ public class DevolucionProcesoWrapper implements Serializable {
 		this.fundaActual = fundaActual;
 		this.ciudadTevcol = ciudadTevcol;
 		this.fechaArriboAgencia = fechaArriboAgencia;
-		this.asesor = asesor;
 		this.fechaAprobacion = fechaAprobacion;
+		this.valorAvaluao = valorAvaluao;
+		this.pesoBruto = pesoBruto;
 	}
 	public Long getId() {
 		return id;
@@ -56,12 +57,7 @@ public class DevolucionProcesoWrapper implements Serializable {
 	public void setFechaSolicitud(Date fechaSolicitud) {
 		this.fechaSolicitud = fechaSolicitud;
 	}
-	public String getNombreAgenciaSolicitud() {
-		return nombreAgenciaSolicitud;
-	}
-	public void setNombreAgenciaSolicitud(String nombreAgenciaSolicitud) {
-		this.nombreAgenciaSolicitud = nombreAgenciaSolicitud;
-	}
+
 	public String getCodigoOperacionMadre() {
 		return codigoOperacionMadre;
 	}
@@ -110,24 +106,27 @@ public class DevolucionProcesoWrapper implements Serializable {
 	public void setFechaArriboAgencia(String fechaArriboAgencia) {
 		this.fechaArriboAgencia = fechaArriboAgencia;
 	}
-	public String getAsesor() {
-		return asesor;
-	}
-	public void setAsesor(String asesor) {
-		this.asesor = asesor;
-	}
+
 	public String getFechaAprobacion() {
 		return fechaAprobacion;
 	}
 	public void setFechaAprobacion(String fechaAprobacion) {
 		this.fechaAprobacion = fechaAprobacion;
 	}
-	public String getAgenciaEntrega() {
-		return agenciaEntrega;
+	public BigDecimal getValorAvaluao() {
+		return valorAvaluao;
 	}
-	public void setAgenciaEntrega(String agenciaEntrega) {
-		this.agenciaEntrega = agenciaEntrega;
+	public void setValorAvaluao(BigDecimal valorAvaluao) {
+		this.valorAvaluao = valorAvaluao;
 	}
+	public BigDecimal getPesoBruto() {
+		return pesoBruto;
+	}
+	public void setPesoBruto(BigDecimal pesoBruto) {
+		this.pesoBruto = pesoBruto;
+	}
+
+
 	
 	
 	

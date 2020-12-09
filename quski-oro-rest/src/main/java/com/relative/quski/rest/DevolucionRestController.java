@@ -1,7 +1,6 @@
 package com.relative.quski.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -26,7 +27,9 @@ import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
+import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -114,7 +117,7 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		PaginatedListWrapper<TbQoDevolucion> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoDevolucion> actions = this.dos.findAllDevolucion(pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countCliente().intValue());
+			plw.setTotalResults(this.dos.countDevolucion().intValue());
 			plw.setList(actions);
 		}
 		return plw;
@@ -122,7 +125,7 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/aprobarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> aprobarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+	public GenericWrapper<TbQoDevolucion> aprobarSolicitudDevolucion(
 			@QueryParam("id") String id)
 			throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
@@ -132,7 +135,7 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/rechazarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> rechazarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
+	public GenericWrapper<TbQoDevolucion> rechazarSolicitudDevolucion(
 			@QueryParam("id") String id)
 			throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
@@ -140,21 +143,85 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return loc;
 	}
 	
-	
-	@POST
+	@GET
 	@Path("/buscarDevolucion")
-	@ApiOperation(value = "PaginatedListWrapper<ResultOperacionesWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiContrato", response = PaginatedListWrapper.class)
-	public PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(BusquedaDevolucionWrapper bdw ) throws RelativeException {
-		PaginatedListWrapper<DevolucionProcesoWrapper> plw = this.dos.findOperacion(bdw);
-	
+	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
+	response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("codigoOperacion") String codigoOperacion,
+			@QueryParam("agencia") String agencia,
+			@QueryParam("fechaAprobacionDesde") String fechaAprobacionDesde,
+			@QueryParam("fechaAprobacionHasta") String fechaAprobacionHasta,
+			@QueryParam("identificacion") String identificacion
+
+			) throws RelativeException {
+		return listarSeleccionFecha(
+				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
+						isPaginated),
+				 StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
+				StringUtils.isNotBlank(agencia)?agencia:null, StringUtils.isNotBlank(fechaAprobacionDesde)?fechaAprobacionDesde:null,
+				StringUtils.isNotBlank(fechaAprobacionHasta)?fechaAprobacionHasta:null, StringUtils.isNotBlank(identificacion)?identificacion:null );
+		
+	}
+	private PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(PaginatedWrapper pw, String codigoOperacion, String agencia,
+			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion ) throws RelativeException {
+		
+		PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		
+		List<DevolucionProcesoWrapper> actions = this.dos.findOperacion(pw, codigoOperacion, agencia, fechaAprobacionDesde,
+				fechaAprobacionHasta, identificacion);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.dos.countOperacion(codigoOperacion, agencia, fechaAprobacionDesde, fechaAprobacionHasta, identificacion));
+			plw.setList(actions);
+		}
 		return plw;
 	}
 
+	
+	@GET
+	@Path("/buscarDevolucionPendienteArribo")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
+	response = PaginatedListWrapper.class)
+	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("codigoOperacion") String codigoOperacion,
+			@QueryParam("agencia") String agencia
+
+
+			) throws RelativeException {
+		return listarPendienteArribo(
+				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
+						isPaginated),
+				 StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
+						 StringUtils.isNotBlank(agencia)?agencia:null);
+		
+	}
+	private PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(PaginatedWrapper pw, String codigoOperacion, String agencia ) throws RelativeException {
+		
+		PaginatedListWrapper<DevolucionPendienteArribosWrapper> plw = new PaginatedListWrapper<>(pw);
+		
+		List<DevolucionPendienteArribosWrapper> actions = this.dos.findOperacionArribo(pw, codigoOperacion, agencia);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.dos.countOperacionArribo(codigoOperacion, agencia));
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	
 	@POST
 	@Path("/registrarFechaArribo")
-	public List<TbQoDevolucion> registrarFechaArribo( List<Long> idDevoluciones, Date fechaArribo) throws RelativeException {
+	public List<TbQoDevolucion> registrarFechaArribo( RegistroFechaArriboWrapper rfaw ) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
-		loc= this.dos.registrarFechaSolicitud(idDevoluciones, fechaArribo);
+		loc= this.dos.registrarFechaArribo(rfaw);
 		return loc;
 	}
 	@POST
@@ -164,4 +231,97 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		loc= this.dos.registrarArriboAgencia(idDevoluciones);
 		return loc;
 	}
+	
+	@POST
+	@Path("/cancelarSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> cancelarSolicitudDevolucion(@QueryParam("id") String idDevolucion,
+			@QueryParam("usuario") String usuario)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.cancelarSolicitudDevolucion(Long.valueOf(idDevolucion), usuario));
+		return loc;
+	}
+	@POST
+	@Path("/aprobarCancelacionSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> aprobarCancelacionSolicitudDevolucion(
+			@QueryParam("id") String idDevolucion)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
+		return loc;
+	}
+	
+	@POST
+	@Path("/rechazarCancelacionSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> rechazarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.rechazarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
+		return loc;
+	}
+	
+	@GET
+	@Path("/validateAprobarCancelarSolicitud")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<Boolean> validateAprobacionCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.validateAprobarCancelacionSolicitud(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	@GET
+	@Path("/validateCancelarSolicitud")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<Boolean> validateCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.validateCancelacionSolicitud(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	@GET
+	@Path("/existeProcesoCancelacionVigente")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<Boolean> existeProcesoCancelacionVigente(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.existeProcesoCancelacionVigente(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/guardarEntregaRecepcion")
+	public GenericWrapper<TbQoDevolucion> guardarEntregaRecepcion( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.guardarEntregaRecepcion((Long.valueOf(idDevolucion))));
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/aprobarVerificacionFirmas")
+	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.guardarEntregaRecepcion((Long.valueOf(idDevolucion))));
+		return loc;
+	}
+	
+	
+	
+	
+	
 }
