@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
-
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
@@ -33,7 +33,8 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 	Logger log;
 
 	@Override
-	public List<DevolucionProcesoWrapper> findOperaciones(BusquedaDevolucionWrapper bdw) throws RelativeException {
+	public List<DevolucionProcesoWrapper> findOperaciones(PaginatedWrapper pw, String codigoOperacion, String agencia, 
+			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion) throws RelativeException {
 		// List<MovimientosDetalleCierreCajaWrapper> listMovimientos = null;
 		try {
 
@@ -67,59 +68,56 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 
 			StringBuilder strQry = new StringBuilder(querySelect);
-			if (StringUtils.isNotBlank(bdw.getCodigoOperacion())) {
+			if (StringUtils.isNotBlank(codigoOperacion)) {
 				
-				strQry.append(" and j.codigo_operacion =:c ");
+				strQry.append(" and j.codigo_operacion like :c ");
 			}
-			if (StringUtils.isNotBlank(bdw.getAgencia())) {
+			if (StringUtils.isNotBlank(agencia)) {
 				strQry.append(" and j.agencia_entrega=:agencia ");
 			}
 
-			if (StringUtils.isNotBlank(bdw.getIdentificacion() )) {
-				strQry.append(" and j.cedula_cliente=:identificacion   ");
+			if (StringUtils.isNotBlank(identificacion )) {
+				strQry.append(" and j.cedula_cliente like :identificacion   ");
 			}
 
-			if (bdw.getFechaAprobacionDesde() != null) {
-				strQry.append(" and j.fecha_aprobacion  >=:desde ");
+			if (fechaAprobacionDesde != null) {
+				strQry.append(" and j.fecha_aprobacion  <=:desde ");
 			}
-			if (bdw.getFechaAprobacionHasta() != null) {
+			if (fechaAprobacionHasta != null) {
 				strQry.append(" and and j.fecha_aprobacion  >=:hasta ");
 			}
-			if (bdw.getEstado() != null) {
-				strQry.append(" and foo.estado_proceso =:estado ");
-			}
+			
+			strQry.append(" and foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO' ");
+		
 
 			strQry.append("ORDER BY j.fecha_creacion ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
-			if (StringUtils.isNotBlank(bdw.getCodigoOperacion() )) {
+			if (StringUtils.isNotBlank(codigoOperacion)) {
 
-				query.setParameter("c", bdw.getCodigoOperacion());
+				query.setParameter("c", "%"+ codigoOperacion+"%");
 
 			}
-			if (bdw.getEstado() != null) {
-				log.info("=========> SET: ESTADO ==> " + bdw.getEstado() + " <====");
-				query.setParameter("estado", bdw.getEstado().toString());
-			}
-			if (StringUtils.isNotBlank(bdw.getIdentificacion())) {
+	
+			if (StringUtils.isNotBlank(identificacion)) {
 
-				query.setParameter("identificacion", bdw.getIdentificacion().toString());
+				query.setParameter("identificacion","%"+ identificacion+"%");
 			}
-			if (bdw.getFechaAprobacionDesde() != null) {
+			if (fechaAprobacionDesde != null) {
 
-				query.setParameter("desde", bdw.getFechaAprobacionDesde());
+				query.setParameter("desde",fechaAprobacionDesde);
 			}
-			if (bdw.getFechaAprobacionHasta() != null) {
+			if (fechaAprobacionHasta != null) {
 
-				query.setParameter("hasta", bdw.getFechaAprobacionDesde());
+				query.setParameter("hasta", fechaAprobacionHasta);
 			}
-			if (StringUtils.isNotBlank(bdw.getAgencia() )) {
+			if (StringUtils.isNotBlank(agencia )) {
 
-				query.setParameter("agencia", bdw.getAgencia());
+				query.setParameter("agencia", agencia);
 			}
 
-			query.setFirstResult(bdw.getNumberPage());
-			query.setMaxResults(bdw.getNumberItems());
+			query.setFirstResult(pw.getStartRecord());
+			query.setMaxResults(pw.getPageSize());
 			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionProcesoWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,7 +127,8 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 	}
 
-	public Integer countOperaciones(BusquedaDevolucionWrapper bdw) throws RelativeException {
+	public Integer countOperaciones(String codigoOperacion, String agencia, 
+			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion) throws RelativeException {
 		// List<MovimientosDetalleCierreCajaWrapper> listMovimientos = null;
 		try {
 
@@ -149,53 +148,51 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 
 			StringBuilder strQry = new StringBuilder(querySelect);
-			if (StringUtils.isNotBlank(bdw.getCodigoOperacion())) {
+			if (StringUtils.isNotBlank(codigoOperacion)) {
 				
-				strQry.append(" and j.codigo_operacion =:c ");
+				strQry.append(" and j.codigo_operacion like :c ");
 			}
-			if (StringUtils.isNotBlank(bdw.getAgencia())) {
-				strQry.append(" and j.agencia_entrega=:agencia ");
-			}
-
-			if (StringUtils.isNotBlank(bdw.getIdentificacion() )) {
-				strQry.append(" and j.cedula_cliente=:identificacion   ");
+			if (StringUtils.isNotBlank(agencia)) {
+				strQry.append(" and j.agencia_entrega =:agencia ");
 			}
 
-			if (bdw.getFechaAprobacionDesde() != null) {
-				strQry.append(" and j.fecha_aprobacion  >=:desde ");
+			if (StringUtils.isNotBlank(identificacion )) {
+				strQry.append(" and j.cedula_cliente like :identificacion   ");
 			}
-			if (bdw.getFechaAprobacionHasta() != null) {
+
+			if (fechaAprobacionDesde != null) {
+				strQry.append(" and j.fecha_aprobacion  <=:desde ");
+			}
+			if (fechaAprobacionHasta != null) {
 				strQry.append(" and and j.fecha_aprobacion  >=:hasta ");
 			}
-			if (bdw.getEstado() != null) {
-				strQry.append(" and foo.estado_proceso =:estado ");
-			}
+			
+				strQry.append(" and foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO'  ");
+		
 
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
-			if (StringUtils.isNotBlank(bdw.getCodigoOperacion() )) {
+			if (StringUtils.isNotBlank(codigoOperacion)) {
 
-				query.setParameter("c", bdw.getCodigoOperacion());
+				query.setParameter("c", "%"+ codigoOperacion+"%");
 
 			}
-			if (bdw.getEstado() != null) {
-				query.setParameter("estado", bdw.getEstado().toString());
-			}
-			if (StringUtils.isNotBlank(bdw.getIdentificacion())) {
+	
+			if (StringUtils.isNotBlank(identificacion)) {
 
-				query.setParameter("identificacion", bdw.getIdentificacion().toString());
+				query.setParameter("identificacion","%"+ identificacion+"%");
 			}
-			if (bdw.getFechaAprobacionDesde() != null) {
+			if (fechaAprobacionDesde != null) {
 
-				query.setParameter("desde", bdw.getFechaAprobacionDesde());
+				query.setParameter("desde",fechaAprobacionDesde);
 			}
-			if (bdw.getFechaAprobacionHasta() != null) {
+			if (fechaAprobacionHasta != null) {
 
-				query.setParameter("hasta", bdw.getFechaAprobacionDesde());
+				query.setParameter("hasta", fechaAprobacionHasta);
 			}
-			if (StringUtils.isNotBlank(bdw.getAgencia() )) {
+			if (StringUtils.isNotBlank(agencia )) {
 
-				query.setParameter("agencia", bdw.getAgencia());
+				query.setParameter("agencia", agencia);
 			}
 
 			return ((BigInteger) query.getSingleResult()).intValue();

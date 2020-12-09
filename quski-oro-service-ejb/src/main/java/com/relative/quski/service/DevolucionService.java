@@ -173,52 +173,52 @@ public class DevolucionService {
 	}
 	
 	public TbQoDevolucion aprobarSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = new TbQoDevolucion();
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);	
+		devolucion.setFechaAprobacionSolicitud(new Date());
+		
 		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA);
+		this.manageDevolucion(devolucion);
+		return devolucion;
+	}
 	
-		
+	public TbQoDevolucion rechazarSolicitudDevolucion(Long id ) throws RelativeException {
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);	
+		devolucion.setFechaAprobacionSolicitud(new Date());
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+		this.manageDevolucion(devolucion);
 		return devolucion;
 	}
 	
 	
-	
-	
-	public TbQoDevolucion rechazarCancelacionSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = new TbQoDevolucion();
-		qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
-	
-		
-		return devolucion;
-	}
-	
-	public PaginatedListWrapper<DevolucionProcesoWrapper> findOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
+
+	public List<DevolucionProcesoWrapper> findOperacion(PaginatedWrapper pw, String codigoOperacion, String agencia,
+			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion
+			) throws RelativeException {
 		
 		try {
-			PaginatedListWrapper<DevolucionProcesoWrapper> plw = new PaginatedListWrapper<>();
-			List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(bdw);
-			log.info("========>>>>>>> actions >>>>" + actions);
-			if (actions != null && !actions.isEmpty()) {
-				plw.setTotalResults(this.devolucionRepository.countOperaciones(bdw).intValue());
-				plw.setList(actions);
-			}
-			
-			return plw;
+			List<DevolucionProcesoWrapper> actions = this.devolucionRepository.findOperaciones(pw, codigoOperacion, agencia ,
+					fechaAprobacionDesde, fechaAprobacionHasta, identificacion );
+		
+			log.info("la lista" + actions);
+			return actions;
 		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			throw e;
 		}
 	}
 	
-	public Integer countOperacion(BusquedaDevolucionWrapper bdw) throws RelativeException {
+	public Integer countOperacion(String codigoOperacion, String agencia,
+			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion) throws RelativeException {
 	
 	
 		
-		return devolucionRepository.countOperaciones(bdw);
+		return devolucionRepository.countOperaciones(codigoOperacion, agencia ,
+				fechaAprobacionDesde, fechaAprobacionHasta, identificacion);
 	}
 	
 	
@@ -254,6 +254,7 @@ public class DevolucionService {
 			TbQoDevolucion devolucion = devolucionRepository.findById(id);
 			if(devolucion.getFechaArribo() == null || devolucion.getFechaArribo().toString().isEmpty()) {
 				devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
+				qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
 				devolucion= manageDevolucion(devolucion);
 				
 				devoluciones.add(devolucion);
@@ -288,14 +289,18 @@ public class DevolucionService {
 	}
 	
 	
-	public TbQoDevolucion cancelarSolicitudDevolucion(Long id ) throws RelativeException {
+	public TbQoDevolucion cancelarSolicitudDevolucion(Long id , String usuario) throws RelativeException {
 		try {
 			TbQoProceso persisted = qos.findProcesoByIdReferencia( id, ProcesoEnum.DEVOLUCION );
 			TbQoDevolucion devolucion = devolucionRepository.findById(id);
-			persisted.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
-			persisted.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+			TbQoProceso proceso = new TbQoProceso();
+			proceso.setIdReferencia(devolucion.getId());
+			proceso.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
+			proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+			proceso.setUsuario(usuario);
+			persisted.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_CANCELADO);
 			qos.manageProceso(persisted);
-		
+			qos.manageProceso(proceso);
 			
 			return devolucion;
 		}catch (RelativeException e) {
@@ -305,24 +310,30 @@ public class DevolucionService {
 		
 	}
 	
-	public TbQoDevolucion rechazarSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = new TbQoDevolucion();
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
 
-		return devolucion;
-	}
 	
 	
 	public TbQoDevolucion aprobarCancelacionSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = new TbQoDevolucion();
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);
 		qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-	
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+		this.manageDevolucion(devolucion);
 		
 		return devolucion;
 	}
+	public TbQoDevolucion rechazarCancelacionSolicitudDevolucion(Long id ) throws RelativeException {
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);
+		qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+		this.manageDevolucion(devolucion);
+		
+		return devolucion;
+	}
+	
+	
+	
 public Boolean validateAprobarCancelacionSolicitud(Long idDevolucion) throws RelativeException {
 		
-		
+	try {
 	TbQoProceso persisted = qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION );
 		
 		if(persisted.getProceso().equals(ProcesoEnum.CANCELACION_DEVOLUCION) && persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION)) {
@@ -330,7 +341,11 @@ public Boolean validateAprobarCancelacionSolicitud(Long idDevolucion) throws Rel
 		}else {
 			return false;
 		}
-		
+	}
+	catch (RelativeException e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ,
+				QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+	}
 	
 }
 
@@ -354,4 +369,40 @@ public Boolean validateCancelacionSolicitud(Long idDevolucion) throws RelativeEx
 		
 	
 }
+public Boolean existeProcesoCancelacionVigente(Long idDevolucion) throws RelativeException{
+	try {
+		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+		if ( qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION )!= null){
+			TbQoProceso proceso = qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION );
+			if (proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION)) {
+				return true;
+				
+			} else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+	} catch (RelativeException e) {
+		throw new RelativeException(Constantes.ERROR_CODE_READ,
+				QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+	}
+}
+
+public TbQoDevolucion guardarEntregaRecepcion(Long id ) throws RelativeException {
+	TbQoDevolucion devolucion = devolucionRepository.findById(id);
+	qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA);
+	this.manageDevolucion(devolucion);
+
+	return devolucion;
+}
+
+public TbQoDevolucion aprobarVerificacionFirmas(Long id ) throws RelativeException {
+	TbQoDevolucion devolucion = devolucionRepository.findById(id);
+	qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
+	this.manageDevolucion(devolucion);
+
+	return devolucion;
+}
+
 }
