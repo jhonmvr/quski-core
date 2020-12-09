@@ -228,7 +228,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
 						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
 						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
-						"				else ' ' end end end end IN (:asesor,:asesorMay) ");
+						"				else ' ' end end end end ilike :asesor");
 			}
 			if (wp.getProceso() != null) {
 				strQry.append(" and proceso.PROCESO =:proceso ");
@@ -269,7 +269,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (wp.getAsesor() != null) {
 				log.info("=========> SET: ASESOR ==> "+ wp.getAsesor() +" <====");
 				query.setParameter("asesor", wp.getAsesor() );
-				query.setParameter("asesorMay", wp.getAsesor().toUpperCase() );
 			}
 			if (wp.getEstado() != null) {
 				log.info("=========> SET: ESTADO ==> "+ wp.getEstado() +" <====");

@@ -185,6 +185,12 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		return loc;
 	}	
 	
-
+	@POST
+	@Path("/upDateEstadoProceso")
+	public GenericWrapper<String> upDateEstadoProceso(TbQoProceso proceso) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		//loc.setEntidad( this.qos.asignarAprobador(proceso) );
+		return loc;
+	}	
 	
 }

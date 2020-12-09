@@ -1,5 +1,7 @@
 package com.relative.quski.rest;
 
+import java.math.BigDecimal;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -59,13 +61,15 @@ public class CalculadoraRestController extends BaseRestController
 	@GET
 	@Path("/simularOferta")
 	public GenericWrapper<SimularResponse> simularOferta(@QueryParam("idCredito") String idCredito,
+			@QueryParam("montoSolicitado") String montoSolicitado,
 			@QueryParam("riesgoTotal") String riesgoTotal,
 			@QueryParam("codigoAgencia") String codigoAgencia) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO");
 		}
-		SimularResponse a = this.qos.simularOfertasCalculadora(Long.valueOf(idCredito), riesgoTotal, codigoAgencia);
+		SimularResponse a = this.qos.simularOfertasCalculadora(Long.valueOf(idCredito), StringUtils.isNotBlank(montoSolicitado)?
+				BigDecimal.valueOf(Double.valueOf(montoSolicitado)):BigDecimal.ZERO,riesgoTotal, codigoAgencia);
 		loc.setEntidad(a);
 		return loc;
 	}

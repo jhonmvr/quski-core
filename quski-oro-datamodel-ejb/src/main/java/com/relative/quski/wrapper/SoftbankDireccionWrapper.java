@@ -17,6 +17,7 @@ public class SoftbankDireccionWrapper implements Serializable{
 	private String callePrincipal; 
 	private String calleSecundaria;
 	private String numero; 
+	private String barrio;
 	private String referencia;
 	private Boolean esDireccionLegal;
 	private Boolean esDireccionEnvio;
@@ -93,5 +94,11 @@ public class SoftbankDireccionWrapper implements Serializable{
 	}
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
+	}
+	public String getBarrio() {
+		return barrio;
+	}
+	public void setBarrio(String barrio) {
+		this.barrio = barrio;
 	}
 }

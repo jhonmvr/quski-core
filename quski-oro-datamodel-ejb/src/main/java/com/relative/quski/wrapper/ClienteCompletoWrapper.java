@@ -24,7 +24,7 @@ public class ClienteCompletoWrapper implements Serializable {
 	private List<TbQoDireccionCliente> direcciones;
 	private List<TbQoReferenciaPersonal> referencias;
 	private List<TbQoTelefonoCliente> telefonos;
-	private TbQoDatoTrabajoCliente datosTrabajo;
+	private List<TbQoDatoTrabajoCliente> datosTrabajos;
 	private List<TbQoCuentaBancariaCliente> cuentas;
 
 	private Boolean isSoftbank;
@@ -41,13 +41,13 @@ public class ClienteCompletoWrapper implements Serializable {
 	}
 	public ClienteCompletoWrapper( TbQoCliente cliente, List<TbQoDireccionCliente> direcciones,
 			List<TbQoReferenciaPersonal> referencias, List<TbQoTelefonoCliente> telefonos,
-			TbQoDatoTrabajoCliente datosTrabajo, List<TbQoCuentaBancariaCliente> cuentas) {
+			List<TbQoDatoTrabajoCliente> datosTrabajos, List<TbQoCuentaBancariaCliente> cuentas) {
 		super();
 		this.setCliente( cliente );
 		this.setDirecciones(direcciones);
 		this.setReferencias(referencias);
 		this.setTelefonos(telefonos);
-		this.setDatosTrabajo(datosTrabajo);
+		this.setDatosTrabajos(datosTrabajos);
 		this.setCuentas(cuentas);
 	}
 	public ClienteCompletoWrapper() {
@@ -105,13 +105,13 @@ public class ClienteCompletoWrapper implements Serializable {
 		}
 	}
 
-	public TbQoDatoTrabajoCliente getDatosTrabajo() {
-		return datosTrabajo;
+	public List<TbQoDatoTrabajoCliente> getDatosTrabajos() {
+		return datosTrabajos;
 	}
 
-	public void setDatosTrabajo(TbQoDatoTrabajoCliente datosTrabajo) {
-		this.datosTrabajo = datosTrabajo;
-		if(datosTrabajo == null) {
+	public void setDatosTrabajos(List<TbQoDatoTrabajoCliente> datosTrabajos) {
+		this.datosTrabajos = datosTrabajos;
+		if(datosTrabajos == null) {
 			this.mensaje = ClienteCompletoWrapper.MENSAJE_TRABAJO;
 		}
 	}
