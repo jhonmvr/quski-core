@@ -98,13 +98,13 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			COALESCE( (select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
 			"			else ' ' end end end end ASESOR ";
 	private final String APROBADOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') " + 
+			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia and nego.APROBADOR != ''), 'NULL') " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') " + 
+			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia and devo.APROBADOR != ''), 'NULL') " + 
 			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL')" + 
+			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA and pago.APROBADOR != ''), 'NULL')" + 
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
+			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA and veri.APROBADOR != ''), 'NULL') " + 
 			"			else ' ' end end end end APROBADOR ";
 	private final String ORDEN_OP = " CASE WHEN (proceso.proceso ='NUEVO') THEN" + 
 			"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
@@ -120,7 +120,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"				ELSE 0 END END" + 
 			"		ELSE CASE WHEN (proceso.proceso ='PAGO') THEN " + 
 			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'NULL') = 'NULL') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') = '') then 5  ELSE 12 end" + 
-			"		ELSE CASE WHEN (proceso.proceso ='DEVOLUCION') THEN " + 
+			"		ELSE CASE WHEN ("+QueryConstantes.WHEN_DEVO+") THEN " + 
 			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'NULL') = 'NULL' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') = '' ) then 6  ELSE 13 end" + 
 			"		ELSE CASE WHEN (proceso.proceso ='VERIFICACION_TELEFONICA') THEN " + 
 			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'NULL') = 'NULL') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') = '') then 7  ELSE 14 end" + 
@@ -338,7 +338,8 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 									CODIGO_BPM 						+ "," + 
 									CODIGO_OP 						+ "," +
 									" PROCESO.PROCESO " 			+ "," +
-									" PROCESO.FECHA_ACTUALIZACION " + "," +
+									//" PROCESO.FECHA_ACTUALIZACION " + "," +
+									"coalesce( PROCESO.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION,"+
 									CEDULA_OP 						+ "," + 
 									NOMBRE_OP 						+ "," + 
 									AGENCIA_OP 						+ "," +
@@ -346,7 +347,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 									APROBADOR_OP 					+ "," + 
 									ORDEN_OP 						+ " " + 
 									FROM_OP;
-			StringBuilder strQry = new StringBuilder(querySelect).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado ) ");
+			StringBuilder strQry = new StringBuilder(querySelect).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado or proceso.ESTADO_PROCESO =:tercerEstado ) ");
 			
 			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
@@ -390,6 +391,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			
 			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
 			query.setParameter("segundoEstado", EstadoProcesoEnum.DEVUELTO.toString() );
+			query.setParameter("tercerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );
 			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				query.setParameter("codigo", wp.getCodigo() );
