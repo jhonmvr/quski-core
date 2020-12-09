@@ -43,7 +43,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
 			"				COALESCE( (select veri.ID from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 0) " + 
 			"				else 0 end end end end ID ";
-	private final String CODIGO_BPM = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+	private final String CODIGO_BPM = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
 			"COALESCE( (select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 			"	COALESCE( (select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
@@ -52,7 +52,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
 			"			COALESCE( (select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
 			"			else ' ' end end end end CODIGO_BPM ";
-	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
 			"COALESCE( (select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 			"	COALESCE( (select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
@@ -61,7 +61,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
 			"			COALESCE( (select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
 			"			else ' ' end end end end CODIGO_OPERACION ";
-	private final String CEDULA_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+	private final String CEDULA_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
 			"COALESCE( (select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL')  " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 			"	COALESCE( (select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL')  " + 
@@ -70,7 +70,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
 			"			COALESCE( (select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL')  " + 
 			"			else ' ' end end end end cedula_cliente ";
-	private final String NOMBRE_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+	private final String NOMBRE_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
 			"COALESCE( (select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL') " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 			"	COALESCE( (select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL') " + 
@@ -79,7 +79,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
 			"			COALESCE( (select veri.NOMBRE_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
 			"			else ' ' end end end end nombre_cliente ";
-	private final String AGENCIA_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
+	private final String AGENCIA_OP = " case when " + QueryConstantes.WHEN_NEGO + " then " + 
 			" COALESCE( (select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0) " + 
 			"else case when  "+QueryConstantes.WHEN_DEVO+"  then " + 
 			"	COALESCE( (select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 0)  " + 
@@ -99,29 +99,29 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			else ' ' end end end end ASESOR ";
 	private final String APROBADOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
 			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia and nego.APROBADOR != ''), 'NULL') " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+			"else case when "+QueryConstantes.WHEN_DEVO+" then " +
 			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia and devo.APROBADOR != ''), 'NULL') " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+			"	else case when "+QueryConstantes.WHEN_PAGO+" then " +
 			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA and pago.APROBADOR != ''), 'NULL')" + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
+			"		else case when "+QueryConstantes.WHEN_VERI+" then " +
 			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA and veri.APROBADOR != ''), 'NULL') " + 
 			"			else ' ' end end end end APROBADOR ";
-	private final String ORDEN_OP = " CASE WHEN (proceso.proceso ='NUEVO') THEN" + 
-			"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 1 ELSE 8 end" + 
-			"			ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 2 ELSE 9 end" + 
-			"			ELSE 0 END END" + 
-			"		ELSE CASE WHEN (proceso.proceso ='RENOVACION') THEN " + 
-			"				CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" + 
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 3 ELSE 10 end" + 
-			"				ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'DEVUELTO') THEN" + 
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 4 ELSE 11 end" + 
+	private final String ORDEN_OP = " CASE WHEN (proceso.proceso ='NUEVO') THEN" +
+			"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" +
+			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 1 ELSE 8 end" +
+			"			ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN" +
+			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 2 ELSE 9 end" +
+			"			ELSE 0 END END" +
+			"		ELSE CASE WHEN (proceso.proceso ='RENOVACION') THEN " +
+			"				CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" +
+			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 3 ELSE 10 end" +
+			"				ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN" + 
+			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 4 ELSE 11 end" +
 			"				ELSE 0 END END" + 
 			"		ELSE CASE WHEN (proceso.proceso ='PAGO') THEN " + 
-			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'NULL') = 'NULL') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') = '') then 5  ELSE 12 end" + 
+			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'NULL') = 'NULL') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') = '') then 5  ELSE 12 end" +
 			"		ELSE CASE WHEN ("+QueryConstantes.WHEN_DEVO+") THEN " + 
-			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'NULL') = 'NULL' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') = '' ) then 6  ELSE 13 end" + 
+			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'NULL') = 'NULL' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') = '' ) then 6  ELSE 13 end" +
 			"		ELSE CASE WHEN (proceso.proceso ='VERIFICACION_TELEFONICA') THEN " + 
 			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'NULL') = 'NULL') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') = '') then 7  ELSE 14 end" + 
 			"		ELSE 0 END END END END END AS orden ";
@@ -301,7 +301,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			query.setParameter("limite", wp.getNumberItems() );
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());
 			query.setParameter("salto", salto );
-
 			return QuskiOroUtil.getResultList(query.getResultList(), OperacionesWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,24 +333,21 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
 			String querySelect = "SELECT " + 
-									ID_OP 							+ "," + 
-									CODIGO_BPM 						+ "," + 
+									ID_OP 							+ "," +
+									CODIGO_BPM 						+ "," +
 									CODIGO_OP 						+ "," +
 									" PROCESO.PROCESO " 			+ "," +
-									//" PROCESO.FECHA_ACTUALIZACION " + "," +
-									"coalesce( PROCESO.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION,"+
-									CEDULA_OP 						+ "," + 
-									NOMBRE_OP 						+ "," + 
+									"coalesce( PROCESO.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION, "+
+									CEDULA_OP 						+ "," +
+									NOMBRE_OP 						+ "," +
 									AGENCIA_OP 						+ "," +
-									ASESOR_OP 						+ "," + 
-									APROBADOR_OP 					+ "," + 
-									ORDEN_OP 						+ " " + 
+									ASESOR_OP 						+ "," +
+									APROBADOR_OP 					+ "," +
+									ORDEN_OP 						+ " " +
 									FROM_OP;
 			StringBuilder strQry = new StringBuilder(querySelect).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado or proceso.ESTADO_PROCESO =:tercerEstado ) ");
-			
-			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
+				strQry.append(" and case when "+ QueryConstantes.WHEN_NEGO +"  then " + 
 						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
 						"			else case when "+QueryConstantes.WHEN_DEVO+" then " + 
 						"				(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
@@ -360,8 +356,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
 						"						(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
 						"						else ' ' end end end end =:codigo  ");
-			}	
-			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
+			}if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
 						"		(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id )" + 
 						"		else case when "+QueryConstantes.WHEN_DEVO+" then " + 
@@ -371,28 +366,24 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"						else case when "+QueryConstantes.WHEN_VERI+" then " + 
 						"							(select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
 						"							else ' ' end end end end =:cedula   ");
-			}	
-			if(wp.getProceso() != null) {
+			}if(wp.getProceso() != null) {
 				strQry.append(" and proceso.PROCESO =:proceso ");
-			} 
-			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
+			}if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " +
 						"		(select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia)" + 
-						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " + 
+						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " +
 						"				(select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"				else case when "+QueryConstantes.WHEN_PAGO+" then " +
 						"					(select pago.ID_AGENCIA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
-						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"					else case when "+QueryConstantes.WHEN_VERI+" then " +
 						"					(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
 						"					else 0 end end end end =:idAgencia ");
 			}
 			strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-			
-			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
-			query.setParameter("segundoEstado", EstadoProcesoEnum.DEVUELTO.toString() );
-			query.setParameter("tercerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );
-			
+			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
+			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );			
+			query.setParameter("tercerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString() );			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				query.setParameter("codigo", wp.getCodigo() );
 			}
@@ -408,7 +399,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			query.setParameter("limite", wp.getNumberItems() );
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());
 			query.setParameter("salto", salto );
-			
 			return QuskiOroUtil.getResultList(query.getResultList(), OpPorAprobarWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -517,8 +507,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		try {
 			String querySelect =  COUNT_OP + FROM_OP;
 			StringBuilder strQry = new StringBuilder( querySelect ).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado ) ");
-			
-			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
 						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
@@ -545,34 +533,28 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and proceso.PROCESO =:proceso ");
 			} 
 			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " +
 						"		(select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia)" + 
-						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " + 
+						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " +
 						"				(select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"				else case when "+QueryConstantes.WHEN_PAGO+" then " +
 						"					(select pago.ID_AGENCIA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
 						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
 						"					(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
 						"					else 0 end end end end =:idAgencia ");
 			}
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-			
-			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
-			query.setParameter("segundoEstado", EstadoProcesoEnum.DEVUELTO.toString() );
-			
+			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
+			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
 				query.setParameter("codigo", wp.getCodigo() );
-			}
-			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
+			}if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				query.setParameter("cedula", wp.getCedula() );
-			}
-			if(wp.getProceso() != null ) {
+			}if(wp.getProceso() != null ) {
 				query.setParameter("proceso", wp.getProceso().toString() );
-			}
-			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
+			}if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
 				query.setParameter("idAgencia", wp.getIdAgencia() );
 			}
-			
 			int count = ((BigInteger) query.getSingleResult()).intValue();
 			return Long.valueOf( count );
 		} catch (Exception e) {
