@@ -298,7 +298,6 @@ public class DevolucionService {
 			proceso.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
 			proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 			proceso.setUsuario(usuario);
-			persisted.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_CANCELADO);
 			qos.manageProceso(persisted);
 			qos.manageProceso(proceso);
 			
