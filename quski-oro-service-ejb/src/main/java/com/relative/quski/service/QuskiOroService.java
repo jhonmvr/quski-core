@@ -43,6 +43,7 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.model.TbQoDatoTrabajoCliente;
 import com.relative.quski.model.TbQoDetalleCredito;
+import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcion;
@@ -212,7 +213,8 @@ public class QuskiOroService {
 	private ProcesoRepository procesoRepository;
 	@Inject
 	private RubroRepository rubroRepository;
-
+	@Inject
+	private DevolucionService ds;
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
 	 */
@@ -6249,7 +6251,16 @@ public class QuskiOroService {
 					persisted.setAprobador(aprobador);
 					this.manageClientePago( persisted );
 				}
-				if(proceso == ProcesoEnum.DEVOLUCION) {}
+				if(proceso == ProcesoEnum.DEVOLUCION || proceso == ProcesoEnum.CANCELACION_DEVOLUCION) {
+					TbQoDevolucion persistedDevolucion  = ds.findDevolucionById( id );
+					if(persistedDevolucion != null) {
+						persistedDevolucion.setAprobador( aprobador );
+						ds.manageDevolucion( persistedDevolucion );
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+								QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+					}
+				}
 				if(proceso == ProcesoEnum.VERIFICACION_TELEFONICA) {}
 				return cambioProceso.getUsuario();
 			}else {
