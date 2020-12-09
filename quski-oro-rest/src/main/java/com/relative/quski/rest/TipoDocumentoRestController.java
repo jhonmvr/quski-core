@@ -28,6 +28,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.TipoPlantillaEnum;
 import com.relative.quski.model.TbQoTipoDocumento;
+import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -47,6 +48,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	@Inject
 	QuskiOroService qos;
 	
+
+	@Inject
+	private ParametroRepository parametroRepository;
 	
 	@Inject 
 	ReportService rs;
@@ -139,9 +143,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 
 		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
-		String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
+		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 
-		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParameters(map,path,  identificacionCliente, nombreCliente, idCotizador, idNegociacion, td);

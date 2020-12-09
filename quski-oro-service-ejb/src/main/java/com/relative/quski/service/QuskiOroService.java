@@ -1961,7 +1961,7 @@ public class QuskiOroService {
 
 	
 	/** ******************************* @INTEGRACION **********************/
-	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente, INGRESOSEGRESOS ingresos) throws RelativeException {
+	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente) throws RelativeException {
 		if (cliente != null) {
 				TbQoCliente c = new TbQoCliente();
 				c.setCedulaCliente(StringUtils.leftPad(String.valueOf(cliente.getIDENTIFICACION()), 10, "0"));
@@ -1969,12 +1969,7 @@ public class QuskiOroService {
 				c.setEmail(cliente.getCORREOELECTRONICO());
 				c.setCargasFamiliares(Long.valueOf(cliente.getCARGASFAMILIARES()));
 				c = this.manageCliente(c);
-				if (c.getId() != null && ingresos != null && ingresos.getRUBRO() != null && !ingresos.getRUBRO().isEmpty()) {
-					c.setIngresos( this.createIngresosFromEquifax(ingresos.getRUBRO()) ); 
-					c.setEgresos( this.createEgresosFromEquifax(ingresos.getRUBRO()) );
-				}
 				return c;
-			
 		} else {
 			return null;
 		}
@@ -2057,7 +2052,7 @@ public class QuskiOroService {
 		try {
 			Informacion data = informacionCliente(cedula);
 			
-			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE(),data.getINGRESOSEGRESOS());
+			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE());
 			if (cliente != null) {
 				return generarTablasIniciales(cliente, asesor,data);
 			} else {
