@@ -1207,12 +1207,12 @@ public class QuskiOroService {
 				
 				return this.manageCliente(cliente);
 			} 
-			cliente = this.prospectoCrmToTbQoCliente(this.findProspectoCrm(cedula));
-			log.info("CLIENTE EN CRM ===================>   " + cliente + "   <==============");
-			if (cliente != null) {
-				return this.manageCliente(cliente);
-			}
-
+			/*
+			 * cliente = this.prospectoCrmToTbQoCliente(this.findProspectoCrm(cedula));
+			 * log.info("CLIENTE EN CRM ===================>   " + cliente +
+			 * "   <=============="); if (cliente != null) { return
+			 * this.manageCliente(cliente); }
+			 */
 			log.info("NO SE ENCONTRO CLIENTE  ===================>   " + cliente + "   <==============");
 			return null;			
 		} catch (RelativeException e) {
@@ -2575,7 +2575,7 @@ public class QuskiOroService {
 				wrapper.setTelefonoMovil(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "M"));
 				//wrapper.setTipoOro(this.tipoOro(cliente));
 				try {
-					this.guardarProspectoCrm(cliente);
+					//this.guardarProspectoCrm(cliente);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
