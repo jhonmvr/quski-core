@@ -65,7 +65,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 				where.add(poll.get("tipoExcepcion").in(tipos));
 			}
 			if (StringUtils.isNotBlank(identificacion)) {
-				where.add(cb.equal(joinCliente.get("cedulaCliente"), identificacion));
+				where.add(cb.like(joinCliente.get("cedulaCliente"), "%"+identificacion+"%"));
 			}
 			where.add(cb.equal(poll.get("estadoExcepcion"), EstadoExcepcionEnum.PENDIENTE));
 
@@ -73,7 +73,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 
 			// ~~> SELECT
 			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("primerNombre"),
-					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"));
+					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"),joinCliente.get("nombreCompleto"));
 
 			// ~~> ORDER BY
 			if (sortDirections.equals("asc")) {
