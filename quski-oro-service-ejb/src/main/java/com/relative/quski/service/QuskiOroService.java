@@ -4025,6 +4025,24 @@ public class QuskiOroService {
 	}
 
 	/**
+	 * REGISTRA UNA EXCEPCION EN FUNCION DE UNA NEGOCIACION 
+	 * @param excepcion
+	 * @return
+	 * @throws RelativeException 
+	 */
+	public TbQoExcepcion solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
+		TbQoProceso proceso = this.findProcesoByIdReferencia(excepcion.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
+		if(!proceso.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE SOLICITAR UNA EXCEPCION INTENTE MAS TARDE");
+		}
+		cambiarEstado(proceso.getIdReferencia(), proceso.getProceso(), EstadoProcesoEnum.PENDIENTE_EXCEPCION);
+		return this.manageExcepcion(excepcion);
+	}
+
+
+	
+	
+	/**
 	 * * * * * * * * * * ********************************** * @EXCEPCION_ROL
 	 */
 	/**
