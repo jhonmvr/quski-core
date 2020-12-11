@@ -5488,6 +5488,15 @@ public class QuskiOroService {
 			if( send.getDeudaInicial() != null ) {
 			    persisted.setDeudaInicial(  send.getDeudaInicial() );
 			}
+			if( StringUtils.isNotBlank( send.getCodigoCash() ) ) {
+			    persisted.setCodigoCash(  send.getCodigoCash() );
+			}
+			if( StringUtils.isNotBlank( send.getCodigoDevuelto() ) ) {
+			    persisted.setCodigoDevuelto(  send.getCodigoDevuelto() );
+			}
+			if( StringUtils.isNotBlank( send.getDescripcionDevuelto() ) ) {
+			    persisted.setDescripcionDevuelto(  send.getDescripcionDevuelto() );
+			}
 			if( !StringUtils.isBlank( send.getTablaAmortizacion() ) ) {
 			    persisted.setTablaAmortizacion(  send.getTablaAmortizacion() );
 			}
@@ -5635,6 +5644,7 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
 		}
 	}
+
 	public DetalleCreditoEnProcesoWrapper traerCreditoNegociacion(Long idNego) throws RelativeException {
 		try {
 			DetalleCreditoEnProcesoWrapper tmp = new DetalleCreditoEnProcesoWrapper( Boolean.FALSE );
@@ -6465,6 +6475,17 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
+	}
+
+	public Boolean devolverAprobarCredito(Long id, String cash, String descripcion, String codigo) throws RelativeException {
+		if( id == null) { return false; }
+		TbQoCreditoNegociacion persisted = this.findCreditoNegociacionById(id);
+		if( persisted == null) { return false;}
+		persisted.setCodigoCash(cash);
+		persisted.setCodigoDevuelto(codigo);
+		persisted.setDescripcionDevuelto(descripcion);
+		persisted = this.manageCreditoNegociacion(persisted);
+		if(persisted.getDescripcionDevuelto() != null) { return true; }else {return false;}
 	}
 
 

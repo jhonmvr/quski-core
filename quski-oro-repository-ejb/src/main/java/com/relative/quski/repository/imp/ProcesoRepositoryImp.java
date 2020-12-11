@@ -126,8 +126,8 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'NULL') = 'NULL') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') = '') then 7  ELSE 14 end" + 
 			"		ELSE 0 END END END END END AS orden ";
 	private final String MONTO_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-			"			COALESCE((select cre.MONTO_PREAPROBADO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0)" + 
-			"			else 0 end MONTO_PREAPROBADO ";
+			"			COALESCE((select cre.monto_financiado from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0)" + 
+			"			else 0 end monto_financiado ";
 	private final String ACTIVIDAD_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
 			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL') " + 
 			"			else case when (proceso.proceso ='DEVOLUCION') then " + 

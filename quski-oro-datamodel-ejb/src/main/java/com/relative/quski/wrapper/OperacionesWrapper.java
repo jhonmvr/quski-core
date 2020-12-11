@@ -14,7 +14,7 @@ public class OperacionesWrapper implements Serializable {
     private String nombreCliente;
     private String cedulaCliente;
 
-	private BigDecimal montoPreaprobado;
+	private BigDecimal montoFinanciado;
     private Date fechaCreacion;
     private BigDecimal idAgencia;
     private String estadoProceso;
@@ -24,7 +24,7 @@ public class OperacionesWrapper implements Serializable {
     private String actividad;
     
 	public OperacionesWrapper(BigDecimal id, String codigoBpm, String codigoOperacion, String nombreCliente, String cedulaCliente,
-			BigDecimal montoPreaprobado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
+			BigDecimal montoFinanciado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
 			String asesor, String usuarioEjecutor, String actividad) {
 		super();
 		this.id = id;
@@ -32,7 +32,7 @@ public class OperacionesWrapper implements Serializable {
 		this.codigoOperacion = codigoOperacion;
 		this.nombreCliente = nombreCliente;
 		this.cedulaCliente = cedulaCliente;
-		this.montoPreaprobado = montoPreaprobado;
+		this.montoFinanciado = montoFinanciado;
 		this.fechaCreacion = fechaCreacion;
 		this.idAgencia = idAgencia;
 		this.estadoProceso = estadoProceso;
@@ -66,11 +66,11 @@ public class OperacionesWrapper implements Serializable {
 	public void setCedulaCliente(String cedulaCliente) {
 		this.cedulaCliente = cedulaCliente;
 	}
-	public BigDecimal getMontoPreaprobado() {
-		return montoPreaprobado;
+	public BigDecimal getMontoFinanciado() {
+		return montoFinanciado;
 	}
-	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
-		this.montoPreaprobado = montoPreaprobado;
+	public void setMontoFinanciado(BigDecimal montoFinanciado) {
+		this.montoFinanciado = montoFinanciado;
 	}
 	public Date getFechaCreacion() {
 		return fechaCreacion;

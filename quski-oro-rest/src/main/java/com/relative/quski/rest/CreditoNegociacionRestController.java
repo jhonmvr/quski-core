@@ -154,6 +154,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	@GET
+	@Path("/devolverAprobar")
+	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.qos.devolverAprobarCredito( Long.valueOf( idCredito ), cash, descripcion, codigo);
+
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
 	@Path("/traerCreditoNuevo")
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<OperacionCreditoNuevoWrapper> loc = new GenericWrapper<>();
