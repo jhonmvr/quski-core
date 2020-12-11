@@ -21,7 +21,7 @@ public class ExcepcionRolWrapper implements Serializable {
 	private Long idNegociacion;
 	private String identificacion;
 	private String nombreCompleto;
-	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente,String apellidoCliente,Long idNegociacion, String identificacion,String nombreCompleto) {
+	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente,String apellidoCliente,Long idNegociacion, String identificacion) {
 		super();
 		this.id = id;
 		this.tipoExcepcion = tipoExcepcion;
@@ -29,7 +29,7 @@ public class ExcepcionRolWrapper implements Serializable {
 		this.apellidoCliente=apellidoCliente;
 		this.idNegociacion=idNegociacion;
 		this.identificacion=identificacion;
-		this.setNombreCompleto(nombreCompleto);
+		//this.nombreCompleto=nombreCompleto;
 	}
 	public Long getId() {
 		return id;
