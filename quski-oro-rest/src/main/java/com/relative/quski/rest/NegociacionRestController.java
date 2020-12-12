@@ -162,7 +162,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@POST
 	@Path("/solicitarExcepcion")
-	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(TbQoExcepcion excepcion, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion);
 		loc.setEntidad(a);

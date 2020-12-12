@@ -35,6 +35,7 @@ import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.SimularResponseExcepcion;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -143,7 +144,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
 		return loc;
 	}
-	
+
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {

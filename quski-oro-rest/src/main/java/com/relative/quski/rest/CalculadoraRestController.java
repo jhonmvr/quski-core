@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,8 +21,8 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
+import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.SimularResponse;
-
 
 @Path("/calculadoraRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +74,12 @@ public class CalculadoraRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
-	
-	
-	
+	@GET
+	@Path("/simularOfertaExcepcionada")
+	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionada(@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura, @QueryParam("idAgencia") String idAgencia) throws NumberFormatException, Exception {
+		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
+		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionada(Long.valueOf( idCredito ), Long.valueOf( cobertura ), Long.valueOf( idAgencia ));
+		loc.setEntidades( as );
+		return loc;
+	}	
 }

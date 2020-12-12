@@ -1,17 +1,20 @@
 package com.relative.quski.bpms.api;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,10 +34,6 @@ import com.relative.quski.wrapper.TokenWrapper;
 public class ApiGatewayClient {
 
 	private static final Log log = LogFactory.getLog(ApiGatewayClient.class);
-    private static final String urlToken = "token?";
-    private static final String urlCalculadora = "quski-calculadora/1.0";
-    private static final String urlHost = "https://apigw.quski.ec:";
-    private static final String urlPort = "8243/";
     private static final String empty="{}";
 
 
@@ -123,7 +122,7 @@ public class ApiGatewayClient {
 			SimularResponseExcepcion s = ApiGatewayClient.callCalculadoraExcepcionadoRest("https://apigw.quski.ec:8243/quski-calculadora/1.0",
 					token.getToken_type()+" "+token.getAccess_token(), content);
 			System.out.println("valor del oro === >>>" + s.getSimularResult().getXmlOfertasSimuladas().getOfertasSimuladas().getOpcion().get(0).getPlazo());
-		} catch (RelativeException e) {
+		} catch (RelativeException | UnsupportedEncodingException | ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -138,6 +137,7 @@ public class ApiGatewayClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
+	@SuppressWarnings("unused")
 	public static Informacion callConsultarClienteEquifaxRest(String urlService, String authorization,String content)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
@@ -184,6 +184,7 @@ public class ApiGatewayClient {
 			return null;
 		}
 	}
+	@SuppressWarnings("unused")
 	public static SimularResponse callCalculadoraRest(String urlService,String authorization, String content)
 			throws RelativeException {
 		try {
@@ -235,13 +236,12 @@ public class ApiGatewayClient {
 	
 	
 	
+	@SuppressWarnings("unused")
 	public static SimularResponseExcepcion callCalculadoraExcepcionadoRest(String urlService,String authorization, String content)
-			throws RelativeException {
+			throws RelativeException, ParserConfigurationException, UnsupportedEncodingException {
 		try {
 			log.info("<================>  CONTENT  <================>"); 
 			log.info(""+content); 
-			//Gson gson = new Gson();
-			//String jsonString = gson.toJson(wrapper);
 		
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
 					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
@@ -251,10 +251,7 @@ public class ApiGatewayClient {
 			log.info("==========>  RESPONSE =================> " + response + " <==================="); 
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
-				//Gson gsons = new GsonBuilder().create();
-				//return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CalculadoraRespuestaWrapper.class);
 				String stringResult =String.valueOf(response.get("resultado"));
-				//log.info("===============> STRING RESULT ======> " + stringResult );
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				ByteArrayInputStream input =  new ByteArrayInputStream(stringResult.getBytes("UTF-8"));
 				Document doc = builder.parse(input);
@@ -268,22 +265,13 @@ public class ApiGatewayClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | SAXException | IOException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		} 
 	}
 	
+	@SuppressWarnings("unused")
 	public static InformacionWrapper callCuentaRest(String urlService,String authorization, String content)
 			throws RelativeException {
 		try {
@@ -300,10 +288,7 @@ public class ApiGatewayClient {
 			log.info("==========>  RESPONSE =================> " + response + " <==================="); 
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
-				//Gson gsons = new GsonBuilder().create();
-				//return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CalculadoraRespuestaWrapper.class);
 				String stringResult =String.valueOf(response.get("resultado"));
-				//log.info("===============> STRING RESULT ======> " + stringResult );
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				ByteArrayInputStream input =  new ByteArrayInputStream(stringResult.getBytes("UTF-8"));
 				Document doc = builder.parse(input);

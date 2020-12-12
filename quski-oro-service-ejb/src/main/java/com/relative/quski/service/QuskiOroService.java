@@ -131,6 +131,7 @@ import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInte
 import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -138,6 +139,7 @@ import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
+import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
@@ -4032,7 +4034,7 @@ public class QuskiOroService {
 	 */
 	public TbQoExcepcion solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
 		TbQoProceso proceso = this.findProcesoByIdReferencia(excepcion.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
-		if(!proceso.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
+		if(!proceso.getEstadoProceso().equals(EstadoProcesoEnum.CREADO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.DEVUELTO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.EXCEPCIONADO) ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE SOLICITAR UNA EXCEPCION INTENTE MAS TARDE");
 		}
 		cambiarEstado(proceso.getIdReferencia(), proceso.getProceso(), EstadoProcesoEnum.PENDIENTE_EXCEPCION);
@@ -5037,12 +5039,8 @@ public class QuskiOroService {
 				}
 				return tiposOro;
 			}
-			
 		}
-	
-		
 		return null;
-		
 	}
 	
 	public CuentaWrapper consultaCuentaApiGateWay(String cedula) throws RelativeException {		
@@ -5209,6 +5207,69 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
 		}
 		
+	}
+	public List<OpcionWrapper> simularOfertaExcepcionada(Long idCredito, Long cobertura, Long idAgencia) throws Exception {				
+		try {
+			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
+			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito(idCredito);
+			if( joyas == null || joyas.isEmpty()) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
+			}
+			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
+			StringBuilder XMLGarantias = new StringBuilder();
+			for(TbQoTasacion joya:joyas) {
+				String x = contentXMLGarantia
+						.replace( "--tipo-joya--" ,joya.getTipoJoya())
+						.replace("--descripcion--",joya.getDescripcion())
+						.replace("--estado-joya--", joya.getEstadoJoya())
+						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
+						.replace("--peso-gr--", joya.getPesoBruto().toString())
+						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
+						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
+						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
+						.replace("--peso-neto--", joya.getPesoNeto().toString())
+						.replace("--precio-oro--", joya.getValorOro().toString())
+						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
+						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
+						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+				XMLGarantias.append(x);
+			}
+				log.info("==============>>>>> XML garantia");
+				String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
+				contentXMLcalculadora = contentXMLcalculadora
+						.replace("--perfil-riesgo--", "1")//donde saco el perfil
+						.replace("--origen-operacion--", "S")
+						.replace("--riesgo-total--", "0.00")
+						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+						.replace("--perfil-preferencia--", "A") //donde saco el tipo
+						.replace("--agencia-originacion--", idAgencia == null ? "01" : idAgencia.toString())
+						.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
+						.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
+						.replace("--cobertura-exepcionada--", cobertura.toString())//de donde saco esto
+						.replace("--garanttias-detalle--", XMLGarantias.toString())
+						.replace("--monto-solicitado--", "0");
+					log.info("==============>>>>> XML calculadora");
+					TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+							this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+					SimularResponseExcepcion halo = ApiGatewayClient.callCalculadoraExcepcionadoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
+							token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
+					List<OpcionWrapper> opciones = new ArrayList<>();
+					halo.getSimularResult().getXmlOfertasSimuladas().getOfertasSimuladas().getOpcion().forEach(e->{
+						OpcionWrapper opcion = new OpcionWrapper();
+						opcion.setPlazo( Long.valueOf( e.getPlazo() ) );
+						opcion.setRiesgoAcumulado( e.getRiesgoAcumulado() );
+						opcion.setValorDesembolso( e.getValorDesembolso() );
+						opcion.setCuota( e.getCuota() );
+						opcion.setMontoCredito( e.getMontoCredito() );
+						opciones.add( opcion );
+					});
+					return opciones.isEmpty() ? null : opciones;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw e;
+			}			
 	}
 
 	/**
