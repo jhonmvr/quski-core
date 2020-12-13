@@ -46,6 +46,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="tabla_amortizacion")
 	private String tablaAmortizacion;
 	
+	private String cobertura;
+	
 	@Column(name="monto_financiado")
 	private BigDecimal montoFinanciado;
 
@@ -1117,6 +1119,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setNumeroCuotas(Long numeroCuotas) {
 		this.numeroCuotas = numeroCuotas;
+	}
+
+	public String getCobertura() {
+		return cobertura;
+	}
+
+	public void setCobertura(String cobertura) {
+		this.cobertura = cobertura;
 	}
 	
 	

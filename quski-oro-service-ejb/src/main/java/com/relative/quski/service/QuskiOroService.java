@@ -5189,7 +5189,7 @@ public class QuskiOroService {
 					.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
-					.replace("--cobertura-exepcionada--", "0")//de donde saco esto
+					.replace("--cobertura-exepcionada--", credito.getCobertura() != null ? credito.getCobertura() : "0" )
 					.replace("--garanttias-detalle--", XMLGarantias.toString())
 					.replace("--monto-solicitado--", montoSolicitado.toString());
 				log.info("==============>>>>> XML calculadora");
@@ -6547,6 +6547,53 @@ public class QuskiOroService {
 		persisted.setDescripcionDevuelto(descripcion);
 		persisted = this.manageCreditoNegociacion(persisted);
 		if(persisted.getDescripcionDevuelto() != null) { return true; }else {return false;}
+	}
+
+	public Boolean negarExcepcion(Long idExc, String obsAprobador, String aprobador)  throws RelativeException {
+		try {
+			TbQoExcepcion exc = this.finExcepcionById(idExc);
+			if(exc == null) { return false; }
+			TbQoProceso proceso = this.findProcesoByIdReferencia(exc.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
+			if(proceso == null) { return null; }
+			exc.setEstadoExcepcion( EstadoExcepcionEnum.NEGADO );
+			exc.setIdAprobador(aprobador);
+			exc.setObservacionAsesor( obsAprobador );
+			exc = this.manageExcepcion(exc);
+			if(exc == null) { return false; }
+			proceso.setEstadoProceso( EstadoProcesoEnum.EXCEPCIONADO );
+			proceso.setUsuario(aprobador);
+			proceso = this.manageProceso(proceso);
+			if(proceso == null) { return false; } else { return true; }
+		}catch(RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+
+	public Boolean aprobarCobertura(Long idExc, String obsAprobador, String aprobador, String cobertura) throws RelativeException {
+		try {
+			TbQoExcepcion exc = this.finExcepcionById(idExc);
+			if(exc == null) { return false; }
+			TbQoProceso proceso = this.findProcesoByIdReferencia(exc.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
+			if(proceso == null) { return null; }
+			TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion( exc.getTbQoNegociacion().getId() );
+			if(credito == null) { return null; }
+			credito.setCobertura( cobertura );
+			credito = this.manageCreditoNegociacion( credito );
+			if( credito == null) { return false; }
+			exc.setEstadoExcepcion( EstadoExcepcionEnum.APROBADO );
+			exc.setIdAprobador(aprobador);
+			exc.setObservacionAsesor( obsAprobador );
+			exc = this.manageExcepcion(exc);
+			if(exc == null) { return false; }
+			proceso.setEstadoProceso( EstadoProcesoEnum.EXCEPCIONADO );
+			proceso.setUsuario(aprobador);
+			proceso = this.manageProceso(proceso);
+			
+			if(proceso == null) { return false; } else { return true; }
+		}catch(RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMensaje() );
+		}
 	}
 
 
