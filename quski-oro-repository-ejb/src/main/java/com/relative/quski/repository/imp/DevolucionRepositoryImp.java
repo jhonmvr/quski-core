@@ -50,9 +50,9 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 					"	coalesce(j.funda_madre, '') funda_madre, " + 
 					"	coalesce(j.funda_actual, '') funda_actual, " + 
 					"	coalesce(j.ciudad_tevcol, '') ciudad_tevcol, " + 
-					"	coalesce(to_char(j.fecha_arribo, 'DD/MM/YYYY'), '') fecha_arribo, " + 
+					"	coalesce(to_char(j.fecha_arribo, 'YYYY/MM/DD'), '') fecha_arribo, " + 
 					"	coalesce(j.asesor, '') asesor, " + 
-					"	coalesce(to_char(j.fecha_aprobacion_solicitud, 'DD/MM/YYYY'), '') fecha_aprobacion_solicitud " + 
+					"	coalesce(to_char(j.fecha_aprobacion_solicitud, 'YYYY/MM/DD'), '') fecha_aprobacion_solicitud " + 
 					"from " + 
 					"	tb_qo_devolucion j " + 
 					"inner join ( " + 
@@ -81,13 +81,13 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}
 
 			if (fechaAprobacionDesde != null) {
-				strQry.append(" and j.fecha_aprobacion  <=:desde ");
+				strQry.append(" and j.fecha_aprobacion_solicitud  >= TO_DATE(:desde, 'YYYY-MM-DD') ");
 			}
 			if (fechaAprobacionHasta != null) {
-				strQry.append(" and and j.fecha_aprobacion  >=:hasta ");
+				strQry.append(" and  j.fecha_aprobacion_solicitud  <= TO_DATE(:hasta, 'YYYY-MM-DD') ");
 			}
 			
-			strQry.append(" and foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO' ");
+			strQry.append(" and (foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO') ");
 		
 
 			strQry.append("ORDER BY j.fecha_creacion ");
@@ -161,13 +161,13 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}
 
 			if (fechaAprobacionDesde != null) {
-				strQry.append(" and j.fecha_aprobacion  <=:desde ");
+				strQry.append(" and j.fecha_aprobacion_solicitud  >= TO_DATE(:desde, 'YYYY-MM-DD') ");
 			}
 			if (fechaAprobacionHasta != null) {
-				strQry.append(" and and j.fecha_aprobacion  >=:hasta ");
+				strQry.append(" and  j.fecha_aprobacion_solicitud  <= TO_DATE(:hasta, 'YYYY-MM-DD') ");
 			}
 			
-				strQry.append(" and foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO'  ");
+				strQry.append(" and (foo.estado_proceso ='PENDIENTE_FECHA' OR foo.estado_proceso = 'PENDIENTE_ARRIBO')  ");
 		
 
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -221,8 +221,8 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 					"	coalesce(j.funda_madre, '') funda_madre, " + 
 					"	coalesce(j.funda_actual, '') funda_actual, " + 
 					"	coalesce(j.ciudad_tevcol, '') ciudad_tevcol, " + 
-					"	coalesce(to_char(j.fecha_arribo, 'DD/MM/YYYY'), '') fecha_arribo, " + 
-					"	coalesce(to_char(j.fecha_aprobacion_solicitud, 'DD/MM/YYYY'), '') fecha_aprobacion_solicitud, " +
+					"	coalesce(to_char(j.fecha_arribo, 'YYYY-MM-DD'), '') fecha_arribo, " + 
+					"	coalesce(to_char(j.fecha_aprobacion_solicitud, 'YYYY-MM-DD'), '') fecha_aprobacion_solicitud, " +
 					"	coalesce(j.valor_avaluo, 0) valor_avaluo, " + 
 					"	coalesce(j.peso_bruto, 0) peso_bruto " + 
 					"from " +  

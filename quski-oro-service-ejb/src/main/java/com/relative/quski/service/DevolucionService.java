@@ -13,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -23,10 +22,10 @@ import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
-import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
+import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
 
 @Stateless
 public class DevolucionService {
@@ -149,6 +148,8 @@ public class DevolucionService {
 			persisted.setArribo(send.getArribo());
 			persisted.setValorAvaluo(send.getValorAvaluo());
 			persisted.setPesoBruto(send.getPesoBruto());
+			persisted.setDevuelto(send.getDevuelto());
+			persisted.setObservacionAprobador(send.getObservacionAprobador());
 			
 			
 			return devolucionRepository.update(persisted);
@@ -274,7 +275,7 @@ public class DevolucionService {
 		for(Long id : idDevoluciones) {
 			TbQoDevolucion devolucion = devolucionRepository.findById(id);
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
-			if(devolucion.getArribo() == null ) {
+			if(devolucion.getArribo() == null && !this.existeProcesoCancelacionVigente(id)) {
 				devolucion.setArribo(true);
 				devolucion= manageDevolucion(devolucion);
 				
@@ -348,29 +349,40 @@ public Boolean validateAprobarCancelacionSolicitud(Long idDevolucion) throws Rel
 	
 }
 
-public Boolean validateCancelacionSolicitud(Long idDevolucion) throws RelativeException {
-	
+public RespuestaBooleanaWrapper validateCancelacionSolicitud(Long idDevolucion) throws RelativeException {
+	RespuestaBooleanaWrapper respuesta = new RespuestaBooleanaWrapper();
 	try {
 	TbQoProceso persisted = qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.DEVOLUCION );
-		
-		if(persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION) ||
-				persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_ARRIBO)||
-				persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_FECHA)) {
-			return true;
+		if(this.existeProcesoCancelacionVigente(idDevolucion)) {
+			respuesta.setBandera(false);
+			respuesta.setMensaje("YA EXISTE UN PROCESO DE CANCELACION");
+			return respuesta;
 		}else {
-			return false;
-		}
+			if(persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION) ||
+					persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_ARRIBO)||
+					persisted.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_FECHA) ||
+					persisted.getEstadoProceso().equals(EstadoProcesoEnum.ARRIBADO)) {
+				respuesta.setBandera(true);
+				respuesta.setMensaje("ES POSIBLE REALIZAR LA CANCELACION");
+				return respuesta;
+			}else {
+				respuesta.setBandera(false);
+				respuesta.setMensaje("NO ES FACTIBLE REALIZAR LA CANCELACION EN ESTADO " +persisted.getEstadoProceso());
+				return respuesta;
+			
+			}
+			}
+		
 	}catch (RelativeException e) {
 		throw new RelativeException(Constantes.ERROR_CODE_READ,
-				QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+				QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
 	}
-
-		
-	
 }
 public Boolean existeProcesoCancelacionVigente(Long idDevolucion) throws RelativeException{
 	try {
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+		
+	
 		if ( qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION )!= null){
 			TbQoProceso proceso = qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION );
 			if (proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION)) {
@@ -399,6 +411,15 @@ public TbQoDevolucion guardarEntregaRecepcion(Long id ) throws RelativeException
 public TbQoDevolucion aprobarVerificacionFirmas(Long id ) throws RelativeException {
 	TbQoDevolucion devolucion = devolucionRepository.findById(id);
 	qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
+	this.manageDevolucion(devolucion);
+
+	return devolucion;
+}
+
+public TbQoDevolucion rechazarVerificacionFirmas(Long id ) throws RelativeException {
+	TbQoDevolucion devolucion = devolucionRepository.findById(id);
+	qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
+	devolucion.setDevuelto(true);
 	this.manageDevolucion(devolucion);
 
 	return devolucion;

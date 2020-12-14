@@ -56,15 +56,15 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="estado_civil")
 	private String estadoCivil;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_nacimiento")
 	private Date fechaNacimiento;
 
@@ -88,6 +88,7 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="nombre_cliente")
 	private String nombreCliente;
 
+	@Column(name="observaciones")
 	private String observaciones;
 
 	@Column(name="separacion_bienes")
@@ -119,6 +120,11 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="arribo")
 	private Boolean arribo;
 	
+	@Column(name="devuelto")
+	private Boolean devuelto;
+	
+	@Column(name="observacion_aprobador")
+	private String observacionAprobador;
 
 	@Column(name="valor_avaluo")
 	private BigDecimal valorAvaluo;
@@ -412,7 +418,21 @@ public class TbQoDevolucion implements Serializable {
 	public void setPesoBruto(BigDecimal pesoBruto) {
 		this.pesoBruto = pesoBruto;
 	}
-	
-	
-	
+
+	public Boolean getDevuelto() {
+		return devuelto;
+	}
+
+	public void setDevuelto(Boolean devuelto) {
+		this.devuelto = devuelto;
+	}
+
+	public String getObservacionAprobador() {
+		return observacionAprobador;
+	}
+
+	public void setObservacionAprobador(String observacionAprobador) {
+		this.observacionAprobador = observacionAprobador;
+	}
+
 }

@@ -26,10 +26,10 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
+import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -277,12 +277,12 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@GET
 	@Path("/validateCancelarSolicitud")
 	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
-	public GenericWrapper<Boolean> validateCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+	public GenericWrapper<RespuestaBooleanaWrapper> validateCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 		if (StringUtils.isBlank(idDevolucion)) {
 		}
-		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.dos.validateCancelacionSolicitud(Long.valueOf(idDevolucion));
+		GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
+		RespuestaBooleanaWrapper a = this.dos.validateCancelacionSolicitud(Long.valueOf(idDevolucion));
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -316,12 +316,19 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
-		loc.setEntidad(this.dos.guardarEntregaRecepcion((Long.valueOf(idDevolucion))));
+		loc.setEntidad(this.dos.aprobarVerificacionFirmas((Long.valueOf(idDevolucion))));
 		return loc;
 	}
 	
 	
-	
+	@POST
+	@Path("/rechazarVerificacionFirmas")
+	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.rechazarVerificacionFirmas((Long.valueOf(idDevolucion))));
+		return loc;
+	}
 	
 	
 }
