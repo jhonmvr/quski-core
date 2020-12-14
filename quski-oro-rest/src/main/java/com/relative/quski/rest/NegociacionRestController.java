@@ -24,6 +24,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
@@ -159,6 +160,16 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		loc.setEntidades(a);
 		return loc;
 	}
+	@POST
+	@Path("/solicitarExcepcion")
+	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
+		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
+		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion);
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	
 	
 	
 }

@@ -34,8 +34,19 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="deuda_inicial")
 	private BigDecimal deudaInicial;
 	
+	@Column(name="codigo_cash")
+	private String codigoCash;
+	
+	@Column(name="codigo_devuelto")
+	private String codigoDevuelto;
+	
+	@Column(name="descripcion_devuelto")
+	private String descripcionDevuelto;
+	
 	@Column(name="tabla_amortizacion")
 	private String tablaAmortizacion;
+	
+	private String cobertura;
 	
 	@Column(name="monto_financiado")
 	private BigDecimal montoFinanciado;
@@ -508,6 +519,30 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public List<TbQoRubro> getTbQoRubros() {
 		return this.tbQoRubros;
+	}
+
+	public String getCodigoCash() {
+		return codigoCash;
+	}
+
+	public void setCodigoCash(String codigoCash) {
+		this.codigoCash = codigoCash;
+	}
+
+	public String getCodigoDevuelto() {
+		return codigoDevuelto;
+	}
+
+	public void setCodigoDevuelto(String codigoDevuelto) {
+		this.codigoDevuelto = codigoDevuelto;
+	}
+
+	public String getDescripcionDevuelto() {
+		return descripcionDevuelto;
+	}
+
+	public void setDescripcionDevuelto(String descripcionDevuelto) {
+		this.descripcionDevuelto = descripcionDevuelto;
 	}
 
 	public void setTbQoRubros(List<TbQoRubro> tbQoRubros) {
@@ -1084,6 +1119,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setNumeroCuotas(Long numeroCuotas) {
 		this.numeroCuotas = numeroCuotas;
+	}
+
+	public String getCobertura() {
+		return cobertura;
+	}
+
+	public void setCobertura(String cobertura) {
+		this.cobertura = cobertura;
 	}
 	
 	

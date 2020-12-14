@@ -69,6 +69,22 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/negarExcepcion")
+	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador ) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.qos.negarExcepcion( Long.valueOf( idExc ), obsAprobador, aprobador);
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/aprobarCobertura")
+	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura ) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.qos.aprobarCobertura(Long.valueOf( idExc ), obsAprobador, aprobador, cobertura );
+		loc.setEntidad(a);
+		return loc;
+	}
 
 
 

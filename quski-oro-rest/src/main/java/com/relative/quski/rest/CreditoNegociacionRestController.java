@@ -35,6 +35,7 @@ import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.SimularResponseExcepcion;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -143,12 +144,21 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
 		return loc;
 	}
-	
+
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( idNegociacion ));
+
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/devolverAprobar")
+	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.qos.devolverAprobarCredito( Long.valueOf( idCredito ), cash, descripcion, codigo);
 
 		loc.setEntidad(a);
 		return loc;
