@@ -1865,7 +1865,10 @@ public class QuskiOroService {
 		if(credito == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA LA NEGOCIACION");
 		}
-		
+		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_RIESGO", credito.getTbQoNegociacion().getId());
+		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_COBERTURA", credito.getTbQoNegociacion().getId());
+		credito.setCobertura(null);
+		manageCreditoNegociacion(credito);
 		return this.getDetalleJoya(credito.getTbQoNegociacion().getTbQoCliente(), joya);
 	
 	}
@@ -4038,6 +4041,8 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE SOLICITAR UNA EXCEPCION INTENTE MAS TARDE");
 		}
 		cambiarEstado(proceso.getIdReferencia(), proceso.getProceso(), EstadoProcesoEnum.PENDIENTE_EXCEPCION);
+		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion(excepcion.getTipoExcepcion(), excepcion.getTbQoNegociacion().getId());
+		
 		return this.manageExcepcion(excepcion);
 	}
 
@@ -5151,7 +5156,7 @@ public class QuskiOroService {
 	}
 	
 	// TODO: Testear metodo por conflictos
-	public SimularResponse simularOfertasCalculadora(Long idCredito, BigDecimal montoSolicitado, String riesgoTotal,String codigoAgencia) throws RelativeException {				
+	public SimularResponse simularOfertasCalculadora(Long idCredito, BigDecimal montoSolicitado, BigDecimal riesgoTotal,String codigoAgencia) throws RelativeException {				
 		try {
 			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
 			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito(idCredito);
@@ -5183,13 +5188,13 @@ public class QuskiOroService {
 			contentXMLcalculadora = contentXMLcalculadora
 					.replace("--perfil-riesgo--", "1")//donde saco el perfil
 					.replace("--origen-operacion--", "N")
-					.replace("--riesgo-total--", StringUtils.isBlank(riesgoTotal)?"0.00":riesgoTotal)
+					.replace("--riesgo-total--", riesgoTotal.toString())
 					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 					.replace("--perfil-preferencia--", "A") //donde saco el tipo
 					.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
-					.replace("--cobertura-exepcionada--", credito.getCobertura() != null ? credito.getCobertura() : "0" )
+					.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(credito.getCobertura())?credito.getCobertura():"0" )
 					.replace("--garanttias-detalle--", XMLGarantias.toString())
 					.replace("--monto-solicitado--", montoSolicitado.toString());
 				log.info("==============>>>>> XML calculadora");
