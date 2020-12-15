@@ -5,7 +5,9 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -216,6 +218,38 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					"Ocurrio un error al leer Excepciones: " + e.getMessage());
 		}
+	}
+
+	@Override
+	public void inactivarExcepcionByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion)
+			throws RelativeException {
+		try {
+			if(StringUtils.isBlank(tipoExcepcion)) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INACTIVAR EXCEPCION - TIPO EXCEPCION ES OBLIGATORIO");
+			}
+		
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("update TB_QO_EXCEPCION set  estado = 'INA' where 1=1 ");
+			if(StringUtils.isNotBlank(tipoExcepcion)) {
+				queryStr.append("and tipo_excepcion =:tipoExcepcion ");
+			}
+			queryStr.append("and id_negociacion =:idNegociacion ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			if(StringUtils.isNotBlank(tipoExcepcion)) {
+				query.setParameter("tipoExcepcion", tipoExcepcion);
+			}
+			query.setParameter("idNegociacion", idNegociacion);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL ACTUALIZAR LAS EXCEPCIONES");
+		}
+		
 	}
 
 }
