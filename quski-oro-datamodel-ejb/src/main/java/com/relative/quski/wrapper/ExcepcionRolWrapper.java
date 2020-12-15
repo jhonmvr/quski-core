@@ -5,6 +5,8 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
+import com.relative.quski.enums.EstadoExcepcionEnum;
+
 /**
  * @author KLÉBER GUERRA relative Engine
  *
@@ -21,15 +23,34 @@ public class ExcepcionRolWrapper implements Serializable {
 	private Long idNegociacion;
 	private String identificacion;
 	private String nombreCompleto;
-	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente,String apellidoCliente,Long idNegociacion, String identificacion) {
-		super();
+	private String observacionAsesor;
+	private EstadoExcepcionEnum estadoExcepcion;
+	
+	
+	public String getObservacionAsesor() {
+		return observacionAsesor;
+	}
+	public void setObservacionAsesor(String observacionAsesor) {
+		this.observacionAsesor = observacionAsesor;
+	}
+	public EstadoExcepcionEnum getEstadoExcepcion() {
+		return estadoExcepcion;
+	}
+	public void setEstadoExcepcion(EstadoExcepcionEnum estadoExcepcion) {
+		this.estadoExcepcion = estadoExcepcion;
+	}
+	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente, String apellidoCliente,
+			Long idNegociacion, String identificacion, String nombreCompleto,  String observacionAsesor,
+			EstadoExcepcionEnum estadoExcepcion) {
 		this.id = id;
 		this.tipoExcepcion = tipoExcepcion;
 		this.nombreCliente = nombreCliente;
-		this.apellidoCliente=apellidoCliente;
-		this.idNegociacion=idNegociacion;
-		this.identificacion=identificacion;
-		//this.nombreCompleto=nombreCompleto;
+		this.apellidoCliente = apellidoCliente;
+		this.idNegociacion = idNegociacion;
+		this.identificacion = identificacion;
+		this.nombreCompleto = nombreCompleto;
+		this.observacionAsesor = observacionAsesor;
+		this.estadoExcepcion = estadoExcepcion;
 	}
 	public Long getId() {
 		return id;

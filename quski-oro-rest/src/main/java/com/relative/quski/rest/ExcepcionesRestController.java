@@ -13,7 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -207,6 +210,25 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		return plw;
 	}
 
-	
+	@GET
+	@Path("/excepcionCliente")
+	public GenericWrapper<TbQoExcepcion> excepcionCliente(@QueryParam("id") String id, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("aprobado") String aprobado ) throws RelativeException {
+		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(id)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER ID EXCEPCION");
+		}
+		if(StringUtils.isBlank(obsAprobador)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER OBSERVACION DEL APROBADOR");
+		}
+		if(StringUtils.isBlank(aprobador)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER ID APROBADOR");
+		}
+		if(StringUtils.isBlank(aprobado)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER APROBADO/RECHAZADO");
+		}
+		TbQoExcepcion a = this.qos.excepcionCliente(Long.valueOf( id ), obsAprobador, aprobador, aprobado );
+		loc.setEntidad(a);
+		return loc;
+	}
 	
 }

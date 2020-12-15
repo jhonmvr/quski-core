@@ -6601,6 +6601,28 @@ public class QuskiOroService {
 		}
 	}
 
+	public TbQoExcepcion excepcionCliente(Long id, String obsAprobador, String aprobador, String aprobado) throws RelativeException {
+		try {
+			TbQoExcepcion exc = this.finExcepcionById(id);
+			TbQoProceso proceso = this.findProcesoByIdReferencia(exc.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
+			if(proceso == null || proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_EXCEPCION)) { 
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EL PROCESO INTENTE MAS TARDE");
+			}
+			
+			exc.setEstadoExcepcion( aprobado.equalsIgnoreCase("SI")?EstadoExcepcionEnum.APROBADO:EstadoExcepcionEnum.NEGADO );
+			exc.setIdAprobador(aprobador);
+			exc.setObservacionAsesor( obsAprobador );
+			proceso.setEstadoProceso( EstadoProcesoEnum.EXCEPCIONADO );
+			proceso.setUsuario(aprobador);
+			this.manageProceso(proceso);
+			return manageExcepcion(exc);
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 
 	
 }
