@@ -136,14 +136,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(this.qos.manageCreditoNegociacion(wp.getEntidad()));
 		return loc;
 	}
-	@POST
-	@Path("/crearOperacion")
-	@ApiOperation(value = "GenericWrapper<CrearOperacionRespuestaWrapper>", notes = "Metodo Post perfeccionarContrato Retorna GenericWrapper de informacion TbMiContrato", response = GenericWrapper.class)
-	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion)throws RelativeException {
-		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
-		return loc;
-	}
+
 
 	@GET
 	@Path("/traerCreditoNegociacionExistente")

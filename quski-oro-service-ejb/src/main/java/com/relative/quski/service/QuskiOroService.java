@@ -2019,22 +2019,16 @@ public class QuskiOroService {
 			TbQoNegociacion negociacion) throws RelativeException {
 			if (variables != null) {
 				List<TbQoVariablesCrediticia> list = new ArrayList<>();
-				variables.forEach(e -> {
+				for(Variable e : variables) {
 					TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
 					v.setCodigo(e.getCodigo());
 					v.setNombre(e.getNombre());
 					v.setOrden(String.valueOf(e.getOrden()));
 					v.setValor(e.getValor());
 					v.setTbQoNegociacion(negociacion);
-					try {
-						list.add(this.manageVariablesCrediticia(v));						
-					} catch (RelativeException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						log.info("ERROR AL INTENTRAR GUARDAR VARIABLE CREDITICIA ");
-					}
-					
-				});
+					list.add(this.manageVariablesCrediticia(v));				
+				}
+	
 				return list;
 			} else {
 				return null;
@@ -4240,24 +4234,7 @@ public class QuskiOroService {
 		}
 	}
 
-	/**
-	 * * * ** * * * * * * * * * * * * * * * * * * * * @SOFTBANK
-	 */
-	/**
-	 * 
-	 * @param datosOperacion
-	 * @return
-	 * @throws RelativeException
-	 */
-	public CrearOperacionRespuestaWrapper crearOperacion(CrearOperacionEntradaWrapper datosOperacion)
-			throws RelativeException {
-		try {
-			return SoftBankApiClient.callCrearOperacion01Rest(datosOperacion);
 
-		} catch (RelativeException | UnsupportedEncodingException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS);
-		}
-	}
 
 	/**
 	 * 
@@ -5184,8 +5161,23 @@ public class QuskiOroService {
 				log.info("==============>>>>> XML calculadora");
 				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
 						this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
-				return ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
+				SimularResponse res = ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
 						token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
+				if (res.getSimularResult().getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
+					//ELIMINO LAS VARIABLES CREDITIAS Y MUESTRO LAS DEL CREDITO
+					variablesCrediticiaRepository.deleteVariablesByNegociacionId(credito.getTbQoNegociacion().getId());
+					for(com.relative.quski.wrapper.SimularResponse.SimularResult.XmlVariablesInternas.VariablesInternas.Variable e
+							: res.getSimularResult().getXmlVariablesInternas().getVariablesInternas().getVariable()) {
+						TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
+						v.setCodigo(e.getCodigo());
+						v.setNombre(e.getNombre());
+						v.setOrden(String.valueOf(e.getOrden()));
+						v.setValor(e.getValor());
+						v.setTbQoNegociacion(credito.getTbQoNegociacion());		
+						manageVariablesCrediticia(v);
+					}
+				} 
+				return res;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -5197,6 +5189,8 @@ public class QuskiOroService {
 		}
 		
 	}
+
+
 	public List<OpcionWrapper> simularOfertaExcepcionada(Long idCredito, Long cobertura, Long idAgencia) throws Exception {				
 		try {
 			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
@@ -5778,7 +5772,7 @@ public class QuskiOroService {
 		operacionSoftBank.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
 		operacionSoftBank.setMontoSolicitado( credito.getMontoSolicitado() );
 		operacionSoftBank.setMontoFinanciado( credito.getMontoFinanciado() );
-		operacionSoftBank.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
+		operacionSoftBank.setPagoDia( Long.valueOf(1) );//arreglar
 		operacionSoftBank.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
 		operacionSoftBank.setDatosRegistro( 
 				new DatosRegistroWrapper(
@@ -5793,8 +5787,9 @@ public class QuskiOroService {
 		operacionSoftBank.setDatosGarantias( datos );
 		CrearOperacionRespuestaWrapper result;
 		try {
-			result = SoftBankApiClient.callCrearOperacion01Rest(operacionSoftBank);
-		} catch (UnsupportedEncodingException | RelativeException e) {
+			result = SoftBankApiClient.callCrearOperacion01Rest(operacionSoftBank,
+					this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION).getValor());
+		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL CREAR OPERACION EN SOFTBANK Y ASIGNAR NUMERO DE FUNDA");
@@ -5815,8 +5810,8 @@ public class QuskiOroService {
 			
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
 			if(op != null ) {
-				CrearOperacionRespuestaWrapper operacion = this.crearOperacion( op );
-				
+				CrearOperacionRespuestaWrapper operacion = 	SoftBankApiClient.callCrearOperacion01Rest(
+						op, this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION).getValor());
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
 				return result; 
@@ -5912,8 +5907,12 @@ public class QuskiOroService {
 			TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
 			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito( credito.getId() ); 
 			List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
-			if( joyas == null )        { return null; }
-			if( cuentaCliente == null ){ return null; }
+			if( joyas == null )        { 
+				return null; 
+			}
+			if( cuentaCliente == null ){
+				return null; 
+			}
 			CrearOperacionEntradaWrapper result = new CrearOperacionEntradaWrapper(cliente.getCedulaCliente(), cliente.getNombreCompleto() ); 
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 		
