@@ -74,7 +74,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			// ~~> SELECT
 			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("primerNombre"),
 					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"),joinCliente.get("nombreCompleto"),
-					poll.get("observacionAsesor"),poll.get("estadoExcepcion"));
+					poll.get("observacionAsesor"),poll.get("estadoExcepcion"), poll.get("mensajeBre"));
 
 			// ~~> ORDER BY
 			if (sortDirections.equals("asc")) {
@@ -141,7 +141,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			// ~~> SELECT
 			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("primerNombre"),
 					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"),joinCliente.get("nombreCompleto"),
-					poll.get("observacionAsesor"),poll.get("estadoExcepcion"));
+					poll.get("observacionAsesor"),poll.get("estadoExcepcion"), poll.get("mensajeBre"));
 
 			// ~~> EJECUTAR CONSULTA
 
@@ -151,7 +151,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
 		}
 	}
 
@@ -197,7 +197,7 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
 		}
 	}
 }
