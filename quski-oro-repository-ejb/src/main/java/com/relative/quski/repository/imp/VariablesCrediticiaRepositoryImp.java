@@ -161,12 +161,12 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 	public void deleteVariablesByNegociacionId(Long idNegociacion) throws RelativeException {
 
 		try {
-			if(idNegociacion != null) {
+			if(idNegociacion == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR VARIABLES CREDITICIAS ID NEGOCIACION ES OBLIGATORIO");
 			}
 		
 			StringBuilder queryStr =  new StringBuilder();
-			queryStr.append("DELETE tb_qo_variables_crediticias where 1=1 ");
+			queryStr.append("DELETE FROM tb_qo_variables_crediticias where 1=1 ");
 			
 			queryStr.append("and id_negociacion =:idNegociacion ");
 			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());

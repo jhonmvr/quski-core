@@ -10,7 +10,7 @@ public class CalculadoraOpcionWrapper implements Serializable {
 	 */
 	 static final long serialVersionUID = 2549180662498901580L;
 	
-
+	private Long id;
     private Long plazo;
     private String periodoPlazo;
     private String periodicidadPlazo;
@@ -277,6 +277,12 @@ public class CalculadoraOpcionWrapper implements Serializable {
 	}
 	public void setDividendosprorrateoserviciosdiferido(BigDecimal dividendosprorrateoserviciosdiferido) {
 		this.dividendosprorrateoserviciosdiferido = dividendosprorrateoserviciosdiferido;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 
