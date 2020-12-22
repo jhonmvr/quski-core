@@ -33,6 +33,7 @@ import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SeccionEnum;
+import com.relative.quski.enums.TipoCreditoNegociacionEnum;
 import com.relative.quski.enums.TipoRubroEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
@@ -102,6 +103,8 @@ import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
+import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
+import com.relative.quski.wrapper.ConsultaGlobalWrapper;
 import com.relative.quski.wrapper.ConsultaOperacionGlobalWrapper;
 import com.relative.quski.wrapper.ConsultaRubrosWrapper;
 import com.relative.quski.wrapper.ConsultaTablaWrapper;
@@ -132,6 +135,7 @@ import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
@@ -5618,29 +5622,11 @@ public class QuskiOroService {
 			if( !StringUtils.isBlank( send.getUriImagenConFunda() ) ) {
 			    persisted.setUriImagenConFunda(  send.getUriImagenConFunda() );
 			}
-			if( !StringUtils.isBlank( send.getIdentificacionCodeudor() ) ) {
-			    persisted.setIdentificacionCodeudor(  send.getIdentificacionCodeudor() );
-			}
-			if( !StringUtils.isBlank( send.getNombreCompletoCodeudor() ) ) {
-			    persisted.setNombreCompletoCodeudor(  send.getNombreCompletoCodeudor() );
-			}
 			if( !StringUtils.isBlank( send.getFirmanteOperacion() ) ) {
 				persisted.setFirmanteOperacion(  send.getFirmanteOperacion() );
 			}
 			if( !StringUtils.isBlank( send.getTipoCliente() ) ) {
 				persisted.setTipoCliente(  send.getTipoCliente() );
-			}
-			if( send.getFechaNacimientoCodeudor() != null ) {
-			    persisted.setFechaNacimientoCodeudor(  send.getFechaNacimientoCodeudor() );
-			}
-			if( !StringUtils.isBlank( send.getIdentificacionApoderado() ) ) {
-			    persisted.setIdentificacionApoderado(  send.getIdentificacionApoderado() );
-			}
-			if( !StringUtils.isBlank( send.getNombreCompletoApoderado() ) ) {
-			    persisted.setNombreCompletoApoderado(  send.getNombreCompletoApoderado() );
-			}
-			if( send.getFechaNacimientoApoderado() != null ) {
-			    persisted.setFechaNacimientoApoderado(  send.getFechaNacimientoApoderado() );
 			}
 			if( send.getTbQoNegociacion() != null ) {
 			    persisted.setTbQoNegociacion(  send.getTbQoNegociacion() );
@@ -6605,6 +6591,57 @@ public class QuskiOroService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	public ConsultaGlobalRespuestaWrapper buscarCreditos(ConsultaGlobalWrapper wrapper) throws RelativeException {
+		try {
+			return SoftBankApiClient.callConsultaGlobalRest(this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor(), wrapper);
+		}catch( RelativeException | UnsupportedEncodingException e ) {
+			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION );
+		}
+	}
+
+	public RenovacionWrapper iniciarRenovacion(String numeroOperacion) throws RelativeException{
+		try {
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacion);
+			if( detalle != null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
+			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre( numeroOperacion );
+			if(credito == null) {
+				TbQoNegociacion nego = new TbQoNegociacion();
+				credito = this.crearCreditoRenovacion( detalle); 
+				TbQoProceso proceso = new TbQoProceso();
+				proceso.setEstado( EstadoEnum.ACT);
+				proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );
+				proceso.setProceso( ProcesoEnum.RENOVACION );
+				proceso.setIdReferencia( );
+				return null;
+				
+			}
+		}catch(RelativeException e) {
+			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
+		}
+	}
+
+	private TbQoCreditoNegociacion crearCreditoRenovacion(DetalleCreditoWrapper detalle) throws RelativeException {
+		try {
+			TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
+			credito.setNumeroOperacionMadre( detalle.getCredito().getNumeroOperacionMadre() );
+			credito.setTablaAmortizacion( detalle.getCredito().getCodigoTipoTablaArmotizacionQuski());
+			credito.setCobertura( detalle.getCredito().getCoberturaActual().toString() );
+			credito.setMontoFinanciado( detalle.getCredito().getMontoFinanciado() );			
+			credito.setEstadoSoftbank( detalle.getCredito().getCodigoEstadoOperacion() );			
+			credito.setFechaEfectiva( QuskiOroUtil.formatSringToDate( detalle.getCredito().getFechaAprobacion()  ));
+			credito.setFechaVencimiento( QuskiOroUtil.formatSringToDate( detalle.getCredito().getFechaVencimiento() ) );
+			credito.setIdAgencia( detalle.getCredito().getIdAgencia() );
+			credito.setNumeroFunda( Long.valueOf(detalle.getGarantias().get(0).getNumeroFundaJoya()) );
+			credito.setMontoSolicitado( detalle.getCredito().getMontoSolicitado() );
+			credito.setPlazoCredito( detalle.getCredito().getPlazo() );
+			credito.setTipo( detalle.getCredito().getTipoCredito().equalsIgnoreCase("cuotas") ? TipoCreditoNegociacionEnum.CUOTAS : TipoCreditoNegociacionEnum.VENCIMIENTO  );							
+			credito.setNumeroCuotas(detalle.getCredito().getNumeroCuotas() );
+			return this.manageCreditoNegociacion( credito );
+		}catch(RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE + e.getMensaje() );
 		}
 	}
 

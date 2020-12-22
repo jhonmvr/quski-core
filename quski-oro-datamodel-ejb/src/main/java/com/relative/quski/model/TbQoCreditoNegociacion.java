@@ -85,6 +85,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="numero_operacion")
 	private String numeroOperacion;
 	
+	@Column(name="numero_operacion_madre")
+	private String numeroOperacionMadre;
 	
 	@Column(name="total_interes_vencimiento")
 	private BigDecimal totalInteresVencimiento;
@@ -141,24 +143,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="uri_imagen_con_funda")
 	private String uriImagenConFunda;
 	
-	@Column(name="identificacion_codeudor")
-	private  String identificacionCodeudor;
-	
-	@Column(name="nombre_completo_codeudor")
-	private  String nombreCompletoCodeudor;
-	
-	@Column(name="fecha_nacimiento_codeudor")
-	private  Date   fechaNacimientoCodeudor;
-
-	@Column(name="identificacion_apoderado")
-	private  String identificacionApoderado;
-	
-	@Column(name="nombre_completo_apoderado")
-	private  String nombreCompletoApoderado;
-	
-	@Column(name="fecha_nacimiento_apoderado")
-	private  Date   fechaNacimientoApoderado;
-	
 	// bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name = "id_negociacion")
@@ -171,9 +155,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	// bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoRubro> tbQoRubros;
-
-	
-	
 
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
@@ -201,18 +182,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="custodia_devengada")
 	private BigDecimal custodiaDevengada;
 
-	@Column(name="destino_operacion")
-	private String destinoOperacion;
-
-
 	@Column(name="dividendo_flujo_planeado")
 	private BigDecimal dividendoFlujoPlaneado;
 
 	@Column(name="dividendo_prorrateo")
 	private BigDecimal dividendoProrrateo;
-
-
-
 
 	@Column(name="forma_pago_capital")
 	private String formaPagoCapital;
@@ -296,24 +270,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="tipo_oferta")
 	private String tipoOferta;
 
-	@Column(name="tota_peso_neto_con_funda")
-	private BigDecimal totaPesoNetoConFunda;
-
 	@Column(name="total_costos_operacion_anterior")
 	private BigDecimal totalCostosOperacionAnterior;
 
 	@Column(name="total_gastos_nueva_operacion")
 	private BigDecimal totalGastosNuevaOperacion;
-
-
-	@Column(name="total_peso_bruto_con_funda")
-	private BigDecimal totalPesoBrutoConFunda;
-
-	@Column(name="total_peso_bruto_garantia")
-	private BigDecimal totalPesoBrutoGarantia;
-
-	@Column(name="total_peso_neto")
-	private BigDecimal totalPesoNeto;
 
 	@Column(name="total_valor_avaluo")
 	private BigDecimal totalValorAvaluo;
@@ -625,54 +586,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.montoFinanciado = montoFinanciado;
 	}
 
-	public String getIdentificacionCodeudor() {
-		return identificacionCodeudor;
-	}
-
-	public void setIdentificacionCodeudor(String identificacionCodeudor) {
-		this.identificacionCodeudor = identificacionCodeudor;
-	}
-
-	public String getNombreCompletoCodeudor() {
-		return nombreCompletoCodeudor;
-	}
-
-	public void setNombreCompletoCodeudor(String nombreCompletoCodeudor) {
-		this.nombreCompletoCodeudor = nombreCompletoCodeudor;
-	}
-
-	public Date getFechaNacimientoCodeudor() {
-		return fechaNacimientoCodeudor;
-	}
-
-	public void setFechaNacimientoCodeudor(Date fechaNacimientoCodeudor) {
-		this.fechaNacimientoCodeudor = fechaNacimientoCodeudor;
-	}
-
-	public String getIdentificacionApoderado() {
-		return identificacionApoderado;
-	}
-
-	public void setIdentificacionApoderado(String identificacionApoderado) {
-		this.identificacionApoderado = identificacionApoderado;
-	}
-
-	public String getNombreCompletoApoderado() {
-		return nombreCompletoApoderado;
-	}
-
-	public void setNombreCompletoApoderado(String nombreCompletoApoderado) {
-		this.nombreCompletoApoderado = nombreCompletoApoderado;
-	}
-
-	public Date getFechaNacimientoApoderado() {
-		return fechaNacimientoApoderado;
-	}
-
-	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
-		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
-	}
-
 	public String getNumeroCuenta() {
 		return numeroCuenta;
 	}
@@ -783,14 +696,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setCustodiaDevengada(BigDecimal custodiaDevengada) {
 		this.custodiaDevengada = custodiaDevengada;
-	}
-
-	public String getDestinoOperacion() {
-		return destinoOperacion;
-	}
-
-	public void setDestinoOperacion(String destinoOperacion) {
-		this.destinoOperacion = destinoOperacion;
 	}
 
 	public BigDecimal getDividendoFlujoPlaneado() {
@@ -1009,14 +914,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.tipoOferta = tipoOferta;
 	}
 
-	public BigDecimal getTotaPesoNetoConFunda() {
-		return totaPesoNetoConFunda;
-	}
-
-	public void setTotaPesoNetoConFunda(BigDecimal totaPesoNetoConFunda) {
-		this.totaPesoNetoConFunda = totaPesoNetoConFunda;
-	}
-
 	public BigDecimal getTotalCostosOperacionAnterior() {
 		return totalCostosOperacionAnterior;
 	}
@@ -1031,30 +928,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setTotalGastosNuevaOperacion(BigDecimal totalGastosNuevaOperacion) {
 		this.totalGastosNuevaOperacion = totalGastosNuevaOperacion;
-	}
-
-	public BigDecimal getTotalPesoBrutoConFunda() {
-		return totalPesoBrutoConFunda;
-	}
-
-	public void setTotalPesoBrutoConFunda(BigDecimal totalPesoBrutoConFunda) {
-		this.totalPesoBrutoConFunda = totalPesoBrutoConFunda;
-	}
-
-	public BigDecimal getTotalPesoBrutoGarantia() {
-		return totalPesoBrutoGarantia;
-	}
-
-	public void setTotalPesoBrutoGarantia(BigDecimal totalPesoBrutoGarantia) {
-		this.totalPesoBrutoGarantia = totalPesoBrutoGarantia;
-	}
-
-	public BigDecimal getTotalPesoNeto() {
-		return totalPesoNeto;
-	}
-
-	public void setTotalPesoNeto(BigDecimal totalPesoNeto) {
-		this.totalPesoNeto = totalPesoNeto;
 	}
 
 	public BigDecimal getTotalValorAvaluo() {
@@ -1127,6 +1000,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setCobertura(String cobertura) {
 		this.cobertura = cobertura;
+	}
+
+	public String getNumeroOperacionMadre() {
+		return numeroOperacionMadre;
+	}
+
+	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
+		this.numeroOperacionMadre = numeroOperacionMadre;
 	}
 	
 	

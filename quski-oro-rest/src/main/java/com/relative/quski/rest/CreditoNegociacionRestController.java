@@ -35,6 +35,7 @@ import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 
 import io.swagger.annotations.Api;
@@ -208,6 +209,18 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		GenericWrapper<DetalleCreditoWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
 			DetalleCreditoWrapper a = this.qos.traerCreditoVigente( numeroOperacion );
+			loc.setEntidad(a);
+			return loc;
+		}
+		loc.setEntidad(null);
+		return loc;
+	}
+	@GET
+	@Path("/iniciarRenovacion")
+	public GenericWrapper<RenovacionWrapper> iniciarRenovacion(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		if( !numeroOperacion.isEmpty() ) { 
+			RenovacionWrapper a = this.qos.iniciarRenovacion( numeroOperacion );
 			loc.setEntidad(a);
 			return loc;
 		}
