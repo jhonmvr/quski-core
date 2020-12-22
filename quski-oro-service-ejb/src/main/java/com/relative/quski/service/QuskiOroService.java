@@ -6614,10 +6614,9 @@ public class QuskiOroService {
 				proceso.setEstado( EstadoEnum.ACT);
 				proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );
 				proceso.setProceso( ProcesoEnum.RENOVACION );
-				proceso.setIdReferencia( );
-				return null;
-				
+				//proceso.setIdReferencia( );				
 			}
+			return null;
 		}catch(RelativeException e) {
 			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
 		}
