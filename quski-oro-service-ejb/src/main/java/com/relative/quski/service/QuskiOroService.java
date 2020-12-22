@@ -6602,19 +6602,23 @@ public class QuskiOroService {
 		}
 	}
 
-	public RenovacionWrapper iniciarRenovacion(String numeroOperacion) throws RelativeException{
+	public RenovacionWrapper iniciarRenovacion(String numeroOperacion, String asesor ) throws RelativeException{
 		try {
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacion);
 			if( detalle != null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre( numeroOperacion );
 			if(credito == null) {
 				TbQoNegociacion nego = new TbQoNegociacion();
-				credito = this.crearCreditoRenovacion( detalle); 
+				nego.setAsesor(asesor);
+				nego = this.manageNegociacion(nego);
+				credito = this.manageCreditoNegociacion(this.crearCreditoRenovacion( detalle )); 
 				TbQoProceso proceso = new TbQoProceso();
 				proceso.setEstado( EstadoEnum.ACT);
 				proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );
 				proceso.setProceso( ProcesoEnum.RENOVACION );
-				//proceso.setIdReferencia( );				
+				proceso.setIdReferencia( nego.getId());
+				proceso = this.manageProceso( proceso ) ;
+				return new RenovacionWrapper(credito, proceso);
 			}
 			return null;
 		}catch(RelativeException e) {

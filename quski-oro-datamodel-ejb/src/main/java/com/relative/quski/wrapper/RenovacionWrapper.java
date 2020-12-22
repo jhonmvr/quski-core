@@ -16,6 +16,11 @@ public class RenovacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private TbQoCreditoNegociacion credito;
+	public RenovacionWrapper(TbQoCreditoNegociacion credito, TbQoProceso proceso) {
+		super();
+		this.credito = credito;
+		this.proceso = proceso;
+	}
 	private TbQoProceso proceso;
 	private List<TbQoExcepcion> excepciones;
 	

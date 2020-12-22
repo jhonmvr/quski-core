@@ -217,10 +217,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/iniciarRenovacion")
-	public GenericWrapper<RenovacionWrapper> iniciarRenovacion(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
+	public GenericWrapper<RenovacionWrapper> iniciarRenovacion(@QueryParam("numeroOperacion") String numeroOperacion,@QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
-			RenovacionWrapper a = this.qos.iniciarRenovacion( numeroOperacion );
+			RenovacionWrapper a = this.qos.iniciarRenovacion( numeroOperacion, asesor );
 			loc.setEntidad(a);
 			return loc;
 		}
