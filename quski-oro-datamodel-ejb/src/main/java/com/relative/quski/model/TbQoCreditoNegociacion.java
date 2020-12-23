@@ -1009,7 +1009,4 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
 		this.numeroOperacionMadre = numeroOperacionMadre;
 	}
-	
-	
-
 }
