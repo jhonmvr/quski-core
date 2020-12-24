@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="DataModelerInicial" id="2858AD3E-226C-2E1F-7DFF-A0B3CB84E349" version="3.5">
+<createdBy>Jero</createdBy>
+<createdTime>2020-12-24 17:55:03 UTC</createdTime>
+<ownerDesignName>DataModelerInicial</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>2858AD3E-226C-2E1F-7DFF-A0B3CB84E349</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="0A1D00BE-D59A-07E7-17F3-0BEA351B1914">
+<designStoragePath>C:\Users\USUARIO\Desktop\alguito</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>
