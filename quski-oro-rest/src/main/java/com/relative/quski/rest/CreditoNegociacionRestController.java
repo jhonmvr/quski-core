@@ -35,6 +35,7 @@ import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 
 import io.swagger.annotations.Api;
@@ -136,14 +137,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(this.qos.manageCreditoNegociacion(wp.getEntidad()));
 		return loc;
 	}
-	@POST
-	@Path("/crearOperacion")
-	@ApiOperation(value = "GenericWrapper<CrearOperacionRespuestaWrapper>", notes = "Metodo Post perfeccionarContrato Retorna GenericWrapper de informacion TbMiContrato", response = GenericWrapper.class)
-	public GenericWrapper<CrearOperacionRespuestaWrapper> crearOperacion(GenericWrapper<CrearOperacionEntradaWrapper> datosEntradaOperacion)throws RelativeException {
-		GenericWrapper<CrearOperacionRespuestaWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad(this.qos.crearOperacion(datosEntradaOperacion.getEntidad()));
-		return loc;
-	}
+
 
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
@@ -215,6 +209,18 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		GenericWrapper<DetalleCreditoWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
 			DetalleCreditoWrapper a = this.qos.traerCreditoVigente( numeroOperacion );
+			loc.setEntidad(a);
+			return loc;
+		}
+		loc.setEntidad(null);
+		return loc;
+	}
+	@GET
+	@Path("/iniciarRenovacion")
+	public GenericWrapper<RenovacionWrapper> iniciarRenovacion(@QueryParam("numeroOperacion") String numeroOperacion,@QueryParam("asesor") String asesor) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		if( !numeroOperacion.isEmpty() ) { 
+			RenovacionWrapper a = this.qos.iniciarRenovacion( numeroOperacion, asesor );
 			loc.setEntidad(a);
 			return loc;
 		}

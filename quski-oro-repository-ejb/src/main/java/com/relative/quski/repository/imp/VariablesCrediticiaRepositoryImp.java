@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -153,6 +154,35 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL BUSCAR VARIABLE CREDITICIA POR ID NEGOCIACION Y CODIGO");
 		}
+	
+	}
+
+	@Override
+	public void deleteVariablesByNegociacionId(Long idNegociacion) throws RelativeException {
+
+		try {
+			if(idNegociacion == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR VARIABLES CREDITICIAS ID NEGOCIACION ES OBLIGATORIO");
+			}
+		
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_variables_crediticias where 1=1 ");
+			
+			queryStr.append("and id_negociacion =:idNegociacion ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idNegociacion", idNegociacion);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR LAS VARIABLES CREDITICIAS");
+		}
+		
 	
 	}
 }

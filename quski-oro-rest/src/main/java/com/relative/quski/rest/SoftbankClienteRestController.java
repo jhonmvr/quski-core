@@ -25,6 +25,8 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
+import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
+import com.relative.quski.wrapper.ConsultaGlobalWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
@@ -76,6 +78,19 @@ public class SoftbankClienteRestController extends BaseRestController
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
+		}
+	}
+	@POST
+	@Path("/buscarCreditos")
+	public GenericWrapper<ConsultaGlobalRespuestaWrapper> buscarCreditos(ConsultaGlobalWrapper wrapper) throws RelativeException {
+		GenericWrapper<ConsultaGlobalRespuestaWrapper> loc = new GenericWrapper<>();
+		try {
+			ConsultaGlobalRespuestaWrapper a = qos.buscarCreditos( wrapper );
+			loc.setEntidad(a);
+			return loc;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR CARGAR DATOS EN SOFTBANK ");
 		}
 	}
 	
