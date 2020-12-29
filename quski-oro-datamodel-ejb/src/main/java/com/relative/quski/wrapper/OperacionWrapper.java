@@ -27,6 +27,8 @@ public class OperacionWrapper implements Serializable {
 	private String codigoUsuarioAsesor;
 	private String codigoEstadoOperacion;
 	private String tipoCredito;
+	private String codigoTipoCarteraQuski;
+	private String periodoPlazo;
 	private String codigoTipoTablaArmotizacionQuski;
 	private Long plazo;
 	private Boolean impago;
@@ -214,6 +216,18 @@ public class OperacionWrapper implements Serializable {
 	}
 	public void setDatosBloqueo(String datosBloqueo) {
 		this.datosBloqueo = datosBloqueo;
+	}
+	public String getCodigoTipoCarteraQuski() {
+		return codigoTipoCarteraQuski;
+	}
+	public void setCodigoTipoCarteraQuski(String codigoTipoCarteraQuski) {
+		this.codigoTipoCarteraQuski = codigoTipoCarteraQuski;
+	}
+	public String getPeriodoPlazo() {
+		return periodoPlazo;
+	}
+	public void setPeriodoPlazo(String periodoPlazo) {
+		this.periodoPlazo = periodoPlazo;
 	}
 
 }
