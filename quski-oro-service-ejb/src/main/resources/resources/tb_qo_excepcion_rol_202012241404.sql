@@ -1,0 +1,6 @@
+INSERT INTO public.tb_qo_excepcion_rol (rol,fecha_creacion,fecha_actualizacion,estado,id,excepcion) VALUES
+	 ('admin',NULL,NULL,'ACT',1,'EXCEPCION_CLIENTE'),
+	 ('ADMINISTRADOR',NULL,NULL,'ACT',2,'EXCEPCION_CLIENTE'),
+	 ('admin',NULL,NULL,'ACT',4,'EXCEPCION_COBERTURA'),
+	 ('ADMINISTRADOR',NULL,NULL,'ACT',3,'EXCEPCION_COBERTURA'),
+	 ('ADMINISTRADOR',NULL,NULL,'ACT',5,'EXCEPCION_RIESGO');

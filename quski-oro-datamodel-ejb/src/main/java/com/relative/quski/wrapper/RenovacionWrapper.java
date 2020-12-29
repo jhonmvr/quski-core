@@ -6,7 +6,9 @@ import java.util.List;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 
 public class RenovacionWrapper implements Serializable {
 
@@ -15,9 +17,19 @@ public class RenovacionWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private DetalleCreditoWrapper detalle;
+	
 	private TbQoCreditoNegociacion credito;
+	private List<TbQoTasacion> tasacion;
+	private List<TbQoVariablesCrediticia> variablesCrediticias;
+	private List<TbQoRiesgoAcumulado> riesgoAcumulado;
 	private TbQoProceso proceso;
 	private List<TbQoExcepcion> excepciones;
+	
+	public RenovacionWrapper(DetalleCreditoWrapper detalle) {
+		super();
+		this.detalle = detalle;
+	}
 	
 	public TbQoCreditoNegociacion getCredito() {
 		return credito;
@@ -37,25 +49,36 @@ public class RenovacionWrapper implements Serializable {
 	public void setExcepciones(List<TbQoExcepcion> excepciones) {
 		this.excepciones = excepciones;
 	}
-	public List<TbQoTasacion> getJoyas() {
-		return joyas;
+
+	public DetalleCreditoWrapper getDetalle() {
+		return detalle;
 	}
-	public void setJoyas(List<TbQoTasacion> joyas) {
-		this.joyas = joyas;
+
+	public void setDetalle(DetalleCreditoWrapper detalle) {
+		this.detalle = detalle;
 	}
-	public Boolean getExisteError() {
-		return existeError;
+
+	public List<TbQoTasacion> getTasacion() {
+		return tasacion;
 	}
-	public void setExisteError(Boolean existeError) {
-		this.existeError = existeError;
+
+	public void setTasacion(List<TbQoTasacion> tasacion) {
+		this.tasacion = tasacion;
 	}
-	public String getMensaje() {
-		return mensaje;
+
+	public List<TbQoVariablesCrediticia> getVariablesCrediticias() {
+		return variablesCrediticias;
 	}
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
+
+	public void setVariablesCrediticias(List<TbQoVariablesCrediticia> variablesCrediticias) {
+		this.variablesCrediticias = variablesCrediticias;
 	}
-	private List<TbQoTasacion> joyas;
-	private Boolean existeError;
-	private String mensaje;
+
+	public List<TbQoRiesgoAcumulado> getRiesgoAcumulado() {
+		return riesgoAcumulado;
+	}
+
+	public void setRiesgoAcumulado(List<TbQoRiesgoAcumulado> riesgoAcumulado) {
+		this.riesgoAcumulado = riesgoAcumulado;
+	}
 }
