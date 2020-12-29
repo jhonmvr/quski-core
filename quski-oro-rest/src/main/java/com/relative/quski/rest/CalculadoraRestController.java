@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -21,6 +22,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraRespuestaWrapper;
+import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 
@@ -75,6 +77,25 @@ public class CalculadoraRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
+	
+	@POST
+	@Path("/simularOfertaRenovacion")
+	public GenericWrapper<SimularResponse> simularOfertaRenovacion(DetalleCreditoWrapper credito,
+			@QueryParam("montoSolicitado") String montoSolicitado,
+			@QueryParam("riesgoTotal") String riesgoTotal,
+			@QueryParam("coberturaExcepcionada") String coberturaExcepcionada,
+			@QueryParam("codigoAgencia") String codigoAgencia) throws RelativeException {
+		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
+		if(credito == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO");
+		}
+		SimularResponse a = this.qos.simularOfertasCalculadoraRenovacion(credito, StringUtils.isNotBlank(montoSolicitado)?
+				BigDecimal.valueOf(Double.valueOf(montoSolicitado)):BigDecimal.ZERO,
+				StringUtils.isNotBlank(riesgoTotal)?BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, codigoAgencia,coberturaExcepcionada);
+		loc.setEntidad(a);
+		return loc;
+	}
+	
 	@GET
 	@Path("/simularOfertaExcepcionada")
 	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionada(@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura, @QueryParam("idAgencia") String idAgencia) throws NumberFormatException, Exception {
