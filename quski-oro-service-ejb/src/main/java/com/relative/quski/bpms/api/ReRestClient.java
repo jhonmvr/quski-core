@@ -182,6 +182,9 @@ public class ReRestClient<T> {
 			cw.setRequireLogin(requireLogin);
 			cw.setUrlStr(serviceUrl);
 			cw.setTransform(transform);
+			System.out.println("=========================>>>>>>");
+			System.out.println(cw.toString());
+			System.out.println("=========================>>>>>>");
 			ReRestClient<T> b= new ReRestClient<>( cw );
 			return b.execute(classType);
 		} catch (RelativeException e) {
@@ -339,8 +342,10 @@ public class ReRestClient<T> {
 		if (this.cw.getContent() != null && !this.cw.getContent().isEmpty()) {
 			try {
 				String content = this.cw.getContent();
-			
-				StringEntity entity = new StringEntity((String) content, this.cw.getAcceptCharset());
+				if (!(content instanceof String)) {
+					content = transformRequest(content, this.cw.getContentType());
+				}
+				StringEntity entity = new StringEntity((String) content, ContentType.parse(this.cw.getContentType()));
 				builder.setEntity(entity);
 			} catch (UnsupportedCharsetException e) {
 				throw new RuntimeException(
