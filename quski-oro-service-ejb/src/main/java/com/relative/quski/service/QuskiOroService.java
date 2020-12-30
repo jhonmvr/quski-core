@@ -5243,10 +5243,10 @@ public class QuskiOroService {
 						.replace("--saldo-interes-credito-anterior--", "0")
 						.replace("--mora-credito-anterior--", "0")
 						.replace("--cobranza-credito-anterior--", "0")
-						.replace("--tipo-cartera--", "0")// agregar el tipo de cartera
+						.replace("--tipo-cartera--",creditoSoft.getCredito().getCodigoTipoCarteraQuski())// agregar el tipo de cartera
 						.replace("--monto-financiado-credito-anterior--", creditoSoft.getCredito().getMontoFinanciado().toString())
 						.replace("--plazo-credito-anterior--", creditoSoft.getCredito().getPlazo().toString())
-						.replace("--tipo-credito-anterior--", creditoSoft.getCredito().getTipoCredito())//agregar el codigo del tipo de credito
+						.replace("--tipo-credito-anterior--", creditoSoft.getCredito().getPeriodoPlazo())//agregar el codigo del tipo de credito
 						.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
 						.replace("--fecha-efectiva-credito-anterior--", creditoSoft.getCredito().getFechaAprobacion())
 						.replace("--fecha-vencimiento-credito-anterior--", creditoSoft.getCredito().getFechaVencimiento())

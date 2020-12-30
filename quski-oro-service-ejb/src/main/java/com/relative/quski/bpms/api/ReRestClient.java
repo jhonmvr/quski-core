@@ -339,10 +339,8 @@ public class ReRestClient<T> {
 		if (this.cw.getContent() != null && !this.cw.getContent().isEmpty()) {
 			try {
 				String content = this.cw.getContent();
-				if (!(content instanceof String)) {
-					content = transformRequest(content, this.cw.getContentType());
-				}
-				StringEntity entity = new StringEntity((String) content, ContentType.parse(this.cw.getContentType()));
+			
+				StringEntity entity = new StringEntity((String) content, this.cw.getAcceptCharset());
 				builder.setEntity(entity);
 			} catch (UnsupportedCharsetException e) {
 				throw new RuntimeException(
