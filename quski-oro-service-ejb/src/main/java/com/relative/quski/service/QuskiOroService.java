@@ -23,6 +23,7 @@ import com.relative.core.util.mail.EmailDefinition;
 import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
@@ -6443,6 +6444,18 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 		}
 	}
+	private TbQoProceso createProcesoNovacion( Long idReferencia, String usuario) throws RelativeException {
+		try {
+			TbQoProceso send = new TbQoProceso( Long.valueOf( idReferencia ));
+			send.setProceso( ProcesoEnum.RENOVACION );
+			send.setEstadoProceso( EstadoProcesoEnum.CREADO );
+			send.setUsuario( usuario );
+			return this.manageProceso( send );
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		}
+	}
 	public TbQoProceso createProcesoPago( Long idReferencia, String usuario) throws RelativeException {
 		try {
 			TbQoProceso send = new TbQoProceso( Long.valueOf( idReferencia ));
@@ -6694,8 +6707,6 @@ public class QuskiOroService {
 				novacion.setCredito( credito );
 				novacion.setExcepciones( this.excepcionesRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId() ));
 				novacion.setProceso( this.procesoRepository.findByIdReferencia(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION ));
-				novacion.setRiesgoAcumulado( this.riesgoAcumuladoRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId()));
-				novacion.setVariablesCrediticias( this.variablesCrediticiaRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId() ));
 				novacion.setTasacion( this.tasacionRepository.findByIdCredito( credito.getId() ));
 				return novacion;
 			}
@@ -6705,28 +6716,93 @@ public class QuskiOroService {
 		}
 	}
 
-	private TbQoCreditoNegociacion crearCreditoRenovacion(DetalleCreditoWrapper detalle) throws RelativeException {
+	public RenovacionWrapper crearCreditoRenovacion(RenovacionWrapper novacion, Opcion opcion, String asesor) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
-			credito.setNumeroOperacionMadre( detalle.getCredito().getNumeroOperacionMadre() );
-			credito.setTablaAmortizacion( detalle.getCredito().getCodigoTipoTablaArmotizacionQuski());
-			credito.setCobertura( detalle.getCredito().getCoberturaActual().toString() );
-			credito.setMontoFinanciado( detalle.getCredito().getMontoFinanciado() );			
-			credito.setEstadoSoftbank( detalle.getCredito().getCodigoEstadoOperacion() );			
-			credito.setFechaEfectiva( QuskiOroUtil.formatSringToDate( detalle.getCredito().getFechaAprobacion()  ));
-			credito.setFechaVencimiento( QuskiOroUtil.formatSringToDate( detalle.getCredito().getFechaVencimiento() ) );
-			credito.setIdAgencia( detalle.getCredito().getIdAgencia() );
-			credito.setNumeroFunda( Long.valueOf(detalle.getGarantias().get(0).getNumeroFundaJoya()) );
-			credito.setMontoSolicitado( detalle.getCredito().getMontoSolicitado() );
-			credito.setPlazoCredito( detalle.getCredito().getPlazo() );
-			credito.setTipo( detalle.getCredito().getTipoCredito().equalsIgnoreCase("cuotas") ? TipoCreditoNegociacionEnum.CUOTAS : TipoCreditoNegociacionEnum.VENCIMIENTO  );							
-			credito.setNumeroCuotas(detalle.getCredito().getNumeroCuotas() );
-			return this.manageCreditoNegociacion( credito );
+			if( novacion.getCredito() == null ){
+				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getDetalle().getCliente().getIdentificacion());
+				if( cliente == null) {
+					log.config( "============> ESTOY CREANDO CLIENTE <============");
+					cliente = this.clienteSoftToTbQoCliente( novacion.getDetalle().getCliente() );
+					cliente = this.manageCliente(cliente);
+				}
+				TbQoNegociacion negociacion = new TbQoNegociacion();
+				negociacion.setAsesor(asesor);
+				negociacion.setEstado( EstadoEnum.ACT);
+				negociacion.setTbQoCliente( cliente );
+				negociacion = this.manageNegociacion(negociacion);
+				TbQoCreditoNegociacion credito = this.createCredito(opcion, novacion.getDetalle().getCredito().getNumeroOperacion());
+				credito.setTbQoNegociacion( negociacion );
+				credito = this.manageCreditoNegociacion(credito);
+				credito = this.crearCodigoRenovacion(credito);
+				novacion.setCredito( credito );
+				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
+				//crear tasacion ???
+			}
+			return novacion;
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE + e.getMensaje() );
 		}
 	}
-
+	private TbQoCreditoNegociacion createCredito(Opcion opcion, String numeroOperacionMadre) {
+		TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
+		//credito.setcobertura();
+		//credito.setpagoDia( );
+		//credito.setmontoSolicitado();
+		//credito.setriesgoTotalCliente( opcion.get);
+		credito.setaPagarCliente( BigDecimal.valueOf( opcion.getValorAPagar() ));
+		credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
+		credito.setMontoFinanciado( BigDecimal.valueOf(opcion.getMontoFinanciado()) );
+		credito.setEstado( EstadoEnum.ACT );
+		credito.setNumeroOperacionMadre(numeroOperacionMadre);
+		credito.setPlazoCredito( Long.valueOf(opcion.getPlazo()) );
+		credito.setValorCuota( BigDecimal.valueOf(opcion.getCuota() ));
+		credito.setCostoCustodia( BigDecimal.valueOf(opcion.getCostoCustodia()));
+		credito.setCostoFideicomiso(BigDecimal.valueOf( opcion.getCostoFideicomiso()));
+		credito.setCostoSeguro(BigDecimal.valueOf( opcion.getCostoSeguro()));
+		credito.setCostoTasacion( BigDecimal.valueOf( opcion.getCostoTasacion() ) );
+		credito.setCostoTransporte( BigDecimal.valueOf( opcion.getCostoTransporte()) );
+		credito.setCostoValoracion( BigDecimal.valueOf( opcion.getCostoValoracion()) );
+		credito.setCuota( BigDecimal.valueOf(opcion.getCuota() ));
+		credito.setCustodiaDevengada( BigDecimal.valueOf(opcion.getCustodiaDevengada() ));
+		credito.setDividendoFlujoPlaneado( BigDecimal.valueOf(opcion.getDIVIDENDOFLUJOPLANEADO() ));
+		credito.setDividendoProrrateo( BigDecimal.valueOf(opcion.getDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO() ));
+		credito.setFormaPagoCapital( opcion.getFormaPagoCapital());
+		credito.setFormaPagoCustodia( opcion.getFormaPagoCustodia() );
+		credito.setFormaPagoCustodiaDevengada( opcion.getFormaPagoCustodiaDevengada() );
+		credito.setFormaPagoFideicomiso( opcion.getFormaPagoFideicomiso() );
+		credito.setFormaPagoGastoCobranza( opcion.getFormaPagoGastoCobranza() );
+		credito.setFormaPagoImpuestoSolca( opcion.getFormaPagoImpuestoSolca() );
+		credito.setFormaPagoInteres( opcion.getFormaPagoInteres() );
+		credito.setFormaPagoMora( opcion.getFormaPagoMora() );
+		credito.setFormaPagoSeguro( opcion.getFormaPagoSeguro() );
+		credito.setFormaPagoTasador( opcion.getFormaPagoTasador() );
+		credito.setFormaPagoTransporte( opcion.getFormaPagoTransporte() );
+		credito.setFormaPagoValoracion( opcion.getFormaPagoValoracion() );
+		credito.setGastoCobranza(  BigDecimal.valueOf(opcion.getGastoCobranza()) );
+		credito.setImpuestoSolca(  BigDecimal.valueOf(opcion.getImpuestoSolca()) );
+		credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(opcion.getMontoPrevioDesembolso() ));
+		credito.setPeriodicidadPlazo( opcion.getPeriodicidadPlazo() );
+		credito.setPeriodoPlazo( opcion.getPeriodoPlazo() );
+		credito.setPorcentajeFlujoPlaneado(  BigDecimal.valueOf(opcion.getPORCENTAJEFLUJOPLANEADO()) );
+		credito.setSaldoCapitalRenov(  BigDecimal.valueOf(opcion.getSaldoCapitalRenov()) );
+		credito.setSaldoInteres(  BigDecimal.valueOf(opcion.getSaldoInteres()) );
+		credito.setSaldoMora(  BigDecimal.valueOf(opcion.getSaldoMora() ));
+		credito.setTipoOferta( opcion.getTIPOOFERTA() );
+		credito.setTotalCostosOperacionAnterior( BigDecimal.valueOf( opcion.getTotalCostosOperacionAnterior()) );
+		credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( opcion.getTotalGastosNuevaOperacion()));
+		credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
+		credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
+		return credito;
+	}
+	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
+		try {
+			persisted.setCodigo( QuskiOroConstantes.CODIGO_RENOVACION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			return this.creditoNegociacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
 
 	
 }

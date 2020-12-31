@@ -21,6 +21,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -232,8 +233,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	public GenericWrapper<DetalleCreditoEnProcesoWrapper> traerCreditoNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<DetalleCreditoEnProcesoWrapper> loc = new GenericWrapper<>();
 		DetalleCreditoEnProcesoWrapper a = this.qos.traerCreditoNegociacion(Long.valueOf( idNegociacion ));
-
 		loc.setEntidad(a);
 		return loc;
+	}
+	@POST
+	@Path("/crearCreditoRenovacion")
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion(RenovacionWrapper novacion, Opcion opcion, @QueryParam("asesor") String asesor) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( novacion, opcion, asesor );
+		loc.setEntidad(a);
+		return loc;			
 	}
 }

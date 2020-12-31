@@ -21,8 +21,6 @@ public class RenovacionWrapper implements Serializable {
 	
 	private TbQoCreditoNegociacion credito;
 	private List<TbQoTasacion> tasacion;
-	private List<TbQoVariablesCrediticia> variablesCrediticias;
-	private List<TbQoRiesgoAcumulado> riesgoAcumulado;
 	private TbQoProceso proceso;
 	private List<TbQoExcepcion> excepciones;
 	
@@ -64,21 +62,5 @@ public class RenovacionWrapper implements Serializable {
 
 	public void setTasacion(List<TbQoTasacion> tasacion) {
 		this.tasacion = tasacion;
-	}
-
-	public List<TbQoVariablesCrediticia> getVariablesCrediticias() {
-		return variablesCrediticias;
-	}
-
-	public void setVariablesCrediticias(List<TbQoVariablesCrediticia> variablesCrediticias) {
-		this.variablesCrediticias = variablesCrediticias;
-	}
-
-	public List<TbQoRiesgoAcumulado> getRiesgoAcumulado() {
-		return riesgoAcumulado;
-	}
-
-	public void setRiesgoAcumulado(List<TbQoRiesgoAcumulado> riesgoAcumulado) {
-		this.riesgoAcumulado = riesgoAcumulado;
 	}
 }
