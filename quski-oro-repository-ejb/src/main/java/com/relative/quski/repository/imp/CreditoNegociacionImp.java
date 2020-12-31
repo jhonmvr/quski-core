@@ -14,6 +14,7 @@ import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.repository.CreditoNegociacionRepository;
+import com.relative.quski.repository.spec.CreditoByCodigoBpmSpec;
 import com.relative.quski.repository.spec.CreditoByIdNegociacionSpec;
 import com.relative.quski.repository.spec.CreditoByNumeroOperacionMadre;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
@@ -72,13 +73,33 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 		try {
 			List<TbQoCreditoNegociacion> list = this.findAllBySpecification( new CreditoByNumeroOperacionMadre( numeroOperacion ) );
 			if(!list.isEmpty() ) {
-				if(list.size() != 1) {
+				if(list.size() == 1) {
 					return list.get(0);
 				}
 			}
 			return null;
 		}catch(Exception e) {
 			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
+		}
+	}
+
+	@Override
+	public TbQoCreditoNegociacion findCreditoByCodigoBpm(String codigoBpm) throws RelativeException {
+		try {
+			List<TbQoCreditoNegociacion> tmp = this.findAllBySpecification(new CreditoByCodigoBpmSpec(codigoBpm));
+			if(!tmp.isEmpty()) {
+				if(tmp.size() == 1) {
+					return tmp.get(0);
+				} else {
+					return null;
+				}
+			}else {
+				return null;				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDO ENCONTRAR CREDITO POR ID_NEGOCIACION");
 		}
 	}
 

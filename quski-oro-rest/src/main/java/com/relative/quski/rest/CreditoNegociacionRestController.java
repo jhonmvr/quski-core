@@ -238,9 +238,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearCreditoRenovacion")
-	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion(RenovacionWrapper novacion, Opcion opcion, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( Opcion opcion, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( novacion, opcion, asesor );
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( opcion, numeroOperacionMadre, asesor );
 		loc.setEntidad(a);
 		return loc;			
 	}

@@ -156,9 +156,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoRubro> tbQoRubros;
 
-	@Column(name="codigo_operacion")
-	private String codigoOperacion;
-
 	@Column(name="costo_custodia")
 	private BigDecimal costoCustodia;
 
@@ -624,14 +621,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setDeudaInicial(BigDecimal deudaInicial) {
 		this.deudaInicial = deudaInicial;
-	}
-
-	public String getCodigoOperacion() {
-		return codigoOperacion;
-	}
-
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
 	}
 
 	public BigDecimal getCostoCustodia() {

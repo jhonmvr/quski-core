@@ -192,5 +192,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad( this.qos.cambiarEstado( proceso.getIdReferencia(), proceso.getProceso(), proceso.getEstadoProceso() ) );
 		return loc;
 	}	
+	@GET
+	@Path("/traerNumeroOperacionMadre")
+	public GenericWrapper<String> traerNumeroOperacionMadre(@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		String a = this.qos.traerNumeroOperacionMadre( codigoBpm );
+		loc.setEntidad(a);
+		return loc;
+	}
 	
 }

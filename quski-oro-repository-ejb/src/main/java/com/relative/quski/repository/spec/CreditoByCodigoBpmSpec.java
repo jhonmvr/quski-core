@@ -11,14 +11,16 @@ import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 
-public class CreditoByNumeroOperacionMadre extends AbstractSpecification<TbQoCreditoNegociacion>{
-	private String numeroOperacion;
+public class CreditoByCodigoBpmSpec extends AbstractSpecification<TbQoCreditoNegociacion> {
+	private String codigoBpm;
 	
-	public CreditoByNumeroOperacionMadre(String numeroOperacion) {
+	
+
+	public CreditoByCodigoBpmSpec(String codigoBpm) {
 		super();
-		this.numeroOperacion = numeroOperacion;
+		this.codigoBpm = codigoBpm;
 	}
-	
+
 	@Override
 	public boolean isSatisfiedBy(TbQoCreditoNegociacion arg0) {
 		// TODO Auto-generated method stub
@@ -28,10 +30,8 @@ public class CreditoByNumeroOperacionMadre extends AbstractSpecification<TbQoCre
 	@Override
 	public Predicate toPredicate(Root<TbQoCreditoNegociacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
-		where.add(cb.equal(poll.get("numeroOperacionMadre"), this.numeroOperacion));
+		where.add(cb.equal(poll.get("codigo"), this.codigoBpm));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
-
-
 
 }
