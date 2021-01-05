@@ -23,7 +23,8 @@ import com.relative.core.util.mail.EmailDefinition;
 import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
+import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
+import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
@@ -34,7 +35,7 @@ import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SeccionEnum;
-import com.relative.quski.enums.TipoRubroEnum;
+//import com.relative.quski.enums.TipoRubroEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoArchivoCliente;
 import com.relative.quski.model.TbQoCliente;
@@ -112,10 +113,10 @@ import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
-import com.relative.quski.wrapper.CrmEntidadWrapper;
-import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
+//import com.relative.quski.wrapper.CrmEntidadWrapper;
+//import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
-import com.relative.quski.wrapper.CrmProspectoWrapper;
+//import com.relative.quski.wrapper.CrmProspectoWrapper;
 import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
@@ -129,7 +130,7 @@ import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
-import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS.RUBRO;
+//import com.relative.quski.wrapper.Informacion.INGRESOSEGRESOS.RUBRO;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
 import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.JoyaWrapper;
@@ -142,7 +143,6 @@ import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SimularResponse;
-import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
@@ -6714,9 +6714,9 @@ public class QuskiOroService {
 			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION );
 		}
 	}
-	public RenovacionWrapper buscarRenovacion(String numeroOperacion ) throws RelativeException{
+	public RenovacionWrapper buscarRenovacionOperacionMadre( String numeroOperacion ) throws RelativeException{
 		try {
-			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacion);
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente( numeroOperacion );
 			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre( numeroOperacion );
 			RenovacionWrapper novacion = new RenovacionWrapper( detalle ); 
@@ -6734,15 +6734,32 @@ public class QuskiOroService {
 			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
 		}
 	}
-
-	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, String numeroOperacionMadre, String asesor) throws RelativeException {
+	public RenovacionWrapper buscarRenovacionNegociacion( Long idNegociacion ) throws RelativeException{
 		try {
-			RenovacionWrapper novacion = this.buscarRenovacion(numeroOperacionMadre);
+			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+			if(credito == null) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION); }
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
+			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
+			RenovacionWrapper novacion = new RenovacionWrapper( null ); 
+			novacion.setCredito( credito );
+			novacion.setProceso( this.procesoRepository.findByIdReferencia(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION ));
+			novacion.setExcepciones( this.excepcionesRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId() ));
+			novacion.setTasacion( this.tasacionRepository.findByIdCredito( credito.getId() ));
+			return novacion;
+		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
+		}
+	}
+
+	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacionMadre, String asesor) throws RelativeException {
+		try {
+			RenovacionWrapper novacion = this.buscarRenovacionOperacionMadre(numeroOperacionMadre);
 			if( novacion.getCredito() == null ){
-				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getDetalle().getCliente().getIdentificacion());
+				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getOperacionAnterior().getCliente().getIdentificacion());
 				if( cliente == null) {
-					log.config( "============> ESTOY CREANDO CLIENTE <============");
-					cliente = this.clienteSoftToTbQoCliente( novacion.getDetalle().getCliente() );
+					log.info( "============> ESTOY CREANDO CLIENTE <============");
+					cliente = this.clienteSoftToTbQoCliente( novacion.getOperacionAnterior().getCliente() );
 					cliente = this.manageCliente(cliente);
 				}
 				TbQoNegociacion negociacion = new TbQoNegociacion();
@@ -6750,18 +6767,69 @@ public class QuskiOroService {
 				negociacion.setEstado( EstadoEnum.ACT);
 				negociacion.setTbQoCliente( cliente );
 				negociacion = this.manageNegociacion(negociacion);
-				TbQoCreditoNegociacion credito = this.createCredito(opcion, novacion.getDetalle().getCredito().getNumeroOperacion());
+				TbQoCreditoNegociacion credito = this.createCredito(opcion, novacion.getOperacionAnterior().getCredito().getNumeroOperacion());
 				credito.setTbQoNegociacion( negociacion );
 				credito = this.manageCreditoNegociacion(credito);
 				credito = this.crearCodigoRenovacion(credito);
 				novacion.setCredito( credito );
 				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
-				//crear tasacion ???
+				novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito) );
+			} else {
+				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
+				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
+				novacion.setCredito( this.manageCreditoNegociacion( this.createCredito(opcion, numeroOperacionMadre)));
+				novacion.setTasacion(this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito()));
 			}
 			return novacion;
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE + e.getMensaje() );
 		}
+	}
+	
+	private List<TbQoTasacion> createTasacionByGarantia(List<Garantia> garantias, List<GarantiaOperacionWrapper> garantiasSoft, TbQoCreditoNegociacion credito) {
+		List<TbQoTasacion> listTasacion = new ArrayList<>();
+		
+		garantias.forEach(e->{
+			garantiasSoft.forEach(s ->{
+				if( e.getDescripcion() == s.getDescripcion() && 
+						e.getTipoJoya() == s.getCodigoTipoJoya() &&
+						e.getTipoOroKilataje() == s.getCodigoTipoOro() &&
+						BigDecimal.valueOf( e.getPesoGr() ) == s.getPesoBruto() &&
+						e.getTienePiedras() == (s.getTienePiedras()?"S":"N")						
+						) {
+					TbQoTasacion tasacion = new TbQoTasacion();
+					tasacion.setNumeroGarantia( s.getNumeroGarantia() );
+					tasacion.setNumeroExpediente( s.getNumeroExpediente() );
+					tasacion.setTipoGarantia( s.getCodigoTipoGarantia() );
+					tasacion.setSubTipoGarantia( s.getCodigoSubTipoGarantia() );
+					tasacion.setEstado(EstadoEnum.ACT );
+					tasacion.setDescripcion( s.getDescripcion() );
+					tasacion.setDescuentoPesoPiedra( BigDecimal.valueOf( e.getDescuentoPesoPiedras() ) );
+					tasacion.setDescuentoSuelda( BigDecimal.valueOf(e.getDescuentoSuelda()) );
+					tasacion.setEstadoJoya( e.getEstadoJoya() );
+					tasacion.setNumeroPiezas( Long.valueOf( e.getNumeroPiezas() ) );
+					tasacion.setPesoBruto( BigDecimal.valueOf( e.getPesoGr()) );
+					tasacion.setPesoNeto(BigDecimal.valueOf( e.getPesoNeto() ) );
+					tasacion.setTipoJoya( s.getCodigoTipoJoya() );
+					tasacion.setValorAvaluo( BigDecimal.valueOf( e.getValorAvaluo() ) );
+					tasacion.setValorComercial( BigDecimal.valueOf( e.getValorAplicable() ) );
+					tasacion.setValorOro( BigDecimal.valueOf( e.getValorOro() ) );
+					tasacion.setValorRealizacion(BigDecimal.valueOf( e.getValorRealizacion() ) );
+					tasacion.setTbQoCreditoNegociacion( credito );
+					tasacion.setTipoOro( s.getCodigoTipoOro() );
+					tasacion.setTienePiedras( s.getTienePiedras() );
+					tasacion.setDetallePiedras( s.getDetallePiedras() );
+					try {
+						listTasacion.add( this.manageTasacion(tasacion) );
+					} catch (RelativeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+		});
+		return listTasacion;
+		
 	}
 	private TbQoCreditoNegociacion createCredito(Opcion opcion, String numeroOperacionMadre) {
 		TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();
