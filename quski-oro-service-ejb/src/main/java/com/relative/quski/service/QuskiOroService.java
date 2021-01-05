@@ -2147,9 +2147,9 @@ public class QuskiOroService {
 	}	
 	public ClienteCompletoWrapper traerClienteByNumeroOperacion(String numeroOperacionMadre) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre(numeroOperacionMadre);
-			if(credito != null) {
-				return traerCliente( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() );
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacionMadre);
+			if(detalle != null) {
+				return traerCliente( detalle.getCliente().getIdentificacion() );
 			}else {
 				log.info("=================> No traje nada? <==================");
 				return null;
