@@ -95,6 +95,14 @@ public class CalculadoraRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/simularOfertaRenovacionExcepcion")
+	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("codigoAgencia") String codigoAgencia, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
+		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
+		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( codigoAgencia,numeroOperacionMadre);
+		loc.setEntidad(a);
+		return loc;
+	}
 	
 	@GET
 	@Path("/simularOfertaExcepcionada")
