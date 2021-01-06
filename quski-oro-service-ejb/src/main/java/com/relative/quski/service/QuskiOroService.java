@@ -6791,17 +6791,8 @@ public class QuskiOroService {
 		try {
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente( numeroOperacion );
 			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
-			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre( numeroOperacion );
-			RenovacionWrapper novacion = new RenovacionWrapper( detalle ); 
-			if(credito == null) { 
-				return novacion;
-			} else {
-				novacion.setCredito( credito );
-				novacion.setExcepciones( this.excepcionesRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId() ));
-				novacion.setProceso( this.procesoRepository.findByIdReferencia(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION ));
-				novacion.setTasacion( this.tasacionRepository.findByIdCredito( credito.getId() ));
-				return novacion;
-			}
+			
+			return new RenovacionWrapper( detalle ); 
 		}catch(RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
@@ -6813,11 +6804,13 @@ public class QuskiOroService {
 			if(credito == null) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION); }
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
 			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
-			RenovacionWrapper novacion = new RenovacionWrapper( null ); 
+			RenovacionWrapper novacion = new RenovacionWrapper( detalle ); 
 			novacion.setCredito( credito );
 			novacion.setProceso( this.procesoRepository.findByIdReferencia(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION ));
 			novacion.setExcepciones( this.excepcionesRepository.findByIdNegociacion( credito.getTbQoNegociacion().getId() ));
 			novacion.setTasacion( this.tasacionRepository.findByIdCredito( credito.getId() ));
+			novacion.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion(idNegociacion));
+			novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), credito.getTbQoNegociacion()) );
 			return novacion;
 		}catch(RelativeException e) {
 			e.printStackTrace();
@@ -6825,13 +6818,12 @@ public class QuskiOroService {
 		}
 	}
 
-	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacionMadre, String asesor) throws RelativeException {
+	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacionMadre, Long idNego, String asesor) throws RelativeException {
 		try {
-			RenovacionWrapper novacion = this.buscarRenovacionOperacionMadre(numeroOperacionMadre);
-			
-			if( novacion.getCredito() == null ){
+			RenovacionWrapper novacion;
+			if(idNego == null) {
+				novacion = this.buscarRenovacionOperacionMadre(numeroOperacionMadre);		
 				log.info( "============> CREANDO CREDITO <============");
-
 				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getOperacionAnterior().getCliente().getIdentificacion());
 				if( cliente == null) {
 					log.info( "============> ESTOY CREANDO CLIENTE <============");
@@ -6855,12 +6847,18 @@ public class QuskiOroService {
 					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), negociacion));	
 				}
 				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion)  );
-			} else {
+			}else {
+				novacion = this.buscarRenovacionNegociacion(idNego);				
 				log.info( "============> ACTUALIZANDO CREDITO <============");
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
 				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacionMadre, novacion.getCredito().getId())));
 				novacion.setTasacion(this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito()));
+				Informacion info = this.informacionCliente(novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
+				if(info != null && info.getXmlVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
+					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), novacion.getCredito().getTbQoNegociacion()));	
+				}
+				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion())  );
 			}
 			return novacion;
 		}catch(RelativeException | UnsupportedEncodingException e) {
