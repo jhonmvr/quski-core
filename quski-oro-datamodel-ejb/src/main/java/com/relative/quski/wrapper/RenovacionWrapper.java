@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
@@ -25,6 +26,7 @@ public class RenovacionWrapper implements Serializable {
 	private List<TbQoExcepcion> excepciones;
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<TbQoCuentaBancariaCliente> cuentas;
 
 	
 	public RenovacionWrapper(DetalleCreditoWrapper operacionAnterior) {
@@ -81,5 +83,13 @@ public class RenovacionWrapper implements Serializable {
 
 	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
 		this.riesgos = riesgos;
+	}
+
+	public List<TbQoCuentaBancariaCliente> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(List<TbQoCuentaBancariaCliente> cuentas) {
+		this.cuentas = cuentas;
 	}
 }

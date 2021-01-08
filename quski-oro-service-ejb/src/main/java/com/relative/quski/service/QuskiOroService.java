@@ -5322,11 +5322,12 @@ public class QuskiOroService {
 				}
 				log.info("==============>>>>> XML garantia");
 				String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA_RENOVAR).getValor();
+				log.info("FECHA DE NACIMIENTO FORMATEADA =============> " +  QuskiOroUtil.dateToString(QuskiOroUtil.formatSringToDate(detalle.getCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI) ) );
 				contentXMLcalculadora = contentXMLcalculadora
 						.replace("--perfil-riesgo--", "1")
 						.replace("--origen-operacion--", detalle.getCredito().getEsMigrado()?"O":"E")
 						.replace("--riesgo-total--", "0")
-						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(QuskiOroUtil.formatSringToDate(detalle.getCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT)) )
+						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(QuskiOroUtil.formatSringToDate(detalle.getCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI)) )
 						.replace("--perfil-preferencia--", "A") 
 						.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 						.replace("--identificacion-cliente--",detalle.getCliente().getIdentificacion())
@@ -5343,8 +5344,8 @@ public class QuskiOroService {
 						.replace("--plazo-credito-anterior--", detalle.getCredito().getPlazo().toString())
 						.replace("--tipo-credito-anterior--", detalle.getCredito().getPeriodoPlazo())//agregar el codigo del tipo de credito
 						.replace("--estado-credito-anterior--", detalle.getCredito().getCodigoEstadoOperacion())
-						.replace("--fecha-efectiva-credito-anterior--", detalle.getCredito().getFechaAprobacion())
-						.replace("--fecha-vencimiento-credito-anterior--", detalle.getCredito().getFechaVencimiento())
+						.replace("--fecha-efectiva-credito-anterior--", QuskiOroUtil.dateToString(QuskiOroUtil.formatSringToDate(detalle.getCredito().getFechaAprobacion(), QuskiOroUtil.DATE_FORMAT_QUSKI) ))
+						.replace("--fecha-vencimiento-credito-anterior--",QuskiOroUtil.dateToString(QuskiOroUtil.formatSringToDate(detalle.getCredito().getFechaVencimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI) ) )
 						.replace("--monto-solicitado--", "0.00")
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(detalle.getCredito().getNumeroOperacionMadre())?
 								detalle.getCredito().getNumeroOperacionMadre():detalle.getCredito().getNumeroOperacion())
@@ -6811,6 +6812,7 @@ public class QuskiOroService {
 			novacion.setTasacion( this.tasacionRepository.findByIdCredito( credito.getId() ));
 			novacion.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion(idNegociacion));
 			novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), credito.getTbQoNegociacion()) );
+			novacion.setCuentas( this.cuentaBancariaRepository.findByIdCliente( credito.getTbQoNegociacion().getTbQoCliente().getId() ));
 			return novacion;
 		}catch(RelativeException e) {
 			e.printStackTrace();
