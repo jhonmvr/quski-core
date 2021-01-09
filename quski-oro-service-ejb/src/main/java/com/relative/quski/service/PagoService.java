@@ -105,6 +105,7 @@ public class PagoService {
 	public List<TbQoRegistrarPago> crearRegistrarComprobanteRenovacion(RegistrarPagoRenovacionWrapper registro)throws RelativeException, UnsupportedEncodingException {
 		try {
 			if (registro == null) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL PAGO");}
+			
 			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			if (registro.getPagos() != null && !registro.getPagos().isEmpty()) {
 				registro.getPagos().forEach(e ->{
@@ -117,12 +118,7 @@ public class PagoService {
 						String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
 						String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
 						String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-
-						log.info( "=============>  URL_STORAGE     =======> "+ url);
-						log.info( "=============>  DATA_BASE_NAME  =======> "+ base);
-						log.info( "=============>  COLLECTION_NAME =======> "+ coleccion);
-						log.info( "=============>  SERVICIO        =======> "+ url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion));
-						objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file,null );
+						objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file, null );
 						TbQoRegistrarPago pago = new TbQoRegistrarPago();
 						pago.setCuentas(e.getCuenta());
 						pago.setFechaPago(e.getFechaPago());
@@ -131,7 +127,8 @@ public class PagoService {
 						pago.setValorPagado(e.getValorDepositado());
 						pago.setEstado(EstadoEnum.ACT);
 						pago.setIdComprobante(objeto.getEntidad());
-						pago.setTbQoCreditoNegociacion( this.qos.findCreditoByIdNegociacion( e.getComprobante().getRelatedIdStr() ));
+						pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getIdCredito() ));
+						pago.setUsuarioCreacion(registro.getAsesor() );
 						pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 						pagos.add( qos.manageRegistrarPago(pago) ); 
 					} catch (UnsupportedEncodingException | RelativeException e1) {

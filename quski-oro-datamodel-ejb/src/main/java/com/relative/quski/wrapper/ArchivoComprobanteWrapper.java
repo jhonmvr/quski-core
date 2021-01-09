@@ -12,7 +12,7 @@ public class ArchivoComprobanteWrapper implements Serializable {
 	private String name;
 	private String process;
 	private Long relatedId;
-	private Long relatedIdStr;
+	private String relatedIdStr;
 	private String type;
 	private Long typeAction;
 	
@@ -40,10 +40,10 @@ public class ArchivoComprobanteWrapper implements Serializable {
 	public void setRelatedId(Long relatedId) {
 		this.relatedId = relatedId;
 	}
-	public Long getRelatedIdStr() {
+	public String getRelatedIdStr() {
 		return relatedIdStr;
 	}
-	public void setRelatedIdStr(Long relatedIdStr) {
+	public void setRelatedIdStr(String relatedIdStr) {
 		this.relatedIdStr = relatedIdStr;
 	}
 	public String getType() {

@@ -290,6 +290,24 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="valor_a_recibir")
 	private BigDecimal valorARecibir;
+	
+	@Column(name="identificacion_codeudor")
+	private String identificacionCodeudor;
+	
+	@Column(name="nombre_completo_codeudor")
+	private String nombreCompletoCodeudor;
+	
+	@Column(name="fecha_nacimiento_codeudor")
+	private Date fechaNacimientoCodeudor;
+	
+	@Column(name="identificacion_apoderado")
+	private String identificacionApoderado;
+	
+	@Column(name="nombre_completo_apoderado")
+	private String nombreCompletoApoderado;
+	
+	@Column(name="fecha_nacimiento_apoderado")
+	private Date fechaNacimientoApoderado;
 
 	
 	public TbQoCreditoNegociacion() {
@@ -997,5 +1015,53 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
 		this.numeroOperacionMadre = numeroOperacionMadre;
+	}
+
+	public String getIdentificacionCodeudor() {
+		return identificacionCodeudor;
+	}
+
+	public void setIdentificacionCodeudor(String identificacionCodeudor) {
+		this.identificacionCodeudor = identificacionCodeudor;
+	}
+
+	public String getNombreCompletoCodeudor() {
+		return nombreCompletoCodeudor;
+	}
+
+	public void setNombreCompletoCodeudor(String nombreCompletoCodeudor) {
+		this.nombreCompletoCodeudor = nombreCompletoCodeudor;
+	}
+
+	public Date getFechaNacimientoCodeudor() {
+		return fechaNacimientoCodeudor;
+	}
+
+	public void setFechaNacimientoCodeudor(Date fechaNacimientoCodeudor) {
+		this.fechaNacimientoCodeudor = fechaNacimientoCodeudor;
+	}
+
+	public String getIdentificacionApoderado() {
+		return identificacionApoderado;
+	}
+
+	public void setIdentificacionApoderado(String identificacionApoderado) {
+		this.identificacionApoderado = identificacionApoderado;
+	}
+
+	public String getNombreCompletoApoderado() {
+		return nombreCompletoApoderado;
+	}
+
+	public void setNombreCompletoApoderado(String nombreCompletoApoderado) {
+		this.nombreCompletoApoderado = nombreCompletoApoderado;
+	}
+
+	public Date getFechaNacimientoApoderado() {
+		return fechaNacimientoApoderado;
+	}
+
+	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
+		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
 	}
 }

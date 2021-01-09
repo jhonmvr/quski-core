@@ -272,6 +272,7 @@ public class QuskiOroConstantes {
 
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "URL_SERVICIO_SOFTBANK_CREAR_OPERACION";
+	public static final String SOFTBANK_RENOVAR_OPERACION = "SOFTBANK_RENOVAR_OPERACION";
 	public static final String SOFTBANK_CONSULTA_GARANTIA = "SOFTBANK_CONSULTA_GARANTIA";
 	public static final String SOFTBANK_CONSULTA_RUBRO = "SOFTBANK_CONSULTA_RUBRO";
 
