@@ -334,8 +334,8 @@ public class QuskiOroConstantes {
 
 	
 	//STORAGE
-	public static final String collectionName = "collectionName";
-	public static final String databaseName = "databaseName";
+	public static final String COLLECTION_NAME = "COLLECTION_NAME";
+	public static final String DATA_BASE_NAME = "DATA_BASE_NAME";
 	public static final String URL_STORAGE = "URL_STORAGE";
 	
 	//PAGO SERVICE

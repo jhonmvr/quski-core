@@ -29,6 +29,7 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.FileLocalStorage;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
+import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 import com.relative.quski.wrapper.RegistroBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistroPagoWrapper;
@@ -101,6 +102,51 @@ public class PagoService {
 			throw e;
 		}
 	}
+	public List<TbQoRegistrarPago> crearRegistrarComprobanteRenovacion(RegistrarPagoRenovacionWrapper registro)throws RelativeException, UnsupportedEncodingException {
+		try {
+			if (registro == null) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL PAGO");}
+			List<TbQoRegistrarPago> pagos = new ArrayList<>();
+			if (registro.getPagos() != null && !registro.getPagos().isEmpty()) {
+				registro.getPagos().forEach(e ->{
+					FileLocalStorage file = new FileLocalStorage();
+					file.setFileBase64(e.getComprobante().getFileBase64());
+					file.setName( e.getComprobante().getName() );
+					file.setProcess(EstadoEnum.ACT);
+					RespuestaObjectWrapper objeto;
+					try {
+						String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+						String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+						String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+
+						log.info( "=============>  URL_STORAGE     =======> "+ url);
+						log.info( "=============>  DATA_BASE_NAME  =======> "+ base);
+						log.info( "=============>  COLLECTION_NAME =======> "+ coleccion);
+						log.info( "=============>  SERVICIO        =======> "+ url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion));
+						objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file,null );
+						TbQoRegistrarPago pago = new TbQoRegistrarPago();
+						pago.setCuentas(e.getCuenta());
+						pago.setFechaPago(e.getFechaPago());
+						pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
+						pago.setNumeroDeposito(e.getNumeroDeposito());
+						pago.setValorPagado(e.getValorDepositado());
+						pago.setEstado(EstadoEnum.ACT);
+						pago.setIdComprobante(objeto.getEntidad());
+						pago.setTbQoCreditoNegociacion( this.qos.findCreditoByIdNegociacion( e.getComprobante().getRelatedIdStr() ));
+						pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+						pagos.add( qos.manageRegistrarPago(pago) ); 
+					} catch (UnsupportedEncodingException | RelativeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+				});
+			}
+			return pagos;
+		} catch (RelativeException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	// REGISTRO BLOQUEO DE FONDOS EN LA TABLA REGISTRAR PAGO 
 	public RegistrarBloqueoFondoWrapper bloqueoFondo(RegistrarBloqueoFondoWrapper bloqueoFondo, String autorizacion, byte[] bs)
 			throws RelativeException, UnsupportedEncodingException {
@@ -122,7 +168,7 @@ public class PagoService {
 			if (bloqueoFondo.getBloqueos() != null && !bloqueoFondo.getBloqueos().isEmpty()) {
 				
 				for (RegistroBloqueoFondoWrapper registro : bloqueoFondo.getBloqueos()) {
-					List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
+					//List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
 					FileLocalStorage file = new FileLocalStorage();
 					file.setFileBase64(registro.getArchivo());
 					file.setName(registro.getNombreArchivo());
@@ -164,10 +210,10 @@ public class PagoService {
 		// log.info("=====> DE NOTIFICACION " + encodedString);
 		params.append("?");
 		params.append("databaseName").append("=")
-				.append(parametroRepository.findByNombre(QuskiOroConstantes.databaseName).getValor());
+				.append(parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor());
 		params.append("&&");
 		params.append("collectionName").append("=")
-				.append(parametroRepository.findByNombre(QuskiOroConstantes.collectionName).getValor());
+				.append(parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor());
 		params.append("&&");
 		params.append("hash").append("=").append(hash);
 		params.append("&&");
