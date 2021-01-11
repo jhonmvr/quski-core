@@ -6110,6 +6110,7 @@ public class QuskiOroService {
 			result.setIdentificacion(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ); 
 			result.setNombreCliente( credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() ); 
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  ) ;
+			
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion() );
 			if(result.getCodigoTablaAmortizacionQuski() == null) { throw new RelativeException(Constantes.ERROR_CODE_READ); }
 			result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
@@ -6947,7 +6948,8 @@ public class QuskiOroService {
 			}
 			return novacion;
 		}catch(RelativeException | UnsupportedEncodingException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE );
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_NOVACION );
 		}
 	}
 	
@@ -7010,15 +7012,13 @@ public class QuskiOroService {
 		
 	}
 	private TbQoCreditoNegociacion createCreditoNovacion(Opcion opcion, String numeroOperacionMadre, Long id) throws RelativeException {
-		TbQoCreditoNegociacion credito = new TbQoCreditoNegociacion();						
+		TbQoCreditoNegociacion credito;						
 		if(id != null) {
-			try {
-				credito = this.findCreditoNegociacionById(id);
-				if(credito == null) {throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA );}
-			} catch (RelativeException e) {
-				e.printStackTrace();
-				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA );
-			}
+			credito = this.findCreditoNegociacionById(id);
+			if(credito == null) {throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA );}
+			
+		}else {
+			credito = new TbQoCreditoNegociacion();
 		}
 		//credito.setcobertura();
 		//credito.setpagoDia( );
@@ -7067,6 +7067,21 @@ public class QuskiOroService {
 		credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( opcion.getTotalGastosNuevaOperacion()));
 		credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
 		credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
+		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor());
+		if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
+		listTablas.forEach(e->{
+			if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+				e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+				e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+				e.getPlazo() == credito.getPlazoCredito() 
+			){
+				credito.setTablaAmortizacion( e.getCodigo() );
+				credito.setNumeroCuotas(e.getNumeroCuotas());					
+			}
+		});
+		if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+		}
 		return credito;
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
