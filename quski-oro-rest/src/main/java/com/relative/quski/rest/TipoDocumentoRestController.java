@@ -29,6 +29,7 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.TipoPlantillaEnum;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.repository.ParametroRepository;
+import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -47,6 +48,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	Logger log;
 	@Inject
 	QuskiOroService qos;
+	@Inject
+	DevolucionService dos;
 	
 
 	@Inject
@@ -128,7 +131,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		    @QueryParam("identificacionCliente") String identificacionCliente,
 		    @QueryParam("nombreCliente") String nombreCliente,
 		    @QueryParam("idCotizador") String idCotizador,
-		    @QueryParam("idNegociacion") String idNegociacion
+		    @QueryParam("idNegociacion") String idNegociacion,
+		    @QueryParam("idDevolucion") String idDevolucion
 		  
 		    ) throws RelativeException {
 		log.info("===================> getPlantilla");
@@ -136,6 +140,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		log.info("===================> getPlantilla identificacionCliente " + identificacionCliente );
 		log.info("===================> getPlantilla idCotizador " + idCotizador );
 		log.info("===================> getPlantilla idNegociacion " + idNegociacion );
+		log.info("===================> getPlantilla idDevolucion " + idDevolucion );
 		
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
@@ -148,8 +153,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
-		this.setParameters(map,path,  identificacionCliente, nombreCliente, idCotizador, idNegociacion, td);
-		this.setReportData(map, path, identificacionCliente, nombreCliente, idCotizador, idNegociacion, td);
+		this.setParameters(map,path,  identificacionCliente, nombreCliente, idCotizador, idNegociacion, idDevolucion, td);
+		this.setReportData(map, path, identificacionCliente, nombreCliente, idCotizador, idNegociacion, idDevolucion, td);
 		return this.generateReport(map, path, formato, td);
 	}
 	/**
@@ -161,10 +166,11 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	 * @param td
 	 */
 	private void setParameters(Map<String, Object> map,String path, String identificacionCliente,String nombreCliente,
-			String idCotizador, String idNegociacion, TbQoTipoDocumento td){
+			String idCotizador, String idNegociacion, String idDevolucion, TbQoTipoDocumento td){
 		map.put("identificacionCliente", identificacionCliente);
 		map.put("idCotizador", idCotizador);
 		map.put("idNegociacion", idNegociacion);
+		map.put("idDevolucion", idDevolucion);
 		map.put("subReportOneName",  td.getPlantillaUno() );
 		map.put("subReportTwoName", td.getPlantillaDos() );
 		map.put("subReportThreeName", td.getPlantillaTres());
@@ -178,12 +184,19 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	
 	
 	private void setReportData(Map<String, Object> map,String path, String identificacionCliente, String nombreCliente,
-			String idCotizador, String idNegociacion,  TbQoTipoDocumento td) throws RelativeException{
+			String idCotizador, String idNegociacion, String idDevolucion,  TbQoTipoDocumento td) throws RelativeException{
 		
 		
 		if( !StringUtils.isEmpty( identificacionCliente )  ) {
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB )==0  )  {
 				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
+			} 
+			
+			
+		}
+		if( !StringUtils.isEmpty( idDevolucion )  ) {
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.TC )==0  )  {
+			//	map.put("BEAN_DS", dos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
 			} 
 			
 			

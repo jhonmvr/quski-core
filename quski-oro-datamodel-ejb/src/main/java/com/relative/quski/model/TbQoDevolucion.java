@@ -100,6 +100,8 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="fecha_aprobacion_solicitud")
 	private Date fechaAprobacionSolicitud;
 	
+	@Column(name="fecha_efectiva")
+	private Date fechaEfectiva;
 
 	@Column(name="fecha_arribo")
 	private Date fechaArribo;
@@ -131,6 +133,16 @@ public class TbQoDevolucion implements Serializable {
 	
 	@Column(name="peso_bruto")
 	private BigDecimal pesoBruto;
+	
+	@Column(name="ciudad_tevcol")
+	private String ciudadTevcol;
+	
+	@Column(name="nombre_Apoderado")
+	private String nombreApoderado;
+	
+	@Column(name="cedula_Apoderado")
+	private String cedulaApoderado;
+	
 	
 	
 	public TbQoDevolucion() {
@@ -435,4 +447,39 @@ public class TbQoDevolucion implements Serializable {
 		this.observacionAprobador = observacionAprobador;
 	}
 
+	public Date getFechaEfectiva() {
+		return fechaEfectiva;
+	}
+
+	public void setFechaEfectiva(Date fechaEfectiva) {
+		this.fechaEfectiva = fechaEfectiva;
+	}
+
+	public String getCiudadTevcol() {
+		return ciudadTevcol;
+	}
+
+	public void setCiudadTevcol(String ciudadTevcol) {
+		this.ciudadTevcol = ciudadTevcol;
+	}
+
+	public String getNombreApoderado() {
+		return nombreApoderado;
+	}
+
+	public void setNombreApoderado(String nombreApoderado) {
+		this.nombreApoderado = nombreApoderado;
+	}
+
+	public String getCedulaApoderado() {
+		return cedulaApoderado;
+	}
+
+	public void setCedulaApoderado(String cedulaApoderado) {
+		this.cedulaApoderado = cedulaApoderado;
+	}
+
+
+
+	
 }

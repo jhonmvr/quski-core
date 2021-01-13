@@ -2,6 +2,7 @@
 package com.relative.quski.service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,6 +12,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
@@ -22,10 +25,19 @@ import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.ActaEntregaRecepcionApoderadoWrapper;
+import com.relative.quski.wrapper.ActaEntregaRecepcionHerederoWrapper;
+import com.relative.quski.wrapper.ActaEntregaRecepcionWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
+import com.relative.quski.wrapper.HerederoWrapper;
+import com.relative.quski.wrapper.ListHerederoWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
+import com.relative.quski.wrapper.SolicitudDevolucionApoderadoWrapper;
+import com.relative.quski.wrapper.SolicitudDevolucionHerederoWrapper;
+import com.relative.quski.wrapper.SolicitudDevolucionWrapper;
 
 @Stateless
 public class DevolucionService {
@@ -150,7 +162,8 @@ public class DevolucionService {
 			persisted.setPesoBruto(send.getPesoBruto());
 			persisted.setDevuelto(send.getDevuelto());
 			persisted.setObservacionAprobador(send.getObservacionAprobador());
-			
+			persisted.setFechaEfectiva(send.getFechaEfectiva());
+			persisted.setCiudadTevcol(send.getCiudadTevcol());
 			
 			return devolucionRepository.update(persisted);
 		} catch (RelativeException e) {
@@ -424,5 +437,195 @@ public TbQoDevolucion rechazarVerificacionFirmas(Long id ) throws RelativeExcept
 
 	return devolucion;
 }
+
+/**
+ * HABILITANTES devolucion
+ */
+
+public HabilitanteTerminacionContratoWrapper setHabilitanteTerminacionContrato(Long idDevolucion)
+		throws RelativeException {
+
+	HabilitanteTerminacionContratoWrapper habilitante = new HabilitanteTerminacionContratoWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());;
+	habilitante.setFechaActual(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
+	habilitante.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
+	return habilitante;
+}
+
+public ActaEntregaRecepcionWrapper setHabilitanteActaEntrega(Long idDevolucion)
+		throws RelativeException {
+
+	ActaEntregaRecepcionWrapper habilitante = new ActaEntregaRecepcionWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
+	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setNombreAsesor(devolucion.getAsesor());
+	return habilitante;
+}
+
+public ActaEntregaRecepcionApoderadoWrapper setHabilitanteActaEntregaApoderado(Long idDevolucion)
+		throws RelativeException {
+
+	ActaEntregaRecepcionApoderadoWrapper habilitante = new ActaEntregaRecepcionApoderadoWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
+	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setNombreAsesor(devolucion.getAsesor());
+	habilitante.setCedulaApoderado(devolucion.getCedulaApoderado());
+	habilitante.setNombreApoderado(devolucion.getNombreApoderado());
+	return habilitante;
+}
+
+public ActaEntregaRecepcionHerederoWrapper setHabilitanteActaEntregaHeredero(Long idDevolucion)
+		throws RelativeException {
+
+	ActaEntregaRecepcionHerederoWrapper habilitante = new ActaEntregaRecepcionHerederoWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
+	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setNombreAsesor(devolucion.getAsesor());
+	//habilitante.setHerederos();
+	return habilitante;
+}
+
+public  List<HerederoWrapper> getHerederos(Long idDevolucion) throws RelativeException {
+	
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	String herederos = devolucion.getCodeHerederos();
+	String decodedUrl = new String(Base64.getDecoder().decode(herederos));
+	Gson gsons = new GsonBuilder().create();
+	ListHerederoWrapper  listHeredero= gsons.fromJson(decodedUrl, ListHerederoWrapper.class);
+
+	return listHeredero.getHeredero();	
+}
+
+
+public static  String setStringHeredero(List<HerederoWrapper> herederos) throws RelativeException {
+	String respuestaHerederos = "";
+	for (HerederoWrapper h : herederos) {
+		
+		if(h.equals(herederos.get(0))){
+			respuestaHerederos = respuestaHerederos.concat(h.getCedula() +" " + h.getNombre());
+		}else {
+			if (h.equals(herederos.get(herederos.size()-1))) {
+				respuestaHerederos = respuestaHerederos.concat(" y "+h.getCedula() +" " + h.getNombre());
+		} else {
+			respuestaHerederos = respuestaHerederos.concat(", "+h.getCedula() +" " + h.getNombre());
+		}
+		}
+		
+			
+		
+	}
+	System.out.println(respuestaHerederos);
+	return respuestaHerederos;
+	
+}
+
+
+
+
+
+public SolicitudDevolucionWrapper setHabilitanteSolicitudDevolucion(Long idDevolucion)
+		throws RelativeException {
+
+	SolicitudDevolucionWrapper habilitante = new SolicitudDevolucionWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
+	habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+	habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setAsesor(devolucion.getAsesor());
+	habilitante.setNombreCliente(devolucion.getNombreCliente());
+	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
+
+	return habilitante;
+}
+
+
+public SolicitudDevolucionApoderadoWrapper setHabilitanteSolicitudDevolucionApoderado(Long idDevolucion)
+		throws RelativeException {
+
+	SolicitudDevolucionApoderadoWrapper habilitante = new SolicitudDevolucionApoderadoWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
+	habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+	habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setAsesor(devolucion.getAsesor());
+	habilitante.setNombreCliente(devolucion.getNombreCliente());
+	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
+	habilitante.setNombreApoderado(devolucion.getNombreApoderado());
+	habilitante.setNombreApoderado(devolucion.getCedulaApoderado());
+
+	return habilitante;
+}
+
+
+
+public SolicitudDevolucionHerederoWrapper setHabilitanteSolicitudDevolucionHeredero(Long idDevolucion)
+		throws RelativeException {
+
+	SolicitudDevolucionHerederoWrapper habilitante = new SolicitudDevolucionHerederoWrapper();
+	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+	habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
+	habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+	habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
+	habilitante.setNumeroFunda(devolucion.getFundaActual());
+	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
+	habilitante.setAsesor(devolucion.getAsesor());
+	habilitante.setNombreCliente(devolucion.getNombreCliente());
+	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
+	habilitante.setHeredero(setStringHeredero(getHerederos(idDevolucion)));
+
+	return habilitante;
+}
+
+
+public static void main(String[] args) {
+	try {
+		String code = "ewoJImhlcmVkZXJvIiA6IFt7ImNlZHVsYSI6IjE3MjA4MTIyMzciLCJub21icmUiOiJEaWVnbyBTZXJyYW5vIn0sIHsiY2VkdWxhIjoiMTcyMDgxMjIzOCIsIm5vbWJyZSI6IkRpZWdvIFNlcnJhbnUifV0KfQ==";
+	
+		String decodedUrl = new String(Base64.getDecoder().decode(code));
+		Gson gsons = new GsonBuilder().create();
+		//System.out.print("decode" + decodedUrl);
+		ListHerederoWrapper  listHeredero= gsons.fromJson(decodedUrl, ListHerederoWrapper.class);
+		String pepito = setStringHeredero(listHeredero.getHeredero());
+	//	List<HerederoWrapper> lista = gsons.fromJson(decodedUrl, new ArrayList<HerederoWrapper>().getClass());
+		//Class<? extends ArrayList> listType = new ArrayList<HerederoWrapper>().getClass();
+		
+		//List<HerederoWrapper> list =   gsons.fromJson((String) decodedUrl, listType);
+		//HerederoWrapper heredero =  list.get(0);
+		
+		//System.out.print("HOLI" + listHeredero.getHeredero().get(0));
+	/*	
+		for (HerederoWrapper h : listHeredero.getHeredero()) {
+			System.out.println(h.getCedula() +" " + h.getNombre() );
+		}*/
+		/*
+		  for (int i = 0; i < list.size(); i++) {
+			    gsons.fromJson((String) list.get(i), HerederoWrapper.class);
+	            System.out.println(list.get(i));
+	        }*/
+		//System.out.print("HOLI" + list.get(1));
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+}
+
+
 
 }
