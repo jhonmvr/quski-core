@@ -167,6 +167,14 @@ public class ClienteRestController extends BaseRestController
 		ClienteCompletoWrapper a = this.qos.traerClienteByIdNegociacion(Long.valueOf( id ));
 		loc.setEntidad(a);
 		return loc;
+	}	
+	@GET
+	@Path("/traerClienteByNumeroOperacion")
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByNumeroOperacion(@QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
+		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
+		ClienteCompletoWrapper a = this.qos.traerClienteByNumeroOperacion(numeroOperacionMadre);
+		loc.setEntidad(a);
+		return loc;
 	}
 	@GET
 	@Path("/traerClienteByCedula")

@@ -7,5 +7,6 @@ public enum ProcessEnum {
 	CLIENTE,
 	CREDITONUEVO,
 	FUNDA,
-	DEVOLUCION
+	DEVOLUCION,
+	NOVACION
 }

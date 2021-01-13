@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoCuentaBancariaCliente;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 
 public class RenovacionWrapper implements Serializable {
 
@@ -15,14 +18,21 @@ public class RenovacionWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private DetalleCreditoWrapper operacionAnterior;
+	
 	private TbQoCreditoNegociacion credito;
-	public RenovacionWrapper(TbQoCreditoNegociacion credito, TbQoProceso proceso) {
-		super();
-		this.credito = credito;
-		this.proceso = proceso;
-	}
+	private List<TbQoTasacion> tasacion;
 	private TbQoProceso proceso;
 	private List<TbQoExcepcion> excepciones;
+	private List<TbQoVariablesCrediticia> variables;
+	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<TbQoCuentaBancariaCliente> cuentas;
+
+	
+	public RenovacionWrapper(DetalleCreditoWrapper operacionAnterior) {
+		super();
+		this.operacionAnterior = operacionAnterior;
+	}
 	
 	public TbQoCreditoNegociacion getCredito() {
 		return credito;
@@ -42,25 +52,44 @@ public class RenovacionWrapper implements Serializable {
 	public void setExcepciones(List<TbQoExcepcion> excepciones) {
 		this.excepciones = excepciones;
 	}
-	public List<TbQoTasacion> getJoyas() {
-		return joyas;
+
+	public List<TbQoTasacion> getTasacion() {
+		return tasacion;
 	}
-	public void setJoyas(List<TbQoTasacion> joyas) {
-		this.joyas = joyas;
+
+	public void setTasacion(List<TbQoTasacion> tasacion) {
+		this.tasacion = tasacion;
 	}
-	public Boolean getExisteError() {
-		return existeError;
+
+	public DetalleCreditoWrapper getOperacionAnterior() {
+		return operacionAnterior;
 	}
-	public void setExisteError(Boolean existeError) {
-		this.existeError = existeError;
+
+	public void setOperacionAnterior(DetalleCreditoWrapper operacionAnterior) {
+		this.operacionAnterior = operacionAnterior;
 	}
-	public String getMensaje() {
-		return mensaje;
+
+	public List<TbQoVariablesCrediticia> getVariables() {
+		return variables;
 	}
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
+
+	public void setVariables(List<TbQoVariablesCrediticia> variables) {
+		this.variables = variables;
 	}
-	private List<TbQoTasacion> joyas;
-	private Boolean existeError;
-	private String mensaje;
+
+	public List<TbQoRiesgoAcumulado> getRiesgos() {
+		return riesgos;
+	}
+
+	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
+		this.riesgos = riesgos;
+	}
+
+	public List<TbQoCuentaBancariaCliente> getCuentas() {
+		return cuentas;
+	}
+
+	public void setCuentas(List<TbQoCuentaBancariaCliente> cuentas) {
+		this.cuentas = cuentas;
+	}
 }

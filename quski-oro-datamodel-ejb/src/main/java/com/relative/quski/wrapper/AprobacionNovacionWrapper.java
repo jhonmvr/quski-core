@@ -14,16 +14,13 @@ import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 
-/**
- * @author KLÉBER GUERRA relative Engine
- *
- */
-public class AprobacionWrapper implements Serializable {
+public class AprobacionNovacionWrapper implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private TbQoCreditoNegociacion credito;
@@ -37,12 +34,14 @@ public class AprobacionWrapper implements Serializable {
 	private List<TbQoRiesgoAcumulado> riesgos;
 	private List<TbQoTasacion> joyas;
 	private TbQoCuentaBancariaCliente cuenta;
+	private List<TbQoRegistrarPago> pagos;
+	private DetalleCreditoWrapper creditoAnterior;
 	private Boolean existeError;
 	private String mensaje;
 	
 	
 	
-	public AprobacionWrapper(Boolean existeError) {
+	public AprobacionNovacionWrapper(Boolean existeError) {
 		super();
 		this.existeError = existeError;
 	}
@@ -77,6 +76,10 @@ public class AprobacionWrapper implements Serializable {
 	}
 	public void setTelefonos(List<TbQoTelefonoCliente> telefonos) {
 		this.telefonos = telefonos;
+		if( telefonos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTEN TELEFONOS";
+		}
 	}
 	public List<TbQoDireccionCliente> getDirecciones() {
 		return direcciones;
@@ -143,13 +146,7 @@ public class AprobacionWrapper implements Serializable {
 	public TbQoCuentaBancariaCliente getCuenta() {
 		return cuenta;
 	}
-	public void setCuentas(TbQoCuentaBancariaCliente cuenta) {
-		this.cuenta = cuenta;
-		if( cuenta == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTE CUENTA BANCARIA";
-		}
-	}
+
 	public Boolean getExisteError() {
 		return existeError;
 	}
@@ -161,6 +158,38 @@ public class AprobacionWrapper implements Serializable {
 	}
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public List<TbQoRegistrarPago> getPagos() {
+		return pagos;
+	}
+
+	public void setPagos(List<TbQoRegistrarPago> pagos) {
+		this.pagos = pagos;
+		if( pagos == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE PAGOS";
+		}
+	}
+
+	public DetalleCreditoWrapper getCreditoAnterior() {
+		return creditoAnterior;
+	}
+
+	public void setCreditoAnterior(DetalleCreditoWrapper creditoAnterior) {
+		this.creditoAnterior = creditoAnterior;
+		if( creditoAnterior == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE CREDITO ANTERIOR";
+		}
+	}
+
+	public void setCuenta(TbQoCuentaBancariaCliente cuenta) {
+		this.cuenta = cuenta;
+		if( cuenta == null) {
+			this.existeError = true;
+			this.mensaje = "NO EXISTE CUENTA BANCARIA";
+		}
 	}
 
 

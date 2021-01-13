@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.FileLocalStorage;
 import com.relative.quski.wrapper.HerederoWrapper;
@@ -33,7 +32,7 @@ public class LocalStorageClient {
 	private static final String empty = "{}";
 
 	@Inject
-	private ParametroRepository parametroRepository;
+	//private ParametroRepository parametroRepository;
 
 	public static void main(String[] args) {
 		try {

@@ -3,9 +3,11 @@ package com.relative.quski.repository.imp;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
+import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
@@ -98,6 +100,34 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 			throw new RelativeException(": Al contar los registro de tasacion por id de negociacion " + e.getMessage());
 		}
 		
+	}
+	@Override
+	public void deleteTasacionByNegociacionId(Long idCredito) throws RelativeException {
+
+		try {
+			if(idCredito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRARTASACION ID CREDITO ES OBLIGATORIO");
+			}
+		
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_tasacion where 1=1 ");
+			
+			queryStr.append("and id_credito_negociacion =:idCredito ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idCredito", idCredito);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR LAS VARIABLES CREDITICIAS");
+		}
+		
+	
 	}
 	
 	

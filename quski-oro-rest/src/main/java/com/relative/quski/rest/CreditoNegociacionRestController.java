@@ -27,16 +27,15 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
-import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
-import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
+import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
-import com.relative.quski.wrapper.SimularResponseExcepcion;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -149,6 +148,15 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	@GET
+	@Path("/traerCreditonovacionPorAprobar")
+	public GenericWrapper<AprobacionNovacionWrapper> traerCreditonovacionPorAprobar(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<AprobacionNovacionWrapper> loc = new GenericWrapper<>();
+		AprobacionNovacionWrapper a = this.qos.traerCreditonovacionPorAprobar(Long.valueOf( idNegociacion ));
+
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
 	@Path("/devolverAprobar")
 	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
@@ -190,6 +198,18 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		}
 		return loc;			
 	}
+	@POST
+	@Path("/crearOperacionRenovacion")
+	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionRenovacion(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
+		if(wp.getEntidad().getId() != null) {
+			CreditoCreadoSoftbank a = this.qos.crearOperacionRenovacion( wp.getEntidad() );
+			loc.setEntidad(a);
+		}else {
+			loc.setEntidad(null);			
+		}
+		return loc;			
+	}
 	
 	@POST
 	@Path("/optenerNumeroDeFunda")
@@ -216,24 +236,44 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	@GET
-	@Path("/iniciarRenovacion")
-	public GenericWrapper<RenovacionWrapper> iniciarRenovacion(@QueryParam("numeroOperacion") String numeroOperacion,@QueryParam("asesor") String asesor) throws RelativeException {
+	@Path("/buscarRenovacionByNumeroOperacionMadre")
+	public GenericWrapper<RenovacionWrapper> buscarRenovacionByNumeroOperacionMadre(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
-			RenovacionWrapper a = this.qos.iniciarRenovacion( numeroOperacion, asesor );
+			RenovacionWrapper a = this.qos.buscarRenovacionOperacionMadre( numeroOperacion );
 			loc.setEntidad(a);
 			return loc;
 		}
 		loc.setEntidad(null);
 		return loc;
 	}
+
 	@GET
 	@Path("/traerCreditoNegociacion")
 	public GenericWrapper<DetalleCreditoEnProcesoWrapper> traerCreditoNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<DetalleCreditoEnProcesoWrapper> loc = new GenericWrapper<>();
 		DetalleCreditoEnProcesoWrapper a = this.qos.traerCreditoNegociacion(Long.valueOf( idNegociacion ));
-
 		loc.setEntidad(a);
+		return loc;
+	}
+	@POST
+	@Path("/crearCreditoRenovacion")
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion(), wp.getGarantias(), numeroOperacionMadre, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor );
+		loc.setEntidad(a);
+		return loc;			
+	}
+	@GET
+	@Path("/buscarRenovacionByIdNegociacion")
+	public GenericWrapper<RenovacionWrapper> buscarRenovacionByIdNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		if( !idNegociacion.isEmpty() ) { 
+			RenovacionWrapper a = this.qos.buscarRenovacionNegociacion( Long.valueOf( idNegociacion ) );
+			loc.setEntidad(a);
+			return loc;
+		}
+		loc.setEntidad(null);
 		return loc;
 	}
 }

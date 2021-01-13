@@ -182,6 +182,9 @@ public class ReRestClient<T> {
 			cw.setRequireLogin(requireLogin);
 			cw.setUrlStr(serviceUrl);
 			cw.setTransform(transform);
+			System.out.println("=========================>>>>>>");
+			System.out.println(cw.toString());
+			System.out.println("=========================>>>>>>");
 			ReRestClient<T> b= new ReRestClient<>( cw );
 			return b.execute(classType);
 		} catch (RelativeException e) {

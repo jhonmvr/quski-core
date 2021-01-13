@@ -12,10 +12,7 @@ public class SoftbankClienteWrapper implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -365985272182192369L;
-	public SoftbankClienteWrapper( String identificacion ) {
-		this.idTipoIdentificacion = QuskiOroConstantes.TIPO_CEDULA;
-		this.identificacion = identificacion;
-	}
+
 		private Integer idTipoIdentificacion;
 		private String identificacion;                         
 		private String nombreCompleto;                         
