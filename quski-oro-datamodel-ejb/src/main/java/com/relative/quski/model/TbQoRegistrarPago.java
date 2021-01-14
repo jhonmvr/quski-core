@@ -73,7 +73,12 @@ public class TbQoRegistrarPago implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_pago")
 	private TbQoClientePago tbQoClientePago;
-
+	
+	//bi-directional many-to-one association to TbQoClientePago
+	@ManyToOne
+	@JoinColumn(name="id_credito")
+	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
+	
 	public TbQoRegistrarPago() {
 	}
 
@@ -179,6 +184,14 @@ public class TbQoRegistrarPago implements Serializable {
 
 	public void setTbQoClientePago(TbQoClientePago tbQoClientePago) {
 		this.tbQoClientePago = tbQoClientePago;
+	}
+
+	public TbQoCreditoNegociacion getTbQoCreditoNegociacion() {
+		return tbQoCreditoNegociacion;
+	}
+
+	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
+		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
 	}
 
 }

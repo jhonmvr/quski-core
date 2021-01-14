@@ -29,6 +29,7 @@ import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
+import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
 
 import io.swagger.annotations.Api;
@@ -123,6 +124,21 @@ public class RegistrarPagoRestController extends BaseRestController
 		
 		try {
 			loc.setEntidad( this.ps.crearRegistrarPago(registroPago,autentication) );
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return loc;
+	}
+	@POST
+	@Path("/crearRegistrarComprobanteRenovacion")
+	public GenericWrapper<TbQoRegistrarPago> crearRegistrarComprobanteRenovacion(RegistrarPagoRenovacionWrapper registro) throws RelativeException {
+		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
+		try {
+			loc.setEntidades( this.ps.crearRegistrarComprobanteRenovacion(registro) );
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");

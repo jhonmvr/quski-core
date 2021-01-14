@@ -17,6 +17,7 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.spec.ProcesoByAsesorSpec;
 import com.relative.quski.repository.spec.ProcesoByIdNegociacion;
+import com.relative.quski.repository.spec.ProcesoByIdNovacion;
 import com.relative.quski.repository.spec.ProcesoByIdReferenciaSpec;
 import com.relative.quski.repository.spec.ProcesoByIdSpec;
 import com.relative.quski.util.QueryConstantes;
@@ -312,6 +313,25 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	public TbQoProceso findByIdCreditoNuevo(Long id) throws RelativeException {
 		try {
 			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdNegociacion(id));
+			if (!list.isEmpty()) {
+				if (list.size() == 1) {
+					return list.get(0);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,
+							QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
+				}
+			} else {
+				return null;
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+		}
+	}
+	@Override
+	public TbQoProceso findByIdCreditoNovacion(Long id) throws RelativeException {
+		try {
+			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdNovacion(id));
 			if (!list.isEmpty()) {
 				if (list.size() == 1) {
 					return list.get(0);

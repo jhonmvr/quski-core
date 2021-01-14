@@ -11,6 +11,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.spec.RegistrarPagoByIdClientePagoSpec;
+import com.relative.quski.repository.spec.RegistrarPagoByIdCreditoSpec;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -23,6 +24,22 @@ public class RegistrarPagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoR
 		try {
 			List<TbQoRegistrarPago> tmp;
 			tmp= this.findAllBySpecification(new RegistrarPagoByIdClientePagoSpec(idClientePago));
+			if(tmp !=null && !tmp.isEmpty()) {
+				return tmp;
+			}
+			// TODO Auto-generated method stub
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL BUSCAR EN TB_QO_REGISTRAR_PAGO POR ID_PAGO");
+		}
+	}
+	@Override
+	public List<TbQoRegistrarPago> findByIdCredito(Long idCredito) throws RelativeException {
+		try {
+			List<TbQoRegistrarPago> tmp;
+			tmp= this.findAllBySpecification(new RegistrarPagoByIdCreditoSpec(idCredito));
 			if(tmp !=null && !tmp.isEmpty()) {
 				return tmp;
 			}

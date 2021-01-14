@@ -239,6 +239,7 @@ public class QuskiOroConstantes {
 	public static final String ERROR_SIN_PROCESO = "NO POSEE UN PROCESO RELACIONADO";
 	public static final String ERROR_AL_REALIZAR_CREACION = "AL REALIZAR CREACION -> ";
 	public static final String ERROR_CREATE_CLIENTE = "AL CREAR AL CLIENTE -> ";
+	public static final String ERROR_CREATE_NOVACION = " AL CREAR EL CREDITO RENOVACION -> ";
 	public static final String ERROR_NEGOCIACION = "AL CREAR TODA LA GESTION -> ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "AL REALIZAR ACTUALIZACION -> ";
 	public static final String ERROR_VALOR_NO_VALIDO = "INGRESE UN VALOR VALIDO";
@@ -272,6 +273,7 @@ public class QuskiOroConstantes {
 
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "URL_SERVICIO_SOFTBANK_CREAR_OPERACION";
+	public static final String SOFTBANK_RENOVAR_OPERACION = "SOFTBANK_RENOVAR_OPERACION";
 	public static final String SOFTBANK_CONSULTA_GARANTIA = "SOFTBANK_CONSULTA_GARANTIA";
 	public static final String SOFTBANK_CONSULTA_RUBRO = "SOFTBANK_CONSULTA_RUBRO";
 
@@ -334,8 +336,8 @@ public class QuskiOroConstantes {
 
 	
 	//STORAGE
-	public static final String collectionName = "collectionName";
-	public static final String databaseName = "databaseName";
+	public static final String COLLECTION_NAME = "COLLECTION_NAME";
+	public static final String DATA_BASE_NAME = "DATA_BASE_NAME";
 	public static final String URL_STORAGE = "URL_STORAGE";
 	
 	//PAGO SERVICE

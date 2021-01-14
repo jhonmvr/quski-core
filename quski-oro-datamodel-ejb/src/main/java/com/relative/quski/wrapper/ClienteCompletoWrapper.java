@@ -14,7 +14,7 @@ public class ClienteCompletoWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final String MENSAJE_CLIENTE = "NO EXISTE CLIENTE";
 	private static final String MENSAJE_DIRECCION = "NO EXISTEN DIRECCIONES";
-	private static final String MENSAJE_REFERENCIA = "NO EXISTEN REFENCIAS";
+	private static final String MENSAJE_REFERENCIA = "NO EXISTEN REFERENCIAS";
 	private static final String MENSAJE_TELEFONO = "NO EXISTEN TELEFONOS";
 	private static final String MENSAJE_TRABAJO = "NO EXISTE TRABAJO CLIENTE";
 	private static final String MENSAJE_CUENTA = "NO EXISTEN CUENTAS";

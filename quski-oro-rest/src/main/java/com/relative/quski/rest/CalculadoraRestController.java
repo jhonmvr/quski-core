@@ -97,9 +97,9 @@ public class CalculadoraRestController extends BaseRestController
 	}
 	@GET
 	@Path("/simularOfertaRenovacionExcepcion")
-	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("codigoAgencia") String codigoAgencia, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
+	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("idCredito") String idCredito,@QueryParam("cobertura") String cobertura) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
-		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( codigoAgencia,numeroOperacionMadre);
+		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura );
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -112,4 +112,12 @@ public class CalculadoraRestController extends BaseRestController
 		loc.setEntidades( as );
 		return loc;
 	}	
+	@GET
+	@Path("/simularOfertaExcepcionadaRenovacion")
+	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura) throws NumberFormatException, Exception {
+		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
+		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionadaRenovacion(Long.valueOf( idCredito ), cobertura );
+		loc.setEntidades( as );
+		return loc;
+	}
 }
