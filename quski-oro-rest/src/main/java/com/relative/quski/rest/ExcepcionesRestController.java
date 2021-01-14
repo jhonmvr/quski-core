@@ -22,6 +22,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.service.QuskiOroService;
 
@@ -74,17 +75,31 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	}
 	@GET
 	@Path("/negarExcepcion")
-	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador ) throws RelativeException {
+	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.qos.negarExcepcion( Long.valueOf( idExc ), obsAprobador, aprobador);
+		ProcesoEnum proc = null;
+		if( proceso.equalsIgnoreCase(ProcesoEnum.NUEVO.toString())) {
+			proc = ProcesoEnum.NUEVO;
+		}
+		if( proceso.equalsIgnoreCase(ProcesoEnum.RENOVACION.toString())) {
+			proc = ProcesoEnum.RENOVACION;
+		}
+		Boolean a = this.qos.negarExcepcion( Long.valueOf( idExc ), obsAprobador, aprobador, proc);
 		loc.setEntidad(a);
 		return loc;
 	}
 	@GET
 	@Path("/aprobarCobertura")
-	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura ) throws RelativeException {
+	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.qos.aprobarCobertura(Long.valueOf( idExc ), obsAprobador, aprobador, cobertura );
+		ProcesoEnum proc = null;
+		if( proceso.equalsIgnoreCase(ProcesoEnum.NUEVO.toString())) {
+			proc = ProcesoEnum.NUEVO;
+		}
+		if( proceso.equalsIgnoreCase(ProcesoEnum.RENOVACION.toString())) {
+			proc = ProcesoEnum.RENOVACION;
+		}
+		Boolean a = this.qos.aprobarCobertura(Long.valueOf( idExc ), obsAprobador, aprobador, cobertura, proc);
 		loc.setEntidad(a);
 		return loc;
 	}
