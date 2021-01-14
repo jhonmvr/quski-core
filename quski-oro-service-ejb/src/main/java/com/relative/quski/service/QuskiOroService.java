@@ -5589,28 +5589,8 @@ public class QuskiOroService {
 		}
 	}
 	private TbQoClientePago crearCodigoPago(TbQoClientePago persisted) throws RelativeException {
-		String cod = QuskiOroConstantes.CODIGO_PAGO+"0000000";
-		Long id = persisted.getId();
 		try {
-			if (id < 9) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"000000";
-			} else if (id < 99) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"00000" + id;
-			} else if (id < 999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"0000" + id;
-			} else if (id < 9999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"000" + id;
-			} else if (id < 99999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"00" + id;
-			} else if (id < 999999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"0" + id;
-			} else if (id < 9999999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+ "" + id;
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de PAGO supera los 7 digitos numericos");
-			}
-			persisted.setCodigo(cod);
+			persisted.setCodigo(QuskiOroConstantes.CODIGO_PAGO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.clientePagoRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -5668,28 +5648,9 @@ public class QuskiOroService {
 	}
 
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
-		String cod = QuskiOroConstantes.CODIGO_NUEVO+"0000000";
-		Long id = persisted.getId();
+		
 		try {
-			if (id < 9) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"000000";
-			} else if (id < 99) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"00000" + id;
-			} else if (id < 999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"0000" + id;
-			} else if (id < 9999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"000" + id;
-			} else if (id < 99999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"00" + id;
-			} else if (id < 999999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"0" + id;
-			} else if (id < 9999999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+ "" + id;
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de Credito supera los 7 digitos numericos");
-			}
-			persisted.setCodigo(cod);
+			persisted.setCodigo(QuskiOroConstantes.CODIGO_NUEVO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -5938,7 +5899,9 @@ public class QuskiOroService {
 				new DatosRegistroWrapper(
 						credito.getTbQoNegociacion().getAsesor(), 
 						c.getIdAgencia(),  
-						QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) ) 
+						QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT),
+						credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto(),
+						credito.getCodigo()) 
 				); 
 		DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
 
@@ -5987,8 +5950,8 @@ public class QuskiOroService {
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion(String numeroOperacion, String usuario, Long agencia) throws RelativeException{
 		try {
 			
-			DatosRegistroWrapper datos = new DatosRegistroWrapper(usuario, agencia,  QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) );
-			return this.consultarTablaAmortizacion(numeroOperacion,  "Referencia", datos ); 
+			DatosRegistroWrapper datos = null;
+			return this.consultarTablaAmortizacion(numeroOperacion,  "", datos ); 
 			
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
@@ -6075,7 +6038,7 @@ public class QuskiOroService {
 			}
 			CrearOperacionEntradaWrapper result = new CrearOperacionEntradaWrapper(cliente.getCedulaCliente(), cliente.getNombreCompleto() ); 
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
-		
+			
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
 			if(result.getCodigoTablaAmortizacionQuski() == null) { return null;}
 			result.setDatosImpCom( this.generarImpCom( credito ) );
@@ -6092,8 +6055,10 @@ public class QuskiOroService {
 					new DatosRegistroWrapper(
 							credito.getTbQoNegociacion().getAsesor(), 
 							credito.getIdAgencia(),  
-							QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT) ) 
-					); 
+							QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), 
+							credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto(),
+							credito.getCodigo()
+					)); 
 			List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
 			cuentaCliente.forEach(c->{
 				if( credito.getNumeroCuenta().equals( c.getCuenta() )) {

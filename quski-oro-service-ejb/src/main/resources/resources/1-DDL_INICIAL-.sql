@@ -1,6 +1,6 @@
 -- DROP SCHEMA public;
 
-CREATE SCHEMA public AUTHORIZATION postgres;
+--CREATE SCHEMA public AUTHORIZATION postgres;
 
 COMMENT ON SCHEMA public IS 'standard public schema';
 
@@ -1700,3 +1700,135 @@ COMMENT ON COLUMN public.tb_qo_tasacion.numero_garantia IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.numero_expediente IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.tipo_garantia IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.sub_tipo_garantia IS 'g';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT 
+    pg_terminate_backend(pid) 
+FROM 
+    pg_stat_activity 
+WHERE 
+    -- don't kill my own connection!
+    pid <> pg_backend_pid()
+    -- don't kill the connections to other databases
+    AND datname = 'requskioropredb'
+    ;
+   
+   
+   REVOKE CONNECT ON DATABASE requskioropredb FROM PUBLIC, postgres;
+
+
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'requskioropredb';
+
+
+
+
+select * from tb_mi_parametro 
+
+
+select * from tb_mi_parametro where valor like '%generic-relative-rest%' 
+
+--http://apigw.quski.ec:8480/
+
+update tb_mi_parametro set valor = '<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<soap:Body>
+		<CalculadoraQuski
+			xmlns="http://tempuri.org/">
+			<XMlConsulta>
+				<![CDATA[ <carga>
+    <XmlParametrosRiesgo>
+        <ParametrosRiesgo>
+            <PerfilRiesgo>--perfil-riesgo--</PerfilRiesgo>
+            <OrigenOperacion>--origen-operacion--</OrigenOperacion>
+            <RiesgoTotal>--riesgo-total--</RiesgoTotal>
+            <FechaNacimiento>--fecha-nacimiento--</FechaNacimiento>
+            <PerfilPreferencia>--perfil-preferencia--</PerfilPreferencia>
+            <AgenciaOriginacion>--agencia-originacion--</AgenciaOriginacion>
+            <IdentificacionCliente>--identificacion-cliente--</IdentificacionCliente>
+            <CalificacionMupi>--calificacion-mupi--</CalificacionMupi>
+            <CoberturaExcepcionada>--cobertura-exepcionada--</CoberturaExcepcionada>
+        </ParametrosRiesgo>
+    </XmlParametrosRiesgo>
+    <XmlGarantias>
+        <Garantias>--garanttias-detalle--</Garantias>
+    </XmlGarantias>
+    <XmlDescuentosNuevaOperacion>
+        <DescuentosOperacion>
+            <SaldoMontoCreditoAnterior>--saldo-monto-credito-anterior--</SaldoMontoCreditoAnterior>
+            <SaldoInteresCreditoAnterior>--saldo-interes-credito-anterior--</SaldoInteresCreditoAnterior>
+            <MoraCreditoAnterior>--mora-credito-anterior--</MoraCreditoAnterior>
+            <CobranzaCreditoAnterior>--cobranza-credito-anterior--</CobranzaCreditoAnterior>
+            <TipoCartera>--tipo-cartera--</TipoCartera>
+            <MontoFinanciadoCreditoAnterior>--monto-financiado-credito-anterior--</MontoFinanciadoCreditoAnterior>
+            <PlazoCreditoAnterior>--plazo-credito-anterior--</PlazoCreditoAnterior>
+            <TipoCreditoAnterior>--tipo-credito-anterior--</TipoCreditoAnterior>
+            <EstadoCreditoAnterior>--estado-credito-anterior--</EstadoCreditoAnterior>
+            <FechaEfectivaCreditoAnterior>--fecha-efectiva-credito-anterior--</FechaEfectivaCreditoAnterior>
+            <FechaVencimientoCreditoAnterior>--fecha-vencimiento-credito-anterior--</FechaVencimientoCreditoAnterior>
+            <MontoSolicitadoCliente>--monto-solicitado--</MontoSolicitadoCliente>
+            <NumeroOperacionMadre>--numero-operacion-madre--</NumeroOperacionMadre>
+            <NumeroOperacionRenovar>--numero-operacion-renovar--</NumeroOperacionRenovar>
+            <REFERENCIA_ADICIONAL>--referencia-adicional--</REFERENCIA_ADICIONAL>
+            <OperacionPropia>--operacion-propia--</OperacionPropia>
+        </DescuentosOperacion>
+    </XmlDescuentosNuevaOperacion>
+</carga> ]]>
+			</XMlConsulta>
+		</CalculadoraQuski>
+	</soap:Body>
+</soap:Envelope>' where id =465
+
+
+-- Auto-generated SQL script #202101111250
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/'
+	WHERE id=37;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/resources/'
+	WHERE id=36;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/'
+	WHERE id=2;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/resources/'
+	WHERE id=1;
+UPDATE public.tb_mi_parametro
+	SET valor='ws://apigw.quski.ec:8480/quski-oro-rest/midasws/'
+	WHERE id=38;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/resources/'
+	WHERE id=210;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/quski-oro-rest/'
+	WHERE id=209;
+
+
+-- Auto-generated SQL script #202101111458
+UPDATE public.tb_mi_parametro
+	SET valor='ws://apigw.quski.ec:8480/generic-relative-rest/relativews/'
+	WHERE id=213;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/generic-relative-rest/resources/'
+	WHERE id=215;
+UPDATE public.tb_mi_parametro
+	SET valor='http://apigw.quski.ec:8480/generic-relative-rest/resources/mongoRestController/createObject'
+	WHERE id=402;

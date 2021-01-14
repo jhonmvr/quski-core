@@ -16,13 +16,13 @@ public class DatosRegistroWrapper implements Serializable{
 	private String codigoUsuario;
 	private String canalNegociacion;
 	
-	public DatosRegistroWrapper(String codigoUsuario, Long idAgencia, String fecha) {
+	public DatosRegistroWrapper(String codigoUsuario, Long idAgencia, String fecha,String canalNegociacion,String referencia) {
 		super();
 		this.codigoUsuario = codigoUsuario;
 		this.idAgencia = idAgencia;
 		this.fecha = fecha;
-		this.canalNegociacion = QuskiOroConstantes.SOFT_POR_DEFECTO;
-		this.referencia = QuskiOroConstantes.SOFT_POR_DEFECTO;
+		this.canalNegociacion = canalNegociacion;
+		this.referencia = referencia;
 	}
 	private Long idAgencia;
 	
