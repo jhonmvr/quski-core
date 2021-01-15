@@ -2118,9 +2118,9 @@ public class QuskiOroService {
 						tmp.setRespuesta(true);
 						tmp.setProceso( proceso );
 						tmp.setTelefonoDomicilio(this.telefonoClienteRepository
-								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "F"));
+								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "DOM"));
 						tmp.setTelefonoMovil(this.telefonoClienteRepository
-								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "M"));
+								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "CEL"));
 						return tmp;
 					}
 				}else {
@@ -2252,10 +2252,10 @@ public class QuskiOroService {
 			referencia.setTbQoCliente(cliente);
 			if(e.getTelefonos() != null ) {
 				e.getTelefonos().forEach(t ->{
-					if( t.getCodigoTipoTelefono().equalsIgnoreCase("F") ){
+					if( t.getCodigoTipoTelefono().equalsIgnoreCase("DOM") ){
 						referencia.setTelefonoFijo( t.getNumero() );
 					}
-					if( t.getCodigoTipoTelefono().equalsIgnoreCase("M") ) {
+					if( t.getCodigoTipoTelefono().equalsIgnoreCase("CEL") ) {
 						referencia.setTelefonoMovil( t.getNumero() );
 					}
 				});									
@@ -2506,10 +2506,10 @@ public class QuskiOroService {
 				referencia.setTbQoCliente(cliente);
 				if(e.getTelefonos() != null ) {
 					e.getTelefonos().forEach(t ->{
-						if( t.getCodigoTipoTelefono().equalsIgnoreCase("F") ){
+						if( t.getCodigoTipoTelefono().equalsIgnoreCase("DOM") ){
 							referencia.setTelefonoFijo( t.getNumero() );
 						}
-						if( t.getCodigoTipoTelefono().equalsIgnoreCase("M") ) {
+						if( t.getCodigoTipoTelefono().equalsIgnoreCase("CEL") ) {
 							referencia.setTelefonoMovil( t.getNumero() );
 						}
 					});									
@@ -2579,8 +2579,8 @@ public class QuskiOroService {
 				}
 				wrapper.setRespuesta(true);
 				wrapper.setProceso( proceso );
-				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "F"));
-				wrapper.setTelefonoMovil(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "M"));
+				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "DOM"));
+				wrapper.setTelefonoMovil(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "CEL"));
 				//wrapper.setTipoOro(this.tipoOro(cliente));
 				try {
 					//this.guardarProspectoCrm(cliente);
@@ -4357,7 +4357,8 @@ public class QuskiOroService {
 	public List<SoftbankOperacionWrapper> consultarRiesgoSoftbank(String identificacion) throws RelativeException {
 		try {
 			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
-			SoftbankRiesgoWrapper persisted = SoftBankApiClient.callConsultaRiesgoRest(consulta);
+			SoftbankRiesgoWrapper persisted = SoftBankApiClient.callConsultaRiesgoRest(consulta,
+					this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SOFTBANK_RIESGO_ACUMULADO).getValor());
 			if (!persisted.getOperaciones().isEmpty()) {
 				return persisted.getOperaciones();
 			} else {
@@ -4631,10 +4632,10 @@ public class QuskiOroService {
 							l.setParentesco( e.getCodigoTipoReferencia() );
 							if(e.getTelefonos() != null ) {
 								e.getTelefonos().forEach(t ->{
-									if( t.getCodigoTipoTelefono().equalsIgnoreCase("F") ){
+									if( t.getCodigoTipoTelefono().equalsIgnoreCase("DOM") ){
 										l.setTelefonoFijo( t.getNumero() );
 									}
-									if( t.getCodigoTipoTelefono().equalsIgnoreCase("M") ) {
+									if( t.getCodigoTipoTelefono().equalsIgnoreCase("CEL") ) {
 										l.setTelefonoMovil( t.getNumero() );
 									}
 								});									
@@ -4651,10 +4652,10 @@ public class QuskiOroService {
 					referencia.setParentesco( e.getCodigoTipoReferencia() );
 					if(e.getTelefonos() != null ) {
 						e.getTelefonos().forEach(t ->{
-							if( t.getCodigoTipoTelefono().equalsIgnoreCase("F") ){
+							if( t.getCodigoTipoTelefono().equalsIgnoreCase("DOM") ){
 								referencia.setTelefonoFijo( t.getNumero() );
 							}
-							if( t.getCodigoTipoTelefono().equalsIgnoreCase("M") ) {
+							if( t.getCodigoTipoTelefono().equalsIgnoreCase("CEL") ) {
 								referencia.setTelefonoMovil( t.getNumero() );
 							}
 						});									
@@ -4812,8 +4813,8 @@ public class QuskiOroService {
 					ref.setDireccion( e.getDireccion() );
 					ref.setActivo( e.getEstado() == EstadoEnum.ACT );
 					List<TelefonosContactoClienteWrapper> subList = new ArrayList<>();
-					subList.add( new TelefonosContactoClienteWrapper( "F", e.getTelefonoFijo() ) );
-					subList.add( new TelefonosContactoClienteWrapper( "M", e.getTelefonoMovil()) );
+					subList.add( new TelefonosContactoClienteWrapper( "DOM", e.getTelefonoFijo() ) );
+					subList.add( new TelefonosContactoClienteWrapper( "CEL", e.getTelefonoMovil()) );
 					ref.setTelefonos( subList );
 					contactosCliente.add(ref);
 				});
@@ -4880,7 +4881,8 @@ public class QuskiOroService {
 			if (cliente.getIdTipoIdentificacion() != null) {
 				if (cliente.getIdentificacion() != null) {
 					if (cliente.getCodigoUsuario() != null) {
-						SoftbankRespuestaWrapper result = SoftBankApiClient.callEditarClienteRest(cliente);
+						SoftbankRespuestaWrapper result = SoftBankApiClient.callEditarClienteRest(cliente,
+								this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE).getValor());
 						if(!result.getExisteError()) {
 							return Boolean.TRUE;
 						}else {

@@ -185,14 +185,14 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta)
+	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CONSULTA ========> " + new String(content));
-			String service = QuskiOroConstantes.URL_SOFTBANK_RIESGO_ACUMULADO;
+			//String service = QuskiOroConstantes.URL_SOFTBANK_RIESGO_ACUMULADO;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
@@ -373,14 +373,14 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static SoftbankRespuestaWrapper callEditarClienteRest(SoftbankClienteWrapper consulta)
+	public static SoftbankRespuestaWrapper callEditarClienteRest(SoftbankClienteWrapper consulta,String service)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER EDITAR CLIENTE ========> " + new String(content));
-			String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE;
+			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
