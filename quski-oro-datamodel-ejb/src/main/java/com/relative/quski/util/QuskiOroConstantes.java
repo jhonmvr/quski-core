@@ -254,7 +254,19 @@ public class QuskiOroConstantes {
 	public static final String ERROR_INGRESE_PROCESO = "INGRESE UN CAMPO DE PROCESO VALIDO.";
 
 
-	
+	// RUBROCREAR OPERACION
+	public static final String COSTO_CUSTODIA      = "COSTO_CUSTODIA" ;
+	public static final String COSTO_FIDEICOMISO   = "COSTO_FIDEICOMISO" ;
+	public static final String COSTO_SEGURO        = "COSTO_SEGURO" ;
+	public static final String COSTO_TASACION      = "COSTO_TASACION" ;
+	public static final String COSTO_TRANSPORTE    = "COSTO_TRANSPORTE" ;
+	public static final String COSTO_VALORACION    = "COSTO_VALORACION" ;
+	public static final String SALDO_CAPITAL_RENOV = "SALDO_CAPITAL_RENOV" ;
+	public static final String SALDO_INTERES       = "SALDO_INTERES" ;
+	public static final String SALDO_MORA          = "SALDO_MORA" ;
+	public static final String GASTO_COBRANZA      = "GASTO_COBRANZA" ;
+	public static final String CUSTODIA_DEVENGADA  = "CUSTODIA_DEVENGADA" ;
+
 	// SOFTBANK
 	public static final String SOFT_TIPO_PRESTAMO = "001" ;
 	public static final String SOFT_GRADO_INTERES = "000" ;

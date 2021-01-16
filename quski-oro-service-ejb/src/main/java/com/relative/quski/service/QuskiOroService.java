@@ -6319,75 +6319,87 @@ public class QuskiOroService {
 			List<CatalogoWrapper>  listCatalogo = this.catalogoImpCom();
 			listCatalogo.forEach(e->{
 				DatosImpComWrapper item = new DatosImpComWrapper();
-				log.info("==========> El valor de CUSTODIA ====> " + credito.getCostoCustodia() );
-				log.info("==========> El valor de COMPARACION CUSTODIA ====> " + credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) );
-
-				if( e.getCodigo().equalsIgnoreCase("CostoCustodia") && credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
-					item.setValor( credito.getCostoCustodia() );
-					listImpCom.add( item );
-				}
-				
-				if( e.getCodigo().equals("CostoFideicomiso") && credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
-					item.setValor( credito.getCostoFideicomiso() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("CostoSeguro") && credito.getCostoSeguro().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoSeguro() );
-					item.setValor( credito.getCostoSeguro() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("CostoTasacion") && credito.getCostoTasacion().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoTasador() );
-					item.setValor( credito.getCostoTasacion() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("CostoTransporte") && credito.getCostoTransporte().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoTransporte() );
-					item.setValor( credito.getCostoTransporte() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("CostoValoracion") && credito.getCostoValoracion().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoValoracion() );
-					item.setValor( credito.getCostoValoracion() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("C") && credito.getSaldoCapitalRenov().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoCapital() );
-					item.setValor( credito.getSaldoCapitalRenov() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("I") && credito.getSaldoInteres().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoInteres() );
-					item.setValor( credito.getSaldoInteres() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("003") && credito.getSaldoMora().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoMora() );
-					item.setValor( credito.getSaldoMora() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("GC") && credito.getGastoCobranza().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoGastoCobranza() );
-					item.setValor( credito.getGastoCobranza() );
-					listImpCom.add( item );
-				}
-				if( e.getCodigo().equals("CD") && credito.getCustodiaDevengada().compareTo( new BigDecimal( 0 ) )> 0){
-					item.setCodigo( e.getCodigo() );
-					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
-					item.setValor( credito.getCustodiaDevengada() );
-					listImpCom.add( item );
+				try {
+					if( e.getCodigo().equalsIgnoreCase(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_CUSTODIA).getValor()) 
+							&& credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
+						item.setValor( credito.getCostoCustodia() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_FIDEICOMISO).getValor()) 
+							&& credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
+						item.setValor( credito.getCostoFideicomiso() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_SEGURO).getValor()) 
+							&& credito.getCostoSeguro().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoSeguro() );
+						item.setValor( credito.getCostoSeguro() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TASACION).getValor()) 
+							&& credito.getCostoTasacion().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoTasador() );
+						item.setValor( credito.getCostoTasacion() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TRANSPORTE).getValor()) 
+							&& credito.getCostoTransporte().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoTransporte() );
+						item.setValor( credito.getCostoTransporte() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_VALORACION).getValor()) 
+							&& credito.getCostoValoracion().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoValoracion() );
+						item.setValor( credito.getCostoValoracion() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_CAPITAL_RENOV).getValor()) 
+							&& credito.getSaldoCapitalRenov().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoCapital() );
+						item.setValor( credito.getSaldoCapitalRenov() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_INTERES).getValor()) 
+							&& credito.getSaldoInteres().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoInteres() );
+						item.setValor( credito.getSaldoInteres() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_MORA).getValor()) 
+							&& credito.getSaldoMora().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoMora() );
+						item.setValor( credito.getSaldoMora() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.GASTO_COBRANZA).getValor()) 
+							&& credito.getGastoCobranza().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoGastoCobranza() );
+						item.setValor( credito.getGastoCobranza() );
+						listImpCom.add( item );
+					}
+					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.CUSTODIA_DEVENGADA).getValor()) 
+							&& credito.getCustodiaDevengada().compareTo( new BigDecimal( 0 ) )> 0){
+						item.setCodigo( e.getCodigo() );
+						item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
+						item.setValor( credito.getCustodiaDevengada() );
+						listImpCom.add( item );
+					}
+				} catch (RelativeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			});
 			return listImpCom;
