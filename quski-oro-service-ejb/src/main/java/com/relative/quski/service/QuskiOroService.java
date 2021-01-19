@@ -6115,6 +6115,9 @@ public class QuskiOroService {
 				
 		}catch(RelativeException e) {
 			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}

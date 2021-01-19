@@ -439,7 +439,7 @@ public class SoftBankApiClient {
 				}
 				return respuestaWrapper;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
