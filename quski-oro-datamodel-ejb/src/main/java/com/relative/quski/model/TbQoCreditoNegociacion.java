@@ -273,15 +273,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="total_gastos_nueva_operacion")
 	private BigDecimal totalGastosNuevaOperacion;
 
-	@Column(name="total_valor_avaluo")
-	private BigDecimal totalValorAvaluo;
-
-	@Column(name="total_valor_comercial")
-	private BigDecimal totalValorComercial;
-
-	@Column(name="total_valor_realizacion")
-	private BigDecimal totalValorRealizacion;
-
 	@Column(name="numero_coutas")
 	private Long numeroCuotas;
 
@@ -308,6 +299,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 	
 	@Column(name="fecha_nacimiento_apoderado")
 	private Date fechaNacimientoApoderado;
+	
+	@Column(name="excepcion_operativa")
+	private String excepcionOperativa;
+	
+	@Column(name="fecha_regularizacion")
+	private Date fechaRegularizacion;
 
 	
 	public TbQoCreditoNegociacion() {
@@ -937,30 +934,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.totalGastosNuevaOperacion = totalGastosNuevaOperacion;
 	}
 
-	public BigDecimal getTotalValorAvaluo() {
-		return totalValorAvaluo;
-	}
-
-	public void setTotalValorAvaluo(BigDecimal totalValorAvaluo) {
-		this.totalValorAvaluo = totalValorAvaluo;
-	}
-
-	public BigDecimal getTotalValorComercial() {
-		return totalValorComercial;
-	}
-
-	public void setTotalValorComercial(BigDecimal totalValorComercial) {
-		this.totalValorComercial = totalValorComercial;
-	}
-
-	public BigDecimal getTotalValorRealizacion() {
-		return totalValorRealizacion;
-	}
-
-	public void setTotalValorRealizacion(BigDecimal totalValorRealizacion) {
-		this.totalValorRealizacion = totalValorRealizacion;
-	}
-
 	public BigDecimal getValorAPagar() {
 		return valorAPagar;
 	}
@@ -1063,5 +1036,21 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaNacimientoApoderado(Date fechaNacimientoApoderado) {
 		this.fechaNacimientoApoderado = fechaNacimientoApoderado;
+	}
+
+	public String getExcepcionOperativa() {
+		return excepcionOperativa;
+	}
+
+	public void setExcepcionOperativa(String excepcionOperativa) {
+		this.excepcionOperativa = excepcionOperativa;
+	}
+
+	public Date getFechaRegularizacion() {
+		return fechaRegularizacion;
+	}
+
+	public void setFechaRegularizacion(Date fechaRegularizacion) {
+		this.fechaRegularizacion = fechaRegularizacion;
 	}
 }

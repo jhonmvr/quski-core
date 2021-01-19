@@ -188,10 +188,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionNuevo")
-	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(@QueryParam("correoAsesor") String correoAsesor, GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
 		if(wp.getEntidad().getId() != null) {
-			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
+			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad(), correoAsesor);
 			loc.setEntidad(a);
 		}else {
 			loc.setEntidad(null);			

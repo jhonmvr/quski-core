@@ -5905,6 +5905,12 @@ public class QuskiOroService {
 			if( send.getFechaNacimientoCodeudor() != null ) {
 				persisted.setFechaNacimientoCodeudor( send.getFechaNacimientoCodeudor() );
 			}
+			if( StringUtils.isNotBlank(send.getExcepcionOperativa() )) {
+				persisted.setExcepcionOperativa( send.getExcepcionOperativa() );
+			}
+			if( send.getFechaRegularizacion() != null ) {
+				persisted.setFechaRegularizacion( send.getFechaRegularizacion() );
+			}
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );
@@ -6087,10 +6093,16 @@ public class QuskiOroService {
 
 	
 	
-	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp ) throws RelativeException{
+	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp, String correoAsesor) throws RelativeException{
 		try {
 			
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
+			String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
+			log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
+			if(  wp.getExcepcionOperativa() != null && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+				this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
+			}
+			
 			if(op != null ) {
 				CrearOperacionRespuestaWrapper operacion = 	SoftBankApiClient.callCrearOperacion01Rest(
 						op, this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION).getValor());
@@ -6102,6 +6114,7 @@ public class QuskiOroService {
 			
 				
 		}catch(RelativeException e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -6317,89 +6330,85 @@ public class QuskiOroService {
 		try {
 			List<DatosImpComWrapper> listImpCom = new ArrayList<DatosImpComWrapper>();
 			List<CatalogoWrapper>  listCatalogo = this.catalogoImpCom();
+			String costoCustodia = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_CUSTODIA).getValor();
+			String costoFideicomiso = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_FIDEICOMISO).getValor();
+			String costoSeguro = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_SEGURO).getValor();
+			String costoTasacion = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TASACION).getValor();
+			String costoTransporte = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TRANSPORTE).getValor();
+			String costoValoracion = this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_VALORACION).getValor();
+			String saldoCapitalRenov = this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_CAPITAL_RENOV).getValor();
+			String saldoInteres = this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_INTERES).getValor();
+			String saldoMora = this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_MORA).getValor();
+			String gastoCobranza = this.parametroRepository.findByNombre(QuskiOroConstantes.GASTO_COBRANZA).getValor();
+			String custodiaDevengada = this.parametroRepository.findByNombre(QuskiOroConstantes.CUSTODIA_DEVENGADA).getValor();
+
 			listCatalogo.forEach(e->{
 				DatosImpComWrapper item = new DatosImpComWrapper();
-				try {
-					if( e.getCodigo().equalsIgnoreCase(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_CUSTODIA).getValor()) 
-							&& credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
-						item.setValor( credito.getCostoCustodia() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_FIDEICOMISO).getValor()) 
-							&& credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
-						item.setValor( credito.getCostoFideicomiso() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_SEGURO).getValor()) 
-							&& credito.getCostoSeguro().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoSeguro() );
-						item.setValor( credito.getCostoSeguro() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TASACION).getValor()) 
-							&& credito.getCostoTasacion().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoTasador() );
-						item.setValor( credito.getCostoTasacion() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_TRANSPORTE).getValor()) 
-							&& credito.getCostoTransporte().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoTransporte() );
-						item.setValor( credito.getCostoTransporte() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.COSTO_VALORACION).getValor()) 
-							&& credito.getCostoValoracion().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoValoracion() );
-						item.setValor( credito.getCostoValoracion() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_CAPITAL_RENOV).getValor()) 
-							&& credito.getSaldoCapitalRenov().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoCapital() );
-						item.setValor( credito.getSaldoCapitalRenov() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_INTERES).getValor()) 
-							&& credito.getSaldoInteres().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoInteres() );
-						item.setValor( credito.getSaldoInteres() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_MORA).getValor()) 
-							&& credito.getSaldoMora().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoMora() );
-						item.setValor( credito.getSaldoMora() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.GASTO_COBRANZA).getValor()) 
-							&& credito.getGastoCobranza().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoGastoCobranza() );
-						item.setValor( credito.getGastoCobranza() );
-						listImpCom.add( item );
-					}
-					if( e.getCodigo().equals(this.parametroRepository.findByNombre(QuskiOroConstantes.CUSTODIA_DEVENGADA).getValor()) 
-							&& credito.getCustodiaDevengada().compareTo( new BigDecimal( 0 ) )> 0){
-						item.setCodigo( e.getCodigo() );
-						item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
-						item.setValor( credito.getCustodiaDevengada() );
-						listImpCom.add( item );
-					}
-				} catch (RelativeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if( e.getCodigo().equalsIgnoreCase(costoCustodia) && credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
+					item.setValor( credito.getCostoCustodia() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(costoFideicomiso) && credito.getCostoFideicomiso().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoFideicomiso() );
+					item.setValor( credito.getCostoFideicomiso() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(costoSeguro) && credito.getCostoSeguro().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoSeguro() );
+					item.setValor( credito.getCostoSeguro() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(costoTasacion) && credito.getCostoTasacion().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoTasador() );
+					item.setValor( credito.getCostoTasacion() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(costoTransporte) && credito.getCostoTransporte().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoTransporte() );
+					item.setValor( credito.getCostoTransporte() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(costoValoracion) && credito.getCostoValoracion().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoValoracion() );
+					item.setValor( credito.getCostoValoracion() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(saldoCapitalRenov) && credito.getSaldoCapitalRenov().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCapital() );
+					item.setValor( credito.getSaldoCapitalRenov() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(saldoInteres) && credito.getSaldoInteres().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoInteres() );
+					item.setValor( credito.getSaldoInteres() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(saldoMora) && credito.getSaldoMora().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoMora() );
+					item.setValor( credito.getSaldoMora() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(gastoCobranza) && credito.getGastoCobranza().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoGastoCobranza() );
+					item.setValor( credito.getGastoCobranza() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(custodiaDevengada) && credito.getCustodiaDevengada().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
+					item.setValor( credito.getCustodiaDevengada() );
+					listImpCom.add( item );
 				}
 			});
 			return listImpCom;
@@ -6482,7 +6491,6 @@ public class QuskiOroService {
 			String fromEmailDesa = this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
 			String authEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
 			String passwordEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
-			
 			if (adjunto != null) {
 				EmailDefinition ed = new EmailDefinition.Builder()
 						.emailSecurityType(
@@ -6495,6 +6503,7 @@ public class QuskiOroService {
 				Transport.send(null, null, passwordEmail, passwordEmail);
 				EmailUtil.sendEmail(ed);
 			} else {
+				log.info("ESTOY LLEGANDO HASTA AQUI? ========> "+ authEmail);
 				EmailDefinition ed = new EmailDefinition.Builder()
 						.emailSecurityType(
 								QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
@@ -6506,15 +6515,13 @@ public class QuskiOroService {
 				EmailUtil.sendEmail(ed);
 			}
 		} catch (RelativeException e) {
-
-			e.getStackTrace();
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
 		}
-
 	}
 
 	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido,
@@ -6522,14 +6529,35 @@ public class QuskiOroService {
 		try {
 			String[] array = new String[1];
 			array[0] = para;
-
 			this.mailNotificacion(array, asunto, contenido, adjunto);
 			return Boolean.TRUE;
 		} catch (RelativeException e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
+	}
+	public void notificarExcepcionOperativa(String asesor, String correoAsesor, String excepcionOperativa) {
+		try {
+			log.info("ESTOY LLEGANDO HASTA AQUI? ========> "+ correoAsesor);
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.PARA_EXC, false);
+			String[] array = new String[paras.size()];
+			for (int i = 0; i < paras.size(); ++i) {
+				array[i] = paras.get(i).getValor().replace("--Correo asesor--", correoAsesor);
+				log.info(" ESTE ES UN PARA DEL CORREO ===========> "+ array[i]);
+			}
+					
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.M_ASUNTO).getValor()
+					.replace("--Tipo Excepcion--", excepcionOperativa);
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.M_CONTENIDO).getValor()
+					.replace("--asesor--", asesor)
+					.replace("--Tipo Excepcion--", excepcionOperativa);
 
+			this.mailNotificacion(array, asunto, contenido, null);
+		} catch (RelativeException e) {
+			e.getStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
 	}
 

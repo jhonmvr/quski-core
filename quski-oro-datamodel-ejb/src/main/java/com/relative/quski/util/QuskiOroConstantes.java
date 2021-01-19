@@ -33,7 +33,14 @@ public class QuskiOroConstantes {
 	
 	public static final String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
 
-	
+	/**
+	 * @MAIL
+	 */
+	public static final String PARA_EXC = "PARA-EXC";
+	public static final String M_ASUNTO = "M_ASUNTO";
+	public static final String M_CONTENIDO = "M_CONTENIDO";
+
+	public static final String SIN_EXCEPCION = "SIN_EXCEPCION";
 	/**
 	 * Formato de envio JSON
 	 */
