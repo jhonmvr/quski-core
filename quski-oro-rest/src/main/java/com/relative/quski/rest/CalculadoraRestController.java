@@ -81,7 +81,6 @@ public class CalculadoraRestController extends BaseRestController
 	@POST
 	@Path("/simularOfertaRenovacion")
 	public GenericWrapper<SimularResponse> simularOfertaRenovacion(DetalleCreditoWrapper credito,
-			@QueryParam("montoSolicitado") String montoSolicitado,
 			@QueryParam("riesgoTotal") String riesgoTotal,
 			@QueryParam("coberturaExcepcionada") String coberturaExcepcionada,
 			@QueryParam("codigoAgencia") String codigoAgencia) throws RelativeException {
@@ -89,9 +88,8 @@ public class CalculadoraRestController extends BaseRestController
 		if(credito == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO");
 		}
-		SimularResponse a = this.qos.simularOfertasCalculadoraRenovacion(credito, StringUtils.isNotBlank(montoSolicitado)?
-				BigDecimal.valueOf(Double.valueOf(montoSolicitado)):BigDecimal.ZERO,
-				StringUtils.isNotBlank(riesgoTotal)?BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, codigoAgencia,coberturaExcepcionada);
+		SimularResponse a = this.qos.simularOfertasCalculadoraRenovacion(credito,StringUtils.isNotBlank(riesgoTotal)?BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, 
+				codigoAgencia,coberturaExcepcionada);
 		loc.setEntidad(a);
 		return loc;
 	}

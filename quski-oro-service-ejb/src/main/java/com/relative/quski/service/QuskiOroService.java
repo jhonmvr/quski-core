@@ -5218,7 +5218,7 @@ public class QuskiOroService {
 
 
 		public SimularResponse simularOfertasCalculadoraRenovacion(DetalleCreditoWrapper creditoSoft, 
-				BigDecimal montoSolicitado, BigDecimal riesgoTotal,String codigoAgencia,String coberturaExcepcionada) throws RelativeException {				
+				BigDecimal riesgoTotal,String codigoAgencia,String coberturaExcepcionada) throws RelativeException {				
 			try {
 				if( creditoSoft.getGarantias() == null || creditoSoft.getGarantias().isEmpty()) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
@@ -5269,7 +5269,7 @@ public class QuskiOroService {
 						.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
 						.replace("--fecha-efectiva-credito-anterior--", creditoSoft.getCredito().getFechaAprobacion())
 						.replace("--fecha-vencimiento-credito-anterior--", creditoSoft.getCredito().getFechaVencimiento())
-						.replace("--monto-solicitado--", montoSolicitado ==null?"0.00":montoSolicitado.toString())
+						.replace("--monto-solicitado--", "0.00")
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 								creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
 						.replace("--numero-operacion-renovar--", creditoSoft.getCredito().getNumeroOperacion())
@@ -7001,10 +7001,12 @@ public class QuskiOroService {
 		try {
 			TbQoExcepcion exc = this.finExcepcionById(id);
 			TbQoProceso proceso = this.findProcesoByIdReferencia(exc.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO);
+			if(proceso == null) {
+				proceso = this.findProcesoByIdReferencia(exc.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION);
+			}
 			if(proceso == null || !proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_EXCEPCION)) { 
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EL PROCESO INTENTE MAS TARDE");
 			}
-			
 			exc.setEstadoExcepcion( aprobado.equalsIgnoreCase("SI")?EstadoExcepcionEnum.APROBADO:EstadoExcepcionEnum.NEGADO );
 			exc.setIdAprobador(aprobador);
 			exc.setObservacionAsesor( obsAprobador );
@@ -7177,69 +7179,71 @@ public class QuskiOroService {
 		}else {
 			credito = new TbQoCreditoNegociacion();
 		}
+		if(opcion != null) {
+			credito.setaPagarCliente( BigDecimal.valueOf( opcion.getValorAPagar() ));
+			credito.setMontoFinanciado( BigDecimal.valueOf(opcion.getMontoFinanciado()) );
+			credito.setPlazoCredito( Long.valueOf(opcion.getPlazo()) );
+			credito.setValorCuota( BigDecimal.valueOf(opcion.getCuota() ));
+			credito.setCostoCustodia( BigDecimal.valueOf(opcion.getCostoCustodia()));
+			credito.setCostoFideicomiso(BigDecimal.valueOf( opcion.getCostoFideicomiso()));
+			credito.setCostoSeguro(BigDecimal.valueOf( opcion.getCostoSeguro()));
+			credito.setCostoTasacion( BigDecimal.valueOf( opcion.getCostoTasacion() ) );
+			credito.setCostoTransporte( BigDecimal.valueOf( opcion.getCostoTransporte()) );
+			credito.setCostoValoracion( BigDecimal.valueOf( opcion.getCostoValoracion()) );
+			credito.setCuota( BigDecimal.valueOf(opcion.getCuota() ));
+			credito.setCustodiaDevengada( BigDecimal.valueOf(opcion.getCustodiaDevengada() ));
+			credito.setDividendoFlujoPlaneado( BigDecimal.valueOf(opcion.getDIVIDENDOFLUJOPLANEADO() ));
+			credito.setDividendoProrrateo( BigDecimal.valueOf(opcion.getDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO() ));
+			credito.setFormaPagoCapital( opcion.getFormaPagoCapital());
+			credito.setFormaPagoCustodia( opcion.getFormaPagoCustodia() );
+			credito.setFormaPagoCustodiaDevengada( opcion.getFormaPagoCustodiaDevengada() );
+			credito.setFormaPagoFideicomiso( opcion.getFormaPagoFideicomiso() );
+			credito.setFormaPagoGastoCobranza( opcion.getFormaPagoGastoCobranza() );
+			credito.setFormaPagoImpuestoSolca( opcion.getFormaPagoImpuestoSolca() );
+			credito.setFormaPagoInteres( opcion.getFormaPagoInteres() );
+			credito.setFormaPagoMora( opcion.getFormaPagoMora() );
+			credito.setFormaPagoSeguro( opcion.getFormaPagoSeguro() );
+			credito.setFormaPagoTasador( opcion.getFormaPagoTasador() );
+			credito.setFormaPagoTransporte( opcion.getFormaPagoTransporte() );
+			credito.setFormaPagoValoracion( opcion.getFormaPagoValoracion() );
+			credito.setGastoCobranza(  BigDecimal.valueOf(opcion.getGastoCobranza()) );
+			credito.setImpuestoSolca(  BigDecimal.valueOf(opcion.getImpuestoSolca()) );
+			credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
+			credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(opcion.getMontoPrevioDesembolso() ));
+			credito.setPeriodicidadPlazo( opcion.getPeriodicidadPlazo() );
+			credito.setPeriodoPlazo( opcion.getPeriodoPlazo() );
+			credito.setPorcentajeFlujoPlaneado(  BigDecimal.valueOf(opcion.getPORCENTAJEFLUJOPLANEADO()) );
+			credito.setSaldoCapitalRenov(  BigDecimal.valueOf(opcion.getSaldoCapitalRenov()) );
+			credito.setSaldoInteres(  BigDecimal.valueOf(opcion.getSaldoInteres()) );
+			credito.setSaldoMora(  BigDecimal.valueOf(opcion.getSaldoMora() ));
+			credito.setTipoOferta( opcion.getTIPOOFERTA() );
+			credito.setTotalCostosOperacionAnterior( BigDecimal.valueOf( opcion.getTotalCostosOperacionAnterior()) );
+			credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( opcion.getTotalGastosNuevaOperacion()));
+			credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
+			credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
+			List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor());
+			if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
+			listTablas.forEach(e->{
+				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+						e.getPlazo() == credito.getPlazoCredito() 
+						){
+					credito.setTablaAmortizacion( e.getCodigo() );
+					credito.setNumeroCuotas(e.getNumeroCuotas());					
+				}
+			});
+			if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+			}
+		}
 		credito.setIdAgencia( idAgencia );
 		//credito.setcobertura();
 		//credito.setpagoDia( );
 		//credito.setmontoSolicitado();
 		//credito.setriesgoTotalCliente( opcion.get);
-		credito.setaPagarCliente( BigDecimal.valueOf( opcion.getValorAPagar() ));
-		credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
-		credito.setMontoFinanciado( BigDecimal.valueOf(opcion.getMontoFinanciado()) );
 		credito.setEstado( EstadoEnum.ACT );
 		credito.setNumeroOperacionMadre(numeroOperacionMadre);
-		credito.setPlazoCredito( Long.valueOf(opcion.getPlazo()) );
-		credito.setValorCuota( BigDecimal.valueOf(opcion.getCuota() ));
-		credito.setCostoCustodia( BigDecimal.valueOf(opcion.getCostoCustodia()));
-		credito.setCostoFideicomiso(BigDecimal.valueOf( opcion.getCostoFideicomiso()));
-		credito.setCostoSeguro(BigDecimal.valueOf( opcion.getCostoSeguro()));
-		credito.setCostoTasacion( BigDecimal.valueOf( opcion.getCostoTasacion() ) );
-		credito.setCostoTransporte( BigDecimal.valueOf( opcion.getCostoTransporte()) );
-		credito.setCostoValoracion( BigDecimal.valueOf( opcion.getCostoValoracion()) );
-		credito.setCuota( BigDecimal.valueOf(opcion.getCuota() ));
-		credito.setCustodiaDevengada( BigDecimal.valueOf(opcion.getCustodiaDevengada() ));
-		credito.setDividendoFlujoPlaneado( BigDecimal.valueOf(opcion.getDIVIDENDOFLUJOPLANEADO() ));
-		credito.setDividendoProrrateo( BigDecimal.valueOf(opcion.getDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO() ));
-		credito.setFormaPagoCapital( opcion.getFormaPagoCapital());
-		credito.setFormaPagoCustodia( opcion.getFormaPagoCustodia() );
-		credito.setFormaPagoCustodiaDevengada( opcion.getFormaPagoCustodiaDevengada() );
-		credito.setFormaPagoFideicomiso( opcion.getFormaPagoFideicomiso() );
-		credito.setFormaPagoGastoCobranza( opcion.getFormaPagoGastoCobranza() );
-		credito.setFormaPagoImpuestoSolca( opcion.getFormaPagoImpuestoSolca() );
-		credito.setFormaPagoInteres( opcion.getFormaPagoInteres() );
-		credito.setFormaPagoMora( opcion.getFormaPagoMora() );
-		credito.setFormaPagoSeguro( opcion.getFormaPagoSeguro() );
-		credito.setFormaPagoTasador( opcion.getFormaPagoTasador() );
-		credito.setFormaPagoTransporte( opcion.getFormaPagoTransporte() );
-		credito.setFormaPagoValoracion( opcion.getFormaPagoValoracion() );
-		credito.setGastoCobranza(  BigDecimal.valueOf(opcion.getGastoCobranza()) );
-		credito.setImpuestoSolca(  BigDecimal.valueOf(opcion.getImpuestoSolca()) );
-		credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(opcion.getMontoPrevioDesembolso() ));
-		credito.setPeriodicidadPlazo( opcion.getPeriodicidadPlazo() );
-		credito.setPeriodoPlazo( opcion.getPeriodoPlazo() );
-		credito.setPorcentajeFlujoPlaneado(  BigDecimal.valueOf(opcion.getPORCENTAJEFLUJOPLANEADO()) );
-		credito.setSaldoCapitalRenov(  BigDecimal.valueOf(opcion.getSaldoCapitalRenov()) );
-		credito.setSaldoInteres(  BigDecimal.valueOf(opcion.getSaldoInteres()) );
-		credito.setSaldoMora(  BigDecimal.valueOf(opcion.getSaldoMora() ));
-		credito.setTipoOferta( opcion.getTIPOOFERTA() );
-		credito.setTotalCostosOperacionAnterior( BigDecimal.valueOf( opcion.getTotalCostosOperacionAnterior()) );
-		credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( opcion.getTotalGastosNuevaOperacion()));
-		credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
-		credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
-		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor());
-		if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
-		listTablas.forEach(e->{
-			if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
-				e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
-				e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-				e.getPlazo() == credito.getPlazoCredito() 
-			){
-				credito.setTablaAmortizacion( e.getCodigo() );
-				credito.setNumeroCuotas(e.getNumeroCuotas());					
-			}
-		});
-		if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
-		}
 		return credito;
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
