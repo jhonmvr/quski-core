@@ -1609,6 +1609,9 @@ public class QuskiOroService {
 			if( !StringUtils.isBlank( send.getOrigenIngreso() ) ) {
 				persisted.setOrigenIngreso(   send.getOrigenIngreso() );
 			}
+			if( send.getEstado() != null ) {
+				persisted.setEstado(   send.getEstado() );
+			}
 			return datoTrabajoClienteRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
