@@ -4828,13 +4828,13 @@ public class QuskiOroService {
 				wp.getDatosTrabajos().forEach( t ->{
 					SoftbankDatosTrabajoWrapper da = new SoftbankDatosTrabajoWrapper();
 					da.setCodigoCargo( t.getCargo() );
-					da.setCodigoActividadEconomicaClienteMupi( t.getActividadEconomicaMupi() );
+					da.setCodigoActividadEconomicaClienteMupi( t.getActividadEconomicaMupi() != null ?  t.getActividadEconomicaMupi() : QuskiOroConstantes.OTRAS_ACTIVIDADES );
 					da.setCodigoOcupacion( t.getOcupacion() );
 					da.setCodigoOrigenIngreso( t.getOrigenIngreso() );
 					da.setNombreEmpresa( t.getNombreEmpresa() );
 					da.setEsRelacionDependencia( t.getEsRelacionDependencia() );
 					da.setEsPrincipal( t.getEsprincipal() );
-					da.setIdActividadEconomica( t.getActividadEconomica() );
+					da.setIdActividadEconomica( t.getActividadEconomica() != null ? t.getActividadEconomica() : Long.valueOf(QuskiOroConstantes.ACTIVIDADES_NO_ECONOMICAS) );
 					da.setActivo( t.getEstado() == EstadoEnum.ACT );
 					da.setId( t.getIdSoftbank() );
 					datosTrabajo.add( da );					
