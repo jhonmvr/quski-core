@@ -94,7 +94,6 @@ public class AprobacionWrapper implements Serializable {
 	public void setTrabajos(List<TbQoDatoTrabajoCliente> trabajos) {
 		this.trabajos = trabajos;
 		if( trabajos == null) {
-			this.existeError = true;
 			this.mensaje = "NO EXISTEN TRABAJOS";
 		}
 	}
