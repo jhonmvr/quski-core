@@ -1793,8 +1793,15 @@ public class QuskiOroService {
 			if(send.getDescripcion() != null) {
 				persisted.setDescripcion(send.getDescripcion());
 			}
-			if(send.getDescuentoPesoPiedra() != null) {
+			
+			if( send.getTienePiedras() != null && send.getTienePiedras()) {
+				persisted.setTienePiedras( send.getTienePiedras() );
 				persisted.setDescuentoPesoPiedra(send.getDescuentoPesoPiedra());
+				persisted.setDetallePiedras( send.getDetallePiedras() );
+			}else {
+				persisted.setTienePiedras( Boolean.FALSE );
+				persisted.setDescuentoPesoPiedra( null );
+				persisted.setDetallePiedras( StringUtils.EMPTY );
 			}
 			if(send.getDescuentoSuelda() != null) {
 				persisted.setDescuentoSuelda(send.getDescuentoSuelda());
@@ -1841,14 +1848,14 @@ public class QuskiOroService {
 	/**
 	 * * * * * * * * * * * @NEGOCIACION_WRAPPER
 	 */
-	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor, Long idAgencia) throws RelativeException {
 		try {
 			log.info("<<=================ENTRAR A INICIAR NEGOCIACION=============>>>");
 			TbQoCliente cliente = this.createCliente(cedula);
 			
 			if (cliente != null) {
 				Informacion data = informacionCliente(cedula);
-				return generarTablasIniciales(cliente, asesor,data);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2047,13 +2054,13 @@ public class QuskiOroService {
 		
 	}
 	
-	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor, Long idAgencia) throws RelativeException {
 		try {
 			Informacion data = informacionCliente(cedula);
 			
 			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE());
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor,data);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2067,12 +2074,12 @@ public class QuskiOroService {
 		}
 	}
 
-	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor, Long idAgencia) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador(id);
 			if (cliente != null) {
 				Informacion data = informacionCliente(cliente.getCedulaCliente());
-				return generarTablasIniciales(cliente, asesor,data);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2566,9 +2573,9 @@ public class QuskiOroService {
 	
 	
 	
-	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Informacion data) throws RelativeException {
+	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor);
+			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
@@ -2603,7 +2610,7 @@ public class QuskiOroService {
 
 	}
 
-	private TbQoCreditoNegociacion createCredito(TbQoCliente cl, String asesor) throws RelativeException { 
+	private TbQoCreditoNegociacion createCredito(TbQoCliente cl, String asesor, Long idAgencia) throws RelativeException { 
 		try {
 			if (cl != null) {
 				TbQoNegociacion ng = new TbQoNegociacion();
@@ -2613,6 +2620,7 @@ public class QuskiOroService {
 				if (negociacion != null) {
 					TbQoCreditoNegociacion cr = new TbQoCreditoNegociacion();
 					cr.setTbQoNegociacion(negociacion);
+					cr.setIdAgencia(idAgencia);
 					return this.manageCreditoNegociacion(cr);
 				} else {
 					throw new RelativeException(Constantes.ERROR_CODE_CREATE,
