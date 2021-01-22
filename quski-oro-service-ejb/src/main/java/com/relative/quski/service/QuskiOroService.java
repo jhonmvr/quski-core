@@ -1800,7 +1800,7 @@ public class QuskiOroService {
 				persisted.setDetallePiedras( send.getDetallePiedras() );
 			}else {
 				persisted.setTienePiedras( Boolean.FALSE );
-				persisted.setDescuentoPesoPiedra( null );
+				persisted.setDescuentoPesoPiedra( BigDecimal.valueOf( 0 ) );
 				persisted.setDetallePiedras( StringUtils.EMPTY );
 			}
 			if(send.getDescuentoSuelda() != null) {
