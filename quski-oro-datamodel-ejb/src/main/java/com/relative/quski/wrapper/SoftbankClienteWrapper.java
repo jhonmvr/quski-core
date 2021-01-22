@@ -2,9 +2,8 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
-
-import com.relative.quski.util.QuskiOroConstantes;
 
 public class SoftbankClienteWrapper implements Serializable{
 
@@ -22,13 +21,13 @@ public class SoftbankClienteWrapper implements Serializable{
 		private String segundoNombre;                         
 		private Boolean esCliente;                             
 		private String codigoMotivoVisita;                         
-		private String fechaIngreso;                              
+		private Date fechaIngreso;                              
 		private Long idAgencia;                              
 		private Long idPaisNacimiento;                        
 		private Long idPais;                                  
 		private Long idLugarNacimiento;                       
 		private SoftbankActividadEconomicaWrapper actividadEconomica; 
-		private String fechaNacimiento;                        
+		private Date fechaNacimiento;                        
 		private String codigoSexo;                           
 		private String codigoProfesion;                      
 		private String codigoEstadoCivil;                   
@@ -107,10 +106,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setCodigoMotivoVisita(String codigoMotivoVisita) {
 			this.codigoMotivoVisita = codigoMotivoVisita;
 		}
-		public String getFechaIngreso() {
+		public Date getFechaIngreso() {
 			return fechaIngreso;
 		}
-		public void setFechaIngreso(String fechaIngreso) {
+		public void setFechaIngreso(Date fechaIngreso) {
 			this.fechaIngreso = fechaIngreso;
 		}
 		public Long getIdAgencia() {
@@ -137,10 +136,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setIdLugarNacimiento(Long idLugarNacimiento) {
 			this.idLugarNacimiento = idLugarNacimiento;
 		}
-		public String getFechaNacimiento() {
+		public Date getFechaNacimiento() {
 			return fechaNacimiento;
 		}
-		public void setFechaNacimiento(String fechaNacimiento) {
+		public void setFechaNacimiento(Date fechaNacimiento) {
 			this.fechaNacimiento = fechaNacimiento;
 		}
 		public String getCodigoSexo() {

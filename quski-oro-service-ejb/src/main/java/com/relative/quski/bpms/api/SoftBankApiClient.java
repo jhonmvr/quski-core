@@ -90,7 +90,12 @@ public class SoftBankApiClient {
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				SoftbankRespuestaWrapper rest =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				if(rest != null && rest.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+							rest.getMensaje() +" | validaciones: "+ rest.getValidaciones());
+				}
+				return rest;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));

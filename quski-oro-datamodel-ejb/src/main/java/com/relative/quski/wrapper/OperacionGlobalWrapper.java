@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class OperacionGlobalWrapper implements Serializable {
 
@@ -16,9 +17,9 @@ public class OperacionGlobalWrapper implements Serializable {
 	private String numeroOperacionMadre;
 	private String numeroOperacionMupi;
 	private String numeroOperacion;
-	private String fechaSolicitud;
-	private String fechaAprobacion;
-	private String fechaVencimiento;
+	private Date fechaSolicitud;
+	private Date fechaAprobacion;
+	private Date fechaVencimiento;
 	private BigDecimal montoFinanciado;
 	private BigDecimal montoSolicitado;
 	private BigDecimal saldo;
@@ -81,22 +82,22 @@ public class OperacionGlobalWrapper implements Serializable {
 	public void setNumeroOperacion(String numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
 	}
-	public String getFechaSolicitud() {
+	public Date getFechaSolicitud() {
 		return fechaSolicitud;
 	}
-	public void setFechaSolicitud(String fechaSolicitud) {
+	public void setFechaSolicitud(Date fechaSolicitud) {
 		this.fechaSolicitud = fechaSolicitud;
 	}
-	public String getFechaAprobacion() {
+	public Date getFechaAprobacion() {
 		return fechaAprobacion;
 	}
-	public void setFechaAprobacion(String fechaAprobacion) {
+	public void setFechaAprobacion(Date fechaAprobacion) {
 		this.fechaAprobacion = fechaAprobacion;
 	}
-	public String getFechaVencimiento() {
+	public Date getFechaVencimiento() {
 		return fechaVencimiento;
 	}
-	public void setFechaVencimiento(String fechaVencimiento) {
+	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 	public BigDecimal getMontoFinanciado() {

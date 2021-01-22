@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public class CrearOperacionRespuestaWrapper implements Serializable {
@@ -26,8 +27,8 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	private Boolean esProductoOro;
 	private String numeroFundaJoya;
 	private String codigoFirmanteOperacion;
-	private String fechaEfectiva;
-	private String fechaVencimiento;
+	private Date fechaEfectiva;
+	private Date fechaVencimiento;
 	private String uriHabilitantes;
 	private List<DatosImpComWrapper> datosImpCom;
 	private List<JoyaWrapper> garantias;
@@ -191,16 +192,16 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setCodigoFirmanteOperacion(String codigoFirmanteOperacion) {
 		this.codigoFirmanteOperacion = codigoFirmanteOperacion;
 	}
-	public String getFechaEfectiva() {
+	public Date getFechaEfectiva() {
 		return fechaEfectiva;
 	}
-	public void setFechaEfectiva(String fechaEfectiva) {
+	public void setFechaEfectiva(Date fechaEfectiva) {
 		this.fechaEfectiva = fechaEfectiva;
 	}
-	public String getFechaVencimiento() {
+	public Date getFechaVencimiento() {
 		return fechaVencimiento;
 	}
-	public void setFechaVencimiento(String fechaVencimiento) {
+	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 }

@@ -2323,8 +2323,8 @@ public class QuskiOroService {
 			cliente.setNombreCompleto( s.getNombreCompleto() );
 			cliente.setCanalContacto( s.getCodigoMotivoVisita() );
 			cliente.setCargasFamiliares( s.getNumeroCargasFamiliares() );
-			if( !StringUtils.isBlank( s.getFechaNacimiento() ) ) {
-				cliente.setFechaNacimiento( QuskiOroUtil.formatSringToDate(s.getFechaNacimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT) );
+			if( s.getFechaNacimiento() != null) {
+				cliente.setFechaNacimiento(s.getFechaNacimiento());
 			}
 			cliente.setEmail( s.getEmail() );
 			cliente.setEstadoCivil( s.getCodigoEstadoCivil() );
@@ -4420,16 +4420,8 @@ public class QuskiOroService {
 				r.setCodigoCarteraQuski(e.getCodigoCarteraQuski());
 				r.setTipoOperacion(e.getTipoOperacion());
 				r.setEsDemandada(e.getEsDemandada());
-				try {
-					r.setFechaEfectiva(QuskiOroUtil.formatSringToDate(e.getFechaEfectiva()));
-				} catch (RelativeException e1) {
-					e1.printStackTrace();
-				}
-				try {
-					r.setFechaVencimiento(QuskiOroUtil.formatSringToDate(e.getFechaVencimiento()));
-				} catch (RelativeException e1) {
-					e1.printStackTrace();
-				}
+				r.setFechaEfectiva(e.getFechaEfectiva());
+				r.setFechaVencimiento(e.getFechaVencimiento());
 				r.setInteresMora(e.getInteresMora());
 				r.setSaldo(e.getSaldo());
 				r.setValorAlDia(e.getValorAlDia());
@@ -4467,11 +4459,9 @@ public class QuskiOroService {
 			cliente.setUsuario( s.getCodigoUsuarioAsesor() );
 			cliente.setNombreCompleto( s.getNombreCompleto() );
 			cliente.setCargasFamiliares( s.getNumeroCargasFamiliares() );
-			if( !StringUtils.isBlank(s.getFechaNacimiento())) {
-				cliente.setFechaNacimiento( QuskiOroUtil.formatSringToDate(s.getFechaNacimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT) );
-				if(cliente.getFechaNacimiento() != null ) {
-					cliente.setEdad( Long.valueOf(QuskiOroUtil.calculateEdad( cliente.getFechaNacimiento() )));						
-				}
+			cliente.setFechaNacimiento(s.getFechaNacimiento());
+			if(cliente.getFechaNacimiento() != null ) {
+				cliente.setEdad( Long.valueOf(QuskiOroUtil.calculateEdad( cliente.getFechaNacimiento() )));						
 			}
 			cliente.setEmail( s.getEmail() );
 			cliente.setEstadoCivil( s.getCodigoEstadoCivil() );
@@ -4748,11 +4738,11 @@ public class QuskiOroService {
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );
 			sof.setEsCliente( true );              
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );                             
-			sof.setFechaIngreso( QuskiOroUtil.dateToString( cli.getFechaActualizacion(), QuskiOroConstantes.SOFT_DATE_FORMAT ) );                                  
+			sof.setFechaIngreso(cli.getFechaActualizacion());                                  
 			sof.setIdPaisNacimiento( cli.getNacionalidad() );                            
 			sof.setIdPais( cli.getNacionalidad() );                                      
 			sof.setIdLugarNacimiento( Long.valueOf( cli.getLugarNacimiento() ) ); 
-			sof.setFechaNacimiento( QuskiOroUtil.dateToString( cli.getFechaNacimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT  ));                            
+			sof.setFechaNacimiento(cli.getFechaNacimiento());                            
 			sof.setCodigoSexo( cli.getGenero() );                               
 			sof.setCodigoProfesion( cli.getProfesion() );                          
 			sof.setCodigoEstadoCivil( cli.getEstadoCivil() );                       
@@ -4850,10 +4840,9 @@ public class QuskiOroService {
 				sof.setDatosTrabajoCliente(datosTrabajo);
 			}
 			return sof;
-		} catch (RelativeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,e.getMessage());
 		}
 	}
 
@@ -4879,7 +4868,10 @@ public class QuskiOroService {
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_UPDATE + "FALTA ID DE TIPO IDENTIFICACION");
 			}
-		} catch (Exception e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
@@ -5261,7 +5253,7 @@ public class QuskiOroService {
 						.replace("--perfil-riesgo--", "1")
 						.replace("--origen-operacion--", creditoSoft.getCredito().getEsMigrado()?"O":"E")
 						.replace("--riesgo-total--", riesgoTotal.toString())
-						.replace("--fecha-nacimiento--", creditoSoft.getCliente().getFechaNacimiento())
+						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(creditoSoft.getCliente().getFechaNacimiento(),QuskiOroUtil.DATE_FORMAT_QUSKI) )
 						.replace("--perfil-preferencia--", "A") 
 						.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 						.replace("--identificacion-cliente--",creditoSoft.getCliente().getIdentificacion())
@@ -5278,8 +5270,8 @@ public class QuskiOroService {
 						.replace("--plazo-credito-anterior--", creditoSoft.getCredito().getPlazo().toString())
 						.replace("--tipo-credito-anterior--", creditoSoft.getCredito().getPeriodoPlazo())//agregar el codigo del tipo de credito
 						.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
-						.replace("--fecha-efectiva-credito-anterior--", creditoSoft.getCredito().getFechaAprobacion())
-						.replace("--fecha-vencimiento-credito-anterior--", creditoSoft.getCredito().getFechaVencimiento())
+						.replace("--fecha-efectiva-credito-anterior--",QuskiOroUtil.dateToString( creditoSoft.getCredito().getFechaAprobacion(),QuskiOroUtil.DATE_FORMAT_QUSKI) )
+						.replace("--fecha-vencimiento-credito-anterior--", QuskiOroUtil.dateToString(creditoSoft.getCredito().getFechaVencimiento(),QuskiOroUtil.DATE_FORMAT_QUSKI))
 						.replace("--monto-solicitado--", "0.00")
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 								creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
@@ -5355,8 +5347,8 @@ public class QuskiOroService {
 						.replace("--plazo-credito-anterior--", creditoSoft.getCredito().getPlazo().toString())
 						.replace("--tipo-credito-anterior--", creditoSoft.getCredito().getPeriodoPlazo())//agregar el codigo del tipo de credito
 						.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
-						.replace("--fecha-efectiva-credito-anterior--", creditoSoft.getCredito().getFechaAprobacion())
-						.replace("--fecha-vencimiento-credito-anterior--", creditoSoft.getCredito().getFechaVencimiento())
+						.replace("--fecha-efectiva-credito-anterior--", QuskiOroUtil.dateToString(creditoSoft.getCredito().getFechaAprobacion(),QuskiOroUtil.DATE_FORMAT_QUSKI) )
+						.replace("--fecha-vencimiento-credito-anterior--", QuskiOroUtil.dateToString( creditoSoft.getCredito().getFechaVencimiento() , QuskiOroUtil.DATE_FORMAT_QUSKI))
 						.replace("--monto-solicitado--", credito.getMontoSolicitado() == null ? "0.00" : credito.getMontoSolicitado().toString())
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 								creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
@@ -5493,8 +5485,8 @@ public class QuskiOroService {
 					.replace("--plazo-credito-anterior--", creditoSoft.getCredito().getPlazo().toString())
 					.replace("--tipo-credito-anterior--", creditoSoft.getCredito().getPeriodoPlazo())//agregar el codigo del tipo de credito
 					.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
-					.replace("--fecha-efectiva-credito-anterior--", creditoSoft.getCredito().getFechaAprobacion())
-					.replace("--fecha-vencimiento-credito-anterior--", creditoSoft.getCredito().getFechaVencimiento())
+					.replace("--fecha-efectiva-credito-anterior--", QuskiOroUtil.dateToString(creditoSoft.getCredito().getFechaAprobacion() , QuskiOroUtil.DATE_FORMAT_QUSKI))
+					.replace("--fecha-vencimiento-credito-anterior--", QuskiOroUtil.dateToString(creditoSoft.getCredito().getFechaVencimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 					.replace("--monto-solicitado--", credito.getMontoSolicitado() == null ? "0.00" : credito.getMontoSolicitado().toString())
 					.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 							creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
@@ -6176,8 +6168,8 @@ public class QuskiOroService {
 			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
 			credito.setValorCuota(  operacion.getValorCuota() );
 			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
-			credito.setFechaEfectiva( QuskiOroUtil.formatSringToDate( operacion.getFechaEfectiva(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
-			credito.setFechaVencimiento( QuskiOroUtil.formatSringToDate( operacion.getFechaVencimiento(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
+			credito.setFechaEfectiva(operacion.getFechaEfectiva());
+			credito.setFechaVencimiento(operacion.getFechaVencimiento());
 			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
