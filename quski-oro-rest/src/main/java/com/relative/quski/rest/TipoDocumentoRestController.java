@@ -132,7 +132,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		    @QueryParam("nombreCliente") String nombreCliente,
 		    @QueryParam("idCotizador") String idCotizador,
 		    @QueryParam("idNegociacion") String idNegociacion,
-		    @QueryParam("idDevolucion") String idDevolucion
+		    @QueryParam("idDevolucion") String idDevolucion,
+		    @QueryParam("nombreAsesor") String nombreAsesor,
+		    @QueryParam("identificacionAsesor") String identificacionAsesor
 		  
 		    ) throws RelativeException {
 		log.info("===================> getPlantilla");
