@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class GarantiaOperacionWrapper implements Serializable {
 
@@ -19,7 +20,7 @@ public class GarantiaOperacionWrapper implements Serializable {
 	private BigDecimal valorAvaluo;
 	private BigDecimal valorRealizacion;
 	private BigDecimal valorOro;
-	private String fechaAvaluo;
+	private Date fechaAvaluo;
 	private Long idAgenciaRegistro;
 	private Long idAgenciaCustodia;
 	private String referencia;
@@ -100,10 +101,10 @@ public class GarantiaOperacionWrapper implements Serializable {
 	public void setValorOro(BigDecimal valorOro) {
 		this.valorOro = valorOro;
 	}
-	public String getFechaAvaluo() {
+	public Date getFechaAvaluo() {
 		return fechaAvaluo;
 	}
-	public void setFechaAvaluo(String fechaAvaluo) {
+	public void setFechaAvaluo(Date fechaAvaluo) {
 		this.fechaAvaluo = fechaAvaluo;
 	}
 	public Long getIdAgenciaRegistro() {

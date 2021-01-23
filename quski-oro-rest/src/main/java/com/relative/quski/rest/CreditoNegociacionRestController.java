@@ -188,10 +188,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionNuevo")
-	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(@QueryParam("correoAsesor") String correoAsesor, GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
 		if(wp.getEntidad().getId() != null) {
-			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad() );
+			CreditoCreadoSoftbank a = this.qos.crearOperacionNuevo( wp.getEntidad(), correoAsesor);
 			loc.setEntidad(a);
 		}else {
 			loc.setEntidad(null);			
@@ -258,9 +258,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearCreditoRenovacion")
-	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion(), wp.getGarantias(), numeroOperacionMadre, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor );
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion(), wp.getGarantias(), numeroOperacionMadre, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia));
 		loc.setEntidad(a);
 		return loc;			
 	}

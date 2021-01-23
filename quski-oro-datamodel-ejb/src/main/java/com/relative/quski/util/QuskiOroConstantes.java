@@ -33,7 +33,14 @@ public class QuskiOroConstantes {
 	
 	public static final String MIDAS_DATE_FORMAT_FRONT="dd/MM/yyyy";
 
-	
+	/**
+	 * @MAIL
+	 */
+	public static final String PARA_EXC = "PARA-EXC";
+	public static final String M_ASUNTO = "M_ASUNTO";
+	public static final String M_CONTENIDO = "M_CONTENIDO";
+
+	public static final String SIN_EXCEPCION = "SIN_EXCEPCION";
 	/**
 	 * Formato de envio JSON
 	 */
@@ -235,6 +242,8 @@ public class QuskiOroConstantes {
 	
 	// MENSAJES DE EXCEPCIONES
 	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA -> ";
+	public static final int ACTIVIDADES_NO_ECONOMICAS = 330;
+	public static final String OTRAS_ACTIVIDADES = "046001009";
 	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "AL REALIZAR BUSQUEDA -> ";
 	public static final String ERROR_SIN_PROCESO = "NO POSEE UN PROCESO RELACIONADO";
 	public static final String ERROR_AL_REALIZAR_CREACION = "AL REALIZAR CREACION -> ";
@@ -254,7 +263,19 @@ public class QuskiOroConstantes {
 	public static final String ERROR_INGRESE_PROCESO = "INGRESE UN CAMPO DE PROCESO VALIDO.";
 
 
-	
+	// RUBROCREAR OPERACION
+	public static final String COSTO_CUSTODIA      = "COSTO_CUSTODIA" ;
+	public static final String COSTO_FIDEICOMISO   = "COSTO_FIDEICOMISO" ;
+	public static final String COSTO_SEGURO        = "COSTO_SEGURO" ;
+	public static final String COSTO_TASACION      = "COSTO_TASACION" ;
+	public static final String COSTO_TRANSPORTE    = "COSTO_TRANSPORTE" ;
+	public static final String COSTO_VALORACION    = "COSTO_VALORACION" ;
+	public static final String SALDO_CAPITAL_RENOV = "SALDO_CAPITAL_RENOV" ;
+	public static final String SALDO_INTERES       = "SALDO_INTERES" ;
+	public static final String SALDO_MORA          = "SALDO_MORA" ;
+	public static final String GASTO_COBRANZA      = "GASTO_COBRANZA" ;
+	public static final String CUSTODIA_DEVENGADA  = "CUSTODIA_DEVENGADA" ;
+
 	// SOFTBANK
 	public static final String SOFT_TIPO_PRESTAMO = "001" ;
 	public static final String SOFT_GRADO_INTERES = "000" ;
@@ -266,12 +287,12 @@ public class QuskiOroConstantes {
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
-	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado";
+	public static final String URL_SOFTBANK_RIESGO_ACUMULADO = "URL_SOFTBANK_RIESGO_ACUMULADO";
 	public static final String SOFTBANK_CONSULTA_CLIENTE = "URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_CLIENTE = "URL_SERVICIO_SOFTBANK_CREAR_CLIENTE";
 	public static final String SOFTBANK_CONSULTA_GLOBAL = "SOFTBANK_CONSULTA_GLOBAL";
 
-	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "http://201.183.238.73:1991/api/cliente/editar";
+	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "URL_SERVICIO_SOFTBANK_CREAR_OPERACION";
 	public static final String SOFTBANK_RENOVAR_OPERACION = "SOFTBANK_RENOVAR_OPERACION";
 	public static final String SOFTBANK_CONSULTA_GARANTIA = "SOFTBANK_CONSULTA_GARANTIA";

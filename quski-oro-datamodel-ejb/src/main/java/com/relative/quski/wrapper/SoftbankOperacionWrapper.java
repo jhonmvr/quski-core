@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class SoftbankOperacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,8 +11,8 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private String numeroOperacion;
 	private String codigoCarteraQuski;
 	private String tipoOperacion;
-	private String fechaEfectiva;
-	private String fechaVencimiento;
+	private Date fechaEfectiva;
+	private Date fechaVencimiento;
 	private BigDecimal interesMora;
 	private BigDecimal saldo;
 	private BigDecimal valorAlDia;
@@ -54,16 +55,16 @@ public class SoftbankOperacionWrapper implements Serializable {
 	public void setTipoOperacion(String tipoOperacion) {
 		this.tipoOperacion = tipoOperacion;
 	}
-	public String getFechaEfectiva() {
+	public Date getFechaEfectiva() {
 		return fechaEfectiva;
 	}
-	public void setFechaEfectiva(String fechaEfectiva) {
+	public void setFechaEfectiva(Date fechaEfectiva) {
 		this.fechaEfectiva = fechaEfectiva;
 	}
-	public String getFechaVencimiento() {
+	public Date getFechaVencimiento() {
 		return fechaVencimiento;
 	}
-	public void setFechaVencimiento(String fechaVencimiento) {
+	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 	public BigDecimal getInteresMora() {

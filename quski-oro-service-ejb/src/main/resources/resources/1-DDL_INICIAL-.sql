@@ -1,6 +1,6 @@
 -- DROP SCHEMA public;
 
-CREATE SCHEMA public AUTHORIZATION postgres;
+--CREATE SCHEMA public AUTHORIZATION postgres;
 
 COMMENT ON SCHEMA public IS 'standard public schema';
 
@@ -1700,3 +1700,357 @@ COMMENT ON COLUMN public.tb_qo_tasacion.numero_garantia IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.numero_expediente IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.tipo_garantia IS 'g';
 COMMENT ON COLUMN public.tb_qo_tasacion.sub_tipo_garantia IS 'g';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT 
+    pg_terminate_backend(pid) 
+FROM 
+    pg_stat_activity 
+WHERE 
+    -- don't kill my own connection!
+    pid <> pg_backend_pid()
+    -- don't kill the connections to other databases
+    AND datname = 'requskioropredb'
+    ;
+   
+   
+   REVOKE CONNECT ON DATABASE requskioropredb FROM PUBLIC, postgres;
+
+
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'requskioropredb';
+
+
+
+
+select * from tb_mi_parametro 
+
+
+select * from tb_mi_parametro where valor like '%generic-relative-rest%' 
+
+--http://apigw.quski.ec:8480/
+
+update tb_mi_parametro set valor = '<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<soap:Body>
+		<CalculadoraQuski
+			xmlns="http://tempuri.org/">
+			<XMlConsulta>
+				<![CDATA[ <carga>
+    <XmlParametrosRiesgo>
+        <ParametrosRiesgo>
+            <PerfilRiesgo>--perfil-riesgo--</PerfilRiesgo>
+            <OrigenOperacion>--origen-operacion--</OrigenOperacion>
+            <RiesgoTotal>--riesgo-total--</RiesgoTotal>
+            <FechaNacimiento>--fecha-nacimiento--</FechaNacimiento>
+            <PerfilPreferencia>--perfil-preferencia--</PerfilPreferencia>
+            <AgenciaOriginacion>--agencia-originacion--</AgenciaOriginacion>
+            <IdentificacionCliente>--identificacion-cliente--</IdentificacionCliente>
+            <CalificacionMupi>--calificacion-mupi--</CalificacionMupi>
+            <CoberturaExcepcionada>--cobertura-exepcionada--</CoberturaExcepcionada>
+        </ParametrosRiesgo>
+    </XmlParametrosRiesgo>
+    <XmlGarantias>
+        <Garantias>--garanttias-detalle--</Garantias>
+    </XmlGarantias>
+    <XmlDescuentosNuevaOperacion>
+        <DescuentosOperacion>
+            <SaldoMontoCreditoAnterior>--saldo-monto-credito-anterior--</SaldoMontoCreditoAnterior>
+            <SaldoInteresCreditoAnterior>--saldo-interes-credito-anterior--</SaldoInteresCreditoAnterior>
+            <MoraCreditoAnterior>--mora-credito-anterior--</MoraCreditoAnterior>
+            <CobranzaCreditoAnterior>--cobranza-credito-anterior--</CobranzaCreditoAnterior>
+            <TipoCartera>--tipo-cartera--</TipoCartera>
+            <MontoFinanciadoCreditoAnterior>--monto-financiado-credito-anterior--</MontoFinanciadoCreditoAnterior>
+            <PlazoCreditoAnterior>--plazo-credito-anterior--</PlazoCreditoAnterior>
+            <TipoCreditoAnterior>--tipo-credito-anterior--</TipoCreditoAnterior>
+            <EstadoCreditoAnterior>--estado-credito-anterior--</EstadoCreditoAnterior>
+            <FechaEfectivaCreditoAnterior>--fecha-efectiva-credito-anterior--</FechaEfectivaCreditoAnterior>
+            <FechaVencimientoCreditoAnterior>--fecha-vencimiento-credito-anterior--</FechaVencimientoCreditoAnterior>
+            <MontoSolicitadoCliente>--monto-solicitado--</MontoSolicitadoCliente>
+            <NumeroOperacionMadre>--numero-operacion-madre--</NumeroOperacionMadre>
+            <NumeroOperacionRenovar>--numero-operacion-renovar--</NumeroOperacionRenovar>
+            <REFERENCIA_ADICIONAL>--referencia-adicional--</REFERENCIA_ADICIONAL>
+            <OperacionPropia>--operacion-propia--</OperacionPropia>
+        </DescuentosOperacion>
+    </XmlDescuentosNuevaOperacion>
+</carga> ]]>
+			</XMlConsulta>
+		</CalculadoraQuski>
+	</soap:Body>
+</soap:Envelope>' where id =465
+
+
+-- Auto-generated SQL script #202101111250
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/'
+	WHERE id=37;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/resources/'
+	WHERE id=36;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/'
+	WHERE id=2;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/resources/'
+	WHERE id=1;
+UPDATE public.tb_mi_parametro
+	SET valor='ws://app.quski.ec:18480/quski-oro-rest/midasws/'
+	WHERE id=38;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/resources/'
+	WHERE id=210;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/quski-oro-rest/'
+	WHERE id=209;
+
+
+-- Auto-generated SQL script #202101111458
+UPDATE public.tb_mi_parametro
+	SET valor='ws://app.quski.ec:18480/generic-relative-rest/relativews/'
+	WHERE id=213;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/generic-relative-rest/resources/'
+	WHERE id=215;
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18480/generic-relative-rest/resources/mongoRestController/createObject'
+	WHERE id=402;
+
+
+
+select * from tb_qo_excepcion_rol 
+
+INSERT INTO tb_qo_excepcion_rol
+(rol, fecha_creacion, fecha_actualizacion, estado, excepcion)
+VALUES('3', to_date('14-01-2021','dd-MM-yyyy'), to_date('14-01-2021','dd-MM-yyyy'), 'ACT', 'EXCEPCION_CLIENTE');
+INSERT INTO tb_qo_excepcion_rol
+(rol, fecha_creacion, fecha_actualizacion, estado, excepcion)
+VALUES('3', to_date('14-01-2021','dd-MM-yyyy'), to_date('14-01-2021','dd-MM-yyyy'), 'ACT', 'EXCEPCION_COBERTURA');
+INSERT INTO tb_qo_excepcion_rol
+(rol, fecha_creacion, fecha_actualizacion, estado, excepcion)
+VALUES('3', to_date('14-01-2021','dd-MM-yyyy'), to_date('14-01-2021','dd-MM-yyyy'), 'ACT', 'EXCEPCION_RIESGO');
+
+
+-- Auto-generated SQL script #202101141201
+UPDATE public.tb_mi_parametro
+	SET valor='/opt/jboss/wildfly/reportes/'
+	WHERE id=104;
+
+select * from tb_qo_tipo_documento 
+
+
+
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,fecha_creacion,descripcion,estado,plantilla,tipo_plantilla,plantilla_uno,plantilla_dos,plantilla_tres,proceso,estado_operacion,servicio) VALUES 
+(10,'COMPROBANTE_PAGO',NULL,'Comprobante de un credito vigente','ACT','ComprobantePago.jasper','AB',NULL,NULL,NULL,'NOVACION','DISPONIBLE','ejemploReporteRestController/generateReporte')
+,(1,'AUTORIZACION_BURO',NULL,'Carta solicitud Autorizacion Buro','ACT','AutorizacionBuro.jasper','AB',NULL,NULL,NULL,'CLIENTE',NULL,'ejemploReporteRestController/generateReporte')
+,(2,'CEDULA_CLIENTE',NULL,'Cedula cliente','INA','CedulaCliente.jasper','AB',NULL,NULL,NULL,'CLIENTE',NULL,'ejemploReporteRestController/generateReporte')
+,(4,'SERVICIO_BASICO_CLIENTE',NULL,'Servicio basico del cliente','ACT','ServicioBasicoCliente.jasper','AB',NULL,NULL,NULL,'CLIENTE','DISPONIBLE','ejemploReporteRestController/generateReporte')
+,(3,'CEDULA_PAPELETA_CLIENTE',NULL,'Cedula y papeleta del cliente','ACT','CedulaPapeletaCliente.jasper','AB',NULL,NULL,NULL,'CLIENTE','DISPONIBLE','ejemploReporteRestController/generateReporte')
+,(5,'DOCUMENTOS LEGALES CREDITO',NULL,'Compilado de habilitantes','ACT','compiladoCredito.jasper','AB',NULL,NULL,NULL,'CREDITONUEVO',NULL,'ejemploReporteRestController/generateReporte')
+,(7,'FOTO FUNDA',NULL,'Foto de la funda','ACT','fotosFunda.jasper','AB',NULL,NULL,NULL,'FUNDA',NULL,'ejemploReporteRestController/generateReporte')
+,(6,'FOTO JOYAS',NULL,'Fotos de las joyas','ACT','fotosJoyas.jasper','AB',NULL,NULL,NULL,'FUNDA',NULL,'ejemploReporteRestController/generateReporte')
+,(9,'DOCUMENTO ENTREGA RECEPCION',NULL,'compilado devolucion','ACT','fotosJoyas.jasper','AB',NULL,NULL,NULL,'DEVOLUCION','ARRIBO','ejemploReporteRestController/generateReporte')
+,(8,'DOCUMENTO LEGALES DEVOLUCION',NULL,'compilado devolucion','ACT','fotosJoyas.jasper','AB',NULL,NULL,NULL,'DEVOLUCION','SOLICITUD','ejemploReporteRestController/generateReporte')
+;
+
+
+-- Auto-generated SQL script #202101150924
+UPDATE public.tb_mi_parametro
+	SET valor='http://app.quski.ec:18094/SoftbankAPI/'
+	WHERE id=244;
+
+
+select  'tb_mi_parametro set valor =''http://10.37.10.58:8094/SoftbankAPI/api'' || split_part(valor,''api'', 2) where  xx.valor like ''%http://201.183.238.73:1991%''; ' from tb_mi_parametro xx where  xx.valor like '%http://201.183.238.73:1991%'
+
+
+
+update  tb_mi_parametro 
+set valor =('http://10.37.10.58:8094/SoftbankAPI/api' || split_part(valor,'api', 2)) 
+where  valor like '%http://201.183.238.73:1991%'
+
+
+
+INSERT INTO tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,caracteristica_dos,orden,archivo,fecha_creacion) VALUES 
+(466,'URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE','http://10.37.10.58:8094/SoftbankAPI/api/cliente/editar','SYS','ACT','CONTENT_XML_QUSKI_CALCULADORA_RENOVAR',NULL,NULL,NULL,NULL)
+,(467,'URL_SOFTBANK_RIESGO_ACUMULADO','http://10.37.10.58:8094/SoftbankAPI/api/prestamo/operacion/riesgoacumulado','SYS','ACT','CONTENT_XML_QUSKI_CALCULADORA_RENOVAR',NULL,NULL,NULL,NULL)
+;
+
+
+select* from tb_mi_parametro where valor like  '%http://10.37.10.58:8094/SoftbankAPI/api%'
+
+
+
+select * from tb_qo_cliente 
+
+
+select * from  tb_mi_parametro where nombre like '%CODIGO%'
+
+
+
+select * from tb_qo_telefono_cliente 
+
+
+select * from tb_qo_referencia_personal 
+
+
+select * from tb_mi_parametro where nombre  = 'URL_SOFTBANK_RIESGO_ACUMULADO'
+
+
+select  * from tb_qo_direccion_cliente 
+
+
+select * from tb_qo_telefono_cliente 
+
+
+
+select * from tb_qo_excepcion_rol 
+
+
+select * from tb_mi_parametro where nombre ='TEXTO_APROBACION_PAGO'
+
+
+
+INSERT INTO tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,caracteristica_dos,orden,archivo,fecha_creacion) VALUES 
+(487,'SERVICIO_BASICO','SERVICIO BASICO','EXC-OPV-NUEV','ACT','Excepcion Operativa',NULL,2,NULL,'2021-01-18')
+,(491,'SIN_EXCEPCION','SIN EXCEPCION','EXC-OPV-NUEV','ACT','Excepcion Operativa',NULL,1,NULL,NULL)
+,(488,'PAPELETA _DE_VOTACION','PAPELETA DE VOTACION','EXC-OPV-NUEV','ACT','Excepcion Operativa',NULL,3,NULL,'2021-01-18')
+,(489,'DESCUENTO_SERVICIOS','DESCUENTO SERVICIOS','EXC-OPV-NUEV','ACT','Excepcion Operativa',NULL,4,NULL,'2021-01-18')
+;
+
+INSERT INTO tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,caracteristica_dos,orden,archivo,fecha_creacion) VALUES 
+(482,'FIRMA','FIRMA','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,2,NULL,'2021-01-18')
+,(485,'SIN_EXCEPCION','SIN EXCEPCION','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,1,NULL,'2021-01-18')
+,(483,'DEPOSITO','DEPOSITO','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,3,NULL,'2021-01-18')
+,(490,'SERVICIO_BASICO','SERVICIO BASICO','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,4,NULL,NULL)
+,(484,'PAPELETA _DE_VOTACION','PAPELETA DE VOTACION','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,5,NULL,'2021-01-18')
+,(486,'DESCUENTO_GASTOS','DESCUENTO GASTOS','EXC-OPV-RENV','ACT','Excepcion Operativa',NULL,6,NULL,'2021-01-18')
+;
+
+
+INSERT INTO tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,caracteristica_dos,orden,archivo,fecha_creacion) VALUES 
+(471,'COSTO_CUSTODIA','CostoCustodia','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(472,'COSTO_FIDEICOMISO','CostoFideicomiso','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(473,'COSTO_SEGURO','CostoSeguro','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(474,'COSTO_TASACION','CostoTasacion','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(475,'COSTO_TRANSPORTE','CostoTransporte','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(476,'COSTO_VALORACION','CostoValoracion','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(477,'SALDO_CAPITAL_RENOV','C','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(479,'SALDO_INTERES','I','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(480,'SALDO_MORA','003','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+,(481,'GASTO_COBRANZA','GC','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+;
+INSERT INTO tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,caracteristica_dos,orden,archivo,fecha_creacion) VALUES 
+(478,'CUSTODIA_DEVENGADA','CD','RUBRO','ACT','RUBRO',NULL,NULL,NULL,'2021-01-15')
+;
+
+
+------------
+select * from tb_mi_parametro where nombre = 'COSTO_VALORACION'
+
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(468, 'EDAD_MAXIMA', '65', 'VALIDACION', 'ACT', 'Edad maxima para solicitar un codeudor', NULL, NULL, NULL, NULL);
+--INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(469, 'URL_SOFTBANK_RIESGO_ACUMULADO', 'http://201.183.238.73:1991/api/prestamo/operacion/riesgoacumulado', 'SYS', 'ACT', 'CONTENT_XML_QUSKI_CALCULADORA_RENOVAR', NULL, NULL, NULL, NULL);
+--INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(470, 'URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE', 'http://201.183.238.73:1991/api/cliente/editar', 'SYS', 'ACT', 'CONTENT_XML_QUSKI_CALCULADORA_RENOVAR', NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(471, 'COSTO_CUSTODIA', 'CostoCustodia', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(472, 'COSTO_FIDEICOMISO', 'CostoFideicomiso', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(473, 'COSTO_SEGURO', 'CostoSeguro', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(474, 'COSTO_TASACION', 'CostoTasacion', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(475, 'COSTO_TRANSPORTE', 'CostoTransporte', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(476, 'COSTO_VALORACION', 'CostoValoracion', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(477, 'SALDO_CAPITAL_RENOV', 'C', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(478, 'CUSTODIA_DEVENGADA', 'CD', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(479, 'SALDO_INTERES', 'I', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(480, 'SALDO_MORA', '003', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(481, 'GASTO_COBRANZA', 'GC', 'RUBRO', 'ACT', 'RUBRO', NULL, NULL, NULL, '2021-01-15');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(482, 'FIRMA', 'FIRMA', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 2, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(483, 'DEPOSITO', 'DEPOSITO', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 3, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(484, 'PAPELETA _DE_VOTACION', 'PAPELETA DE VOTACION', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 5, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(485, 'SIN_EXCEPCION', 'SIN EXCEPCION', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 1, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(486, 'DESCUENTO_GASTOS', 'DESCUENTO GASTOS', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 6, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(487, 'SERVICIO_BASICO', 'SERVICIO BASICO', 'EXC-OPV-NUEV', 'ACT', 'Excepcion Operativa', NULL, 2, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(488, 'PAPELETA _DE_VOTACION', 'PAPELETA DE VOTACION', 'EXC-OPV-NUEV', 'ACT', 'Excepcion Operativa', NULL, 3, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(489, 'DESCUENTO_SERVICIOS', 'DESCUENTO SERVICIOS', 'EXC-OPV-NUEV', 'ACT', 'Excepcion Operativa', NULL, 4, NULL, '2021-01-18');
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(490, 'SERVICIO_BASICO', 'SERVICIO BASICO', 'EXC-OPV-RENV', 'ACT', 'Excepcion Operativa', NULL, 4, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(491, 'SIN_EXCEPCION', 'SIN EXCEPCION', 'EXC-OPV-NUEV', 'ACT', 'Excepcion Operativa', NULL, 1, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(492, 'PARA_DESARROLLO', 'desa.twelve@gmail.com', 'PARA-EXC', 'ACT', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(493, 'M_ASUNTO', 'Excepcion Operativa: --Tipo Excepcion--', 'MAIL-EXCEPCION', 'ACT', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(494, 'M_CONTENIDO', 'Mensaje en caso de existir una excepcion operativa de tipo: --Tipo Excepcion-- Solisitada por: --asesor--. Quedo Atento a cambios.', 'MAIL-EXCEPCION', 'ACT', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(495, 'PARA_TWELVE', 'jka.proyects@gmail.com', 'PARA-EXC', 'ACT', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(496, 'PARA_ASESOR', '--Correo asesor--', 'PARA-EXC', 'ACT', NULL, NULL, NULL, NULL, NULL);
+
+----------------
+
+ALTER TABLE tb_qo_credito_negociacion ADD excepcion_operativa varchar(20) NULL;
+
+ALTER TABLE tb_qo_credito_negociacion ADD fecha_regularizacion date NULL;
+
+
+
+
+requskioropredb
+
+select * from tb_qo_credito_negociacion 
+
+select * from tb_qo_negociacion where id_cliente =
+(select id from tb_qo_cliente where cedula_cliente ='1708946577')
+
+
+select * from tb_qo_telefono_cliente where id_cliente = 9
+
+
+select * from tb_qo_negociacion 
+
+select * from tb_mi_parametro where nombre ='PARA-EXC'
+
+
+select * from tb_mi_parametro where nombre like '%MONGO%'
+
+-- Auto-generated SQL script #202101211222
+UPDATE public.tb_mi_parametro
+	SET valor='10.37.10.180'
+	WHERE id=211;
+
+UPDATE public.tb_mi_parametro
+	SET valor='15672'
+	WHERE id=212;
+
+UPDATE public.tb_mi_parametro
+	SET valor='quski-core-documento'
+	WHERE id=400;
+
+INSERT INTO public.tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno)
+	VALUES (497,'localRE014','yyyy-MM-dd','SYS','ACT','Formato Fecha front');
+
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) 
+VALUES(500, 'COBERTURA_MINIMA', '80', 'VALIDACION', 'ACT', 'Cobertura minima para la excepcion', NULL, NULL, NULL, '2021-01-21');
+
+
+select * from tb_mi_parametro where nombre ='collectionName'
+
+
+
+
+select * from tb_mi_parametro where nombre like '%RE013%'
+
+
+select * from tb_qo_negociacion 
+
+
+select * from tb_qo_proceso 
+

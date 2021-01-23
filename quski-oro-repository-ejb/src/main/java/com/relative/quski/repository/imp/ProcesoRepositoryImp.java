@@ -194,7 +194,101 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			return null;
 		}
 	}
-
+	@Override
+	public Long countOperacion(BusquedaOperacionesWrapper wp) throws RelativeException {
+		try {
+			String querySelect =  COUNT_OP + FROM_OP;
+			StringBuilder strQry = new StringBuilder( querySelect );
+			if (wp.getEstado() != null) {
+				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
+			} else {
+				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO') ");
+			}
+			if(wp.getAsesor() != null) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
+						"	(select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
+						"	else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+						"		(select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+						"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
+						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
+						"				else ' ' end end end end ilike :asesor");
+			}
+			if (wp.getProceso() != null) {
+				strQry.append(" and proceso.PROCESO =:proceso ");
+			}	
+			if (wp.getFechaCreacionDesde() != null) {
+				strQry.append(" and proceso.FECHA_CREACION >=:desde ");
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				strQry.append(" and PROCESO.FECHA_CREACION <=:hasta ");
+			}
+			if(wp.getActividad() != null) {
+				log.info("================> WHERE: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
+				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
+						"				(select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
+						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
+						"					(select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
+						"					else ' ' end end =:actividad ");
+			}
+			if(wp.getNombreCompleto() != null) {
+				log.info("================> WHERE: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
+				strQry.append(" and case when ( proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION' ) then " + 
+						"				(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
+						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
+						"					(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
+						"					else '' end end LIKE :nombre ");
+			}
+			if(wp.getIdentificacion() != null) {
+				log.info("================> WHERE: CEDULA ==> "+ wp.getIdentificacion() +" <====");
+				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
+						"			(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
+						"			else case when (proceso.proceso ='DEVOLUCION') then " + 
+						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
+						"				else ' ' end end =:cedula ");
+			}
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			
+			if (wp.getAsesor() != null) {
+				log.info("=========> SET: ASESOR ==> "+ wp.getAsesor() +" <====");
+				query.setParameter("asesor", wp.getAsesor() );
+			}
+			if (wp.getEstado() != null) {
+				log.info("=========> SET: ESTADO ==> "+ wp.getEstado() +" <====");
+				query.setParameter("estado", wp.getEstado().toString());
+			}
+			if (wp.getProceso() != null) {
+				log.info("=========> SET: PROCESO ==> "+ wp.getProceso() +" <====");
+				query.setParameter("proceso", wp.getProceso().toString());
+			}	
+			if (wp.getFechaCreacionDesde() != null) {
+				log.info("=========> SET: DESDE ==> "+ wp.getFechaCreacionDesde() +" <====");
+				query.setParameter("desde", wp.getFechaCreacionDesde() );
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				log.info("=========> SET: HASTA ==> "+ wp.getFechaCreacionHasta() +" <====");
+				query.setParameter("hasta", wp.getFechaCreacionHasta() );
+			}
+			if(wp.getActividad() != null) {
+				log.info("=========> SET: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
+				query.setParameter("actividad", wp.getActividad());
+			}
+			if(wp.getNombreCompleto() != null) {
+				log.info("=========> SET: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
+				query.setParameter("nombre", "%"+wp.getNombreCompleto()+"%");
+			}
+			if(wp.getIdentificacion() != null) {
+				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
+				query.setParameter("cedula", wp.getIdentificacion());
+			}
+			int count = ((BigInteger) query.getSingleResult()).intValue();
+			return Long.valueOf( count );
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException {
@@ -423,102 +517,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
-		}
-	}
-	@Override
-	public Long countOperacion(BusquedaOperacionesWrapper wp) throws RelativeException {
-		try {
-			String querySelect =  COUNT_OP + FROM_OP;
-			StringBuilder strQry = new StringBuilder( querySelect );
-			if (wp.getEstado() != null) {
-				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
-			} else {
-				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO') ");
-			}
-			if(wp.getAsesor() != null) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
-						"	(select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
-						"	else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"		(select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
-						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
-						"				else ' ' end end end end IN (:asesor,:asesorMay) ");
-			}
-			if (wp.getProceso() != null) {
-				strQry.append(" and proceso.PROCESO =:proceso ");
-			}	
-			if (wp.getFechaCreacionDesde() != null) {
-				strQry.append(" and proceso.FECHA_CREACION >=:desde ");
-			}	
-			if (wp.getFechaCreacionHasta() != null) {
-				strQry.append(" and PROCESO.FECHA_CREACION <=:hasta ");
-			}
-			if(wp.getActividad() != null) {
-				log.info("================> WHERE: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"				(select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"					else ' ' end end =:actividad ");
-			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("================> WHERE: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				strQry.append(" and case when ( proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION' ) then " + 
-						"				(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"					else '' end end LIKE :nombre ");
-			}
-			if(wp.getIdentificacion() != null) {
-				log.info("================> WHERE: CEDULA ==> "+ wp.getIdentificacion() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"			(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"			else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"				else ' ' end end =:cedula ");
-			}
-			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-			
-			if (wp.getAsesor() != null) {
-				log.info("=========> SET: ASESOR ==> "+ wp.getAsesor() +" <====");
-				query.setParameter("asesor", wp.getAsesor() );
-				query.setParameter("asesorMay", wp.getAsesor().toUpperCase() );
-			}
-			if (wp.getEstado() != null) {
-				log.info("=========> SET: ESTADO ==> "+ wp.getEstado() +" <====");
-				query.setParameter("estado", wp.getEstado().toString());
-			}
-			if (wp.getProceso() != null) {
-				log.info("=========> SET: PROCESO ==> "+ wp.getProceso() +" <====");
-				query.setParameter("proceso", wp.getProceso().toString());
-			}	
-			if (wp.getFechaCreacionDesde() != null) {
-				log.info("=========> SET: DESDE ==> "+ wp.getFechaCreacionDesde() +" <====");
-				query.setParameter("desde", wp.getFechaCreacionDesde() );
-			}	
-			if (wp.getFechaCreacionHasta() != null) {
-				log.info("=========> SET: HASTA ==> "+ wp.getFechaCreacionHasta() +" <====");
-				query.setParameter("hasta", wp.getFechaCreacionHasta() );
-			}
-			if(wp.getActividad() != null) {
-				log.info("=========> SET: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
-				query.setParameter("actividad", wp.getActividad());
-			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("=========> SET: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				query.setParameter("nombre", "%"+wp.getNombreCompleto()+"%");
-			}
-			if(wp.getIdentificacion() != null) {
-				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
-				query.setParameter("cedula", wp.getIdentificacion());
-			}
-			int count = ((BigInteger) query.getSingleResult()).intValue();
-			return Long.valueOf( count );
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
 		}
 	}
 	

@@ -90,26 +90,26 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@GET
 	@Path("/iniciarNegociacion")
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor);
+		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia));
 		loc.setEntidad(a);
 		return loc;
 	}
 	
 	@GET
 	@Path("/iniciarNegociacionEquifax")
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor);
+		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
 		loc.setEntidad(a);
 		return loc;
 	}
 	@GET
 	@Path("/iniciarNegociacionFromCot")
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor);
+		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia));
 		loc.setEntidad(a);
 		return loc;
 	}
