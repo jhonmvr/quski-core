@@ -32,11 +32,11 @@ public class TbQoProceso implements Serializable {
 	@Column(name="estado_proceso")
 	private EstadoProcesoEnum estadoProceso;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

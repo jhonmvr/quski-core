@@ -29,7 +29,7 @@ public class TbQoTipoDocumento implements Serializable {
 
 	private String estado;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

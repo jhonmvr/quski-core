@@ -2,7 +2,6 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 public class SoftbankClienteWrapper implements Serializable{
@@ -21,13 +20,13 @@ public class SoftbankClienteWrapper implements Serializable{
 		private String segundoNombre;                         
 		private Boolean esCliente;                             
 		private String codigoMotivoVisita;                         
-		private Date fechaIngreso;                              
+		private String fechaIngreso;                              
 		private Long idAgencia;                              
 		private Long idPaisNacimiento;                        
 		private Long idPais;                                  
 		private Long idLugarNacimiento;                       
 		private SoftbankActividadEconomicaWrapper actividadEconomica; 
-		private Date fechaNacimiento;                        
+		private String fechaNacimiento;                        
 		private String codigoSexo;                           
 		private String codigoProfesion;                      
 		private String codigoEstadoCivil;                   
@@ -106,10 +105,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setCodigoMotivoVisita(String codigoMotivoVisita) {
 			this.codigoMotivoVisita = codigoMotivoVisita;
 		}
-		public Date getFechaIngreso() {
+		public String getFechaIngreso() {
 			return fechaIngreso;
 		}
-		public void setFechaIngreso(Date fechaIngreso) {
+		public void setFechaIngreso(String fechaIngreso) {
 			this.fechaIngreso = fechaIngreso;
 		}
 		public Long getIdAgencia() {
@@ -136,10 +135,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setIdLugarNacimiento(Long idLugarNacimiento) {
 			this.idLugarNacimiento = idLugarNacimiento;
 		}
-		public Date getFechaNacimiento() {
+		public String getFechaNacimiento() {
 			return fechaNacimiento;
 		}
-		public void setFechaNacimiento(Date fechaNacimiento) {
+		public void setFechaNacimiento(String fechaNacimiento) {
 			this.fechaNacimiento = fechaNacimiento;
 		}
 		public String getCodigoSexo() {

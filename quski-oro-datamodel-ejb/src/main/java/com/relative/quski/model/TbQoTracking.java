@@ -59,11 +59,11 @@ public class TbQoTracking implements Serializable {
 	@Column(name="codigo_operacion_softbank")
 	private String codigoOperacionSoftbank;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

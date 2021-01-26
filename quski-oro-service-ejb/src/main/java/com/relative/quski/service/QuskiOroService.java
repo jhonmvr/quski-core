@@ -2324,7 +2324,7 @@ public class QuskiOroService {
 			cliente.setCanalContacto( s.getCodigoMotivoVisita() );
 			cliente.setCargasFamiliares( s.getNumeroCargasFamiliares() );
 			if( s.getFechaNacimiento() != null) {
-				cliente.setFechaNacimiento(s.getFechaNacimiento());
+				cliente.setFechaNacimiento(QuskiOroUtil.formatSringToDate(s.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 			}
 			cliente.setEmail( s.getEmail() );
 			cliente.setEstadoCivil( s.getCodigoEstadoCivil() );
@@ -4459,7 +4459,7 @@ public class QuskiOroService {
 			cliente.setUsuario( s.getCodigoUsuarioAsesor() );
 			cliente.setNombreCompleto( s.getNombreCompleto() );
 			cliente.setCargasFamiliares( s.getNumeroCargasFamiliares() );
-			cliente.setFechaNacimiento(s.getFechaNacimiento());
+			cliente.setFechaNacimiento(QuskiOroUtil.formatSringToDate(s.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 			if(cliente.getFechaNacimiento() != null ) {
 				cliente.setEdad( Long.valueOf(QuskiOroUtil.calculateEdad( cliente.getFechaNacimiento() )));						
 			}
@@ -4738,11 +4738,11 @@ public class QuskiOroService {
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );
 			sof.setEsCliente( true );              
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );                             
-			sof.setFechaIngreso(cli.getFechaActualizacion());                                  
+			sof.setFechaIngreso(QuskiOroUtil.dateToString(cli.getFechaActualizacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));                                  
 			sof.setIdPaisNacimiento( cli.getNacionalidad() );                            
 			sof.setIdPais( cli.getNacionalidad() );                                      
 			sof.setIdLugarNacimiento( Long.valueOf( cli.getLugarNacimiento() ) ); 
-			sof.setFechaNacimiento(cli.getFechaNacimiento());                            
+			sof.setFechaNacimiento(QuskiOroUtil.dateToString(cli.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));                            
 			sof.setCodigoSexo( cli.getGenero() );                               
 			sof.setCodigoProfesion( cli.getProfesion() );                          
 			sof.setCodigoEstadoCivil( cli.getEstadoCivil() );                       
@@ -5253,7 +5253,8 @@ public class QuskiOroService {
 						.replace("--perfil-riesgo--", "1")
 						.replace("--origen-operacion--", creditoSoft.getCredito().getEsMigrado()?"O":"E")
 						.replace("--riesgo-total--", riesgoTotal.toString())
-						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(creditoSoft.getCliente().getFechaNacimiento(),QuskiOroUtil.DATE_FORMAT_QUSKI) )
+						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(
+								QuskiOroUtil.formatSringToDate(creditoSoft.getCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK),QuskiOroUtil.DATE_FORMAT_QUSKI) )
 						.replace("--perfil-preferencia--", "A") 
 						.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 						.replace("--identificacion-cliente--",creditoSoft.getCliente().getIdentificacion())

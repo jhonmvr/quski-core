@@ -32,7 +32,7 @@ public class TbQoRubro implements Serializable {
 	
 	private String factor;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

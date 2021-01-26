@@ -59,23 +59,23 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="estado_softbank")
 	private String estadoSoftbank;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 	
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="pago_dia")
 	private Date pagoDia;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_efectiva")
 	private Date fechaEfectiva;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
