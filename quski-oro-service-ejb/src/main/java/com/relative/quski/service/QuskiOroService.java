@@ -5253,8 +5253,7 @@ public class QuskiOroService {
 						.replace("--perfil-riesgo--", "1")
 						.replace("--origen-operacion--", creditoSoft.getCredito().getEsMigrado()?"O":"E")
 						.replace("--riesgo-total--", riesgoTotal.toString())
-						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(
-								QuskiOroUtil.formatSringToDate(creditoSoft.getCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK),QuskiOroUtil.DATE_FORMAT_QUSKI) )
+						.replace("--fecha-nacimiento--", creditoSoft.getCliente().getFechaNacimiento())
 						.replace("--perfil-preferencia--", "A") 
 						.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
 						.replace("--identificacion-cliente--",creditoSoft.getCliente().getIdentificacion())
@@ -6089,7 +6088,7 @@ public class QuskiOroService {
 		if(StringUtils.isBlank(result.getNumeroFundaJoya())) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL NUMERO DE FUNDA ASIGNADO ESTA VACIO");
 		}
-		credito.setNumeroFunda(Long.valueOf(result.getNumeroFundaJoya()) );
+		credito.setNumeroFunda(result.getNumeroFundaJoya());
 		credito.setCodigoTipoFunda(c.getCodigoTipoFunda());
 		credito.setNumeroOperacion(result.getNumeroOperacion());
 		return this.manageCreditoNegociacion(credito);
@@ -6174,7 +6173,7 @@ public class QuskiOroService {
 			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
-			credito.setNumeroFunda( Long.valueOf( operacion.getNumeroFundaJoya() ) );
+			credito.setNumeroFunda( operacion.getNumeroFundaJoya() );
 			
 			if(operacion.getGarantias() != null ) {
 				List<TbQoTasacion> list = this.tasacionRepository.findByIdCredito( credito.getId() );
@@ -6318,7 +6317,7 @@ public class QuskiOroService {
 			});
 			result.setDatosCuentaCliente( listCuenta );
 			DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
-			if( credito.getNumeroFunda() != Long.valueOf( 0 ) && credito.getNumeroFunda() != null ) {
+			if( StringUtils.isNotBlank( credito.getNumeroFunda() ) ) {
 				datos.setNumeroFundaJoya( credito.getNumeroFunda().toString() );								
 			}
 			datos.setCodigoTipoFunda( credito.getCodigoTipoFunda() ); 

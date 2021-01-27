@@ -95,7 +95,7 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private BigDecimal totalCostoNuevaOperacion;
 	
 	@Column(name="numero_funda")
-	private Long numeroFunda;
+	private String numeroFunda;
 	
 	@Column(name="descripcion_producto")
 	private String descripcionProducto;
@@ -246,9 +246,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="periodo_plazo")
 	private String periodoPlazo;
 
-	@Column(name="peso_funda")
-	private String pesoFunda;
-
 
 	@Column(name="porcentaje_flujo_planeado")
 	private BigDecimal porcentajeFlujoPlaneado;
@@ -350,11 +347,11 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.codigo = codigo;
 	}
 
-	public Long getNumeroFunda() {
+	public String getNumeroFunda() {
 		return numeroFunda;
 	}
 
-	public void setNumeroFunda(Long numeroFunda) {
+	public void setNumeroFunda(String numeroFunda) {
 		this.numeroFunda = numeroFunda;
 	}
 
@@ -868,14 +865,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setPeriodoPlazo(String periodoPlazo) {
 		this.periodoPlazo = periodoPlazo;
-	}
-
-	public String getPesoFunda() {
-		return pesoFunda;
-	}
-
-	public void setPesoFunda(String pesoFunda) {
-		this.pesoFunda = pesoFunda;
 	}
 
 	public BigDecimal getPorcentajeFlujoPlaneado() {
