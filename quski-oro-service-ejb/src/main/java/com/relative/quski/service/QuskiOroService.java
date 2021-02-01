@@ -2361,7 +2361,9 @@ public class QuskiOroService {
 			}
 				return rp;
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje());
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 		}
 
 	}
