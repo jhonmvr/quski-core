@@ -2172,22 +2172,10 @@ public class QuskiOroService {
 			if( wr == null) {
 				wr = new ClienteCompletoWrapper( this.findClienteByIdentifiacion( cedula ) );
 				wr.setIsSoftbank( false );
-				if(wr.getExisteError()) {return wr;}
-				wr.setDirecciones( this.direccionClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
-				wr.setReferencias( this.referenciaPersonalRepository.findByIdCliente( wr.getCliente().getId() ) );
-				wr.setDatosTrabajos( this.datoTrabajoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
-				TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
-				String codigoCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
-				List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
-				CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cedula);
-				cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
-				cuenta.setCuenta(cuentaWS.getNumeroCuenta());
-				cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
-				cuenta.setEstado(EstadoEnum.ACT);
-				cuenta.setTbQoCliente( wr.getCliente() );
-				listCreate.add( cuenta );
-				wr.setCuentas( listCreate );
-				wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
+				if(wr.getExisteError()) {
+					return wr;
+				}
+				setDatosCliente(cedula, wr);
 				return wr;
 			}else {
 				wr.setIsSoftbank( true );
@@ -2198,14 +2186,64 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM , e.getMensaje());
 		}
 	}
+
+	/**
+	 * SETEA LAS RELACIONES DE TBQOCLIENTE EN UN SOLO WRAPPER
+	 * @param cedula
+	 * @param wr
+	 * @throws RelativeException
+	 */
+	private void setDatosCliente(String cedula, ClienteCompletoWrapper wr) throws RelativeException {
+		wr.setDirecciones( this.direccionClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
+		wr.setReferencias( this.referenciaPersonalRepository.findByIdCliente( wr.getCliente().getId() ) );
+		wr.setDatosTrabajos( this.datoTrabajoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
+		TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
+		String codigoCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
+		List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
+		CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cedula);
+		cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
+		cuenta.setCuenta(cuentaWS.getNumeroCuenta());
+		cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
+		cuenta.setEstado(EstadoEnum.ACT);
+		cuenta.setTbQoCliente( wr.getCliente() );
+		listCreate.add( cuenta );
+		wr.setCuentas( listCreate );
+		wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
+	}
 	private ClienteCompletoWrapper mapearClienteCompleto( SoftbankClienteWrapper s) throws RelativeException {
 		if (s == null) {return null;}
-		TbQoCliente  cliente 					= this.mapearCliente( s );
-		List<TbQoTelefonoCliente> telefonos     = !s.getTelefonos().isEmpty() ? this.mapearTelefonos(   s.getTelefonos() )       : null;
-		List<TbQoDireccionCliente> direcciones 	= !s.getDirecciones().isEmpty() ?  this.mapearDirecciones(s.getDirecciones()  )     : null; 
-		List<TbQoReferenciaPersonal> referencias= !s.getContactosCliente().isEmpty() ? this.mapearReferencias( s.getContactosCliente() ) : null;
-		List<TbQoDatoTrabajoCliente> trabajos   = !s.getDatosTrabajoCliente().isEmpty() ? this.mapearTrabajo( s.getDatosTrabajoCliente() ) : null;
-		List<TbQoCuentaBancariaCliente> cuentas = !s.getCuentasBancariasCliente().isEmpty() ? this.mapearCuentas( s.getCuentasBancariasCliente(), cliente ) : null;
+		TbQoCliente  cliente = this.mapearCliente( s );
+		List<TbQoTelefonoCliente> telefonos;
+		List<TbQoDireccionCliente> direcciones;
+		List<TbQoReferenciaPersonal> referencias;
+		List<TbQoDatoTrabajoCliente> trabajos;
+		List<TbQoCuentaBancariaCliente> cuentas;
+		if(s.getTelefonos() != null && !s.getTelefonos().isEmpty()) {
+			telefonos =  this.mapearTelefonos(   s.getTelefonos() ); 
+		}else {
+			telefonos = this.telefonoClienteRepository.findAllByIdCliente(cliente.getId());
+		}
+		if(s.getDirecciones() != null && !s.getDirecciones().isEmpty()) {
+			direcciones =  this.mapearDirecciones(   s.getDirecciones() ); 
+		}else {
+			direcciones = this.direccionClienteRepository.findAllByIdCliente(cliente.getId());
+		}
+		if(s.getContactosCliente() != null && !s.getContactosCliente().isEmpty()) {
+			referencias =  this.mapearReferencias(   s.getContactosCliente() ); 
+		}else {
+			referencias = this.referenciaPersonalRepository.findAllByIdCliente(cliente.getId());
+		}
+		if(s.getDatosTrabajoCliente() != null && !s.getDatosTrabajoCliente().isEmpty()) {
+			trabajos =  this.mapearTrabajo(   s.getDatosTrabajoCliente() ); 
+		}else {
+			trabajos = this.datoTrabajoClienteRepository.findAllByIdCliente(cliente.getId());
+		}
+		if(s.getCuentasBancariasCliente() != null && !s.getCuentasBancariasCliente().isEmpty()) {
+			cuentas =  this.mapearCuentas(   s.getCuentasBancariasCliente(), cliente ); 
+		}else {
+			cuentas = this.cuentaBancariaRepository.findByIdCliente(cliente.getId());
+		}
+		
 		return new ClienteCompletoWrapper(cliente, direcciones, referencias, telefonos,  trabajos, cuentas);
 	}
 	private List<TbQoDatoTrabajoCliente> mapearTrabajo(List<SoftbankDatosTrabajoWrapper> datosTrabajoCliente ) {
