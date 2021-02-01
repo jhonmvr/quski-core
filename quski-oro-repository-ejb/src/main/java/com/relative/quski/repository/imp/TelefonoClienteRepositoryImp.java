@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -66,6 +67,31 @@ public class TelefonoClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+		}
+	}
+
+	@Override
+	public void deleteAllByIdCliente(Long id) throws RelativeException {
+		try {
+			if(id == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR TELEFONOS DEL CLIENTE ID ES OBLIGATORIO");
+			}
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_telefono_cliente where 1=1 ");
+			
+			queryStr.append("and id_cliente =:idCliente ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idCliente", id);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR TELEFONOS DEL CLIENTE");
 		}
 	}
 

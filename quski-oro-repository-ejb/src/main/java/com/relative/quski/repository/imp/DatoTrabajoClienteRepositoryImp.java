@@ -76,7 +76,6 @@ public class DatoTrabajoClienteRepositoryImp extends GeneralRepositoryImp<Long, 
 			if(id == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR DATOS DE TRABAJO ID CREDITO ES OBLIGATORIO");
 			}
-		
 			StringBuilder queryStr =  new StringBuilder();
 			queryStr.append("DELETE FROM tb_qo_dato_trabajo_cliente where 1=1 ");
 			
@@ -94,7 +93,5 @@ public class DatoTrabajoClienteRepositoryImp extends GeneralRepositoryImp<Long, 
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR DATOS DE TRABAJO");
 		}
-		
-		
 	}
 }
