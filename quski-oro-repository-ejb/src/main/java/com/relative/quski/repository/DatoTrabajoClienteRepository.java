@@ -16,6 +16,7 @@ public interface DatoTrabajoClienteRepository extends CrudRepository<Long, TbQoD
 	public TbQoDatoTrabajoCliente findByIdSoftbank(Long id) throws RelativeException ;
 
 	public List<TbQoDatoTrabajoCliente> findAllByIdCliente(Long id) throws RelativeException ;
+	public void deleteAllByIdCliente(Long id)throws RelativeException ;
 
 	
 	

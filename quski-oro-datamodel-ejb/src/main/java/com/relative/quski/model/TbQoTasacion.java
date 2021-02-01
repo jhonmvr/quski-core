@@ -49,11 +49,11 @@ public class TbQoTasacion implements Serializable {
 	@Column(name="estado_joya")
 	private String estadoJoya;
 	
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

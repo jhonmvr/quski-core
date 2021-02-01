@@ -61,15 +61,15 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "estado_civil")
 	private String estadoCivil;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_nacimiento")
 	private Date fechaNacimiento;
 

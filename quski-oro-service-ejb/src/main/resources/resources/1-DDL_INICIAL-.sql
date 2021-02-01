@@ -2054,3 +2054,6 @@ select * from tb_qo_negociacion
 
 select * from tb_qo_proceso 
 
+
+
+select * from tb_mi_parametro where nombre like '%RE%'

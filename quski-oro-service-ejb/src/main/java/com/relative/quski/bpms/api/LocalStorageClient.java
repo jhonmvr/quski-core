@@ -1,10 +1,7 @@
 package com.relative.quski.bpms.api;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -12,14 +9,12 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.FileLocalStorage;
-import com.relative.quski.wrapper.HerederoWrapper;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.TokenWrapper;

@@ -76,7 +76,7 @@ public class SoftBankApiClient {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static SoftbankRespuestaWrapper callCrearClienteRest(String service,SoftbankClienteWrapper wrapper)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
@@ -100,19 +100,13 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		}
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:" + e.getMessage());
+		} 
 	}
 	public static ConsultaGlobalRespuestaWrapper callConsultaGlobalRest(String service, ConsultaGlobalWrapper wrapper)
 			throws RelativeException, UnsupportedEncodingException {
@@ -397,26 +391,23 @@ public class SoftBankApiClient {
 			log.info("=========> VALOR DEL STATUS ========> "+ status);
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				SoftbankRespuestaWrapper rest =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				if(rest != null && rest.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+							rest.getMensaje() +" | validaciones: "+ rest.getValidaciones());
+				}
+				return rest;
 			}else {
-				SoftbankRespuestaWrapper res = new SoftbankRespuestaWrapper();
-				res.setExisteError(true);
-				return res;
-				// throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:");
-		}
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:" + e.getMessage());
+		} 
 	}
 	
 	public static CrearOperacionRespuestaWrapper callCrearOperacion01Rest(CrearOperacionEntradaWrapper datosEntradaOperacion, String service)

@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
+import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.repository.ParametroRepository;
@@ -29,11 +30,17 @@ public class ParametroRepositoryImp extends GeneralRepositoryImp<Long, TbMiParam
 	 * @return nombre de parametro
 	 */
 	public TbMiParametro findByNombre(String nombre) throws RelativeException {
-		List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreSpec(nombre));
-		if (p != null && !p.isEmpty()) {
-			return p.get(0);
+		try {
+			List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreSpec(nombre));
+			if (p != null && !p.isEmpty()) {
+				return p.get(0);
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL BUSCAR PARAMETRO POR NOMBRE");
 		}
-		return null;
 	}
 
 	/**
@@ -47,14 +54,20 @@ public class ParametroRepositoryImp extends GeneralRepositoryImp<Long, TbMiParam
 	 */
 	public List<TbMiParametro> findByNombreAndTipoOrdered(String nombre, String tipo, Boolean ordered)
 			throws RelativeException {
-		List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreTipoOrderedSpec(nombre, tipo));
-		if (p != null && !p.isEmpty()) {
-			if (ordered) {
-				p.sort((p1, p2) -> p1.getOrden().compareTo(p2.getOrden()));
+		try {
+			List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreTipoOrderedSpec(nombre, tipo));
+			if (p != null && !p.isEmpty()) {
+				if (ordered) {
+					p.sort((p1, p2) -> p1.getOrden().compareTo(p2.getOrden()));
+				}
+				return p;
 			}
-			return p;
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL LISTAR PARAMETROS POR TIPO Y ORDEN" + e);
 		}
-		return null;
 	}
 
 	public List<TbMiParametro> findByParamPaged(String nombre, String tipo, EstadoEnum estado, String caracteriticaUno,
@@ -68,7 +81,7 @@ public class ParametroRepositoryImp extends GeneralRepositoryImp<Long, TbMiParam
 				return tmp;
 			}
 		} catch (Exception e) {
-			throw new RelativeException("Error al buscar contrato por identificacion de cliente" + e);
+			throw new RelativeException("AL LISTAR PARAMETROS" + e);
 		}
 		return null;
 	}

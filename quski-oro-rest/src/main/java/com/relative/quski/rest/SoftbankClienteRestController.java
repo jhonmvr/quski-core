@@ -72,12 +72,9 @@ public class SoftbankClienteRestController extends BaseRestController
 					.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE).getValor(),wrapper);
 			loc.setEntidad(a);
 			return loc;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL INTENTAR GUARDAR DATOS EN SOFTBANK ");
+			throw e;
 		}
 	}
 	@POST

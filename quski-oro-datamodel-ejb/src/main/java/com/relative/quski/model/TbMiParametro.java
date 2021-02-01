@@ -45,7 +45,7 @@ public class TbMiParametro implements Serializable {
 	private Long orden;
 	@Lob
 	private Object archivo;
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 

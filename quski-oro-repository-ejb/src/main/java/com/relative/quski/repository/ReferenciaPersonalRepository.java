@@ -15,4 +15,6 @@ public interface ReferenciaPersonalRepository extends CrudRepository<Long, TbQoR
 	
 	public List<TbQoReferenciaPersonal> findAllByIdCliente(Long id) throws RelativeException;
 
+	public void deleteAllByIdCliente(Long id) throws RelativeException;
+
 }

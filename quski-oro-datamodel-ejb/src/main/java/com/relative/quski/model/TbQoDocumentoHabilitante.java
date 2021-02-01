@@ -56,11 +56,11 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EstadoOperacionEnum estadoOperacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 

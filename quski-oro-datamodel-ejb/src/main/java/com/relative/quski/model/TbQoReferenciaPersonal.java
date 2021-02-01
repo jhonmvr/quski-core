@@ -15,8 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
 
@@ -40,11 +38,11 @@ public class TbQoReferenciaPersonal implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_actualizacion")
 	private Date fechaActualizacion;
 
-	@Temporal(TemporalType.DATE)
+
 	@Column(name = "fecha_creacion")
 	private Date fechaCreacion;
 

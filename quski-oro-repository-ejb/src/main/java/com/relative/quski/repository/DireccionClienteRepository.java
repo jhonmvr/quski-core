@@ -16,6 +16,8 @@ public interface DireccionClienteRepository extends CrudRepository<Long, TbQoDir
 	public List<TbQoDireccionCliente> findAllByIdCliente(Long id) throws RelativeException ;
 
 	public List<TbQoDireccionCliente> findByIdClienteAndTipoDireccion(Long idC, String tipoDireccion) throws RelativeException;
+
+	public void deleteAllByIdCliente(Long id) throws RelativeException;
 	
 	
 	
