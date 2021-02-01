@@ -1561,6 +1561,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
+				send.setEstado( send.getEstado() != null ? send.getEstado() : EstadoEnum.ACT );
 				return this.datoTrabajoClienteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -1641,7 +1642,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
-				send.setEstado( EstadoEnum.ACT );
+				send.setEstado( send.getEstado() != null ? send.getEstado() : EstadoEnum.ACT );
 				return this.telefonoClienteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -1686,7 +1687,7 @@ public class QuskiOroService {
 				if (send.getTbQoCliente() == null && send.getTbQoCliente().getId() == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Ingrese un id de cliente");
 				}
-				send.setEstado( EstadoEnum.ACT );
+				send.setEstado( send.getEstado() != null ? send.getEstado() : EstadoEnum.ACT );
 				return this.cuentaBancariaRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
@@ -3019,7 +3020,7 @@ public class QuskiOroService {
 				return this.updateReferenciaPersonal(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado(EstadoEnum.ACT);
+				send.setEstado( send.getEstado() != null ? send.getEstado() : EstadoEnum.ACT );
 				return referenciaPersonalRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -3596,7 +3597,7 @@ public class QuskiOroService {
 				persisted = this.findDireccionClienteById(send.getId());
 				return this.updateDireccionCliente(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				send.setEstado(EstadoEnum.ACT);
+				send.setEstado( send.getEstado() != null ? send.getEstado() : EstadoEnum.ACT );
 				return this.direccionClienteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -4795,6 +4796,7 @@ public class QuskiOroService {
 					ref.setNombres( e.getNombres() );
 					ref.setCodigoTipoReferencia( e.getParentesco() );
 					ref.setDireccion( e.getDireccion() );
+					log.info("EL ESTADO DE CADA COSA PERETERA =============>" + e.getEstado());
 					ref.setActivo( e.getEstado() == EstadoEnum.ACT );
 					List<TelefonosContactoClienteWrapper> subList = new ArrayList<>();
 					subList.add( new TelefonosContactoClienteWrapper( "DOM", e.getTelefonoFijo() ) );
