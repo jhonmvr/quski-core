@@ -20,6 +20,8 @@ public class SolicitudDevolucionHerederoWrapper implements Serializable {
 	private String numeroFunda;
 	private String agenciaEntrega;
 	private String heredero;
+	private String nombreAsesor;
+	private String cedulaAsesor;
 	
 	
 	private String asesor;
@@ -78,6 +80,18 @@ public class SolicitudDevolucionHerederoWrapper implements Serializable {
 	}
 	public void setHeredero(String heredero) {
 		this.heredero = heredero;
+	}
+	public String getNombreAsesor() {
+		return nombreAsesor;
+	}
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
+	}
+	public String getCedulaAsesor() {
+		return cedulaAsesor;
+	}
+	public void setCedulaAsesor(String cedulaAsesor) {
+		this.cedulaAsesor = cedulaAsesor;
 	}
 	
 	

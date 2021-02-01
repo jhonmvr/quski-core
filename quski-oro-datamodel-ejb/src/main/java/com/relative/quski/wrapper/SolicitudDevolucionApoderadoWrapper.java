@@ -22,6 +22,7 @@ public class SolicitudDevolucionApoderadoWrapper implements Serializable {
 	private String nombreApoderado;
 	private String cedulaApoderado;
 	private String asesor;
+	private String cedulaAsesor;
 	
 	
 	
@@ -84,6 +85,12 @@ public class SolicitudDevolucionApoderadoWrapper implements Serializable {
 	}
 	public void setAsesor(String asesor) {
 		this.asesor = asesor;
+	}
+	public String getCedulaAsesor() {
+		return cedulaAsesor;
+	}
+	public void setCedulaAsesor(String cedulaAsesor) {
+		this.cedulaAsesor = cedulaAsesor;
 	}
 
 	

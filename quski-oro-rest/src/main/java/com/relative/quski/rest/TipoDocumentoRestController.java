@@ -251,4 +251,70 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	
 	
 	*/
+	
+	@GET
+	@Path("/getPlantillaDevolucion")
+	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
+	response = GenericWrapper.class)
+		public byte[] getPlantillaDevolucion(
+			@QueryParam("id") String id,
+			@QueryParam("format") String formato,
+		    @QueryParam("idDevolucion") String idDevolucion,
+		    @QueryParam("nombreAsesor") String nombreAsesor,
+		    @QueryParam("identificacionAsesor") String identificacionAsesor
+		  
+		    ) throws RelativeException {
+		log.info("===================> getPlantilla");
+		log.info("===================> getPlantilla id " + id );
+		log.info("===================> getPlantilla idDevolucion " + idDevolucion );
+		
+		log.info("================s===> getPlantilla format " + formato );
+		Map<String, Object> map = new HashMap<>();
+		//CAMBIAR PARA PONER EL PARAMETRO
+		
+
+		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
+		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
+
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		log.info("================PATH===> P" +path);
+		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
+		this.setParametersDevolucion(map,path,    idDevolucion, td);
+		this.setReportDataDevolucion(map, path,   idDevolucion, td);
+		return this.generateReport(map, path, formato, td);
+	}
+	
+	
+	private void setParametersDevolucion(Map<String, Object> map,String path, 
+		 String idDevolucion, TbQoTipoDocumento td){
+	
+		map.put("idDevolucion", idDevolucion);
+		map.put("subReportOneName",  td.getPlantillaUno() );
+		map.put("subReportTwoName", td.getPlantillaDos() );
+		map.put("subReportThreeName", td.getPlantillaTres());
+		map.put("mainReportName", td.getPlantilla());
+		map.put("REPORT_PATH", path );
+		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 1" + path+td.getPlantillaUno() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 2" + path+td.getPlantillaDos() );
+	//	log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 3" + path+td.getPlantillaTres() );
+	}
+	
+	
+	private void setReportDataDevolucion(Map<String, Object> map,String path, 
+			 String idDevolucion,  TbQoTipoDocumento td) throws RelativeException{
+		
+		
+			
+			
+		
+		if( !StringUtils.isEmpty( idDevolucion )  ) {
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.TC )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
+			} 
+			
+			
+		}
+	}
+	
 }
