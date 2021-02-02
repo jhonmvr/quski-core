@@ -4796,11 +4796,14 @@ public class QuskiOroService {
 					ref.setNombres( e.getNombres() );
 					ref.setCodigoTipoReferencia( e.getParentesco() );
 					ref.setDireccion( e.getDireccion() );
-					log.info("EL ESTADO DE CADA COSA PERETERA =============>" + e.getEstado());
 					ref.setActivo( e.getEstado() == EstadoEnum.ACT );
 					List<TelefonosContactoClienteWrapper> subList = new ArrayList<>();
-					subList.add( new TelefonosContactoClienteWrapper( "DOM", e.getTelefonoFijo() ) );
-					subList.add( new TelefonosContactoClienteWrapper( "CEL", e.getTelefonoMovil()) );
+					if(e.getTelefonoFijo() != null) {
+						subList.add( new TelefonosContactoClienteWrapper( "DOM", e.getTelefonoFijo() ) );						
+					}
+					if(e.getTelefonoMovil() != null) {
+						subList.add( new TelefonosContactoClienteWrapper( "CEL", e.getTelefonoMovil()) );						
+					}
 					ref.setTelefonos( subList );
 					contactosCliente.add(ref);
 				});
