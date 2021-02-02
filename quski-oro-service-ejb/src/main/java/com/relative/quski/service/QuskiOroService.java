@@ -2419,6 +2419,7 @@ public class QuskiOroService {
 			if(wp.getCuentas() != null && !wp.getCuentas().isEmpty()) {
 				this.cuentaBancariaRepository.deleteAllByIdCliente(cliente.getId());
 				for (TbQoCuentaBancariaCliente cb :wp.getCuentas()) {
+					cb.setId(null);
 					cb.setTbQoCliente(cliente);
 					this.manageCuentaBancariaCliente(cb);
 				}
@@ -2426,6 +2427,7 @@ public class QuskiOroService {
 			if(wp.getDatosTrabajos() != null && !wp.getDatosTrabajos().isEmpty()) {
 				this.datoTrabajoClienteRepository.deleteAllByIdCliente(cliente.getId());
 				for(TbQoDatoTrabajoCliente dt :  wp.getDatosTrabajos()){
+					dt.setId(null);
 					dt.setTbQoCliente(cliente);
 					this.manageDatoTrabajoCliente(dt);
 				}
@@ -2433,6 +2435,7 @@ public class QuskiOroService {
 			if(wp.getDirecciones() != null && !wp.getDirecciones().isEmpty()) {
 				this.direccionClienteRepository.deleteAllByIdCliente(cliente.getId());
 				for(TbQoDireccionCliente dir :wp.getDirecciones() ) {
+					dir.setId(null);
 					dir.setTbQoCliente(cliente);
 					this.manageDireccionCliente(dir);
 				}
@@ -2440,6 +2443,7 @@ public class QuskiOroService {
 			if(wp.getReferencias() != null && !wp.getReferencias().isEmpty()) {
 				this.referenciaPersonalRepository.deleteAllByIdCliente(cliente.getId());
 				for(TbQoReferenciaPersonal ref : wp.getReferencias()) {
+					ref.setId(null);
 					ref.setTbQoCliente(cliente);
 					this.manageReferenciaPersonal(ref);
 				}
@@ -2447,6 +2451,7 @@ public class QuskiOroService {
 			if(wp.getTelefonos() != null && !wp.getTelefonos().isEmpty()) {
 				this.telefonoClienteRepository.deleteAllByIdCliente(cliente.getId());
 				for(TbQoTelefonoCliente tel : wp.getTelefonos()) {
+					tel.setId(null);
 					tel.setTbQoCliente(cliente);
 					this.manageTelefonoCliente(tel);
 				}
@@ -2455,6 +2460,7 @@ public class QuskiOroService {
 		}catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL GUARDAR CLIENTE EN BASE LOCAL: " + e.getMessage());
 		}
 		
