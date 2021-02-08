@@ -248,6 +248,28 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
 						"				else ' ' end end =:cedula ");
 			}
+			if(wp.getCodigoBpm() != null ) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
+						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+						"					(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"							(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
+						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"									(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+						"										else ' ' end end end end iLIKE :codigoBpm ");
+			}
+			if(wp.getCodigoSoft() != null ) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
+						"			(select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+						"					(select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)  " + 
+						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"							(select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)   " + 
+						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"									(select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+						"										else ' ' end end end end iLIKE :codigosoft ");
+			}
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
 			if (wp.getAsesor() != null) {
@@ -281,6 +303,14 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if(wp.getIdentificacion() != null) {
 				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
 				query.setParameter("cedula", wp.getIdentificacion());
+			}			
+			if(wp.getCodigoBpm() != null) {
+				log.info("=========> SET: CODIGO BPM ==> "+ wp.getCodigoBpm() +" <====");
+				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm()+"%");
+			}			
+			if(wp.getCodigoSoft() != null) {
+				log.info("=========> SET: CODIGO SOFTBANK ==> "+ wp.getCodigoSoft() +" <====");
+				query.setParameter("codigosoft", "%"+wp.getCodigoSoft()+"%");
 			}
 			int count = ((BigInteger) query.getSingleResult()).intValue();
 			return Long.valueOf( count );
@@ -358,6 +388,28 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
 						"				else ' ' end end =:cedula ");
 			}
+			if(wp.getCodigoBpm() != null ) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
+						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+						"					(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
+						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"							(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
+						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"									(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+						"										else ' ' end end end end iLIKE :codigoBpm ");
+			}
+			if(wp.getCodigoSoft() != null ) {
+				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
+						"			(select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
+						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
+						"					(select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)  " + 
+						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
+						"							(select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
+						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
+						"									(select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
+						"										else ' ' end end end end iLIKE :codigosoft ");
+			}
 			strQry.append(" LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
@@ -392,6 +444,14 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if(wp.getIdentificacion() != null) {
 				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
 				query.setParameter("cedula", wp.getIdentificacion());
+			}
+			if(wp.getCodigoBpm() != null) {
+				log.info("=========> SET: CODIGO BPM ==> "+ wp.getCodigoBpm() +" <====");
+				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm()+"%");
+			}			
+			if(wp.getCodigoSoft() != null) {
+				log.info("=========> SET: CODIGO SOFTBANK ==> "+ wp.getCodigoSoft() +" <====");
+				query.setParameter("codigosoft", "%"+wp.getCodigoSoft()+"%");
 			}
 			query.setParameter("limite", wp.getNumberItems() );
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());
