@@ -27,6 +27,8 @@ public class OperacionGlobalWrapper implements Serializable {
 	private String codigoUsuarioAsesor;
 	private String codigoEstadoOperacion;
 	private String tipoCredito;
+    private String codigoTipoCarteraQuski;
+    private String periodoPlazo;
 	private String codigoTipoTablaArmotizacionQuski;
 	private Long plazo;
 	private Boolean impago;
@@ -213,5 +215,17 @@ public class OperacionGlobalWrapper implements Serializable {
 	}
 	public void setEsMigrado(Boolean esMigrado) {
 		this.esMigrado = esMigrado;
+	}
+	public String getCodigoTipoCarteraQuski() {
+		return codigoTipoCarteraQuski;
+	}
+	public void setCodigoTipoCarteraQuski(String codigoTipoCarteraQuski) {
+		this.codigoTipoCarteraQuski = codigoTipoCarteraQuski;
+	}
+	public String getPeriodoPlazo() {
+		return periodoPlazo;
+	}
+	public void setPeriodoPlazo(String periodoPlazo) {
+		this.periodoPlazo = periodoPlazo;
 	}
 }

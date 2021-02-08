@@ -15,6 +15,9 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	private Date fechaCreacionHasta; 	// Proceso //
 	private EstadoProcesoEnum estado;   // Proceso //
 	private String asesor; 				// Proceso // 
+	
+	private String codigoBpm; 				// Varia // 
+	private String codigoSoft; 				// Varia // 
 
 	private String nombreCompleto; 		// Cliente //
 	private String identificacion; 		// Cliente //
@@ -82,6 +85,18 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	}
 	public void setNumberItems(Long numberItems) {
 		this.numberItems = numberItems;
+	}
+	public String getCodigoBpm() {
+		return codigoBpm;
+	}
+	public void setCodigoBpm(String codigoBpm) {
+		this.codigoBpm = codigoBpm;
+	}
+	public String getCodigoSoft() {
+		return codigoSoft;
+	}
+	public void setCodigoSoft(String codigoSoft) {
+		this.codigoSoft = codigoSoft;
 	}
 	
 

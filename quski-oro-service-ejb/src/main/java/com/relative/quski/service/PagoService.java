@@ -105,28 +105,29 @@ public class PagoService {
 	public List<TbQoRegistrarPago> crearRegistrarComprobanteRenovacion(RegistrarPagoRenovacionWrapper registro)throws RelativeException, UnsupportedEncodingException {
 		try {
 			if (registro == null) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL PAGO");}
-			
 			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			if (registro.getPagos() != null && !registro.getPagos().isEmpty()) {
 				registro.getPagos().forEach(e ->{
-					FileLocalStorage file = new FileLocalStorage();
-					file.setFileBase64(e.getComprobante().getFileBase64());
-					file.setName( e.getComprobante().getName() );
-					file.setProcess(EstadoEnum.ACT);
-					RespuestaObjectWrapper objeto;
 					try {
-						String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
-						String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
-						String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-						objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file, null );
 						TbQoRegistrarPago pago = new TbQoRegistrarPago();
+						if(e.getComprobante() != null) {
+							FileLocalStorage file = new FileLocalStorage();
+							file.setFileBase64(e.getComprobante().getFileBase64());
+							file.setName( e.getComprobante().getName() );
+							file.setProcess(EstadoEnum.ACT);
+							RespuestaObjectWrapper objeto;
+							String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+							String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+							String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+							objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file, null );
+							pago.setIdComprobante(objeto.getEntidad());
+						}
 						pago.setCuentas(e.getCuenta());
 						pago.setFechaPago(e.getFechaPago());
 						pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
 						pago.setNumeroDeposito(e.getNumeroDeposito());
 						pago.setValorPagado(e.getValorDepositado());
 						pago.setEstado(EstadoEnum.ACT);
-						pago.setIdComprobante(objeto.getEntidad());
 						pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getIdCredito() ));
 						pago.setUsuarioCreacion(registro.getAsesor() );
 						pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
