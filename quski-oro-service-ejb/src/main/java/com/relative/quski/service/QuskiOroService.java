@@ -5186,7 +5186,7 @@ public class QuskiOroService {
 
 
 		public SimularResponse simularOfertasCalculadoraRenovacion(DetalleCreditoWrapper creditoSoft, 
-				BigDecimal riesgoTotal,String codigoAgencia,String coberturaExcepcionada) throws RelativeException {				
+				BigDecimal riesgoTotal,String codigoAgencia,String coberturaExcepcionada,BigDecimal montoSolicitado) throws RelativeException {				
 			try {
 				if( creditoSoft.getGarantias() == null || creditoSoft.getGarantias().isEmpty()) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
@@ -5237,7 +5237,7 @@ public class QuskiOroService {
 						.replace("--estado-credito-anterior--", creditoSoft.getCredito().getCodigoEstadoOperacion())
 						.replace("--fecha-efectiva-credito-anterior--",QuskiOroUtil.dateToString( creditoSoft.getCredito().getFechaAprobacion(),QuskiOroUtil.DATE_FORMAT_QUSKI) )
 						.replace("--fecha-vencimiento-credito-anterior--", QuskiOroUtil.dateToString(creditoSoft.getCredito().getFechaVencimiento(),QuskiOroUtil.DATE_FORMAT_QUSKI))
-						.replace("--monto-solicitado--", "0.00")
+						.replace("--monto-solicitado--", montoSolicitado.toString())
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 								creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
 						.replace("--numero-operacion-renovar--", creditoSoft.getCredito().getNumeroOperacion())
