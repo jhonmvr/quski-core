@@ -94,6 +94,7 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.AprobarWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
@@ -136,6 +137,7 @@ import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
+import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
@@ -6638,7 +6640,7 @@ public class QuskiOroService {
 			persisted.setEstadoProceso( newEstado );
 			return this.manageProceso(persisted);
 		}catch(RelativeException e) {
-			e.getStackTrace();
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());		
 		}
 	}
@@ -6908,15 +6910,28 @@ public class QuskiOroService {
 	}
 
 	public Boolean devolverAprobarCredito(Long id, String cash, String descripcion, String codigo) throws RelativeException {
-		if( id == null) { return false; }
-		TbQoCreditoNegociacion persisted = this.findCreditoNegociacionById(id);
-		if( persisted == null) { return false;}
-		persisted.setCodigoCash(cash);
-		persisted.setCodigoDevuelto(codigo);
-		persisted.setDescripcionDevuelto(descripcion);
-		persisted = this.manageCreditoNegociacion(persisted);
-		if(persisted.getDescripcionDevuelto() != null) { return true; }else {return false;}
+		try {
+			if( id == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO ID CREDITO EN LA EDICION");
+			}
+			TbQoCreditoNegociacion persisted = this.findCreditoNegociacionById(id);
+			if( persisted == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
+			}
+			persisted.setCodigoCash(cash);
+			persisted.setCodigoDevuelto(codigo);
+			persisted.setDescripcionDevuelto(descripcion);
+			persisted = this.manageCreditoNegociacion(persisted);
+			return persisted.getDescripcionDevuelto() != null ? Boolean.TRUE : Boolean.FALSE;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
+		}
 	}
+
 
 	public Boolean negarExcepcion(Long idExc, String obsAprobador, String aprobador, ProcesoEnum tipoProceso)  throws RelativeException {
 		try {
@@ -6934,6 +6949,7 @@ public class QuskiOroService {
 			proceso = this.manageProceso(proceso);
 			if(proceso == null) { return false; } else { return true; }
 		}catch(RelativeException e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
@@ -7232,6 +7248,50 @@ public class QuskiOroService {
 		}catch(RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION + e.getMessage());
+		}
+	}
+
+	public TbQoProceso aprobarNuevo(Long idCredito, String descripcion, String cash, String codigoMotivo, Long agencia,	String usuario, Boolean aprobar) throws RelativeException {
+		try {
+			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(idCredito);
+			if( credito == null || StringUtils.isBlank( credito.getNumeroOperacion())) {
+				throw new RelativeException( Constantes.ERROR_CODE_READ, " NO EXISTE EL CREDITO O EL NUMERO DE OPERACION"); 
+			}
+			if(aprobar) {
+				AprobarWrapper ap = new AprobarWrapper();
+				ap.setNumeroOperacion( credito.getNumeroOperacion() );
+				ap.setUriHabilitantesFirmados("Sin habilitar");
+				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
+				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
+				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
+					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
+				}		
+				TbQoProceso proceso = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO);
+				if(proceso == null || proceso.getEstadoProceso() != EstadoProcesoEnum.APROBADO) {
+					throw new RelativeException( Constantes.ERROR_CODE_UPDATE, " EN LA ACTUALIZACION DEL PROCESO.");
+				}
+				if(this.devolverAprobarCredito(credito.getId(), cash, descripcion, null) ){
+					return proceso;
+				}else {
+					throw new RelativeException( Constantes.ERROR_CODE_UPDATE, " EN LA ACTUALIZACION DEL PROCESO.");
+				}
+			}else {
+				TbQoProceso proceso = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO);
+				if(proceso == null || proceso.getEstadoProceso() != EstadoProcesoEnum.DEVUELTO) {
+					throw new RelativeException( Constantes.ERROR_CODE_UPDATE, " EN LA ACTUALIZACION DEL CREDITO.");
+				}
+				if(this.devolverAprobarCredito(credito.getId(), null, descripcion, codigoMotivo) ){
+					return proceso;
+				}else {
+					throw new RelativeException( Constantes.ERROR_CODE_UPDATE, " EN LA ACTUALIZACION DEL CREDITO.");
+				}
+			}
+		} catch( RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR APROBAR: " + e.getMessage());
 		}
 	}	
 }

@@ -2,9 +2,6 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-import com.relative.quski.util.QuskiOroConstantes;
-
-
 public class DatosRegistroWrapper implements Serializable{
 	/**
 	 * 
@@ -15,6 +12,7 @@ public class DatosRegistroWrapper implements Serializable{
 	private String referencia;
 	private String codigoUsuario;
 	private String canalNegociacion;
+	private Long idAgencia;
 	
 	public DatosRegistroWrapper(String codigoUsuario, Long idAgencia, String fecha,String canalNegociacion,String referencia) {
 		super();
@@ -24,7 +22,6 @@ public class DatosRegistroWrapper implements Serializable{
 		this.canalNegociacion = canalNegociacion;
 		this.referencia = referencia;
 	}
-	private Long idAgencia;
 	
 	public String getFecha() {
 		return fecha;

@@ -25,6 +25,7 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
@@ -162,6 +163,22 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		Boolean a = this.qos.devolverAprobarCredito( Long.valueOf( idCredito ), cash, descripcion, codigo);
 
+		loc.setEntidad(a);
+		return loc;
+	}	
+	@GET
+	@Path("/aprobarNuevo")
+	public GenericWrapper<TbQoProceso> aprobarNuevo(
+			@QueryParam("idCredito") String idCredito, 
+			@QueryParam("descripcion") String descripcion,
+			@QueryParam("cash") String cash, 
+			@QueryParam("agencia") String agencia,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("codigo") String codigoMotivo,
+			@QueryParam("aprobar") String aprobar			
+			) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		TbQoProceso a = this.qos.aprobarNuevo( Long.valueOf(idCredito),  descripcion, cash, codigoMotivo, Long.valueOf(agencia), usuario, Boolean.valueOf(aprobar) );
 		loc.setEntidad(a);
 		return loc;
 	}

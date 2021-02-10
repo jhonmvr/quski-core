@@ -300,6 +300,7 @@ public class QuskiOroConstantes {
 
 
 	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "URL_SOFTBANK_TABLA_AMORTIZACION";
+	public static final String URL_APROBAR_NUEVO= "URL_APROBAR_NUEVO";
 	
 	public static final String CATALOGO_TABLA_AMOTIZACION = "URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION";
 	
