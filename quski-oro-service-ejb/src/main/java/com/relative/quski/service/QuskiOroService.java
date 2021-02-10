@@ -7015,20 +7015,28 @@ public class QuskiOroService {
 	public RenovacionWrapper buscarRenovacionOperacionMadre( String numeroOperacion ) throws RelativeException{
 		try {
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente( numeroOperacion );
-			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
-			
+			if( detalle == null ) { 
+				throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION + " DE SOFTBANK.");
+			}
 			return new RenovacionWrapper( detalle ); 
 		}catch(RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION );
 		}
 	}
 	public RenovacionWrapper buscarRenovacionNegociacion( Long idNegociacion ) throws RelativeException{
 		try {
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
-			if(credito == null) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION); }
+			if(credito == null) { 
+				throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION); 
+			}
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
-			if( detalle == null ) { throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);}
+			if( detalle == null ) { 
+				throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION + " DE SOFTBANK.");
+			}
 			RenovacionWrapper novacion = new RenovacionWrapper( detalle ); 
 			novacion.setCredito( credito );
 			novacion.setProceso( this.procesoRepository.findByIdReferencia(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION ));
@@ -7040,7 +7048,10 @@ public class QuskiOroService {
 			return novacion;
 		}catch(RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMensaje() );
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
 		}
 	}
 
@@ -7049,10 +7060,8 @@ public class QuskiOroService {
 			RenovacionWrapper novacion;
 			if(idNego == null) {
 				novacion = this.buscarRenovacionOperacionMadre(numeroOperacionMadre);		
-				log.info( "============> CREANDO CREDITO <============");
 				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getOperacionAnterior().getCliente().getIdentificacion());
 				if( cliente == null) {
-					log.info( "============> ESTOY CREANDO CLIENTE <============");
 					cliente = this.clienteSoftToTbQoCliente( novacion.getOperacionAnterior().getCliente() );
 					cliente = this.manageCliente(cliente);
 				}

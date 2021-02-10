@@ -363,7 +363,7 @@ public class QuskiOroConstantes {
 	public static final String URL_STORAGE = "URL_STORAGE";
 	
 	//PAGO SERVICE
-	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = "ERROR AL INTENTAR LEER LA INFORMACION";
+	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = " AL INTENTAR LEER LA INFORMACION ";
 	//E-MAIL
 	public static final String emailSecurityType = "emailSecurityType";
 	public static final String smtpHostServer = "smtpHostServer";
