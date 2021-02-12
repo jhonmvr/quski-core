@@ -24,7 +24,10 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		super();
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
-
+	public TbQoRiesgoAcumulado(TbQoCotizador tbQoCotizador) {
+		super();
+		this.tbQoCotizador = tbQoCotizador;
+	}
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -122,7 +125,11 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
-	private TbQoNegociacion tbQoNegociacion;
+	private TbQoNegociacion tbQoNegociacion;	
+	//bi-directional many-to-one association to TbQoNegociacion
+	@ManyToOne
+	@JoinColumn(name="id_cotizador")
+	private TbQoCotizador tbQoCotizador;
 
 	public TbQoRiesgoAcumulado() {
 	}
@@ -357,6 +364,12 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
+	}
+	public TbQoCotizador getTbQoCotizador() {
+		return tbQoCotizador;
+	}
+	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
 	}
 
 }

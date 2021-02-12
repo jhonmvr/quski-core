@@ -1,5 +1,6 @@
 package com.relative.quski.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,7 +21,9 @@ import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.model.TbQoCotizador;
+import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.CotizacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -116,5 +119,40 @@ public class CotizadorRestController extends BaseRestController
 			plw.setList(actions);
 		}
 		return plw;
+	}
+	
+	@GET
+	@Path("/iniciarCotizacion")
+	public GenericWrapper<CotizacionWrapper> iniciarCotizacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
+		CotizacionWrapper a = this.qos.iniciarCotizacion(cedula, asesor, Long.valueOf(idAgencia));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	@GET
+	@Path("/iniciarCotizacionEquifax")
+	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
+		CotizacionWrapper a = this.qos.iniciarCotizacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
+		loc.setEntidad(a);
+		return loc;
+	}
+	
+	@POST
+	@Path("/agregarJoya")
+	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
+		List<TbQoTasacion> a = this.qos.agregarJoyaCotizacion(joya, asesor);
+		loc.setEntidades(a);
+		return loc;
+	}
+	@GET
+	@Path("/eliminarJoya")
+	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
+		TbQoTasacion a = this.qos.eliminarJoya(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
 	}
 }

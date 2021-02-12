@@ -249,7 +249,8 @@ public class QuskiOroConstantes {
 	public static final String ERROR_AL_REALIZAR_CREACION = "AL REALIZAR CREACION -> ";
 	public static final String ERROR_CREATE_CLIENTE = "AL CREAR AL CLIENTE -> ";
 	public static final String ERROR_CREATE_NOVACION = " AL CREAR EL CREDITO RENOVACION -> ";
-	public static final String ERROR_NEGOCIACION = "AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_NEGOCIACION = " AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_COTIZACION = " AL CREAR TODA LA COTIZACION ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "AL REALIZAR ACTUALIZACION -> ";
 	public static final String ERROR_VALOR_NO_VALIDO = "INGRESE UN VALOR VALIDO";
 	public static final String ERROR_ID_NO_EXISTE = "ID INGRESADO NO EXISTE ";

@@ -15,8 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.EstadoEnum;
 
@@ -130,6 +128,14 @@ public class TbQoTasacion implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_credito_negociacion")
 	private TbQoCreditoNegociacion tbQoCreditoNegociacion;
+	
+	
+	//bi-directional many-to-one association to TbQoCreditoNegociacion
+	@ManyToOne
+	@JoinColumn(name="id_detalle_credito")
+	private TbQoDetalleCredito tbQoDetalleCredito;
+	
+	
 	
 	public EstadoEnum getEstado() {
 		return estado;
@@ -300,6 +306,14 @@ public class TbQoTasacion implements Serializable {
 
 	public void setDetallePiedras(String detallePiedras) {
 		this.detallePiedras = detallePiedras;
+	}
+
+	public TbQoDetalleCredito getTbQoDetalleCredito() {
+		return tbQoDetalleCredito;
+	}
+
+	public void setTbQoDetalleCredito(TbQoDetalleCredito tbQoDetalleCredito) {
+		this.tbQoDetalleCredito = tbQoDetalleCredito;
 	}
 
 }

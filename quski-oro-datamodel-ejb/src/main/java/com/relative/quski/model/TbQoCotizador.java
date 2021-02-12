@@ -37,7 +37,9 @@ public class TbQoCotizador implements Serializable {
 	private Date fechaCreacion;
 
 	@Column(name = "grado_interes")
-	private String gradoInteres;
+	private String gradoInteres;	
+	
+	private String asesor;
 
 	@Column(name = "motivo_de_desestimiento")
 	private String motivoDeDesestimiento;
@@ -216,5 +218,13 @@ public class TbQoCotizador implements Serializable {
 		tbQoVariablesCrediticia.setTbQoCotizador(null);
 
 		return tbQoVariablesCrediticia;
+	}
+
+	public String getAsesor() {
+		return asesor;
+	}
+
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
 	}
 }
