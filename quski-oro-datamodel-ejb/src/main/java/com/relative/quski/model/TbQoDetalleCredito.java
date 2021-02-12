@@ -75,9 +75,6 @@ public class TbQoDetalleCredito implements Serializable {
 
 	@Column(name = "valor_cuota")
 	private BigDecimal valorCuota;
-	
-	@Column(name = "id_agencia")
-	private Long idAgencia;
 
 	// bi-directional many-to-one association to TbQoCotizador
 	@ManyToOne
@@ -245,14 +242,6 @@ public class TbQoDetalleCredito implements Serializable {
 
 	public void setSolca(BigDecimal solca) {
 		this.solca = solca;
-	}
-
-	public Long getIdAgencia() {
-		return idAgencia;
-	}
-
-	public void setIdAgencia(Long idAgencia) {
-		this.idAgencia = idAgencia;
 	}
 
 }

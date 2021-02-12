@@ -22,6 +22,6 @@ public interface TasacionRepository extends CrudRepository<Long, TbQoTasacion>{
 	
 	public List<TbQoTasacion> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
 	public Long countFindByIdNegociacion(Long idNegociacion) throws RelativeException;
-	public List<TbQoTasacion> findByIdDetalle(Long id)  throws RelativeException;
+	public List<TbQoTasacion> findByIdCotizador(Long id)  throws RelativeException;
 
 }

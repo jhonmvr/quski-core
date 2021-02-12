@@ -147,6 +147,14 @@ public class CotizadorRestController extends BaseRestController
 		loc.setEntidades(a);
 		return loc;
 	}
+	@POST
+	@Path("/guardarGestion")
+	public GenericWrapper<TbQoCotizador> guardarGestion(CotizacionWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
+		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
+		TbQoCotizador a = this.qos.guardarGestion(wrapper);
+		loc.setEntidad(a);
+		return loc;
+	}
 	@GET
 	@Path("/eliminarJoya")
 	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
@@ -155,4 +163,34 @@ public class CotizadorRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/findByCedula")
+	public PaginatedListWrapper<TbQoCotizador> findByCedula(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
+			@QueryParam("cedula") String cedula
+			) throws RelativeException {
+		return findIdentificacion(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields,
+				sortDirections, isPaginated),cedula);
+	}
+	@GET
+	@Path("/buscarGestionCotizacion")
+	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("id") String id) throws RelativeException {
+		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
+		CotizacionWrapper a = this.qos.buscarGestionCotizacion(Long.valueOf(id));
+		loc.setEntidad(a);
+		return loc;
+	}
+	private PaginatedListWrapper<TbQoCotizador> findIdentificacion(PaginatedWrapper pw, String cedula) throws RelativeException {
+		PaginatedListWrapper<TbQoCotizador> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoCotizador> actions = this.qos.cotizacionByCedula(pw, cedula);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.cotizacionCountByCedula(cedula).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}	
 }

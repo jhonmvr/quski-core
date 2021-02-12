@@ -43,6 +43,9 @@ public class TbQoCotizador implements Serializable {
 
 	@Column(name = "motivo_de_desestimiento")
 	private String motivoDeDesestimiento;
+	
+	@Column(name = "id_agencia")
+	private Long idAgencia;
 
 	// bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -126,6 +129,14 @@ public class TbQoCotizador implements Serializable {
 
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
+	}
+
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
 	}
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {

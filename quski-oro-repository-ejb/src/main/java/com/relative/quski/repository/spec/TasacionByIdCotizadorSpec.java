@@ -11,16 +11,16 @@ import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoTasacion;
 
-public class TasacionByIdDetalleSpec  extends AbstractSpecification<TbQoTasacion> {
+public class TasacionByIdCotizadorSpec  extends AbstractSpecification<TbQoTasacion> {
 
 	private Long id;
 
-	public TasacionByIdDetalleSpec(Long id) {
+	public TasacionByIdCotizadorSpec(Long id) {
 
 		this.id = id;
 	}
 
-	public TasacionByIdDetalleSpec() {
+	public TasacionByIdCotizadorSpec() {
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class TasacionByIdDetalleSpec  extends AbstractSpecification<TbQoTasacion
 	public Predicate toPredicate(Root<TbQoTasacion> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
-		where.add(cb.equal(poll.get("tbQoDetalleCredito").get("id"), this.id));
+		where.add(cb.equal(poll.get("tbQoCotizador").get("id"), this.id));
 		return cb.and(where.toArray(new Predicate[0]));
 	}
 }

@@ -11,7 +11,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
-import com.relative.quski.repository.spec.TasacionByIdDetalleSpec;
+import com.relative.quski.repository.spec.TasacionByIdCotizadorSpec;
 import com.relative.quski.repository.spec.TasacionByIdNegociacionSpec;
 import com.relative.quski.repository.spec.TasacionByIdSpec;
 
@@ -131,9 +131,9 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 	
 	}
 	@Override
-	public List<TbQoTasacion> findByIdDetalle(Long id) throws RelativeException {
+	public List<TbQoTasacion> findByIdCotizador(Long id) throws RelativeException {
 		try {
-			List<TbQoTasacion> list = this.findAllBySpecification( new TasacionByIdDetalleSpec( id ) );
+			List<TbQoTasacion> list = this.findAllBySpecification( new TasacionByIdCotizadorSpec( id ) );
 			if( !list.isEmpty() ) {
 				return list;
 			} else {

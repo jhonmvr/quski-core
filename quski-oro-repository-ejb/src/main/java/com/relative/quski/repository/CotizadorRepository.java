@@ -18,6 +18,11 @@ public interface CotizadorRepository extends CrudRepository<Long, TbQoCotizador>
 	
 	public TbQoCotizador findById( Long id) throws RelativeException;
 	
+	public List<TbQoCotizador> findByCedula(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, String cedula) throws RelativeException;
+	public List<TbQoCotizador> findByCedula(String cedula) throws RelativeException;
+	public Long countByCedula(String cedula) throws RelativeException;
+	
 	
 	
 	

@@ -3,6 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
+import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
@@ -15,7 +16,8 @@ public class CotizacionWrapper implements Serializable {
 	private List<TbQoTasacion> joyas;
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
-	private TbQoDetalleCredito creditoCotizacion;
+	private List<TbQoDetalleCredito> opciones;
+	private TbQoCotizador cotizacion;
 	private TbQoTelefonoCliente telefonoMovil;
 	private TbQoTelefonoCliente telefonoDomicilio;
 	private List<TipoOroWrapper> tipoOro;
@@ -40,12 +42,6 @@ public class CotizacionWrapper implements Serializable {
 	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
 		this.riesgos = riesgos;
 	}
-	public TbQoDetalleCredito getCreditoCotizacion() {
-		return creditoCotizacion;
-	}
-	public void setCreditoCotizacion(TbQoDetalleCredito creditoCotizacion) {
-		this.creditoCotizacion = creditoCotizacion;
-	}
 	public TbQoTelefonoCliente getTelefonoMovil() {
 		return telefonoMovil;
 	}
@@ -69,6 +65,18 @@ public class CotizacionWrapper implements Serializable {
 	}
 	public void setExcepcionBre(String excepcionBre) {
 		this.excepcionBre = excepcionBre;
+	}
+	public List<TbQoDetalleCredito> getOpciones() {
+		return opciones;
+	}
+	public void setOpciones(List<TbQoDetalleCredito> opciones) {
+		this.opciones = opciones;
+	}
+	public TbQoCotizador getCotizacion() {
+		return cotizacion;
+	}
+	public void setCotizacion(TbQoCotizador cotizacion) {
+		this.cotizacion = cotizacion;
 	}
 	
 }

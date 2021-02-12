@@ -132,8 +132,8 @@ public class TbQoTasacion implements Serializable {
 	
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@ManyToOne
-	@JoinColumn(name="id_detalle_credito")
-	private TbQoDetalleCredito tbQoDetalleCredito;
+	@JoinColumn(name="id_cotizador")
+	private TbQoCotizador tbQoCotizador;
 	
 	
 	
@@ -308,12 +308,12 @@ public class TbQoTasacion implements Serializable {
 		this.detallePiedras = detallePiedras;
 	}
 
-	public TbQoDetalleCredito getTbQoDetalleCredito() {
-		return tbQoDetalleCredito;
+	public TbQoCotizador getTbQoCotizador() {
+		return tbQoCotizador;
 	}
 
-	public void setTbQoDetalleCredito(TbQoDetalleCredito tbQoDetalleCredito) {
-		this.tbQoDetalleCredito = tbQoDetalleCredito;
+	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
+		this.tbQoCotizador = tbQoCotizador;
 	}
 
 }
