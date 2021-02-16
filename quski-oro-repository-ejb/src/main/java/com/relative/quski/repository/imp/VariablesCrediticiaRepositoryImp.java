@@ -185,4 +185,31 @@ public class VariablesCrediticiaRepositoryImp extends GeneralRepositoryImp<Long,
 		
 	
 	}
+
+	@Override
+	public void deleteVariablesByCotizacionId(Long idCotizador) throws RelativeException {
+		try {
+			if(idCotizador == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR VARIABLES CREDITICIAS ID COTIZADOR ES OBLIGATORIO");
+			}
+		
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_variables_crediticias where 1=1 ");
+			
+			queryStr.append("and id_cotizador =:idCotizador ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idCotizador", idCotizador);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR LAS VARIABLES CREDITICIAS");
+		}
+				
+	}
 }

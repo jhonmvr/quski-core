@@ -62,6 +62,18 @@ public class CalculadoraRestController extends BaseRestController
 		return null;
 	}
 	@GET
+	@Path("/simularOfertaCotizacion")
+	public GenericWrapper<SimularResponse> simularOfertaCotizacion(@QueryParam("idCotizador") String idCotizador) throws RelativeException {
+		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idCotizador)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL COTIZADOR");
+		}
+		
+		SimularResponse a = this.qos.simularOfertasCalculadoraCotizacion(Long.valueOf(idCotizador));
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
 	@Path("/simularOferta")
 	public GenericWrapper<SimularResponse> simularOferta(@QueryParam("idCredito") String idCredito,
 			@QueryParam("montoSolicitado") String montoSolicitado,
