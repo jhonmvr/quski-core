@@ -96,6 +96,17 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	
 	
+	@POST
+	@Path("/mandarAprobacionSolicitudDevolucion")
+	public GenericWrapper<TbQoDevolucion> mandarAprobarSolicitudDevolucion(@QueryParam("id") String idDevolucion,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("mailUsuario") String mailUsuario)
+			throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.mandarAprobarSolicitudDevolucion(Long.valueOf(idDevolucion), usuario));
+		return loc;
+	}
+	
 	
 
 	@Override
@@ -168,6 +179,9 @@ public class DevolucionRestController extends BaseRestController implements Crud
 				StringUtils.isNotBlank(fechaAprobacionHasta)?fechaAprobacionHasta:null, StringUtils.isNotBlank(identificacion)?identificacion:null );
 		
 	}
+	
+	
+	
 	private PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(PaginatedWrapper pw, String codigoOperacion, String agencia,
 			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion ) throws RelativeException {
 		

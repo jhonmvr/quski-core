@@ -257,9 +257,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
 	response = GenericWrapper.class)
 		public byte[] getPlantillaDevolucion(
-			@QueryParam("id") String id,
+			@QueryParam("idTipoDocumento") String id,
 			@QueryParam("format") String formato,
-		    @QueryParam("idDevolucion") String idDevolucion,
+		    @QueryParam("idReferencia") String idDevolucion,
 		    @QueryParam("nombreAsesor") String nombreAsesor,
 		    @QueryParam("identificacionAsesor") String identificacionAsesor
 		  
@@ -277,6 +277,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParametersDevolucion(map,path,    idDevolucion, td);
@@ -309,7 +310,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 			
 		
 		if( !StringUtils.isEmpty( idDevolucion )  ) {
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.TC )==0  )  {
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
 				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
 			} 
 			

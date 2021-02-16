@@ -323,8 +323,15 @@ public class DevolucionService {
 		
 	}
 	
-
 	
+	public TbQoDevolucion mandarAprobarSolicitudDevolucion(Long id , String usuario) throws RelativeException {
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION);
+	//	qos.
+		this.manageDevolucion(devolucion);	
+		return devolucion;
+		
+	}
 	
 	public TbQoDevolucion aprobarCancelacionSolicitudDevolucion(Long id ) throws RelativeException {
 		TbQoDevolucion devolucion = devolucionRepository.findById(id);
