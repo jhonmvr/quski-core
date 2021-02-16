@@ -1,7 +1,6 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class DetalleCreditoWrapper implements Serializable {
@@ -12,7 +11,6 @@ public class DetalleCreditoWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private SoftbankClienteWrapper cliente;
-	private Date fechaNacimiento;
 	private OperacionWrapper credito;
 	private List<RubroOperacionWrapper> rubros;
 	private List<GarantiaOperacionWrapper> garantias;
@@ -49,11 +47,6 @@ public class DetalleCreditoWrapper implements Serializable {
 	public void setHabilitantes(String habilitantes) {
 		this.habilitantes = habilitantes;
 	}
-	public Date getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
+
 
 }

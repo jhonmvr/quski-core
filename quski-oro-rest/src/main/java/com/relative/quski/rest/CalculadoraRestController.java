@@ -62,6 +62,18 @@ public class CalculadoraRestController extends BaseRestController
 		return null;
 	}
 	@GET
+	@Path("/simularOfertaCotizacion")
+	public GenericWrapper<SimularResponse> simularOfertaCotizacion(@QueryParam("idCotizador") String idCotizador) throws RelativeException {
+		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idCotizador)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL COTIZADOR");
+		}
+		
+		SimularResponse a = this.qos.simularOfertasCalculadoraCotizacion(Long.valueOf(idCotizador));
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
 	@Path("/simularOferta")
 	public GenericWrapper<SimularResponse> simularOferta(@QueryParam("idCredito") String idCredito,
 			@QueryParam("montoSolicitado") String montoSolicitado,
@@ -83,13 +95,14 @@ public class CalculadoraRestController extends BaseRestController
 	public GenericWrapper<SimularResponse> simularOfertaRenovacion(DetalleCreditoWrapper credito,
 			@QueryParam("riesgoTotal") String riesgoTotal,
 			@QueryParam("coberturaExcepcionada") String coberturaExcepcionada,
-			@QueryParam("codigoAgencia") String codigoAgencia) throws RelativeException {
+			@QueryParam("codigoAgencia") String codigoAgencia,
+			@QueryParam("montoSolicitado") String montoSolicitado) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
 		if(credito == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO");
 		}
-		SimularResponse a = this.qos.simularOfertasCalculadoraRenovacion(credito,StringUtils.isNotBlank(riesgoTotal)?BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, 
-				codigoAgencia,coberturaExcepcionada);
+		SimularResponse a = this.qos.simularOfertasCalculadoraRenovacion(credito, StringUtils.isNotBlank(riesgoTotal) ? BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, 
+				codigoAgencia,coberturaExcepcionada, StringUtils.isNotBlank(montoSolicitado) ? BigDecimal.valueOf(Double.valueOf(montoSolicitado)):BigDecimal.ZERO);
 		loc.setEntidad(a);
 		return loc;
 	}

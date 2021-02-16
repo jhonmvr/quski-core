@@ -37,10 +37,15 @@ public class TbQoCotizador implements Serializable {
 	private Date fechaCreacion;
 
 	@Column(name = "grado_interes")
-	private String gradoInteres;
+	private String gradoInteres;	
+	
+	private String asesor;
 
 	@Column(name = "motivo_de_desestimiento")
 	private String motivoDeDesestimiento;
+	
+	@Column(name = "id_agencia")
+	private Long idAgencia;
 
 	// bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
@@ -124,6 +129,14 @@ public class TbQoCotizador implements Serializable {
 
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
+	}
+
+	public Long getIdAgencia() {
+		return idAgencia;
+	}
+
+	public void setIdAgencia(Long idAgencia) {
+		this.idAgencia = idAgencia;
 	}
 
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
@@ -216,5 +229,13 @@ public class TbQoCotizador implements Serializable {
 		tbQoVariablesCrediticia.setTbQoCotizador(null);
 
 		return tbQoVariablesCrediticia;
+	}
+
+	public String getAsesor() {
+		return asesor;
+	}
+
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
 	}
 }

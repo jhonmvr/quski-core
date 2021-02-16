@@ -11,6 +11,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.model.TbQoCotizador;
 import com.relative.quski.repository.CotizadorRepository;
+import com.relative.quski.repository.spec.CotizacionByCedulaSpec;
 import com.relative.quski.repository.spec.CotizadorByIdSpec;
 import com.relative.quski.repository.spec.CotizadorByIdentificacionClienteSpec;
 
@@ -90,10 +91,46 @@ public class CotizadorRepositoryImp extends GeneralRepositoryImp<Long, TbQoCotiz
 				return null;
 			}
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR cotizador");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " AL BUSCAR cotizador");
 		}
 	}
 
-	
-	
+	@Override
+	public List<TbQoCotizador> findByCedula(int startRecord, Integer pageSize, String sortFields, String sortDirections,
+			String cedula) throws RelativeException {
+		try {
+			List<TbQoCotizador> list = this.findAllBySpecificationPaged( new CotizacionByCedulaSpec(cedula), startRecord, pageSize,
+					sortFields, sortDirections);
+			if (!list.isEmpty()) {
+				return list;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,  " AL BUSCAR LISTA DE COTIZACIONES.");
+		}
+	}
+
+	@Override
+	public List<TbQoCotizador> findByCedula(String cedula) throws RelativeException {
+		try {
+			List<TbQoCotizador> list = this.findAllBySpecification(new CotizacionByCedulaSpec(cedula));
+			if (!list.isEmpty()) {
+				return list;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL BUSCAR LISTA DE COTIZACIONES.");
+		}
+	}
+
+	@Override
+	public Long countByCedula(String cedula) throws RelativeException {
+		try {
+			return countBySpecification(new CotizacionByCedulaSpec(cedula));
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL CONTAR LISTA DE COTIZACIONES.");
+		}
+	}
 }

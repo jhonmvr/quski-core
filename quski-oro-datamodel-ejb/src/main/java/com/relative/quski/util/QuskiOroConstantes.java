@@ -249,7 +249,8 @@ public class QuskiOroConstantes {
 	public static final String ERROR_AL_REALIZAR_CREACION = "AL REALIZAR CREACION -> ";
 	public static final String ERROR_CREATE_CLIENTE = "AL CREAR AL CLIENTE -> ";
 	public static final String ERROR_CREATE_NOVACION = " AL CREAR EL CREDITO RENOVACION -> ";
-	public static final String ERROR_NEGOCIACION = "AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_NEGOCIACION = " AL CREAR TODA LA GESTION -> ";
+	public static final String ERROR_COTIZACION = " AL CREAR TODA LA COTIZACION ";
 	public static final String ERROR_AL_REALIZAR_ACTUALIZACION = "AL REALIZAR ACTUALIZACION -> ";
 	public static final String ERROR_VALOR_NO_VALIDO = "INGRESE UN VALOR VALIDO";
 	public static final String ERROR_ID_NO_EXISTE = "ID INGRESADO NO EXISTE ";
@@ -300,6 +301,7 @@ public class QuskiOroConstantes {
 
 
 	public static final String URL_SOFTBANK_TABLA_AMORTIZACION= "URL_SOFTBANK_TABLA_AMORTIZACION";
+	public static final String URL_APROBAR_NUEVO= "URL_APROBAR_NUEVO";
 	
 	public static final String CATALOGO_TABLA_AMOTIZACION = "URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION";
 	
@@ -362,7 +364,7 @@ public class QuskiOroConstantes {
 	public static final String URL_STORAGE = "URL_STORAGE";
 	
 	//PAGO SERVICE
-	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = "ERROR AL INTENTAR LEER LA INFORMACION";
+	public static final String ERROR_AL_INTENTAR_LEER_LA_INFORMACION = " AL INTENTAR LEER LA INFORMACION ";
 	//E-MAIL
 	public static final String emailSecurityType = "emailSecurityType";
 	public static final String smtpHostServer = "smtpHostServer";

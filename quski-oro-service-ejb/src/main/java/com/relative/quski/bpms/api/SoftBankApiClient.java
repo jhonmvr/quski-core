@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.AprobarWrapper;
 import com.relative.quski.wrapper.CatalogoActividadWrapper;
 import com.relative.quski.wrapper.CatalogoAgenciaWrapper;
 import com.relative.quski.wrapper.CatalogoDivicionWrapper;
@@ -36,6 +37,7 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRenovacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
+import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaGarantiaWrapper;
 import com.relative.quski.wrapper.RespuestaRubroWrapper;
@@ -140,6 +142,37 @@ public class SoftBankApiClient {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
+	}
+	public static RespuestaAprobarWrapper callAprobarRest(String service, AprobarWrapper wrapper) throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(wrapper);
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=========> WRAPPER CREAR ========> " + new String(content));
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaAprobarWrapper.class);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				RespuestaAprobarWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaAprobarWrapper.class);
+				if( result.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + result.getMensaje() );
+				}else {
+					return result;
+				}
+			}else {
+				log.info( " =================> " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)) + " <===================" );
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Error:" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR SERVICIO APROBAR REST SOFTBANK:" + e.getMessage());
+		} 
 	}
 	/**
 	 * 
