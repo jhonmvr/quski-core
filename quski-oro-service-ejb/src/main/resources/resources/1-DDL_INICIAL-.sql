@@ -2041,6 +2041,19 @@ INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno,
 VALUES(500, 'COBERTURA_MINIMA', '80', 'VALIDACION', 'ACT', 'Cobertura minima para la excepcion', NULL, NULL, NULL, '2021-01-21');
 
 
+
+
+UPDATE tb_mi_parametro SET nombre='DATA_BASE_NAME', valor='quski-core-documento', tipo='STORAGE', estado='ACT', caracteritica_uno='nombre de la base de datos del storage', caracteristica_dos=NULL, orden=NULL, archivo=NULL, fecha_creacion=NULL WHERE id=400;
+UPDATE tb_mi_parametro SET nombre='localRE009', valor='quski-core-documento', tipo='SYS', estado='ACT', caracteritica_uno='MONGO_DB', caracteristica_dos='ambiente', orden=NULL, archivo=NULL, fecha_creacion=NULL WHERE id=216;
+
+ALTER TABLE public.tb_qo_credito_negociacion DROP COLUMN peso_funda;
+ALTER TABLE public.tb_qo_credito_negociacion ALTER COLUMN numero_funda TYPE varchar(20) USING numero_funda::varchar;
+
+
+
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(499, 'localRE016', '75', 'SYS', 'ACT', 'Edad maxima de cliente', NULL, NULL, NULL, NULL);
+INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(498, 'localRE015', '10', 'SYS', 'ACT', 'Edad minima de cliente', NULL, NULL, NULL, NULL);
+
 select * from tb_mi_parametro where nombre ='collectionName'
 
 
@@ -2056,4 +2069,16 @@ select * from tb_qo_proceso
 
 
 
-select * from tb_mi_parametro where nombre like '%RE%'
+select * from tb_qo_referencia_personal 
+
+
+select * from tb_qo_cliente where cedula_cliente ='1721395125'
+
+select * from tb_qo_credito_negociacion where codigo ='NUEV0000061'
+
+select * from tb_qo_proceso where id_referencia =61
+
+
+select * from tb_mi_parametro where valor like '%documento-habilitante%'
+
+select * from tb_qo_credito_negociacion where id =42

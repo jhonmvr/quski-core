@@ -27,7 +27,7 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
-import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RegistrarPagoWrapper;
@@ -71,7 +71,7 @@ public class PagoService {
 			if (registroPago.getPagos() != null && !registroPago.getPagos().isEmpty()) {
 				
 				for (RegistroPagoWrapper registro : registroPago.getPagos()) {
-					FileLocalStorage file = new FileLocalStorage();
+					FileObjectStorage file = new FileObjectStorage();
 					file.setFileBase64(registro.getArchivo());
 					file.setName(registro.getNombreArchivo());
 					file.setProcess(EstadoEnum.ACT);
@@ -111,7 +111,7 @@ public class PagoService {
 					try {
 						TbQoRegistrarPago pago = new TbQoRegistrarPago();
 						if(e.getComprobante() != null) {
-							FileLocalStorage file = new FileLocalStorage();
+							FileObjectStorage file = new FileObjectStorage();
 							file.setFileBase64(e.getComprobante().getFileBase64());
 							file.setName( e.getComprobante().getName() );
 							file.setProcess(EstadoEnum.ACT);
@@ -167,7 +167,7 @@ public class PagoService {
 				
 				for (RegistroBloqueoFondoWrapper registro : bloqueoFondo.getBloqueos()) {
 					//List<FileLocalStorage> listFile = new ArrayList<FileLocalStorage>();
-					FileLocalStorage file = new FileLocalStorage();
+					FileObjectStorage file = new FileObjectStorage();
 					file.setFileBase64(registro.getArchivo());
 					file.setName(registro.getNombreArchivo());
 					file.setProcess(EstadoEnum.ACT);
@@ -199,7 +199,7 @@ public class PagoService {
 	}
 
 	public String getQueryParametersNotificacion(String hash, String tipo, String idUsuario,
-			List<FileLocalStorage> notificacion) throws RelativeException, UnsupportedEncodingException {
+			List<FileObjectStorage> notificacion) throws RelativeException, UnsupportedEncodingException {
 		StringBuilder params = new StringBuilder();
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(notificacion);

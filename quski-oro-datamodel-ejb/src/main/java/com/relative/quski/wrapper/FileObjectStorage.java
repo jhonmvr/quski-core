@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.relative.quski.enums.EstadoEnum;
 
-public class FileLocalStorage implements Serializable{
+public class FileObjectStorage implements Serializable{
 
 	/**
 	 * 
@@ -18,7 +18,8 @@ public class FileLocalStorage implements Serializable{
 	private String relatedIdStr;
 	private String typeAction;
 	private String fileBase64;
-	private String objectId;
+	private String typeDocument;
+	private String date;
 
 	
 	public String getName() {
@@ -63,11 +64,18 @@ public class FileLocalStorage implements Serializable{
 	public void setFileBase64(String fileBase64) {
 		this.fileBase64 = fileBase64;
 	}
-	public String getObjectId() {
-		return objectId;
+	public String getTypeDocument() {
+		return typeDocument;
 	}
-	public void setObjectId(String objectId) {
-		this.objectId = objectId;
+	public void setTypeDocument(String typeDocument) {
+		this.typeDocument = typeDocument;
 	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	
 	}

@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
@@ -44,7 +44,7 @@ public class LocalStorageClient {
 
 	}
 
-	public static RespuestaObjectWrapper createObject(String urlService,FileLocalStorage wrapper, String authorization)
+	public static RespuestaObjectWrapper createObject(String urlService,FileObjectStorage wrapper, String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
