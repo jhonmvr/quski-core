@@ -99,8 +99,8 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@POST
 	@Path("/mandarAprobacionSolicitudDevolucion")
 	public GenericWrapper<TbQoDevolucion> mandarAprobarSolicitudDevolucion(@QueryParam("id") String idDevolucion,
-			@QueryParam("usuario") String usuario,
-			@QueryParam("mailUsuario") String mailUsuario)
+			@QueryParam("usuario") String usuario
+			)
 			throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.mandarAprobarSolicitudDevolucion(Long.valueOf(idDevolucion), usuario));
