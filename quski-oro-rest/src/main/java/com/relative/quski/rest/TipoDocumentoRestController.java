@@ -313,6 +313,12 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
 				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
 			} 
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
+			} 
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
+			} 
 			
 			
 		}
