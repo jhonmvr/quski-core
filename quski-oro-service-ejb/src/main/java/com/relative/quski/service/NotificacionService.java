@@ -28,7 +28,7 @@ public class NotificacionService {
 					parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
 					parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
 					SoftBankApiClient.generarHabilitanteCredito(codigoOperacion, parametroRepository
-							.findByNombre(QuskiOroConstantes.SOFTBANK_GENERAR_HABILITANTE).getValor()));
+							.findByNombre(QuskiOroConstantes.SOFTBANK_GENERAR_HABILITANTE).getValor()).getUriHabilitantes());
 
 			return objeto;
 
