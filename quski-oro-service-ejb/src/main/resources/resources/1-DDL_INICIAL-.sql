@@ -2054,6 +2054,33 @@ ALTER TABLE public.tb_qo_credito_negociacion ALTER COLUMN numero_funda TYPE varc
 INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(499, 'localRE016', '75', 'SYS', 'ACT', 'Edad maxima de cliente', NULL, NULL, NULL, NULL);
 INSERT INTO tb_mi_parametro (id, nombre, valor, tipo, estado, caracteritica_uno, caracteristica_dos, orden, archivo, fecha_creacion) VALUES(498, 'localRE015', '10', 'SYS', 'ACT', 'Edad minima de cliente', NULL, NULL, NULL, NULL);
 
+INSERT INTO public.tb_mi_parametro (id,nombre,valor,tipo,estado,caracteritica_uno,fecha_creacion)
+	VALUES (502,'SOFTBANK_GENERAR_HABILITANTE','http://10.37.10.58:8094/SoftbankAPI/api/credito/operacion/habilitante','SYS','ACT','GENERAR HABILITANTE SOFTBANK','2021-02-09');
+
+
+
+---- tipo documento para credito nuevo 
+	
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','CREADO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','APROBADO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','PENDIENTE_APROBACION','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','PENDIENTE_APROBACION_DEVUELTO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','DEVUELTO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','CANCELADO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','PENDIENTE_EXCEPCION','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+INSERT INTO tb_qo_tipo_documento (id,tipo_documento,descripcion,estado,plantilla,tipo_plantilla,proceso,estado_operacion,servicio)
+	VALUES ( (select max(t.id)+1 from tb_qo_tipo_documento t),'DOCUMENTOS LEGALES CREDITO','Compilado de habilitantes','ACT','compiladoCredito.jasper','AB','NUEVO','EXCEPCIONADO','documentoHabilitanteExtendedRestController/getDocumentoCredito');
+
+
+------
+
 select * from tb_mi_parametro where nombre ='collectionName'
 
 
