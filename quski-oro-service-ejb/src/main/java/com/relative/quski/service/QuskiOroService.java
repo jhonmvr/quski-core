@@ -6355,7 +6355,7 @@ public class QuskiOroService {
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
 			String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
 			log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
-			if(  wp.getExcepcionOperativa() != null && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+			if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 				this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
 			}
 			

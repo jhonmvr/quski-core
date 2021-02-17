@@ -22,9 +22,11 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoRolTipoDocumento;
+import com.relative.quski.service.CreditoNuevoService;
 import com.relative.quski.service.GestorHabilitanteService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
+import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
 
 @Path("/documentoHabilitanteExtendedRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -36,6 +38,8 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@Inject
 	GestorHabilitanteService gdh;
+	@Inject
+	CreditoNuevoService cs;
 
 	public DocumentoHabilitanteExtendedRestController() throws RelativeException {
 		super();
@@ -96,6 +100,14 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso):null,
 				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null));
 		return permisos;
+	}
+	
+	@GET
+	@Path("/getDocumentoCredito")
+	public RespuestaHabilitanteCreditoWrapper getDocumentoCredito(
+			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
+	
+		return cs.generarHabilitanteCredito(idReferencia);
 	}
 	
 }
