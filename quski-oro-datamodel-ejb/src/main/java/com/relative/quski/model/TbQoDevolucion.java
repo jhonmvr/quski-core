@@ -137,10 +137,10 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="ciudad_tevcol")
 	private String ciudadTevcol;
 	
-	@Column(name="nombre_Apoderado")
+	@Column(name="nombre_apoderado")
 	private String nombreApoderado;
 	
-	@Column(name="cedula_Apoderado")
+	@Column(name="cedula_apoderado")
 	private String cedulaApoderado;
 	
 	

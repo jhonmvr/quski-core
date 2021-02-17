@@ -117,7 +117,7 @@ public class DevolucionService {
 		TbQoProceso proceso = new TbQoProceso();
 		proceso.setIdReferencia(devolucion.getId());
 		proceso.setProceso(ProcesoEnum.DEVOLUCION);
-		proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+		proceso.setEstadoProceso(EstadoProcesoEnum.CREADO);
 		proceso.setUsuario(usuario);
 		qos.manageProceso(proceso);
 		
@@ -323,8 +323,15 @@ public class DevolucionService {
 		
 	}
 	
-
 	
+	public TbQoDevolucion mandarAprobarSolicitudDevolucion(Long id , String usuario) throws RelativeException {
+		TbQoDevolucion devolucion = devolucionRepository.findById(id);
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION);
+	//	qos.
+		this.manageDevolucion(devolucion);	
+		return devolucion;
+		
+	}
 	
 	public TbQoDevolucion aprobarCancelacionSolicitudDevolucion(Long id ) throws RelativeException {
 		TbQoDevolucion devolucion = devolucionRepository.findById(id);
@@ -549,6 +556,7 @@ public SolicitudDevolucionWrapper setHabilitanteSolicitudDevolucion(Long idDevol
 	habilitante.setAsesor(devolucion.getAsesor());
 	habilitante.setNombreCliente(devolucion.getNombreCliente());
 	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
+	
 
 	return habilitante;
 }
