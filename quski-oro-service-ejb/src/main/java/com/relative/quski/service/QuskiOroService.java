@@ -5928,28 +5928,8 @@ public class QuskiOroService {
 		}
 	}
 	private TbQoClientePago crearCodigoPago(TbQoClientePago persisted) throws RelativeException {
-		String cod = QuskiOroConstantes.CODIGO_PAGO+"0000000";
-		Long id = persisted.getId();
 		try {
-			if (id < 9) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"000000";
-			} else if (id < 99) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"00000" + id;
-			} else if (id < 999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"0000" + id;
-			} else if (id < 9999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"000" + id;
-			} else if (id < 99999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"00" + id;
-			} else if (id < 999999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+"0" + id;
-			} else if (id < 9999999) {
-				cod = QuskiOroConstantes.CODIGO_PAGO+ "" + id;
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de PAGO supera los 7 digitos numericos");
-			}
-			persisted.setCodigo(cod);
+			persisted.setCodigo( QuskiOroConstantes.CODIGO_PAGO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.clientePagoRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
