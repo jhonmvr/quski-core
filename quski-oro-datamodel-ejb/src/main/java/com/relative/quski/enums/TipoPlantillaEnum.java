@@ -4,6 +4,11 @@ public enum TipoPlantillaEnum {
 	
 	AB,
 	TC,
-	SD
+	SD,
+	SDH,
+	SDA,
+	AEA,
+	AEH,
+	AE
 
 }
