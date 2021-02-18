@@ -69,6 +69,7 @@ public class PagoService {
 			clienteCast.setCodigoCuentaMupi( String.valueOf( wrapper.getIdBanco() ));
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoWrapper result = new RespuestaProcesoPagoWrapper();
+			result.setCliente( clienteCast );
 			result.setProceso( qos.createProcesoPago( clienteCast.getId(), clienteCast.getAsesor()) );
 			if(result.getProceso() == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
