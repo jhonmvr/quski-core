@@ -6289,7 +6289,8 @@ public class QuskiOroService {
 			if(rCredito.getNumeroTotalRegistros() != Long.valueOf( 1 ) ) { return null;}
 			detalle.setCredito( rCredito.getOperaciones().get( 0 ));
 			detalle.setCliente( SoftBankApiClient.callConsultaClienteRest(urlCliente, rCredito.getOperaciones().get( 0 ).getIdentificacion() ) );
-			detalle.setGarantias( SoftBankApiClient.callConsultarGarantiasRest( new ConsultaGarantiaWrapper( numeroOperacion ), urlGarantia ) );
+			detalle.setGarantias( SoftBankApiClient.callConsultarGarantiasRest( new ConsultaGarantiaWrapper(  
+					StringUtils.isNotBlank(rCredito.getOperaciones().get( 0 ).getNumeroOperacionMadre())? rCredito.getOperaciones().get( 0 ).getNumeroOperacionMadre() :numeroOperacion), urlGarantia ) );
 			detalle.setRubros( SoftBankApiClient.callConsultarRubrosRest( new ConsultaRubrosWrapper( numeroOperacion ), urlRubro ) );
 			return detalle;
 			
