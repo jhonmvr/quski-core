@@ -58,7 +58,7 @@ public class GestorHabilitanteService {
 	 * @return
 	 */
 	public List<TbQoTipoDocumento> findDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion( PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion){
+			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion){
 		if( pw != null && pw.getIsPaginated().equalsIgnoreCase( PaginatedWrapper.YES )) {
 			if( !StringUtils.isEmpty(pw.getSortDirections())  ) {
 				return dhr.findAllBySpecificationPaged(new TipoDocumentoWithDocumentoByAndProRefEstOpSpec(idTipoDocumento, idReferencia, proceso, estadoOperacion) ,
@@ -74,13 +74,13 @@ public class GestorHabilitanteService {
 	}
 	
 	public List<DocumentoHabilitanteWrapper> findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion( PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion) throws RelativeException{
+			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
 		return this.dhr.findByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, idReferencia, proceso, estadoOperacion);
 		
 	}
 	
 	public Long countDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion(
-			Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion){
+			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion){
 		return dhr.countBySpecification(new TipoDocumentoWithDocumentoByAndProRefEstOpSpec(idTipoDocumento, idReferencia, proceso, estadoOperacion));
 	}
 	
@@ -95,7 +95,7 @@ public class GestorHabilitanteService {
 	 * @return
 	 */
 	public List<DocumentoHabilitanteWrapper> generateDocumentoHabilitante( PaginatedWrapper pw, 
-			Long idRol, Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion ) throws RelativeException{
+			Long idRol, Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion ) throws RelativeException{
 		log.info("==========>generateDocumentoHabilitante");
 		List<DocumentoHabilitanteWrapper> tdsw= new ArrayList<>();
 		List<DocumentoHabilitanteWrapper> tds = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, null, proceso, estadoOperacion);
@@ -177,12 +177,14 @@ public class GestorHabilitanteService {
 	 * EstadoOperacion operacion a la que corresponde la carga de archivo
 	 * @return Tipo de habilitante con los datos registrados
 	 * @throws RelativeException
-	 */
+	*/
 	public TbQoDocumentoHabilitante generateDocumentoHabilitanteSimplified(FileWrapper fw) throws RelativeException {
 		TbQoDocumentoHabilitante dhs = new TbQoDocumentoHabilitante();
 		Long relatedId= Long.valueOf( fw.getRelatedIdStr() );
-		ProcessEnum pe=!StringUtils.isEmpty( fw.getProcess() )?QuskiOroUtil.getEnumFromString(ProcessEnum.class,fw.getProcess()):null;
-		EstadoOperacionEnum eoe=!StringUtils.isEmpty( fw.getEstadoOperacion() )?QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class,fw.getEstadoOperacion()):null ;
+		List<ProcessEnum> pe= new ArrayList<>();
+		pe.add(!StringUtils.isEmpty( fw.getProcess() )?QuskiOroUtil.getEnumFromString(ProcessEnum.class,fw.getProcess()):null);
+		List<EstadoOperacionEnum> eoe=new ArrayList<>();
+		eoe.add(!StringUtils.isEmpty( fw.getEstadoOperacion() )?QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class,fw.getEstadoOperacion()):null );
 		
 		List<TbQoTipoDocumento> tds=findDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion(null, Long.valueOf(fw.getTypeAction()  ), 
 				relatedId, pe, eoe);
@@ -193,15 +195,15 @@ public class GestorHabilitanteService {
 		dhs.setIdReferencia( Long.valueOf(fw.getRelatedIdStr()) );
 		dhs.setFechaCreacion( new Date(System.currentTimeMillis()) );
 		dhs.setEstado( EstadoEnum.ACT );
-		dhs.setEstadoOperacion(eoe );
+		dhs.setEstadoOperacion(eoe.get(0));
 		dhs.setObjectId( fw.getObjectId() );
-		dhs.setProceso(pe);
+		dhs.setProceso(pe.get(0));
 		dhs.setNombreArchivo( fw.getName() );
 		dhs.setTipoDocumento( fw.getType() );
 		TbQoTipoDocumento td = dhr.findById(Long.valueOf(fw.getTypeAction())); 
 		dhs.setTbQoTipoDocumento(td);		
 		return this.manageDocumentoHabilitante(dhs);
-	}
+	} 
 	
 	public TbQoDocumentoHabilitante manageDocumentoHabilitante(TbQoDocumentoHabilitante send) throws RelativeException {
 		try {

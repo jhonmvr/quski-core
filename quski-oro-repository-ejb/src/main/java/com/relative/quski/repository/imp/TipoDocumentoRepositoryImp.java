@@ -2,6 +2,7 @@ package com.relative.quski.repository.imp;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -30,7 +31,7 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 
 	
 	public List<DocumentoHabilitanteWrapper> findByTipoProcesoReferenciaEstadoOperacion(PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion) throws RelativeException{
+			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
 		try {
 			StringBuilder queryStr = new StringBuilder("SELECT  NEW com.relative.quski.wrapper.DocumentoHabilitanteWrapper("); 
 			queryStr.append("td.id as idTipoDocumento ,"); 
@@ -45,13 +46,13 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 			}
 			queryStr.append("where 1=1 ");
 			if( proceso != null ) {
-				queryStr.append(" and td.proceso=:proceso ");
+				queryStr.append(" and td.proceso in :proceso ");
 			}
 			if( idTipoDocumento != null ) {
 				queryStr.append(" and td.id=:idTipoDocumento ");
 			}
 			if( estadoOperacion != null ) {
-				queryStr.append(" and td.estadoOperacion=:estadoOperacion ");
+				queryStr.append(" and td.estadoOperacion in :estadoOperacion  ");
 			}
 			if( idReferencia != null ) {
 				queryStr.append(" and dh.idReferencia=:idReferencia ");
@@ -64,11 +65,17 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 			if( idTipoDocumento != null ) {
 				query.setParameter("idTipoDocumento", idTipoDocumento);
 			}
-			if( proceso != null ) {
-				query.setParameter("proceso",proceso);
+			if( proceso != null && !proceso.isEmpty()) {
+				String result = proceso.stream()
+					      .map(n -> "'"+n.toString()+"'")
+					      .collect(Collectors.joining(",", "(", ")"));
+				query.setParameter("proceso",result);
 			}
-			if( estadoOperacion != null ) {
-				query.setParameter("estadoOperacion",estadoOperacion);
+			if( estadoOperacion != null && !estadoOperacion.isEmpty() ) {
+				String result = estadoOperacion.stream()
+					      .map(n -> "'"+n.toString()+"'")
+					      .collect(Collectors.joining(",", "(", ")"));
+				query.setParameter("estadoOperacion",result);
 			}
 			if( idReferencia != null ) {
 				query.setParameter("idReferencia",idReferencia);

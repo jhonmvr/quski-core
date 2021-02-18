@@ -12,7 +12,8 @@ public class ConsultaGlobalRespuestaWrapper implements Serializable {
 	
 	private List<OperacionGlobalWrapper> operaciones;
 	private Long numeroTotalRegistros;
-	
+	private Boolean existeError;
+	private String mensaje;
 	public List<OperacionGlobalWrapper> getOperaciones() {
 		return operaciones;
 	}
@@ -24,6 +25,18 @@ public class ConsultaGlobalRespuestaWrapper implements Serializable {
 	}
 	public void setNumeroTotalRegistros(Long numeroTotalRegistros) {
 		this.numeroTotalRegistros = numeroTotalRegistros;
+	}
+	public Boolean getExisteError() {
+		return existeError;
+	}
+	public void setExisteError(Boolean existeError) {
+		this.existeError = existeError;
+	}
+	public String getMensaje() {
+		return mensaje;
+	}
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 
 }

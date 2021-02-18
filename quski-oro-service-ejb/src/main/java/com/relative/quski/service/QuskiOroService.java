@@ -7297,11 +7297,8 @@ public class QuskiOroService {
 	}
 
 	public ConsultaGlobalRespuestaWrapper buscarCreditos(ConsultaGlobalWrapper wrapper) throws RelativeException {
-		try {
-			return SoftBankApiClient.callConsultaGlobalRest(this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor(), wrapper);
-		}catch( RelativeException | UnsupportedEncodingException e ) {
-			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION );
-		}
+		return SoftBankApiClient.callConsultaGlobalRest(this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor(), wrapper);
+	
 	}
 	public RenovacionWrapper buscarRenovacionOperacionMadre( String numeroOperacion ) throws RelativeException{
 		try {
