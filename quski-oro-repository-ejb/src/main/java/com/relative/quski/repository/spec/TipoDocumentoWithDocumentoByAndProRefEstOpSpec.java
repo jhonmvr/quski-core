@@ -22,12 +22,12 @@ public class TipoDocumentoWithDocumentoByAndProRefEstOpSpec  extends AbstractSpe
 	
  private Long idTipoDocumento;
  private Long idReferencia;	
- private ProcessEnum proceso;
- private EstadoOperacionEnum estadoOperacion;
+ private List<ProcessEnum> proceso;
+ private List<EstadoOperacionEnum> estadoOperacion;
  
 
-	public TipoDocumentoWithDocumentoByAndProRefEstOpSpec(Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,
-		EstadoOperacionEnum estadoOperacion) {
+	public TipoDocumentoWithDocumentoByAndProRefEstOpSpec(Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,
+		List<EstadoOperacionEnum> estadoOperacion) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
 		this.idReferencia = idReferencia;
@@ -52,11 +52,11 @@ public class TipoDocumentoWithDocumentoByAndProRefEstOpSpec  extends AbstractSpe
 			if(idTipoDocumento != null) {
 				where.add(cb.equal(poll.<Long>get("id"),idTipoDocumento ));
 			}
-			if(this.proceso != null) {
-				where.add(cb.equal(poll.<ProcessEnum>get("proceso"), proceso));
+			if(this.proceso != null && !this.proceso.isEmpty()) {
+				where.add(poll.<ProcessEnum>get("proceso").in(this.proceso));
 			}
-			if(this.estadoOperacion != null) {
-				where.add(cb.equal(poll.<EstadoOperacionEnum>get("estadoOperacion"), estadoOperacion));
+			if(this.estadoOperacion != null && !this.estadoOperacion.isEmpty()) {
+				where.add(poll.<EstadoOperacionEnum>get("estadoOperacion").in(estadoOperacion));
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}

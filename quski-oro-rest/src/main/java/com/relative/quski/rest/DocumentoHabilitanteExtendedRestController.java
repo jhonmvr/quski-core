@@ -1,7 +1,9 @@
 package com.relative.quski.rest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -72,17 +74,17 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 			String proceso,String estadoOperacion) throws RelativeException {
 		PaginatedListWrapper<DocumentoHabilitanteWrapper> plw = new PaginatedListWrapper<>(pw);
 		List<DocumentoHabilitanteWrapper> actions = this.gdh.generateDocumentoHabilitante(pw, 
-				!StringUtils.isEmpty(idRol)?Long.valueOf( idRol ):null,  
-				!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
-				!StringUtils.isEmpty(idReferencia)?Long.valueOf(idReferencia):null, 
-				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso ):null,
-				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null);
+				StringUtils.isNotBlank(idRol)?Long.valueOf( idRol ):null,  
+						StringUtils.isNotBlank(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
+								StringUtils.isNotBlank(idReferencia)?Long.valueOf(idReferencia):null, 
+				StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",\\s+")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
+				StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",\\s+")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null);
 		if (actions != null && !actions.isEmpty() ) {
 			plw.setTotalResults(this.gdh.countDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion( 
-				!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
-				!StringUtils.isEmpty(idReferencia)?Long.valueOf(idReferencia):null, 
-				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso):null,
-				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null).intValue() );
+					StringUtils.isNotBlank(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
+							StringUtils.isNotBlank(idReferencia)?Long.valueOf(idReferencia):null,  
+									StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",\\s+")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
+											StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",\\s+")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null).intValue() );
 			plw.setList(actions);
 		}
 		return plw;

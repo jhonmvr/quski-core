@@ -112,7 +112,7 @@ public class SoftBankApiClient {
 		} 
 	}
 	public static ConsultaGlobalRespuestaWrapper callConsultaGlobalRest(String service, ConsultaGlobalWrapper wrapper)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
@@ -125,23 +125,30 @@ public class SoftBankApiClient {
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ConsultaGlobalRespuestaWrapper.class);
+				ConsultaGlobalRespuestaWrapper result=gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ConsultaGlobalRespuestaWrapper.class);
+				return result;
+				
+			}else if(status==400){
+				Gson gsons = new GsonBuilder().create();
+				ConsultaGlobalRespuestaWrapper result=gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ConsultaGlobalRespuestaWrapper.class);
+				
+				if( result.getExisteError() != null && result.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + result.getMensaje() );
+				}else {
+					return result;
+				}
+				
 			}else {
+				
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + e.getMessage() );
 		}
 	}
 	public static RespuestaAprobarWrapper callAprobarRest(String service, AprobarWrapper wrapper) throws RelativeException {

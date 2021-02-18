@@ -57,7 +57,7 @@ public class TbQoClientePago implements Serializable {
 	private String codigo;
 	
 	@Column(name="id_agencia")
-	private BigDecimal idAgencia;
+	private Long idAgencia;
 
 	@Column(name="tipo_credito")
 	private String tipoCredito;
@@ -247,11 +247,11 @@ public class TbQoClientePago implements Serializable {
 		this.codigo = codigo;
 	}
 
-	public BigDecimal getIdAgencia() {
+	public Long getIdAgencia() {
 		return idAgencia;
 	}
 
-	public void setIdAgencia(BigDecimal idAgencia) {
+	public void setIdAgencia(Long idAgencia) {
 		this.idAgencia = idAgencia;
 	}
 

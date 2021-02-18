@@ -48,11 +48,42 @@ public class LocalStorageClient {
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
-		String service = urlService.
-				concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes()));
+		String service = urlService.concat("createObject?")
+				.concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes()));
 		log.info("===> callBpmsInitProcesss con servcio " + service);
 		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 				RestClientWrapper.CONTENT_TYPE_JSON, authorization, null, RestClientWrapper.METHOD_GET, null, null,
+				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
+		log.info("===> REspuesta de servicio " + response);
+		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+		
+		
+		
+		if(status>=200 && status < 300) {
+			Gson gsons = new GsonBuilder().create();
+			return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+			
+		}else {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE NOTIFICACION:"+
+					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+		}
+	}
+	
+	public static RespuestaObjectWrapper createObjectBig(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String authorization)
+			throws RelativeException, UnsupportedEncodingException {
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(wrapper);
+		String service = urlService.concat("createObjectBig?").
+				concat("&databaseName=").concat(databaseName).
+				concat("&collectionName=").concat(collectionName);
+		
+		byte[] content = new String("{ \r\n" + 
+				"  \"objectEncripted\":\""+Base64.getEncoder().encodeToString(jsonString.getBytes())+"\"\r\n" + 
+				"}").getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+		log.info("===> callBpmsInitProcesss con servcio " + service);
+		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+				RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
 				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
 		log.info("===> REspuesta de servicio " + response);
@@ -74,7 +105,7 @@ public class LocalStorageClient {
 	public static RespuestaObjectWrapper findObjectById(String urlService,String databaseName, String collectionName,String objectId)
 			throws RelativeException, UnsupportedEncodingException {
 	
-		String service = urlService.
+		String service = urlService.concat("findObjectById?").
 				concat("&databaseName=").concat(databaseName).
 				concat("&collectionName=").concat(collectionName).
 				concat("&objectId=").concat(objectId);
