@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.FileLocalStorage;
+import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
@@ -44,7 +44,7 @@ public class LocalStorageClient {
 
 	}
 
-	public static RespuestaObjectWrapper createObject(String urlService,FileLocalStorage wrapper, String authorization)
+	public static RespuestaObjectWrapper createObject(String urlService,FileObjectStorage wrapper, String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
@@ -70,6 +70,33 @@ public class LocalStorageClient {
 		}
 	}
 	
+	
+	public static RespuestaObjectWrapper findObjectById(String urlService,String databaseName, String collectionName,String objectId)
+			throws RelativeException, UnsupportedEncodingException {
+	
+		String service = urlService.
+				concat("&databaseName=").concat(databaseName).
+				concat("&collectionName=").concat(collectionName).
+				concat("&objectId=").concat(objectId);
+		log.info("===> callBpmsInitProcesss con servcio " + service);
+		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+				RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
+		log.info("===> REspuesta de servicio " + response);
+		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+		
+		
+		
+		if(status>=200 && status < 300) {
+			Gson gsons = new GsonBuilder().create();
+			return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+			
+		}else {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE NOTIFICACION:"+
+					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+		}
+	}
 	
 
 	public static String saveFileSotage(String urlService, String authorization)

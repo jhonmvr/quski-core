@@ -5234,7 +5234,11 @@ public class QuskiOroService {
 				if(response != null && response.getCodigoError() == 0 && response.getINFOFINAN() != null) {
 					CuentaWrapper retorno = new CuentaWrapper( String.valueOf( response.getIdentificacion() )  );
 					retorno.setTipoPago( response.getINFOFINAN().getTIPOPAGO() );
-					retorno.setInstitucionFinanciera( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()  ));
+					retorno.setInstitucionFinanciera( parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor());
+//					if( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()) == "15") {
+//					}else {
+//						retorno.setInstitucionFinanciera( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()) );
+//					}
 					retorno.setTipoCuenta( response.getINFOFINAN().getTIPOCUENTA() );
 					retorno.setNumeroCuenta( String.valueOf( response.getINFOFINAN().getNUMEROCUENTA() ) );
 					retorno.setFirmaRegularizada( response.getINFOFINAN().getFIRMAREGULARIZADA());
@@ -6355,7 +6359,7 @@ public class QuskiOroService {
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
 			String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
 			log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
-			if(  wp.getExcepcionOperativa() != null && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+			if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 				this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
 			}
 			

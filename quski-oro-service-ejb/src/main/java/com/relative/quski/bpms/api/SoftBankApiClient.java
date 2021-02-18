@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,6 +40,7 @@ import com.relative.quski.wrapper.GarantiaOperacionWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaGarantiaWrapper;
+import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
 import com.relative.quski.wrapper.RespuestaRubroWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
@@ -598,6 +599,39 @@ public class SoftBankApiClient {
 				RespuestaRubroWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaRubroWrapper.class);
 				if( result.getExisteError() ) {return null;}
 				return result.getRubros();
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+		}
+	}
+	
+	
+	public static RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(String numeroOperacion, String service)throws RelativeException {
+		try {
+			
+			String jsonString ="{\r\n" + 
+					"	\"numeroOperacion\": \""+numeroOperacion+"\",\r\n" + 
+					"}";
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====> un01 " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				RespuestaHabilitanteCreditoWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaHabilitanteCreditoWrapper.class);
+				if( StringUtils.isBlank(result.getUriHabilitantes() ))
+				{
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL GENERAR EL HABILITANTE NO SE PUEDE LEER LA URI");
+					}
+				return result;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
