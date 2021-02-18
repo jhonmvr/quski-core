@@ -28,9 +28,10 @@ import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.InicioProcesoPagoWrapper;
 import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
-import com.relative.quski.wrapper.RegistrarPagoWrapper;
+import com.relative.quski.wrapper.RespuestaProcesoPagoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -114,23 +115,10 @@ public class RegistrarPagoRestController extends BaseRestController
 		
 	}
 	@POST
-	@Path("/crearRegistrarPago")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
-	response = GenericWrapper.class)
-	public GenericWrapper<RegistrarPagoWrapper> crearRegistrarPago(RegistrarPagoWrapper registroPago, String autentication) 
-			throws RelativeException {
-		GenericWrapper<RegistrarPagoWrapper> loc = new GenericWrapper<>();
-		
-		try {
-			loc.setEntidad( this.ps.crearRegistrarPago(registroPago,autentication) );
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@Path("/iniciarProcesoRegistrarPago")
+	public GenericWrapper<RespuestaProcesoPagoWrapper> iniciarProcesoRegistrarPago(InicioProcesoPagoWrapper wrapper) throws RelativeException {
+		GenericWrapper<RespuestaProcesoPagoWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad( this.ps.crearRegistrarPago( wrapper ) );
 		return loc;
 	}
 	@POST
