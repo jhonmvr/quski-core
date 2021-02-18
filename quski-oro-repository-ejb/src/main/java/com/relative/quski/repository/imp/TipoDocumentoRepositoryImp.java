@@ -66,16 +66,10 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 				query.setParameter("idTipoDocumento", idTipoDocumento);
 			}
 			if( proceso != null && !proceso.isEmpty()) {
-				String result = proceso.stream()
-					      .map(n -> "'"+n.toString()+"'")
-					      .collect(Collectors.joining(",", "(", ")"));
-				query.setParameter("proceso",result);
+				query.setParameter("proceso",proceso);
 			}
 			if( estadoOperacion != null && !estadoOperacion.isEmpty() ) {
-				String result = estadoOperacion.stream()
-					      .map(n -> "'"+n.toString()+"'")
-					      .collect(Collectors.joining(",", "(", ")"));
-				query.setParameter("estadoOperacion",result);
+				query.setParameter("estadoOperacion",estadoOperacion);
 			}
 			if( idReferencia != null ) {
 				query.setParameter("idReferencia",idReferencia);

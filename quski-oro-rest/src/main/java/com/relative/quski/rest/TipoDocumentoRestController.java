@@ -33,6 +33,7 @@ import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -125,7 +126,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	@Path("/getPlantilla")
 	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
 	response = GenericWrapper.class)
-		public byte[] getPlantilla(
+		public ObjetoHabilitanteWrapper getPlantilla(
 			@QueryParam("id") String id,
 			@QueryParam("format") String formato,
 		    @QueryParam("identificacionCliente") String identificacionCliente,
@@ -205,23 +206,26 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		}
 	}
 	
-	private byte[] generateReport(Map<String, Object> map,String path, String format,TbQoTipoDocumento td) throws RelativeException{
+	private ObjetoHabilitanteWrapper generateReport(Map<String, Object> map,String path, String format,TbQoTipoDocumento td) throws RelativeException{
 		byte[] reportFile = null;
+		ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
 		String mainReportName = td.getPlantilla();
 		log.info("=========>ENTRA EN TipoDocumentoRestController generateReport  " + QuskiOroConstantes.PREFIX_REPORT_MAIN_PATH +td.getPlantilla() );
 		if( Constantes.PDF_FILE_TYPE_EXTENSION.equalsIgnoreCase(format.trim()) ) {
 			//reportFile = this.rs.generateReporteFromBeanPDF(sins , map,
 			reportFile = this.rs.generateReporteFromBeanPDF(null , map, 
 					path+mainReportName);
+			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport PDF9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport PDF9 " + reportFile.length);
 		} else {
 			reportFile = this.rs.generateReporteBeanCsv(null,map,		
 					path+mainReportName );
+			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
 		}	
-		return reportFile;
+		return ohw;
 	}
 	/*
 	@GET
@@ -256,7 +260,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	@Path("/getPlantillaDevolucion")
 	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
 	response = GenericWrapper.class)
-		public byte[] getPlantillaDevolucion(
+		public ObjetoHabilitanteWrapper getPlantillaDevolucion(
 			@QueryParam("idTipoDocumento") String id,
 			@QueryParam("format") String formato,
 		    @QueryParam("idReferencia") String idDevolucion,
