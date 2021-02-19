@@ -29,6 +29,7 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.TipoPlantillaEnum;
 import com.relative.quski.model.TbQoTipoArchivo;
 import com.relative.quski.model.TbQoTipoDocumento;
+import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -47,7 +48,8 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 	Logger log;
 	@Inject
 	QuskiOroService qos;
-	
+	@Inject
+	ParametroRepository ps;
 	
 	@Inject 
 	ReportService rs;
@@ -137,8 +139,8 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
 		
-		String path= "C:\\Users\\jukis\\JaspersoftWorkspace\\PrjQuskiReportes\\";
-		//String path= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
+		//String path= "C:\\Users\\jukis\\JaspersoftWorkspace\\PrjQuskiReportes\\";
+		String path = "";//= this.ps.getParametros().get(QuskiOroConstantes.PATH_REPORTE).getValor();
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		/*
 		TbMiContrato ccc = null;

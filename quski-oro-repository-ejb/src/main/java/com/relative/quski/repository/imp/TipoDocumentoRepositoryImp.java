@@ -31,7 +31,7 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 
 	
 	public List<DocumentoHabilitanteWrapper> findByTipoProcesoReferenciaEstadoOperacion(PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
+			Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
 		try {
 			StringBuilder queryStr = new StringBuilder("SELECT  NEW com.relative.quski.wrapper.DocumentoHabilitanteWrapper("); 
 			queryStr.append("td.id as idTipoDocumento ,"); 

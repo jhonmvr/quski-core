@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoOperacionEnum;
@@ -20,12 +21,12 @@ public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecifi
 	
 	
  private Long idTipoDocumento;
- private Long idReferencia;	
+ private String idReferencia;	
  private ProcessEnum proceso;
  private EstadoOperacionEnum estadoOperacion;
  
 
-	public DocumentoByTipoDocumentoAndProRefEstOpSpec(Long idTipoDocumento, Long idReferencia, ProcessEnum proceso,
+	public DocumentoByTipoDocumentoAndProRefEstOpSpec(Long idTipoDocumento, String idReferencia, ProcessEnum proceso,
 		EstadoOperacionEnum estadoOperacion) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
@@ -44,7 +45,7 @@ public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecifi
 		@Override
 		public Predicate toPredicate(Root<TbQoDocumentoHabilitante> poll, CriteriaBuilder cb) {
 			List<Predicate> where = new ArrayList<Predicate>();
-			if(idReferencia != null) {
+			if(StringUtils.isNotBlank(idReferencia)) {
 				where.add(cb.equal(poll.<Long>get("idReferencia"), this.idReferencia ));
 			}
 			if(idTipoDocumento != null) {

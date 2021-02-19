@@ -2915,7 +2915,7 @@ public class QuskiOroService {
 	}
 
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento,
-			ProcessEnum proceso, Long referencia) throws RelativeException {
+			ProcessEnum proceso, String referencia) throws RelativeException {
 		try {
 			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso,
 					referencia);

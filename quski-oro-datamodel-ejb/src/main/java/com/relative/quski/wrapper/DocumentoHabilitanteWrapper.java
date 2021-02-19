@@ -19,7 +19,7 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	
 	private Long idDocumentoHabilitante;
 	private Long idTipoDocumento;
-	private Long idReferencia;
+	private String idReferencia;
 	private String descripcionTipoDocumento;
 	private String objectId;
 	private String mimeType;
@@ -32,7 +32,7 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	
 	
 	
-	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, Long idReferencia, String descripcionTipoDocumento,
+	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, String idReferencia, String descripcionTipoDocumento,
 			EstadoOperacionEnum estadoOperacion, ProcessEnum proceso, String pantilla, String servicio, Boolean estaCargado, List<TbQoRolTipoDocumento> roles) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
@@ -47,7 +47,7 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 		this.servicio=servicio;
 	}
 	
-	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, Long idReferencia, String objectId,String mimeType, String descripcionTipoDocumento,
+	public DocumentoHabilitanteWrapper(Long idTipoDocumento,Long idDocumentoHabilitante, String idReferencia, String objectId,String mimeType, String descripcionTipoDocumento,
 			EstadoOperacionEnum estadoOperacion, ProcessEnum proceso, String pantilla,String servicio ) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
@@ -79,10 +79,10 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	public void setIdTipoDocumento(Long idTipoDocumento) {
 		this.idTipoDocumento = idTipoDocumento;
 	}
-	public Long getIdReferencia() {
+	public String getIdReferencia() {
 		return idReferencia;
 	}
-	public void setIdReferencia(Long idReferencia) {
+	public void setIdReferencia(String idReferencia) {
 		this.idReferencia = idReferencia;
 	}
 	public String getDescripcionTipoDocumento() {
@@ -161,7 +161,7 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 	public static class DocumentoHabilitanteBuilder {
 		private Long idTipoDocumento;
 		private Long idDocumentoHabilitante;
-		private Long idReferencia;
+		private String idReferencia;
 		private String descripcionTipoDocumento;
 		private EstadoOperacionEnum estadoOperacion;
 		private ProcessEnum proceso;
@@ -180,7 +180,7 @@ public class DocumentoHabilitanteWrapper implements Serializable {
 			return this;
 		}
 		
-		public DocumentoHabilitanteBuilder idReferencia(Long idReferencia) {
+		public DocumentoHabilitanteBuilder idReferencia(String idReferencia) {
 			this.idReferencia=idReferencia;
 			return this;
 		}

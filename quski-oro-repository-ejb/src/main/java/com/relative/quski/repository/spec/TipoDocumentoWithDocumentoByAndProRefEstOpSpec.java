@@ -9,6 +9,8 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
@@ -21,12 +23,12 @@ public class TipoDocumentoWithDocumentoByAndProRefEstOpSpec  extends AbstractSpe
 	
 	
  private Long idTipoDocumento;
- private Long idReferencia;	
+ private String idReferencia;	
  private List<ProcessEnum> proceso;
  private List<EstadoOperacionEnum> estadoOperacion;
  
 
-	public TipoDocumentoWithDocumentoByAndProRefEstOpSpec(Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,
+	public TipoDocumentoWithDocumentoByAndProRefEstOpSpec(Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,
 		List<EstadoOperacionEnum> estadoOperacion) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
@@ -45,7 +47,7 @@ public class TipoDocumentoWithDocumentoByAndProRefEstOpSpec  extends AbstractSpe
 		@Override
 		public Predicate toPredicate(Root<TbQoTipoDocumento> poll, CriteriaBuilder cb) {
 			List<Predicate> where = new ArrayList<Predicate>();
-			if(idReferencia != null) {
+			if(StringUtils.isNotBlank(idReferencia )) {
 				Join<TbQoTipoDocumento, TbQoDocumentoHabilitante> join=poll.join("tbQoDocumentoHabilitantes",JoinType.INNER);
 				where.add(cb.equal(join.<String>get("idReferencia"), this.idReferencia ));
 			}

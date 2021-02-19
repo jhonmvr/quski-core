@@ -47,7 +47,7 @@ public class TbQoDocumentoHabilitante implements Serializable {
 	private ProcessEnum proceso;
 	
 	@Column(name="id_referencia")
-	private Long idReferencia;
+	private String idReferencia;
 	
 	@Column(name="object_id")
 	private String objectId;
@@ -155,11 +155,11 @@ public class TbQoDocumentoHabilitante implements Serializable {
 		this.proceso = proceso;
 	}
 
-	public Long getIdReferencia() {
+	public String getIdReferencia() {
 		return idReferencia;
 	}
 
-	public void setIdReferencia(Long idReferencia) {
+	public void setIdReferencia(String idReferencia) {
 		this.idReferencia = idReferencia;
 	}
 

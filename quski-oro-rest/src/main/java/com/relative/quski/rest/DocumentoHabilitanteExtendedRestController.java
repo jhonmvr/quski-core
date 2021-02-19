@@ -76,15 +76,15 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 		List<DocumentoHabilitanteWrapper> actions = this.gdh.generateDocumentoHabilitante(pw, 
 				StringUtils.isNotBlank(idRol)?Long.valueOf( idRol ):null,  
 						StringUtils.isNotBlank(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
-								StringUtils.isNotBlank(idReferencia)?Long.valueOf(idReferencia):null, 
-				StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",\\s+")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
-				StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",\\s+")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null);
+								StringUtils.isNotBlank(idReferencia)?idReferencia:null, 
+				StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
+				StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null);
 		if (actions != null && !actions.isEmpty() ) {
 			plw.setTotalResults(this.gdh.countDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion( 
 					StringUtils.isNotBlank(idTipoDocumento)?Long.valueOf( idTipoDocumento ):null,
-							StringUtils.isNotBlank(idReferencia)?Long.valueOf(idReferencia):null,  
-									StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",\\s+")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
-											StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",\\s+")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null).intValue() );
+							StringUtils.isNotBlank(idReferencia)?idReferencia:null,  
+									StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
+											StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null).intValue() );
 			plw.setList(actions);
 		}
 		return plw;
@@ -99,8 +99,8 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 		GenericWrapper<TbQoRolTipoDocumento> permisos= new GenericWrapper<>();
 		permisos.setEntidades(this.gdh.findRolTipoDocumentoByParams(!StringUtils.isEmpty(idTipoDocumento)?Long.valueOf(idTipoDocumento):null, 
 				!StringUtils.isEmpty( idRol )?Long.valueOf(idRol):null, 
-				!StringUtils.isEmpty( proceso )?QuskiOroUtil.getEnumFromString( ProcessEnum.class , proceso):null,
-				!StringUtils.isEmpty( estadoOperacion )?QuskiOroUtil.getEnumFromString( EstadoOperacionEnum.class , estadoOperacion ):null));
+						StringUtils.isNotBlank(proceso)?Arrays.stream(proceso.split(",")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null,
+								StringUtils.isNotBlank(estadoOperacion )?Arrays.stream(estadoOperacion.split(",")).map(EstadoOperacionEnum::valueOf).collect(Collectors.toList()):null));
 		return permisos;
 	}
 	

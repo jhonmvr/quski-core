@@ -19,11 +19,11 @@ public class RolTipoDocumentoByParamsSpec  extends AbstractSpecification<TbQoRol
 	
  private Long idTipoDocumento;
  private Long idRol;	
- private ProcessEnum proceso;
- private EstadoOperacionEnum estadoOperacion;
+ private List<ProcessEnum> proceso;
+ private List<EstadoOperacionEnum> estadoOperacion;
  
 
-	public RolTipoDocumentoByParamsSpec(Long idTipoDocumento, Long idRol, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion) {
+	public RolTipoDocumentoByParamsSpec(Long idTipoDocumento, Long idRol, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) {
 		super();
 		this.idTipoDocumento = idTipoDocumento;
 		this.idRol = idRol;
@@ -31,7 +31,19 @@ public class RolTipoDocumentoByParamsSpec  extends AbstractSpecification<TbQoRol
 		this.estadoOperacion = estadoOperacion;
 	}
 
-	
+	public RolTipoDocumentoByParamsSpec(Long idTipoDocumento, Long idRol, ProcessEnum proceso,EstadoOperacionEnum estadoOperacion) {
+		super();
+		this.idTipoDocumento = idTipoDocumento;
+		this.idRol = idRol;
+		if(proceso != null) {
+			this.proceso = new ArrayList<>();
+			this.proceso.add(proceso);
+		}
+		if(estadoOperacion != null) {
+			this.estadoOperacion = new ArrayList<>();
+			this.estadoOperacion.add(estadoOperacion);
+		}
+	}
 	 
 		@Override
 		public boolean isSatisfiedBy(TbQoRolTipoDocumento arg0) {
@@ -47,11 +59,11 @@ public class RolTipoDocumentoByParamsSpec  extends AbstractSpecification<TbQoRol
 			if(idTipoDocumento != null) {
 				where.add(cb.equal(poll.<Long>get("idTipoDocumento"),idTipoDocumento ));
 			}
-			if(this.proceso != null) {
-				where.add(cb.equal(poll.<ProcessEnum>get("proceso"), proceso));
+			if(this.proceso != null && !this.proceso.isEmpty()) {
+				where.add(poll.<ProcessEnum>get("proceso").in(proceso));
 			}
-			if(this.estadoOperacion != null) {
-				where.add(cb.equal(poll.<EstadoOperacionEnum>get("estadoOperacion"), estadoOperacion));
+			if(this.estadoOperacion != null && !this.estadoOperacion.isEmpty()) {
+				where.add(poll.<EstadoOperacionEnum>get("estadoOperacion").in(estadoOperacion));
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}

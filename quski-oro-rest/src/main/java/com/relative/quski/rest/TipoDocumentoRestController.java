@@ -280,8 +280,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
 		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
 
-		//String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
-		String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParametersDevolucion(map,path,    idDevolucion, td);
