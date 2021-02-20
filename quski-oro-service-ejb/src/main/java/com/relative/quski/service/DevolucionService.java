@@ -21,7 +21,6 @@ import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoProceso;
-import com.relative.quski.repository.CotizadorRepository;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
@@ -43,8 +42,6 @@ import com.relative.quski.wrapper.SolicitudDevolucionWrapper;
 public class DevolucionService {
 	@Inject
 	Logger log;
-	@Inject
-	private CotizadorRepository cotizadorRepository;
 	@Inject 
 	private DevolucionRepository devolucionRepository;
 	@Inject

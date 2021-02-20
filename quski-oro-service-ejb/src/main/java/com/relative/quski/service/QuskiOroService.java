@@ -6677,7 +6677,6 @@ public class QuskiOroService {
 			try {
 				joyaSoft.setFechaAvaluo( QuskiOroUtil.dateToString( e.getFechaCreacion() , QuskiOroConstantes.SOFT_DATE_FORMAT ) );
 			} catch (RelativeException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			joyaSoft.setIdAgenciaRegistro( credito.getIdAgencia() );
@@ -6698,29 +6697,6 @@ public class QuskiOroService {
 		});
 		return listjoyas;
 	}
-
-
-	
-
-	/*private String traerExcepcionEquifax(String cedula) throws RelativeException {
-		try {
-			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
-			if (data != null) {
-				if (data.getCodigoError() == 3) {
-					return data.getMensaje();
-				} else {
-					return null;
-				}
-			} else {
-				return null;
-			}
-
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}*/
 
 	public void mailNotificacion(String[] para, String asunto, String contenido, Map<String, byte[]> adjunto)
 			throws RelativeException {
@@ -6759,9 +6735,8 @@ public class QuskiOroService {
 				EmailUtil.sendEmail(ed);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			e.getStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());

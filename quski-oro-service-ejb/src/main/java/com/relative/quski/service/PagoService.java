@@ -242,70 +242,64 @@ public class PagoService {
 	}
 
 	
-	public TbQoClientePago aprobarPago(Long id, String tipo, String nombreAprobador, String mailAprobador) throws RelativeException {
+	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador) throws RelativeException {
+		TbQoClientePago clientePago = null;
+		TbQoProceso proceso = null;
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, EstadoEnum.ACT, tipo);
+			clientePago = clientePagoRepository.findById(id);
 			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
-			log.info("Aprobador ---->>>>"+ nombreAprobador);
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
-			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
+			proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
 			if(proceso == null) {
-				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+" EL PROCESO.");
 			}
-			TbQoClientePago rPago = qos.manageClientePago(clientePago);
-			try {
-				log.info("TIPO DE REGISTRO : ----->>>>"+tipo);
-				if(tipo.equalsIgnoreCase("REGISTRO_PAGO")) { 
-				String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
-				textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
-						.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente())
-						.replace("--Identificacion Cliente--", clientePago.getCedula())
-						.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
-						.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
-				ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-				String[] para= {"hoscarly007@gmail.com"};//reemplazar el mailAprobador,
-				
-				String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
-				log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
-				qos.mailNotificacion(para, asunto, textoContenido, null);
-				}else if(tipo.equalsIgnoreCase("BLOQUEO_FONDO")) { 
-						
-						String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
-						textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
-								.replace("--tipo--", "BLOQUEO").replace("--Nombre Cliente--", clientePago.getNombreCliente())
-								.replace("--Identificacion Cliente--", clientePago.getCedula())
-								.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
-								.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
-						ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-						String[] para= {"hoscarly007@gmail.com"};//reemplazar el mailAprobador,
-						String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
-						log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
-						qos.mailNotificacion(para, asunto, textoContenido, null);
-						
-						
-						}
-			} catch (Exception e) {
-				log.info("----NO SE PUDO ENVIAR EL CORREO DE APROBAR PAGO----");
-				e.printStackTrace();
-			}
-			return rPago;
+			clientePago = qos.manageClientePago(clientePago);
+			this.enviarCorreoPagoAprobado(isRegistro, clientePago);
+			return proceso;
 		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
+
+	}
+	private void enviarCorreoPagoAprobado(Boolean isRegistro, TbQoClientePago clientePago) throws RelativeException {
+		if(isRegistro) {
+			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
+			textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
+				.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente())
+				.replace("--Identificacion Cliente--", clientePago.getCedula())
+				.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
+				.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( clientePago.getFechaActualizacion()));
+			String[] para= {"jeroham126@gmail.com"};
+			String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
+			qos.mailNotificacion(para, asunto, textoContenido, null);
+		}else { 	
+			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
+			textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
+				.replace("--tipo--", "BLOQUEO").replace("--Nombre Cliente--", clientePago.getNombreCliente())
+				.replace("--Identificacion Cliente--", clientePago.getCedula())
+				.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
+				.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( clientePago.getFechaActualizacion()));
+			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();
+			String[] para= {"jeroham126@gmail.com"};
+			String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
+			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
+			qos.mailNotificacion(para, asunto, textoContenido, null);	
 		}
 	}
 
-	public TbQoClientePago rechazarPago(Long id,String tipo,String nombreAprobador, String mailAprobador) throws RelativeException {
+	public TbQoProceso rechazarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador) throws RelativeException {
 		try {
-			TbQoClientePago clientePago = clientePagoRepository.findByIdAndEstado(id, EstadoEnum.ACT, tipo);
+			TbQoClientePago clientePago = clientePagoRepository.findById(id);
 			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
-			log.info("Aprobador ---->>>>"+ nombreAprobador);
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
 			clientePago.setEstado(EstadoEnum.ACT);
@@ -314,45 +308,34 @@ public class PagoService {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}
 			TbQoClientePago rPago = qos.manageClientePago(clientePago);
-			try {
-				if(tipo.equalsIgnoreCase("REGISTRO_PAGO")) {
+			if(isRegistro) {
 				String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
-				textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
-						.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente())
+				textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
+					.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente())
+					.replace("--Identificacion Cliente--", clientePago.getCedula())
+					.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
+					.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
+				String[] para= {mailAprobador};
+				String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.RECHAZADO.toString(); 
+				qos.mailNotificacion(para, asunto, textoContenido, null);
+				} else{ 	
+					String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
+					textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
+						.replace("--tipo--", "BLOQUEO").replace("--Nombre Cliente--", clientePago.getNombreCliente())
 						.replace("--Identificacion Cliente--", clientePago.getCedula())
 						.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
 						.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
-				ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-				String[] para= {"hoscarly007@gmail.com"};//reemplazar el mailAprobador,
-				
-				String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.RECHAZADO.toString(); 
-				log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
-				qos.mailNotificacion(para, asunto, textoContenido, null);
-				}else if(tipo.equalsIgnoreCase("BLOQUEO_FONDO")) { 
-						
-							String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
-							textoContenido=textoContenido.replace("--Nombre Asesor--", "Nombre asesor").replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
-									.replace("--tipo--", "BLOQUEO").replace("--Nombre Cliente--", clientePago.getNombreCliente())
-									.replace("--Identificacion Cliente--", clientePago.getCedula())
-									.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
-									.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
-							ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();//= (LocalStorageClient);
-							String[] para= {"hoscarly007@gmail.com"};//reemplazar el mailAprobador,
-							
-							String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
-							log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
-							qos.mailNotificacion(para, asunto, textoContenido, null);
-					}
-						
-			} catch (Exception e) {
-				log.info("----NO SE PUDO ENVIAR EL CORREO DE RECHAZAR PAGO----");
-				e.printStackTrace();
-			}
-			return rPago;
+					String[] para= {mailAprobador};
+					String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
+					qos.mailNotificacion(para, asunto, textoContenido, null);
+				}	
+			return proceso;
 		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
 		
 	}

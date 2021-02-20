@@ -8,7 +8,6 @@ import javax.ejb.Local;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 
 
@@ -39,5 +38,5 @@ public interface ClientePagoRepository extends CrudRepository<Long, TbQoClienteP
 	 * @return TbQoClientePago
 	 * @throws RelativeException
 	 */
-	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo) throws RelativeException;
+	public TbQoClientePago findById(Long id) throws RelativeException;
 }

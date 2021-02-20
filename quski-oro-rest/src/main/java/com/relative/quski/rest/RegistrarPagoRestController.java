@@ -23,7 +23,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoClientePago;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
@@ -164,38 +164,23 @@ public class RegistrarPagoRestController extends BaseRestController
 		loc.setEntidades( this.ps.findRegistrarPagoByIdClientePago(StringUtils.isNotBlank(id)?Long.valueOf(id):null) );
 		return loc;
 	}
-	
 	@GET
-	@Path("/aprobar")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
-	response = GenericWrapper.class)
-	public GenericWrapper<TbQoClientePago> aprobar(@QueryParam("id")  String id,
-			@QueryParam("tipo")  String tipo,
-			@QueryParam("mail")  String mail,
-			@QueryParam("nombre")  String nombre) 
-			throws RelativeException {
-		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
-		Constantes.MSG_ERROR_BUSQUEDA.concat(id);	
-		loc.setEntidad( this.ps.aprobarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,tipo,nombre,mail) );
+	@Path("/enviarRespuesta")
+	public GenericWrapper<TbQoProceso> enviarRespuesta(
+			@QueryParam("id") String id, 
+			@QueryParam("isRegistro")  String isRegistro,
+			@QueryParam("isAprobar")  String isAprobar,			
+			@QueryParam("nombreAprobador")  String nombreAprobador,
+			@QueryParam("correoAprobador")  String correoAprobador
+			) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<TbQoProceso>();
+		if( StringUtils.isNotBlank(isAprobar) && Boolean.valueOf( isAprobar )) {
+			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
+		} else if( StringUtils.isNotBlank(isAprobar) && !Boolean.valueOf( isAprobar ) ) {
+			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
+		} else {
+			throw new RelativeException( Constantes.ERROR_CODE_READ, " AL LEER BOLLEANO DE ENTRADA.");
+		}
 		return loc;
 	}
-	
-	@GET
-	@Path("/rechazar")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo Post aprobar que aprueba un pago o bloqueo de fondos", 
-	response = GenericWrapper.class)
-	public GenericWrapper<TbQoClientePago> rechazar(@QueryParam("id")  String id,
-			@QueryParam("tipo")  String tipo,
-			@QueryParam("mail")  String mail,
-			@QueryParam("nombre")  String nombre) 
-			throws RelativeException { 
-		GenericWrapper<TbQoClientePago> loc = new GenericWrapper<TbQoClientePago>();
-		Constantes.MSG_ERROR_BUSQUEDA.concat(id);
-		loc.setEntidad( this.ps.rechazarPago(StringUtils.isNotBlank(id)?Long.valueOf(id):null,tipo,nombre,mail) );
-		return loc;
-	}
-	
-	
 }

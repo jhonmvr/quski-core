@@ -10,7 +10,6 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.spec.ClientePagoByIdAndEstadoSpec;
@@ -47,18 +46,15 @@ public class ClientePagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoCli
 
 
 	@Override
-	public TbQoClientePago findByIdAndEstado(Long id, EstadoEnum estado, String tipo)
-			throws RelativeException {
+	public TbQoClientePago findById(Long id) throws RelativeException {
 		try {
 			List<TbQoClientePago> tmp;
-			tmp= this.findAllBySpecification(new ClientePagoByIdAndEstadoSpec(id,estado));
+			tmp= this.findAllBySpecification(new ClientePagoByIdAndEstadoSpec(id));
 			if(tmp != null && !tmp.isEmpty()) {
 				return tmp.get(0);
 			}
-			
 			return null;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL INTENTAR BUSCAR EN TB_QO_CLIENTE_PAGO POR ID Y ESTADO");
 		}
