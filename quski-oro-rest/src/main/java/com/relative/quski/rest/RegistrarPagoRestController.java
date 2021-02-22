@@ -27,11 +27,10 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.service.PagoService;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.wrapper.FileWrapper;
+import com.relative.quski.wrapper.InicioProcesoBloqueoWrapper;
 import com.relative.quski.wrapper.InicioProcesoPagoWrapper;
-import com.relative.quski.wrapper.RegistrarBloqueoFondoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
-import com.relative.quski.wrapper.RespuestaProcesoPagoWrapper;
+import com.relative.quski.wrapper.RespuestaProcesoPagoBloqueoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -116,9 +115,22 @@ public class RegistrarPagoRestController extends BaseRestController
 	}
 	@POST
 	@Path("/iniciarProcesoRegistrarPago")
-	public GenericWrapper<RespuestaProcesoPagoWrapper> iniciarProcesoRegistrarPago(InicioProcesoPagoWrapper wrapper) throws RelativeException {
-		GenericWrapper<RespuestaProcesoPagoWrapper> loc = new GenericWrapper<>();
+	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarPago(InicioProcesoPagoWrapper wrapper) throws RelativeException {
+		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad( this.ps.crearRegistrarPago( wrapper ) );
+		return loc;
+	}
+	@POST
+	@Path("/iniciarProcesoRegistrarBloqueo")
+	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper) throws RelativeException {
+		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
+		
+		try {
+			loc.setEntidad( this.ps.crearRegistrarBloqueo(wrapper));
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");
+		}
 		return loc;
 	}
 	@POST
@@ -136,23 +148,7 @@ public class RegistrarPagoRestController extends BaseRestController
 		}
 		return loc;
 	}
-	@POST
-	@Path("/bloqueoFondo")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo Post registra los bloqueo de fondos o credito en la entidad TbQoRegistrarPago", 
-	response = GenericWrapper.class)
-	public GenericWrapper<RegistrarBloqueoFondoWrapper> bloqueoFondo(RegistrarBloqueoFondoWrapper bloqueoFondo, String autentication,FileWrapper fw) 
-			throws RelativeException, UnsupportedEncodingException {
-		GenericWrapper<RegistrarBloqueoFondoWrapper> loc = new GenericWrapper<>();
-		
-		try {
-			loc.setEntidad( this.ps.bloqueoFondo(bloqueoFondo, autentication, fw.getFile()));
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");
-		}
-		return loc;
-	}
+
 	@GET
 	@Path("/findByIdClientePago")
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 

@@ -7,7 +7,7 @@ import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
 
-public class RespuestaProcesoPagoWrapper implements Serializable {
+public class RespuestaProcesoPagoBloqueoWrapper implements Serializable {
 
 	/**
 	 * 

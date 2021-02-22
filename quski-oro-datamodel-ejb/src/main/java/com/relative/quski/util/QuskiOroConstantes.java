@@ -80,6 +80,7 @@ public class QuskiOroConstantes {
 	public static final String CODIGO_RENOVACION				= "RENV";
 	public static final String CODIGO_DEVOLUCION 				= "DEVC";
 	public static final String CODIGO_PAGO 						= "PAGO";
+	public static final String CODIGO_BLOQUEO					= "BLOQ";
 	public static final String CODIGO_VERIFICACION_TELEFONICA 	= "VETF";
 	
 	/**

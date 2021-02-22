@@ -5920,16 +5920,36 @@ public class QuskiOroService {
 			} else {
 				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return crearCodigoPago( this.clientePagoRepository.add(send) );
+				if( send.getTipo() != null && send.getTipo().equalsIgnoreCase( "PAGO" )) {
+					return crearCodigoPago( this.clientePagoRepository.add(send) );					
+				}else if( send.getTipo() != null && send.getTipo().equalsIgnoreCase( "BLOQ" ) ) {
+					return crearCodigoBloq( this.clientePagoRepository.add(send) );					
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO ESTA DEFININIDO UN TIPO DE PROCESO PAGO O BLOQUEO.");
+				}
 			}
 		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + "CLIENTE PAGO" + e.getMessage());
 		}
 	}
+	
 	private TbQoClientePago crearCodigoPago(TbQoClientePago persisted) throws RelativeException {
 		try {
 			persisted.setCodigo( QuskiOroConstantes.CODIGO_PAGO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			return this.clientePagoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	private TbQoClientePago crearCodigoBloq(TbQoClientePago persisted) throws RelativeException {
+		try {
+			persisted.setCodigo( QuskiOroConstantes.CODIGO_BLOQUEO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.clientePagoRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
