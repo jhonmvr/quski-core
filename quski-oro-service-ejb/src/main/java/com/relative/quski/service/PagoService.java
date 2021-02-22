@@ -260,26 +260,28 @@ public class PagoService {
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
 			clientePago = qos.manageClientePago(clientePago);
-			AbonoWrapper abono = new AbonoWrapper( 
-					clientePago.getCodigoOperacion(), 
-					clientePago.getCodigo(), 
-					clientePago.getObservacion(),
-					clientePago.getIdAgencia().toString(),
-					clientePago.getAsesor(),
-					clientePago.getCedula(),
-					clientePago.getNombreCliente(),
-					clientePago.getValorDepositado().toString(),
-					QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
-					);
-			RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
-			if(abonoRespuesta == null || abonoRespuesta.getExisteError()) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL REGISTRAR EL PAGO EN SOFTBANK.");
+			if(isRegistro) {
+				AbonoWrapper abono = new AbonoWrapper( 
+						clientePago.getCodigoOperacion(), 
+						clientePago.getCodigo(), 
+						clientePago.getObservacion(),
+						clientePago.getIdAgencia().toString(),
+						clientePago.getAsesor(),
+						clientePago.getCedula(),
+						clientePago.getNombreCliente(),
+						clientePago.getValorDepositado().toString(),
+						QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
+						);
+				RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
+				if(abonoRespuesta == null || abonoRespuesta.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL REGISTRAR EL PAGO EN SOFTBANK.");
+				}
 			}
 			proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
 			if(proceso == null) {
 				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+" EL PROCESO.");
 			}
-			this.enviarCorreoPagoAprobado(isRegistro, clientePago);
+			this.enviarCorreoPagoAprobado(isRegistro, clientePago, mailAprobador);
 			return proceso;
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -289,7 +291,7 @@ public class PagoService {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
 	}
-	private void enviarCorreoPagoAprobado(Boolean isRegistro, TbQoClientePago clientePago) throws RelativeException {
+	private void enviarCorreoPagoAprobado(Boolean isRegistro, TbQoClientePago clientePago, String mailAprobador) throws RelativeException {
 		if(isRegistro) {
 			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
 			textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
@@ -297,7 +299,7 @@ public class PagoService {
 				.replace("--Identificacion Cliente--", clientePago.getCedula())
 				.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
 				.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( clientePago.getFechaActualizacion()));
-			String[] para= {"jeroham126@gmail.com"};
+			String[] para= {mailAprobador};
 			String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
 			qos.mailNotificacion(para, asunto, textoContenido, null);
 		}else { 	
@@ -308,7 +310,7 @@ public class PagoService {
 				.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
 				.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( clientePago.getFechaActualizacion()));
 			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();
-			String[] para= {"jeroham126@gmail.com"};
+			String[] para= {mailAprobador};
 			String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
 			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
 			qos.mailNotificacion(para, asunto, textoContenido, null);	
