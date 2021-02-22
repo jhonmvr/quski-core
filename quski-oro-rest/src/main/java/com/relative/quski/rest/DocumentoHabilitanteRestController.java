@@ -153,7 +153,7 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 			@QueryParam("proceso") String proceso, @QueryParam("referencia") String referencia) throws RelativeException {
 		GenericWrapper<TbQoDocumentoHabilitante> loc = new GenericWrapper<>();
 		TbQoDocumentoHabilitante a = this.qos.findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(idTipoDocumento.isEmpty() ? null : Long.valueOf(idTipoDocumento), 
-				QuskiOroUtil.getEnumFromString(ProcessEnum.class, proceso), referencia.isEmpty() ? null : Long.valueOf(referencia));
+				QuskiOroUtil.getEnumFromString(ProcessEnum.class, proceso), referencia);
 		loc.setEntidad(a);
 		return loc;
 	}

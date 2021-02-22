@@ -92,6 +92,7 @@ import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
@@ -138,6 +139,7 @@ import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
+import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -2915,7 +2917,7 @@ public class QuskiOroService {
 	}
 
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoReferenciaProceso(Long idTipoDocumento,
-			ProcessEnum proceso, Long referencia) throws RelativeException {
+			ProcessEnum proceso, String referencia) throws RelativeException {
 		try {
 			return documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(idTipoDocumento, proceso,
 					referencia);
@@ -5920,16 +5922,36 @@ public class QuskiOroService {
 			} else {
 				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				return crearCodigoPago( this.clientePagoRepository.add(send) );
+				if( send.getTipo() != null && send.getTipo().equalsIgnoreCase( "PAGO" )) {
+					return crearCodigoPago( this.clientePagoRepository.add(send) );					
+				}else if( send.getTipo() != null && send.getTipo().equalsIgnoreCase( "BLOQ" ) ) {
+					return crearCodigoBloq( this.clientePagoRepository.add(send) );					
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO ESTA DEFININIDO UN TIPO DE PROCESO PAGO O BLOQUEO.");
+				}
 			}
 		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + "CLIENTE PAGO" + e.getMessage());
 		}
 	}
+	
 	private TbQoClientePago crearCodigoPago(TbQoClientePago persisted) throws RelativeException {
 		try {
 			persisted.setCodigo( QuskiOroConstantes.CODIGO_PAGO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			return this.clientePagoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	private TbQoClientePago crearCodigoBloq(TbQoClientePago persisted) throws RelativeException {
+		try {
+			persisted.setCodigo( QuskiOroConstantes.CODIGO_BLOQUEO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.clientePagoRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
@@ -6377,6 +6399,21 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	public RespuestaAbonoWrapper aplicarAbono(  AbonoWrapper wp ) throws RelativeException{
+		try {
+			if(wp != null) {
+				return	SoftBankApiClient.callAbonoRest(wp, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_ABONO_OPERACION).getValor());
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO EXISTE WRAPPER PARA APLICAR ABONO.");
+			}
+		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
 	
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion(String numeroOperacion, String usuario, Long agencia) throws RelativeException{
 		try {
@@ -6677,7 +6714,6 @@ public class QuskiOroService {
 			try {
 				joyaSoft.setFechaAvaluo( QuskiOroUtil.dateToString( e.getFechaCreacion() , QuskiOroConstantes.SOFT_DATE_FORMAT ) );
 			} catch (RelativeException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			joyaSoft.setIdAgenciaRegistro( credito.getIdAgencia() );
@@ -6698,29 +6734,6 @@ public class QuskiOroService {
 		});
 		return listjoyas;
 	}
-
-
-	
-
-	/*private String traerExcepcionEquifax(String cedula) throws RelativeException {
-		try {
-			IntegracionEntidadWrapper data = IntegracionApiClient.callPersonaRest(cedula);
-			if (data != null) {
-				if (data.getCodigoError() == 3) {
-					return data.getMensaje();
-				} else {
-					return null;
-				}
-			} else {
-				return null;
-			}
-
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}*/
 
 	public void mailNotificacion(String[] para, String asunto, String contenido, Map<String, byte[]> adjunto)
 			throws RelativeException {
@@ -6759,9 +6772,8 @@ public class QuskiOroService {
 				EmailUtil.sendEmail(ed);
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			e.getStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		} catch (Exception e) {
 			e.getStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());

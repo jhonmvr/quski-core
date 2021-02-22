@@ -14,7 +14,7 @@ import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
 @Local
 public interface TipoDocumentoRepository extends CrudRepository<Long, TbQoTipoDocumento>{
 	public List<DocumentoHabilitanteWrapper> findByTipoProcesoReferenciaEstadoOperacion(PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) throws RelativeException;
+			Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion) throws RelativeException;
 
 
 }

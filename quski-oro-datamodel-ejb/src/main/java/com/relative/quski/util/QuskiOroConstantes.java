@@ -80,6 +80,7 @@ public class QuskiOroConstantes {
 	public static final String CODIGO_RENOVACION				= "RENV";
 	public static final String CODIGO_DEVOLUCION 				= "DEVC";
 	public static final String CODIGO_PAGO 						= "PAGO";
+	public static final String CODIGO_BLOQUEO					= "BLOQ";
 	public static final String CODIGO_VERIFICACION_TELEFONICA 	= "VETF";
 	
 	/**
@@ -298,6 +299,7 @@ public class QuskiOroConstantes {
 	public static final String URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE = "URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE";
 	public static final String URL_SERVICIO_SOFTBANK_CREAR_OPERACION = "URL_SERVICIO_SOFTBANK_CREAR_OPERACION";
 	public static final String SOFTBANK_RENOVAR_OPERACION = "SOFTBANK_RENOVAR_OPERACION";
+	public static final String SOFTBANK_ABONO_OPERACION = "SOFTBANK_ABONO_OPERACION";
 	public static final String SOFTBANK_CONSULTA_GARANTIA = "SOFTBANK_CONSULTA_GARANTIA";
 	public static final String SOFTBANK_CONSULTA_RUBRO = "SOFTBANK_CONSULTA_RUBRO";
 

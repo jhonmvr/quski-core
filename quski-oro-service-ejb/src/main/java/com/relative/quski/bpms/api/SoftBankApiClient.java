@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
 import com.relative.quski.wrapper.CatalogoActividadWrapper;
 import com.relative.quski.wrapper.CatalogoAgenciaWrapper;
@@ -37,6 +38,7 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRenovacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
+import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaGarantiaWrapper;
@@ -507,6 +509,41 @@ public class SoftBankApiClient {
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
 				CrearOperacionRespuestaWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
+				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
+				if(respuestaWrapper.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
+				}
+				return respuestaWrapper;
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		}  catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
+		}
+	}
+	public static RespuestaAbonoWrapper callAbonoRest(AbonoWrapper abono, String service) throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(abono);
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====> un01 " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaAbonoWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				RespuestaAbonoWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaAbonoWrapper.class);
 				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
 				if(respuestaWrapper.getExisteError() ) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );

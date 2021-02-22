@@ -32,7 +32,7 @@ public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long
 
 	@Override
 	public TbQoDocumentoHabilitante findByTipoDocumentoAndReferenciaAndProceso(Long idTipoDocumento,
-			ProcessEnum proceso, Long referencia) {
+			ProcessEnum proceso, String referencia) {
 		List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(
 				(new DocumentoByTipoDocumentoAndProRefEstOpSpec(idTipoDocumento, referencia, proceso, null)));
 		if (tmp != null && !tmp.isEmpty()) {

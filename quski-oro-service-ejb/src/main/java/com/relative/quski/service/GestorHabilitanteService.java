@@ -58,7 +58,7 @@ public class GestorHabilitanteService {
 	 * @return
 	 */
 	public List<TbQoTipoDocumento> findDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion( PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion){
+			Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion){
 		if( pw != null && pw.getIsPaginated().equalsIgnoreCase( PaginatedWrapper.YES )) {
 			if( !StringUtils.isEmpty(pw.getSortDirections())  ) {
 				return dhr.findAllBySpecificationPaged(new TipoDocumentoWithDocumentoByAndProRefEstOpSpec(idTipoDocumento, idReferencia, proceso, estadoOperacion) ,
@@ -74,13 +74,13 @@ public class GestorHabilitanteService {
 	}
 	
 	public List<DocumentoHabilitanteWrapper> findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion( PaginatedWrapper pw, 
-			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
+			Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion) throws RelativeException{
 		return this.dhr.findByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, idReferencia, proceso, estadoOperacion);
 		
 	}
 	
 	public Long countDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion(
-			Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion){
+			Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso, List<EstadoOperacionEnum> estadoOperacion){
 		return dhr.countBySpecification(new TipoDocumentoWithDocumentoByAndProRefEstOpSpec(idTipoDocumento, idReferencia, proceso, estadoOperacion));
 	}
 	
@@ -95,7 +95,7 @@ public class GestorHabilitanteService {
 	 * @return
 	 */
 	public List<DocumentoHabilitanteWrapper> generateDocumentoHabilitante( PaginatedWrapper pw, 
-			Long idRol, Long idTipoDocumento, Long idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion ) throws RelativeException{
+			Long idRol, Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion ) throws RelativeException{
 		log.info("==========>generateDocumentoHabilitante");
 		List<DocumentoHabilitanteWrapper> tdsw= new ArrayList<>();
 		List<DocumentoHabilitanteWrapper> tds = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, null, proceso, estadoOperacion);
@@ -112,6 +112,10 @@ public class GestorHabilitanteService {
 					log.info("==========>generateDocumentoHabilitante 6 " + td.getIdTipoDocumento()); 
 					DocumentoHabilitanteWrapper existeDocumentoHabilitante =null;
 					existeDocumentoHabilitante = this.getDocumentId(tdsWithDoc, td.getIdTipoDocumento() , previous);
+					td.setRoles( 
+							rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(td.getIdTipoDocumento(), idRol, 
+								 td.getProceso(),td.getEstadoOperacion() ) ) 
+							);
 					if( existeDocumentoHabilitante != null ) {
 						log.info("==========>generateDocumentoHabilitante 6.0 " + existeDocumentoHabilitante.getIdDocumentoHabilitante()); 
 						td.setIdDocumentoHabilitante( existeDocumentoHabilitante.getIdDocumentoHabilitante() );
@@ -120,21 +124,14 @@ public class GestorHabilitanteService {
 						td.setMimeType( existeDocumentoHabilitante.getMimeType() );
 						previous.add( existeDocumentoHabilitante.getIdDocumentoHabilitante()  );
 						log.info("==========>generateDocumentoHabilitante 6.1 " + td.getIdDocumentoHabilitante()); 
-						td.setRoles( 
-								rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(td.getIdTipoDocumento(), idRol, 
-									 td.getProceso(),td.getEstadoOperacion() ) ) 
-								);
+						
 						td.setEstaCargado( Boolean.TRUE );
 						tdsw.add( td) ;
-					} else {
-						log.info("==========>generateDocumentoHabilitante 6.2 "); 
-						td.setRoles( 
-								rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(td.getIdTipoDocumento(), idRol, 
-										td.getProceso(),td.getEstadoOperacion()) ) 
-								);
+					} else {		
 						td.setEstaCargado( Boolean.FALSE );
 						tdsw.add( td) ;
 					}
+					
 				});
 			} else {
 				log.info("==========>generateDocumentoHabilitante 7 "); 
@@ -162,7 +159,7 @@ public class GestorHabilitanteService {
 	}
 	
 	
-	public List<TbQoRolTipoDocumento> findRolTipoDocumentoByParams( Long idTipoDocumento, Long idRol, ProcessEnum process, EstadoOperacionEnum estadoOperacion )
+	public List<TbQoRolTipoDocumento> findRolTipoDocumentoByParams( Long idTipoDocumento, Long idRol, List<ProcessEnum> process, List<EstadoOperacionEnum> estadoOperacion )
 			throws RelativeException{
 		return rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(idTipoDocumento, idRol, process, estadoOperacion));
 	}
@@ -180,19 +177,19 @@ public class GestorHabilitanteService {
 	*/
 	public TbQoDocumentoHabilitante generateDocumentoHabilitanteSimplified(FileWrapper fw) throws RelativeException {
 		TbQoDocumentoHabilitante dhs = new TbQoDocumentoHabilitante();
-		Long relatedId= Long.valueOf( fw.getRelatedIdStr() );
+		
 		List<ProcessEnum> pe= new ArrayList<>();
 		pe.add(!StringUtils.isEmpty( fw.getProcess() )?QuskiOroUtil.getEnumFromString(ProcessEnum.class,fw.getProcess()):null);
 		List<EstadoOperacionEnum> eoe=new ArrayList<>();
 		eoe.add(!StringUtils.isEmpty( fw.getEstadoOperacion() )?QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class,fw.getEstadoOperacion()):null );
 		
 		List<TbQoTipoDocumento> tds=findDocumentoHabilitanteByTipoProcesoReferenciaEstadoOperacion(null, Long.valueOf(fw.getTypeAction()  ), 
-				relatedId, pe, eoe);
+				fw.getRelatedIdStr() , pe, eoe);
 		if( tds != null && !tds.isEmpty() ) {
 			dhs.setId( tds.get(0).getId() );
 		}
 		dhs.setId( fw.getRelatedId());
-		dhs.setIdReferencia( Long.valueOf(fw.getRelatedIdStr()) );
+		dhs.setIdReferencia( fw.getRelatedIdStr() );
 		dhs.setFechaCreacion( new Date(System.currentTimeMillis()) );
 		dhs.setEstado( EstadoEnum.ACT );
 		dhs.setEstadoOperacion(eoe.get(0));

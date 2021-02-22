@@ -13,6 +13,6 @@ public interface DocumentoHabilitanteRepository extends CrudRepository<Long, TbQ
 			String identificacionCliente, Long idCotizador, Long idNegociacion);
 
 	public TbQoDocumentoHabilitante findByTipoDocumentoAndReferenciaAndProceso(Long idTipoDocumento,
-			ProcessEnum proceso, Long referencia);
+			ProcessEnum proceso, String referencia);
 	public TbQoDocumentoHabilitante findByIdCreditoNegociacion(Long idCreditoNegociacion);
 }
