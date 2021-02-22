@@ -27,11 +27,13 @@ import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.InicioProcesoBloqueoWrapper;
 import com.relative.quski.wrapper.InicioProcesoPagoWrapper;
 import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RegistroPagoRenovacionWrapper;
+import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RespuestaProcesoPagoBloqueoWrapper;
 
@@ -250,17 +252,33 @@ public class PagoService {
 		TbQoClientePago clientePago = null;
 		TbQoProceso proceso = null;
 		try {
+			
 			clientePago = clientePagoRepository.findById(id);
 			if(clientePago == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EN ESTADO PENDIENTE");
 			}
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
+			clientePago = qos.manageClientePago(clientePago);
+			AbonoWrapper abono = new AbonoWrapper( 
+					clientePago.getCodigoOperacion(), 
+					clientePago.getCodigo(), 
+					clientePago.getObservacion(),
+					clientePago.getIdAgencia().toString(),
+					clientePago.getAsesor(),
+					clientePago.getCedula(),
+					clientePago.getNombreCliente(),
+					clientePago.getValorDepositado().toString(),
+					QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
+					);
+			RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
+			if(abonoRespuesta == null || abonoRespuesta.getExisteError()) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL REGISTRAR EL PAGO EN SOFTBANK.");
+			}
 			proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
 			if(proceso == null) {
 				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+" EL PROCESO.");
 			}
-			clientePago = qos.manageClientePago(clientePago);
 			this.enviarCorreoPagoAprobado(isRegistro, clientePago);
 			return proceso;
 		} catch (RelativeException e) {
@@ -270,7 +288,6 @@ public class PagoService {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
-
 	}
 	private void enviarCorreoPagoAprobado(Boolean isRegistro, TbQoClientePago clientePago) throws RelativeException {
 		if(isRegistro) {

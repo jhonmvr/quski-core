@@ -92,6 +92,7 @@ import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
@@ -138,6 +139,7 @@ import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
+import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
@@ -6394,6 +6396,21 @@ public class QuskiOroService {
 			}
 			return null;
 		}catch(RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
+	public RespuestaAbonoWrapper aplicarAbono(  AbonoWrapper wp ) throws RelativeException{
+		try {
+			if(wp != null) {
+				return	SoftBankApiClient.callAbonoRest(wp, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_ABONO_OPERACION).getValor());
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO EXISTE WRAPPER PARA APLICAR ABONO.");
+			}
+		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch( Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
