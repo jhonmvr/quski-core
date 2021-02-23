@@ -16,6 +16,10 @@ public class HabilitanteTerminacionContratoWrapper implements Serializable {
 	private String nombreCompletoCliente;
 	private String apoderadoMutualista;
 	private String fechaElaboracionContrato;
+	private String nombreUsuario;
+	private String rolUsuario;
+	private String cedulaCliente;
+	
 	public String getFechaActual() {
 		return fechaActual;
 	}
@@ -40,8 +44,24 @@ public class HabilitanteTerminacionContratoWrapper implements Serializable {
 	public void setFechaElaboracionContrato(String fechaElaboracionContrato) {
 		this.fechaElaboracionContrato = fechaElaboracionContrato;
 	}
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+	public void setNombreUsuario(String nombreUsuario) {
+		this.nombreUsuario = nombreUsuario;
+	}
+	public String getRolUsuario() {
+		return rolUsuario;
+	}
+	public void setRolUsuario(String rolUsuario) {
+		this.rolUsuario = rolUsuario;
+	}
+	public String getCedulaCliente() {
+		return cedulaCliente;
+	}
+	public void setCedulaCliente(String cedulaCliente) {
+		this.cedulaCliente = cedulaCliente;
+	}
 	
 	
-
-
 }

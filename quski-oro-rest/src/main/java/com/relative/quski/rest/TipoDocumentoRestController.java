@@ -324,7 +324,15 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero((Long.valueOf(idDevolucion))));
 				map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
 			} 
-			
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AE )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteActaEntrega((Long.valueOf(idDevolucion))));
+			} 
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AEA )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));
+			} 
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AEH )==0  )  {
+				map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
+			} 
 			
 		}
 	}

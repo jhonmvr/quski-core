@@ -452,8 +452,12 @@ public HabilitanteTerminacionContratoWrapper setHabilitanteTerminacionContrato(L
 	HabilitanteTerminacionContratoWrapper habilitante = new HabilitanteTerminacionContratoWrapper();
 	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());;
-	habilitante.setFechaActual(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
+	habilitante.setFechaElaboracionContrato(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
 	habilitante.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
+	habilitante.setApoderadoMutualista("Quemaado hasta mientras");
+	habilitante.setNombreUsuario("Quemaado hasta mientras");
+	habilitante.setRolUsuario("rolUsuario");
+	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 	return habilitante;
 }
 
