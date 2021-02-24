@@ -44,6 +44,17 @@ public class RolTipoDocumentoByParamsSpec  extends AbstractSpecification<TbQoRol
 			this.estadoOperacion.add(estadoOperacion);
 		}
 	}
+	
+	public RolTipoDocumentoByParamsSpec(Long idTipoDocumento, Long idRol, ProcessEnum proceso,List<EstadoOperacionEnum> estadoOperacion) {
+		super();
+		this.idTipoDocumento = idTipoDocumento;
+		this.idRol = idRol;
+		if(proceso != null) {
+			this.proceso = new ArrayList<>();
+			this.proceso.add(proceso);
+		}
+		this.estadoOperacion = estadoOperacion;
+	}
 	 
 		@Override
 		public boolean isSatisfiedBy(TbQoRolTipoDocumento arg0) {

@@ -116,12 +116,13 @@ public class DevolucionService {
 		if( send.getId() != null) {
 			proceso = this.qos.findProcesoByIdReferencia(send.getId(), ProcesoEnum.DEVOLUCION );
 		}
+		send = this.manageDevolucion(send);
 		proceso.setProceso( ProcesoEnum.DEVOLUCION );
 		proceso.setIdReferencia( send.getId()  );
 		proceso.setUsuario( send.getAsesor() );
 		proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );			
 		result.setProceso(this.qos.manageProceso(proceso));
-		result.setDevolucion(this.manageDevolucion(send));
+		result.setDevolucion(send);
 		return result;
 	}
 	public ProcesoDevolucionWrapper buscarProcesoDevolucion(Long idDevolucion) throws RelativeException {
