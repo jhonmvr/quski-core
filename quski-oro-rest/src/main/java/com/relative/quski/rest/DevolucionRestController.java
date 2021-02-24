@@ -143,25 +143,14 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return plw;
 	}
 	
-	@POST
-	@Path("/aprobarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> aprobarSolicitudDevolucion(
-			@QueryParam("id") String id)
-			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
+	@GET
+	@Path("/aprobarNegarSolicitudDevolucion")
+	public GenericWrapper<ProcesoDevolucionWrapper> aprobarNegarSolicitudDevolucion(@QueryParam("idDevolucion") String idDevolucion, @QueryParam("aprobado") String aprobado)throws RelativeException {
+		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.aprobarNegarSolicitudDevolucion(Long.valueOf(idDevolucion), Boolean.valueOf( aprobado )));
 		return loc;
 	}
 	
-	@POST
-	@Path("/rechazarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> rechazarSolicitudDevolucion(
-			@QueryParam("id") String id)
-			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.aprobarSolicitudDevolucion(Long.valueOf(id)));
-		return loc;
-	}
 	
 	@GET
 	@Path("/buscarDevolucion")
