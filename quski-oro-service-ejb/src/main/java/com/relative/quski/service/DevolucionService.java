@@ -191,25 +191,19 @@ public class DevolucionService {
 		}
 	}
 	
-	public TbQoDevolucion aprobarSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(id);	
-		devolucion.setFechaAprobacionSolicitud(new Date());
-		
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA);
+	public ProcesoDevolucionWrapper aprobarNegarSolicitudDevolucion(Long idDevolucion, Boolean aprobado ) throws RelativeException {
+		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
+		devolucion.setFechaAprobacionSolicitud(new Timestamp(System.currentTimeMillis()));
+		result.setDevolucion( this.manageDevolucion(devolucion) );
 		this.manageDevolucion(devolucion);
-		return devolucion;
+		if(aprobado) {
+			result.setProceso( this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA) );
+		}else {
+			result.setProceso( this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO) );
+		}
+		return result;
 	}
-	
-	public TbQoDevolucion rechazarSolicitudDevolucion(Long id ) throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(id);	
-		devolucion.setFechaAprobacionSolicitud(new Date());
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
-		this.manageDevolucion(devolucion);
-		return devolucion;
-	}
-	
-	
-
 	public List<DevolucionProcesoWrapper> findOperacion(PaginatedWrapper pw, String codigoOperacion, String agencia,
 			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion
 			) throws RelativeException {
