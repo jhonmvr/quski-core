@@ -28,6 +28,7 @@ import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
 
@@ -87,12 +88,20 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/registrarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> registrarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp,
-			@QueryParam("usuario") String usuario)
+	public GenericWrapper<ProcesoDevolucionWrapper> registrarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp)
 			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.registrarSolicitudDevolucion(wp.getEntidad(), usuario));
+		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.registrarSolicitudDevolucion(wp.getEntidad()));
 		return loc;
+	}
+
+	@GET
+	@Path("/buscarProcesoDevolucion")
+	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoDevolucion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.buscarProcesoDevolucion( Long.valueOf( idDevolucion )) );
+		return loc;
+
 	}
 	
 	
