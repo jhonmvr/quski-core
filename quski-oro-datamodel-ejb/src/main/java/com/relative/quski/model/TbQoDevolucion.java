@@ -143,7 +143,8 @@ public class TbQoDevolucion implements Serializable {
 	@Column(name="cedula_apoderado")
 	private String cedulaApoderado;
 	
-	
+	@Column(name="ciudad_entrega")
+	private String ciudadEntrega;
 	
 	public TbQoDevolucion() {
 	}
@@ -477,6 +478,14 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setCedulaApoderado(String cedulaApoderado) {
 		this.cedulaApoderado = cedulaApoderado;
+	}
+
+	public String getCiudadEntrega() {
+		return ciudadEntrega;
+	}
+
+	public void setCiudadEntrega(String ciudadEntrega) {
+		this.ciudadEntrega = ciudadEntrega;
 	}
 
 
