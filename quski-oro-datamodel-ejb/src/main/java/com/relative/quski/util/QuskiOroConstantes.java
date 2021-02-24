@@ -382,6 +382,10 @@ public class QuskiOroConstantes {
 	public static final String TEXTO_APROBACION_PAGO = "TEXTO_APROBACION_PAGO";
 	public static final String CODIGO_BANCO_MUPI = "CODIGO_BANCO_MUPI";
 	public static final String TEXTO_APROBACION_DEVOLUCION = "TEXTO_APROBACION_DEVOLUCION";
+	//tipo cliente devolucion 
+	public static final String HEREDERO = "HER";
+	public static final String DEUDOR = "DEU";
+	public static final String APODERADO = "SAP";
 	
 
   

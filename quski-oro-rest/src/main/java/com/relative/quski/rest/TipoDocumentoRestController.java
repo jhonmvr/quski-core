@@ -27,8 +27,11 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.TipoPlantillaEnum;
+import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoTipoDocumento;
+import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
@@ -53,6 +56,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	QuskiOroService qos;
 	@Inject
 	DevolucionService dos;
+	@Inject
+	DevolucionRepository devolucionRepository;
 	
 
 	@Inject
@@ -300,9 +305,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		map.put("subReportOneName",  td.getPlantillaUno() );
 		map.put("subReportTwoName", td.getPlantillaDos() );
 		map.put("subReportThreeName", td.getPlantillaTres());
-		map.put("mainReportName", td.getPlantilla());
+		
 		map.put("REPORT_PATH", path );
-		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
 		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 1" + path+td.getPlantillaUno() );
 		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 2" + path+td.getPlantillaDos() );
 	//	log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 3" + path+td.getPlantillaTres() );
@@ -317,31 +322,44 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 			
 		log.info("Entra a set Report Data Devolucion ");
 		if( !StringUtils.isEmpty( idDevolucion )  ) {
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SDA )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SDH )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero((Long.valueOf(idDevolucion))));
-				map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AE )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteActaEntrega((Long.valueOf(idDevolucion))));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AEA )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AEH )==0  )  {
-				map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
-				map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
-			} 
-			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.TC )==0  )  {	
+			TbQoDevolucion devolucion = this.devolucionRepository.findById(Long.valueOf(idDevolucion));
+			if(devolucion == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA LA DEVOLUCION PARA EL ID:"+idDevolucion);
+			}
+			
+			if(td.getProceso().equals(ProcessEnum.SOLICITUD)) {
+				if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.DEUDOR)) {
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
+					map.put("mainReportName", td.getPlantilla());
+					
+				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero((Long.valueOf(idDevolucion))));
+					map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
+					map.put("mainReportName", td.getPlantillaDos());
+				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionApoderado((Long.valueOf(idDevolucion))));
+					map.put("mainReportName", td.getPlantillaUno());
+					
+				} 
+			}else if(td.getProceso().equals(ProcessEnum.ENTREGA)) {
+				if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.DEUDOR)) {
+					map.put("BEAN_DS", dos.setHabilitanteActaEntrega((Long.valueOf(idDevolucion))));
+					map.put("mainReportName", td.getPlantilla());
+				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
+					map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
+					map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
+					map.put("mainReportName", td.getPlantillaDos());
+				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
+					map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));
+					map.put("mainReportName", td.getPlantillaUno());
+				} 
+			}else if(td.getProceso().equals(ProcessEnum.TERMINACIONCONTRATO)) {
 				List<HabilitanteTerminacionContratoWrapper> terminacionContrato = new ArrayList<>();
 				terminacionContrato.add(dos.setHabilitanteTerminacionContrato(Long.valueOf(idDevolucion)));
 				map.put("LIST_DS", terminacionContrato);
+				map.put("mainReportName", td.getPlantilla());
 			}
+		
 		}
 	}
 	

@@ -6832,6 +6832,8 @@ public class QuskiOroService {
 		try {
 			return procesoRepository.findByIdReferencia(id, proceso);
 		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
