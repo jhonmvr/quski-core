@@ -217,18 +217,18 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	private ObjetoHabilitanteWrapper generateReport(Map<String, Object> map,String path, String format,TbQoTipoDocumento td) throws RelativeException{
 		byte[] reportFile = null;
 		ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
-		String mainReportName = td.getPlantilla();
+		//String mainReportName = td.getPlantilla();
 		log.info("REPORT PATH DATA ==>>>"+map.get("REPORT_PATH")+map.get("mainReportName"));
 		if( Constantes.PDF_FILE_TYPE_EXTENSION.equalsIgnoreCase(format.trim()) ) {
 			//reportFile = this.rs.generateReporteFromBeanPDF(sins , map,
 			reportFile = this.rs.generateReporteFromBeanPDF(null , map, 
-					path+mainReportName);
+					map.get("REPORT_PATH")+map.get("mainReportName").toString());
 			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport PDF9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport PDF9 " + reportFile.length);
 		} else {
 			reportFile = this.rs.generateReporteBeanCsv(null,map,		
-					path+mainReportName );
+					map.get("REPORT_PATH")+map.get("mainReportName").toString() );
 			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
@@ -302,9 +302,9 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		 String idDevolucion, TbQoTipoDocumento td){
 	
 		map.put("idDevolucion", idDevolucion);
-		map.put("subReportOneName",  td.getPlantillaUno() );
-		map.put("subReportTwoName", td.getPlantillaDos() );
-		map.put("subReportThreeName", td.getPlantillaTres());
+	//	map.put("subReportOneName",  td.getPlantillaUno() );
+	//	map.put("subReportTwoName", td.getPlantillaDos() );
+	//	map.put("subReportThreeName", td.getPlantillaTres());
 		
 		map.put("REPORT_PATH", path );
 		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );

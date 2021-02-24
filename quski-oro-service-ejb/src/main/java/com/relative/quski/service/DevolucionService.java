@@ -587,7 +587,7 @@ public SolicitudDevolucionApoderadoWrapper setHabilitanteSolicitudDevolucionApod
 	habilitante.setNombreCliente(devolucion.getNombreCliente());
 	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 	habilitante.setNombreApoderado(devolucion.getNombreApoderado());
-	habilitante.setNombreApoderado(devolucion.getCedulaApoderado());
+	habilitante.setCedulaApoderado(devolucion.getCedulaApoderado());
 
 	return habilitante;
 }
