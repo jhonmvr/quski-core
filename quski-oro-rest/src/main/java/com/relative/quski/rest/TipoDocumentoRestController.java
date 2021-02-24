@@ -162,7 +162,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 				
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
-		log.info("================PATH===> P" +path);
+		//log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParameters(map,path,  identificacionCliente, nombreCliente, idCotizador, idNegociacion, idDevolucion, td);
 		this.setReportData(map, path, identificacionCliente, nombreCliente, idCotizador, idNegociacion, idDevolucion, td);
@@ -187,7 +187,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		map.put("subReportThreeName", td.getPlantillaTres());
 		map.put("mainReportName", td.getPlantilla());
 		map.put("REPORT_PATH", path );
-		log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
+		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters " + path+td.getPlantilla() );
 		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 1" + path+td.getPlantillaUno() );
 		//log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 2" + path+td.getPlantillaDos() );
 	//	log.info("=========>ENTRA EN TipoDocumentoRestController setParameters  8 3" + path+td.getPlantillaTres() );
@@ -218,7 +218,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		byte[] reportFile = null;
 		ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
 		String mainReportName = td.getPlantilla();
-		log.info("=========>ENTRA EN TipoDocumentoRestController generateReport  " + QuskiOroConstantes.PREFIX_REPORT_MAIN_PATH +td.getPlantilla() );
+		log.info("REPORT PATH DATA ==>>>"+map.get("REPORT_PATH")+map.get("mainReportName"));
 		if( Constantes.PDF_FILE_TYPE_EXTENSION.equalsIgnoreCase(format.trim()) ) {
 			//reportFile = this.rs.generateReporteFromBeanPDF(sins , map,
 			reportFile = this.rs.generateReporteFromBeanPDF(null , map, 
@@ -290,7 +290,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
-		log.info("================PATH===> P" +path);
+		//log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParametersDevolucion(map,path,    idDevolucion, td);
 		this.setReportDataDevolucion(map, path,   idDevolucion, td);
@@ -359,6 +359,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 				map.put("LIST_DS", terminacionContrato);
 				map.put("mainReportName", td.getPlantilla());
 			}
+			
+		
 		
 		}
 	}
