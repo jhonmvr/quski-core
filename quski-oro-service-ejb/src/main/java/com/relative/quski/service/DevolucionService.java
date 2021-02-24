@@ -116,12 +116,13 @@ public class DevolucionService {
 		if( send.getId() != null) {
 			proceso = this.qos.findProcesoByIdReferencia(send.getId(), ProcesoEnum.DEVOLUCION );
 		}
+		send = this.manageDevolucion(send);
 		proceso.setProceso( ProcesoEnum.DEVOLUCION );
 		proceso.setIdReferencia( send.getId()  );
 		proceso.setUsuario( send.getAsesor() );
 		proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );			
 		result.setProceso(this.qos.manageProceso(proceso));
-		result.setDevolucion(this.manageDevolucion(send));
+		result.setDevolucion(send);
 		return result;
 	}
 	public ProcesoDevolucionWrapper buscarProcesoDevolucion(Long idDevolucion) throws RelativeException {
@@ -170,6 +171,7 @@ public class DevolucionService {
 			persisted.setObservacionAprobador(send.getObservacionAprobador());
 			persisted.setFechaEfectiva(send.getFechaEfectiva());
 			persisted.setCiudadTevcol(send.getCiudadTevcol());
+			persisted.setCiudadEntrega(send.getCiudadEntrega());
 			
 			return devolucionRepository.update(persisted);
 		} catch (RelativeException e) {
@@ -453,8 +455,11 @@ public HabilitanteTerminacionContratoWrapper setHabilitanteTerminacionContrato(L
 
 	HabilitanteTerminacionContratoWrapper habilitante = new HabilitanteTerminacionContratoWrapper();
 	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());;
-	habilitante.setFechaElaboracionContrato(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
+	
+	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
+	log.info("entra yal metodo habilitante" + habilitante.getNombreCompletoCliente());
+//	habilitante.setFechaElaboracionContrato(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
+	log.info("entra yal metodo habilitante" + habilitante.getNombreCompletoCliente());
 	habilitante.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
 	habilitante.setApoderadoMutualista("Quemaado hasta mientras");
 	habilitante.setNombreUsuario("Quemaado hasta mientras");
@@ -468,12 +473,13 @@ public ActaEntregaRecepcionWrapper setHabilitanteActaEntrega(Long idDevolucion)
 
 	ActaEntregaRecepcionWrapper habilitante = new ActaEntregaRecepcionWrapper();
 	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setCiudad(devolucion.getCiudadEntrega());
 	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
 	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
 	habilitante.setNumeroFunda(devolucion.getFundaActual());
 	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
 	habilitante.setNombreAsesor(devolucion.getAsesor());
+	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 	return habilitante;
 }
 
@@ -482,7 +488,7 @@ public ActaEntregaRecepcionApoderadoWrapper setHabilitanteActaEntregaApoderado(L
 
 	ActaEntregaRecepcionApoderadoWrapper habilitante = new ActaEntregaRecepcionApoderadoWrapper();
 	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setCiudad(devolucion.getCiudadEntrega());
 	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
 	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
 	habilitante.setNumeroFunda(devolucion.getFundaActual());
@@ -498,13 +504,13 @@ public ActaEntregaRecepcionHerederoWrapper setHabilitanteActaEntregaHeredero(Lon
 
 	ActaEntregaRecepcionHerederoWrapper habilitante = new ActaEntregaRecepcionHerederoWrapper();
 	TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-	habilitante.setCiudad(devolucion.getCiudadTevcol());
+	habilitante.setCiudad(devolucion.getCiudadEntrega());
 	habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
 	habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
 	habilitante.setNumeroFunda(devolucion.getFundaActual());
 	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
 	habilitante.setNombreAsesor(devolucion.getAsesor());
-	//habilitante.setHerederos();
+	habilitante.setHerederos((setStringHeredero(getHerederos(idDevolucion))));
 	return habilitante;
 }
 

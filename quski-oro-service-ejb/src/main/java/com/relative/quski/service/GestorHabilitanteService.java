@@ -98,11 +98,11 @@ public class GestorHabilitanteService {
 			Long idRol, Long idTipoDocumento, String idReferencia, List<ProcessEnum> proceso,List<EstadoOperacionEnum> estadoOperacion ) throws RelativeException{
 		log.info("==========>generateDocumentoHabilitante");
 		List<DocumentoHabilitanteWrapper> tdsw= new ArrayList<>();
-		List<DocumentoHabilitanteWrapper> tds = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, null, proceso, estadoOperacion);
+		List<DocumentoHabilitanteWrapper> tds = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, null, proceso, null);
 		log.info("==========>generateDocumentoHabilitante 1 "); 
 		if( tds != null && !tds.isEmpty() ) {
 			log.info("==========>generateDocumentoHabilitante 2 " + tds.size()); 
-			List<DocumentoHabilitanteWrapper> tdsWithDoc = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, idReferencia, proceso, estadoOperacion);
+			List<DocumentoHabilitanteWrapper> tdsWithDoc = findDocumentoHabilitanteWrapperByTipoProcesoReferenciaEstadoOperacion(pw, idTipoDocumento, idReferencia, proceso, null);
 			log.info("==========>generateDocumentoHabilitante 3 "); 
 			if(tdsWithDoc != null && !tdsWithDoc.isEmpty() ) {
 				log.info("==========>generateDocumentoHabilitante 4 " + tdsWithDoc.size()); 
@@ -114,7 +114,7 @@ public class GestorHabilitanteService {
 					existeDocumentoHabilitante = this.getDocumentId(tdsWithDoc, td.getIdTipoDocumento() , previous);
 					td.setRoles( 
 							rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(td.getIdTipoDocumento(), idRol, 
-								 td.getProceso(),td.getEstadoOperacion() ) ) 
+								 td.getProceso(),estadoOperacion ) ) 
 							);
 					if( existeDocumentoHabilitante != null ) {
 						log.info("==========>generateDocumentoHabilitante 6.0 " + existeDocumentoHabilitante.getIdDocumentoHabilitante()); 
@@ -139,7 +139,7 @@ public class GestorHabilitanteService {
 					log.info("==========>generateDocumentoHabilitante 7 " + td.getIdDocumentoHabilitante()); 
 					td.setRoles( 
 							rtdr.findAllBySpecification( new RolTipoDocumentoByParamsSpec(td.getIdTipoDocumento(), idRol, 
-									td.getProceso(),td.getEstadoOperacion()) ) 
+									td.getProceso(),estadoOperacion) ) 
 							);
 					td.setEstaCargado( Boolean.FALSE );
 					tdsw.add( td) ;

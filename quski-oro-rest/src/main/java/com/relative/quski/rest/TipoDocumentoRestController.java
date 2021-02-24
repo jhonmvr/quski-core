@@ -2,6 +2,7 @@ package com.relative.quski.rest;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ReportService;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 
 import io.swagger.annotations.Api;
@@ -152,7 +154,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 
 		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
 		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
-
+		
+				
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
@@ -312,7 +315,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 			
 			
-		
+		log.info("Entra a set Report Data Devolucion ");
 		if( !StringUtils.isEmpty( idDevolucion )  ) {
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.SD )==0  )  {
 				map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
@@ -332,8 +335,13 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 			} 
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AEH )==0  )  {
 				map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
+				map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
 			} 
-			
+			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.TC )==0  )  {	
+				List<HabilitanteTerminacionContratoWrapper> terminacionContrato = new ArrayList<>();
+				terminacionContrato.add(dos.setHabilitanteTerminacionContrato(Long.valueOf(idDevolucion)));
+				map.put("LIST_DS", terminacionContrato);
+			}
 		}
 	}
 	
