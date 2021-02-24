@@ -1,6 +1,7 @@
 
 package com.relative.quski.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -17,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
@@ -32,6 +34,7 @@ import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
 import com.relative.quski.wrapper.ListHerederoWrapper;
+import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
 import com.relative.quski.wrapper.SolicitudDevolucionApoderadoWrapper;
@@ -86,16 +89,15 @@ public class DevolucionService {
 
 	public TbQoDevolucion manageDevolucion(TbQoDevolucion send) throws RelativeException {
 		try {
-			log.info("==> entra a manage Devolucion");
 			TbQoDevolucion persisted = null;
 			if (send != null && send.getId() != null) {
 				persisted = this.findDevolucionById(send.getId());
 				return this.updateDevolucion(send, persisted);
 			} else if (send != null && send.getId() == null) {
-				// send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-				send.setFechaCreacion(new Date());
-				
-				return devolucionRepository.add(send);
+				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado( EstadoEnum.ACT );
+				TbQoDevolucion devolucion = devolucionRepository.add(send);
+				return crearCodigoDev(devolucion);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error no se realizo transaccion");
 			}
@@ -104,32 +106,40 @@ public class DevolucionService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, "Error actualizando la Agente " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, " AL ACTUALIZAR LA DEVOLUCION. " + e.getMessage());
 		}
 	}
 	
-	public TbQoDevolucion registrarSolicitudDevolucion(TbQoDevolucion send , String usuario) throws RelativeException {
-		TbQoDevolucion devolucion = manageDevolucion(send);
-		devolucion = crearCodigoDev(devolucion);
+	public ProcesoDevolucionWrapper registrarSolicitudDevolucion(TbQoDevolucion send) throws RelativeException {
+		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
 		TbQoProceso proceso = new TbQoProceso();
-		proceso.setIdReferencia(devolucion.getId());
-		proceso.setProceso(ProcesoEnum.DEVOLUCION);
-		proceso.setEstadoProceso(EstadoProcesoEnum.CREADO);
-		proceso.setUsuario(usuario);
-		qos.manageProceso(proceso);
-		
-		return devolucion;
+		if( send.getId() != null) {
+			proceso = this.qos.findProcesoByIdReferencia(send.getId(), ProcesoEnum.DEVOLUCION );
+		}
+		proceso.setProceso( ProcesoEnum.DEVOLUCION );
+		proceso.setIdReferencia( send.getId()  );
+		proceso.setUsuario( send.getAsesor() );
+		proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );			
+		result.setProceso(this.qos.manageProceso(proceso));
+		result.setDevolucion(this.manageDevolucion(send));
+		return result;
 	}
-	
+	public ProcesoDevolucionWrapper buscarProcesoDevolucion(Long idDevolucion) throws RelativeException {
+		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
+		result.setDevolucion( devolucionRepository.findById(idDevolucion) );
+		result.setProceso( this.qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION ));
+		return result;
+	}
 	
 	
 	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion persisted) throws RelativeException {
 		try {
 			persisted.setCodigo(send.getCodigo());
 			persisted.setAsesor(send.getAsesor());
+			persisted.setEstado( EstadoEnum.ACT );
+			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setAprobador(send.getAprobador());
 			persisted.setIdAgencia(send.getIdAgencia());
-			persisted.setFechaActualizacion(new Date());
 			persisted.setCedulaCliente(send.getCedulaCliente());
 			persisted.setCodigoOperacion(send.getCodigoOperacion());
 			persisted.setNivelEducacion(send.getNivelEducacion());
@@ -142,7 +152,6 @@ public class DevolucionService {
 			persisted.setObservaciones(send.getObservaciones());
 			persisted.setAgenciaEntregaId(send.getAgenciaEntregaId());
 			persisted.setNombreAgenciaSolicitud(send.getNombreAgenciaSolicitud());
-			persisted.setEstado(send.getEstado());
 			persisted.setGenero(send.getGenero());
 			persisted.setAgenciaEntrega(send.getAgenciaEntrega());
 			persisted.setValorCustodiaAprox(send.getValorCustodiaAprox());
@@ -172,7 +181,6 @@ public class DevolucionService {
 	
 	
 	private TbQoDevolucion crearCodigoDev(TbQoDevolucion persisted) throws RelativeException {
-		
 		try {
 			String cod = QuskiOroConstantes.CODIGO_DEVOLUCION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0"));
 			persisted.setCodigo(cod);
