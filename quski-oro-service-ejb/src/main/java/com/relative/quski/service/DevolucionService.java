@@ -135,44 +135,126 @@ public class DevolucionService {
 	
 	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion persisted) throws RelativeException {
 		try {
-			persisted.setCodigo(send.getCodigo());
-			persisted.setAsesor(send.getAsesor());
 			persisted.setEstado( EstadoEnum.ACT );
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setAprobador(send.getAprobador());
-			persisted.setIdAgencia(send.getIdAgencia());
-			persisted.setCedulaCliente(send.getCedulaCliente());
-			persisted.setCodigoOperacion(send.getCodigoOperacion());
-			persisted.setNivelEducacion(send.getNivelEducacion());
-			persisted.setEstadoCivil(send.getEstadoCivil());
-			persisted.setSeparacionBienes(send.getSeparacionBienes());
-			persisted.setFechaNacimiento(send.getFechaNacimiento());
-			persisted.setNacionalidad(send.getNacionalidad());
-			persisted.setLugarNacimiento(send.getLugarNacimiento());
-			persisted.setTipoCliente(send.getTipoCliente());
-			persisted.setObservaciones(send.getObservaciones());
-			persisted.setAgenciaEntregaId(send.getAgenciaEntregaId());
-			persisted.setNombreAgenciaSolicitud(send.getNombreAgenciaSolicitud());
-			persisted.setGenero(send.getGenero());
-			persisted.setAgenciaEntrega(send.getAgenciaEntrega());
-			persisted.setValorCustodiaAprox(send.getValorCustodiaAprox());
-			persisted.setCodeHerederos(send.getCodeHerederos());
-			persisted.setCodeDetalleCredito(send.getCodeDetalleCredito());
-			persisted.setCodeDetalleGarantia(send.getCodeDetalleGarantia());
-			persisted.setFechaArribo(send.getFechaArribo());
-			persisted.setFechaAprobacionSolicitud(send.getFechaAprobacionSolicitud());
-			persisted.setFundaActual(send.getFundaActual());
-			persisted.setFundaMadre(send.getFundaMadre());
-			persisted.setCodigoOperacionMadre(send.getCodigoOperacionMadre());
-			persisted.setArribo(send.getArribo());
-			persisted.setValorAvaluo(send.getValorAvaluo());
-			persisted.setPesoBruto(send.getPesoBruto());
-			persisted.setDevuelto(send.getDevuelto());
-			persisted.setObservacionAprobador(send.getObservacionAprobador());
-			persisted.setFechaEfectiva(send.getFechaEfectiva());
-			persisted.setCiudadTevcol(send.getCiudadTevcol());
-			persisted.setCiudadEntrega(send.getCiudadEntrega());
 			
+			 if(StringUtils.isNotBlank( send.getAgenciaEntrega() )){
+			     persisted.setAgenciaEntrega( send.getAgenciaEntrega());
+			 }
+			 if(StringUtils.isNotBlank( send.getAprobador() )){
+			     persisted.setAprobador( send.getAprobador());
+			 }
+			 if(StringUtils.isNotBlank( send.getAsesor() )){
+			     persisted.setAsesor( send.getAsesor());
+			 }
+			 if(StringUtils.isNotBlank( send.getCedulaCliente() )){
+			     persisted.setCedulaCliente( send.getCedulaCliente());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodeDetalleCredito() )){
+			     persisted.setCodeDetalleCredito( send.getCodeDetalleCredito());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodeDetalleGarantia() )){
+			     persisted.setCodeDetalleGarantia( send.getCodeDetalleGarantia());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodeHerederos() )){
+			     persisted.setCodeHerederos( send.getCodeHerederos());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodigo() )){
+			     persisted.setCodigo( send.getCodigo());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodigoOperacion() )){
+			     persisted.setCodigoOperacion( send.getCodigoOperacion());
+			 }
+			 if(StringUtils.isNotBlank( send.getGenero() )){
+			     persisted.setGenero( send.getGenero());
+			 }
+			 if(send.getEstado() != null ) {
+				 persisted.setEstado( send.getEstado() );
+			 }
+			 if(StringUtils.isNotBlank( send.getEstadoCivil() ) ){
+			     persisted.setEstadoCivil( send.getEstadoCivil());
+			 }
+			 if(send.getFechaNacimiento() != null ) {
+				 persisted.setFechaNacimiento( send.getFechaNacimiento() );
+			 }
+			 if( send.getIdAgencia() != null ) {
+				 persisted.setIdAgencia( send.getIdAgencia());
+			 }				
+			 if(StringUtils.isNotBlank( send.getNombreAgenciaSolicitud() )){
+			     persisted.setNombreAgenciaSolicitud( send.getNombreAgenciaSolicitud());
+			 }
+			 if(send.getAgenciaEntregaId() != null ) {
+				persisted.setAgenciaEntregaId( send.getAgenciaEntregaId() );
+			 }
+			 if(StringUtils.isNotBlank( send.getLugarNacimiento() )){
+			     persisted.setLugarNacimiento( send.getLugarNacimiento());
+			 }
+			 if(StringUtils.isNotBlank( send.getNacionalidad() )){
+			     persisted.setNacionalidad( send.getNacionalidad());
+			 }
+			 if(StringUtils.isNotBlank( send.getNivelEducacion() )){
+			     persisted.setNivelEducacion( send.getNivelEducacion());
+			 }
+			 if(StringUtils.isNotBlank( send.getNombreCliente() )){
+			     persisted.setNombreCliente( send.getNombreCliente());
+			 }
+			 if(StringUtils.isNotBlank( send.getObservaciones() )){
+			     persisted.setObservaciones( send.getObservaciones());
+			 }
+			 if(StringUtils.isNotBlank( send.getSeparacionBienes() )){
+			     persisted.setSeparacionBienes( send.getSeparacionBienes());
+			 }
+			 if(StringUtils.isNotBlank( send.getTipoCliente() )){
+			     persisted.setTipoCliente( send.getTipoCliente());
+			 }
+			 if( send.getFechaArribo() != null) {
+				 persisted.setFechaArribo( send.getFechaArribo() );
+			 }
+			 if(send.getFechaAprobacionSolicitud() != null) {
+				 persisted.setFechaAprobacionSolicitud( send.getFechaAprobacionSolicitud() );
+			 }
+			 if(send.getFechaEfectiva() != null ) {
+				 persisted.setFechaEfectiva( send.getFechaEfectiva() );
+			 }
+			 if(StringUtils.isNotBlank( send.getFundaActual() )){
+			     persisted.setFundaActual( send.getFundaActual());
+			 }
+			 if(StringUtils.isNotBlank( send.getFundaMadre() )){
+			     persisted.setFundaMadre( send.getFundaMadre());
+			 }
+			 if(StringUtils.isNotBlank( send.getCodigoOperacionMadre() )){
+			     persisted.setCodigoOperacionMadre( send.getCodigoOperacionMadre());
+			 }
+			 if(StringUtils.isNotBlank( send.getObservacionAprobador() )){
+				 persisted.setObservacionAprobador( send.getObservacionAprobador());
+			 }
+			 if( send.getValorAvaluo() != null ) {
+				 persisted.setValorAvaluo( send.getValorAvaluo() );
+			 }
+			 if( send.getValorCustodiaAprox() != null ) {
+				 persisted.setValorCustodiaAprox( send.getValorCustodiaAprox() );
+			 }
+			 if( send.getArribo() != null ) {
+				 persisted.setArribo( send.getArribo() );
+			 }
+			 if( send.getDevuelto() != null ) {
+				 persisted.setDevuelto( send.getDevuelto() );
+			 }
+			 if( send.getPesoBruto() != null ) {
+				 persisted.setPesoBruto( send.getPesoBruto() );
+			 }
+			 if(StringUtils.isNotBlank( send.getCiudadTevcol() )){
+			     persisted.setCiudadTevcol( send.getCiudadTevcol());
+			 }
+			 if(StringUtils.isNotBlank( send.getNombreApoderado() )){
+			     persisted.setNombreApoderado( send.getNombreApoderado());
+			 }
+			 if(StringUtils.isNotBlank( send.getCedulaApoderado() )){
+			     persisted.setCedulaApoderado( send.getCedulaApoderado());
+			 }		
+			 if(StringUtils.isNotBlank( send.getCiudadEntrega() )){
+			     persisted.setCiudadEntrega( send.getCiudadEntrega());
+			 }
 			return devolucionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
