@@ -17,6 +17,7 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	private String nombreCompleto; 
 	private String tipoCredito; 
 	private String numeroOperacion; 
+	private String tipoPagoProceso;
 	private String observacion;
 	private BigDecimal valorDepositado;
 	private BigDecimal valorPrecancelado;
@@ -87,6 +88,12 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	}
 	public void setIdBanco(Long idBanco) {
 		this.idBanco = idBanco;
+	}
+	public String getTipoPagoProceso() {
+		return tipoPagoProceso;
+	}
+	public void setTipoPagoProceso(String tipoPagoProceso) {
+		this.tipoPagoProceso = tipoPagoProceso;
 	}
 
 }

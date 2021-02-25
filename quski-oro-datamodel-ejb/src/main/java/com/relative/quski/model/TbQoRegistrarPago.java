@@ -55,6 +55,9 @@ public class TbQoRegistrarPago implements Serializable {
 	@Column(name="institucion_financiera")
 	private String institucionFinanciera;
 
+	@Column(name="tipo_pago")
+	private String tipoPago;
+	
 	@Column(name="numero_deposito")
 	private BigDecimal numeroDeposito;
 
@@ -190,6 +193,14 @@ public class TbQoRegistrarPago implements Serializable {
 
 	public void setTbQoCreditoNegociacion(TbQoCreditoNegociacion tbQoCreditoNegociacion) {
 		this.tbQoCreditoNegociacion = tbQoCreditoNegociacion;
+	}
+
+	public String getTipoPago() {
+		return tipoPago;
+	}
+
+	public void setTipoPago(String tipoPago) {
+		this.tipoPago = tipoPago;
 	}
 
 }

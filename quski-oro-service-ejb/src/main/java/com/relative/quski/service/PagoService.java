@@ -68,6 +68,7 @@ public class PagoService {
 			clienteCast.setValorDepositado( wrapper.getValorDepositado() );
 			clienteCast.setValorPrecancelado( wrapper.getValorPrecancelado() );
 			clienteCast.setCodigoCuentaMupi( String.valueOf( wrapper.getIdBanco() ));
+			clienteCast.setTipoPagoProceso( wrapper.getTipoPagoProceso() );
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
@@ -77,17 +78,20 @@ public class PagoService {
 			}
 			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			for (RegistroPagoRenovacionWrapper e : wrapper.getPagos()) {
-				FileObjectStorage file = new FileObjectStorage();
-				file.setFileBase64(e.getComprobante().getFileBase64());
-				file.setName( e.getComprobante().getName() );
-				file.setProcess(EstadoEnum.ACT);
-				RespuestaObjectWrapper objeto;
-				objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
-						parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-						parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );
 				TbQoRegistrarPago pago = new TbQoRegistrarPago();
-				pago.setIdComprobante(objeto.getEntidad());					
+				if(e.getComprobante() != null) {
+					FileObjectStorage file = new FileObjectStorage();
+					file.setFileBase64(e.getComprobante().getFileBase64());
+					file.setName( e.getComprobante().getName() );
+					file.setProcess(EstadoEnum.ACT);
+					RespuestaObjectWrapper objeto;
+					objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+							parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );					
+					pago.setIdComprobante(objeto.getEntidad());					
+				}				
 				pago.setCuentas(e.getCuenta());
+				pago.setTipoPago( e.getTipoPago() );
 				pago.setFechaPago(e.getFechaPago());
 				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
 				pago.setNumeroDeposito(e.getNumeroDeposito());

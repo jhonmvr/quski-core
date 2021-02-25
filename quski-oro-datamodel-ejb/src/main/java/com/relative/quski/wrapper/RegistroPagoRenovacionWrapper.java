@@ -16,6 +16,7 @@ public class RegistroPagoRenovacionWrapper implements Serializable {
 	private Date fechaPago;
 	private String cuenta;
 	private ArchivoComprobanteWrapper comprobante;
+	private String tipoPago;
 	
 
 	public String getCuenta() {
@@ -53,5 +54,11 @@ public class RegistroPagoRenovacionWrapper implements Serializable {
 	}
 	public void setComprobante(ArchivoComprobanteWrapper comprobante) {
 		this.comprobante = comprobante;
+	}
+	public String getTipoPago() {
+		return tipoPago;
+	}
+	public void setTipoPago(String tipoPago) {
+		this.tipoPago = tipoPago;
 	}
 }

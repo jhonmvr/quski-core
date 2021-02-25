@@ -32,6 +32,9 @@ public class TbQoClientePago implements Serializable {
 	@Column(name="codigo_operacion")
 	private String codigoOperacion;
 	
+	@Column(name="tipo_pago_proceso")
+	private String tipoPagoProceso;
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -253,6 +256,14 @@ public class TbQoClientePago implements Serializable {
 
 	public void setIdAgencia(Long idAgencia) {
 		this.idAgencia = idAgencia;
+	}
+
+	public String getTipoPagoProceso() {
+		return tipoPagoProceso;
+	}
+
+	public void setTipoPagoProceso(String tipoPagoProceso) {
+		this.tipoPagoProceso = tipoPagoProceso;
 	}
 
 }
