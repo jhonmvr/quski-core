@@ -561,7 +561,8 @@ public ActaEntregaRecepcionWrapper setHabilitanteActaEntrega(Long idDevolucion)
 	habilitante.setNumeroFunda(devolucion.getFundaActual());
 	habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
 	habilitante.setNombreAsesor(devolucion.getAsesor());
-	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
+	habilitante.setCedulaCliente(StringUtils.isNotBlank(devolucion.getCedulaCliente()) ? devolucion.getCedulaCliente() : "");
+	
 	return habilitante;
 }
 
@@ -613,6 +614,7 @@ public static  String setStringHeredero(List<HerederoWrapper> herederos) throws 
 	for (HerederoWrapper h : herederos) {
 		
 		if(h.equals(herederos.get(0))){
+			
 			respuestaHerederos = respuestaHerederos.concat(h.getCedula() +" " + h.getNombre());
 		}else {
 			if (h.equals(herederos.get(herederos.size()-1))) {
@@ -667,7 +669,7 @@ public SolicitudDevolucionApoderadoWrapper setHabilitanteSolicitudDevolucionApod
 	habilitante.setNombreCliente(devolucion.getNombreCliente());
 	habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 	habilitante.setNombreApoderado(devolucion.getNombreApoderado());
-	habilitante.setNombreApoderado(devolucion.getCedulaApoderado());
+	habilitante.setCedulaApoderado(devolucion.getCedulaApoderado());
 
 	return habilitante;
 }
