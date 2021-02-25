@@ -154,8 +154,6 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/buscarDevolucion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
-	response = PaginatedListWrapper.class)
 	public PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

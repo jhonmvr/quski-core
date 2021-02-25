@@ -16,6 +16,7 @@ public class DevolucionProcesoWrapper implements Serializable {
     private String codigoOperacion;
     private String nombreCliente;
 	private String cedulaCliente;
+	private String codigo;
 	private String fundaMadre;
 	private String fundaActual;	
 	private String ciudadTevcol;
@@ -25,7 +26,7 @@ public class DevolucionProcesoWrapper implements Serializable {
 	
 
 	public DevolucionProcesoWrapper(BigDecimal id, Date fechaSolicitud, String nombreAgenciaSolicitud, String agenciaEntrega,
-			String codigoOperacionMadre, String codigoOperacion, String nombreCliente, String cedulaCliente,
+			String codigoOperacionMadre, String codigoOperacion, String nombreCliente, String cedulaCliente, String codigo,
 			String fundaMadre, String fundaActual, String ciudadTevcol, String fechaArriboAgencia, String asesor,
 			String fechaAprobacion) {
 		super();
@@ -37,6 +38,7 @@ public class DevolucionProcesoWrapper implements Serializable {
 		this.codigoOperacion = codigoOperacion;
 		this.nombreCliente = nombreCliente;
 		this.cedulaCliente = cedulaCliente;
+		this.codigo = codigo;
 		this.fundaMadre = fundaMadre;
 		this.fundaActual = fundaActual;
 		this.ciudadTevcol = ciudadTevcol;
@@ -127,6 +129,12 @@ public class DevolucionProcesoWrapper implements Serializable {
 	}
 	public void setAgenciaEntrega(String agenciaEntrega) {
 		this.agenciaEntrega = agenciaEntrega;
+	}
+	public String getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	
 	

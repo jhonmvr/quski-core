@@ -47,6 +47,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 					"	coalesce(j.codigo_operacion, '') codigo_operacion, " + 
 					"	coalesce(j.nombre_cliente, '') nombre_cliente, " + 
 					"	coalesce(j.cedula_cliente, '') cedula_cliente, " + 
+					"	coalesce(j.codigo, '') codigo, " + 
 					"	coalesce(j.funda_madre, '') funda_madre, " + 
 					"	coalesce(j.funda_actual, '') funda_actual, " + 
 					"	coalesce(j.ciudad_tevcol, '') ciudad_tevcol, " + 

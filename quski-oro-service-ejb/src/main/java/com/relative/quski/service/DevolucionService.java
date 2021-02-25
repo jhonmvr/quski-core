@@ -346,43 +346,49 @@ public class DevolucionService {
 	}
 	
 	public List<TbQoDevolucion> registrarFechaArribo(RegistroFechaArriboWrapper rfaw  ) throws RelativeException {
-		List<TbQoDevolucion> devoluciones = new ArrayList<>();
-		for(Long id : rfaw.getIdDevoluciones()) {
-			TbQoDevolucion devolucion = devolucionRepository.findById(id);
-			if(devolucion.getFechaArribo() == null || devolucion.getFechaArribo().toString().isEmpty()) {
-				devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
-				qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
-				devolucion= manageDevolucion(devolucion);
-				
-				devoluciones.add(devolucion);
-			}else {
-				//DEVOLVER LO QUE NO SE HA PROCESADO
+		try {
+			List<TbQoDevolucion> devoluciones = new ArrayList<>();
+			for(Long id : rfaw.getIdDevoluciones()) {
+				TbQoDevolucion devolucion = devolucionRepository.findById(id);
+				if(devolucion.getFechaArribo() == null) {
+					devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
+					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
+					devolucion= manageDevolucion(devolucion);
+					devoluciones.add(devolucion);
+				}
 			}
-				
-			
+			return devoluciones;
+		} catch( RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
-	
-		
-		return devoluciones;
 	}
 	
 	public List<TbQoDevolucion> registrarArriboAgencia(List<Long> idDevoluciones) throws RelativeException {
-		List<TbQoDevolucion> devoluciones = new ArrayList<>();
-		for(Long id : idDevoluciones) {
-			TbQoDevolucion devolucion = devolucionRepository.findById(id);
-			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
-			if(devolucion.getArribo() == null && !this.existeProcesoCancelacionVigente(id)) {
-				devolucion.setArribo(true);
-				devolucion= manageDevolucion(devolucion);
-				
-				devoluciones.add(devolucion);
-			}else {
-				
+		try {
+			List<TbQoDevolucion> devoluciones = new ArrayList<>();
+			for(Long id : idDevoluciones) {
+				TbQoDevolucion devolucion = devolucionRepository.findById(id);
+				if(devolucion.getArribo() == null && !this.existeProcesoCancelacionVigente(id)) {
+					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
+					devolucion.setArribo(true);
+					devolucion= manageDevolucion(devolucion);
+					devoluciones.add(devolucion);
+				}
 			}
+			return devoluciones;
+		} catch( RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
-	
-		
-		return devoluciones;
 	}
 	
 	
