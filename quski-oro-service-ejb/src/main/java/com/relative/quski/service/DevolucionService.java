@@ -320,11 +320,8 @@ public class DevolucionService {
 	
 	
 	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String codigoOperacion, String agencia) throws RelativeException {
-		
 		try {
-		
 			List<DevolucionPendienteArribosWrapper> actions = this.devolucionRepository.findOperacionArribo(pw, codigoOperacion, agencia , EstadoProcesoEnum.PENDIENTE_ARRIBO);
-		
 			log.info("la lista" + actions);
 			return actions;
 		} catch (RelativeException e) {
@@ -395,7 +392,7 @@ public class DevolucionService {
 	public TbQoDevolucion cancelarSolicitudDevolucion(Long id , String usuario) throws RelativeException {
 		try {
 			TbQoProceso persisted = qos.findProcesoByIdReferencia( id, ProcesoEnum.DEVOLUCION );
-			TbQoDevolucion devolucion = devolucionRepository.findById(id);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); // Cambiar busqueda para filtrar estados
 			TbQoProceso proceso = new TbQoProceso();
 			proceso.setIdReferencia(devolucion.getId());
 			proceso.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
@@ -488,10 +485,7 @@ public RespuestaBooleanaWrapper validateCancelacionSolicitud(Long idDevolucion) 
 	}
 }
 public Boolean existeProcesoCancelacionVigente(Long idDevolucion) throws RelativeException{
-	try {
-		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-		
-	
+	try {		
 		if ( qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION )!= null){
 			TbQoProceso proceso = qos.findProcesoByIdReferencia( idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION );
 			if (proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION)) {
@@ -703,13 +697,13 @@ public SolicitudDevolucionHerederoWrapper setHabilitanteSolicitudDevolucionHered
 
 public static void main(String[] args) {
 	try {
-		String code = "ewoJImhlcmVkZXJvIiA6IFt7ImNlZHVsYSI6IjE3MjA4MTIyMzciLCJub21icmUiOiJEaWVnbyBTZXJyYW5vIn0sIHsiY2VkdWxhIjoiMTcyMDgxMjIzOCIsIm5vbWJyZSI6IkRpZWdvIFNlcnJhbnUifV0KfQ==";
+		//String code = "ewoJImhlcmVkZXJvIiA6IFt7ImNlZHVsYSI6IjE3MjA4MTIyMzciLCJub21icmUiOiJEaWVnbyBTZXJyYW5vIn0sIHsiY2VkdWxhIjoiMTcyMDgxMjIzOCIsIm5vbWJyZSI6IkRpZWdvIFNlcnJhbnUifV0KfQ==";
 	
-		String decodedUrl = new String(Base64.getDecoder().decode(code));
-		Gson gsons = new GsonBuilder().create();
+		//String decodedUrl = new String(Base64.getDecoder().decode(code));
+		//Gson gsons = new GsonBuilder().create();
 		//System.out.print("decode" + decodedUrl);
-		ListHerederoWrapper  listHeredero= gsons.fromJson(decodedUrl, ListHerederoWrapper.class);
-		String pepito = setStringHeredero(listHeredero.getHeredero());
+		//ListHerederoWrapper  listHeredero= gsons.fromJson(decodedUrl, ListHerederoWrapper.class);
+		//String pepito = setStringHeredero(listHeredero.getHeredero());
 	//	List<HerederoWrapper> lista = gsons.fromJson(decodedUrl, new ArrayList<HerederoWrapper>().getClass());
 		//Class<? extends ArrayList> listType = new ArrayList<HerederoWrapper>().getClass();
 		

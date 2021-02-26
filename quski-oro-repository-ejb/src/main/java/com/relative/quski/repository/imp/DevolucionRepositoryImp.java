@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
-import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
@@ -18,7 +17,6 @@ import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.util.QuskiOroUtil;
-import com.relative.quski.wrapper.BusquedaDevolucionWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 
@@ -32,6 +30,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 	@Inject
 	Logger log;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DevolucionProcesoWrapper> findOperaciones(PaginatedWrapper pw, String codigoOperacion, String agencia, 
 			String fechaAprobacionDesde, String fechaAprobacionHasta, String identificacion) throws RelativeException {
@@ -206,6 +205,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String codigoOperacion, String agencia, 
 			EstadoProcesoEnum estado)
@@ -217,6 +217,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 					"	j.fecha_creacion, "  + 
 					"	coalesce(j.codigo_operacion_madre, '') codigo_operacion_madre, " + 
 					"	coalesce(j.codigo_operacion, '') codigo_operacion, " + 
+					"	coalesce(j.codigo, '') codigo, " + 
 					"	coalesce(j.nombre_cliente, '') nombre_cliente, " + 
 					"	coalesce(j.cedula_cliente, '') cedula_cliente, " + 
 					"	coalesce(j.funda_madre, '') funda_madre, " + 

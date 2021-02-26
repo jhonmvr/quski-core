@@ -12,6 +12,7 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
     private Date   fechaSolicitud;
     private String codigoOperacionMadre;
     private String codigoOperacion;
+    private String codigo;
     private String nombreCliente;
 	private String cedulaCliente;
 	private String fundaMadre;
@@ -27,7 +28,7 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 	
 	
 	public DevolucionPendienteArribosWrapper(BigDecimal id, Date fechaSolicitud, String codigoOperacionMadre,
-			String codigoOperacion, String nombreCliente, String cedulaCliente, String fundaMadre, String fundaActual,
+			String codigoOperacion,String codigo, String nombreCliente, String cedulaCliente, String fundaMadre, String fundaActual,
 			String ciudadTevcol, String fechaArriboAgencia, String fechaAprobacion, BigDecimal valorAvaluao,
 			BigDecimal pesoBruto) {
 		super();
@@ -35,6 +36,7 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 		this.fechaSolicitud = fechaSolicitud;
 		this.codigoOperacionMadre = codigoOperacionMadre;
 		this.codigoOperacion = codigoOperacion;
+		this.codigo = codigo;
 		this.nombreCliente = nombreCliente;
 		this.cedulaCliente = cedulaCliente;
 		this.fundaMadre = fundaMadre;
@@ -124,6 +126,12 @@ public class DevolucionPendienteArribosWrapper implements Serializable {
 	}
 	public void setPesoBruto(BigDecimal pesoBruto) {
 		this.pesoBruto = pesoBruto;
+	}
+	public String getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 
