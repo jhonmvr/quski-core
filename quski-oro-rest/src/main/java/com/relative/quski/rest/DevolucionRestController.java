@@ -17,15 +17,20 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
+import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
@@ -268,7 +273,37 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		loc.setEntidad(this.dos.rechazarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
 		return loc;
 	}
+
 	
+	@POST
+	@Path("/guardarEntregaRecepcion")
+	public GenericWrapper<TbQoDevolucion> guardarEntregaRecepcion( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.guardarEntregaRecepcion((Long.valueOf(idDevolucion))));
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/aprobarVerificacionFirmas")
+	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.aprobarVerificacionFirmas((Long.valueOf(idDevolucion))));
+		return loc;
+	}
+	
+	
+	@POST
+	@Path("/rechazarVerificacionFirmas")
+	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		
+		loc.setEntidad(this.dos.rechazarVerificacionFirmas((Long.valueOf(idDevolucion))));
+		return loc;
+	}
+	///////////Validaciones
 	@GET
 	@Path("/validateAprobarCancelarSolicitud")
 	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
@@ -308,35 +343,57 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return loc;
 	}
 	
+	@GET
+	@Path("/validateSolicitarAprobacion")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<RespuestaBooleanaWrapper> validateSolicitarAprobacion(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+			if (StringUtils.isBlank(idDevolucion)) {
+			}
+			GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
+			RespuestaBooleanaWrapper a = this.dos.validateSolicitarAprobacion(Long.valueOf(idDevolucion));
+			loc.setEntidad(a);
+			return loc;
+		}
 	
-	@POST
-	@Path("/guardarEntregaRecepcion")
-	public GenericWrapper<TbQoDevolucion> guardarEntregaRecepcion( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		
-		loc.setEntidad(this.dos.guardarEntregaRecepcion((Long.valueOf(idDevolucion))));
-		return loc;
-	}
+	@GET
+	@Path("/validateAprobarRechazarSolicitud")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<RespuestaBooleanaWrapper>  validateAprobarRechazarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+			if (StringUtils.isBlank(idDevolucion)) {
+			}
+			GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
+			RespuestaBooleanaWrapper a = this.dos.validateAprobarRechazarSolicitud(Long.valueOf(idDevolucion));
+			loc.setEntidad(a);
+			return loc;
+		}
+	
+	@GET
+	@Path("/validateEntregaRecepcion")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<RespuestaBooleanaWrapper> validateEntregaRecepcion(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+			if (StringUtils.isBlank(idDevolucion)) {
+			}
+			GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
+			RespuestaBooleanaWrapper a = this.dos.validateEntregaRecepcion(Long.valueOf(idDevolucion));
+			loc.setEntidad(a);
+			return loc;
+		}
 	
 	
-	@POST
-	@Path("/aprobarVerificacionFirmas")
-	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		
-		loc.setEntidad(this.dos.aprobarVerificacionFirmas((Long.valueOf(idDevolucion))));
-		return loc;
-	}
-	
-	
-	@POST
-	@Path("/rechazarVerificacionFirmas")
-	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		
-		loc.setEntidad(this.dos.rechazarVerificacionFirmas((Long.valueOf(idDevolucion))));
-		return loc;
-	}
-	
-	
+	@GET
+	@Path("/validateVerificacionFirma")
+	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	public GenericWrapper<RespuestaBooleanaWrapper> validateVerificacionFirma(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+			if (StringUtils.isBlank(idDevolucion)) {
+			}
+			GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
+			RespuestaBooleanaWrapper a = this.dos.validateVerificacionFirma(Long.valueOf(idDevolucion));
+			loc.setEntidad(a);
+			return loc;
+		}
+
 }
