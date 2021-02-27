@@ -37,6 +37,7 @@ import com.relative.quski.wrapper.ListHerederoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
+import com.relative.quski.wrapper.RespuestaValidacionWrapper;
 import com.relative.quski.wrapper.SolicitudDevolucionApoderadoWrapper;
 import com.relative.quski.wrapper.SolicitudDevolucionHerederoWrapper;
 import com.relative.quski.wrapper.SolicitudDevolucionWrapper;
@@ -130,6 +131,26 @@ public class DevolucionService {
 		result.setDevolucion(devolucionRepository.findById(idDevolucion));
 		result.setProceso(this.qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION));
 		return result;
+	}
+	public RespuestaValidacionWrapper validarProcesoActivo( String numeroOperacion ) throws RelativeException {
+		try {
+			RespuestaValidacionWrapper result = new RespuestaValidacionWrapper();
+			List<TbQoDevolucion> list = this.devolucionRepository.findByNumeroOperacion( numeroOperacion );
+			if( list == null || list.size() < Long.valueOf( 1 ) ) {
+				result.setExiste( Boolean.FALSE );
+				result.setMensaje( "NO HAY PROCESOS ACTIVOS." );
+			}else {
+				result.setExiste( Boolean.TRUE );
+				result.setMensaje( "EXISTE UN PROCESO ACTIVO PARA ESTE CREDITO: "+ list.get(0).getCodigo() );
+			}
+			return result;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE," AL VALIDAR LA DEVOLUCION. " );			
+		}
 	}
 
 	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion persisted) throws RelativeException {
@@ -319,7 +340,7 @@ public class DevolucionService {
 	}
 
 	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String codigoOperacion,
-			String agencia) throws RelativeException {
+			Long agencia) throws RelativeException {
 		try {
 			List<DevolucionPendienteArribosWrapper> actions = this.devolucionRepository.findOperacionArribo(pw,
 					codigoOperacion, agencia, EstadoProcesoEnum.PENDIENTE_ARRIBO);
@@ -336,7 +357,7 @@ public class DevolucionService {
 		}
 	}
 
-	public Integer countOperacionArribo(String codigoOperacion, String agencia) throws RelativeException {
+	public Integer countOperacionArribo(String codigoOperacion, Long agencia) throws RelativeException {
 
 		return devolucionRepository.countOperacionArribo(codigoOperacion, agencia, EstadoProcesoEnum.PENDIENTE_ARRIBO);
 	}

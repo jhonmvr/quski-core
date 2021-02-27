@@ -17,25 +17,21 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
-import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
-import com.relative.quski.enums.EstadoProcesoEnum;
-import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
-import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
-import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
+import com.relative.quski.wrapper.RespuestaValidacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -106,7 +102,13 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.buscarProcesoDevolucion( Long.valueOf( idDevolucion )) );
 		return loc;
-
+	}	
+	@GET
+	@Path("/validarProcesoActivo")
+	public GenericWrapper<RespuestaValidacionWrapper> validarProcesoActivo(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
+		GenericWrapper<RespuestaValidacionWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.validarProcesoActivo(  numeroOperacion ) );
+		return loc;
 	}
 	
 	
@@ -208,23 +210,16 @@ public class DevolucionRestController extends BaseRestController implements Crud
 			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated,
 			@QueryParam("codigoOperacion") String codigoOperacion,
 			@QueryParam("agencia") String agencia
-
-
 			) throws RelativeException {
 		return listarPendienteArribo(
-				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
-						isPaginated),
-				 StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null,
-						 StringUtils.isNotBlank(agencia)?agencia:null);
-		
+				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated),
+				 StringUtils.isNotBlank(codigoOperacion)?codigoOperacion:null, StringUtils.isNotBlank(agencia)?agencia:null);
 	}
 	private PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(PaginatedWrapper pw, String codigoOperacion, String agencia ) throws RelativeException {
-		
 		PaginatedListWrapper<DevolucionPendienteArribosWrapper> plw = new PaginatedListWrapper<>(pw);
-		
-		List<DevolucionPendienteArribosWrapper> actions = this.dos.findOperacionArribo(pw, codigoOperacion, agencia);
+		List<DevolucionPendienteArribosWrapper> actions = this.dos.findOperacionArribo(pw, codigoOperacion, agencia != null ? Long.valueOf( agencia ) : null );
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.dos.countOperacionArribo(codigoOperacion, agencia));
+			plw.setTotalResults(this.dos.countOperacionArribo(codigoOperacion, agencia != null ? Long.valueOf( agencia ) : null));
 			plw.setList(actions);
 		}
 		return plw;
@@ -284,7 +279,17 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return loc;
 	}
 	
-	
+	@GET
+	@Path("/validarInicioDeFlujo")
+	public GenericWrapper<Boolean> validarInicioDeFlujo(@QueryParam("idDevolucion") String idDevolucion)
+			throws RelativeException {
+		if (StringUtils.isBlank(idDevolucion)) {
+		}
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		Boolean a = this.dos.validateAprobarCancelacionSolicitud(Long.valueOf(idDevolucion));
+		loc.setEntidad(a);
+		return loc;
+	}
 	@POST
 	@Path("/aprobarVerificacionFirmas")
 	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
@@ -303,7 +308,6 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		loc.setEntidad(this.dos.rechazarVerificacionFirmas((Long.valueOf(idDevolucion))));
 		return loc;
 	}
-	///////////Validaciones
 	@GET
 	@Path("/validateAprobarCancelarSolicitud")
 	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
@@ -316,6 +320,7 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		loc.setEntidad(a);
 		return loc;
 	}
+	
 	
 	@GET
 	@Path("/validateCancelarSolicitud")

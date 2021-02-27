@@ -2,7 +2,6 @@ package com.relative.quski.rest;
 
 
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -124,7 +123,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 
 	@GET
 	@Path("/pruebaWSPersona")
-	public GenericWrapper<EquifaxVariableWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<EquifaxVariableWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<EquifaxVariableWrapper> loc = new GenericWrapper<>();
 		//List<EquifaxVariableWrapper> a = this.qos.traerVariablesEquifax(cedula);
 		//loc.setEntidades(a);
@@ -133,7 +132,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	
 	@POST
 	@Path("/agregarJoya")
-	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		List<TbQoTasacion> a = this.qos.agregarJoya(joya, asesor);
 		loc.setEntidades(a);
@@ -142,7 +141,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 
 	@POST
 	@Path("/guardarOpcionCredito")
-	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CREDITO");
@@ -153,9 +152,8 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@POST
 	@Path("/verPrecio")
-	public GenericWrapper<TipoOroWrapper> verPrecio(TbQoCliente cliente, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TipoOroWrapper> verPrecio(TbQoCliente cliente, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TipoOroWrapper> loc = new GenericWrapper<>();
-	
 		List<TipoOroWrapper> a = this.qos.verPrecio(cliente);
 		loc.setEntidades(a);
 		return loc;

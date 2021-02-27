@@ -25,10 +25,11 @@ public interface DevolucionRepository extends CrudRepository<Long, TbQoDevolucio
 			String identificacion) throws RelativeException;
 	
 	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String 
-			codigoOperacion, String agencia, EstadoProcesoEnum estado) throws RelativeException;
+			codigoOperacion, Long agencia, EstadoProcesoEnum estado) throws RelativeException;
 
-
-	public Integer countOperacionArribo(String codigoOperacion, String agencia, EstadoProcesoEnum estado) throws RelativeException;
+	public List<TbQoDevolucion> findByNumeroOperacion( String codigoOperacion ) throws RelativeException;
+	
+	public Integer countOperacionArribo(String codigoOperacion, Long agencia, EstadoProcesoEnum estado) throws RelativeException;
 	
 
 }

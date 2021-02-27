@@ -1,6 +1,5 @@
 package com.relative.quski.rest;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -141,7 +140,7 @@ public class CotizadorRestController extends BaseRestController
 	
 	@POST
 	@Path("/agregarJoya")
-	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		List<TbQoTasacion> a = this.qos.agregarJoyaCotizacion(joya, asesor);
 		loc.setEntidades(a);
@@ -149,7 +148,7 @@ public class CotizadorRestController extends BaseRestController
 	}
 	@POST
 	@Path("/guardarGestion")
-	public GenericWrapper<TbQoCotizador> guardarGestion(CotizacionWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<TbQoCotizador> guardarGestion(CotizacionWrapper wrapper) throws RelativeException {
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		TbQoCotizador a = this.qos.guardarGestion(wrapper);
 		loc.setEntidad(a);

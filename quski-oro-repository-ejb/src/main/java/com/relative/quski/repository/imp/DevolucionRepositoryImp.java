@@ -16,6 +16,7 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.repository.DevolucionRepository;
+import com.relative.quski.repository.spec.DevolucionByNumeroOperacionSpec;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
@@ -207,7 +208,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String codigoOperacion, String agencia, 
+	public List<DevolucionPendienteArribosWrapper> findOperacionArribo(PaginatedWrapper pw, String codigoOperacion, Long agencia, 
 			EstadoProcesoEnum estado)
 			throws RelativeException {
 		try {
@@ -246,29 +247,23 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 				
 				strQry.append(" and j.codigo_operacion  like :c ");
 			}
-			if (StringUtils.isNotBlank(agencia)) {
-				strQry.append(" and j.agencia_entrega = :agencia ");
+			if (agencia != null ) {
+				strQry.append(" and j.id_agencia_entrega = :agencia ");
 			}
 
 			if (estado != null) {
 				strQry.append(" and foo.estado_proceso =:estado ");
 			}
-
-	
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
 			if (StringUtils.isNotBlank(codigoOperacion)){
 				query.setParameter("c", "%"+ codigoOperacion+"%");
-
 			}
 			if (estado != null) {
 				log.info("=========> SET: ESTADO ==> " + estado.toString() + " <====");
 				query.setParameter("estado", estado.toString());
 			}
-	
-		
-			if (StringUtils.isNotBlank(agencia )) {
-
+			if (agencia != null ) {
 				query.setParameter("agencia", agencia);
 			}
 
@@ -284,7 +279,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 	}
 
 	@Override
-	public Integer countOperacionArribo(String codigoOperacion, String agencia, EstadoProcesoEnum estado) throws RelativeException {
+	public Integer countOperacionArribo(String codigoOperacion, Long agencia, EstadoProcesoEnum estado) throws RelativeException {
 		// TODO Auto-generated method stub
 		try {
 		String querySelect = " select count (j.id) " + 
@@ -303,18 +298,14 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 		
 		StringBuilder strQry = new StringBuilder(querySelect);
 		if (StringUtils.isNotBlank(codigoOperacion)) {
-			
 			strQry.append(" and j.codigo_operacion like :c  ");
 		}
-		if (StringUtils.isNotBlank(agencia)) {
-			strQry.append(" and j.agencia_entrega=:agencia ");
+		if (agencia != null) {
+			strQry.append(" and j.id_agencia_entrega =:agencia ");
 		}
-
 		if (estado != null) {
 			strQry.append(" and foo.estado_proceso =:estado ");
 		}
-
-
 		Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
 		if (StringUtils.isNotBlank(codigoOperacion)){
@@ -326,7 +317,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			query.setParameter("estado", estado.toString());
 		}
 
-		if (StringUtils.isNotBlank(agencia )) {
+		if ( agencia != null ) {
 
 			query.setParameter("agencia", agencia);
 		}
@@ -336,6 +327,20 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			e.printStackTrace();
 
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
+		}
+	}
+
+	@Override
+	public List<TbQoDevolucion> findByNumeroOperacion(String codigoOperacion) throws RelativeException {
+		try {
+			List<TbQoDevolucion> list = this.findAllBySpecification( new DevolucionByNumeroOperacionSpec( codigoOperacion ));
+			if(list.size() >  Long.valueOf( 0 ) ) {
+				return list;
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL TRAER LOS RESULTADOS DE LA CONSULTA. ");
 		}
 	}
 
