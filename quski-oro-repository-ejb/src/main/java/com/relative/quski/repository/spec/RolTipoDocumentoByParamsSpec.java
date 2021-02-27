@@ -75,6 +75,8 @@ public class RolTipoDocumentoByParamsSpec  extends AbstractSpecification<TbQoRol
 			}
 			if(this.estadoOperacion != null && !this.estadoOperacion.isEmpty()) {
 				where.add(poll.<EstadoOperacionEnum>get("estadoOperacion").in(estadoOperacion));
+			}else {
+				where.add(cb.isNull(poll.<EstadoOperacionEnum>get("estadoOperacion")));
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}
