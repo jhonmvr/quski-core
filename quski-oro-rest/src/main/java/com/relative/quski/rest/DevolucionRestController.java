@@ -24,6 +24,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
@@ -101,6 +102,13 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoDevolucion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.buscarProcesoDevolucion( Long.valueOf( idDevolucion )) );
+		return loc;
+	}	
+	@GET
+	@Path("/buscarProcesoCancelacion")
+	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoCancelacion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
+		loc.setEntidad(this.dos.buscarProcesoCancelacion( Long.valueOf( idDevolucion )) );
 		return loc;
 	}	
 	@GET
@@ -240,30 +248,27 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		return loc;
 	}
 	
-	@POST
-	@Path("/cancelarSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> cancelarSolicitudDevolucion(@QueryParam("id") String idDevolucion,
-			@QueryParam("usuario") String usuario)
+	@GET
+	@Path("/iniciarProcesoCancelacion")
+	public GenericWrapper<TbQoProceso> iniciarProcesoCancelacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario)
 			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.cancelarSolicitudDevolucion(Long.valueOf(idDevolucion), usuario));
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		loc.setEntidad( this.dos.iniciarProcesoCancelacion(Long.valueOf(id), usuario) );
 		return loc;
 	}
 	@POST
 	@Path("/aprobarCancelacionSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> aprobarCancelacionSolicitudDevolucion(
-			@QueryParam("id") String idDevolucion)
-			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+	public GenericWrapper<TbQoProceso> aprobarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.aprobarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
 		return loc;
 	}
 	
 	@POST
 	@Path("/rechazarCancelacionSolicitudDevolucion")
-	public GenericWrapper<TbQoDevolucion> rechazarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion)
+	public GenericWrapper<TbQoProceso> rechazarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion)
 			throws RelativeException {
-		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		
 		loc.setEntidad(this.dos.rechazarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
 		return loc;
@@ -310,40 +315,12 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@GET
 	@Path("/validateAprobarCancelarSolicitud")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
 	public GenericWrapper<Boolean> validateAprobacionCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 		if (StringUtils.isBlank(idDevolucion)) {
 		}
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		Boolean a = this.dos.validateAprobarCancelacionSolicitud(Long.valueOf(idDevolucion));
-		loc.setEntidad(a);
-		return loc;
-	}
-	
-	
-	@GET
-	@Path("/validateCancelarSolicitud")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
-	public GenericWrapper<RespuestaBooleanaWrapper> validateCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
-			throws RelativeException {
-		if (StringUtils.isBlank(idDevolucion)) {
-		}
-		GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
-		RespuestaBooleanaWrapper a = this.dos.validateCancelacionSolicitud(Long.valueOf(idDevolucion));
-		loc.setEntidad(a);
-		return loc;
-	}
-	
-	@GET
-	@Path("/existeProcesoCancelacionVigente")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
-	public GenericWrapper<Boolean> existeProcesoCancelacionVigente(@QueryParam("idDevolucion") String idDevolucion)
-			throws RelativeException {
-		if (StringUtils.isBlank(idDevolucion)) {
-		}
-		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.dos.existeProcesoCancelacionVigente(Long.valueOf(idDevolucion));
 		loc.setEntidad(a);
 		return loc;
 	}
