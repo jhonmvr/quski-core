@@ -736,11 +736,14 @@ public class DevolucionService {
 		 this.getHerederos(idDevolucion);
 		 List<HerederoWrapper> herederos = this.getHerederos(idDevolucion);
 		 List<HerederoConsolidadoWrapper> herederosList = new ArrayList<HerederoConsolidadoWrapper>();
-		String heredero = "";
+		HerederoConsolidadoWrapper heredero = new HerederoConsolidadoWrapper();
 		for (HerederoWrapper h : herederos) {
-			heredero = "SR.(A)".concat(h.getNombre().concat("/n C.I. ").concat(h.getCedula()).concat("/n/n").concat("Heredero (a) del señor (a) /n").
-					concat(devolucion.getNombreCliente()));
+			heredero.setCampoCompleto("SR.(A)".concat(h.getNombre().concat("\n ").concat("C.I.").concat(h.getCedula()).concat("\n\n").concat("Heredero (a) del señor (a) \n").
+					concat(devolucion.getNombreCliente())));
+			
+		herederosList.add(heredero);
 		} 
+		
 		
 		return herederosList;
 	}
@@ -751,12 +754,12 @@ public class DevolucionService {
 
 			if (h.equals(herederos.get(0))) {
 
-				respuestaHerederos = respuestaHerederos.concat(h.getCedula() + " " + h.getNombre());
+				respuestaHerederos = respuestaHerederos.concat(h.getNombre()  + "con cédula de ciudadanía No. " + h.getCedula());
 			} else {
 				if (h.equals(herederos.get(herederos.size() - 1))) {
-					respuestaHerederos = respuestaHerederos.concat(" y " + h.getCedula() + " " + h.getNombre());
+					respuestaHerederos = respuestaHerederos.concat(" y " +h.getNombre()  + "con cédula de ciudadanía No. " + h.getCedula() );
 				} else {
-					respuestaHerederos = respuestaHerederos.concat(", " + h.getCedula() + " " + h.getNombre());
+					respuestaHerederos = respuestaHerederos.concat(", " + h.getNombre() + "con cédula de ciudadanía No. " + h.getCedula());
 				}
 			}
 

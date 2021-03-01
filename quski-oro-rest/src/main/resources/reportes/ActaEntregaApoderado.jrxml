@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AdendaCP" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="0aca80b7-95f1-4f1d-bbe5-5064e8fb3526">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dsdetalle" uuid="8ac8db0c-be34-4927-8e21-d8dbe244ec36">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="custodiaAlmacenamiento" class="java.lang.String">
+			<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
+		</field>
+		<field name="valorRenovacion" class="java.lang.String">
+			<fieldDescription><![CDATA[valorRenovacion]]></fieldDescription>
+		</field>
+		<field name="servicioAdministrativo" class="java.lang.String">
+			<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.String">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.ActaEntregaRecepcionApoderadoWrapper"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="custodiaAlmacenamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
+	</field>
+	<field name="valorRenovacion" class="java.lang.String"/>
+	<field name="nuevaFechaVencimiento" class="java.lang.String"/>
+	<field name="servicioAdministrativo" class="java.lang.String">
+		<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
+	</field>
+	<field name="renovacion" class="java.lang.String">
+		<fieldDescription><![CDATA[renovacion]]></fieldDescription>
+	</field>
+	<field name="identificacionCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[identificacionCliente]]></fieldDescription>
+	</field>
+	<field name="plazoContrato" class="java.lang.String">
+		<fieldDescription><![CDATA[plazoContrato]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.String"/>
+	<field name="identificacionApoderado" class="java.lang.String">
+		<fieldDescription><![CDATA[identificacionApoderado]]></fieldDescription>
+	</field>
+	<field name="nombreCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCliente]]></fieldDescription>
+	</field>
+	<field name="fechaCreacion" class="java.lang.String"/>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="nombreApoderado" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreApoderado]]></fieldDescription>
+	</field>
+	<field name="nombreAgente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreAgente]]></fieldDescription>
+	</field>
+	<title>
+		<band height="600" splitType="Stretch">
+			<staticText>
+				<reportElement x="129" y="18" width="300" height="16" uuid="423f258f-f251-42f2-aa61-9245599f1358"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ACTA ENTREGA RECEPCIÓN DE JOYAS EN GARANTÍA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="2" y="160" width="508" height="100" uuid="485f57c0-3ea6-4013-8130-24f6bdae5942"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["El (la) Cliente " +  $P{BEAN_DS}.getNombreCompletoCliente()+ " con cédula de identidad No." + $P{BEAN_DS}.getCedulaCliente() + ", representado (a) en legal y debida forma por el señor (a) " + $P{BEAN_DS}.getNombreApoderado()+ "  con cedula de ciudadanía No. " +$P{BEAN_DS}.getCedulaApoderado()+", conforme consta en la Escritura de Poder Especial que adjunta como documento habilitante, declara expresamente recibir en las mismas condiciones que fueron entregadas las joyas que servían de garantía de la operación de crediticia indicada. El cliente declara aceptar expresamente su conformidad, renunciando incondicional e irrevocablemente, a realizar reclamo futuro alguno, relacionado con el estado y cantidad de las joyas, ya que las recibe a entera y completa satisfacción."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="44" width="509" height="106" uuid="caf4b55a-1e91-461a-a75d-cf1bffeaa1ea"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCiudad() +" "+ $P{BEAN_DS}.getFechaDevolucion() + ", por solicitud expresa y escrita del cliente señor (a) " +$P{BEAN_DS}.getNombreCompletoCliente()+"con cedula de ciudadanía No. "+$P{BEAN_DS}.getCedulaCliente() + ", representado (a) en legal y debida forma por el señor (a) "+$P{BEAN_DS}.getNombreApoderado()  +" con cédula de ciudadanía No. "+$P{BEAN_DS}.getCedulaApoderado() + ",  conforme consta en la Escritura de Poder Especial que adjunta como documento habilitante, se procede a la entrega de la funda" + $P{BEAN_DS}.getNumeroFunda()  + "sin alteraciones de ninguna naturaleza y en las mismas condiciones recibidas inicialmente; joyas que garantizaban la operación de crédito " + $P{BEAN_DS}.getNumeroOperacion() +", misma que se encuentra cancelada."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="511" width="5" height="5" uuid="13dbc615-8ee3-41ae-b5f1-99acb1ad8167"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Static Text]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="277" width="510" height="23" uuid="84851d69-accc-42a5-b7e2-3db6f5282afc"/>
+				<textFieldExpression><![CDATA["Para constancia de lo actuado firman las partes en unidad de acto," +$P{BEAN_DS}.getCiudad() +", "+ $P{BEAN_DS}.getFechaDevolucion()]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="0" y="327" width="510" height="130" uuid="d4c9ddea-d359-4118-940a-3d5f57ccb9de"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<staticText>
+					<reportElement x="1" y="0" width="104" height="20" uuid="a994ddc8-0c78-4ce7-aba5-8cacf4f2d5e9"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Recibo conforme:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="30" width="230" height="20" uuid="46c7f39f-c488-47aa-ad17-e0924de2ff0d"/>
+					<textElement textAlignment="Justified" markup="html">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["SR.(A) " +$P{BEAN_DS}.getNombreApoderado()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="1" y="61" width="229" height="20" uuid="49955c4f-7456-4476-a74d-3b9fb511cea7"/>
+					<textElement textAlignment="Justified" markup="html">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<b> CI: </b> " +$P{BEAN_DS}.getCedulaApoderado()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="324" y="0" width="180" height="20" uuid="994ed4a6-42e3-4902-b4fc-edaff554d3fe"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ Entrega Por : (Quski C.A. )]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="80" width="210" height="20" uuid="5bd7fafc-ed99-405e-b13f-b6574a2cbcbe"/>
+					<textElement>
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Apoderado(a) Especial del  señor (a)
+]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="0" y="110" width="230" height="20" uuid="7f5b7131-dcbd-4d60-ad5b-2dea02d183c3"/>
+					<textElement textAlignment="Justified" markup="html">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCompletoCliente()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="289" y="30" width="53" height="20" uuid="2ab834ad-534d-45c1-8519-119351046efb"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ASESOR:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="343" y="30" width="166" height="20" uuid="a768ad8f-455a-4d1d-9438-3a7f2b5e48e6"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="289" y="50" width="50" height="20" uuid="98729033-ef7c-4141-9f49-f2b5b1b2e874"/>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CI:]]></text>
+				</staticText>
+			</frame>
+			<rectangle>
+				<reportElement x="0" y="490" width="171" height="81" uuid="5eb4ffd5-c405-49b3-8a4a-a992372929d8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="580" width="104" height="20" uuid="beb2e3ea-5b3d-497f-b751-553c819953e5"/>
+				<textElement>
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[HUELLA]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

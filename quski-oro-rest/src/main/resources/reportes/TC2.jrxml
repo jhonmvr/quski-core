@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TC2" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" whenResourceMissingType="Empty" uuid="20be03fc-b8bb-42ae-8b95-166e3d46b905">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="LIST_DS" class="java.util.List"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaActual" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaActual]]></fieldDescription>
+	</field>
+	<field name="apoderadoMutualista" class="java.lang.String">
+		<fieldDescription><![CDATA[apoderadoMutualista]]></fieldDescription>
+	</field>
+	<field name="rolUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[rolUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreCompletoCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCompletoCliente]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="cedulaCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
+	</field>
+	<field name="fechaElaboracionContrato" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaElaboracionContrato]]></fieldDescription>
+	</field>
+	<title>
+		<band height="710">
+			<property name="com.jaspersoft.studio.layout"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="0" width="510" height="180" uuid="4af22df7-fc66-436a-ae1c-06352de3a747"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Cinco.-</b>.-  El sub numeral <b>7.2</b> del numeral <b>Siete</b> correspondiente a la CLÁUSULA QUINTA del contrato de constitución del ENCARGO FIDUCIARIO, precisa:   “ <b>7.2</b> <u> Al no cumplirse la CONDICIÓN SUSPENSIVA de los CONTRATOS DE COMPRAVENTA </u>.- En caso de no haberse cumplido la condición, los BIENES se entregarán al BENEFICIARIO SECUNDARIO, salvo que subsista sobre dichos BIENES la PRENDA COMERCIAL ORDINARIA, caso en el cual el FIDUCIARIO mantendrá la custodia de los bienes hasta que el ACREEDOR cancele la referida prenda o disponga expresamente la entrega de los BIENES al BENEFICIARIO SECUNDARIO. La entrega de los BIENES en este caso se realizará, previo la suscripción de los documentos correspondientes que permitan y acrediten la entrega.  Para el efecto, el FIDUCIARIO instruirá al CUSTODIO DEFINITIVO la terminación de la custodia de los BIENES correspondientes y la entrega de los mismos conforme lo indicado. …”. Concomitante con lo citado, en la misma cláusula, en el literal <b>E</b> de estipulaciones comunes a las instrucciones se establece: “<b>E</b>. El FIDUCIARIO para la verificación del cumplimiento de la CONDICIÓN SUSPENSIVA de los CONTRATOS DE COMPRAVENTA o la pertinencia de la DACIÓN EN PAGO, tendrá la potestad de verificar el estado y el cumplimiento  o no de las OBLIGACIONES existentes, y requerir el pronunciamiento expreso del ACREEDOR al respecto, a fin de proceder con la entrega de los BIENES.”."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="182" width="510" height="90" uuid="86a0a5c1-c476-4de6-a75c-8c9c0d87b484"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Seis.-</b> El numeral <b>Uno</b> correspondiente a la CLÁUSULA SEGUNDA del contrato de constitución del ENCARGO FIDUCIARIO, define: “ <b>Uno.- ACREEDOR: </b> Es la persona natural o jurídica, legítima titular de la cartera  constituida por las OBLIGACIONES adquiridas por los CONSTITUYENTES ADHERENTES que se encuentran garantizadas con los BIENES, que a su vez son objeto de los CONTRATOS DE COMPRAVENTA bajo CONDICIÓN SUSPENSIVA. También se tendrá como ACREEDOR a aquél que haya cancelado al último acreedor las OBLIGACIONES a cargo de los CONSTITUYENTES ADHERENTES, constituyéndose en nuevo acreedor de aquellos y respecto de esas mismas OBLIGACIONES.”."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="389" width="510" height="60" uuid="5c060e84-d90c-4672-849f-431548eba622"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA TERCERA: TERMINACIÓN DE CONTRATO DE ADHESIÓN.-</b><br>   Con los antecedentes expuestos, la parte CONSTITUYENTE ADHERENTE y el FIDUCIARIO dan por terminado, libre y voluntariamente, el contrato de adhesión suscrito por éstas, conforme lo detallado en los antecedentes de este instrumento, en virtud de haberse cumplido con el objeto del mismo y no tener nada que reclamarse entre sí. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="275" width="510" height="110" uuid="2fc50925-d7e3-4792-9011-3fda9799abe4"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Siete.-</b> El ACREEDOR ostenta tal calidad, dada la compra de cartera efectuada con fecha  _____  de __________ del _______, en cuyo registro notificado al FIDUCIARIO consta las OBLIGACIONES adeudadas por la parte CONSTITUYENTE ADHERENTE a favor del ACREEDOR, quien certifica a su vez que a la presente fecha las OBLIGACIONES en mención se encuentran pagadas en su totalidad, por consiguiente no se ha cumplido la CONDICIÓN SUSPENSIVA del CONTRATO DE COMPRAVENTA de BIENES quedando este insubsistente; así también, certifica el ACREEDOR que los BIENES  a entregarse por este acto, no se encuentran prendados a la presente fecha / o tal gravamen se cancela con oportunidad de este contrato; por tal razón, autoriza al FIDUCIARIO que entregue los BIENES a favor de la parte CONSTITUYENTE ADHERENTE conforme las estipulaciones citadas."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="452" width="510" height="110" uuid="d6b2c769-7dc1-49f2-a96a-bb8222ebbbea"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA CUARTA: FIN DE CUSTODIA Y ENTREGA DE BIENES.- </b><br>   A efecto de la terminación del mandato instruido por la parte CONSTITUYENTE ADHERENTE, el FIDUCIARIO entrega a su favor los BIENES descritos en los contratos mencionados en la cláusula de antecedentes de este contrato, por su parte la parte CONSTITUYENTE ADHERENTE acepta sin objeción dichos BIENES y declara estar conforme con la entrega y el estado de los mismos. <br> La entrega de los BIENES que se realiza en virtud del presente contrato, no constituye una transferencia de dominio a ningún título, únicamente se la efectúa como resultado de las gestiones encomendadas a través del ENCARGO FIDUCIARIO, al cual la parte CONSTITUYENTE ADHERENTE se adhirió expresamente según lo advertido en la cláusula de antecedentes. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="560" width="510" height="120" uuid="83cb6713-a55f-4a9c-bc36-c653dfac1a12"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA QUINTA: DECLARACIONES BAJO JURAMENTO.-</b>.- <br>  <b>Uno.-</b> La parte CONSTITUYENTE  ADHERENTE declara que, con la entrega de los BIENES que el FIDUCIARIO realiza a su favor, no se irroga perjuicio a terceras personas, en especial a sus acreedores. <br> <b>Dos.-</b> La parte CONSTITUYENTE ADHERENTE y el ACREEDOR conocen y aceptan que el FIDUCIARIO ha cumplido con sus obligaciones, tanto las prevista en la Ley como en el ENCARGO FIDUCIARIO, por lo que nada tienen que reclamar en tal sentido. <br> <b>Tres.-</b> La parte CONSTITUYENTE ADHERENTE conoce y acepta que el encargo efectuado al FIDUCIARIO, a su adhesión, termina por este acto, por tanto su participación en el mismo queda sin efecto.  Asimismo, ratifica el poder especial otorgado al CONSTITUYENTE ORIGINAL hasta la terminación total del ENCARGO FIDUCIARIO."]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

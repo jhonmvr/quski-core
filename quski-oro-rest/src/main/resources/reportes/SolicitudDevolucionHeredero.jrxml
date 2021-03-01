@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LiquidacionCD" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="bd61ad2f-9f25-415f-9c3b-33012cc4371a">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="herederos" uuid="7809461e-dc62-47c4-beb7-7162ddf64d94">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="campoCompleto" class="java.lang.String">
+			<fieldDescription><![CDATA[campoCompleto]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="LIST_DS" class="java.util.List"/>
+	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.SolicitudDevolucionHerederoWrapper"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="numeroFunda" class="java.lang.String">
+		<fieldDescription><![CDATA[numeroFunda]]></fieldDescription>
+	</field>
+	<field name="fechaSolicitud" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaSolicitud]]></fieldDescription>
+	</field>
+	<field name="agenciaSolicitante" class="java.lang.String">
+		<fieldDescription><![CDATA[agenciaSolicitante]]></fieldDescription>
+	</field>
+	<field name="nombreCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCliente]]></fieldDescription>
+	</field>
+	<field name="cedulaAsesor" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaAsesor]]></fieldDescription>
+	</field>
+	<field name="numeroOperacion" class="java.lang.String">
+		<fieldDescription><![CDATA[numeroOperacion]]></fieldDescription>
+	</field>
+	<field name="heredero" class="java.lang.String">
+		<fieldDescription><![CDATA[heredero]]></fieldDescription>
+	</field>
+	<field name="asesor" class="java.lang.String">
+		<fieldDescription><![CDATA[asesor]]></fieldDescription>
+	</field>
+	<field name="nombreAsesor" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreAsesor]]></fieldDescription>
+	</field>
+	<field name="agenciaEntrega" class="java.lang.String">
+		<fieldDescription><![CDATA[agenciaEntrega]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="cedulaCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
+	</field>
+	<title>
+		<band height="757" splitType="Stretch">
+			<staticText>
+				<reportElement x="130" y="10" width="297" height="20" uuid="d083857a-31a8-450d-8a31-baaed91ab671"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE DEVOLUCIÓN DE GARANTÍA DE JOYAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="200" width="510" height="90" uuid="69ba6d57-0fa3-42cc-b379-b67c6ad112fc"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["El (la) Sr (a) " +  $P{BEAN_DS}.getNombreCliente() + " con cédula de identidad No."  +$P{BEAN_DS}.getCedulaCliente() +" representado (a) en legal y debida forma por el señor (a) " +$P{BEAN_DS}.getHeredero()+ " conforme consta en la Escritura de Posesión Efectiva que adjunta como documento habilitante, como herederos de las joyas que garantizan la operación de crédito de las joyas que garantizan la operación de crédito No. "+$P{BEAN_DS}.getNumeroOperacion()  +", solicita la devolución de las mismas, en vista de que he procedido con la cancelación total de mi (s) obligación (es) con la Institución, lo cual lo justifico con el certificado debidamente extendido por la entidad acreedora."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="40" width="150" height="20" uuid="7b10ae93-ae98-47c3-b973-111fa43443c4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA SOLICITUD:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="60" width="150" height="20" uuid="894eb89a-07b8-4366-9a6b-5df95b4a0364"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[AGENCIA SOLICITANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="80" width="150" height="20" uuid="4d364d7e-ad52-4311-ae39-5fc4ccbc3b49"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[NOMBRE CLIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="100" width="150" height="20" uuid="b94f0187-2278-475f-97a8-716639cb2cad"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CEDULA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="250" y="60" width="230" height="20" uuid="a12a6387-d003-4976-b6b0-0539b550254c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getAgenciaSolicitante()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="80" width="230" height="20" uuid="6806ced6-da08-4ee6-a9c5-46f5d307fd88"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCliente()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="100" width="230" height="20" uuid="1eaa7d81-2fa0-4e66-b909-6a49b32944b5"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="120" width="150" height="20" uuid="c78c357f-a9e1-4539-8d2f-85bea68462b3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No. OPERACIÓN:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="250" y="120" width="230" height="20" uuid="50d729d5-3163-437b-846b-95e98c6fd4c0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroOperacion()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="40" width="230" height="20" uuid="f032aaa0-c2c3-4142-8baf-9baef1dc8611"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getFechaSolicitud()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="140" width="150" height="20" uuid="702f79a2-31a0-4192-b2a1-fba92601b0d4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[AGENCIA DE ENTREGA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="160" width="150" height="20" uuid="7b5996ec-c7eb-4894-af55-7963a59ef276"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No. FUNDA JOYA (GARANTIA)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="250" y="140" width="230" height="20" uuid="76199368-5066-40ab-b1fb-3851fd8f367c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getAgenciaEntrega()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="160" width="230" height="20" uuid="87c3fac4-0d53-4182-abf5-fd75f29c9aae"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="58" y="541" width="5" height="5" uuid="68ded4ba-bb63-4ae0-a8dd-c1ee0ed3296c"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Static Text]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="-1" y="590" width="511" height="1" uuid="c45e6455-923e-4551-96c5-3874d30223f9"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="129" y="600" width="257" height="20" uuid="0ec64830-ac29-4066-889f-4dbea7bcedce"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CONSIDERACIONES PARA EL RETORNO DE GARANTÍAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="630" width="501" height="101" uuid="3f1ae3a0-2707-460e-aee0-bbba927f253d"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
+Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
+Recuerde que el tiempo adicional de custodia de la garantía, que respalda su operación cancelada, tendrá un costo.
+]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="50" y="310" width="412" height="70" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="herederos" uuid="a4e5cf01-1af6-45b9-89f6-b6fb0ce4c1fa">
+						<datasetParameter name="REPORT_DATA_SOURCE">
+							<datasetParameterExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LIST_DS})]]></datasetParameterExpression>
+						</datasetParameter>
+					</datasetRun>
+					<jr:column width="140" uuid="5032ff7b-947c-4f88-a344-4c7669b50247">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:detailCell height="150">
+							<textField>
+								<reportElement x="0" y="0" width="140" height="150" uuid="2cded28d-94ab-44a1-9579-f8520dc961f5"/>
+								<box>
+									<pen lineWidth="1.0"/>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement markup="html"/>
+								<textFieldExpression><![CDATA["<br>"+$F{campoCompleto}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="170" uuid="0b213413-de94-4b66-a77f-c7177d259494">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:detailCell height="150">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="200" uuid="4abbd969-475c-4070-a46c-3fd907264a2c">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:detailCell height="150">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<rectangle>
+								<reportElement x="0" y="0" width="200" height="110" uuid="8f4c6201-86c7-407b-a5cf-6881e4cfafa3"/>
+							</rectangle>
+							<staticText>
+								<reportElement x="0" y="110" width="200" height="40" uuid="0f4b6943-105a-45d0-8be5-31a06c4fad67"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[HUELLA]]></text>
+							</staticText>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement positionType="Float" x="36" y="495" width="104" height="20" uuid="7afbbfb2-b391-4e1d-a6ca-1e48f9ca4110"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="30" y="470" width="230" height="20" uuid="7cad9f5a-7649-466c-ada4-a944f53a2ec2"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nombre: " + $P{BEAN_DS}.getAsesor()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="30" y="440" width="169" height="20" uuid="affd73ff-a3fe-44f1-a0b6-368b51f117d1"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Tramitado Por: (Quski C.A.)]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="70" y="510" width="190" height="1" uuid="4a4baa30-ec0c-4b0d-87d4-44f82479708d"/>
+			</line>
+		</band>
+	</title>
+</jasperReport>
