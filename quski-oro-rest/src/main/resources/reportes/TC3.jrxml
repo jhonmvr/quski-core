@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TC3" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" whenResourceMissingType="Empty" uuid="20be03fc-b8bb-42ae-8b95-166e3d46b905">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<parameter name="LIST_DS" class="java.util.List"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaActual" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaActual]]></fieldDescription>
+	</field>
+	<field name="apoderadoMutualista" class="java.lang.String">
+		<fieldDescription><![CDATA[apoderadoMutualista]]></fieldDescription>
+	</field>
+	<field name="rolUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[rolUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreCompletoCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCompletoCliente]]></fieldDescription>
+	</field>
+	<field name="cedulaCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
+	</field>
+	<field name="fechaElaboracionContrato" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaElaboracionContrato]]></fieldDescription>
+	</field>
+	<title>
+		<band height="710">
+			<property name="com.jaspersoft.studio.layout"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="80" width="510" height="70" uuid="5c060e84-d90c-4672-849f-431548eba622"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA SEXTA: VALORACIÓN DE LOS BIENES.-</b><br>   La valoración de los BIENES entregados en custodia es la que consta en los antecedentes de este contrato, que a su vez consta en el CONTRATO DE COMPRAVENTA cuya CONDICIÓN SUSPENSIVA no se ha cumplido, lo cual es aceptado sin objeción por la parte CONSTITUYENTE ADHERENTE."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="0" width="510" height="60" uuid="2fc50925-d7e3-4792-9011-3fda9799abe4"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Cuatro-</b> Las partes contratantes declaran expresamente que por este acto se liquida parcialmente la gestión encomendada al FIDUCIARIO, respecto única y exclusivamente de la parte CONSTITUYENTE ADHERENTE y de los BIENES entregados para el cumplimiento del ENCARGO FIDUCIARIO, por tanto los demás adherentes del negocio fiduciario se mantienen inalterables en sus derechos y obligaciones."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="160" width="510" height="30" uuid="b4835e00-6f6f-4191-97e7-0c874cef38d7"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA SÉPTIMA: CONTROVERSIAS:</b><br>   En caso de controversias las partes estarán a lo dispuesto en la cláusula de controversias del contrato de constitución del ENCARGO FIDUCIARIO."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="200" width="510" height="40" uuid="02af5a37-16dc-43cd-89fa-2e399849dcc4"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLAUSULA OCTAVA.- ACEPTACIÓN Y SUSCRIPCIÓN:</b><br>   Una vez leído y aceptado este documento en su totalidad por los comparecientes, en señal de constancia de lo convenido, las partes lo suscriben por duplicado, en la ciudad y fecha indicadas."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="275" width="170" height="15" uuid="faf640f0-3fb0-46bd-a266-a28b8fd68210"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apoderadoMutualista}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="63" y="290" width="130" height="65" uuid="4692bb28-958d-4e5b-a00a-d4d691fcf69d"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Apoderado(a) <br>Enlace Negocios Fiduciarios S.A. <br> Administradora de Fondos y Fideicomisos <br>  Administrador Fiduciario"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="63" y="495" width="120" height="30" uuid="dfc863e9-edce-4131-a024-5a2f052e3cfb"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ENCARGO FIDUCIARIO BIENES MINGA
+FIDUCIARIO
+]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="280" y="276" width="219" height="20" uuid="2c0ca663-3a1a-49c0-ad12-4fc804719242"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombreCompletoCliente}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="280" y="296" width="219" height="20" uuid="d9ea9424-adcc-4214-988a-2ddf762b5445"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cedulaCliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="316" width="219" height="20" uuid="d3a464c8-f176-4830-b946-3464bf8663cb"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CONSTITUYENTE ADHERENTE]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

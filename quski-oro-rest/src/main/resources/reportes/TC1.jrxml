@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TC1" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" whenResourceMissingType="Empty" uuid="20be03fc-b8bb-42ae-8b95-166e3d46b905">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<parameter name="LIST_DS" class="java.util.List"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaActual" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaActual]]></fieldDescription>
+	</field>
+	<field name="apoderadoMutualista" class="java.lang.String">
+		<fieldDescription><![CDATA[apoderadoMutualista]]></fieldDescription>
+	</field>
+	<field name="rolUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[rolUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreUsuario]]></fieldDescription>
+	</field>
+	<field name="nombreCompletoCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCompletoCliente]]></fieldDescription>
+	</field>
+	<field name="cedulaCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
+	</field>
+	<field name="fechaElaboracionContrato" class="java.lang.String">
+		<fieldDescription><![CDATA[fechaElaboracionContrato]]></fieldDescription>
+	</field>
+	<title>
+		<band height="720">
+			<property name="com.jaspersoft.studio.layout"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="21" width="510" height="30" uuid="23d3f8c8-a37b-4dba-9713-794c308f168b"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["En la ciudad de QUITO a los "+$F{fechaActual}+"  comparecen a la suscripción del presente documento las siguientes personas: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="2" y="61" width="508" height="105" uuid="4af22df7-fc66-436a-ae1c-06352de3a747"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Uno</b>.- Por una parte, la compañía Enlace Negocios Fiduciarios S.A. Administradora de Fondos y " +" fideicomisos, en su calidad de administrador fiduciario del encargo fiduciario de gestión denominado ENCARGO FIDUCIARIO BIENES MINGA; dicha empresa comparece representada por su Apoderado el señor" +$F{apoderadoMutualista}+", parte a la cual en lo posterior y para efectos del presente instrumento se denominará como el FIDUCIARIO. <br> <b>Dos.-</b> Por otra parte, "  +$F{nombreCompletoCliente}  + " parte a la cual, en lo posterior y para efectos del presente instrumento se denominará como la parte CONSTITUYENTE ADHERENTE o BENEFICIARIO SECUNDARIO."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="0" width="380" height="19" uuid="fe6a2a0d-a677-46e4-8951-4233a6397a51"/>
+				<textElement>
+					<font fontName="Arial" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TERMINACIÓN DE CONTRATO DE ADHESIÓN Y DEVOLUCIÓN DE BIENES
+]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="161" width="510" height="90" uuid="d48f49f2-084c-4687-ad92-64939c35fa07"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Tres.-</b> Por otra parte comparece para constancia y aceptación de las estipulaciones de este instrumento, la ASOCIACIÓN MUTUALISTA PICHINCHA PARA LA VIVIENDA representada por ____________________________________en su calidad de ____________________, parte a la que, en lo posterior y para efectos del presente contrato se denominará simplemente como el ACREEDOR. <br> Las personas que comparecen a este contrato, declaran ser hábiles para contratar y obligar a sus representadas en las calidades en que comparecen, por tanto, se reconocen mutuamente capacidad suficiente para la celebración del presente contrato, al tenor de las cláusulas que a continuación se estipulan:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="254" width="510" height="90" uuid="86a0a5c1-c476-4de6-a75c-8c9c0d87b484"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA PRIMERA: TERMINOLOGÍA.-</b> <br> Para efectos de interpretación del presente instrumento, las partes acuerdan remitirse de manera expresa a la terminología utilizada dentro del contrato de constitución del ENCARGO FIDUCIARIO BIENES MINGA (en adelante simplemente el ENCARGO FIDUCIARIO), cuyo contenido, estipulaciones y términos en general son conocidos y aceptados por las partes contratantes. Para tal efecto, las partes acuerdan que las palabras o frases que en el presente contrato se escriban con mayúscula, tendrán los significados, definiciones y alcances contenidos en la CLÁUSULA SEGUNDA relativa al GLOSARIO DE TÉRMINOS del contrato constitutivo del ENCARGO FIDUCIARIO. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="2" y="346" width="508" height="180" uuid="c10733a6-1859-4498-b027-431ce5d8d8b2"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>CLÁUSULA SEGUNDA: ANTECEDENTES.- </b> <br> <b>Uno.-</b> El ENCARGO FIDUCIARIO fue constituido mediante escritura pública celebrada el 22 de mayo de 2014, ante el Notario Décimo del cantón Quito; comparecieron a dicho instrumento las siguientes personas: <b>(i)</b> En calidad de CONSTITUYENTE ORIGINAL y BENEFICIARIO PRINCIPAL la compañía Asesores Integrales Mingacorp S.A.; y, <b>(ii)</b> En calidad de FIDUCIARIO la compañía Enlace Negocios Fiduciarios S.A. Administradora de Fondos y Fidecomisos.  Dicho negocio fiduciario tiene por objeto que el FIDUCIARIO, efectúe de manera irrevocable a nombre, representación, y por cuenta de los CONSTITUYENTES, los actos de gestión establecidos en las instrucciones descritas en la CLÁUSULA QUINTA del contrato de constitución del ENCARGO FIDUCIARIO. <br> <b>Dos.-</b> En la CLÁUSULA CUARTA del contrato de constitución del ENCARGO FIDUCIARIO se prevé la posibilidad de que el referido negocio fiduciario cuente con constituyentes adherentes, los cuales en caso que se incorporen, entregarán en custodia al FIDUCIARIO los BIENES objeto de los contratos de PRENDA COMERCIAL ORDINARIA, BIENES que a la vez son objeto de los CONTRATOS DE COMPRAVENTA, cuya entrega posterior al BENEFICIARIO PRINCIPAL o al beneficiario secundario correspondiente, estará supeditada al cumplimiento o no (respectivamente) de la CONDICIÓN SUSPENSIVA pactada en los CONTRATOS DE COMPRAVENTA."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="536" width="510" height="50" uuid="5c060e84-d90c-4672-849f-431548eba622"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Tres.- </b>   Mediante instrumento privado suscrito el  _____  de __________ del _______,  parte CONSTITUYENTE ADHERENTE en calidad de vendedor, suscribió a favor del CONSTITUYENTE ORIGINAL en calidad de comprador. <br>Dichas partes en su momento convinieron en que la custodia de los BIENES objeto del CONTRATO DE COMPRAVENTA sea ejecutada y supeditada al cumplimiento del objeto del ENCARGO FIDUCIARIO. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="0" y="601" width="510" height="70" uuid="b07474ab-107e-4f50-8f56-509e85a75370"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Cuatro.-</b>   Mediante contrato celebrado el _____  de __________ del _______, la parte CONSTITUYENTE ADHERENTE se adhirió al ENCARGO FIDUCIARIO, a fin de que el FIDUCIARIO a su nombre, por su cuenta y en su representación, realice con los BIENES que entregó a su adhesión, las gestiones e instrucciones constantes en el contrato de constitución del ENCARGO FIDUCIARIO, puntualmente en su CLÁUSULA QUINTA."]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>
