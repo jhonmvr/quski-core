@@ -32,6 +32,7 @@ import com.relative.quski.wrapper.ActaEntregaRecepcionWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
+import com.relative.quski.wrapper.HerederoConsolidadoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
 import com.relative.quski.wrapper.ListHerederoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
@@ -730,6 +731,20 @@ public class DevolucionService {
 		return listHeredero.getHeredero();
 	}
 
+	public List<HerederoConsolidadoWrapper> setListaHerederosString(Long idDevolucion) throws RelativeException{
+		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+		 this.getHerederos(idDevolucion);
+		 List<HerederoWrapper> herederos = this.getHerederos(idDevolucion);
+		 List<HerederoConsolidadoWrapper> herederosList = new ArrayList<HerederoConsolidadoWrapper>();
+		String heredero = "";
+		for (HerederoWrapper h : herederos) {
+			heredero = "SR.(A)".concat(h.getNombre().concat("/n C.I. ").concat(h.getCedula()).concat("/n/n").concat("Heredero (a) del señor (a) /n").
+					concat(devolucion.getNombreCliente()));
+		} 
+		
+		return herederosList;
+	}
+	
 	public static String setStringHeredero(List<HerederoWrapper> herederos) throws RelativeException {
 		String respuestaHerederos = "";
 		for (HerederoWrapper h : herederos) {
@@ -756,7 +771,7 @@ public class DevolucionService {
 		SolicitudDevolucionWrapper habilitante = new SolicitudDevolucionWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
@@ -773,7 +788,7 @@ public class DevolucionService {
 		SolicitudDevolucionApoderadoWrapper habilitante = new SolicitudDevolucionApoderadoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
@@ -792,7 +807,7 @@ public class DevolucionService {
 		SolicitudDevolucionHerederoWrapper habilitante = new SolicitudDevolucionHerederoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());

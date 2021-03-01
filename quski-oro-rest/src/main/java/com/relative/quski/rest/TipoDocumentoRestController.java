@@ -334,7 +334,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 					
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
 					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero((Long.valueOf(idDevolucion))));
-					map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
+					map.put("LIST_DS", dos.setListaHerederosString(((Long.valueOf(idDevolucion)))));
 					map.put("mainReportName", td.getPlantillaDos());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
 					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionApoderado((Long.valueOf(idDevolucion))));
@@ -347,7 +347,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 					map.put("mainReportName", td.getPlantilla());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
 					map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
-					map.put("LIST_DS", dos.getHerederos(((Long.valueOf(idDevolucion)))));
+					map.put("LIST_DS", dos.setListaHerederosString(((Long.valueOf(idDevolucion)))));
 					map.put("mainReportName", td.getPlantillaDos());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
 					map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));

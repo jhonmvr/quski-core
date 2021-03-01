@@ -177,6 +177,25 @@ public class QuskiOroUtil {
 		}
 
 	}
+	
+	@SuppressWarnings("deprecation")
+	public static String dateToStringYearMonthDay(Date date) throws RelativeException {
+		try {
+			if (date != null) {
+				String str;
+				str = String.valueOf(date.getYear() + 1900 +"/"+ "/" + String.valueOf(date.getMonth() + 1) + "/"
+				+ String.valueOf(date.getDay())
+				 );
+				return str;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			throw new RelativeException("dateToString ERROR AL PARSEAR LA FECHA " + e.getMessage());
+		}
+
+	}
+	
 
 	public static String dateToString(Date date, String format) throws RelativeException {
 		try {
