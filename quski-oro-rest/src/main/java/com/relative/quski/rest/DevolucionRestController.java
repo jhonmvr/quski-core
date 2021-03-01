@@ -327,13 +327,12 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validateSolicitarAprobacion")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
-	public GenericWrapper<RespuestaBooleanaWrapper> validateSolicitarAprobacion(@QueryParam("idDevolucion") String idDevolucion)
+	public GenericWrapper<TbQoProceso> validateSolicitarAprobacion(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 			if (StringUtils.isBlank(idDevolucion)) {
 			}
-			GenericWrapper<RespuestaBooleanaWrapper> loc = new GenericWrapper<>();
-			RespuestaBooleanaWrapper a = this.dos.validateSolicitarAprobacion(Long.valueOf(idDevolucion));
+			GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+			TbQoProceso a = this.dos.validateSolicitarAprobacion(Long.valueOf(idDevolucion));
 			loc.setEntidad(a);
 			return loc;
 		}

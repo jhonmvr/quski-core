@@ -112,19 +112,42 @@ public class DevolucionService {
 	}
 
 	public ProcesoDevolucionWrapper registrarSolicitudDevolucion(TbQoDevolucion send) throws RelativeException {
-		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
-		TbQoProceso proceso = new TbQoProceso();
-		if (send.getId() != null) {
-			proceso = this.qos.findProcesoByIdReferencia(send.getId(), ProcesoEnum.DEVOLUCION);
+		try {
+			ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
+			TbQoProceso proceso = new TbQoProceso();
+			if (send.getId() != null ) {
+				proceso = this.qos.findProcesoByIdReferencia(send.getId(), ProcesoEnum.DEVOLUCION);
+			}else {
+				if( StringUtils.isBlank( send.getCodigoOperacion() )) {
+					throw new RelativeException(" FALTA CODIGO OPERACION SOFTBANK. ");				
+				}
+				List<TbQoDevolucion> devoluciones = this.devolucionRepository.findByNumeroOperacion( send.getCodigoOperacion() );
+				if(devoluciones != null) {
+					for(TbQoDevolucion e : devoluciones) {
+						TbQoProceso procesoActivo = this.qos.findProcesoByIdReferencia( e.getId(), ProcesoEnum.DEVOLUCION);
+						if(procesoActivo.getEstadoProceso() != EstadoProcesoEnum.CANCELADO || procesoActivo.getEstadoProceso() != EstadoProcesoEnum.RECHAZADO) {
+							throw new RelativeException(" YA EXISTE UN PROCESO DE DEVOLUCION ACTIVO PARA ESTE CREDITO: " +e.getCodigo() );				
+						}		
+					}
+				}
+			}
+			send = this.manageDevolucion(send);
+			proceso.setProceso(ProcesoEnum.DEVOLUCION);
+			proceso.setIdReferencia(send.getId());
+			proceso.setUsuario(send.getAsesor());
+			proceso.setEstadoProceso(EstadoProcesoEnum.CREADO);
+			result.setProceso(this.qos.manageProceso(proceso));
+			result.setDevolucion(send);
+			return result;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					" AL ACTUALIZAR LA DEVOLUCION. " + e.getMessage());
 		}
-		send = this.manageDevolucion(send);
-		proceso.setProceso(ProcesoEnum.DEVOLUCION);
-		proceso.setIdReferencia(send.getId());
-		proceso.setUsuario(send.getAsesor());
-		proceso.setEstadoProceso(EstadoProcesoEnum.CREADO);
-		result.setProceso(this.qos.manageProceso(proceso));
-		result.setDevolucion(send);
-		return result;
+		
 	}
 	
 	public ProcesoDevolucionWrapper buscarProcesoCancelacion(Long idDevolucion) throws RelativeException {
@@ -304,19 +327,33 @@ public class DevolucionService {
 
 	public ProcesoDevolucionWrapper aprobarNegarSolicitudDevolucion(Long idDevolucion, Boolean aprobado)
 			throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
-		devolucion.setFechaAprobacionSolicitud(new Timestamp(System.currentTimeMillis()));
-		result.setDevolucion(this.manageDevolucion(devolucion));
-		this.manageDevolucion(devolucion);
-		if (aprobado) {
-			result.setProceso(
-					this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA));
-		} else {
-			result.setProceso(
-					this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO));
+		try {
+			TbQoProceso proceso = qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION);
+			if ( !proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION) ) {
+				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + proceso.getEstadoProceso());				
+			}
+			TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
+			ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
+			devolucion.setFechaAprobacionSolicitud(new Timestamp(System.currentTimeMillis()));
+			result.setDevolucion(this.manageDevolucion(devolucion));
+			this.manageDevolucion(devolucion);
+			if (aprobado) {
+				result.setProceso(
+						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA));
+			} else {
+				result.setProceso(
+						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO));
+			}
+			return result;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
-		return result;
+		
 	}
 
 	public List<DevolucionProcesoWrapper> findOperacion(PaginatedWrapper pw, String codigoOperacion, String agencia,
@@ -373,7 +410,15 @@ public class DevolucionService {
 		try {
 			List<TbQoDevolucion> devoluciones = new ArrayList<>();
 			for (Long id : rfaw.getIdDevoluciones()) {
+				
 				TbQoDevolucion devolucion = devolucionRepository.findById(id);
+				if( devolucion == null) {
+					throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION RELACIONADO A ESTE ID: " + id );
+				}
+				TbQoProceso proceso = this.qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+				if( proceso == null || !proceso.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_FECHA) ) {
+					throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ proceso.getEstadoProceso() );
+				}
 				if (devolucion.getFechaArribo() == null) {
 					devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
@@ -387,8 +432,7 @@ public class DevolucionService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 	}
 
@@ -396,8 +440,16 @@ public class DevolucionService {
 		try {
 			List<TbQoDevolucion> devoluciones = new ArrayList<>();
 			for (Long id : idDevoluciones) {
+				
 				TbQoDevolucion devolucion = devolucionRepository.findById(id);
-				if (devolucion.getArribo() == null && !this.existeProcesoCancelacionVigente(id)) {
+				if( devolucion == null) {
+					throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION RELACIONADO A ESTE ID: " + id );
+				}
+				TbQoProceso proceso = this.qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+				if( proceso == null || !proceso.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_ARRIBO) ) {
+					throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ proceso.getEstadoProceso() );
+				}
+				if ( devolucion.getArribo() == null ) {
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
 					devolucion.setArribo(true);
 					devolucion = manageDevolucion(devolucion);
@@ -420,14 +472,18 @@ public class DevolucionService {
 			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
 			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
 			TbQoProceso procesoCancelacion = qos.findProcesoByIdReferencia(id, ProcesoEnum.CANCELACION_DEVOLUCION);
-			if(devolucion == null || procesoDevolucion == null || procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.APROBADO || procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.RECHAZADO ) {
+			if(devolucion == null || procesoDevolucion == null || 
+					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.APROBADO || 
+					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.RECHAZADO ||
+					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.CANCELADO 
+					) {
 				throw new RelativeException( "NO EXISTE PROCESO DE DEVOLUCION ACTIVO.");
 			}
 			if( !devolucion.getAsesor().equalsIgnoreCase( usuario )) {
 				throw new RelativeException( "NO TIENES PERMITIDO CANCELAR EL PROCESO, CONTACTE CON EL ASESOR RESPONSABLE DEL PROCESO.");
 			}
 			if( procesoCancelacion != null ) {
-				throw new RelativeException( "PROCESO DE CANCELACION DE DEVOLUCION ACTIVO.");
+				throw new RelativeException( " YA EXISTE UN PROCESO DE CANCELACION DE DEVOLUCION ACTIVO: "+ devolucion.getCodigo() );
 			}
 			procesoCancelacion = new TbQoProceso();
 			procesoCancelacion.setIdReferencia(devolucion.getId());
@@ -455,45 +511,117 @@ public class DevolucionService {
 	}
 
 	public TbQoProceso aprobarCancelacionSolicitudDevolucion(Long id) throws RelativeException {
-		TbQoProceso procesoDevolucion = this.qos.findProcesoByIdReferencia(id,  ProcesoEnum.DEVOLUCION );
-		if(procesoDevolucion == null || procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.RECHAZADO || 
-				procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.APROBADO || 
-				procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.CANCELADO ) {
-			throw new RelativeException( "EL PROCESO DE DEVOLUCION LA FUE FINALIZADO, NO SE PUEDE REALIZAR LA CANCELACION.");
+		try {
+			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
+			if(devolucion == null || procesoDevolucion == null) {
+				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
+			}
+			if(procesoDevolucion == null || procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.RECHAZADO || 
+					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.APROBADO || 
+					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.CANCELADO ) {
+				throw new RelativeException( "EL PROCESO DE DEVOLUCION LA FUE FINALIZADO, NO SE PUEDE REALIZAR LA CANCELACION.");
+			}
+			TbQoProceso procesoCancelacion = this.qos.findProcesoByIdReferencia(id,  ProcesoEnum.CANCELACION_DEVOLUCION );
+			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
+				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
+			}
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+		} catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 		}
-		TbQoProceso procesoCancelacion = this.qos.findProcesoByIdReferencia(id,  ProcesoEnum.CANCELACION_DEVOLUCION );
-		if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
-			throw new RelativeException( "EL PROCESO DE NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
-		}
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-		return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
 	}
 
 	public TbQoProceso rechazarCancelacionSolicitudDevolucion(Long id) throws RelativeException {
-		return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+		try {
+			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
+			if(devolucion == null || procesoDevolucion == null) {
+				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
+			}
+
+			TbQoProceso procesoCancelacion = this.qos.findProcesoByIdReferencia(id,  ProcesoEnum.CANCELACION_DEVOLUCION );
+			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
+				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
+			}
+			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+		} catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
+		
 	}
 
 	public TbQoDevolucion guardarEntregaRecepcion(Long id) throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(id);
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA);
-		this.manageDevolucion(devolucion);
-
-		return devolucion;
+		try {
+			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
+			if(devolucion == null || procesoDevolucion == null) {
+				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
+			}
+			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.ARRIBADO ) ) {
+				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
+			}
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA);
+			return this.manageDevolucion(devolucion);
+		} catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
 	}
 
 	public TbQoDevolucion aprobarVerificacionFirmas(Long id) throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(id);
-		this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
-		this.manageDevolucion(devolucion);
-		return devolucion;
+		try {
+			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
+			if(devolucion == null || procesoDevolucion == null) {
+				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
+			}
+			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA ) ) {
+				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
+			}
+			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
+			return this.manageDevolucion(devolucion);
+		} catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
 	}
 
 	public TbQoDevolucion rechazarVerificacionFirmas(Long id) throws RelativeException {
-		TbQoDevolucion devolucion = devolucionRepository.findById(id);
-		this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
-		devolucion.setDevuelto(true);
-		this.manageDevolucion(devolucion);
-		return devolucion;
+		try {
+			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
+			if(devolucion == null || procesoDevolucion == null) {
+				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
+			}
+			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA ) ) {
+				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
+			}
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
+			devolucion.setDevuelto(true);
+			return this.manageDevolucion(devolucion);
+		} catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+		}
 	}
 
 	/**
@@ -566,26 +694,22 @@ public class DevolucionService {
 
 	}
 
-	public RespuestaBooleanaWrapper validateSolicitarAprobacion(Long idDevolucion) throws RelativeException {
-		RespuestaBooleanaWrapper respuesta = new RespuestaBooleanaWrapper();
+	public TbQoProceso validateSolicitarAprobacion(Long idDevolucion) throws RelativeException {
 		try {
 			TbQoProceso persisted = qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION);
 
 			if (persisted.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
-				respuesta.setBandera(true);
-				respuesta.setMensaje("ES FACTIBLE REALIZAR EL PROCESO");
-				return respuesta;
+				return this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION );
 			} else {
-				respuesta.setBandera(false);
-				respuesta.setMensaje(
-						"NO ES FACTIBLE REALIZAR LA SOLICITUD DE APROBACION EN ESTADO " + persisted.getEstadoProceso());
-				return respuesta;
+				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + persisted.getEstadoProceso());
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}catch ( RelativeException e ) {
+			e.printStackTrace();
+			throw e;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 		}
-
 	}
 
 	public RespuestaBooleanaWrapper validateAprobarRechazarSolicitud(Long idDevolucion) throws RelativeException {
