@@ -165,7 +165,7 @@ public class DevolucionService {
 	public RespuestaValidacionWrapper validarProcesoActivo( String numeroOperacion ) throws RelativeException {
 		try {
 			RespuestaValidacionWrapper result = new RespuestaValidacionWrapper();
-			List<TbQoDevolucion> list = this.devolucionRepository.findByNumeroOperacion( numeroOperacion );
+			List<DevolucionProcesoWrapper>  list = this.qos.findProcesoByIdReferencia( numeroOperacion );
 			if( list == null || list.size() < Long.valueOf( 1 ) ) {
 				result.setExiste( Boolean.FALSE );
 				result.setMensaje( "NO HAY PROCESOS ACTIVOS." );

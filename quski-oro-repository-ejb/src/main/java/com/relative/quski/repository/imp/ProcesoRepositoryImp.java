@@ -8,6 +8,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
@@ -25,6 +27,7 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 
@@ -638,6 +641,30 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DevolucionProcesoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException {
+		try {
+			String querySelect = " select * from tb_qo_devolucion j inner join ( select d.estado_proceso, d.proceso, d.id_referencia from tb_qo_proceso d where d.proceso = 'DEVOLUCION') "
+					+ " as foo on foo.id_referencia = j.id where 1 = 1 ";
+			StringBuilder strQry = new StringBuilder(querySelect);
+	
+			if (StringUtils.isNotBlank(numeroOperacion)) {
+				strQry.append(" and j.codigo_operacion = :numeroOperacion ");
+			}
+			
+			strQry.append(" and (foo.estado_proceso !='RECHAZADO' AND foo.estado_proceso != 'CANCELADO' ) ");
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			log.info("=========> QUERY VALIDACION =======> "+ strQry.toString() +" <====");
+			if (StringUtils.isNotBlank(numeroOperacion)) {
+				query.setParameter("numeroOperacion", "%"+ numeroOperacion+"%");
+			}
+			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionProcesoWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e.getMessage());
 		}
 	}
 }
