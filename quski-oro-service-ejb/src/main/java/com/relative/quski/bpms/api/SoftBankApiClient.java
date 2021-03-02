@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -690,6 +691,7 @@ public class SoftBankApiClient {
 			log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
+				
 				Gson gsons = new GsonBuilder().create();
 				SoftbankRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
 				if(result.getExisteError() )
@@ -698,16 +700,6 @@ public class SoftBankApiClient {
 				}
 				return result;
 			}else {
-				try {
-					Gson gsons = new GsonBuilder().create();
-					SoftbankResponseWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
-					if(result != null && result.getExisteError() )
-					{
-						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
-					}
-				} catch (JsonSyntaxException e) {
-					e.printStackTrace();
-				}
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
