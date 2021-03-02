@@ -334,6 +334,7 @@ public class QuskiOroConstantes {
 	public static final String CATALOGO_OCUPACION = "URL_SOFTBANK_CATALOGO_OCUPACION";
 	public static final String CATALOGO_CARGO = "URL_SOFTBANK_CATALOGO_CARGO";
 	public static final String CATALOGO_ORIGEN_INGRESOS = "URL_SOFTBANK_CATALOGO_ORIGEN_INGRESOS";
+	public static final String SOFTBANK_PROCESAR_BLOQUEO = "SOFTBANK_PROCESAR_BLOQUEO";
 	
 	
 	
@@ -387,6 +388,12 @@ public class QuskiOroConstantes {
 	public static final String DEUDOR = "DEU";
 	public static final String APODERADO = "SAP";
 	public static final String APODERADO_MUPI_DEVOLUCION = "APODERADO_MUPI_DEVOLUCION";
+	public static final String CODIGO_BLOQUEO_A = "CODIGO_BLOQUEO_A";
+	public static final String CODIGO_BLOQUEO_B = "CODIGO_BLOQUEO_B";
+	public static final String CODIGO_BLOQUEO_C = "CODIGO_BLOQUEO_C";
+	public static final String CODIGO_BLOQUEO_D = "CODIGO_BLOQUEO_D";
+	public static final String CODIGO_BLOQUEO_E = "CODIGO_BLOQUEO_E";
+	public static final String CODIGO_BLOQUEO_F = "CODIGO_BLOQUEO_F";
 	
 
   

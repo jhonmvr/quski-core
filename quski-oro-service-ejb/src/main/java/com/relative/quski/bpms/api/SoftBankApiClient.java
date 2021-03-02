@@ -16,6 +16,7 @@ import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
+import com.relative.quski.wrapper.BloqueoWrapper;
 import com.relative.quski.wrapper.CatalogoActividadWrapper;
 import com.relative.quski.wrapper.CatalogoAgenciaWrapper;
 import com.relative.quski.wrapper.CatalogoDivicionWrapper;
@@ -48,6 +49,7 @@ import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankResponseWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.SoftbankTablaAmortizacionWrapper;
@@ -460,7 +462,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(datosEntradaOperacion);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION;
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
@@ -498,7 +500,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(datosEntradaOperacion);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -515,7 +517,7 @@ public class SoftBankApiClient {
 				}
 				return respuestaWrapper;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
@@ -533,7 +535,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(abono);
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -550,7 +552,7 @@ public class SoftBankApiClient {
 				}
 				return respuestaWrapper;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
@@ -580,7 +582,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -592,11 +594,11 @@ public class SoftBankApiClient {
 				Gson gsons = new GsonBuilder().create();
 				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaConsultaGlobalWrapper.class);
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	public static List<GarantiaOperacionWrapper> callConsultarGarantiasRest(ConsultaGarantiaWrapper entrada, String service)throws RelativeException {
@@ -604,7 +606,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -618,11 +620,11 @@ public class SoftBankApiClient {
 				if( respuestaWrapper.getExisteError() ) {return null;}
 				return respuestaWrapper.getGarantias();
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	public static List<RubroOperacionWrapper> callConsultarRubrosRest(ConsultaRubrosWrapper entrada, String service)throws RelativeException {
@@ -630,7 +632,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -644,11 +646,11 @@ public class SoftBankApiClient {
 				if( result.getExisteError() ) {return null;}
 				return result.getRubros();
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	
@@ -660,7 +662,7 @@ public class SoftBankApiClient {
 					"	\"numeroOperacion\": \""+numeroOperacion+"\",\r\n" + 
 					"}";
 			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=====> un01 " + new String(content));
+			log.info("=====>  " + new String(content));
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
@@ -677,11 +679,52 @@ public class SoftBankApiClient {
 					}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO UN01:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException | UnsupportedEncodingException e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultarOperacionRest" );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
+	
+	public static SoftbankRespuestaWrapper procesarBloqueo(BloqueoWrapper bloqueo, String service)throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson( bloqueo );
+			byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+			log.info("=====>  " + new String(content));
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, "", "",
+					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				SoftbankRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				if(result.getExisteError() )
+				{
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
+				}
+				return result;
+			}else {
+				try {
+					Gson gsons = new GsonBuilder().create();
+					SoftbankResponseWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					if(result.getExisteError() )
+					{
+						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
+					}
+				} catch (JsonSyntaxException e) {
+					e.printStackTrace();
+				}
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+		}
+	}
+	
 }

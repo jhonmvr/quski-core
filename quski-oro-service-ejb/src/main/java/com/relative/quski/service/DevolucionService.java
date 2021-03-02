@@ -18,17 +18,20 @@ import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.DevolucionRepository;
+import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.ActaEntregaRecepcionApoderadoWrapper;
 import com.relative.quski.wrapper.ActaEntregaRecepcionHerederoWrapper;
 import com.relative.quski.wrapper.ActaEntregaRecepcionWrapper;
+import com.relative.quski.wrapper.BloqueoWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
@@ -52,6 +55,8 @@ public class DevolucionService {
 	private DevolucionRepository devolucionRepository;
 	@Inject
 	private QuskiOroService qos;
+	@Inject
+	private ParametroRepository parametroRepository;
 
 	public TbQoDevolucion findDevolucionById(Long id) throws RelativeException {
 
@@ -347,6 +352,7 @@ public class DevolucionService {
 			if (aprobado) {
 				result.setProceso(
 						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA));
+				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE);
 			} else {
 				result.setProceso(
 						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO));
@@ -361,6 +367,18 @@ public class DevolucionService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 		
+	}
+
+	private void bloquear(TbQoProceso proceso, TbQoDevolucion devolucion, String tipoBloqueo,Boolean esBloqueo) throws RelativeException {
+		BloqueoWrapper bloqueo = new BloqueoWrapper();
+		bloqueo.setCodigoMotivoBloqueo(parametroRepository.findByNombre(tipoBloqueo).getValor());
+		bloqueo.setCodigoUsuario(proceso.getUsuario());
+		bloqueo.setEsBloqueo(esBloqueo);
+		bloqueo.setIdentificacion(devolucion.getCedulaCliente());
+		bloqueo.setIdTipoIdentificacion(Long.valueOf("1"));
+		bloqueo.setNumeroOperacion(devolucion.getCodigoOperacion());
+		bloqueo.setReferenciaBpm(devolucion.getCodigo());
+		SoftBankApiClient.procesarBloqueo(bloqueo,parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_PROCESAR_BLOQUEO).getValor() );
 	}
 
 	public List<DevolucionProcesoWrapper> findOperacion(PaginatedWrapper pw, String codigoOperacion, String agencia,
@@ -458,9 +476,10 @@ public class DevolucionService {
 				}
 				if ( devolucion.getArribo() == null ) {
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
-					devolucion.setArribo(true);
+					devolucion.setArribo(Boolean.TRUE);
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
+					bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE);
 				}
 			}
 			return devoluciones;
@@ -536,9 +555,10 @@ public class DevolucionService {
 				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
 			}
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
+			return pro;
 		} catch ( RelativeException e ) {
-			e.printStackTrace();
 			throw e;
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -601,7 +621,9 @@ public class DevolucionService {
 				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
 			}
 			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
-			return this.manageDevolucion(devolucion);
+			TbQoDevolucion devo = this.manageDevolucion(devolucion);
+			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE);
+			return devo;
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
 			throw e;
