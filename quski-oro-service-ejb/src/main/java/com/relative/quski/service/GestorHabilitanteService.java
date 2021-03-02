@@ -2,6 +2,7 @@ package com.relative.quski.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -179,7 +180,7 @@ public class GestorHabilitanteService {
 		TbQoDocumentoHabilitante dhs = new TbQoDocumentoHabilitante();
 		
 		List<ProcessEnum> pe= new ArrayList<>();
-		pe.add(!StringUtils.isEmpty( fw.getProcess() )?QuskiOroUtil.getEnumFromString(ProcessEnum.class,fw.getProcess()):null);
+		pe.addAll(StringUtils.isNotBlank(fw.getProcess())?Arrays.stream(fw.getProcess().split(",")).map(ProcessEnum::valueOf).collect(Collectors.toList()):null);
 		List<EstadoOperacionEnum> eoe=new ArrayList<>();
 		eoe.add(!StringUtils.isEmpty( fw.getEstadoOperacion() )?QuskiOroUtil.getEnumFromString(EstadoOperacionEnum.class,fw.getEstadoOperacion()):null );
 		
