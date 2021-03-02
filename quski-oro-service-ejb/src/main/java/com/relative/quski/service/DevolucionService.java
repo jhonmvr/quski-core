@@ -126,7 +126,7 @@ public class DevolucionService {
 				if(devoluciones != null) {
 					for(TbQoDevolucion e : devoluciones) {
 						TbQoProceso procesoActivo = this.qos.findProcesoByIdReferencia( e.getId(), ProcesoEnum.DEVOLUCION);
-						if(procesoActivo.getEstadoProceso() != EstadoProcesoEnum.CANCELADO || procesoActivo.getEstadoProceso() != EstadoProcesoEnum.RECHAZADO) {
+						if(procesoActivo.getEstadoProceso() != EstadoProcesoEnum.CANCELADO && procesoActivo.getEstadoProceso() != EstadoProcesoEnum.RECHAZADO) {
 							throw new RelativeException(" YA EXISTE UN PROCESO DE DEVOLUCION ACTIVO PARA ESTE CREDITO: " +e.getCodigo() );				
 						}		
 					}
@@ -145,8 +145,7 @@ public class DevolucionService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					" AL ACTUALIZAR LA DEVOLUCION. " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE," AL ACTUALIZAR LA DEVOLUCION. " + e.getMessage());
 		}
 		
 	}
