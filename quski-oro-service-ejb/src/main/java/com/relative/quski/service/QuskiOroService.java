@@ -6936,6 +6936,8 @@ public class QuskiOroService {
 			persisted.setEstadoProceso( newEstado );
 			return this.manageProceso(persisted);
 		}catch(RelativeException e) {
+			throw e;		
+		}catch(Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());		
 		}
