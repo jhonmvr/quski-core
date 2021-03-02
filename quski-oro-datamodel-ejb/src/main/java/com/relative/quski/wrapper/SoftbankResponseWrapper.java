@@ -8,14 +8,13 @@ public class SoftbankResponseWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public SoftbankResponseWrapper( ) {
 	}
-	@JsonProperty("WebUrl")
+	@JsonProperty("ExisteError")
 	private Boolean existeError;
-	@JsonProperty("WebUrl")
+	@JsonProperty("Mensaje")
 	private String mensaje ;
-	@JsonProperty("WebUrl")
-	private String codigoServicio;
-	@JsonProperty("WebUrl")
-	private String validaciones;
+	@JsonProperty("Descripcion")
+	private String descripcion;
+	
 	public Boolean getExisteError() {
 		return existeError;
 	}
@@ -28,17 +27,11 @@ public class SoftbankResponseWrapper implements Serializable {
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
-	public String getCodigoServicio() {
-		return codigoServicio;
+	public String getDescripcion() {
+		return descripcion;
 	}
-	public void setCodigoServicio(String codigoServicio) {
-		this.codigoServicio = codigoServicio;
-	}
-	public String getValidaciones() {
-		return validaciones;
-	}
-	public void setValidaciones(String validaciones) {
-		this.validaciones = validaciones;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	

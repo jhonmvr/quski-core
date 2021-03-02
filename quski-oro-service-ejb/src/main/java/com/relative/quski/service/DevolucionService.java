@@ -556,7 +556,10 @@ public class DevolucionService {
 			}
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
 			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
+			if(procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) != 0) {
+				bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
+			}
+			
 			return pro;
 		} catch ( RelativeException e ) {
 			throw e;
