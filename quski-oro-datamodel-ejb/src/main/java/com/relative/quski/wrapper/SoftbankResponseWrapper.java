@@ -2,38 +2,44 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SoftbankResponseWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public SoftbankResponseWrapper( ) {
 	}
-	
-	private Boolean ExisteError;
-	private String Mensaje ;
-	private String CodigoServicio;
-	private String Validaciones;
+	@JsonProperty("WebUrl")
+	private Boolean existeError;
+	@JsonProperty("WebUrl")
+	private String mensaje ;
+	@JsonProperty("WebUrl")
+	private String codigoServicio;
+	@JsonProperty("WebUrl")
+	private String validaciones;
 	public Boolean getExisteError() {
-		return ExisteError;
+		return existeError;
 	}
 	public void setExisteError(Boolean existeError) {
-		ExisteError = existeError;
+		this.existeError = existeError;
 	}
 	public String getMensaje() {
-		return Mensaje;
+		return mensaje;
 	}
 	public void setMensaje(String mensaje) {
-		Mensaje = mensaje;
+		this.mensaje = mensaje;
 	}
 	public String getCodigoServicio() {
-		return CodigoServicio;
+		return codigoServicio;
 	}
 	public void setCodigoServicio(String codigoServicio) {
-		CodigoServicio = codigoServicio;
+		this.codigoServicio = codigoServicio;
 	}
 	public String getValidaciones() {
-		return Validaciones;
+		return validaciones;
 	}
 	public void setValidaciones(String validaciones) {
-		Validaciones = validaciones;
+		this.validaciones = validaciones;
 	}
+	
 	
 }
