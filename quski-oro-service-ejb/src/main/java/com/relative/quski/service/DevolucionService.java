@@ -878,12 +878,12 @@ public class DevolucionService {
 
 			if (h.equals(herederos.get(0))) {
 
-				respuestaHerederos = respuestaHerederos.concat(h.getNombre()  + "con cédula de ciudadanía No. " + h.getCedula());
+				respuestaHerederos = respuestaHerederos.concat(h.getNombre()  + " con cédula de ciudadanía No. " + h.getCedula());
 			} else {
 				if (h.equals(herederos.get(herederos.size() - 1))) {
-					respuestaHerederos = respuestaHerederos.concat(" y " +h.getNombre()  + "con cédula de ciudadanía No. " + h.getCedula() );
+					respuestaHerederos = respuestaHerederos.concat(" y " +h.getNombre()  + " con cédula de ciudadanía No. " + h.getCedula() );
 				} else {
-					respuestaHerederos = respuestaHerederos.concat(", " + h.getNombre() + "con cédula de ciudadanía No. " + h.getCedula());
+					respuestaHerederos = respuestaHerederos.concat(", " + h.getNombre() + " con cédula de ciudadanía No. " + h.getCedula());
 				}
 			}
 
@@ -898,7 +898,7 @@ public class DevolucionService {
 		SolicitudDevolucionWrapper habilitante = new SolicitudDevolucionWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
@@ -915,7 +915,7 @@ public class DevolucionService {
 		SolicitudDevolucionApoderadoWrapper habilitante = new SolicitudDevolucionApoderadoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
@@ -934,7 +934,7 @@ public class DevolucionService {
 		SolicitudDevolucionHerederoWrapper habilitante = new SolicitudDevolucionHerederoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToStringYearMonthDay(devolucion.getFechaCreacion()));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
