@@ -32,6 +32,12 @@ public class TbQoDevolucion implements Serializable {
 
 	@Column(name="cedula_cliente")
 	private String cedulaCliente;
+	
+	@Column(name="observacion_cancelacion")
+	private String observacionCancelacion;
+	
+	@Column(name="es_migrado")
+	private Boolean esMigrado;
 
 	@Column(name="code_detalle_credito")
 	private String codeDetalleCredito;
@@ -486,6 +492,22 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setCiudadEntrega(String ciudadEntrega) {
 		this.ciudadEntrega = ciudadEntrega;
+	}
+
+	public String getObservacionCancelacion() {
+		return observacionCancelacion;
+	}
+
+	public void setObservacionCancelacion(String observacionCancelacion) {
+		this.observacionCancelacion = observacionCancelacion;
+	}
+
+	public Boolean getEsMigrado() {
+		return esMigrado;
+	}
+
+	public void setEsMigrado(Boolean esMigrado) {
+		this.esMigrado = esMigrado;
 	}
 
 

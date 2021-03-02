@@ -8,6 +8,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
@@ -27,6 +29,7 @@ import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -131,9 +134,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			else 0 end monto_financiado ";
 	private final String ACTIVIDAD_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
 			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL') " + 
-			"			else case when (proceso.proceso ='DEVOLUCION') then " + 
+			"			else case when (proceso.proceso ='DEVOLUCION'  or proceso.proceso = 'CANCELACION_DEVOLUCION' ) then " + 
 			"				COALESCE((select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL')" + 
-			"				else ' ' end  end ACTIVIDAD ";
+			"				else case when (proceso.proceso = 'PAGO') then " +
+			"					COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pago where pago.codigo = tra.CODIGO_BPM and pago.id = proceso.id_referencia order by tra.FECHA_INICIO desc limit 1), 'NULL')"+ 
+			"						else ' ' end  end end ACTIVIDAD ";
 	private final String COUNT_OP = "SELECT  COUNT(case when "+QueryConstantes.WHEN_NEGO+"  then " + 
 			"(select cre.ID from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
@@ -335,7 +340,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 									" PROCESO.ESTADO_PROCESO, " + 
 									" PROCESO.PROCESO, "   		+ 
 									ASESOR_OP  	+ "," + 
-									" PROCESO.USUARIO, " 		+ 
+									" COALESCE(PROCESO.USUARIO, 'NULL') USUARIO "+ "," + 
 									ACTIVIDAD_OP+ " " + 
 									FROM_OP;
 			StringBuilder strQry = new StringBuilder( querySelect );
@@ -638,6 +643,30 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProcesoDevoActivoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException {
+		try {
+			String querySelect = " select j.id, j.codigo, jon.estado_proceso from tb_qo_devolucion j inner join ( select d.estado_proceso, d.id_referencia from tb_qo_proceso d where d.proceso = 'DEVOLUCION') "
+					+ " as jon on jon.id_referencia = j.id where 1 = 1 ";
+			StringBuilder strQry = new StringBuilder(querySelect);
+	
+			if (StringUtils.isNotBlank(numeroOperacion)) {
+				strQry.append(" and j.codigo_operacion =:numeroOperacion ");
+			}
+			
+			strQry.append(" and (jon.estado_proceso != 'RECHAZADO' AND jon.estado_proceso != 'CANCELADO' ) ");
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			log.info("=========> QUERY VALIDACION =======> "+ strQry.toString() +" <====");
+			if (StringUtils.isNotBlank(numeroOperacion)) {
+				query.setParameter("numeroOperacion", numeroOperacion);
+			}
+			return QuskiOroUtil.getResultList(query.getResultList(), ProcesoDevoActivoWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL CONSULTAR EN  findDevolucionesActivas " + e.getMessage());
 		}
 	}
 }

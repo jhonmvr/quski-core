@@ -138,6 +138,7 @@ import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
@@ -6831,6 +6832,16 @@ public class QuskiOroService {
 	public TbQoProceso findProcesoByIdReferencia(Long id, ProcesoEnum proceso) throws RelativeException {
 		try {
 			return procesoRepository.findByIdReferencia(id, proceso);
+		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	public List<ProcesoDevoActivoWrapper> findProcesoByIdReferencia(String numeroOperacion) throws RelativeException {
+		try {
+			return procesoRepository.findDevolucionesActivas(numeroOperacion);
 		} catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
