@@ -49,6 +49,7 @@ import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankResponseWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.SoftbankTablaAmortizacionWrapper;
@@ -710,7 +711,7 @@ public class SoftBankApiClient {
 			}else {
 				try {
 					Gson gsons = new GsonBuilder().create();
-					SoftbankRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+					SoftbankResponseWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
 					if(result.getExisteError() )
 					{
 						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
