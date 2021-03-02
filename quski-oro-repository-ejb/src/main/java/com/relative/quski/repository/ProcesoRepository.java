@@ -10,9 +10,9 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
-import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 
 @Local
 public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
@@ -20,7 +20,7 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public TbQoProceso findById(Long id) throws RelativeException;
 	TbQoProceso findByIdReferencia(Long id, ProcesoEnum proceso) throws RelativeException;
 	
-	List<DevolucionProcesoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException;
+	public List<ProcesoDevoActivoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException;
 	
 	public List<TbQoProceso> findProcesosByAsesor(String asesor) throws RelativeException;
 	

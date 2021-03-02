@@ -27,9 +27,9 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
-import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -645,26 +645,26 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DevolucionProcesoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException {
+	public List<ProcesoDevoActivoWrapper> findDevolucionesActivas(String numeroOperacion) throws RelativeException {
 		try {
-			String querySelect = " select * from tb_qo_devolucion j inner join ( select d.estado_proceso, d.proceso, d.id_referencia from tb_qo_proceso d where d.proceso = 'DEVOLUCION') "
-					+ " as foo on foo.id_referencia = j.id where 1 = 1 ";
+			String querySelect = " select j.id, j.codigo, jon.estado_proceso from tb_qo_devolucion j inner join ( select d.estado_proceso, d.id_referencia from tb_qo_proceso d where d.proceso = 'DEVOLUCION') "
+					+ " as jon on jon.id_referencia = j.id where 1 = 1 ";
 			StringBuilder strQry = new StringBuilder(querySelect);
 	
 			if (StringUtils.isNotBlank(numeroOperacion)) {
-				strQry.append(" and j.codigo_operacion = :numeroOperacion ");
+				strQry.append(" and j.codigo_operacion =:numeroOperacion ");
 			}
 			
-			strQry.append(" and (foo.estado_proceso !='RECHAZADO' AND foo.estado_proceso != 'CANCELADO' ) ");
+			strQry.append(" and (jon.estado_proceso != 'RECHAZADO' AND jon.estado_proceso != 'CANCELADO' ) ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			log.info("=========> QUERY VALIDACION =======> "+ strQry.toString() +" <====");
 			if (StringUtils.isNotBlank(numeroOperacion)) {
-				query.setParameter("numeroOperacion", "%"+ numeroOperacion+"%");
+				query.setParameter("numeroOperacion", numeroOperacion);
 			}
-			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionProcesoWrapper.class);
+			return QuskiOroUtil.getResultList(query.getResultList(), ProcesoDevoActivoWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL CONSULTAR EN  findDevolucionesActivas " + e.getMessage());
 		}
 	}
 }

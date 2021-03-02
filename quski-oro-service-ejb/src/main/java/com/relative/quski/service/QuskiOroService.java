@@ -126,7 +126,6 @@ import com.relative.quski.wrapper.DatosImpComWrapper;
 import com.relative.quski.wrapper.DatosRegistroWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
-import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.GaranteWrapper;
@@ -139,6 +138,7 @@ import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
@@ -6839,7 +6839,7 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	public List<DevolucionProcesoWrapper> findProcesoByIdReferencia(String numeroOperacion) throws RelativeException {
+	public List<ProcesoDevoActivoWrapper> findProcesoByIdReferencia(String numeroOperacion) throws RelativeException {
 		try {
 			return procesoRepository.findDevolucionesActivas(numeroOperacion);
 		} catch (RelativeException e) {

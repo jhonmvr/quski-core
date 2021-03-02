@@ -250,10 +250,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/iniciarProcesoCancelacion")
-	public GenericWrapper<TbQoProceso> iniciarProcesoCancelacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario)
+	public GenericWrapper<TbQoProceso> iniciarProcesoCancelacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario, @QueryParam("motivo") String motivo )
 			throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
-		loc.setEntidad( this.dos.iniciarProcesoCancelacion(Long.valueOf(id), usuario) );
+		loc.setEntidad( this.dos.iniciarProcesoCancelacion(Long.valueOf(id), usuario, motivo) );
 		return loc;
 	}
 	@POST

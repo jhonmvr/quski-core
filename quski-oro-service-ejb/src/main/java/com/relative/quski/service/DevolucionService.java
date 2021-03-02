@@ -35,6 +35,7 @@ import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.HerederoConsolidadoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
 import com.relative.quski.wrapper.ListHerederoWrapper;
+import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
@@ -165,8 +166,9 @@ public class DevolucionService {
 	public RespuestaValidacionWrapper validarProcesoActivo( String numeroOperacion ) throws RelativeException {
 		try {
 			RespuestaValidacionWrapper result = new RespuestaValidacionWrapper();
-			List<DevolucionProcesoWrapper>  list = this.qos.findProcesoByIdReferencia( numeroOperacion );
-			if( list == null || list.size() < Long.valueOf( 1 ) ) {
+			List<ProcesoDevoActivoWrapper>  list = this.qos.findProcesoByIdReferencia( numeroOperacion );
+			log.info(" ===========> LISTA DE DEVOLUCIONES =============================>" + list.size() );
+			if( list == null || list.size() < 1 ) {
 				result.setExiste( Boolean.FALSE );
 				result.setMensaje( "NO HAY PROCESOS ACTIVOS." );
 			}else {
@@ -190,6 +192,12 @@ public class DevolucionService {
 
 			if (StringUtils.isNotBlank(send.getAgenciaEntrega())) {
 				persisted.setAgenciaEntrega(send.getAgenciaEntrega());
+			}
+			if (StringUtils.isNotBlank(send.getObservacionCancelacion())) {
+				persisted.setObservacionCancelacion(send.getObservacionCancelacion());
+			}
+			if ( send.getEsMigrado() != null ) {
+				persisted.setEsMigrado(send.getEsMigrado());
 			}
 			if (StringUtils.isNotBlank(send.getAprobador())) {
 				persisted.setAprobador(send.getAprobador());
@@ -467,7 +475,7 @@ public class DevolucionService {
 		}
 	}
 
-	public TbQoProceso iniciarProcesoCancelacion(Long id, String usuario) throws RelativeException {
+	public TbQoProceso iniciarProcesoCancelacion(Long id, String usuario,  String motivo ) throws RelativeException {
 		try {
 			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
 			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
@@ -491,6 +499,8 @@ public class DevolucionService {
 			procesoCancelacion.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 			procesoCancelacion.setUsuario(usuario);
 			procesoCancelacion = this.qos.manageProceso(procesoCancelacion);
+			devolucion.setObservacionCancelacion(motivo);
+			this.manageDevolucion(devolucion);
 			return procesoCancelacion;
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
