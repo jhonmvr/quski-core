@@ -833,6 +833,7 @@ public class DevolucionService {
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
 		habilitante.setNombreAsesor(devolucion.getAsesor());
+		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setCedulaApoderado(devolucion.getCedulaApoderado());
 		habilitante.setNombreApoderado(devolucion.getNombreApoderado());
 		return habilitante;
