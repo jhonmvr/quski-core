@@ -701,7 +701,7 @@ public class SoftBankApiClient {
 				try {
 					Gson gsons = new GsonBuilder().create();
 					SoftbankResponseWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
-					if(result.getExisteError() )
+					if(result != null && result.getExisteError() )
 					{
 						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
 					}
