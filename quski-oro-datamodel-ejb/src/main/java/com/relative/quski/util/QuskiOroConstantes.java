@@ -386,6 +386,7 @@ public class QuskiOroConstantes {
 	public static final String HEREDERO = "HER";
 	public static final String DEUDOR = "DEU";
 	public static final String APODERADO = "SAP";
+	public static final String APODERADO_MUPI_DEVOLUCION = "APODERADO_MUPI_DEVOLUCION";
 	
 
   

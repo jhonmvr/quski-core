@@ -790,9 +790,9 @@ public class DevolucionService {
 //	habilitante.setFechaElaboracionContrato(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
 		log.info("entra yal metodo habilitante" + habilitante.getNombreCompletoCliente());
 		habilitante.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
-		habilitante.setApoderadoMutualista("Quemaado hasta mientras");
-		habilitante.setNombreUsuario("Quemaado hasta mientras");
-		habilitante.setRolUsuario("rolUsuario");
+		habilitante.setApoderadoMutualista(QuskiOroConstantes.APODERADO_MUPI_DEVOLUCION);
+	//	habilitante.setNombreUsuario("Quemaado hasta mientras");
+	//	habilitante.setRolUsuario("rolUsuario");
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		return habilitante;
 	}
