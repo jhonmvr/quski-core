@@ -6302,7 +6302,9 @@ public class QuskiOroService {
 			return detalle;
 			
 			
-		}catch(RelativeException | UnsupportedEncodingException e ){
+		}catch(RelativeException e ){
+			throw e;
+		}catch(Exception e ){
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getLocalizedMessage());
 		}
 	}
