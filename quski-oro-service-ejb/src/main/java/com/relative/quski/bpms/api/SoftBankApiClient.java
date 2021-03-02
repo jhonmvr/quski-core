@@ -705,9 +705,19 @@ public class SoftBankApiClient {
 				if(result.getExisteError() )
 				{
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
-					}
+				}
 				return result;
 			}else {
+				try {
+					Gson gsons = new GsonBuilder().create();
+					SoftbankRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+					if(result.getExisteError() )
+					{
+						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
+					}
+				} catch (JsonSyntaxException e) {
+					e.printStackTrace();
+				}
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException | UnsupportedEncodingException e) {
