@@ -1,6 +1,5 @@
 package com.relative.quski.bpms.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,13 +64,10 @@ public class SoftBankApiClient {
 			
 			SoftbankClienteWrapper x= callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar","131166441");
 			System.out.println("==============>>>"+ x.getNombreCompleto());
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 	/**
 	 * 
@@ -80,7 +76,7 @@ public class SoftBankApiClient {
 	 * @param wrapper
 	 * @return
 	 * @throws RelativeException
-	 * @throws UnsupportedEncodingException
+	 * @throws Exception
 	 */
 	public static SoftbankRespuestaWrapper callCrearClienteRest(String service,SoftbankClienteWrapper wrapper)
 			throws RelativeException {
@@ -193,10 +189,10 @@ public class SoftBankApiClient {
 	 * @param consulta
 	 * @return
 	 * @throws RelativeException
-	 * @throws UnsupportedEncodingException
+	 * @throws Exception
 	 */
 	public static SoftbankClienteWrapper callConsultaClienteRest(String service,String identificacion)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException, Exception {
 		try {
 			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
 			Gson gson = new Gson();
@@ -215,22 +211,16 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
@@ -256,21 +246,15 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
-	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service, ConsultaTablaWrapper cont)	throws RelativeException, UnsupportedEncodingException {
+	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service, ConsultaTablaWrapper cont)	throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(cont);
@@ -292,18 +276,12 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
+		}catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest(String service) throws RelativeException {
@@ -327,15 +305,12 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
 	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service ) throws RelativeException {
@@ -377,7 +352,9 @@ public class SoftBankApiClient {
 			Gson gsons = new GsonBuilder().create();
 			CatalogoResponseDivicionWrapper  wrapper = status >= 200 && status < 300 ? gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CatalogoResponseDivicionWrapper.class) : null;
 			return wrapper != null && Boolean.FALSE.equals(wrapper.getExisteError()) && !wrapper.getCatalogo().isEmpty() ? wrapper.getCatalogo() : null;
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		} catch (RelativeException  e) {
+			throw e;
+		}catch ( Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
@@ -415,10 +392,10 @@ public class SoftBankApiClient {
 	 * @param consulta
 	 * @return
 	 * @throws RelativeException
-	 * @throws UnsupportedEncodingException
+	 * @throws Exception
 	 */
 	public static SoftbankRespuestaWrapper callEditarClienteRest(SoftbankClienteWrapper consulta,String service)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
@@ -596,7 +573,10 @@ public class SoftBankApiClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
@@ -622,7 +602,10 @@ public class SoftBankApiClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
@@ -648,7 +631,10 @@ public class SoftBankApiClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
@@ -681,7 +667,10 @@ public class SoftBankApiClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
@@ -721,7 +710,10 @@ public class SoftBankApiClient {
 				}
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException | UnsupportedEncodingException e) {
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
