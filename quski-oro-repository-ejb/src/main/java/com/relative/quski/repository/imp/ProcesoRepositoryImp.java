@@ -134,9 +134,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"			else 0 end monto_financiado ";
 	private final String ACTIVIDAD_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
 			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL') " + 
-			"			else case when (proceso.proceso ='DEVOLUCION') then " + 
+			"			else case when (proceso.proceso ='DEVOLUCION'  or proceso.proceso = 'CANCELACION_DEVOLUCION' ) then " + 
 			"				COALESCE((select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL')" + 
-			"				else ' ' end  end ACTIVIDAD ";
+			"				else case when (proceso.proceso = 'PAGO') then " +
+			"					COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pago where pago.codigo = tra.CODIGO_BPM and pago.id = proceso.id_referencia order by tra.FECHA_INICIO desc limit 1), 'NULL')"+ 
+			"						else ' ' end  end end ACTIVIDAD ";
 	private final String COUNT_OP = "SELECT  COUNT(case when "+QueryConstantes.WHEN_NEGO+"  then " + 
 			"(select cre.ID from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
 			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
@@ -338,7 +340,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 									" PROCESO.ESTADO_PROCESO, " + 
 									" PROCESO.PROCESO, "   		+ 
 									ASESOR_OP  	+ "," + 
-									" PROCESO.USUARIO, " 		+ 
+									" COALESCE(PROCESO.USUARIO, 'NULL') USUARIO "+ "," + 
 									ACTIVIDAD_OP+ " " + 
 									FROM_OP;
 			StringBuilder strQry = new StringBuilder( querySelect );
