@@ -387,6 +387,7 @@ public class QuskiOroConstantes {
 	public static final String HEREDERO = "HER";
 	public static final String DEUDOR = "DEU";
 	public static final String APODERADO = "SAP";
+	public static final String APODERADO_MUPI_DEVOLUCION = "APODERADO_MUPI_DEVOLUCION";
 	public static final String CODIGO_BLOQUEO_A = "CODIGO_BLOQUEO_A";
 	public static final String CODIGO_BLOQUEO_B = "CODIGO_BLOQUEO_B";
 	public static final String CODIGO_BLOQUEO_C = "CODIGO_BLOQUEO_C";
