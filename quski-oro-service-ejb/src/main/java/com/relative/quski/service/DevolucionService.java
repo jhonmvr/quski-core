@@ -824,7 +824,7 @@ public class DevolucionService {
 		log.info("entra yal metodo habilitante" + habilitante.getNombreCompletoCliente());
 //	habilitante.setFechaElaboracionContrato(QuskiOroUtil.dateToFullString(devolucion.getFechaEfectiva()));
 		log.info("entra yal metodo habilitante" + habilitante.getNombreCompletoCliente());
-		habilitante.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
+		habilitante.setFechaActual(QuskiOroUtil.dateToCompletelyFullString(new Date()));
 		habilitante.setApoderadoMutualista(parametroRepository.findByNombre(QuskiOroConstantes.APODERADO_MUPI_DEVOLUCION).getValor());
 	//	habilitante.setNombreUsuario("Quemaado hasta mientras");
 	//	habilitante.setRolUsuario("rolUsuario");
@@ -874,6 +874,7 @@ public class DevolucionService {
 		habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
 		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
+		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
 		habilitante.setNombreAsesor(devolucion.getAsesor());
 		habilitante.setHerederos((setStringHeredero(getHerederos(idDevolucion))));

@@ -227,6 +227,19 @@ public class QuskiOroUtil {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE TRANSFORMAR A TEXTO");
 		}
 	}
+	
+	public static String dateToCompletelyFullString(Date date) throws RelativeException {
+		try {
+			String[] mes = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre",
+					"octubre", "noviembre", "diciembre" };
+			String fechaSalida;
+			fechaSalida = String.valueOf(date.getDate()).concat("días del mes de ").concat(mes[date.getMonth()]).concat(" del ")
+					.concat(String.valueOf(date.getYear() + 1900));
+			return fechaSalida;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE TRANSFORMAR A TEXTO");
+		}
+	}
 
 	public static Long diasFecha(Date fechaIni, Date fechaFin) {
 		return ((fechaFin.getTime() - fechaIni.getTime()) / 86400000);
