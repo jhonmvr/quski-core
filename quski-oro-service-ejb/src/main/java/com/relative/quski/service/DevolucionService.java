@@ -890,17 +890,26 @@ public class DevolucionService {
 
 		return listHeredero.getHeredero();
 	}
+	
+	public List<HerederoWrapper> getHerederos(TbQoDevolucion devolucion) throws RelativeException {
+
+		String herederos = devolucion.getCodeHerederos();
+		String decodedUrl = new String(Base64.getDecoder().decode(herederos));
+		Gson gsons = new GsonBuilder().create();
+		ListHerederoWrapper listHeredero = gsons.fromJson(decodedUrl, ListHerederoWrapper.class);
+
+		return listHeredero.getHeredero();
+	}
 
 	public List<HerederoConsolidadoWrapper> setListaHerederosString(Long idDevolucion) throws RelativeException{
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
-		 this.getHerederos(idDevolucion);
-		 List<HerederoWrapper> herederos = this.getHerederos(idDevolucion);
+		 List<HerederoWrapper> herederos = this.getHerederos(devolucion);
 		 List<HerederoConsolidadoWrapper> herederosList = new ArrayList<HerederoConsolidadoWrapper>();
-		HerederoConsolidadoWrapper heredero = new HerederoConsolidadoWrapper();
+		
 		for (HerederoWrapper h : herederos) {
+			HerederoConsolidadoWrapper heredero = new HerederoConsolidadoWrapper();
 			heredero.setCampoCompleto("SR.(A)".concat(h.getNombre().concat("\n ").concat("C.I.").concat(h.getCedula()).concat("\n\n").concat("Heredero (a) del señor (a) \n").
 					concat(devolucion.getNombreCliente())));
-			
 		herederosList.add(heredero);
 		} 
 		
