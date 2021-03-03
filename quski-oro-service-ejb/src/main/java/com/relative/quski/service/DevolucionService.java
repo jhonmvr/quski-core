@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.jfree.chart.axis.LogarithmicAxis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -554,11 +555,11 @@ public class DevolucionService {
 			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
 				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
 			}
-			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-			if(procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) != 0) {
+			if(procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) != 0 && procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.PENDIENTE_APROBACION) != 0) {
 				bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
 			}
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
 			
 			return pro;
 		} catch ( RelativeException e ) {
