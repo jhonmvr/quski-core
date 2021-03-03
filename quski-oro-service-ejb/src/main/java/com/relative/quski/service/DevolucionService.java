@@ -922,12 +922,12 @@ public class DevolucionService {
 
 			if (h.equals(herederos.get(0))) {
 
-				respuestaHerederos = respuestaHerederos.concat(h.getNombre()  + " con cédula de ciudadanía No. " + h.getCedula());
+				respuestaHerederos = respuestaHerederos.concat(h.getNombre()  + ", con cédula de ciudadanía No. " + h.getCedula());
 			} else {
 				if (h.equals(herederos.get(herederos.size() - 1))) {
-					respuestaHerederos = respuestaHerederos.concat(" y " +h.getNombre()  + " con cédula de ciudadanía No. " + h.getCedula() );
+					respuestaHerederos = respuestaHerederos.concat(" y " +h.getNombre()  + ", con cédula de ciudadanía No. " + h.getCedula() );
 				} else {
-					respuestaHerederos = respuestaHerederos.concat(", " + h.getNombre() + " con cédula de ciudadanía No. " + h.getCedula());
+					respuestaHerederos = respuestaHerederos.concat(", " + h.getNombre() + ", con cédula de ciudadanía No. " + h.getCedula());
 				}
 			}
 
