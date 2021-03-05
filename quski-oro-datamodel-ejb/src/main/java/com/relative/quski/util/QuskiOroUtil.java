@@ -233,7 +233,7 @@ public class QuskiOroUtil {
 			String[] mes = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre",
 					"octubre", "noviembre", "diciembre" };
 			String fechaSalida;
-			fechaSalida = String.valueOf(date.getDate()).concat("días del mes de ").concat(mes[date.getMonth()]).concat(" del ")
+			fechaSalida = String.valueOf(date.getDate()).concat(" días del mes de ").concat(mes[date.getMonth()]).concat(" del ")
 					.concat(String.valueOf(date.getYear() + 1900));
 			return fechaSalida;
 		} catch (Exception e) {
