@@ -9,10 +9,13 @@ public class SoftbankOperacionWrapper implements Serializable {
 
 	private String referencia;
 	private String numeroOperacion;
+	private String numeroOperacionMadre;
 	private String codigoCarteraQuski;
 	private String tipoOperacion;
 	private Date fechaEfectiva;
 	private Date fechaVencimiento;
+	private Long plazo;
+	private BigDecimal montoFinanciado;
 	private BigDecimal interesMora;
 	private BigDecimal saldo;
 	private BigDecimal valorAlDia;
@@ -30,6 +33,7 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private BigDecimal idMoneda;
 	private Boolean esDemandada;
 	private Long id;
+	private BigDecimal cobertura;
 	
 	public String getReferencia() {
 		return referencia;
@@ -168,5 +172,29 @@ public class SoftbankOperacionWrapper implements Serializable {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public String getNumeroOperacionMadre() {
+		return numeroOperacionMadre;
+	}
+	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
+		this.numeroOperacionMadre = numeroOperacionMadre;
+	}
+	public Long getPlazo() {
+		return plazo;
+	}
+	public void setPlazo(Long plazo) {
+		this.plazo = plazo;
+	}
+	public BigDecimal getMontoFinanciado() {
+		return montoFinanciado;
+	}
+	public void setMontoFinanciado(BigDecimal montoFinanciado) {
+		this.montoFinanciado = montoFinanciado;
+	}
+	public BigDecimal getCobertura() {
+		return cobertura;
+	}
+	public void setCobertura(BigDecimal cobertura) {
+		this.cobertura = cobertura;
 	}
 }

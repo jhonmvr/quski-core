@@ -69,13 +69,11 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
-
-
 	@Column(name="id_moneda")
 	private BigDecimal idMoneda;
 
 	@Column(name="id_softbank")
-	private BigDecimal idSoftbank;
+	private Long idSoftbank;
 
 	@Column(name="interes_mora")
 	private BigDecimal interesMora;
@@ -230,11 +228,11 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.idMoneda = idMoneda;
 	}
 
-	public BigDecimal getIdSoftbank() {
+	public Long getIdSoftbank() {
 		return this.idSoftbank;
 	}
 
-	public void setIdSoftbank(BigDecimal idSoftbank) {
+	public void setIdSoftbank(Long idSoftbank) {
 		this.idSoftbank = idSoftbank;
 	}
 

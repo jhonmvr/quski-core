@@ -3929,6 +3929,8 @@ public class QuskiOroService {
 						persisted.add(this.riesgoAcumuladoRepository.add(element));
 					} else if (element.getTbQoNegociacion() != null) {
 						persisted.add(this.riesgoAcumuladoRepository.add(element));
+					} else if (element.getTbQoCotizador() != null) {
+						persisted.add(this.riesgoAcumuladoRepository.add(element));
 					} else {
 						throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.FALTA_RELACION);
 					}
@@ -3938,7 +3940,8 @@ public class QuskiOroService {
 			});
 			return persisted;
 		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -4648,6 +4651,7 @@ public class QuskiOroService {
 				r.setNumeroGarantiasReales(e.getNumeroGarantiasReales());
 				r.setEstadoOperacion(e.getEstadoOperacion());
 				r.setIdMoneda(e.getIdMoneda());
+				r.setIdSoftbank( e.getId() );
 				list.add(r);
 			});
 			return list;

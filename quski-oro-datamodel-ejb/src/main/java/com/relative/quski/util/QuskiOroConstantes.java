@@ -280,7 +280,7 @@ public class QuskiOroConstantes {
 
 	// SOFTBANK
 	public static final String SOFT_TIPO_PRESTAMO = "001" ;
-	public static final String SOFT_GRADO_INTERES = "000" ;
+	public static final String SOFT_GRADO_INTERES = "SEG" ;
 	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
 	public static final String SOFT_POR_DEFECTO="REFERENCIA POR DEFECTO";
 	public static final String SOFT_COBERTURA="001";
