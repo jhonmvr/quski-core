@@ -4593,7 +4593,7 @@ public class QuskiOroService {
 
 	public List<CuotasAmortizacionWrapper> consultarTablaAmortizacion (String numeroOperacion, String urlHabilitantes, DatosRegistroWrapper registro) throws RelativeException {
 		try {
-			ConsultaTablaWrapper entrada = new 	ConsultaTablaWrapper(numeroOperacion, urlHabilitantes != null ? urlHabilitantes : QuskiOroConstantes.SOFT_POR_DEFECTO, registro);
+			ConsultaTablaWrapper entrada = new 	ConsultaTablaWrapper(numeroOperacion, urlHabilitantes != null ? urlHabilitantes : null, registro);
 			SoftbankTablaAmortizacionWrapper persisted = SoftBankApiClient.callConsultaTablaAmortizacionRest(
 					this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION).getValor(),entrada);
 			if (!persisted.getCuotas().isEmpty()) {
@@ -6319,17 +6319,18 @@ public class QuskiOroService {
 				new CrearOperacionEntradaWrapper(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente(),
 						credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() ); 
 		operacionSoftBank.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
-	
+		String gradoInteres = this.findByNombre( QuskiOroConstantes.SOFT_GRADO_INTERES ).getValor();
+		String tipoPrestamo = this.findByNombre( QuskiOroConstantes.SOFT_TIPO_PRESTAMO ).getValor();
 		operacionSoftBank.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
 
 		operacionSoftBank.setDatosImpCom( this.generarImpCom( credito ) );
 		operacionSoftBank.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
 		operacionSoftBank.setNumeroOperacion( credito.getNumeroOperacion() );
-		operacionSoftBank.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
+		operacionSoftBank.setCodigoTipoPrestamo( tipoPrestamo );
 		operacionSoftBank.setMontoSolicitado( credito.getMontoSolicitado() );
 		operacionSoftBank.setMontoFinanciado( credito.getMontoFinanciado() );
-		operacionSoftBank.setPagoDia( Long.valueOf(1) );//arreglar
-		operacionSoftBank.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
+		operacionSoftBank.setPagoDia( Long.valueOf(1) );
+		operacionSoftBank.setCodigoGradoInteres( gradoInteres );
 		operacionSoftBank.setDatosRegistro( 
 				new DatosRegistroWrapper(
 						credito.getTbQoNegociacion().getAsesor(), 
@@ -6510,6 +6511,8 @@ public class QuskiOroService {
 		try {			
 			TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
 			List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
+			String gradoInteres = this.findByNombre( QuskiOroConstantes.SOFT_GRADO_INTERES ).getValor();
+			String tipoPrestamo = this.findByNombre( QuskiOroConstantes.SOFT_TIPO_PRESTAMO ).getValor();
 			if( cuentaCliente == null ){
 				throw new RelativeException(Constantes.ERROR_CODE_READ);
 			}
@@ -6521,8 +6524,8 @@ public class QuskiOroService {
 			
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion() );
 			if(result.getCodigoTablaAmortizacionQuski() == null) { throw new RelativeException(Constantes.ERROR_CODE_READ); }
-			result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
-			result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
+			result.setCodigoTipoPrestamo( tipoPrestamo );
+			result.setCodigoGradoInteres( gradoInteres );
 			result.setMontoFinanciado( credito.getMontoFinanciado() ) ;
 			result.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
 			GaranteWrapper garante = null;
@@ -6562,6 +6565,8 @@ public class QuskiOroService {
 			TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
 			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito( credito.getId() ); 
 			List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
+			String tipoPrestamo = this.findByNombre( QuskiOroConstantes.SOFT_TIPO_PRESTAMO ).getValor();
+			String gradoInteres = this.findByNombre( QuskiOroConstantes.SOFT_GRADO_INTERES ).getValor();
 			if( joyas == null )        { 
 				return null; 
 			}
@@ -6578,11 +6583,11 @@ public class QuskiOroService {
 			if(StringUtils.isNotBlank(credito.getNumeroOperacion() ) ) {
 				result.setNumeroOperacion( credito.getNumeroOperacion() );
 			}
-			result.setCodigoTipoPrestamo( QuskiOroConstantes.SOFT_TIPO_PRESTAMO );
+			result.setCodigoTipoPrestamo( tipoPrestamo );
 			result.setMontoSolicitado( credito.getMontoSolicitado() );
 			result.setMontoFinanciado( credito.getMontoFinanciado() );
 			result.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
-			result.setCodigoGradoInteres( QuskiOroConstantes.SOFT_GRADO_INTERES );
+			result.setCodigoGradoInteres( gradoInteres );
 			result.setDatosRegistro( 
 					new DatosRegistroWrapper(
 							credito.getTbQoNegociacion().getAsesor(), 
@@ -6706,14 +6711,15 @@ public class QuskiOroService {
 		}
 
 	}
-	private List<JoyaWrapper> generarJoyas(TbQoCreditoNegociacion credito, List<TbQoTasacion> joyas) {
+	private List<JoyaWrapper> generarJoyas(TbQoCreditoNegociacion credito, List<TbQoTasacion> joyas) throws RelativeException {
 		List<JoyaWrapper> listjoyas = new ArrayList<>();
+		String cobertura = this.findByNombre( QuskiOroConstantes.SOFT_COBERTURA ).getValor();
 		joyas.forEach(e->{
 			JoyaWrapper joyaSoft = new JoyaWrapper();
 			joyaSoft.setCodigoTipoGarantia( e.getTipoGarantia() );
 			joyaSoft.setDescripcion( e.getDescripcion());
 			joyaSoft.setCodigoSubTipoGarantia( e.getSubTipoGarantia() );
-			joyaSoft.setTipoCobertura( QuskiOroConstantes.SOFT_COBERTURA );
+			joyaSoft.setTipoCobertura( cobertura );
 			joyaSoft.setValorComercial( e.getValorComercial());
 			joyaSoft.setValorAvaluo( e.getValorAvaluo());
 			joyaSoft.setValorRealizacion( e.getValorRealizacion());
@@ -6725,7 +6731,7 @@ public class QuskiOroService {
 			}
 			joyaSoft.setIdAgenciaRegistro( credito.getIdAgencia() );
 			joyaSoft.setIdAgenciaCustodia( credito.getIdAgencia() );
-			joyaSoft.setReferencia( e.getId().toString() );
+			joyaSoft.setReferencia( credito.getCodigo() );
 			joyaSoft.setCodigoTipoJoya( e.getTipoJoya() );
 			joyaSoft.setDescripcionJoya( e.getDescripcion() );
 			joyaSoft.setCodigoEstadoJoya( e.getEstadoJoya());

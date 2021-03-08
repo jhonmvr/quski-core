@@ -279,13 +279,12 @@ public class QuskiOroConstantes {
 	public static final String CUSTODIA_DEVENGADA  = "CUSTODIA_DEVENGADA" ;
 
 	// SOFTBANK
-	public static final String SOFT_TIPO_PRESTAMO = "001" ;
-	public static final String SOFT_GRADO_INTERES = "SEG" ;
 	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
-	public static final String SOFT_POR_DEFECTO="REFERENCIA POR DEFECTO";
-	public static final String SOFT_COBERTURA="001";
-
-
+	
+	
+	public static final String SOFT_TIPO_PRESTAMO = "SOFT_TIPO_PRESTAMO" ;
+	public static final String SOFT_GRADO_INTERES = "SOFT_GRADO_INTERES" ;
+	public static final String SOFT_COBERTURA="SOFT_COBERTURA";
 	public static final String URLCLOUDSTUDIO ="URLSOFTBANK";
 	public static final Integer TIPO_CEDULA = 1;
 	public static final String AUTORIZACION = "Basic RmlpeUhKUjN2SHIyanFqZzNpWjQ2WHVZaHJNYTpGcDFJY3pmT3Fsd19xQXVBOVZ0WG9hazNQOWNh";
