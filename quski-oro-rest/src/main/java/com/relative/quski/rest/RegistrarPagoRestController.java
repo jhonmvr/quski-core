@@ -167,11 +167,12 @@ public class RegistrarPagoRestController extends BaseRestController
 			@QueryParam("isRegistro")  String isRegistro,
 			@QueryParam("isAprobar")  String isAprobar,			
 			@QueryParam("nombreAprobador")  String nombreAprobador,
-			@QueryParam("correoAprobador")  String correoAprobador
+			@QueryParam("correoAprobador")  String correoAprobador,
+			@QueryParam("valorAprobador")  String valorAprobador
 			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<TbQoProceso>();
 		if( StringUtils.isNotBlank(isAprobar) && Boolean.valueOf( isAprobar )) {
-			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
+			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, valorAprobador) );
 		} else if( StringUtils.isNotBlank(isAprobar) && !Boolean.valueOf( isAprobar ) ) {
 			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
 		} else {
