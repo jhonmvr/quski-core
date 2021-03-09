@@ -5831,6 +5831,36 @@ public class QuskiOroService {
 	public TbQoRegistrarPago updateRegistrarPago(TbQoRegistrarPago send, TbQoRegistrarPago persisted)
 			throws RelativeException {
 		try {
+			if( StringUtils.isNotBlank(send.getIdComprobante() ) ){
+		        persisted.setIdComprobante( send.getIdComprobante() );
+		    }
+			if( StringUtils.isNotBlank(send.getCuentas() ) ){
+		        persisted.setCuentas( send.getCuentas() );
+		    }
+			if( StringUtils.isNotBlank(send.getInstitucionFinanciera() ) ){
+		        persisted.setInstitucionFinanciera( send.getInstitucionFinanciera() );
+		    }
+			if( StringUtils.isNotBlank(send.getTipoPago() ) ){
+		        persisted.setTipoPago( send.getTipoPago() );
+		    }
+			if( StringUtils.isNotBlank(send.getUsuarioActualizacion() ) ){
+		        persisted.setUsuarioActualizacion( send.getUsuarioActualizacion() );
+		    }
+			if( StringUtils.isNotBlank(send.getUsuarioCreacion() ) ){
+		        persisted.setUsuarioCreacion( send.getUsuarioCreacion() );
+		    }
+			if( send.getFechaPago() != null ){
+		        persisted.setFechaPago( send.getFechaPago() );
+		    }
+			if( send.getEstado() != null ){
+		        persisted.setEstado( send.getEstado() );
+		    }
+			if( send.getNumeroDeposito() != null ){
+		        persisted.setNumeroDeposito( send.getNumeroDeposito() );
+		    }
+			if( send.getValorPagado() != null ){
+		        persisted.setValorPagado( send.getValorPagado() );
+		    }
 			return registrarPagoRepository.update(persisted);
 		} catch (Exception e) {
 
@@ -5978,6 +6008,9 @@ public class QuskiOroService {
 			}
 			if(send.getAprobador() != null) {
 				persisted.setAprobador( send.getAprobador());
+			}
+			if( StringUtils.isNotBlank( send.getTipoPagoProceso() )) {
+				persisted.setTipoPagoProceso( send.getTipoPagoProceso() );
 			}
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );

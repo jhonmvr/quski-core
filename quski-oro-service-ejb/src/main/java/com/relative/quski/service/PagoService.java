@@ -252,7 +252,7 @@ public class PagoService {
 	}
 
 	
-	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador) throws RelativeException {
+	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, String valorAprobador) throws RelativeException {
 		TbQoClientePago clientePago = null;
 		TbQoProceso proceso = null;
 		try {
@@ -273,7 +273,7 @@ public class PagoService {
 						clientePago.getAsesor(),
 						clientePago.getCedula(),
 						clientePago.getNombreCliente(),
-						clientePago.getValorDepositado().toString(),
+						valorAprobador != null ? valorAprobador : clientePago.getValorDepositado().toString(),
 						QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
 						);
 				RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
