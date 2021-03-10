@@ -1,6 +1,7 @@
 package com.relative.quski.rest;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -172,7 +173,8 @@ public class RegistrarPagoRestController extends BaseRestController
 			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<TbQoProceso>();
 		if( StringUtils.isNotBlank(isAprobar) && Boolean.valueOf( isAprobar )) {
-			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, valorAprobador) );
+			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, 
+					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null) );
 		} else if( StringUtils.isNotBlank(isAprobar) && !Boolean.valueOf( isAprobar ) ) {
 			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
 		} else {

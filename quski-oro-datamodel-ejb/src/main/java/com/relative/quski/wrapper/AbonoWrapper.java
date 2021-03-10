@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class AbonoWrapper implements Serializable {
 
@@ -14,12 +15,13 @@ public class AbonoWrapper implements Serializable {
 	private String idAgencia;
 	private String codigoUsuario;
     private Long idTipoIdentificacion;
-
+	private String nombreCliente;
+    private BigDecimal valor;
 	private String identificacion;
     private String fechaRegistro;
     
     public AbonoWrapper(String numeroOperacion, String referencia, String observacion, String idAgencia,
-			String codigoUsuario, String identificacion, String nombreCliente, String valor,  String fechaRegistro) {
+			String codigoUsuario, String identificacion, String nombreCliente, BigDecimal valor,  String fechaRegistro) {
 		super();
 		this.numeroOperacion = numeroOperacion;
 		this.referencia = referencia;
@@ -86,13 +88,12 @@ public class AbonoWrapper implements Serializable {
 	public void setNombreCliente(String nombreCliente) {
 		this.nombreCliente = nombreCliente;
 	}
-	public String getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
-	public void setValor(String valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	private String nombreCliente;
-    private String valor;
+
 
 }

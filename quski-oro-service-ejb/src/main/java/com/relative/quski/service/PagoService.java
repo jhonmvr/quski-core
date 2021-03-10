@@ -1,6 +1,7 @@
 package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -252,7 +253,7 @@ public class PagoService {
 	}
 
 	
-	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, String valorAprobador) throws RelativeException {
+	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, Double valorAprobador) throws RelativeException {
 		TbQoClientePago clientePago = null;
 		TbQoProceso proceso = null;
 		try {
@@ -263,6 +264,9 @@ public class PagoService {
 			}
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
+			if(valorAprobador != null) {
+				clientePago.setValorDepositado( BigDecimal.valueOf( valorAprobador ));
+			}
 			clientePago = qos.manageClientePago(clientePago);
 			if(isRegistro) {
 				AbonoWrapper abono = new AbonoWrapper( 
@@ -273,7 +277,7 @@ public class PagoService {
 						clientePago.getAsesor(),
 						clientePago.getCedula(),
 						clientePago.getNombreCliente(),
-						valorAprobador != null ? valorAprobador : clientePago.getValorDepositado().toString(),
+						clientePago.getValorDepositado(),
 						QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
 						);
 				RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
