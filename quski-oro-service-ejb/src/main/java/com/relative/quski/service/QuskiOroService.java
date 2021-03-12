@@ -4212,7 +4212,9 @@ public class QuskiOroService {
 			}
 			persisted.setCaracteristica(send.getCaracteristica());
 			persisted.setIdAprobador(send.getIdAprobador());
-			persisted.setObservacionAprobador(send.getObservacionAprobador());
+			if( StringUtils.isNotBlank( send.getObservacionAprobador() )) {
+				persisted.setObservacionAprobador(send.getObservacionAprobador());				
+			}
 			
 			persisted.setEstado(EstadoEnum.ACT);
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
@@ -7284,7 +7286,7 @@ public class QuskiOroService {
 			if(proceso == null) { return null; }
 			exc.setEstadoExcepcion( EstadoExcepcionEnum.NEGADO );
 			exc.setIdAprobador(aprobador);
-			exc.setObservacionAsesor( obsAprobador );
+			exc.setObservacionAprobador( obsAprobador );
 			exc = this.manageExcepcion(exc);
 			if(exc == null) { return false; }
 			proceso.setEstadoProceso( EstadoProcesoEnum.EXCEPCIONADO );
@@ -7336,7 +7338,7 @@ public class QuskiOroService {
 			}
 			exc.setEstadoExcepcion( aprobado.equalsIgnoreCase("SI")?EstadoExcepcionEnum.APROBADO:EstadoExcepcionEnum.NEGADO );
 			exc.setIdAprobador(aprobador);
-			exc.setObservacionAsesor( obsAprobador );
+			exc.setObservacionAprobador( obsAprobador );
 			proceso.setEstadoProceso( EstadoProcesoEnum.EXCEPCIONADO );
 			proceso.setUsuario(aprobador);
 			this.manageProceso(proceso);
