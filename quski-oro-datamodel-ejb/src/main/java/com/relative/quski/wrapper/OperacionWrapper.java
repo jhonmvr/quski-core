@@ -42,8 +42,43 @@ public class OperacionWrapper implements Serializable {
 	private Boolean esMigrado;
 	private Long numeroCuotas;
 	private String datosBloqueo;
+	private String uriHabilitante;
+	private String uriHabilitanteFirmado;
+	private String uriImagenGarantiaConFunda;
+	private String uriImagenGarantiaSinFunda;
+	private String estaNovado;
 	
 	
+	public String getUriHabilitante() {
+		return uriHabilitante;
+	}
+	public void setUriHabilitante(String uriHabilitante) {
+		this.uriHabilitante = uriHabilitante;
+	}
+	public String getUriHabilitanteFirmado() {
+		return uriHabilitanteFirmado;
+	}
+	public void setUriHabilitanteFirmado(String uriHabilitanteFirmado) {
+		this.uriHabilitanteFirmado = uriHabilitanteFirmado;
+	}
+	public String getUriImagenGarantiaConFunda() {
+		return uriImagenGarantiaConFunda;
+	}
+	public void setUriImagenGarantiaConFunda(String uriImagenGarantiaConFunda) {
+		this.uriImagenGarantiaConFunda = uriImagenGarantiaConFunda;
+	}
+	public String getUriImagenGarantiaSinFunda() {
+		return uriImagenGarantiaSinFunda;
+	}
+	public void setUriImagenGarantiaSinFunda(String uriImagenGarantiaSinFunda) {
+		this.uriImagenGarantiaSinFunda = uriImagenGarantiaSinFunda;
+	}
+	public String getEstaNovado() {
+		return estaNovado;
+	}
+	public void setEstaNovado(String estaNovado) {
+		this.estaNovado = estaNovado;
+	}
 	public Long getId() {
 		return id;
 	}

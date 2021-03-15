@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -108,8 +109,10 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	@Path("/getDocumentoCredito")
 	public RespuestaHabilitanteCreditoWrapper getDocumentoCredito(
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
-	
-		return cs.generarHabilitanteCredito(idReferencia);
+	if(StringUtils.isBlank(idReferencia)) {
+		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DE REFERENCIA"); 
+	}
+		return cs.generarHabilitanteCredito(Long.valueOf(idReferencia));
 	}
 	
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -161,10 +162,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@Path("/devolverAprobar")
 	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		Boolean a = this.qos.devolverAprobarCredito( Long.valueOf( idCredito ), cash, descripcion, codigo);
-
-		loc.setEntidad(a);
-		return loc;
+		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO IMPLEMENTADO");
 	}	
 	@GET
 	@Path("/aprobarNuevo")
@@ -292,5 +290,19 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		}
 		loc.setEntidad(null);
 		return loc;
+	}
+	
+	@POST
+	@Path("/solicitarAprobacionNuevo")
+	public GenericWrapper<CreditoCreadoSoftbank> solicitarAprobacionNuevo(@QueryParam("correoAsesor") String correoAsesor,
+			@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNegociacion)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
+		}
+			CreditoCreadoSoftbank a = this.qos.solicitarAprobacionNuevo( Long.valueOf(idNegociacion),correoAsesor);
+			loc.setEntidad(a);
+		
+		return loc;			
 	}
 }
