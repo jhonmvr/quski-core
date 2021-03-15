@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -207,7 +206,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (wp.getEstado() != null) {
 				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
 			} else {
-				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO') ");
+				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO' and proceso.ESTADO_PROCESO != 'CADUCADO') ");
 			}
 			if(wp.getAsesor() != null) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
@@ -347,7 +346,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (wp.getEstado() != null) {
 				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
 			} else {
-				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO') ");
+				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO'  and proceso.ESTADO_PROCESO != 'CADUCADO') ");
 			}
 			if(wp.getAsesor() != null) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
