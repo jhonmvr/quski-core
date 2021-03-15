@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -150,7 +151,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			"				else 0 end end end end)  ";
 	private final String FROM_OP = " FROM tb_qo_proceso proceso ";
 	
-
 	@Override
 	public TbQoProceso findById(Long id) throws RelativeException {
 		try {
@@ -669,4 +669,17 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL CONSULTAR EN  findDevolucionesActivas " + e.getMessage());
 		}
 	}
+	@Override
+	public Long caducarProcesos() throws RelativeException {
+		try {
+			Query query = this.getEntityManager().createNativeQuery(" call caducar_estado() ");
+			int number = query.executeUpdate();
+			Long count = Long.valueOf(number);
+			return count;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
+		}
+	}
+
 }
