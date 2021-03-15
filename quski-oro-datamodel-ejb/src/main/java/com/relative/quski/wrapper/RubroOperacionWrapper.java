@@ -11,10 +11,25 @@ public class RubroOperacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long idRubro;
     private String rubro;
+    private String codigoQuski;
     private Long numeroCuota;
     private BigDecimal proyectado;
     private BigDecimal calculado;
+    private BigDecimal cobrado;
     private String estado;
+    
+	public String getCodigoQuski() {
+		return codigoQuski;
+	}
+	public void setCodigoQuski(String codigoQuski) {
+		this.codigoQuski = codigoQuski;
+	}
+	public BigDecimal getCobrado() {
+		return cobrado;
+	}
+	public void setCobrado(BigDecimal cobrado) {
+		this.cobrado = cobrado;
+	}
 	public Long getIdRubro() {
 		return idRubro;
 	}

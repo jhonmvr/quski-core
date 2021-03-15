@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import com.relative.core.exception.RelativeException;
 import com.relative.quski.bpms.api.LocalStorageClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
+import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
@@ -20,6 +22,8 @@ public class CreditoNuevoService {
 	Logger log;
 	@Inject
 	private ParametroRepository parametroRepository;
+	@Inject
+	private CreditoNegociacionRepository creditoNegociacionRepository;
 
 	public RespuestaObjectWrapper plantillaOperacionHabilitante(String codigoOperacion)
 			throws RelativeException, UnsupportedEncodingException {
@@ -40,9 +44,11 @@ public class CreditoNuevoService {
 		}
 	}
 
-	public RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(String codigoOperacion)
+	public RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(Long idNegociacion)
 			throws RelativeException {
-		return SoftBankApiClient.generarHabilitanteCredito(codigoOperacion, parametroRepository
+		TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+		
+		return SoftBankApiClient.generarHabilitanteCredito(credito.getNumeroOperacion(), parametroRepository
 				.findByNombre(QuskiOroConstantes.SOFTBANK_GENERAR_HABILITANTE).getValor());
 	}
 
