@@ -104,8 +104,6 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		return loc;
 	}
 
-
-
 	@Override
 	public PaginatedListWrapper<TbQoExcepcion> listAllEntities(String arg0, String arg1, String arg2, String arg3,
 			String arg4) throws RelativeException {

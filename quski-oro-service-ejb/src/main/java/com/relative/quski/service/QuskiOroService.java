@@ -7691,5 +7691,18 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR GUARDAR GESTION: " + e.getMessage());
 		}
 		
+	}
+
+	public Long caducarCreditos() throws RelativeException {
+		try {
+			return this.procesoRepository.caducarProcesos();
+			
+		}catch( RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch( Exception e ) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR GUARDAR GESTION: " + e.getMessage());
+		}
 	}	
 }

@@ -200,5 +200,12 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad(a);
 		return loc;
 	}
+	@GET
+	@Path("/caducarCreditos")
+	public GenericWrapper<Long> caducarCreditos() throws RelativeException {
+		GenericWrapper<Long> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.caducarCreditos() );
+		return loc;
+	}
 	
 }

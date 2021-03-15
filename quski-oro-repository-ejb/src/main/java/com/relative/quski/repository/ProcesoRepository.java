@@ -32,4 +32,7 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar( BusquedaPorAprobarWrapper wp ) throws RelativeException;
 	public Long countOperacionAprobar( BusquedaPorAprobarWrapper wp ) throws RelativeException;
+	
+	public Long caducarProcesos() throws RelativeException;
+
 }
