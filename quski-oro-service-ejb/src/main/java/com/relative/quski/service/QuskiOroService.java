@@ -6097,7 +6097,7 @@ public class QuskiOroService {
 			if( StringUtils.isNotBlank( send.getCodigoCash() ) ) {
 			    persisted.setCodigoCash(  send.getCodigoCash() );
 			}
-			if( StringUtils.isNotBlank( send.getCodigoDevuelto() ) ) {
+			if( send.getCodigoDevuelto() != null ) {
 			    persisted.setCodigoDevuelto(  send.getCodigoDevuelto() );
 			}
 			if( StringUtils.isNotBlank( send.getDescripcionDevuelto() ) ) {
@@ -7260,7 +7260,7 @@ public class QuskiOroService {
 		}
 	}
 
-	public Boolean devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
+	public TbQoCreditoNegociacion devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
 		try {
 			if( persisted == null) { 
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
@@ -7268,8 +7268,8 @@ public class QuskiOroService {
 			persisted.setCodigoCash(cash);
 			persisted.setCodigoDevuelto(codigo);
 			persisted.setDescripcionDevuelto(descripcion);
-			persisted = this.manageCreditoNegociacion(persisted);
-			return persisted.getDescripcionDevuelto() != null ? Boolean.TRUE : Boolean.FALSE;
+			log.info( " CODIGO DE OPERACION DEVUALTA =================================> "+ persisted.getCodigoDevuelto() );
+			return this.manageCreditoNegociacion(persisted);
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -7610,7 +7610,7 @@ public class QuskiOroService {
 			if( credito == null || StringUtils.isBlank( credito.getNumeroOperacion())) {
 				throw new RelativeException( Constantes.ERROR_CODE_READ, " NO EXISTE EL CREDITO O EL NUMERO DE OPERACION"); 
 			}
-			if(StringUtils.isNotBlank(descripcion)) {
+			if(StringUtils.isBlank(descripcion)) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA DESCRIPCION");
 			}
 			TbQoProceso persisted = this.findProcesoByIdReferencia( credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO );
