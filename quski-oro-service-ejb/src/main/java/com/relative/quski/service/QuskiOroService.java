@@ -3076,17 +3076,8 @@ public class QuskiOroService {
 		TbQoTipoDocumento td = null;
 		TbQoDocumentoHabilitante da = null;
 		try {
-			if (fw.getProcess() == null || fw.getProcess().equalsIgnoreCase("CLIENTE")) {
-				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(fw.getRelatedIdStr(),
-						Long.valueOf(fw.getTypeAction()), null, null);
-			} else if (fw.getProcess().equalsIgnoreCase("COTIZADOR")) {
-				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(null, null, null,
-						Long.valueOf(fw.getTypeAction()));
-			} else if (fw.getProcess().equalsIgnoreCase("NEGOCIACION")) {
-				dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(null,
-						Long.valueOf(fw.getRelatedIdStr()), null, null);
-			}
-
+			dhs = this.findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(fw.getRelatedIdStr(), null, null,
+					Long.valueOf(fw.getTypeAction()));
 		} catch (NumberFormatException e) {
 			dhs = null;
 		}
@@ -6659,6 +6650,9 @@ public class QuskiOroService {
 			return result;
 		}catch(RelativeException e) {
 			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -6748,7 +6742,10 @@ public class QuskiOroService {
 				}
 			});
 			return listImpCom;
-		} catch (RelativeException e) {
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
@@ -6827,13 +6824,10 @@ public class QuskiOroService {
 				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
 				EmailUtil.sendEmail(ed);
 			}
-		} catch (RelativeException e) {
-			e.getStackTrace();
-			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		} catch (Exception e) {
 			e.getStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, "Action no encontrada " + e.getMessage());
-		}
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		} 
 	}
 
 	public Boolean enviarCorreoPruebas(String para, String asunto, String contenido,
@@ -6971,8 +6965,12 @@ public class QuskiOroService {
 			result.setResult( this.procesoRepository.countOperacion( wp ));
 			return result;
 			 
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public ResultOperacionesAprobarWrapper findOperacionesPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
@@ -7028,9 +7026,12 @@ public class QuskiOroService {
 				}
 			}
 			return false;
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public String asignarAprobador(Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
@@ -7070,9 +7071,12 @@ public class QuskiOroService {
 			}else {
 				return "SIN PROCESO";
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public TbQoProceso cancelarNegociacion(Long id, String usuario) throws RelativeException {
@@ -7097,9 +7101,12 @@ public class QuskiOroService {
 			send.setEstadoProceso( EstadoProcesoEnum.CREADO );
 			send.setUsuario( usuario );
 			return this.manageProceso( send );
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	private TbQoProceso createProcesoNovacion( Long idReferencia, String usuario) throws RelativeException {
@@ -7109,9 +7116,12 @@ public class QuskiOroService {
 			send.setEstadoProceso( EstadoProcesoEnum.CREADO );
 			send.setUsuario( usuario );
 			return this.manageProceso( send );
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public TbQoProceso createProcesoPago( Long idReferencia, String usuario) throws RelativeException {
@@ -7121,8 +7131,12 @@ public class QuskiOroService {
 			send.setEstadoProceso( EstadoProcesoEnum.PENDIENTE_APROBACION );
 			send.setUsuario( usuario );
 			return this.manageProceso( send );
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	
@@ -7155,9 +7169,12 @@ public class QuskiOroService {
 					return trackingRepository.findAll(TbQoTracking.class, pw.getSortFields(), pw.getSortDirections());
 				}
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
@@ -7215,9 +7232,12 @@ public class QuskiOroService {
 	public TbQoRubro findRubroById(Long id) throws RelativeException {
 		try {
 			return rubroRepository.findById(id);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public List<TbQoRubro> findAllRubros(PaginatedWrapper pw) throws RelativeException {
@@ -7234,9 +7254,12 @@ public class QuskiOroService {
 							pw.getSortDirections());
 				}
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public TbQoRubro manageRubro(TbQoRubro send) throws RelativeException {
@@ -7250,18 +7273,24 @@ public class QuskiOroService {
 				send.setEstado(EstadoEnum.ACT);
 				return this.rubroRepository.add(send);
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public TbQoRubro updateRubro(TbQoRubro send, TbQoRubro persisted) throws RelativeException {
 		try {
 			persisted.setEstado(EstadoEnum.ACT);
 			return this.rubroRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
@@ -7302,8 +7331,10 @@ public class QuskiOroService {
 			if(proceso == null) { return false; } else { return true; }
 		}catch(RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
@@ -7329,7 +7360,11 @@ public class QuskiOroService {
 			
 			if(proceso == null) { return false; } else { return true; }
 		}catch(RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMensaje() );
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
@@ -7350,10 +7385,12 @@ public class QuskiOroService {
 			proceso.setUsuario(aprobador);
 			this.manageProceso(proceso);
 			return manageExcepcion(exc);
-		} catch (RelativeException e) {
-			// TODO Auto-generated catch block
+		} catch(RelativeException e) {
 			e.printStackTrace();
 			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
@@ -7460,9 +7497,12 @@ public class QuskiOroService {
 			this.tasacionRepository.deleteTasacionByNegociacionId(credito.getId());
 			log.info( "============> DELETE JOYA <============");
 
-		} catch (RelativeException e2) {
-			e2.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_DELETE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION );
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 		garantias.forEach(e->{
 			garantiasSoft.forEach(s ->{
@@ -7516,7 +7556,9 @@ public class QuskiOroService {
 		TbQoCreditoNegociacion credito;						
 		if(id != null) {
 			credito = this.findCreditoNegociacionById(id);
-			if(credito == null) {throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA );}
+			if(credito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA );
+				}
 			
 		}else {
 			credito = new TbQoCreditoNegociacion();
@@ -7592,9 +7634,12 @@ public class QuskiOroService {
 		try {
 			persisted.setCodigo( QuskiOroConstantes.CODIGO_RENOVACION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.creditoNegociacionRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 	public String traerNumeroOperacionMadre(String codigoBpm)  throws RelativeException {
@@ -7604,8 +7649,11 @@ public class QuskiOroService {
 				return nego.getNumeroOperacionMadre();
 			}else { return null; }
 		}catch(RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
