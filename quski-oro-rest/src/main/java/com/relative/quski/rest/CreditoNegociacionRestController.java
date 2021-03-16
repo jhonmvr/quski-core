@@ -172,7 +172,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("cash") String cash, 
 			@QueryParam("agencia") String agencia,
 			@QueryParam("usuario") String usuario,
-			@QueryParam("codigo") String codigoMotivo,
+			@QueryParam("codigoMotivo") String codigoMotivo,
 			@QueryParam("aprobar") String aprobar			
 			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
