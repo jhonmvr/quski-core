@@ -117,7 +117,10 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRenovacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
+import com.relative.quski.wrapper.CrmEntidadWrapper;
+import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
+import com.relative.quski.wrapper.CrmProspectoWrapper;
 import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
@@ -2856,43 +2859,43 @@ public class QuskiOroService {
 
 	}
 
-//	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper p) {
-//		if (p != null) {
-//			TbQoCliente c = new TbQoCliente();
-//			c.setCedulaCliente(p.getCedula());
-//			c.setNombreCompleto(p.getNombreCompleto());
-//			c.setEmail(p.getEmail());
-////			c.setTelefonoAdicional(p.getPhoneOther());
-////			c.setTelefonoFijo(p.getPhoneHome());
-////			c.setTelefonoMovil(p.getPhoneMobile());
-////			c.setTelefonoTrabajo(p.getPhoneWork());
-//			return c;
-//		} else {
-//			return null;
-//		}
-//	}
-//
-//	private Boolean guardarProspectoCrm(TbQoCliente cliente) throws RelativeException {
-//		try {
-//			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
-//			entidad.setCedulaC(cliente.getCedulaCliente());
-//			entidad.setEmailAddress(cliente.getEmail());
-//			entidad.setEmailAddressCaps(StringUtils.isNotBlank(cliente.getEmail())?cliente.getEmail().toUpperCase():null);
-//			entidad.setFirstName(cliente.getNombreCompleto());
-//			entidad.setLeadSourceDescription("GESTION QUSKI");
-//			entidad.setPhoneMobile(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"M").getNumero());
-//			entidad.setPhoneHome(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"F").getNumero());
-//			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
-//			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp);
-//			return pro != null;
-//		} catch (RelativeException e) {
-//			throw e;
-//		} catch (Exception e) {
-//			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-//					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
-//
-//		}
-//	}
+	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper p) {
+		if (p != null) {
+			TbQoCliente c = new TbQoCliente();
+			c.setCedulaCliente(p.getCedula());
+			c.setNombreCompleto(p.getNombreCompleto());
+			c.setEmail(p.getEmail());
+//			c.setTelefonoAdicional(p.getPhoneOther());
+//			c.setTelefonoFijo(p.getPhoneHome());
+//			c.setTelefonoMovil(p.getPhoneMobile());
+//			c.setTelefonoTrabajo(p.getPhoneWork());
+			return c;
+		} else {
+			return null;
+		}
+	}
+
+	public CrmProspectoWrapper guardarProspectoCrm(TbQoCliente cliente) throws RelativeException {
+		try {
+			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
+			entidad.setCedulaC(cliente.getCedulaCliente());
+			entidad.setEmailAddress(cliente.getEmail());
+			entidad.setEmailAddressCaps(StringUtils.isNotBlank(cliente.getEmail())?cliente.getEmail().toUpperCase():null);
+			entidad.setFirstName(cliente.getNombreCompleto());
+			entidad.setLeadSourceDescription("GESTION QUSKI");
+			entidad.setPhoneMobile(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"M").getNumero());
+			entidad.setPhoneHome(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"F").getNumero());
+			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp);
+			return pro;
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+
+		}
+	}
 
 
 	/**

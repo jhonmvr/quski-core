@@ -27,6 +27,8 @@ import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
+import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
+import com.relative.quski.wrapper.CrmProspectoWrapper;
 import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
@@ -181,6 +183,22 @@ public class ClienteRestController extends BaseRestController
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
 		ClienteCompletoWrapper a = this.qos.traerCliente( cedula );
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/buscarClienteCrm")
+	public GenericWrapper<CrmProspectoCortoWrapper> buscarClienteCrm(@QueryParam("cedula") String cedula) throws RelativeException {
+		GenericWrapper<CrmProspectoCortoWrapper> loc = new GenericWrapper<>();
+		CrmProspectoCortoWrapper a = this.qos.findProspectoCrm( cedula );
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
+	@Path("/guardarEnCrm")
+	public GenericWrapper<CrmProspectoWrapper> guardarEnCrm(TbQoCliente cliente) throws RelativeException {
+		GenericWrapper<CrmProspectoWrapper> loc = new GenericWrapper<>();
+		CrmProspectoWrapper a = this.qos.guardarProspectoCrm( cliente );
 		loc.setEntidad(a);
 		return loc;
 	}
