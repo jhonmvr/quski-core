@@ -105,6 +105,7 @@ import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
+import com.relative.quski.wrapper.ClienteCrmWrapper;
 import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalWrapper;
@@ -1269,22 +1270,48 @@ public class QuskiOroService {
 			if (cliente != null) {
 				return this.manageCliente(cliente);
 			} 
-			/*
-			 * cliente = this.prospectoCrmToTbQoCliente(this.findProspectoCrm(cedula));
-			 * log.info("CLIENTE EN CRM ===================>   " + cliente +
-			 * "   <=============="); if (cliente != null) { return
-			 * this.manageCliente(cliente); }
-			 */
+			cliente = this.prospectoCrmToTbQoCliente( this.findProspectoCrm(cedula) );
+			if (cliente != null) { 
+				return this.manageCliente(cliente); 
+			}
 			return null;			
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_CREATE_CLIENTE);
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE);
 		}
-
+	}
+	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper crmW ) throws RelativeException {
+		try {
+			TbQoCliente cliente = new TbQoCliente();
+			cliente.setNombreCompleto( crmW.getNombreCompleto() );
+			cliente.setCedulaCliente( crmW.getCedula() );
+			cliente.setEmail( crmW.getEmail() );
+			cliente = this.manageCliente(cliente); 
+			if( StringUtils.isNotBlank( crmW.getPhoneMobile() ) ) {
+				TbQoTelefonoCliente tlfMovil = new TbQoTelefonoCliente();
+				tlfMovil.setTipoTelefono( "CEL" );
+				tlfMovil.setNumero( crmW.getPhoneMobile() );
+				tlfMovil.setTbQoCliente( cliente );
+				tlfMovil = this.manageTelefonoCliente( tlfMovil );			
+			}
+			if( StringUtils.isNotBlank( crmW.getPhoneHome() ) ) {
+				TbQoTelefonoCliente tlfCasa = new TbQoTelefonoCliente();
+				tlfCasa.setTipoTelefono( "DOM" );
+				tlfCasa.setTbQoCliente( cliente );
+				tlfCasa.setNumero( crmW.getPhoneHome() );
+				tlfCasa = this.manageTelefonoCliente( tlfCasa );			
+			}
+			return cliente;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_CLIENTE);
+		}
 	}
 
 	/**
@@ -2737,6 +2764,7 @@ public class QuskiOroService {
 	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data) throws RelativeException {
 		try {
 			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia);
+			this.guardarProspectoCrm(cliente);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
@@ -2776,6 +2804,7 @@ public class QuskiOroService {
 			if (cot == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, " AL GENERAR TODAS LAS TABLAS INICIALES.");			
 			}
+			this.guardarProspectoCrm(cliente);
 			CotizacionWrapper wrapper = new CotizacionWrapper();
 			List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente());
 			wrapper.setCotizacion(cot);
@@ -2858,23 +2887,6 @@ public class QuskiOroService {
 		}
 
 	}
-
-	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper p) {
-		if (p != null) {
-			TbQoCliente c = new TbQoCliente();
-			c.setCedulaCliente(p.getCedula());
-			c.setNombreCompleto(p.getNombreCompleto());
-			c.setEmail(p.getEmail());
-//			c.setTelefonoAdicional(p.getPhoneOther());
-//			c.setTelefonoFijo(p.getPhoneHome());
-//			c.setTelefonoMovil(p.getPhoneMobile());
-//			c.setTelefonoTrabajo(p.getPhoneWork());
-			return c;
-		} else {
-			return null;
-		}
-	}
-
 	public CrmProspectoWrapper guardarProspectoCrm(TbQoCliente cliente) throws RelativeException {
 		try {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
@@ -2882,15 +2894,24 @@ public class QuskiOroService {
 			entidad.setEmailAddress(cliente.getEmail());
 			entidad.setEmailAddressCaps(StringUtils.isNotBlank(cliente.getEmail())?cliente.getEmail().toUpperCase():null);
 			entidad.setFirstName(cliente.getNombreCompleto());
-			entidad.setLeadSourceDescription("GESTION QUSKI");
-			entidad.setPhoneMobile(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"M").getNumero());
-			entidad.setPhoneHome(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"F").getNumero());
+			entidad.setLeadSourceDescription("GESTION BPM QUSKI");
+			TbQoTelefonoCliente tlfMovil = this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"CEL");
+			if(tlfMovil != null ) {
+				entidad.setPhoneMobile( tlfMovil.getNumero() );				
+			}
+			TbQoTelefonoCliente tlfCasa = this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(),"DOM");
+			if(tlfCasa != null ) {
+				entidad.setPhoneMobile( tlfCasa.getNumero() );				
+			}
 			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
 			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp);
+			log.info( " GUARDANDO EN CRM =====================================> " + pro.getCedulaC() );
 			return pro;
 		} catch (RelativeException e) {
+			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 
