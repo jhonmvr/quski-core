@@ -6643,8 +6643,13 @@ public class QuskiOroService {
 				datos.setNumeroFundaJoya( credito.getNumeroFunda().toString() );								
 			}
 			datos.setCodigoTipoFunda( credito.getCodigoTipoFunda() ); 
-			datos.setUriImagenSinFunda( credito.getUriImagenSinFunda() );
-			datos.setUriImagenConFunda( credito.getUriImagenConFunda() );
+			TbQoDocumentoHabilitante fotoJoya = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("6"), ProcessEnum.FUNDA, String.valueOf(credito.getTbQoNegociacion().getId()));
+			TbQoDocumentoHabilitante fotoFunda = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("7"), ProcessEnum.FUNDA, String.valueOf(credito.getTbQoNegociacion().getId()));
+			if(fotoJoya == null || fotoFunda == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LAS FOTOS DE LA FUNDA");
+			}
+			datos.setUriImagenSinFunda(fotoJoya.getObjectId() );
+			datos.setUriImagenConFunda(fotoFunda.getObjectId() );
 			List<JoyaWrapper> listjoyas = generarJoyas(credito, joyas);
 			datos.setGarantias( listjoyas );
 			result.setDatosGarantias( datos );
@@ -7607,7 +7612,7 @@ public class QuskiOroService {
 			if( credito == null || StringUtils.isBlank( credito.getNumeroOperacion())) {
 				throw new RelativeException( Constantes.ERROR_CODE_READ, " NO EXISTE EL CREDITO O EL NUMERO DE OPERACION"); 
 			}
-			if(StringUtils.isNotBlank(descripcion)) {
+			if(StringUtils.isBlank(descripcion)) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA DESCRIPCION");
 			}
 			TbQoProceso persisted = this.findProcesoByIdReferencia( credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO );
