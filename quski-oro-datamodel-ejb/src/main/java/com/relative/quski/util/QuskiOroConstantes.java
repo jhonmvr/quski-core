@@ -19,6 +19,7 @@ public class QuskiOroConstantes {
 	public static final String PREFIX_REPORT_SUB_THREE_PATH="report.sub.three.path.";
 	public static final String PATH_REPORTE="PATH_REPORTE";
 	public static final String REPORT_MAIN_PATH="PATH_REPORTE";
+	public static final String REPORT_TIEMPO_TRANSCURRIDO="REPORT_TIEMPO_TRANSCURRIDO";
 	/**
 	 * Varible en sistema correspondiente al home de widlfly
 	 */
