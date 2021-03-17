@@ -1,6 +1,8 @@
 package com.relative.quski.repository.imp;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,13 +17,22 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoClientePago;
+import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoVerificacionTelefonica;
 import com.relative.quski.repository.ProcesoRepository;
+import com.relative.quski.repository.spec.CreditoByListIdsAndAprobadoresSpec;
+import com.relative.quski.repository.spec.DevolucionByListIdsAndAprobadoresSpec;
+import com.relative.quski.repository.spec.PagoByListIdsAndAprobadoresSpec;
 import com.relative.quski.repository.spec.ProcesoByAsesorSpec;
 import com.relative.quski.repository.spec.ProcesoByIdNegociacion;
 import com.relative.quski.repository.spec.ProcesoByIdNovacion;
 import com.relative.quski.repository.spec.ProcesoByIdReferenciaSpec;
 import com.relative.quski.repository.spec.ProcesoByIdSpec;
+import com.relative.quski.repository.spec.ProcesoByProcesosEstadosAndTimeDiferenceSpec;
+import com.relative.quski.repository.spec.VerificacionByListIdsAndAprobadoresSpec;
 import com.relative.quski.util.QueryConstantes;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
@@ -29,6 +40,7 @@ import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 
 /**
@@ -679,6 +691,49 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
+	}
+	@SuppressWarnings("null")
+	@Override
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
+			throws RelativeException {
+		try {
+			List<TbQoProceso> listProceso = this.findAllBySpecification( new ProcesoByProcesosEstadosAndTimeDiferenceSpec( procesos, estados, tiempoBase ) );
+			log.info(" HORA DE TIEMPO DE BASE ========================================> " + tiempoBase );
+			if( listProceso == null || listProceso.isEmpty() ) {
+				return null;
+			}
+			if( procesos == null || procesos.isEmpty() ) {
+				return null;
+			}
+			List<Long> ids = new ArrayList<>();;
+			listProceso.forEach( e ->{
+				ids.add( e.getIdReferencia() );
+			});
+			List<TbQoCreditoNegociacion> listCredito = new ArrayList<>();
+			List<TbQoClientePago> listPago 	= new ArrayList<>();
+			List<TbQoVerificacionTelefonica> listVerificacion = new ArrayList<>();
+			List<TbQoDevolucion> listDevolucion = new ArrayList<>();
+			for(ProcesoEnum proceso : procesos) {
+				if( proceso.compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
+					listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( ids, aprobadores ) );
+					
+				}if( proceso.compareTo( ProcesoEnum.PAGO ) == 0 ) {
+					listPago =  this.findAllBySpecification( new PagoByListIdsAndAprobadoresSpec( ids, aprobadores ) );
+					
+				}if( proceso.compareTo( ProcesoEnum.VERIFICACION_TELEFONICA ) == 0 ) {
+					listVerificacion =  this.findAllBySpecification( new VerificacionByListIdsAndAprobadoresSpec( ids, aprobadores ) );
+
+				}if( proceso.compareTo( ProcesoEnum.DEVOLUCION ) == 0 ) {
+					listDevolucion =  this.findAllBySpecification( new DevolucionByListIdsAndAprobadoresSpec( ids, aprobadores ) );
+
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
+		}
+		return null;
 	}
 
 }

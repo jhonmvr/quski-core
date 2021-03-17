@@ -224,8 +224,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="gasto_cobranza")
 	private BigDecimal gastoCobranza;
 
-
-
 	@Column(name="impuesto_solca")
 	private BigDecimal impuestoSolca;
 
@@ -235,10 +233,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="monto_previo_desembolso")
 	private BigDecimal montoPrevioDesembolso;
 
-
 	@Column(name="neto_al_cliente")
 	private BigDecimal netoAlCliente;
-
 
 	@Column(name="periodicidad_plazo")
 	private String periodicidadPlazo;
@@ -246,10 +242,8 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="periodo_plazo")
 	private String periodoPlazo;
 
-
 	@Column(name="porcentaje_flujo_planeado")
 	private BigDecimal porcentajeFlujoPlaneado;
-
 
 	@Column(name="saldo_capital_renov")
 	private BigDecimal saldoCapitalRenov;
@@ -259,7 +253,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="saldo_mora")
 	private BigDecimal saldoMora;
-
 
 	@Column(name="tipo_oferta")
 	private String tipoOferta;

@@ -105,7 +105,6 @@ import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
-import com.relative.quski.wrapper.ClienteCrmWrapper;
 import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalWrapper;
@@ -5426,6 +5425,36 @@ public class QuskiOroService {
 		}
 		
 	}
+	public void findByTiempoBaseAprobadorProcesoEstadoProceso( ) throws RelativeException {
+		try {
+			List<ProcesoEnum> listProceso = new ArrayList<>();
+			listProceso.add( ProcesoEnum.NUEVO );
+			listProceso.add( ProcesoEnum.PAGO );
+			listProceso.add( ProcesoEnum.RENOVACION );
+			listProceso.add( ProcesoEnum.VERIFICACION_TELEFONICA );
+			listProceso.add( ProcesoEnum.DEVOLUCION );
+			Timestamp time = new Timestamp( QuskiOroUtil.formatSringToDateFull( "0000-00-00 00:07:00" ).getTime() );
+			List<String> listAprobador = new ArrayList<>();
+			listAprobador.add( "SUPERVISORFABRICA" );
+			listAprobador.add( "GERENTECOMERCIAL" );
+			listAprobador.add( "GERENTEFABRICA" );
+			List<EstadoProcesoEnum> listEstados = new ArrayList<>();
+			listEstados.add( EstadoProcesoEnum.APROBADO );
+			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA );
+			listEstados.add( EstadoProcesoEnum.DEVUELTO );
+			this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, listAprobador, listProceso, listEstados );
+			
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
+		}
+		
+	}
 	// TODO: Testear metodo por conflictos
 	public SimularResponse simularOfertasCalculadora(Long idCredito, BigDecimal montoSolicitado, BigDecimal riesgoTotal,String codigoAgencia) throws RelativeException {				
 		try {
@@ -6944,6 +6973,9 @@ public class QuskiOroService {
 			if (send.getEstadoProceso() != null) {
 				persisted.setEstadoProceso(send.getEstadoProceso());
 			}
+			if(send.getHoraAprobador() != null ) {
+				persisted.setHoraAprobador( send.getHoraAprobador() );
+			}
 			if (send.getUsuario() != null) {
 				persisted.setUsuario(send.getUsuario());
 			}
@@ -7060,6 +7092,7 @@ public class QuskiOroService {
 			TbQoProceso persistedProceso = this.findProcesoByIdReferencia(id, proceso);
 			if(persistedProceso != null) {
 				persistedProceso.setUsuario( aprobador );
+				persistedProceso.setHoraAprobador( new Timestamp(System.currentTimeMillis()) );
 				TbQoProceso cambioProceso = this.manageProceso(persistedProceso);
 				
 				if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {

@@ -1,17 +1,20 @@
 package com.relative.quski.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.Local;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
+import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 
 @Local
@@ -34,5 +37,7 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public Long countOperacionAprobar( BusquedaPorAprobarWrapper wp ) throws RelativeException;
 	
 	public Long caducarProcesos() throws RelativeException;
+	
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados ) throws RelativeException;
 
 }
