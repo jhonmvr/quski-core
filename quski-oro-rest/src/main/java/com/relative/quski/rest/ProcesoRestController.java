@@ -81,14 +81,14 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad(inEg);
 		return loc;
 	}
-	@GET
-	@Path("/mookDeTiempoCaducado")
-	public GenericWrapper<Boolean> mookDeTiempoCaducado() throws RelativeException {
-		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		this.qos.findByTiempoBaseAprobadorProcesoEstadoProceso();
-		loc.setEntidad(Boolean.TRUE);
-		return loc;
-	}
+//	@GET
+//	@Path("/mookDeTiempoCaducado")
+//	public GenericWrapper<Boolean> mookDeTiempoCaducado() throws RelativeException {
+//		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+//		this.qos.findByTiempoBaseAprobadorProcesoEstadoProceso();
+//		loc.setEntidad(Boolean.TRUE);
+//		return loc;
+//	}
 	@Override
 	@POST
 	@Path("/persistEntity")

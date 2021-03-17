@@ -4,11 +4,8 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,7 +18,6 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
@@ -750,12 +746,12 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				}
 				
 			}
-			
+
+			return lista;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
-		return lista;
 	}
 
 }
