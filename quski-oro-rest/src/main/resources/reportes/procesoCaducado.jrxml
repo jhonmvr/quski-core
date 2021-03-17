@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProcesoCaducado" pageWidth="800" pageHeight="450" columnWidth="89" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="14" uuid="0aca80b7-95f1-4f1d-bbe5-5064e8fb3526">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dsdetalle" uuid="8ac8db0c-be34-4927-8e21-d8dbe244ec36">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="custodiaAlmacenamiento" class="java.lang.String">
+			<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
+		</field>
+		<field name="valorRenovacion" class="java.lang.String">
+			<fieldDescription><![CDATA[valorRenovacion]]></fieldDescription>
+		</field>
+		<field name="servicioAdministrativo" class="java.lang.String">
+			<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.String">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="LIST_DS" uuid="1ff2ec5f-9cd6-4d93-b3ab-3edbdb708d9c">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="tiempoInicio" class="java.sql.Timestamp">
+			<fieldDescription><![CDATA[tiempoInicio]]></fieldDescription>
+		</field>
+		<field name="tiempoTranscurrido" class="java.sql.Timestamp">
+			<fieldDescription><![CDATA[tiempoTranscurrido]]></fieldDescription>
+		</field>
+		<field name="codigoBpm" class="java.lang.String">
+			<fieldDescription><![CDATA[codigoBpm]]></fieldDescription>
+		</field>
+		<field name="proceso" class="com.relative.quski.enums.ProcesoEnum">
+			<fieldDescription><![CDATA[proceso]]></fieldDescription>
+		</field>
+		<field name="aprobador" class="java.lang.String">
+			<fieldDescription><![CDATA[aprobador]]></fieldDescription>
+		</field>
+		<field name="codigSoftbank" class="java.lang.String">
+			<fieldDescription><![CDATA[codigSoftbank]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.ActaEntregaRecepcionWrapper"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="custodiaAlmacenamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
+	</field>
+	<field name="valorRenovacion" class="java.lang.String"/>
+	<field name="nuevaFechaVencimiento" class="java.lang.String"/>
+	<field name="servicioAdministrativo" class="java.lang.String">
+		<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
+	</field>
+	<field name="renovacion" class="java.lang.String">
+		<fieldDescription><![CDATA[renovacion]]></fieldDescription>
+	</field>
+	<field name="identificacionCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[identificacionCliente]]></fieldDescription>
+	</field>
+	<field name="plazoContrato" class="java.lang.String">
+		<fieldDescription><![CDATA[plazoContrato]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.String"/>
+	<field name="identificacionApoderado" class="java.lang.String">
+		<fieldDescription><![CDATA[identificacionApoderado]]></fieldDescription>
+	</field>
+	<field name="nombreCliente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreCliente]]></fieldDescription>
+	</field>
+	<field name="fechaCreacion" class="java.lang.String"/>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="nombreApoderado" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreApoderado]]></fieldDescription>
+	</field>
+	<field name="nombreAgente" class="java.lang.String">
+		<fieldDescription><![CDATA[nombreAgente]]></fieldDescription>
+	</field>
+	<title>
+		<band height="344" splitType="Stretch">
+			<componentElement>
+				<reportElement x="30" y="10" width="560" height="60" uuid="3db502b2-91a2-46ea-a06d-5bf54115a34d">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="LIST_DS" uuid="b232a662-5997-42a5-8276-583390a92e43">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="80" uuid="7d3f2935-d734-4119-936e-756558e54c60">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="f91e7979-74fd-469a-a365-db88a270249d"/>
+								<text><![CDATA[Codigo 
+Bpm]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="80" height="30" uuid="7c2caf99-6d18-4461-a4ae-09658efe02a8"/>
+								<textFieldExpression><![CDATA[$F{codigoBpm}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="d6957955-c9c1-4c62-b942-efd2593faf4e">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d3135bb8-95f1-4d8c-8de1-b295d616c055"/>
+								<text><![CDATA[Codigo Softbank]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="1ad19d29-4c8f-48d8-9e48-89122ccd24fa"/>
+								<textFieldExpression><![CDATA[$F{codigSoftbank}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="11d9e4df-39d9-42c1-8fd1-6b3c835b8ad2">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="fc7b7479-b8f4-481a-a4d9-1bbde4298ff5"/>
+								<text><![CDATA[Proceso]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="18dcd3ba-074e-47ae-88a9-2f6462fe727d"/>
+								<textFieldExpression><![CDATA[$F{proceso}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="b91ac1d1-0a0e-4581-82f6-a7bf214fcc08">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="02328dd9-0823-4358-90be-2d89c17023e8"/>
+								<text><![CDATA[Aprobador]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="32c81ade-0655-45af-a630-5d662d0fee66"/>
+								<textFieldExpression><![CDATA[$F{aprobador}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="54845804-913c-4da2-a949-8295ff405a29">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="f1462401-1b90-4162-ac1c-c28e95d4573a"/>
+								<text><![CDATA[Tiempo Inicio]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="0f2d6691-ae2c-46e1-bf9b-36491a84fed3"/>
+								<textFieldExpression><![CDATA[$F{tiempoInicio}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="457ed9e5-ec35-47aa-86de-b847c3a19669">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="e9e8fea5-d92b-4e74-baab-9c2825df89d9"/>
+								<text><![CDATA[Tiempo transcurrido]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="26ebe6e9-b95a-4011-97ef-3b42ff2dac7a"/>
+								<textFieldExpression><![CDATA[$F{tiempoTranscurrido}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</title>
+</jasperReport>
