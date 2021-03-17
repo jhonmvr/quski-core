@@ -17,7 +17,7 @@ public class ProcesoCaducadoWrapper implements Serializable {
 	private ProcesoEnum proceso;
 	private String aprobador;
 	private Timestamp tiempoInicio;
-	private Timestamp tiempoTranscurrido;
+	private Long tiempoTranscurrido;
 	
 	public String getCodigoBpm() {
 		return codigoBpm;
@@ -49,10 +49,10 @@ public class ProcesoCaducadoWrapper implements Serializable {
 	public void setTiempoInicio(Timestamp tiempoInicio) {
 		this.tiempoInicio = tiempoInicio;
 	}
-	public Timestamp getTiempoTranscurrido() {
+	public Long getTiempoTranscurrido() {
 		return tiempoTranscurrido;
 	}
-	public void setTiempoTranscurrido(Timestamp tiempoTranscurrido) {
+	public void setTiempoTranscurrido(Long tiempoTranscurrido) {
 		this.tiempoTranscurrido = tiempoTranscurrido;
 	}
 

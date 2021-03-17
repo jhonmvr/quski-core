@@ -710,7 +710,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				ProcesoCaducadoWrapper wrapper = new ProcesoCaducadoWrapper();
 				wrapper.setProceso(proceso.getProceso());
 				wrapper.setTiempoInicio(proceso.getHoraAprobador());
-				wrapper.setTiempoTranscurrido(new Timestamp(new Date().getTime() - proceso.getHoraAprobador().getTime()) );
+				wrapper.setTiempoTranscurrido(new Date().getTime() - proceso.getHoraAprobador().getTime() );
 				if( proceso.getProceso().compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.getProceso().compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
 					List<TbQoCreditoNegociacion> listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
 					if(listCredito != null && !listCredito.isEmpty()) {
