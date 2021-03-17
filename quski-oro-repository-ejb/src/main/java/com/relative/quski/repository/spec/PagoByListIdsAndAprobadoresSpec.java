@@ -16,10 +16,10 @@ public class PagoByListIdsAndAprobadoresSpec  extends AbstractSpecification<TbQo
 	
 		
 	private List<String> aprobadores;
-	private List<Long> ids;
+	private Long ids;
 
  
-	public PagoByListIdsAndAprobadoresSpec(List<Long> ids,	List<String> aprobadores) {
+	public PagoByListIdsAndAprobadoresSpec(Long ids,	List<String> aprobadores) {
 		super();
 		this.ids = ids;
 		this.aprobadores = aprobadores;
@@ -35,8 +35,8 @@ public class PagoByListIdsAndAprobadoresSpec  extends AbstractSpecification<TbQo
 		@Override
 		public Predicate toPredicate(Root<TbQoClientePago> poll, CriteriaBuilder cb) {
 			List<Predicate> where = new ArrayList<Predicate>();
-			if( this.ids != null && !this.ids.isEmpty() ) {
-				where.add(poll.<Long>get("id").in(this.ids));
+			if( this.ids != null ) {
+				where.add(cb.equal(poll.<Long>get("id"), this.ids));
 			}
 			if( this.aprobadores != null && !this.aprobadores.isEmpty() ) {
 				where.add(poll.<String>get("aprobador").in( this.aprobadores ) );

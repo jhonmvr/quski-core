@@ -3,8 +3,12 @@ package com.relative.quski.repository.imp;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,6 +21,7 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
@@ -692,7 +697,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
 	}
-	@SuppressWarnings("null")
 	@Override
 	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
 			throws RelativeException {
@@ -705,35 +709,53 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if( procesos == null || procesos.isEmpty() ) {
 				return null;
 			}
-			List<Long> ids = new ArrayList<>();;
-			listProceso.forEach( e ->{
-				ids.add( e.getIdReferencia() );
-			});
-			List<TbQoCreditoNegociacion> listCredito = new ArrayList<>();
-			List<TbQoClientePago> listPago 	= new ArrayList<>();
-			List<TbQoVerificacionTelefonica> listVerificacion = new ArrayList<>();
-			List<TbQoDevolucion> listDevolucion = new ArrayList<>();
-			for(ProcesoEnum proceso : procesos) {
-				if( proceso.compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
-					listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( ids, aprobadores ) );
-					
-				}if( proceso.compareTo( ProcesoEnum.PAGO ) == 0 ) {
-					listPago =  this.findAllBySpecification( new PagoByListIdsAndAprobadoresSpec( ids, aprobadores ) );
-					
-				}if( proceso.compareTo( ProcesoEnum.VERIFICACION_TELEFONICA ) == 0 ) {
-					listVerificacion =  this.findAllBySpecification( new VerificacionByListIdsAndAprobadoresSpec( ids, aprobadores ) );
-
-				}if( proceso.compareTo( ProcesoEnum.DEVOLUCION ) == 0 ) {
-					listDevolucion =  this.findAllBySpecification( new DevolucionByListIdsAndAprobadoresSpec( ids, aprobadores ) );
-
+			List<ProcesoCaducadoWrapper> lista = new ArrayList<>();
+			for(TbQoProceso  proceso:listProceso) {
+				ProcesoCaducadoWrapper wrapper = new ProcesoCaducadoWrapper();
+				wrapper.setProceso(proceso.getProceso());
+				wrapper.setTiempoInicio(proceso.getHoraAprobador());
+				wrapper.setTiempoTranscurrido(new Timestamp(new Date().getTime() - proceso.getHoraAprobador().getTime()) );
+				if( proceso.getProceso().compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.getProceso().compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
+					List<TbQoCreditoNegociacion> listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
+					if(listCredito != null && !listCredito.isEmpty()) {
+						wrapper.setAprobador(listCredito.get(0).getTbQoNegociacion().getAprobador());
+						wrapper.setCodigoBpm(listCredito.get(0).getCodigo());
+						wrapper.setCodigSoftbank(listCredito.get(0).getNumeroOperacion());
+						lista.add(wrapper);
+					}
+				
+				}else if( proceso.getProceso().compareTo( ProcesoEnum.PAGO ) == 0 ) {
+					List<TbQoClientePago> listPago  =  this.findAllBySpecification( new PagoByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
+					if(listPago != null && !listPago.isEmpty()) {
+						wrapper.setAprobador(listPago.get(0).getAprobador());
+						wrapper.setCodigoBpm(listPago.get(0).getCodigo());
+						wrapper.setCodigSoftbank(listPago.get(0).getCodigoOperacion());
+						lista.add(wrapper);
+					}
+				}else if( proceso.getProceso().compareTo( ProcesoEnum.VERIFICACION_TELEFONICA ) == 0 ) {
+					List<TbQoVerificacionTelefonica> listVerificacion =  this.findAllBySpecification( new VerificacionByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
+					if(listVerificacion != null && !listVerificacion.isEmpty()) {
+						wrapper.setAprobador(listVerificacion.get(0).getAprobador());
+						wrapper.setCodigoBpm(listVerificacion.get(0).getCodigo());
+						lista.add(wrapper);
+					}
+				}else if( proceso.getProceso().compareTo( ProcesoEnum.DEVOLUCION ) == 0 ) {
+					List<TbQoDevolucion> listDevolucion  =  this.findAllBySpecification( new DevolucionByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
+					if(listDevolucion != null && !listDevolucion.isEmpty()) {
+						wrapper.setAprobador(listDevolucion.get(0).getAprobador());
+						wrapper.setCodigoBpm(listDevolucion.get(0).getCodigo());
+						wrapper.setCodigSoftbank(listDevolucion.get(0).getCodigoOperacion());
+						lista.add(wrapper);
+					}
 				}
+				
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
-		return null;
+		return lista;
 	}
 
 }

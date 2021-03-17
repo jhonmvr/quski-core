@@ -141,6 +141,7 @@ import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
@@ -5425,26 +5426,10 @@ public class QuskiOroService {
 		}
 		
 	}
-	public void findByTiempoBaseAprobadorProcesoEstadoProceso( ) throws RelativeException {
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( List<ProcesoEnum> listProceso,List<String> listAprobador,List<EstadoProcesoEnum> listEstados) throws RelativeException {
 		try {
-			List<ProcesoEnum> listProceso = new ArrayList<>();
-			listProceso.add( ProcesoEnum.NUEVO );
-			listProceso.add( ProcesoEnum.PAGO );
-			listProceso.add( ProcesoEnum.RENOVACION );
-			listProceso.add( ProcesoEnum.VERIFICACION_TELEFONICA );
-			listProceso.add( ProcesoEnum.DEVOLUCION );
-			Timestamp time = new Timestamp( QuskiOroUtil.formatSringToDateFull( "0000-00-00 00:07:00" ).getTime() );
-			List<String> listAprobador = new ArrayList<>();
-			listAprobador.add( "SUPERVISORFABRICA" );
-			listAprobador.add( "GERENTECOMERCIAL" );
-			listAprobador.add( "GERENTEFABRICA" );
-			List<EstadoProcesoEnum> listEstados = new ArrayList<>();
-			listEstados.add( EstadoProcesoEnum.APROBADO );
-			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
-			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
-			listEstados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA );
-			listEstados.add( EstadoProcesoEnum.DEVUELTO );
-			this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, listAprobador, listProceso, listEstados );
+			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, listAprobador, listProceso, listEstados );
 			
 		}catch (RelativeException e) {
 			e.printStackTrace();

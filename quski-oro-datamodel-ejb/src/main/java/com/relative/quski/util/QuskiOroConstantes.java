@@ -393,6 +393,7 @@ public class QuskiOroConstantes {
 	public static final String CODIGO_BLOQUEO_D = "CODIGO_BLOQUEO_D";
 	public static final String CODIGO_BLOQUEO_E = "CODIGO_BLOQUEO_E";
 	public static final String CODIGO_BLOQUEO_F = "CODIGO_BLOQUEO_F";
+	public static final String TIEMPO_APROBACION = "TIEMPO_APROBACION";
 	
 
   
