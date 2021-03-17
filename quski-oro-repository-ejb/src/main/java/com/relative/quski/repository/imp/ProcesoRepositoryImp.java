@@ -708,8 +708,8 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			List<ProcesoCaducadoWrapper> lista = new ArrayList<>();
 			for(TbQoProceso  proceso:listProceso) {
 				ProcesoCaducadoWrapper wrapper = new ProcesoCaducadoWrapper();
-				wrapper.setProceso(proceso.getProceso());
-				wrapper.setTiempoInicio(proceso.getHoraAprobador());
+				wrapper.setProceso(proceso.getProceso().toString());
+				wrapper.setTiempoInicio(QuskiOroUtil.formatSringToDate(proceso.getHoraAprobador(), QuskiOroUtil.DATE_FORMAT_FULL) );
 				wrapper.setTiempoTranscurrido(new Date().getTime() - proceso.getHoraAprobador().getTime() );
 				if( proceso.getProceso().compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.getProceso().compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
 					List<TbQoCreditoNegociacion> listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );

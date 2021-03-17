@@ -14,9 +14,9 @@ public class ProcesoCaducadoWrapper implements Serializable {
 	
 	private String codigoBpm;
 	private String codigSoftbank;
-	private ProcesoEnum proceso;
+	private String proceso;
 	private String aprobador;
-	private Timestamp tiempoInicio;
+	private String tiempoInicio;
 	private Long tiempoTranscurrido;
 	
 	public String getCodigoBpm() {
@@ -31,10 +31,10 @@ public class ProcesoCaducadoWrapper implements Serializable {
 	public void setCodigSoftbank(String codigSoftbank) {
 		this.codigSoftbank = codigSoftbank;
 	}
-	public ProcesoEnum getProceso() {
+	public String getProceso() {
 		return proceso;
 	}
-	public void setProceso(ProcesoEnum proceso) {
+	public void setProceso(String proceso) {
 		this.proceso = proceso;
 	}
 	public String getAprobador() {
@@ -43,10 +43,10 @@ public class ProcesoCaducadoWrapper implements Serializable {
 	public void setAprobador(String aprobador) {
 		this.aprobador = aprobador;
 	}
-	public Timestamp getTiempoInicio() {
+	public String getTiempoInicio() {
 		return tiempoInicio;
 	}
-	public void setTiempoInicio(Timestamp tiempoInicio) {
+	public void setTiempoInicio(String tiempoInicio) {
 		this.tiempoInicio = tiempoInicio;
 	}
 	public Long getTiempoTranscurrido() {
