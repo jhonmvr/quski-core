@@ -38,6 +38,8 @@ public class DevolucionByListIdsAndAprobadoresSpec  extends AbstractSpecificatio
 		}
 		if( this.aprobadores != null && !this.aprobadores.isEmpty() ) {
 			where.add(poll.<String>get("aprobador").in( this.aprobadores ) );
+		}else {
+			where.add(cb.isNotNull(poll.<String>get("aprobador")) );
 		}
 		return cb.and(where.toArray(new Predicate[]{}));
 	}

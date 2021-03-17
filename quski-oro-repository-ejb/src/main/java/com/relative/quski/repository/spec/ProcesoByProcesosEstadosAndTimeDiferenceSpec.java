@@ -21,10 +21,10 @@ public class ProcesoByProcesosEstadosAndTimeDiferenceSpec  extends AbstractSpeci
 		
 	private List<ProcesoEnum> procesos;
 	private List<EstadoProcesoEnum> estados;
-	private Timestamp horaBase;
+	private Long horaBase;
 
  
-	public ProcesoByProcesosEstadosAndTimeDiferenceSpec(List<ProcesoEnum> procesos,	List<EstadoProcesoEnum> estados, Timestamp horaBase) {
+	public ProcesoByProcesosEstadosAndTimeDiferenceSpec(List<ProcesoEnum> procesos,	List<EstadoProcesoEnum> estados, Long horaBase) {
 		super();
 		this.procesos = procesos;
 		this.horaBase = horaBase;
@@ -48,7 +48,7 @@ public class ProcesoByProcesosEstadosAndTimeDiferenceSpec  extends AbstractSpeci
 				where.add(poll.<EstadoProcesoEnum>get("estadoProceso").in( this.estados ) );
 			}
 			if( this.horaBase != null ) {
-				long result = new Timestamp( System.currentTimeMillis() ).getTime() - horaBase.getTime();
+				long result = new Timestamp( System.currentTimeMillis() ).getTime() - horaBase;
 				Timestamp resultTime = new Timestamp( result );
 				where.add(cb.lessThanOrEqualTo(poll.get("horaAprobador"), resultTime));
 			}

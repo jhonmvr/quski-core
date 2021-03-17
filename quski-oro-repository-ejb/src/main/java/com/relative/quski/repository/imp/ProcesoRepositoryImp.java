@@ -1,7 +1,6 @@
 package com.relative.quski.repository.imp;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -694,7 +693,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		}
 	}
 	@Override
-	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Long tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
 			throws RelativeException {
 		try {
 			List<TbQoProceso> listProceso = this.findAllBySpecification( new ProcesoByProcesosEstadosAndTimeDiferenceSpec( procesos, estados, tiempoBase ) );

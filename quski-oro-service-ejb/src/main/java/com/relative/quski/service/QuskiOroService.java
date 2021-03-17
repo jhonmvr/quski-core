@@ -5429,7 +5429,7 @@ public class QuskiOroService {
 	}
 	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( List<ProcesoEnum> listProceso,List<String> listAprobador,List<EstadoProcesoEnum> listEstados) throws RelativeException {
 		try {
-			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			Long time = Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor());
 			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, listAprobador, listProceso, listEstados );
 			
 		}catch (RelativeException e) {

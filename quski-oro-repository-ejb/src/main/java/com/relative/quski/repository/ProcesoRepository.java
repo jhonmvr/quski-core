@@ -1,6 +1,5 @@
 package com.relative.quski.repository;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -38,6 +37,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	
 	public Long caducarProcesos() throws RelativeException;
 	
-	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados ) throws RelativeException;
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( Long tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados ) throws RelativeException;
 
 }
