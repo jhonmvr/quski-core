@@ -303,8 +303,7 @@ public class QuskiOroUtil {
 			date.setTime(ts.getTime());
 			return new SimpleDateFormat("yyyyMMdd").format(date);
 		} catch (Exception e) {
-			throw new RelativeException(
-					"formatSringToDate ERROR AL PARSEAR LA FECHA " + e.getMessage());
+			return "";
 		}
 		/*
 		 * DateTime dateTime = new DateTime(date); return
