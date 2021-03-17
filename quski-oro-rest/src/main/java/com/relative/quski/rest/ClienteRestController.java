@@ -194,7 +194,7 @@ public class ClienteRestController extends BaseRestController
 		loc.setEntidad(a);
 		return loc;
 	}
-	@GET
+	@POST
 	@Path("/guardarEnCrm")
 	public GenericWrapper<CrmProspectoWrapper> guardarEnCrm(TbQoCliente cliente) throws RelativeException {
 		GenericWrapper<CrmProspectoWrapper> loc = new GenericWrapper<>();

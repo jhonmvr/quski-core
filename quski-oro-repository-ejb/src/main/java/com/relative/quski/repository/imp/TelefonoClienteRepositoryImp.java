@@ -42,8 +42,7 @@ public class TelefonoClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 	public TbQoTelefonoCliente findByClienteAndTipo(String identificacion, String tipoTelefono)
 			throws RelativeException {
 		try {
-			List<TbQoTelefonoCliente> list = findAllBySpecification(new TelefonoByClienteAndTipoSpec( identificacion,tipoTelefono ));
-		
+			List<TbQoTelefonoCliente> list = findAllBySpecification(new TelefonoByClienteAndTipoSpec( identificacion, tipoTelefono ));
 			if(list != null && !list.isEmpty()) {
 				return list.get(0);
 			}
@@ -51,7 +50,7 @@ public class TelefonoClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQ
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "AL BUSCAR TELEFONO DEL CLIENTE");
 		}
 	}
 

@@ -8,6 +8,7 @@ import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -48,9 +49,11 @@ public class TbQoProceso implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private ProcesoEnum proceso;
+	
+	@Column(name="hora_aprobador")
+	private Timestamp horaAprobador;
 
 	private String usuario;
-
 
 	public TbQoProceso() {
 	}
@@ -125,6 +128,12 @@ public class TbQoProceso implements Serializable {
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}
+	public Timestamp getHoraAprobador() {
+		return horaAprobador;
+	}
+	public void setHoraAprobador(Timestamp horaAprobador) {
+		this.horaAprobador = horaAprobador;
 	}
 
 }
