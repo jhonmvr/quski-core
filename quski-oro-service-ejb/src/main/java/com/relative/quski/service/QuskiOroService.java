@@ -2908,11 +2908,10 @@ public class QuskiOroService {
 			return pro;
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw e;
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+			return null;
 
 		}
 	}

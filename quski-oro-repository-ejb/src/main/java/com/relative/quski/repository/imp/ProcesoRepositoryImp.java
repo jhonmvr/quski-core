@@ -692,7 +692,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
 	}
-	@SuppressWarnings("null")
 	@Override
 	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
 			throws RelativeException {
