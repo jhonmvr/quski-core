@@ -142,4 +142,14 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		loc.setEntidades(a);
 		return loc;
 	}
+	
+	@POST
+	@Path("/registrar")
+	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de secciones encontradas en TbQoTraking", response = GenericWrapper.class)
+	public GenericWrapper<SeccionEnum> registrar(@QueryParam("actividad") String actividad) throws RelativeException {
+		GenericWrapper<SeccionEnum> loc = new GenericWrapper<>();
+		List<SeccionEnum> a = this.qos.findListSeccionByActividad(actividad);
+		loc.setEntidades(a);
+		return loc;
+	}
 }
