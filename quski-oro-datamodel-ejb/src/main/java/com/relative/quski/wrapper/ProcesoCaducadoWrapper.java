@@ -1,9 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
-import com.relative.quski.enums.ProcesoEnum;
 
 public class ProcesoCaducadoWrapper implements Serializable {
 

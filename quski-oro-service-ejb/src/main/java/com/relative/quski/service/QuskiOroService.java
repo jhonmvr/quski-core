@@ -5443,7 +5443,7 @@ public class QuskiOroService {
 	}
 	public List<ProcesoCaducadoWrapper> listAlertaDeProcesos() throws RelativeException {
 		try {
-			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			Long time = Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor());
 			List<EstadoProcesoEnum> estados = new ArrayList<>();
 			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
 			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
@@ -5469,7 +5469,7 @@ public class QuskiOroService {
 	}
 	public List<ProcesoCaducadoWrapper> listAlertaDeProcesosAprobador( String aprobador ) throws RelativeException {
 		try {
-			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			Long time = Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor());
 			List<EstadoProcesoEnum> estados = new ArrayList<>();
 			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
 			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
