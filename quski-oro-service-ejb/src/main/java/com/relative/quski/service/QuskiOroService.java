@@ -7917,5 +7917,10 @@ public class QuskiOroService {
 		log.info( "============================================> SIZE DE LISTA ===============>" + procesoCaducado.size());
 		return rs.generateReporteFromBeanPDF(null, map, path+nombreReporte);
 	}
+
+	public TbQoTracking registrarTraking(TbQoTracking wp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
