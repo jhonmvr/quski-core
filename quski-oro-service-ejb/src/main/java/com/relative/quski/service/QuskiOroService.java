@@ -5439,6 +5439,58 @@ public class QuskiOroService {
 		}
 		
 	}
+	public List<ProcesoCaducadoWrapper> listAlertaDeProcesos() throws RelativeException {
+		try {
+			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			List<EstadoProcesoEnum> estados = new ArrayList<>();
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA );
+		
+			List<ProcesoEnum> procesos = new ArrayList<>();
+			procesos.add( ProcesoEnum.CANCELACION_DEVOLUCION );
+			procesos.add( ProcesoEnum.RENOVACION );
+			procesos.add( ProcesoEnum.DEVOLUCION );
+			procesos.add( ProcesoEnum.NUEVO );
+			procesos.add( ProcesoEnum.PAGO );
+			procesos.add( ProcesoEnum.VERIFICACION_TELEFONICA );
+			
+			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, null, procesos, estados );
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
+		}
+		
+	}
+	public List<ProcesoCaducadoWrapper> listAlertaDeProcesosAprobador( String aprobador ) throws RelativeException {
+		try {
+			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			List<EstadoProcesoEnum> estados = new ArrayList<>();
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+			estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA );
+			List<ProcesoEnum> procesos = new ArrayList<>();
+			procesos.add( ProcesoEnum.CANCELACION_DEVOLUCION );
+			procesos.add( ProcesoEnum.RENOVACION );
+			procesos.add( ProcesoEnum.DEVOLUCION );
+			procesos.add( ProcesoEnum.NUEVO );
+			procesos.add( ProcesoEnum.PAGO );
+			procesos.add( ProcesoEnum.VERIFICACION_TELEFONICA );
+			List<String> usuarios = new ArrayList<>();
+			usuarios.add( aprobador );
+			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, usuarios, procesos, estados );
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
+		}
+		
+	}
 	// TODO: Testear metodo por conflictos
 	public SimularResponse simularOfertasCalculadora(Long idCredito, BigDecimal montoSolicitado, BigDecimal riesgoTotal,String codigoAgencia) throws RelativeException {				
 		try {

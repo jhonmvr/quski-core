@@ -29,6 +29,7 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 
@@ -81,6 +82,24 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad(inEg);
 		return loc;
 	}
+	@GET
+	@Path("/listAlertaDeProcesos")
+	public GenericWrapper<ProcesoCaducadoWrapper> listAlertaDeProcesos() throws RelativeException {
+		GenericWrapper<ProcesoCaducadoWrapper> loc = new GenericWrapper<>();
+		List<ProcesoCaducadoWrapper> a = this.qos.listAlertaDeProcesos();
+		loc.setEntidades(a);
+		return loc;
+	}
+	@GET
+	@Path("/listAlertaDeProcesosAprobador")
+	public GenericWrapper<ProcesoCaducadoWrapper> listAlertaDeProcesosAprobador(@QueryParam("aprobador") String aprobador) throws RelativeException {
+		GenericWrapper<ProcesoCaducadoWrapper> loc = new GenericWrapper<>();
+		List<ProcesoCaducadoWrapper> a = this.qos.listAlertaDeProcesosAprobador( aprobador );
+		loc.setEntidades( a );
+		return loc;
+	}
+// 1 - Un web service que busque por Estado Pendiente_Aprobacion y Todos los procesos y todos los aprobadores.
+// 2 - Un web service que busque por Estado Pendiente_Aprobacion y Todos los procesos y resiva como parametro el nombre del usuario logeado.
 //	@GET
 //	@Path("/mookDeTiempoCaducado")
 //	public GenericWrapper<Boolean> mookDeTiempoCaducado() throws RelativeException {
@@ -97,7 +116,6 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad( this.qos.manageProceso( wp.getEntidad() ) );
 		return loc;
 	}
-
 	@Override
 	@GET
 	@Path("/listAllEntities")
