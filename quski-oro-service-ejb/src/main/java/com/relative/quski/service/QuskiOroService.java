@@ -7860,5 +7860,10 @@ public class QuskiOroService {
 
 		return rs.generateReporteExcel(map, path+nombreReporte);
 	}
+
+	public TbQoTracking registrarTraking(TbQoTracking wp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
