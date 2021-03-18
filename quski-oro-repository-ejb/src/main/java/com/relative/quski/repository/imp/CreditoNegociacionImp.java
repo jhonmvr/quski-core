@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.ParameterMode;
-import javax.persistence.StoredProcedureQuery;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;

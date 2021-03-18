@@ -12,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
-import org.jfree.chart.axis.LogarithmicAxis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

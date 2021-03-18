@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -6902,8 +6901,8 @@ public class QuskiOroService {
 						.auth(StringUtils.isNotBlank(authEmail) && authEmail == "TRUE").password(passwordEmail)
 						.user(userEmail).subject(asunto).tos(Arrays.asList(para)).fromEmail(fromEmailDesa)
 						.message(contenido).hasFiles(Boolean.TRUE).attachments(adjunto).build();
-				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
-				Transport.send(null, null, passwordEmail, passwordEmail);
+				//ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
+				// Transport.send(null, null, passwordEmail, passwordEmail);
 				EmailUtil.sendEmail(ed);
 			} else {
 				log.info("ESTOY LLEGANDO HASTA AQUI? ========> "+ authEmail);
