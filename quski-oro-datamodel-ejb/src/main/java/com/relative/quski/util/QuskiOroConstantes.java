@@ -396,6 +396,10 @@ public class QuskiOroConstantes {
 	public static final String CODIGO_BLOQUEO_F = "CODIGO_BLOQUEO_F";
 	public static final String TIEMPO_APROBACION = "TIEMPO_APROBACION";
 	
+	public static final String PARA_TWELVE = "PARA_TWELVE";
+
+	
+	
 
   
 }

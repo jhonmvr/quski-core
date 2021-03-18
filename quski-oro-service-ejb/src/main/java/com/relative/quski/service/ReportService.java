@@ -82,7 +82,19 @@ public class ReportService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateAvisoSiniestro " + e.getMessage());
 		}
     }
-    
+    public byte[] generateReporteBeanExcel(@SuppressWarnings("rawtypes") List dataSource, Map<String, Object> parameters, String reportFilePath ) throws RelativeException{
+    	try {
+    		ReportGenerator rg = new ReportGenerator(dataSource,parameters,reportFilePath);
+			ByteArrayOutputStream baos = rg.generateReportExcelWithListDatasource();
+			if( baos != null ){
+				return baos.toByteArray();
+			}
+			return null;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateReporteExcel " + e.getMessage());
+		}
+    }
     
     public byte[] generateReporteExcel( Map<String, Object> parameters, String reportFilePath ) throws RelativeException{
     	try {
@@ -95,20 +107,8 @@ public class ReportService {
 		} catch (SQLException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR EN LA GENERACION DE LA CONEXION A LA BDD");
 		}catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateAvisoSiniestro " + e.getMessage());
-		}
-    }
-    
-    public byte[] generateReporteBeanExcel(@SuppressWarnings("rawtypes") List dataSource, Map<String, Object> parameters, String reportFilePath ) throws RelativeException{
-    	try {
-    		ReportGenerator rg = new ReportGenerator(dataSource,parameters,reportFilePath);
-			ByteArrayOutputStream baos = rg.generateReportExcelWithListDatasource();
-			if( baos != null ){
-				return baos.toByteArray();
-			}
-			return null;
-		}catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateAvisoSiniestro " + e.getMessage());
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateReporteExcel " + e.getMessage());
 		}
     }
     

@@ -5456,8 +5456,13 @@ public class QuskiOroService {
 			procesos.add( ProcesoEnum.NUEVO );
 			procesos.add( ProcesoEnum.PAGO );
 			procesos.add( ProcesoEnum.VERIFICACION_TELEFONICA );
-			
-			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, null, procesos, estados );
+			List<ProcesoCaducadoWrapper> list = this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, null, procesos, estados );
+			Map<String, byte[]> map = new HashMap<>();
+			map.put("REPORTE.xls", generarReporteProcesoCaducado( list ));
+			String[] listCorreos = new String[1];
+			listCorreos[0] = this.parametroRepository.findByNombre(QuskiOroConstantes.PARA_TWELVE).getValor();
+			this.mailNotificacion( listCorreos, "REPORTE DE ALERTA DE APROBADOR", "Lista de operaciones por vencer", map );
+			return list;
 		}catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -6913,7 +6918,7 @@ public class QuskiOroService {
 				EmailUtil.sendEmail(ed);
 			}
 		} catch (Exception e) {
-			e.getStackTrace();
+			e.printStackTrace();
 			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		} 
 	}
@@ -6926,7 +6931,7 @@ public class QuskiOroService {
 			this.mailNotificacion(array, asunto, contenido, adjunto);
 			return Boolean.TRUE;
 		} catch (RelativeException e) {
-			e.getStackTrace();
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
@@ -6949,7 +6954,7 @@ public class QuskiOroService {
 
 			this.mailNotificacion(array, asunto, contenido, null);
 		} catch (RelativeException e) {
-			e.getStackTrace();
+			e.printStackTrace();
 			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
@@ -7899,18 +7904,18 @@ public class QuskiOroService {
 		
 		Map<String, Object> map = new HashMap<>();
 		//CAMBIAR PARA PONER EL PARAMETRO
-		
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		String nombreReporte= this.parametroRepository.findByNombre(QuskiOroConstantes.REPORT_TIEMPO_TRANSCURRIDO).getValor();
 		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
 		//log.info("================PATH===> P" +path);
-		
+		//String path = "C:\Users\USUARIO\RelativeEngine\Quski-Oro\quski-oro-core\quski-oro-rest\src\main\resources\reportes\";
+
 		
 		map.put("LIST_DS", procesoCaducado);
 		//this.setReportDataDevolucion(map, path,   idDevolucion, td);
-	
-
-		return rs.generateReporteExcel(map, path+nombreReporte);
+		log.info( "============================================> PATH + NOMBRE REPORTE ===============>" + path+nombreReporte);
+		log.info( "============================================> SIZE DE LISTA ===============>" + procesoCaducado.size());
+		return rs.generateReporteFromBeanPDF(null, map, path+nombreReporte);
 	}
 
 	public TbQoTracking registrarTraking(TbQoTracking wp) {
