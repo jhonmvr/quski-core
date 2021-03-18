@@ -40,6 +40,8 @@ public class CreditoByListIdsAndAprobadoresSpec  extends AbstractSpecification<T
 			}
 			if( this.aprobadores != null && !this.aprobadores.isEmpty() ) {
 				where.add(poll.<String>get("tbQoNegociacion").get("aprobador").in( this.aprobadores ) );
+			}else {
+				where.add(cb.isNotNull(poll.<String>get("tbQoNegociacion").get("aprobador")) );
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}

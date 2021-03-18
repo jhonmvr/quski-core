@@ -1,7 +1,6 @@
 package com.relative.quski.repository.imp;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -694,7 +693,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		}
 	}
 	@Override
-	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Timestamp tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
+	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso(Long tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados)
 			throws RelativeException {
 		try {
 			List<TbQoProceso> listProceso = this.findAllBySpecification( new ProcesoByProcesosEstadosAndTimeDiferenceSpec( procesos, estados, tiempoBase ) );
@@ -708,9 +707,13 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			List<ProcesoCaducadoWrapper> lista = new ArrayList<>();
 			for(TbQoProceso  proceso:listProceso) {
 				ProcesoCaducadoWrapper wrapper = new ProcesoCaducadoWrapper();
-				wrapper.setProceso(proceso.getProceso());
-				wrapper.setTiempoInicio(proceso.getHoraAprobador());
-				wrapper.setTiempoTranscurrido(new Date().getTime() - proceso.getHoraAprobador().getTime() );
+				wrapper.setProceso(proceso.getProceso().toString());
+				wrapper.setTiempoInicio(QuskiOroUtil.formatSringToDate(proceso.getHoraAprobador(), QuskiOroUtil.DATE_FORMAT_FULL) );
+				try {
+					wrapper.setTiempoTranscurrido((new Date().getTime() - proceso.getHoraAprobador().getTime() )/60000);
+				} catch (Exception e) {
+					wrapper.setTiempoTranscurrido(Long.valueOf("0"));
+				}
 				if( proceso.getProceso().compareTo( ProcesoEnum.NUEVO ) == 0 || proceso.getProceso().compareTo( ProcesoEnum.RENOVACION ) == 0 ) {
 					List<TbQoCreditoNegociacion> listCredito = this.findAllBySpecification( new CreditoByListIdsAndAprobadoresSpec( proceso.getId(), aprobadores ) );
 					if(listCredito != null && !listCredito.isEmpty()) {

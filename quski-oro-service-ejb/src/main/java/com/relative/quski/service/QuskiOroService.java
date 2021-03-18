@@ -23,8 +23,6 @@ import com.relative.core.util.mail.EmailDefinition;
 import com.relative.core.util.mail.EmailUtil;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
-import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
-import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
@@ -151,6 +149,8 @@ import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SimularResponse;
+import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
+import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
@@ -228,6 +228,8 @@ public class QuskiOroService {
 	private RubroRepository rubroRepository;
 	@Inject
 	private DevolucionService ds;
+	@Inject
+	private ReportService rs;
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
 	 */
@@ -5427,7 +5429,7 @@ public class QuskiOroService {
 	}
 	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( List<ProcesoEnum> listProceso,List<String> listAprobador,List<EstadoProcesoEnum> listEstados) throws RelativeException {
 		try {
-			Timestamp time = new Timestamp( Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor()));
+			Long time = Long.valueOf(this.parametroRepository.findByNombre(QuskiOroConstantes.TIEMPO_APROBACION).getValor());
 			return this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, listAprobador, listProceso, listEstados );
 			
 		}catch (RelativeException e) {
@@ -7892,4 +7894,23 @@ public class QuskiOroService {
 		}
 	}	
 
+	private byte[] generarReporteProcesoCaducado(List<ProcesoCaducadoWrapper> procesoCaducado) throws RelativeException{
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		//CAMBIAR PARA PONER EL PARAMETRO
+		
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		String nombreReporte= this.parametroRepository.findByNombre(QuskiOroConstantes.REPORT_TIEMPO_TRANSCURRIDO).getValor();
+		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
+		//log.info("================PATH===> P" +path);
+		
+		
+		map.put("LIST_DS", procesoCaducado);
+		//this.setReportDataDevolucion(map, path,   idDevolucion, td);
+	
+
+		return rs.generateReporteExcel(map, path+nombreReporte);
+	}
+	
 }

@@ -5,6 +5,7 @@ import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import java.lang.reflect.Constructor;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -289,6 +290,20 @@ public class QuskiOroUtil {
 		} catch (ParseException e) {
 			throw new RelativeException(
 					"SmsESRestController formatearCadenaFechaDate ERROR AL PARSEAR LA FECHA " + e.getMessage());
+		}
+		/*
+		 * DateTime dateTime = new DateTime(date); return
+		 * DateTimeFormat.forPattern(DATE_FORMAT).print(dateTime);
+		 */
+	}
+	
+	public static String formatSringToDate(Timestamp ts, String dateFormat) throws RelativeException {
+		try {
+			Date date = new Date();
+			date.setTime(ts.getTime());
+			return new SimpleDateFormat("yyyyMMdd").format(date);
+		} catch (Exception e) {
+			return "";
 		}
 		/*
 		 * DateTime dateTime = new DateTime(date); return
