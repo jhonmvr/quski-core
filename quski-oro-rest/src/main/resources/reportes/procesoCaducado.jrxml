@@ -97,7 +97,7 @@
 			<fieldDescription><![CDATA[codigSoftbank]]></fieldDescription>
 		</field>
 	</subDataset>
-	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.ActaEntregaRecepcionWrapper"/>
+	<parameter name="LIST_DS" class="java.util.List"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
