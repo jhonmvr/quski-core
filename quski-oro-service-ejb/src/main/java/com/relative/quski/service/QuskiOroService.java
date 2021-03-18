@@ -2,6 +2,10 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +17,6 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.mail.Transport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -3529,10 +3532,6 @@ public class QuskiOroService {
 				return this.updateTracking(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT);
-				if (send.getFechaCreacion() != null && send.getFechaActualizacion() != null) {
-					// send.setTotalTiempo(new Time(QuskiOroUtil.diasFecha(send.getFechaInicio(),
-					// send.getFechaFin())));
-				}
 				return this.trackingRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -3573,8 +3572,7 @@ public class QuskiOroService {
 
 			}
 			if (send.getFechaInicio() != null && send.getFechaFin() != null) {
-				persisted.setTiempoTranscurrido(
-						new BigDecimal(QuskiOroUtil.horasFecha(send.getFechaInicio(), send.getFechaFin())));
+				persisted.setTiempoTranscurrido(send.getFechaFin().getTime() - send.getFechaInicio().getTime() );
 			}
 			if (send.getNombreAsesor() != null) {
 				persisted.setNombreAsesor(send.getNombreAsesor());
@@ -5458,9 +5456,16 @@ public class QuskiOroService {
 			procesos.add( ProcesoEnum.VERIFICACION_TELEFONICA );
 			List<ProcesoCaducadoWrapper> list = this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, null, procesos, estados );
 			Map<String, byte[]> map = new HashMap<>();
+	
+			try {
+				Path path = Paths.get(parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor()+"archivo.pdf");
+				Files.write(path, generarReporteProcesoCaducado( list ), StandardOpenOption.CREATE_NEW);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			map.put("REPORTE.xls", generarReporteProcesoCaducado( list ));
-			String[] listCorreos = new String[1];
-			listCorreos[0] = this.parametroRepository.findByNombre(QuskiOroConstantes.PARA_TWELVE).getValor();
+			String[] listCorreos = {this.parametroRepository.findByNombre(QuskiOroConstantes.PARA_TWELVE).getValor()};
 			this.mailNotificacion( listCorreos, "REPORTE DE ALERTA DE APROBADOR", "Lista de operaciones por vencer", map );
 			return list;
 		}catch (RelativeException e) {
@@ -6894,6 +6899,17 @@ public class QuskiOroService {
 			String fromEmailDesa = this.parametroRepository.findByNombre(QuskiOroConstantes.fromEmailDesa).getValor();
 			String authEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.authEmail).getValor();
 			String passwordEmail = this.parametroRepository.findByNombre(QuskiOroConstantes.passwordEmail).getValor();
+			log.info("smtpHostServer>>>>"+smtpHostServer);
+			log.info("portEmail>>>>"+portEmail);
+			log.info("sfPortEmail>>>>"+sfPortEmail);
+			log.info("userEmail>>>>"+userEmail);
+			log.info("fromEmailDesa>>>>"+fromEmailDesa);
+			log.info("authEmail>>>>"+authEmail);
+			log.info("passwordEmail>>>>"+passwordEmail);
+			log.info("para>>>>"+para[0]);
+			log.info("asunto>>>>"+asunto);
+			log.info("contenido>>>>"+contenido);
+			log.info("adjunto>>>>"+adjunto);
 			if (adjunto != null) {
 				EmailDefinition ed = new EmailDefinition.Builder()
 						.emailSecurityType(
@@ -6903,7 +6919,7 @@ public class QuskiOroService {
 						.user(userEmail).subject(asunto).tos(Arrays.asList(para)).fromEmail(fromEmailDesa)
 						.message(contenido).hasFiles(Boolean.TRUE).attachments(adjunto).build();
 				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
-				Transport.send(null, null, passwordEmail, passwordEmail);
+				//Transport.send(null, null, passwordEmail, passwordEmail);
 				EmailUtil.sendEmail(ed);
 			} else {
 				log.info("ESTOY LLEGANDO HASTA AQUI? ========> "+ authEmail);
@@ -7918,9 +7934,15 @@ public class QuskiOroService {
 		return rs.generateReporteFromBeanPDF(null, map, path+nombreReporte);
 	}
 
-	public TbQoTracking registrarTraking(TbQoTracking wp) {
-		// TODO Auto-generated method stub
-		return null;
+	public TbQoTracking registrarTraking(TbQoTracking wp) throws RelativeException {
+		TbQoTracking last = this.trackingRepository.findByParams(wp.getCodigoBpm(),wp.getProceso());
+		wp.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+		wp.setFechaCreacion(new Date());
+		if(last != null) {
+			last.setFechaFin(new Timestamp(System.currentTimeMillis()));
+			this.manageTracking(last);
+		}
+		return this.manageTracking(wp);
 	}
 	
 }

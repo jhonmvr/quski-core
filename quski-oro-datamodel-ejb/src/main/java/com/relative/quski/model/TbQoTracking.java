@@ -77,7 +77,7 @@ public class TbQoTracking implements Serializable {
 	private String nombreAsesor;
 
 	@Column(name="tiempo_transcurrido")
-	private BigDecimal tiempoTranscurrido;
+	private Long tiempoTranscurrido;
 
 	@Column(name="usuario_actualizacion")
 	private String usuarioActualizacion;
@@ -189,11 +189,11 @@ public class TbQoTracking implements Serializable {
 		this.seccion = seccion;
 	}
 
-	public BigDecimal getTiempoTranscurrido() {
+	public Long getTiempoTranscurrido() {
 		return this.tiempoTranscurrido;
 	}
 
-	public void setTiempoTranscurrido(BigDecimal tiempoTranscurrido) {
+	public void setTiempoTranscurrido(Long tiempoTranscurrido) {
 		this.tiempoTranscurrido = tiempoTranscurrido;
 	}
 

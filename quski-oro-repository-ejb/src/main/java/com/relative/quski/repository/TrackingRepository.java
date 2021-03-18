@@ -30,6 +30,8 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 
 	public Long countByParamPaged(TrackingWrapper wp)throws RelativeException;
 
+	public TbQoTracking findByParams(String codigoBpm, ProcesoEnum proceso)throws RelativeException;
+
 	
 	
 }

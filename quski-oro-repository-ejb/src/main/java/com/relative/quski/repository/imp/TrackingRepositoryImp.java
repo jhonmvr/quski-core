@@ -135,4 +135,26 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 	public Long countByParamPaged(TrackingWrapper wp) throws RelativeException {
 		return this.countBySpecification(new TrackingByParamsSpec(wp));
 	}
+
+	@Override
+	public TbQoTracking findByParams(String codigoBpm, ProcesoEnum proceso) throws RelativeException {
+		try {
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<TbQoTracking> query = cb.createQuery(TbQoTracking.class);
+			Root<TbQoTracking> poll = query.from(TbQoTracking.class);
+			query.where(cb.and(cb.equal(poll.get("codigoBpm"), codigoBpm),cb.equal(poll.get("proceso"), proceso)));
+			query.select(poll);
+			query.orderBy(cb.asc(poll.get("id")));
+			TypedQuery<TbQoTracking> tq = this.getEntityManager().createQuery(query);
+			List<TbQoTracking> resultList = tq.getResultList();
+			if (resultList != null && !resultList.isEmpty()) {
+				return resultList.get(0);
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "AL LEER LAS ACTIVIDADES DE TRAKING");
+		}
+	}
 }
