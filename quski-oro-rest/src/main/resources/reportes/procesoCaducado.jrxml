@@ -55,39 +55,21 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="dsdetalle" uuid="8ac8db0c-be34-4927-8e21-d8dbe244ec36">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-		<queryString>
-			<![CDATA[]]>
-		</queryString>
-		<field name="custodiaAlmacenamiento" class="java.lang.String">
-			<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
-		</field>
-		<field name="valorRenovacion" class="java.lang.String">
-			<fieldDescription><![CDATA[valorRenovacion]]></fieldDescription>
-		</field>
-		<field name="servicioAdministrativo" class="java.lang.String">
-			<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
-		</field>
-		<field name="total" class="java.lang.String">
-			<fieldDescription><![CDATA[total]]></fieldDescription>
-		</field>
-	</subDataset>
 	<subDataset name="LIST_DS" uuid="1ff2ec5f-9cd6-4d93-b3ab-3edbdb708d9c">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="tiempoInicio" class="java.sql.Timestamp">
+		<field name="tiempoInicio" class="java.lang.String">
 			<fieldDescription><![CDATA[tiempoInicio]]></fieldDescription>
 		</field>
-		<field name="tiempoTranscurrido" class="java.sql.Timestamp">
+		<field name="tiempoTranscurrido" class="java.lang.Long">
 			<fieldDescription><![CDATA[tiempoTranscurrido]]></fieldDescription>
 		</field>
 		<field name="codigoBpm" class="java.lang.String">
 			<fieldDescription><![CDATA[codigoBpm]]></fieldDescription>
 		</field>
-		<field name="proceso" class="com.relative.quski.enums.ProcesoEnum">
+		<field name="proceso" class="java.lang.String">
 			<fieldDescription><![CDATA[proceso]]></fieldDescription>
 		</field>
 		<field name="aprobador" class="java.lang.String">
@@ -101,44 +83,10 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="custodiaAlmacenamiento" class="java.lang.String">
-		<fieldDescription><![CDATA[custodiaAlmacenamiento]]></fieldDescription>
-	</field>
-	<field name="valorRenovacion" class="java.lang.String"/>
-	<field name="nuevaFechaVencimiento" class="java.lang.String"/>
-	<field name="servicioAdministrativo" class="java.lang.String">
-		<fieldDescription><![CDATA[servicioAdministrativo]]></fieldDescription>
-	</field>
-	<field name="renovacion" class="java.lang.String">
-		<fieldDescription><![CDATA[renovacion]]></fieldDescription>
-	</field>
-	<field name="identificacionCliente" class="java.lang.String">
-		<fieldDescription><![CDATA[identificacionCliente]]></fieldDescription>
-	</field>
-	<field name="plazoContrato" class="java.lang.String">
-		<fieldDescription><![CDATA[plazoContrato]]></fieldDescription>
-	</field>
-	<field name="total" class="java.lang.String"/>
-	<field name="identificacionApoderado" class="java.lang.String">
-		<fieldDescription><![CDATA[identificacionApoderado]]></fieldDescription>
-	</field>
-	<field name="nombreCliente" class="java.lang.String">
-		<fieldDescription><![CDATA[nombreCliente]]></fieldDescription>
-	</field>
-	<field name="fechaCreacion" class="java.lang.String"/>
-	<field name="class" class="java.lang.Class">
-		<fieldDescription><![CDATA[class]]></fieldDescription>
-	</field>
-	<field name="nombreApoderado" class="java.lang.String">
-		<fieldDescription><![CDATA[nombreApoderado]]></fieldDescription>
-	</field>
-	<field name="nombreAgente" class="java.lang.String">
-		<fieldDescription><![CDATA[nombreAgente]]></fieldDescription>
-	</field>
 	<title>
 		<band height="344" splitType="Stretch">
 			<componentElement>
-				<reportElement x="30" y="10" width="560" height="60" uuid="3db502b2-91a2-46ea-a06d-5bf54115a34d">
+				<reportElement stretchType="RelativeToTallestObject" x="30" y="10" width="560" height="60" uuid="3db502b2-91a2-46ea-a06d-5bf54115a34d">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
@@ -146,8 +94,10 @@
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="LIST_DS" uuid="b232a662-5997-42a5-8276-583390a92e43">
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<datasetRun subDataset="LIST_DS" uuid="74c68ae6-5819-4dc9-a950-ad16d5049938">
+						<datasetParameter name="REPORT_DATA_SOURCE">
+							<datasetParameterExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LIST_DS})]]></datasetParameterExpression>
+						</datasetParameter>
 					</datasetRun>
 					<jr:column width="80" uuid="7d3f2935-d734-4119-936e-756558e54c60">
 						<jr:columnHeader style="Table 1_CH" height="30">
