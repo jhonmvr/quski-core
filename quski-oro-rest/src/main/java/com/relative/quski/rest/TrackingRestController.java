@@ -2,6 +2,8 @@ package com.relative.quski.rest;
 
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,6 +27,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.EnumsWrapper;
 import com.relative.quski.wrapper.TrackingWrapper;
 
 import io.swagger.annotations.Api;
@@ -152,4 +155,29 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		loc.setEntidad(a);
 		return loc;
 	}
+
+	@GET	
+	@Path("/getActividadesProcesosAndSecciones")
+	public GenericWrapper<EnumsWrapper> getActividadesProcesosAndSecciones() throws RelativeException {
+		GenericWrapper<EnumsWrapper> w = new GenericWrapper<>();
+		EnumsWrapper enums = new EnumsWrapper();
+		
+		List<ProcesoEnum> enumProcesos = Arrays.asList(ProcesoEnum.values());
+		List<String> stringsProcesos = new ArrayList<String>();
+		enumProcesos.forEach(f -> stringsProcesos.add(f.toString().replace('_', ' ')));
+		enums.setProcesos(stringsProcesos); 
+		
+		List<ActividadEnum> enumActividades = Arrays.asList(ActividadEnum.values());
+		List<String> stringActividades = new ArrayList<String>();
+		enumActividades.forEach(f -> stringActividades.add(f.toString().replace('_', ' ')));
+		enums.setActividades(stringActividades); 
+		
+		List<SeccionEnum> enumSecciones = Arrays.asList(SeccionEnum.values());
+		List<String> stringSecciones = new ArrayList<String>();
+		enumSecciones.forEach(f -> stringSecciones.add(f.toString().replace('_', ' ')));
+		enums.setSecciones(stringSecciones); 
+		w.setEntidad( enums );
+		return w;
+	}
+
 }
