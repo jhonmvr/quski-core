@@ -2,10 +2,6 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5456,14 +5452,6 @@ public class QuskiOroService {
 			procesos.add( ProcesoEnum.VERIFICACION_TELEFONICA );
 			List<ProcesoCaducadoWrapper> list = this.procesoRepository.findByTiempoBaseAprobadorProcesoEstadoProceso( time, null, procesos, estados );
 			Map<String, byte[]> map = new HashMap<>();
-	
-			try {
-				Path path = Paths.get(parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor()+"archivo.pdf");
-				Files.write(path, generarReporteProcesoCaducado( list ), StandardOpenOption.CREATE_NEW);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			map.put("REPORTE.xls", generarReporteProcesoCaducado( list ));
 			String[] listCorreos = {this.parametroRepository.findByNombre(QuskiOroConstantes.PARA_TWELVE).getValor()};
 			this.mailNotificacion( listCorreos, "REPORTE DE ALERTA DE APROBADOR", "Lista de operaciones por vencer", map );
@@ -6915,7 +6903,7 @@ public class QuskiOroService {
 						.emailSecurityType(
 								QuskiOroUtil.getEnumFromString(EmailSecurityTypeEnum.class, emailSecurityType))
 						.smtpHostServer(smtpHostServer).port(portEmail).sfPort(sfPortEmail)
-						.auth(StringUtils.isNotBlank(authEmail) && authEmail == "TRUE").password(passwordEmail)
+						.auth(authEmail.equalsIgnoreCase("TRUE")).password(passwordEmail)
 						.user(userEmail).subject(asunto).tos(Arrays.asList(para)).fromEmail(fromEmailDesa)
 						.message(contenido).hasFiles(Boolean.TRUE).attachments(adjunto).build();
 				ed.setSession(EmailUtil.provideSession(ed, EmailSecurityTypeEnum.SSL));
@@ -7916,22 +7904,13 @@ public class QuskiOroService {
 	}	
 
 	private byte[] generarReporteProcesoCaducado(List<ProcesoCaducadoWrapper> procesoCaducado) throws RelativeException{
-		
-		
 		Map<String, Object> map = new HashMap<>();
-		//CAMBIAR PARA PONER EL PARAMETRO
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		String nombreReporte= this.parametroRepository.findByNombre(QuskiOroConstantes.REPORT_TIEMPO_TRANSCURRIDO).getValor();
-		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
-		//log.info("================PATH===> P" +path);
-		//String path = "C:\Users\USUARIO\RelativeEngine\Quski-Oro\quski-oro-core\quski-oro-rest\src\main\resources\reportes\";
-
-		
 		map.put("LIST_DS", procesoCaducado);
-		//this.setReportDataDevolucion(map, path,   idDevolucion, td);
 		log.info( "============================================> PATH + NOMBRE REPORTE ===============>" + path+nombreReporte);
 		log.info( "============================================> SIZE DE LISTA ===============>" + procesoCaducado.size());
-		return rs.generateReporteFromBeanPDF(null, map, path+nombreReporte);
+		return rs.generateReporteBeanExcel(procesoCaducado, map, path+nombreReporte);
 	}
 
 	public TbQoTracking registrarTraking(TbQoTracking wp) throws RelativeException {

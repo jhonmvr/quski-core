@@ -91,7 +91,7 @@ public class ReportService {
 			}
 			return null;
 		}catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateReporteExcel " + e.getMessage());
 		}
     }
