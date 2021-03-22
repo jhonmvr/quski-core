@@ -3,9 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
-import com.relative.quski.model.TbQoRubro;
 
 public class DatosCreditoSoftbankWrapper  implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -28,7 +26,6 @@ public class DatosCreditoSoftbankWrapper  implements Serializable {
 	private BigDecimal aPagarPorCliente;
 	private BigDecimal valorCreditoAnterior;
 	private BigDecimal totalDeCostosNuevaOperacion;
-	private List<TbQoRubro> rubros; 
 	private BigDecimal saldoCapitalDeOperacionAnterior;
 	private BigDecimal saldoInteresOperacionAnterior;
 	private BigDecimal montoDeDesembolso;
@@ -81,13 +78,6 @@ public class DatosCreditoSoftbankWrapper  implements Serializable {
 	}
 	public void setTipoCarteraQuski(String tipoCarteraQuski) {
 		this.tipoCarteraQuski = tipoCarteraQuski;
-	}
-	
-	public List<TbQoRubro> getRubros() {
-		return rubros;
-	}
-	public void setRubros(List<TbQoRubro> rubros) {
-		this.rubros = rubros;
 	}
 	
 	public String getDocumentosHabilitantes() {

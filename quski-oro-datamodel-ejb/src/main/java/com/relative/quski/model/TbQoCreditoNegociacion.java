@@ -1,14 +1,24 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import com.relative.quski.enums.EstadoEnum;
-import com.relative.quski.enums.TipoCreditoNegociacionEnum;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.relative.quski.enums.EstadoEnum;
 
 
 /**
@@ -103,9 +113,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="monto_diferido")
 	private BigDecimal montoDiferido;
 
-	@Column(name="monto_preaprobado")
-	private BigDecimal montoPreaprobado;
-
 	@Column(name="monto_solicitado")
 	private BigDecimal montoSolicitado;
 
@@ -114,10 +121,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="riesgo_total_cliente")
 	private BigDecimal riesgoTotalCliente;
-
-	@Column(name = "tipo")
-	@Enumerated(EnumType.STRING)
-	private TipoCreditoNegociacionEnum tipo;
 
 	@Column(name="tipo_cartera_quski")
 	private String tipoCarteraQuski;
@@ -151,10 +154,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	// bi-directional many-to-one association to TbQoTasacion
 	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
 	private List<TbQoTasacion> tbQoTasacions;
-	
-	// bi-directional many-to-one association to TbQoTasacion
-	@OneToMany(mappedBy = "tbQoCreditoNegociacion")
-	private List<TbQoRubro> tbQoRubros;
 
 	@Column(name="costo_custodia")
 	private BigDecimal costoCustodia;
@@ -324,14 +323,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.idAgencia = idAgencia;
 	}
 
-	public TipoCreditoNegociacionEnum getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoCreditoNegociacionEnum tipo) {
-		this.tipo = tipo;
-	}
-
 	public String getCodigo() {
 		return this.codigo;
 	}
@@ -403,14 +394,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.montoDiferido = montoDiferido;
 	}
 
-	public BigDecimal getMontoPreaprobado() {
-		return this.montoPreaprobado;
-	}
-
-	public void setMontoPreaprobado(BigDecimal montoPreaprobado) {
-		this.montoPreaprobado = montoPreaprobado;
-	}
-
 	public BigDecimal getMontoSolicitado() {
 		return this.montoSolicitado;
 	}
@@ -480,10 +463,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 		return tbQoTasacion;
 	}
 
-	public List<TbQoRubro> getTbQoRubros() {
-		return this.tbQoRubros;
-	}
-
 	public String getCodigoCash() {
 		return codigoCash;
 	}
@@ -506,22 +485,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setDescripcionDevuelto(String descripcionDevuelto) {
 		this.descripcionDevuelto = descripcionDevuelto;
-	}
-
-	public void setTbQoRubros(List<TbQoRubro> tbQoRubros) {
-		this.tbQoRubros = tbQoRubros;
-	}
-
-	public TbQoRubro addTbQoRubro(TbQoRubro tbQoRubro) {
-		getTbQoRubros().add(tbQoRubro);
-		tbQoRubro.setTbQoCreditoNegociacion(this);
-		return tbQoRubro;
-	}
-
-	public TbQoRubro removeTbQoRubro(TbQoRubro tbQoRubro) {
-		getTbQoRubros().remove(tbQoRubro);
-		tbQoRubro.setTbQoCreditoNegociacion(null);
-		return tbQoRubro;
 	}
 
 	public Date getPagoDia() {

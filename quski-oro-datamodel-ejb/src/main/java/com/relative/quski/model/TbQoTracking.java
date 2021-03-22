@@ -1,7 +1,6 @@
 package com.relative.quski.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -14,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;

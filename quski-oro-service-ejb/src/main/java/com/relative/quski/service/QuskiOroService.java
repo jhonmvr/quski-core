@@ -47,12 +47,10 @@ import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoNegociacion;
-import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
-import com.relative.quski.model.TbQoRubro;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.model.TbQoTipoArchivo;
@@ -73,12 +71,10 @@ import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
-import com.relative.quski.repository.PrecioOroRepository;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
-import com.relative.quski.repository.RubroRepository;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.TelefonoClienteRepository;
 import com.relative.quski.repository.TipoArchivoRepository;
@@ -178,8 +174,6 @@ public class QuskiOroService {
 	@Inject
 	private DetalleCreditoRepository detalleCreditoRepository;
 	@Inject
-	private PrecioOroRepository precioOroRepository;
-	@Inject
 	private CreditoNegociacionRepository creditoNegociacionRepository;
 	@Inject
 	private ClienteRepository clienteRepository;
@@ -223,8 +217,6 @@ public class QuskiOroService {
 	private ExcepcionRolRepository excepcionRolRepository;
 	@Inject
 	private ProcesoRepository procesoRepository;
-	@Inject
-	private RubroRepository rubroRepository;
 	@Inject
 	private DevolucionService ds;
 	@Inject
@@ -697,40 +689,6 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
-	public TbQoPrecioOro registrarPrecioOroByCotizacion(TbQoPrecioOro po) throws RelativeException {
-		TbQoCotizador cot = this.findCotizadorById(po.getTbQoCotizador().getId());
-		po.setTbQoCotizador(cot);
-		return this.managePrecioOro(po);
-	}
-
-	public TbQoPrecioOro eliminarPrecioOro(Long id) throws RelativeException {
-		TbQoPrecioOro precioOro = this.precioOroRepository.findById(id);
-		precioOro.setEstado(EstadoEnum.INA);
-		try {
-			return this.precioOroRepository.update(precioOro);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-
-	}
-
-	public List<TbQoPrecioOro> findByIdCotizacion(PaginatedWrapper pw, Long idCotizador) throws RelativeException {
-		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			return precioOroRepository.findByIdCotizacion(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections(), idCotizador);
-
-		} else {
-			return precioOroRepository.findByIdCotizacion(idCotizador);
-		}
-	}
-
-	public Long countByIdCotizacion(Long idCotizador) throws RelativeException {
-
-		return precioOroRepository.countfindByIdCotizacion(idCotizador);
-	}
-
 	/**
 	 * 
 	 * @param pw
@@ -1095,144 +1053,6 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
-	/**
-	 * * * * * * * * * * * @PRECIO ORO
-	 */
-
-	/**
-	 * Metodo que busca la entidad por su PK
-	 * 
-	 * @param id Pk de la entidad
-	 * @return Entidad encontrada
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
-	public TbQoPrecioOro findPrecioOroById(Long id) throws RelativeException {
-		try {
-			return precioOroRepository.findById(id);
-		} catch (RelativeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que lista la informacion de las entidades encontradas
-	 * 
-	 * @param pw Objeto generico que tiene la informacion que determina si el
-	 *           resultado es total o paginado
-	 * @return Listado de entidades encontradas
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @throws RelativeException
-	 */
-	public List<TbQoPrecioOro> findAllPrecioOro(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.precioOroRepository.findAll(TbQoPrecioOro.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.precioOroRepository.findAll(TbQoPrecioOro.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
-					return this.precioOroRepository.findAll(TbQoPrecioOro.class, pw.getSortFields(),
-							pw.getSortDirections());
-				}
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	/**
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @param send entidad con la informacion de creacion o actualizacion
-	 * @return Entidad modificada o actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoPrecioOro managePrecioOro(TbQoPrecioOro send) throws RelativeException {
-		try {
-			TbQoPrecioOro persisted = null;
-			if (send != null && send.getId() != null) {
-				persisted = this.precioOroRepository.findById(send.getId()); // Crear implementacion para solo activos
-				return this.updatePrecioOro(send, persisted);
-			} else if (send != null && send.getId() == null) {
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado(EstadoEnum.ACT);
-				return precioOroRepository.add(send);
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
-			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que actualiza la entidad
-	 * 
-	 * @authorSAUL MENDEZ- Relative Engine
-	 * @param send      informacion enviada para update
-	 * @param persisted entidad existente sobre la que se actualiza
-	 * @return Entidad actualizada
-	 * @throws RelativeException
-	 */
-	public TbQoPrecioOro updatePrecioOro(TbQoPrecioOro send, TbQoPrecioOro persisted) throws RelativeException {
-		try {
-			persisted.setPesoNetoEstimado(send.getPesoNetoEstimado());
-			persisted.setPrecio(send.getPrecio());
-			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-			persisted.setEstado(EstadoEnum.ACT);
-			persisted.setTipoOro(send.getTipoOro());
-			return precioOroRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
-		}
-	}
-
-	/**
-	 * Metodo que cuenta la cantidad de entidades existentes
-	 * 
-	 * @author SAUL MENDEZ - Relative Engine
-	 * @return Cantidad de entidades encontradas
-	 * @throws RelativeException
-	 */
-	public Long countPrecioOro() throws RelativeException {
-		try {
-			return precioOroRepository.countAll(TbQoPrecioOro.class);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-	}
-
-	/**
-	 * METODO QUE BUSCA LOS PRECIOS OROS LIGADOS A LA COTIZACION Y TAMBIEN AL
-	 * CLIENTE.
-	 * 
-	 * @author Jeroham Cadenas - Developer Twelve
-	 * @param PaginatedWrapper pw
-	 * @param String           cedula
-	 * @return List<TbQoPrecioOro>
-	 * @throws RelativeException
-	 */
-	public List<TbQoPrecioOro> listByCedula(PaginatedWrapper pw, String cedula) throws RelativeException {
-		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-
-			return precioOroRepository.findByCedula(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
-					pw.getSortDirections(), cedula);
-
-		} else {
-			return precioOroRepository.findByCedula(cedula);
-		}
-	}
 	public List<TbQoCotizador> cotizacionByCedula(PaginatedWrapper pw, String cedula) throws RelativeException {
 		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			return cotizadorRepository.findByCedula(pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(),
@@ -1243,18 +1063,6 @@ public class QuskiOroService {
 	}
 	public Long cotizacionCountByCedula(String cedula) throws RelativeException {
 		return this.cotizadorRepository.countByCedula(cedula);
-	}
-
-	/**
-	 * 
-	 * @author Jeroham Cadenas - Developer Twelve
-	 * @param String cedula
-	 * @return Long
-	 * @throws RelativeException
-	 */
-	public Long countByCedula(String cedula) throws RelativeException {
-
-		return precioOroRepository.countByCedula(cedula);
 	}
 
 	/**
@@ -6224,9 +6032,6 @@ public class QuskiOroService {
 			if( send.getMontoDiferido() != null ) {
 			    persisted.setMontoDiferido(  send.getMontoDiferido() );
 			}
-			if( send.getMontoPreaprobado() != null ) {
-			    persisted.setMontoPreaprobado(  send.getMontoPreaprobado() );
-			}
 			if( send.getMontoSolicitado() != null ) {
 			    persisted.setMontoSolicitado(  send.getMontoSolicitado() );
 			}
@@ -6235,9 +6040,6 @@ public class QuskiOroService {
 			}
 			if( send.getRiesgoTotalCliente() != null ) {
 			    persisted.setRiesgoTotalCliente(  send.getRiesgoTotalCliente() );
-			}
-			if( send.getTipo() != null ) {
-			    persisted.setTipo(  send.getTipo() );
 			}
 			if( !StringUtils.isBlank( send.getTipoCarteraQuski() ) ) {
 			    persisted.setTipoCarteraQuski(  send.getTipoCarteraQuski() );
@@ -7327,73 +7129,9 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-	/**
-	 * * * * * * * * * * * @RUBRO
-	 */
-	public TbQoRubro findRubroById(Long id) throws RelativeException {
-		try {
-			return rubroRepository.findById(id);
-		} catch(RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
-		}
-	}
-	public List<TbQoRubro> findAllRubros(PaginatedWrapper pw) throws RelativeException {
-		try {
-			if (pw == null) {
-				return this.rubroRepository.findAll(TbQoRubro.class);
-			} else {
-				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-					return this.rubroRepository.findAll(TbQoRubro.class, pw.getStartRecord(), pw.getPageSize(),
-							pw.getSortFields(), pw.getSortDirections());
-				} else {
 
-					return this.rubroRepository.findAll(TbQoRubro.class, pw.getSortFields(),
-							pw.getSortDirections());
-				}
-			}
-		} catch(RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
-		}
-	}
-	public TbQoRubro manageRubro(TbQoRubro send) throws RelativeException {
-		try {
-			if (send != null && send.getId() != null) {
-				TbQoRubro persisted = this.rubroRepository.findById(send.getId());
-				return this.updateRubro(send, persisted);
 
-			} else {
-				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
-				send.setEstado(EstadoEnum.ACT);
-				return this.rubroRepository.add(send);
-			}
-		} catch(RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
-		}
-	}
-	public TbQoRubro updateRubro(TbQoRubro send, TbQoRubro persisted) throws RelativeException {
-		try {
-			persisted.setEstado(EstadoEnum.ACT);
-			return this.rubroRepository.update(persisted);
-		} catch(RelativeException e) {
-			e.printStackTrace();
-			throw e;
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
-		}
-	}
+
 
 	public TbQoCreditoNegociacion devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
 		try {

@@ -60,10 +60,6 @@ public class TbQoCotizador implements Serializable {
 	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
 
-	// bi-directional many-to-one association to TbQoPrecioOro
-	@OneToMany(mappedBy = "tbQoCotizador")
-	private List<TbQoPrecioOro> tbQoPrecioOros;
-
 	// bi-directional many-to-one association to TbQoVariablesCrediticia
 	@OneToMany(mappedBy = "tbQoCotizador")
 	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
@@ -185,28 +181,6 @@ public class TbQoCotizador implements Serializable {
 		tbQoDocumentoHabilitante.setTbQoCotizador(null);
 
 		return tbQoDocumentoHabilitante;
-	}
-
-	public List<TbQoPrecioOro> getTbQoPrecioOros() {
-		return this.tbQoPrecioOros;
-	}
-
-	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {
-		this.tbQoPrecioOros = tbQoPrecioOros;
-	}
-
-	public TbQoPrecioOro addTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
-		getTbQoPrecioOros().add(tbQoPrecioOro);
-		tbQoPrecioOro.setTbQoCotizador(this);
-
-		return tbQoPrecioOro;
-	}
-
-	public TbQoPrecioOro removeTbQoPrecioOro(TbQoPrecioOro tbQoPrecioOro) {
-		getTbQoPrecioOros().remove(tbQoPrecioOro);
-		tbQoPrecioOro.setTbQoCotizador(null);
-
-		return tbQoPrecioOro;
 	}
 
 	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {

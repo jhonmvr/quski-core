@@ -2,10 +2,8 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.relative.quski.model.TbQoRubro;
 
 
 public class CrearOperacionEntradaWrapper implements Serializable {
@@ -36,15 +34,7 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 		this.idTipoIdentificacion = Long.valueOf( 1 );
 		
 	}
-	
-	public void cargarImpCom(List<TbQoRubro> rubros) {
-		List<DatosImpComWrapper> list = new ArrayList<>();
-		rubros.forEach(e->{
-			DatosImpComWrapper impCom = new DatosImpComWrapper(e.getCodigo(), e.getFormaPago(), e.getValor() );
-			list.add( impCom );
-		});
-		this.setDatosImpCom(list);
-	}
+
 
 
 

@@ -3,7 +3,6 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 
 

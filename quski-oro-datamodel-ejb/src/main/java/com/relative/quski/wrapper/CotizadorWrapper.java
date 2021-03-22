@@ -8,7 +8,6 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoDetalleCredito;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
-import com.relative.quski.model.TbQoPrecioOro;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 
 public class CotizadorWrapper implements Serializable{
@@ -32,7 +31,6 @@ public class CotizadorWrapper implements Serializable{
 	private String gradoInteres;
 	private String motivoDeDesestimiento;
 	private TbQoCliente tbQoCliente;
-	private List<TbQoPrecioOro> tbQoPrecioOros;
 	private List<TbQoVariablesCrediticia> tbQoVariablesCrediticias;
 	private List<TbQoDetalleCredito> tbQoDetalleCreditos;
 	private List<TbQoDocumentoHabilitante> tbQoDocumentoHabilitantes;
@@ -115,12 +113,6 @@ public class CotizadorWrapper implements Serializable{
 	}
 	public void setTbQoCliente(TbQoCliente tbQoCliente) {
 		this.tbQoCliente = tbQoCliente;
-	}
-	public List<TbQoPrecioOro> getTbQoPrecioOros() {
-		return tbQoPrecioOros;
-	}
-	public void setTbQoPrecioOros(List<TbQoPrecioOro> tbQoPrecioOros) {
-		this.tbQoPrecioOros = tbQoPrecioOros;
 	}
 	public List<TbQoVariablesCrediticia> getTbQoVariablesCrediticias() {
 		return tbQoVariablesCrediticias;
