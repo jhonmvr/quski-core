@@ -209,6 +209,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador ) );
 		return loc;
 	}	
+	@GET
+	@Path("/asignarAprobadorExcepcion")
+	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia,@QueryParam("aprobador") String aprobador) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.asignarAprobadorExcepcion( Long.valueOf( idReferencia ), aprobador ) );
+		return loc;
+	}
 	
 	@POST
 	@Path("/upDateEstadoProceso")

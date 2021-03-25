@@ -4084,10 +4084,12 @@ public class QuskiOroService {
 		if(proceso == null ) {
 			proceso = this.findProcesoByIdReferencia(excepcion.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION);
 		}
-		if(!proceso.getEstadoProceso().equals(EstadoProcesoEnum.CREADO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.DEVUELTO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.EXCEPCIONADO) ) {
+		if(proceso == null || (!proceso.getEstadoProceso().equals(EstadoProcesoEnum.CREADO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.DEVUELTO) && !proceso.getEstadoProceso().equals(EstadoProcesoEnum.EXCEPCIONADO)) ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE SOLICITAR UNA EXCEPCION INTENTE MAS TARDE");
 		}
-		cambiarEstado(proceso.getIdReferencia(), proceso.getProceso(), EstadoProcesoEnum.PENDIENTE_EXCEPCION);
+		proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_EXCEPCION);
+		proceso.setUsuario( "En cola");
+		manageProceso(proceso);
 		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion(excepcion.getTipoExcepcion(), excepcion.getTbQoNegociacion().getId());
 		
 		return this.manageExcepcion(excepcion);
@@ -6936,6 +6938,36 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	public String asignarAprobadorExcepcion(Long id, String aprobador) throws RelativeException {
+		try {
+			TbQoProceso persistedProceso = this.findProcesoByIdReferencia(id, ProcesoEnum.NUEVO );
+			if(persistedProceso == null) {
+				persistedProceso = this.findProcesoByIdReferencia(id, ProcesoEnum.RENOVACION );
+			}
+			if(persistedProceso == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, " PROCESO NO ENCONTRADO. ");
+			}
+			persistedProceso.setUsuario( aprobador );
+			persistedProceso.setHoraAprobador( new Timestamp(System.currentTimeMillis()) );
+			persistedProceso = this.manageProceso(persistedProceso);
+			if(persistedProceso.getProceso() == ProcesoEnum.NUEVO || persistedProceso.getProceso() == ProcesoEnum.RENOVACION) {
+				TbQoNegociacion persistedOperacion = this.findNegociacionById( id );
+				if(persistedOperacion != null) {
+					persistedOperacion.setAprobador(aprobador);
+					this.manageNegociacion(persistedOperacion);
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+				}
+			}					
+			return persistedProceso.getUsuario();
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, e.getMessage());
+		}
+	}
 	public String asignarAprobador(Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
 		try {
 			TbQoProceso persistedProceso = this.findProcesoByIdReferencia(id, proceso);
@@ -7616,6 +7648,7 @@ public class QuskiOroService {
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+				proceso.setUsuario( "En cola");
 				manageProceso(proceso);
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
