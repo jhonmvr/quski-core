@@ -10,6 +10,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -202,7 +203,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "SimularResponse")
 public class SimularResponse implements Serializable{
 
-    @XmlElement(name = "SimularResult", required = true)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@XmlElement(name = "SimularResult", required = true)
     protected SimularResponse.SimularResult simularResult;
 
     /**

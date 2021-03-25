@@ -351,11 +351,11 @@ public class DevolucionService {
 			this.manageDevolucion(devolucion);
 			if (aprobado) {
 				result.setProceso(
-						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA));
+						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, QuskiOroConstantes.EN_COLA));
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE);
 			} else {
 				result.setProceso(
-						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO));
+						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null));
 			}
 			return result;
 		} catch (RelativeException e) {
@@ -446,7 +446,7 @@ public class DevolucionService {
 				}
 				if (devolucion.getFechaArribo() == null) {
 					devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
-					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO);
+					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO, QuskiOroConstantes.EN_COLA);
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
 				}
@@ -475,7 +475,7 @@ public class DevolucionService {
 					throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ proceso.getEstadoProceso() );
 				}
 				if ( devolucion.getArribo() == null ) {
-					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
+					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 					devolucion.setArribo(Boolean.TRUE);
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
@@ -532,7 +532,7 @@ public class DevolucionService {
 
 	public TbQoDevolucion mandarAprobarSolicitudDevolucion(Long id, String usuario) throws RelativeException {
 		TbQoDevolucion devolucion = devolucionRepository.findById(id);
-		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION);
+		qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION, QuskiOroConstantes.EN_COLA);
 		this.manageDevolucion(devolucion);
 		return devolucion;
 
@@ -557,8 +557,8 @@ public class DevolucionService {
 			if(procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) != 0 && procesoDevolucion.getEstadoProceso().compareTo(EstadoProcesoEnum.PENDIENTE_APROBACION) != 0) {
 				bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
 			}
-			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO);
-			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.CANCELADO);
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO, null);
+			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.APROBADO, null);
 			
 			return pro;
 		} catch ( RelativeException e ) {
@@ -581,7 +581,7 @@ public class DevolucionService {
 			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
 				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
 			}
-			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO);
+			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null);
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
 			throw e;
@@ -602,7 +602,7 @@ public class DevolucionService {
 			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.ARRIBADO ) ) {
 				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
 			}
-			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA);
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA, QuskiOroConstantes.EN_COLA);
 			return this.manageDevolucion(devolucion);
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
@@ -623,7 +623,7 @@ public class DevolucionService {
 			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA ) ) {
 				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
 			}
-			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO);
+			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO , null);
 			TbQoDevolucion devo = this.manageDevolucion(devolucion);
 			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE);
 			return devo;
@@ -646,7 +646,7 @@ public class DevolucionService {
 			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA ) ) {
 				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
 			}
-			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO);
+			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 			devolucion.setDevuelto(true);
 			return this.manageDevolucion(devolucion);
 		} catch ( RelativeException e ) {
@@ -733,7 +733,7 @@ public class DevolucionService {
 			TbQoProceso persisted = qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION);
 
 			if (persisted.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
-				return this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION );
+				return this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION, QuskiOroConstantes.EN_COLA);
 			} else {
 				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + persisted.getEstadoProceso());
 			}

@@ -12,6 +12,7 @@ public class CalculadoraEntradaWrapper implements Serializable {
 	private List<CalculadoraGarantiaWrapper> garantias;
 	private CalculadoraDescuentosOperacionWrapper descuentosOperacion;
 	
+	@SuppressWarnings("static-access")
 	public void generateMockup() { 
 		List<CalculadoraGarantiaWrapper> listMockGarantia  = new ArrayList<>();
 		CalculadoraParametrosRiesgoWrapper mockRiesgo = new CalculadoraParametrosRiesgoWrapper();

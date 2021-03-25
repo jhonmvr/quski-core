@@ -7,10 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -49,7 +47,6 @@ import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
-import com.relative.quski.wrapper.SoftbankResponseWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.SoftbankTablaAmortizacionWrapper;

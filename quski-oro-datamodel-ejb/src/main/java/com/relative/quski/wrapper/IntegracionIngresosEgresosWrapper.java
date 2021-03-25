@@ -3,8 +3,6 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class IntegracionIngresosEgresosWrapper implements Serializable{
 
 	/**

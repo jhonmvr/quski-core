@@ -4088,7 +4088,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE SOLICITAR UNA EXCEPCION INTENTE MAS TARDE");
 		}
 		proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_EXCEPCION);
-		proceso.setUsuario( "En cola");
+		proceso.setUsuario( QuskiOroConstantes.EN_COLA);
 		manageProceso(proceso);
 		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion(excepcion.getTipoExcepcion(), excepcion.getTbQoNegociacion().getId());
 		
@@ -6887,13 +6887,16 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());		
 		}
 	}
-	public TbQoProceso cambiarEstado( Long idReferencia, ProcesoEnum proceso, EstadoProcesoEnum newEstado) throws RelativeException {
+	public TbQoProceso cambiarEstado( Long idReferencia, ProcesoEnum proceso, EstadoProcesoEnum newEstado, String usuario) throws RelativeException {
 		try {
 			TbQoProceso persisted = this.findProcesoByIdReferencia( idReferencia, proceso );
 			if(persisted == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EN PROCESO PARA LA REFERENCIA:" +idReferencia);
 			}
 			persisted.setEstadoProceso( newEstado );
+			if(usuario != null ) {
+				persisted.setUsuario( usuario );				
+			}
 			return this.manageProceso(persisted);
 		}catch(RelativeException e) {
 			throw e;		
@@ -7173,7 +7176,7 @@ public class QuskiOroService {
 			persisted.setCodigoCash(cash);
 			persisted.setCodigoDevuelto(codigo);
 			persisted.setDescripcionDevuelto(descripcion);
-			log.info( " CODIGO DE OPERACION DEVUALTA =================================> "+ persisted.getCodigoDevuelto() );
+			log.info( " CODIGO DE OPERACION DEVUELTA =================================> "+ persisted.getCodigoDevuelto() );
 			return this.manageCreditoNegociacion(persisted);
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -7562,11 +7565,11 @@ public class QuskiOroService {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}		
 				this.devolverAprobarCredito(credito, cash, descripcion, null);
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO);
+				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO, null);
 				
 			}else {
 				this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO);
+				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
 		} catch( RelativeException e) {
 			e.printStackTrace();
@@ -7640,7 +7643,28 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
-	
+	 
+	public TbQoProceso solicitarAprobacionRenovacion(Long idNegociacion) throws RelativeException{
+		try {
+			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.RENOVACION);
+			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
+				
+				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+				return this.manageProceso(proceso);
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
+			}
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
 	private void solicitarAprobacionNuevo(Long idNegociacion) throws RelativeException{
 		try {
 			TbQoProceso proceso =this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.NUEVO);
@@ -7648,7 +7672,7 @@ public class QuskiOroService {
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
-				proceso.setUsuario( "En cola");
+				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
 				manageProceso(proceso);
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");

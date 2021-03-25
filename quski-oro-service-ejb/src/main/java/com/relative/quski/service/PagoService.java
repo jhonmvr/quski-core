@@ -73,7 +73,7 @@ public class PagoService {
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
-			result.setProceso( qos.createProcesoPago( clienteCast.getId(), clienteCast.getAsesor()) );
+			result.setProceso( qos.createProcesoPago( clienteCast.getId(), QuskiOroConstantes.EN_COLA ) );
 			if(result.getProceso() == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
@@ -133,7 +133,7 @@ public class PagoService {
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
-			result.setProceso( qos.createProcesoPago( clienteCast.getId(), clienteCast.getAsesor()) );
+			result.setProceso( qos.createProcesoPago( clienteCast.getId(), QuskiOroConstantes.EN_COLA) );
 			if(result.getProceso() == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
@@ -285,7 +285,7 @@ public class PagoService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL REGISTRAR EL PAGO EN SOFTBANK.");
 				}
 			}
-			proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO);
+			proceso = qos.cambiarEstado( clientePago.getId(), ProcesoEnum.PAGO, EstadoProcesoEnum.APROBADO, null);
 			if(proceso == null) {
 				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+" EL PROCESO.");
 			}
@@ -334,7 +334,7 @@ public class PagoService {
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
 			clientePago.setEstado(EstadoEnum.ACT);
-			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(),  ProcesoEnum.PAGO, EstadoProcesoEnum.RECHAZADO);
+			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(),  ProcesoEnum.PAGO, EstadoProcesoEnum.RECHAZADO, null);
 			if(proceso == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}

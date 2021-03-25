@@ -27,7 +27,6 @@ import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoRolTipoDocumento;
 import com.relative.quski.service.CreditoNuevoService;
 import com.relative.quski.service.GestorHabilitanteService;
-import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
 import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
 
