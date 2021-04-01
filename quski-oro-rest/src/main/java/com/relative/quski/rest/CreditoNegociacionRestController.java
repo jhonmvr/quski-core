@@ -161,7 +161,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@GET
 	@Path("/devolverAprobar")
 	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
-		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO IMPLEMENTADO");
 	}	
 	@GET
@@ -292,6 +291,17 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	
+	@GET
+	@Path("/solicitarAprobacionRenovacion")
+	public GenericWrapper<TbQoProceso> solicitarAprobacionRenovacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNegociacion)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
+		}
+		TbQoProceso a = this.qos.solicitarAprobacionRenovacion( Long.valueOf(idNegociacion) );
+		loc.setEntidad(a);
+		return loc;			
+	}
 	@POST
 	@Path("/solicitarAprobacionNuevo")
 	public GenericWrapper<CreditoCreadoSoftbank> solicitarAprobacionNuevo(@QueryParam("correoAsesor") String correoAsesor,

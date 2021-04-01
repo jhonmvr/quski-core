@@ -87,7 +87,8 @@ public class QuskiOroConstantes {
 	/**
 	 * FUNDAS
 	 */
-	public static final String FUNDA_PREFIX = "CODIGO-";
+	public static final String EN_COLA = "EN COLA";
+
     
 	/**
 	 * BODEGAS 

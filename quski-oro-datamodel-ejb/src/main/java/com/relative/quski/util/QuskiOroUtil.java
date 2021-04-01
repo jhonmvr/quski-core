@@ -229,6 +229,7 @@ public class QuskiOroUtil {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String dateToCompletelyFullString(Date date) throws RelativeException {
 		try {
 			String[] mes = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre",

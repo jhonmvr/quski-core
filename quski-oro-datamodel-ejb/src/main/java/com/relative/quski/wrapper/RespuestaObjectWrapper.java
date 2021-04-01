@@ -2,8 +2,6 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 
-import com.relative.quski.enums.EstadoEnum;
-
 public class RespuestaObjectWrapper implements Serializable{
 
 	/**

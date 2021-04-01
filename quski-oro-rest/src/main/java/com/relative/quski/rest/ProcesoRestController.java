@@ -69,9 +69,11 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	@Path("/cambiarEstadoProceso")
 	public GenericWrapper<TbQoProceso> cambiarEstadoProceso(@QueryParam("idReferencia") String idReferencia, 
 			@QueryParam("proceso") ProcesoEnum proceso, 
-			@QueryParam("newEstado") EstadoProcesoEnum newEstado) throws RelativeException {
+			@QueryParam("newEstado") EstadoProcesoEnum newEstado,
+			@QueryParam("usuario") String usuario
+			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.cambiarEstado( Long.valueOf( idReferencia ), proceso, newEstado ) );
+		loc.setEntidad( this.qos.cambiarEstado( Long.valueOf( idReferencia ), proceso, newEstado, usuario ) );
 		return loc;
 	}	
 	@GET
@@ -209,14 +211,13 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador ) );
 		return loc;
 	}	
-	
-	@POST
-	@Path("/upDateEstadoProceso")
-	public GenericWrapper<TbQoProceso> upDateEstadoProceso(TbQoProceso proceso) throws RelativeException {
-		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.cambiarEstado( proceso.getIdReferencia(), proceso.getProceso(), proceso.getEstadoProceso() ) );
+	@GET
+	@Path("/asignarAprobadorExcepcion")
+	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia,@QueryParam("aprobador") String aprobador) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.asignarAprobadorExcepcion( Long.valueOf( idReferencia ), aprobador ) );
 		return loc;
-	}	
+	}
 	@GET
 	@Path("/traerNumeroOperacionMadre")
 	public GenericWrapper<String> traerNumeroOperacionMadre(@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {

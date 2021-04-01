@@ -1,7 +1,6 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class TipoOroWrapper implements Serializable{
 

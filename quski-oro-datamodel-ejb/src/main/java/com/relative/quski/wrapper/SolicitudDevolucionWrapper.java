@@ -22,9 +22,6 @@ public class SolicitudDevolucionWrapper implements Serializable {
 	
 	
 	private String asesor;
-	private String cedulaAsesor;
-	
-	
 	public String getFechaSolicitud() {
 		return fechaSolicitud;
 	}

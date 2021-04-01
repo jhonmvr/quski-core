@@ -153,7 +153,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "Informacion")
 public class Informacion implements Serializable{
 
-    @XmlElement(name = "Identificacion")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@XmlElement(name = "Identificacion")
     protected int identificacion;
     @XmlElement(name = "DATOS_CLIENTE", required = true)
     protected Informacion.DATOSCLIENTE datoscliente;

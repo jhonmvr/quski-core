@@ -34,6 +34,7 @@ public class LocalStorageClient {
 			String code = "W3siY2VkdWxhIjoiMTcyMDgxMjIzNyIsIm5vbWJyZSI6IkRpZWdvIFNlcnJhbm8gIn1d";
 			String decodedUrl = Base64.getEncoder().encodeToString(code.getBytes());
 			//String decodedUrl = Arrays.toString(byteArray);
+			@SuppressWarnings("unused")
 			Gson gsons = new GsonBuilder().create();
 		/*	Class<? extends ArrayList> listType = new ArrayList<HerederoWrapper>().getClass();
 			List<HerederoWrapper> list =   gsons.fromJson((String) decodedUrl, listType);*/

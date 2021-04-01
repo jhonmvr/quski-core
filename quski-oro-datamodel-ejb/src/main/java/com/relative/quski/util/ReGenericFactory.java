@@ -18,6 +18,7 @@ public class ReGenericFactory {
 		
         try {
         	Class<?> repClass = Class.forName(objectFullName); 
+			@SuppressWarnings("deprecation")
 			Object repAux = repClass.newInstance();
 			Method setNameMethod = repAux.getClass().getMethod(methodName, String.class);
 			return (Map<String, Object>)setNameMethod.invoke(repAux, idHabilitante,idTipoDocumento, proceso, estadoOperacion, idReferencia );
