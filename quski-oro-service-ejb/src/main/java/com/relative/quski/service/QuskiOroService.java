@@ -5937,34 +5937,16 @@ public class QuskiOroService {
 		}
 
 	}
-
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
-		String cod = QuskiOroConstantes.CODIGO_NUEVO+"0000000";
-		Long id = persisted.getId();
 		try {
-			if (id < 9) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"000000";
-			} else if (id < 99) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"00000" + id;
-			} else if (id < 999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"0000" + id;
-			} else if (id < 9999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"000" + id;
-			} else if (id < 99999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"00" + id;
-			} else if (id < 999999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+"0" + id;
-			} else if (id < 9999999) {
-				cod = QuskiOroConstantes.CODIGO_NUEVO+ "" + id;
-			} else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-						"Error. Codigo de Credito supera los 7 digitos numericos");
-			}
-			persisted.setCodigo(cod);
+			persisted.setCodigo( QuskiOroConstantes.CODIGO_NUEVO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
 			return this.creditoNegociacionRepository.update(persisted);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 
