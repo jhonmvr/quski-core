@@ -7691,6 +7691,9 @@ public class QuskiOroService {
 	}
 
 	public TbQoTracking registrarTraking(TbQoTracking wp) throws RelativeException {
+		if(StringUtils.isBlank(wp.getCodigoBpm())) {
+			return null;
+		}
 		TbQoTracking last = this.trackingRepository.findByParams(wp.getCodigoBpm(),wp.getProceso());
 		wp.setFechaInicio(new Timestamp(System.currentTimeMillis()));
 		wp.setFechaCreacion(new Date());
