@@ -59,7 +59,7 @@ public class TbQoRegistrarPago implements Serializable {
 	private String tipoPago;
 	
 	@Column(name="numero_deposito")
-	private BigDecimal numeroDeposito;
+	private String numeroDeposito;
 
 	@Column(name="usuario_actualizacion")
 	private String usuarioActualizacion;
@@ -147,11 +147,11 @@ public class TbQoRegistrarPago implements Serializable {
 		this.institucionFinanciera = institucionFinanciera;
 	}
 
-	public BigDecimal getNumeroDeposito() {
+	public String getNumeroDeposito() {
 		return this.numeroDeposito;
 	}
 
-	public void setNumeroDeposito(BigDecimal numeroDeposito) {
+	public void setNumeroDeposito(String numeroDeposito) {
 		this.numeroDeposito = numeroDeposito;
 	}
 

@@ -95,7 +95,7 @@ public class PagoService {
 				pago.setTipoPago( e.getTipoPago() );
 				pago.setFechaPago(e.getFechaPago());
 				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
-				pago.setNumeroDeposito(e.getNumeroDeposito());
+				pago.setNumeroDeposito( e.getNumeroDeposito() );
 				pago.setValorPagado(e.getValorDepositado());
 				pago.setEstado(EstadoEnum.ACT);
 				pago.setTbQoClientePago(clienteCast);

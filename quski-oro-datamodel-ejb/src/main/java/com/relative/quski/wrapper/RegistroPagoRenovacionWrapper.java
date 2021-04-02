@@ -11,7 +11,7 @@ public class RegistroPagoRenovacionWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String intitucionFinanciera;
-	private BigDecimal numeroDeposito;
+	private String numeroDeposito;
 	private BigDecimal valorDepositado;
 	private Date fechaPago;
 	private String cuenta;
@@ -31,10 +31,10 @@ public class RegistroPagoRenovacionWrapper implements Serializable {
 	public void setFechaPago(Date fechaPago) {
 		this.fechaPago = fechaPago;
 	}
-	public BigDecimal getNumeroDeposito() {
+	public String getNumeroDeposito() {
 		return numeroDeposito;
 	}
-	public void setNumeroDeposito(BigDecimal numeroDeposito) {
+	public void setNumeroDeposito(String numeroDeposito) {
 		this.numeroDeposito = numeroDeposito;
 	}
 	public String getIntitucionFinanciera() {
