@@ -1464,8 +1464,11 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
+
 
 	}
 	private TbQoDatoTrabajoCliente updateDatoTrabajoCliente(TbQoDatoTrabajoCliente send, TbQoDatoTrabajoCliente persisted)
@@ -1544,7 +1547,9 @@ public class QuskiOroService {
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
-		} catch (RelativeException e) {
+		}catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
@@ -1589,10 +1594,11 @@ public class QuskiOroService {
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
-		} catch (RelativeException e) {
+		}catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
-
 	}
 	private TbQoCuentaBancariaCliente updateCuentaBancariaCliente(TbQoCuentaBancariaCliente send, TbQoCuentaBancariaCliente persisted)
 			throws RelativeException {
@@ -2391,7 +2397,6 @@ public class QuskiOroService {
 			wp.setCliente( cliente ); 
 			if (this.findClienteSoftbank(cliente.getCedulaCliente()) == null) {
 				this.crearClienteSoftbank( this.clienteToClienteSoftbank( wp ) );
-				
 			}else {
 				this.editarClienteSoftbank( this.clienteToClienteSoftbank( wp ) );
 				
@@ -2411,7 +2416,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_REGISTRO + e.getMessage());
 		}
 
 	}
@@ -3071,9 +3076,10 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
 						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -3646,8 +3652,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 	}
 
@@ -4323,9 +4328,12 @@ public class QuskiOroService {
 			} else {
 				return null;
 			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM," ERROR AL LLAMAR METODO findClienteSoftbank. " + e.getMessage()  );
 		}
 
 	}
@@ -4888,18 +4896,15 @@ public class QuskiOroService {
 	}
 
 	public void crearClienteSoftbank(SoftbankClienteWrapper cliente) throws RelativeException {
-		try {			
-					
+		try {					
 			SoftBankApiClient.callCrearClienteRest(this.parametroRepository
 				.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE).getValor(),cliente);
-				
-		
 		} catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
+					QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION_SOFTBANK + e.getMessage());
 		}
 
 	}
@@ -4912,11 +4917,11 @@ public class QuskiOroService {
 			
 
 		} catch (RelativeException e) {
+			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_SOFTBANK + e.getMessage());
 		}
 	}
 

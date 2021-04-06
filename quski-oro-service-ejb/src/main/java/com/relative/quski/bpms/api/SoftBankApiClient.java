@@ -421,9 +421,9 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (RelativeException e) {
+		}  catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:");
+			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:" + e.getMessage());
