@@ -9,17 +9,28 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoExcepcion;
+import com.relative.quski.model.TbQoExcepcionRol;
+import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoVerificacionTelefonica;
 import com.relative.quski.repository.ProcesoRepository;
@@ -765,6 +776,46 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
+		}
+	}
+	@Override
+	public Integer findByNumeroOperacionMadreAndProcesoAndEstado(String numeroOperacionMadre, ProcesoEnum proceso,
+			List<EstadoProcesoEnum> estados) throws RelativeException {
+		try {
+			List<Long> creditos = null;
+			if (StringUtils.isBlank(numeroOperacionMadre)) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL NUMERO DE OPERACION MADRE");
+			}
+				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+				CriteriaQuery<Long> queryy = cbb.createQuery(Long.class);
+				Root<TbQoCreditoNegociacion> pollRol = queryy.from(TbQoCreditoNegociacion.class);
+				//Join<TbQoNegociacion,TbQoCreditoNegociacion> joinNegociacion = pollRol.join("tbQoNegociacion");
+				queryy.where(cbb.equal(pollRol.get("numeroOperacionMadre"), numeroOperacionMadre));
+				queryy.select(pollRol.get("tbQoNegociacion").get("id"));
+				TypedQuery<Long> createQue = this.getEntityManager().createQuery(queryy);
+				creditos = createQue.getResultList();
+			if(creditos == null || creditos.isEmpty() ) {
+				return Integer.valueOf("0");
+			}
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<Long> query = cb.createQuery(Long.class);
+			Root<TbQoProceso> poll = query.from(TbQoProceso.class);
+			List<Predicate> where = new ArrayList<>();
+			where.add(poll.get("idReferencia").in(creditos));
+			if (estados != null && !estados.isEmpty()) {
+				where.add(poll.get("estadoProceso").in(estados));
+			}
+			
+
+			query.where(cb.and(where.toArray(new Predicate[] {})));
+
+			query.select(cb.count(poll.get("id")));
+			TypedQuery<Long> createQuery = this.getEntityManager().createQuery(query);
+			return createQuery.getSingleResult().intValue();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
 		}
 	}
 

@@ -7302,11 +7302,21 @@ public class QuskiOroService {
 		}
 	}
 
-	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacionMadre, Long idNego, String asesor, Long idAgencia) throws RelativeException {
+	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego, String asesor, Long idAgencia, String numeroOperacionMadre) throws RelativeException {
 		try {
+			
 			RenovacionWrapper novacion;
 			if(idNego == null) {
-				novacion = this.buscarRenovacionOperacionMadre(numeroOperacionMadre);		
+				List<EstadoProcesoEnum> estados = new ArrayList<>();
+				estados.add( EstadoProcesoEnum.CREADO );
+				estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+				estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+				estados.add( EstadoProcesoEnum.EXCEPCIONADO );
+				estados.add( EstadoProcesoEnum.PENDIENTE_EXCEPCION );
+				if(this.procesoRepository.findByNumeroOperacionMadreAndProcesoAndEstado(numeroOperacionMadre,  ProcesoEnum.RENOVACION, estados) > 0 ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"YA EXISTE UN PROCESO DE RENOVACION ACTIVO PARA EL NUMERO DE OPERACION MADRE: "+ numeroOperacionMadre);
+				}
+				novacion = this.buscarRenovacionOperacionMadre(numeroOperacion);		
 				TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getOperacionAnterior().getCliente().getIdentificacion());
 				if( cliente == null) {
 					cliente = this.clienteSoftToTbQoCliente( novacion.getOperacionAnterior().getCliente() );
@@ -7317,7 +7327,7 @@ public class QuskiOroService {
 				negociacion.setEstado( EstadoEnum.ACT);
 				negociacion.setTbQoCliente( cliente );
 				negociacion = this.manageNegociacion(negociacion);
-				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacionMadre, idAgencia, null);
+				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacionMadre,  idAgencia, null);
 				credito.setTbQoNegociacion( negociacion );
 				credito = this.manageCreditoNegociacion(credito);
 				credito = this.crearCodigoRenovacion(credito);
@@ -7335,7 +7345,6 @@ public class QuskiOroService {
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
 				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId())));
-				novacion.setTasacion(this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito()));
 				Informacion info = this.informacionCliente(novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
 				if(info != null && info.getXmlVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
 					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), novacion.getCredito().getTbQoNegociacion(), null));	

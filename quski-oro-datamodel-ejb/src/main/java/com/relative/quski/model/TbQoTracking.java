@@ -14,10 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.enums.SeccionEnum;
 
 
 /**
@@ -35,14 +33,12 @@ public class TbQoTracking implements Serializable {
 	
 	private Long id;
 	
-	@Enumerated(EnumType.STRING)
-	private ActividadEnum actividad;
+	private String actividad;
 	
 	@Enumerated(EnumType.STRING)
 	private ProcesoEnum proceso;
 	
-	@Enumerated(EnumType.STRING)
-	private SeccionEnum seccion;
+	private String seccion;
 	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
@@ -82,11 +78,11 @@ public class TbQoTracking implements Serializable {
 	@Column(name="usuario_creacion")
 	private String usuarioCreacion;
 
-	public ActividadEnum getActividad() {
+	public String getActividad() {
 		return this.actividad;
 	}
 
-	public void setActividad(ActividadEnum actividad) {
+	public void setActividad(String actividad) {
 		this.actividad = actividad;
 	}
 
@@ -178,11 +174,11 @@ public class TbQoTracking implements Serializable {
 		this.proceso = proceso;
 	}
 
-	public SeccionEnum getSeccion() {
+	public String getSeccion() {
 		return this.seccion;
 	}
 
-	public void setSeccion(SeccionEnum seccion) {
+	public void setSeccion(String seccion) {
 		this.seccion = seccion;
 	}
 
