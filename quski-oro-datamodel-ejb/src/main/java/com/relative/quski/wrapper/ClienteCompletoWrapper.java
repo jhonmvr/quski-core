@@ -26,7 +26,8 @@ public class ClienteCompletoWrapper implements Serializable {
 	private List<TbQoTelefonoCliente> telefonos;
 	private List<TbQoDatoTrabajoCliente> datosTrabajos;
 	private List<TbQoCuentaBancariaCliente> cuentas;
-
+	
+	private String codigoBpm;
 	private Boolean isSoftbank;
 	private Boolean existeError;
 	private String mensaje;
@@ -137,6 +138,12 @@ public class ClienteCompletoWrapper implements Serializable {
 	}
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+	public String getCodigoBpm() {
+		return codigoBpm;
+	}
+	public void setCodigoBpm(String codigoBpm) {
+		this.codigoBpm = codigoBpm;
 	}
 
 	

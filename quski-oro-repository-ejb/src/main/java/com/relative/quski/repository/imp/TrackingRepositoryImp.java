@@ -144,7 +144,7 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 			Root<TbQoTracking> poll = query.from(TbQoTracking.class);
 			query.where(cb.and(cb.equal(poll.get("codigoBpm"), codigoBpm),cb.equal(poll.get("proceso"), proceso)));
 			query.select(poll);
-			query.orderBy(cb.asc(poll.get("id")));
+			query.orderBy(cb.desc(poll.get("id")));
 			TypedQuery<TbQoTracking> tq = this.getEntityManager().createQuery(query);
 			List<TbQoTracking> resultList = tq.getResultList();
 			if (resultList != null && !resultList.isEmpty()) {

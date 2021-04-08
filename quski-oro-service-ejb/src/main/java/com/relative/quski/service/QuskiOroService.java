@@ -2160,7 +2160,8 @@ public class QuskiOroService {
 		try {
 			TbQoNegociacion nego = this.findNegociacionById( id );
 			if(nego != null) {
-				return traerCliente( nego.getTbQoCliente().getCedulaCliente() );
+				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(id);
+				return traerCliente( nego.getTbQoCliente().getCedulaCliente(), credito.getCodigo() );
 			}else {
 				return null;
 			}
@@ -2172,7 +2173,7 @@ public class QuskiOroService {
 		try {
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacionMadre);
 			if(detalle != null) {
-				return traerCliente( detalle.getCliente().getIdentificacion() );
+				return traerCliente( detalle.getCliente().getIdentificacion(), null );
 			}else {
 				log.info("=================> No traje nada? <==================");
 				return null;
@@ -2182,12 +2183,13 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
 		}
 	}
-	public ClienteCompletoWrapper traerCliente( String cedula ) throws RelativeException{
+	public ClienteCompletoWrapper traerCliente( String cedula, String codigoBpm) throws RelativeException{
 		try {
 			ClienteCompletoWrapper wr = this.mapearClienteCompleto( this.findClienteSoftbank(  cedula  ) );
 			if( wr == null) {
 				wr = new ClienteCompletoWrapper( this.findClienteByIdentifiacion( cedula ) );
 				wr.setIsSoftbank( false );
+				wr.setCodigoBpm( codigoBpm );
 				if(wr.getExisteError()) {
 					return wr;
 				}
@@ -2195,6 +2197,7 @@ public class QuskiOroService {
 				return wr;
 			}else {
 				wr.setIsSoftbank( true );
+				wr.setCodigoBpm( codigoBpm );
 				return wr;
 			}
 		}catch(RelativeException e ) {
