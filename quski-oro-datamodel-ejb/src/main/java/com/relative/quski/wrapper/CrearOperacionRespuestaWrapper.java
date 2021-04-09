@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CrearOperacionRespuestaWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public CrearOperacionRespuestaWrapper() {
@@ -126,12 +128,14 @@ public class CrearOperacionRespuestaWrapper implements Serializable {
 	public void setEsProductoOro(Boolean esProductoOro) {
 		this.esProductoOro = esProductoOro;
 	}
+	@JsonProperty("ExisteError")
 	public Boolean getExisteError() {
 		return existeError;
 	}
 	public void setExisteError(Boolean existeError) {
 		this.existeError = existeError;
 	}
+	@JsonProperty("Mensaje")
 	public String getMensaje() {
 		return mensaje;
 	}

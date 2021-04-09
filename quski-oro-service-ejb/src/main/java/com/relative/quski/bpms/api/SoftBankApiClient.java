@@ -47,6 +47,7 @@ import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
+import com.relative.quski.wrapper.SoftbankResponseWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.SoftbankRiesgoWrapper;
 import com.relative.quski.wrapper.SoftbankTablaAmortizacionWrapper;
@@ -487,6 +488,13 @@ public class SoftBankApiClient {
 				Gson gsons = new GsonBuilder().create();
 				CrearOperacionRespuestaWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
 				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
+				if( respuestaWrapper.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> respuesta servicio objeto "+ respuestaError.getExisteError());
+					if(respuestaError.getExisteError() ) {
+						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaError.getMensaje() );
+					}
+				}
 				if(respuestaWrapper.getExisteError() ) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
 				}
