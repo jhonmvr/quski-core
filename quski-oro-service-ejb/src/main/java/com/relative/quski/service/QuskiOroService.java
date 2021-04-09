@@ -4434,10 +4434,12 @@ public class QuskiOroService {
 			} else {
 				return null;
 			}
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
 
@@ -5939,7 +5941,10 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
 						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
-		} catch (RelativeException e) {
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
@@ -6313,6 +6318,10 @@ public class QuskiOroService {
 			}
 			return null;
 		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch( Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -6412,6 +6421,10 @@ public class QuskiOroService {
 			return this.manageCreditoNegociacion( credito );
 			
 		}catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
