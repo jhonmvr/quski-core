@@ -246,6 +246,7 @@ public class QuskiOroConstantes {
 	// MENSAJES DE EXCEPCIONES
 	public static final String ACCION_NO_ENCONTRADA = "ACCION NO ENCONTRADA -> ";
 	public static final int ACTIVIDADES_NO_ECONOMICAS = 330;
+	public static final String ERROR_SOFTBANK = "ERROR SOFTBANK";
 	public static final String OTRAS_ACTIVIDADES = "046001009";
 	public static final String ERROR_AL_REALIZAR_BUSQUEDA = "AL REALIZAR BUSQUEDA -> ";
 	public static final String ERROR_SIN_PROCESO = "NO POSEE UN PROCESO RELACIONADO";

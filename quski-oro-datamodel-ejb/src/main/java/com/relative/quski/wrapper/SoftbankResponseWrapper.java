@@ -1,62 +1,73 @@
 package com.relative.quski.wrapper;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SoftbankResponseWrapper {
-	public SoftbankResponseWrapper( ) {
+public class SoftbankResponseWrapper implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public String toString() {
+		return "SoftbankResponseWrapper [existeError=" + ExisteError + ", mensaje=" + Mensaje + ", descripcion="
+				+ Descripcion + ", validaciones=" + Validaciones + ", codigoServicio=" + CodigoServicio + "]";
 	}
 	@JsonProperty("ExisteError")
-	private Boolean existeError;
+	private Boolean ExisteError;
 	
 	@JsonProperty("Mensaje")
-	private String mensaje ;
+	private String Mensaje ;
 	
 	@JsonProperty("Descripcion")
-	private String descripcion;
+	private String Descripcion;
 	
 	@JsonProperty("Validaciones")
-	private String validaciones;
+	private String Validaciones;
 	
 	@JsonProperty("CodigoServicio")
-	private String codigoServicio;
+	private String CodigoServicio;
 	
 	
 	
 	
-	@JsonProperty("ExisteError")
+	@JsonGetter("ExisteError")
 	public Boolean getExisteError() {
-		return existeError;
+		return ExisteError;
 	}
 	public void setExisteError(Boolean existeError) {
-		this.existeError = existeError;
+		this.ExisteError = existeError;
 	}
-	@JsonProperty("Mensaje")
+    @JsonGetter("Mensaje")
 	public String getMensaje() {
-		return mensaje;
+		return Mensaje;
 	}
 	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
+		this.Mensaje = mensaje;
 	}
-	@JsonProperty("Descripcion")
+	@JsonGetter("Descripcion")
 	public String getDescripcion() {
-		return descripcion;
+		return Descripcion;
 	}
 	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+		this.Descripcion = descripcion;
 	}
-	@JsonProperty("Validaciones")
+	@JsonGetter("Validaciones")
 	public String getValidaciones() {
-		return validaciones;
+		return Validaciones;
 	}
 	public void setValidaciones(String validaciones) {
-		this.validaciones = validaciones;
+		this.Validaciones = validaciones;
 	}
-	@JsonProperty("CodigoServicio")
+	@JsonGetter("CodigoServicio")
 	public String getCodigoServicio() {
-		return codigoServicio;
+		return CodigoServicio;
 	}
 	public void setCodigoServicio(String codigoServicio) {
-		this.codigoServicio = codigoServicio;
+		this.CodigoServicio = codigoServicio;
 	}
 	
 	

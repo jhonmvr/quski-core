@@ -59,10 +59,9 @@ public class SoftBankApiClient {
 		
 		try {
 			
-			
-			
-			SoftbankClienteWrapper x= callConsultaClienteRest("http://201.183.238.73:1991/api/cliente/consultar","131166441");
-			System.out.println("==============>>>"+ x.getNombreCompleto());
+			CrearOperacionRenovacionWrapper wp = new CrearOperacionRenovacionWrapper();
+			CrearOperacionRespuestaWrapper x = callRenovarOperacionRest( wp ,"http://10.37.10.58:8094/SoftbankAPI/api/credito/operacion/renovar");
+			System.out.println("==============>>>"+ x.getDescripcion());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,12 +91,20 @@ public class SoftBankApiClient {
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				SoftbankRespuestaWrapper rest =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
-				if(rest != null && rest.getExisteError()) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-							rest.getMensaje() +" | validaciones: "+ rest.getValidaciones());
+				SoftbankRespuestaWrapper result =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
 				}
-				return rest;
+				if(result != null && result.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+							result.getMensaje() +" | validaciones: "+ result.getValidaciones());
+				}
+				return result;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -130,7 +137,14 @@ public class SoftBankApiClient {
 			}else if(status==400){
 				Gson gsons = new GsonBuilder().create();
 				ConsultaGlobalRespuestaWrapper result=gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ConsultaGlobalRespuestaWrapper.class);
-				
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
+				}
 				if( result.getExisteError() != null && result.getExisteError()) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + result.getMensaje() );
 				}else {
@@ -164,21 +178,29 @@ public class SoftBankApiClient {
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
 				RespuestaAprobarWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaAprobarWrapper.class);
-				if( result.getExisteError()) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + result.getMensaje() );
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
+				}
+				if( result.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," EXISTE ERROR: " + result.getMensaje() );
 				}else {
 					return result;
 				}
 			}else {
 				log.info( " =================> " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)) + " <===================" );
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Error:" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," ERROR:" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR SERVICIO APROBAR REST SOFTBANK:" + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR SERVICIO APROBAR REST SOFTBANK: " + e.getMessage());
 		} 
 	}
 	/**
@@ -218,8 +240,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
 		}
 	}
-	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service)
-			throws RelativeException, Exception {
+	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service) throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
@@ -236,11 +257,20 @@ public class SoftBankApiClient {
 			log.info("=========> VALOR DEL STATUS ========> "+ status);
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				SoftbankRiesgoWrapper resp = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRiesgoWrapper.class);
-				if(resp.getExisteError()) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,resp.getMensaje());
+				SoftbankRiesgoWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRiesgoWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
 				}
-				return resp;
+				if( result.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," EXISTE ERROR: " + result.getMensaje() );
+				}else {
+					return result;
+				}
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -412,12 +442,20 @@ public class SoftBankApiClient {
 			log.info("=========> VALOR DEL STATUS ========> "+ status);
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				SoftbankRespuestaWrapper rest =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
-				if(rest != null && rest.getExisteError()) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-							rest.getMensaje() +" | validaciones: "+ rest.getValidaciones());
+				SoftbankRespuestaWrapper result =  gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
 				}
-				return rest;
+				if(result != null && result.getExisteError()) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+							result.getMensaje() +" | validaciones: "+ result.getValidaciones());
+				}
+				return result;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -449,12 +487,19 @@ public class SoftBankApiClient {
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				CrearOperacionRespuestaWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
-				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
-				if(respuestaWrapper.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
+				CrearOperacionRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
 				}
-				return respuestaWrapper;
+				if(result.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + result.getMensaje() );
+				}
+				return result;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO:"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -486,31 +531,28 @@ public class SoftBankApiClient {
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				CrearOperacionRespuestaWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
-				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
-				if( respuestaWrapper.getExisteError() == null ) {
+				CrearOperacionRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), CrearOperacionRespuestaWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
 					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
-					log.info("============> respuesta servicio objeto "+ respuestaError.getExisteError());
-					if(respuestaError.getExisteError() ) {
-						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaError.getMensaje() );
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
 					}
 				}
-				if(respuestaWrapper.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
+				if(result.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION: " + result.getMensaje() );
 				}
-				return respuestaWrapper;
+				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+
-						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBANK");
 		}
 	}
 	public static RespuestaAbonoWrapper callAbonoRest(AbonoWrapper abono, String service) throws RelativeException {
@@ -529,12 +571,19 @@ public class SoftBankApiClient {
 			log.info("=============================> ESTADO DEL SERVICIO " + status);
 			if(status >= 200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
-				RespuestaAbonoWrapper respuestaWrapper = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaAbonoWrapper.class);
-				log.info("============> respuesta servicio objeto "+ respuestaWrapper.getExisteError());
-				if(respuestaWrapper.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + respuestaWrapper.getMensaje() );
+				RespuestaAbonoWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaAbonoWrapper.class);
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
 				}
-				return respuestaWrapper;
+				if(result.getExisteError() ) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + result.getMensaje() );
+				}
+				return result;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
@@ -549,16 +598,6 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public static RespuestaConsultaGlobalWrapper callConsultarOperacionRest(ConsultaOperacionGlobalWrapper entrada, String service)throws RelativeException {
@@ -647,7 +686,6 @@ public class SoftBankApiClient {
 		}
 	}
 	
-	
 	public static RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(String numeroOperacion, String service)throws RelativeException {
 		try {
 			
@@ -700,8 +738,15 @@ public class SoftBankApiClient {
 				
 				Gson gsons = new GsonBuilder().create();
 				SoftbankRespuestaWrapper result = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankRespuestaWrapper.class);
-				if(result.getExisteError() )
-				{
+				log.info("============> RESPUESTA DEL SERVICIO ==========> "+ result.getExisteError());
+				if( result.getExisteError() == null ) {
+					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
+					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
+					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
+					}
+				}
+				if(result.getExisteError() ){
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje());
 				}
 				return result;
