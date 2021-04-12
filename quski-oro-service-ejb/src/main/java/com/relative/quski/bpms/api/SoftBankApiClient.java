@@ -96,7 +96,7 @@ public class SoftBankApiClient {
 				if( result.getExisteError() == null ) {
 					SoftbankResponseWrapper respuestaError = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankResponseWrapper.class);
 					log.info("============> RESPUESTA ESPECIAL DEL SERVICIO ==========> "+ respuestaError.toString() );
-					if(respuestaError.getExisteError() == null || respuestaError.getExisteError() ) {
+					if( respuestaError != null && (respuestaError.getExisteError() == null || respuestaError.getExisteError()) ) {
 						throw new RelativeException( QuskiOroConstantes.ERROR_SOFTBANK , respuestaError.getMensaje() );
 					}
 				}
