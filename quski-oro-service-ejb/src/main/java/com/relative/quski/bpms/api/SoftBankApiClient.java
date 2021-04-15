@@ -237,7 +237,7 @@ public class SoftBankApiClient {
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service) throws RelativeException, Exception {
@@ -280,7 +280,7 @@ public class SoftBankApiClient {
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service, ConsultaTablaWrapper cont)	throws RelativeException, Exception {
@@ -310,7 +310,7 @@ public class SoftBankApiClient {
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest(String service) throws RelativeException {
@@ -339,7 +339,7 @@ public class SoftBankApiClient {
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service ) throws RelativeException {
@@ -457,8 +457,7 @@ public class SoftBankApiClient {
 				}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+
-						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
 			e.printStackTrace();
@@ -497,12 +496,11 @@ public class SoftBankApiClient {
 					}
 				}
 				if(result.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + result.getMensaje() );
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,result.getMensaje() );
 				}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO:"+
-						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -541,11 +539,11 @@ public class SoftBankApiClient {
 					}
 				}
 				if(result.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION: " + result.getMensaje() );
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,result.getMensaje() );
 				}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
 			e.printStackTrace();
@@ -581,12 +579,11 @@ public class SoftBankApiClient {
 					}
 				}
 				if(result.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CREAR OPERACION" + result.getMensaje() );
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,result.getMensaje() );
 				}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+
-						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -617,14 +614,14 @@ public class SoftBankApiClient {
 				Gson gsons = new GsonBuilder().create();
 				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaConsultaGlobalWrapper.class);
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static List<GarantiaOperacionWrapper> callConsultarGarantiasRest(ConsultaGarantiaWrapper entrada, String service)throws RelativeException {
@@ -646,14 +643,14 @@ public class SoftBankApiClient {
 				if( respuestaWrapper.getExisteError() ) {return null;}
 				return respuestaWrapper.getGarantias();
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	public static List<RubroOperacionWrapper> callConsultarRubrosRest(ConsultaRubrosWrapper entrada, String service)throws RelativeException {
@@ -675,14 +672,14 @@ public class SoftBankApiClient {
 				if( result.getExisteError() ) {return null;}
 				return result.getRubros();
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	
@@ -710,14 +707,14 @@ public class SoftBankApiClient {
 					}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	
@@ -751,14 +748,14 @@ public class SoftBankApiClient {
 				}
 				return result;
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO :"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO" + service );
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
 	

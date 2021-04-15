@@ -58,18 +58,12 @@ public class CrmApiClient {
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
-		} catch (NumberFormatException e) {
+		}  catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
+			throw e;
+		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultaProspectoRest:");
 		}
 	}
 	public static CrmProspectoWrapper callPersistProspectoRest(String service,CrmGuardarProspectoWrapper wrapper ) throws RelativeException, UnsupportedEncodingException {

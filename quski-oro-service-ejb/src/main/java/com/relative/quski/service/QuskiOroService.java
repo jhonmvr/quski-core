@@ -1094,6 +1094,9 @@ public class QuskiOroService {
 	}
 	private TbQoCliente prospectoCrmToTbQoCliente(CrmProspectoCortoWrapper crmW ) throws RelativeException {
 		try {
+			if (crmW == null) {
+				return null;
+			}
 			TbQoCliente cliente = new TbQoCliente();
 			cliente.setNombreCompleto( crmW.getNombreCompleto() );
 			cliente.setCedulaCliente( crmW.getCedula() );
