@@ -348,10 +348,9 @@ public class DevolucionService {
 			ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
 			devolucion.setFechaAprobacionSolicitud(new Timestamp(System.currentTimeMillis()));
 			result.setDevolucion(this.manageDevolucion(devolucion));
-			this.manageDevolucion(devolucion);
 			if (aprobado) {
 				result.setProceso(
-						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, QuskiOroConstantes.EN_COLA));
+						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, null));
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE);
 			} else {
 				result.setProceso(
