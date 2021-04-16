@@ -7091,7 +7091,15 @@ public class QuskiOroService {
 		if(wp == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS PARAMETROS DE BUSQUEDA");
 		}
-		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+		log.info("-------->>>>"+wp.getCodigoBpm());
+		log.info("-------->>>>"+wp.getCodigoOperacionSoftbank());
+		log.info("-------->>>>"+wp.getUsuarioCreacion());
+		log.info("-------->>>>"+wp.getActividad());
+		log.info("-------->>>>"+wp.getFechaDesde());
+		log.info("-------->>>>"+wp.getFechaHasta());
+		log.info("-------->>>>"+wp.getProceso());
+		log.info("-------->>>>"+wp.getSeccion());
+		if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 			
 				return this.trackingRepository.findByParams(wp,pw.getStartRecord(), pw.getPageSize(),
 						pw.getSortFields(), pw.getSortDirections());

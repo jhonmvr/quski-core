@@ -45,11 +45,12 @@ public class LocalStorageClient {
 
 	}
 
-	public static RespuestaObjectWrapper createObject(String urlService,FileObjectStorage wrapper, String authorization)
+	public static RespuestaObjectWrapper createObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
-		String service = urlService.concat("createObject?")
+		
+		String service = urlService.concat("createObject?").concat("databaseName=").concat(databaseName).concat("&collectionName=").concat(collectionName)
 				.concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes()));
 		log.info("===> callBpmsInitProcesss con servcio " + service);
 		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,

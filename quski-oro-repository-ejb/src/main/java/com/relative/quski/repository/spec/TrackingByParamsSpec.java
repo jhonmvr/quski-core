@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -56,13 +58,13 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 		if (this.seccion != null) {
 			where.add(cb.equal(poll.<SeccionEnum>get("seccion"), this.seccion));
 		}
-		if (this.codigoBpm != null) {
+		if (StringUtils.isNotBlank(this.codigoBpm )) {
 			where.add(cb.equal(poll.<String>get("codigoBpm"), this.codigoBpm));
 		}
-		if (this.codigoOperacionSoftbank != null) {
+		if (StringUtils.isNotBlank(this.codigoOperacionSoftbank) ){
 			where.add(cb.equal(poll.<String>get("codigoOperacionSoftbank"), this.codigoOperacionSoftbank));
 		}
-		if (this.usuarioCreacion != null) {
+		if (StringUtils.isNotBlank(this.usuarioCreacion )) {
 			where.add(cb.equal(poll.<String>get("usuarioCreacion"), this.usuarioCreacion));
 		}
 		

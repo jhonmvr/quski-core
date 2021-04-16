@@ -186,7 +186,7 @@ public class PagoService {
 							String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
 							String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
 							String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-							objeto = LocalStorageClient.createObject(url.concat("?databaseName=").concat(base).concat("&collectionName=").concat(coleccion),file, null );
+							objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
 							pago.setIdComprobante(objeto.getEntidad());
 						}
 						pago.setCuentas(e.getCuenta());

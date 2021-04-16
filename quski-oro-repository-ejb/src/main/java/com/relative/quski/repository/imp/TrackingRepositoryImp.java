@@ -23,16 +23,16 @@ import com.relative.quski.wrapper.TrackingWrapper;
 public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracking> implements TrackingRepository {
 
 	@Override
-	public List<TbQoTracking> findByParams(TrackingWrapper wp, int strat, Integer size, String sort, String direction)
+	public List<TbQoTracking> findByParams(TrackingWrapper wp, int start, Integer size, String sort, String direction)
 			throws RelativeException {
 		try {
 			List<TbQoTracking> tmp;
-			tmp = this.findAllBySpecificationPaged(new TrackingByParamsSpec(wp), strat, size, sort, direction);
+			tmp = this.findAllBySpecificationPaged(new TrackingByParamsSpec(wp), start, size, sort, direction);
 			if (tmp != null && !tmp.isEmpty()) {
 				return tmp;
 			}
 
-			return null;
+			return null;            
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
