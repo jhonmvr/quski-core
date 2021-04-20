@@ -31,6 +31,7 @@ import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
@@ -214,14 +215,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionRenovacion")
-	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionRenovacion(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
+	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionRenovacion( CrearRenovacionWrapper wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
-		if(wp.getEntidad().getId() != null) {
-			CreditoCreadoSoftbank a = this.qos.crearOperacionRenovacion( wp.getEntidad() );
-			loc.setEntidad(a);
-		}else {
-			loc.setEntidad(null);			
+		if(wp.getCredito().getId() == null) {
+			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, "NO SE PUDO LEER EL ID DEL CREDITO EN LA CREACION DE LA OPERACION");			
 		}
+		CreditoCreadoSoftbank a = this.qos.crearOperacionRenovacion( wp );
+		loc.setEntidad(a);
 		return loc;			
 	}
 	

@@ -109,6 +109,7 @@ import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
 import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRenovacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
+import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
@@ -134,6 +135,7 @@ import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
+import com.relative.quski.wrapper.PagosNovacionSoftWrapper;
 import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
@@ -221,6 +223,8 @@ public class QuskiOroService {
 	private DevolucionService ds;
 	@Inject
 	private ReportService rs;
+	@Inject
+	PagoService ps;
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
 	 */
@@ -406,8 +410,9 @@ public class QuskiOroService {
 				String noP = send.getPrimerNombre() != null ? send.getPrimerNombre()  + " ": "";
 				String noS = send.getSegundoNombre() != null ? send.getSegundoNombre()  + " ": "";
 				String nombre = apP + apM + noP + noS;
-				send.setNombreCompleto(nombre);
+				persisted.setNombreCompleto(nombre);
 			}
+			log.info("NOMBRE COMPLETO LUEGO DE SETEAR EN UPDATE ====================> " + persisted.getNombreCompleto() );
 			if( send.getIngresos() != null ) {
 				persisted.setIngresos( send.getIngresos() );
 			}
@@ -6309,13 +6314,14 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
-	public CreditoCreadoSoftbank crearOperacionRenovacion(  TbQoCreditoNegociacion wp ) throws RelativeException{
+	public CreditoCreadoSoftbank crearOperacionRenovacion(  CrearRenovacionWrapper wp ) throws RelativeException{
 		try {
-			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( this.manageCreditoNegociacion( wp ) ); 
+			List<PagosNovacionSoftWrapper> listPagos = this.ps.crearRegistrarComprobanteRenovacion( wp );
+			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( this.manageCreditoNegociacion( wp.getCredito() ), listPagos  ); 
 			if(op != null ) {
 				CrearOperacionRespuestaWrapper operacion = 	SoftBankApiClient.callRenovarOperacionRest(
 						op, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_RENOVAR_OPERACION).getValor());
-				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp ) );
+				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp.getCredito() ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
 				return result; 
 			}
@@ -6432,7 +6438,7 @@ public class QuskiOroService {
 		}
 	}
 	@SuppressWarnings("deprecation")
-	private CrearOperacionRenovacionWrapper convertirCreditoCoreToCreditoSoftbankRenovacion( TbQoCreditoNegociacion credito )  throws RelativeException {
+	private CrearOperacionRenovacionWrapper convertirCreditoCoreToCreditoSoftbankRenovacion( TbQoCreditoNegociacion credito, List<PagosNovacionSoftWrapper> listPagos )  throws RelativeException {
 		try {			
 			TbQoCliente cliente = credito.getTbQoNegociacion().getTbQoCliente();
 			List<TbQoCuentaBancariaCliente> cuentaCliente = this.cuentaBancariaRepository.findByIdCliente( cliente.getId() );
@@ -6442,6 +6448,9 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ);
 			}
 			CrearOperacionRenovacionWrapper result = new CrearOperacionRenovacionWrapper(); 
+			if( listPagos != null ) {
+				result.setPagosNovacion( listPagos );
+			}
 			result.setIdTipoIdentificacion( Long.valueOf( 1 ) ); 
 			result.setIdentificacion(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ); 
 			result.setNombreCliente( credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() ); 

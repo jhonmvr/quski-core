@@ -29,10 +29,11 @@ import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AbonoWrapper;
+import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.InicioProcesoBloqueoWrapper;
 import com.relative.quski.wrapper.InicioProcesoPagoWrapper;
-import com.relative.quski.wrapper.RegistrarPagoRenovacionWrapper;
+import com.relative.quski.wrapper.PagosNovacionSoftWrapper;
 import com.relative.quski.wrapper.RegistroPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
@@ -169,47 +170,58 @@ public class PagoService {
 			throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION, " EN METODO, crearRegistrarBloqueo FALLO. ");
 		}
 	}
-	public List<TbQoRegistrarPago> crearRegistrarComprobanteRenovacion(RegistrarPagoRenovacionWrapper registro)throws RelativeException, UnsupportedEncodingException {
+	public List<PagosNovacionSoftWrapper> crearRegistrarComprobanteRenovacion(CrearRenovacionWrapper registro)throws RelativeException, UnsupportedEncodingException {
 		try {
-			if (registro == null) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL PAGO");}
-			List<TbQoRegistrarPago> pagos = new ArrayList<>();
-			if (registro.getPagos() != null && !registro.getPagos().isEmpty()) {
-				registro.getPagos().forEach(e ->{
-					try {
-						TbQoRegistrarPago pago = new TbQoRegistrarPago();
-						if(e.getComprobante() != null) {
-							FileObjectStorage file = new FileObjectStorage();
-							file.setFileBase64(e.getComprobante().getFileBase64());
-							file.setName( e.getComprobante().getName() );
-							file.setProcess(EstadoEnum.ACT);
-							RespuestaObjectWrapper objeto;
-							String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
-							String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
-							String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-							objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
-							pago.setIdComprobante(objeto.getEntidad());
-						}
-						pago.setCuentas(e.getCuenta());
-						pago.setFechaPago(e.getFechaPago());
-						pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
-						pago.setNumeroDeposito(e.getNumeroDeposito());
-						pago.setValorPagado(e.getValorDepositado());
-						pago.setEstado(EstadoEnum.ACT);
-						pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getIdCredito() ));
-						pago.setUsuarioCreacion(registro.getAsesor() );
-						pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-						pagos.add( qos.manageRegistrarPago(pago) ); 
-					} catch (UnsupportedEncodingException | RelativeException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}	
-				});
+			if (registro == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DEL CREDITO");
 			}
-			return pagos;
-		} catch (RelativeException  e) {
-			// TODO Auto-generated catch block
+			if (registro.getPagos() == null || registro.getPagos().isEmpty()) {
+				return null;
+			}
+			List<TbQoRegistrarPago> pagos = new ArrayList<>();
+			List<PagosNovacionSoftWrapper> pagosNovacion = new ArrayList<>();
+			registro.getPagos().forEach(e ->{
+				try {
+					PagosNovacionSoftWrapper pagoNovacion = new PagosNovacionSoftWrapper();
+					pagoNovacion.setNumeroDocumento( e.getNumeroDeposito() );
+					pagoNovacion.setFechaPago( QuskiOroUtil.dateToString(e.getFechaPago(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+					pagoNovacion.setValor( e.getValorDepositado() );
+					pagosNovacion.add( pagoNovacion ); 
+					
+					TbQoRegistrarPago pago = new TbQoRegistrarPago();
+					if(e.getComprobante() != null) {
+						FileObjectStorage file = new FileObjectStorage();
+						file.setFileBase64(e.getComprobante().getFileBase64());
+						file.setName( e.getComprobante().getName() );
+						file.setProcess(EstadoEnum.ACT);
+						RespuestaObjectWrapper objeto;
+						String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+						String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+						String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+						objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
+						pago.setIdComprobante(objeto.getEntidad());
+					}
+					pago.setCuentas(e.getCuenta());
+					pago.setFechaPago(e.getFechaPago());
+					pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
+					pago.setNumeroDeposito(e.getNumeroDeposito());
+					pago.setValorPagado(e.getValorDepositado());
+					pago.setEstado(EstadoEnum.ACT);
+					pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getCredito().getId() ));
+					pago.setUsuarioCreacion( registro.getAsesor() );
+					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+					pagos.add( qos.manageRegistrarPago(pago) ); 
+				} catch (UnsupportedEncodingException | RelativeException e1) {
+					e1.printStackTrace();
+				}	
+			});
+			return pagosNovacion;
+		} catch(RelativeException e) {
 			e.printStackTrace();
 			throw e;
+		}catch( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 

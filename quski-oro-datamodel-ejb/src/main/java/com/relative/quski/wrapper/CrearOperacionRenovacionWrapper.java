@@ -23,6 +23,7 @@ public class CrearOperacionRenovacionWrapper implements Serializable {
 	private DatosRegistroWrapper datosRegistro; 
 	private List<DatosImpComWrapper> datosImpCom;
 	private List<DatosCuentaClienteWrapper> datosCuentaCliente;
+	private List<PagosNovacionSoftWrapper> pagosNovacion;
 	private String numeroOperacionMadre;
 	
 	public Long getIdTipoIdentificacion() {
@@ -108,6 +109,12 @@ public class CrearOperacionRenovacionWrapper implements Serializable {
 	}
 	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
 		this.numeroOperacionMadre = numeroOperacionMadre;
+	}
+	public List<PagosNovacionSoftWrapper> getPagosNovacion() {
+		return pagosNovacion;
+	}
+	public void setPagosNovacion(List<PagosNovacionSoftWrapper> pagosNovacion) {
+		this.pagosNovacion = pagosNovacion;
 	}
 
 
