@@ -40,6 +40,11 @@ public class QuskiOroConstantes {
 	public static final String PARA_EXC = "PARA-EXC";
 	public static final String M_ASUNTO = "M_ASUNTO";
 	public static final String M_CONTENIDO = "M_CONTENIDO";
+	
+	public static final String APROBACION_NUEVO_ASUNTO = "APROBACION_NUEVO_ASUNTO";
+	public static final String APROBACION_NUEVO_CONTENIDO = "APROBACION_NUEVO_CONTENIDO";
+	public static final String APROBACION_RENOVACION_ASUNTO = "APROBACION_RENOVACION_ASUNTO";
+	public static final String APROBACION_RENOVACION_CONTENIDO = "APROBACION_RENOVACION_CONTENIDO";
 
 	public static final String SIN_EXCEPCION = "SIN_EXCEPCION";
 	/**

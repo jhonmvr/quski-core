@@ -26,6 +26,7 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
@@ -181,6 +182,22 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 	@GET
+	@Path("/aprobarNovacion")
+	public GenericWrapper<TbQoProceso> aprobarNovacion(
+			@QueryParam("idCredito") String idCredito, 
+			@QueryParam("descripcion") String descripcion,
+			@QueryParam("cash") String cash, 
+			@QueryParam("agencia") String agencia,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("codigoMotivo") String codigoMotivo,
+			@QueryParam("aprobar") String aprobar			
+			) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		TbQoProceso a = this.qos.aprobarNovacion( Long.valueOf(idCredito),  descripcion, cash, codigoMotivo, Long.valueOf(agencia), usuario, Boolean.valueOf(aprobar) );
+		loc.setEntidad(a);
+		return loc;
+	}
+	@GET
 	@Path("/traerCreditoNuevo")
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<OperacionCreditoNuevoWrapper> loc = new GenericWrapper<>();
@@ -293,7 +310,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@GET
 	@Path("/solicitarAprobacionRenovacion")
-	public GenericWrapper<TbQoProceso> solicitarAprobacionRenovacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+	public GenericWrapper<TbQoProceso> solicitarAprobacionRenovacion(
+			@QueryParam("idNegociacion") String idNegociacion,
+			@QueryParam("correoAsesor") String correoAsesor,
+			@QueryParam("nombreAsesor") String nombreAsesor) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idNegociacion)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
@@ -302,17 +322,18 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;			
 	}
-	@POST
+	@GET
 	@Path("/solicitarAprobacionNuevo")
-	public GenericWrapper<CreditoCreadoSoftbank> solicitarAprobacionNuevo(@QueryParam("correoAsesor") String correoAsesor,
-			@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
-		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
+	public GenericWrapper<TbQoNegociacion> solicitarAprobacionNuevo(
+			@QueryParam("idNegociacion") String idNegociacion,
+			@QueryParam("correoAsesor") String correoAsesor,
+			@QueryParam("nombreAsesor") String nombreAsesor) throws RelativeException {
+		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idNegociacion)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
 		}
-			CreditoCreadoSoftbank a = this.qos.solicitarAprobacionNuevo( Long.valueOf(idNegociacion),correoAsesor);
-			loc.setEntidad(a);
-		
+		TbQoNegociacion a = this.qos.solicitarAprobacionNuevo( Long.valueOf(idNegociacion), correoAsesor, nombreAsesor);
+		loc.setEntidad(a);
 		return loc;			
 	}
 }

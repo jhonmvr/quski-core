@@ -539,7 +539,7 @@ public class SoftBankApiClient {
 					}
 				}
 				if(result.getExisteError() ) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,result.getMensaje() );
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, result.getMensaje() );
 				}
 				return result;
 			}else {

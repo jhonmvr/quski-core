@@ -36,6 +36,12 @@ public class TbQoNegociacion implements Serializable {
 
 	private String asesor;
 	
+	@Column(name="correo_asesor")
+	private String correoAsesor;
+	
+	@Column(name="nombre_asesor")
+	private String nombreAsesor;
+	
 	private String aprobador;
 
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
@@ -229,6 +235,22 @@ public class TbQoNegociacion implements Serializable {
 		tbQoRiesgoAcumulado.setTbQoNegociacion(null);
 
 		return tbQoRiesgoAcumulado;
+	}
+
+	public String getCorreoAsesor() {
+		return correoAsesor;
+	}
+
+	public void setCorreoAsesor(String correoAsesor) {
+		this.correoAsesor = correoAsesor;
+	}
+
+	public String getNombreAsesor() {
+		return nombreAsesor;
+	}
+
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
 	}
 
 }
