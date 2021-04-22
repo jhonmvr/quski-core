@@ -13,17 +13,15 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.persistence.AbstractSpecification;
-import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.wrapper.TrackingWrapper;
 
 public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 
-	private ActividadEnum actividad;
+	private String actividad;
 	private ProcesoEnum proceso;
-	private SeccionEnum seccion;
+	private String seccion;
 	private String codigoBpm;
 	private String codigoOperacionSoftbank;
 	private String usuarioCreacion;
@@ -52,30 +50,27 @@ public class TrackingByParamsSpec extends AbstractSpecification<TbQoTracking> {
 		if (this.proceso != null) {
 			where.add(cb.equal(poll.<ProcesoEnum>get("proceso"),this.proceso));
 		}
-		if (this.actividad != null) {
-			where.add(cb.equal(poll.<ActividadEnum>get("actividad"), this.actividad));
+		if (StringUtils.isNotBlank(this.actividad ) ) {
+			where.add(cb.like(poll.<String>get("actividad"), "%"+this.actividad+"%"));
 		}
-		if (this.seccion != null) {
-			where.add(cb.equal(poll.<SeccionEnum>get("seccion"), this.seccion));
+		if (StringUtils.isNotBlank(this.seccion ) ) {
+			where.add(cb.like(poll.<String>get("seccion"), "%"+this.seccion+"%"));
 		}
 		if (StringUtils.isNotBlank(this.codigoBpm )) {
-			where.add(cb.equal(poll.<String>get("codigoBpm"), this.codigoBpm));
+			where.add(cb.like(poll.<String>get("codigoBpm"), "%"+this.codigoBpm+"%"));
 		}
 		if (StringUtils.isNotBlank(this.codigoOperacionSoftbank) ){
-			where.add(cb.equal(poll.<String>get("codigoOperacionSoftbank"), this.codigoOperacionSoftbank));
+			where.add(cb.like(poll.<String>get("codigoOperacionSoftbank"),"%"+this.codigoOperacionSoftbank+"%"));
 		}
 		if (StringUtils.isNotBlank(this.usuarioCreacion )) {
-			where.add(cb.equal(poll.<String>get("usuarioCreacion"), this.usuarioCreacion));
+			where.add(cb.like(poll.<String>get("usuarioCreacion"), "%"+this.usuarioCreacion+"%"));
 		}
-		
 		if (this.fechaDesde != null) {
 			where.add(cb.greaterThanOrEqualTo(poll.<Date>get("fechaCreacion"),this.fechaDesde));
 		}
-		
 		if (this.fechaHasta != null) {
 			where.add(cb.lessThanOrEqualTo(poll.<Date>get("fechaCreacion"),this.fechaHasta));
 		}
-			
 		return cb.and(where.toArray(new Predicate[] {}));
 	}
 

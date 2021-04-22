@@ -4,7 +4,9 @@ package com.relative.quski.rest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -37,7 +39,9 @@ import io.swagger.annotations.ApiOperation;
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = " Traking - REST CRUD")
 public class TrackingRestController extends BaseRestController implements CrudRestControllerInterface<TbQoTracking, GenericWrapper<TbQoTracking>> {  
-
+	@Inject
+	Logger log;
+	
 	public TrackingRestController() throws RelativeException {
 		super();
 		//  Auto-generated constructor stub
@@ -97,22 +101,69 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		return loc;
 	}
 	
-	@POST
-	@Path("/busqueda")
-	@ApiOperation(value = "GenericWrapper<TbQoTracking>", 
-	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTracking", 
-	response = GenericWrapper.class)
-	public PaginatedListWrapper<TbQoTracking> findBusquedaParametros(
+//	@POST
+//	@Path("/busqueda")
+//	public PaginatedListWrapper<TbQoTracking> findBusquedaParametros(
+//			@QueryParam("page") @DefaultValue("1") String page,
+//			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+//			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+//			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+//			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+//			@QueryParam("proceso") ProcesoEnum proceso,
+//			@QueryParam("actividad") String actividad,
+//			@QueryParam("seccion") String seccion,
+//			@QueryParam("codigoBpm") String codigoBpm,
+//			@QueryParam("codigoOperacionSoftbank") String codigoOperacionSoftbank,
+//			@QueryParam("usuarioCreacion") String usuarioCreacion,
+//			@QueryParam("fechaCreacion") Date fechaCreacion,
+//			@QueryParam("fechaDesde") Date fechaDesde,
+//			@QueryParam("fechaHasta") Date fechaHasta
+//			) throws RelativeException {
+//		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
+//		log.info("-------->>>>"+plw.getPageSize() );
+//		log.info("-------->>>>"+plw.getIsPaginated());
+//
+//		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wp,plw);
+//		if (actions != null && !actions.isEmpty()) {
+//			plw.setTotalResults(this.qos.countTracking(wp).intValue());
+//			plw.setList(actions);
+//		}
+//		return plw;
+//	}
+	@GET
+	@Path("/busquedaTracking")
+	public PaginatedListWrapper<TbQoTracking> busquedaTracking(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
 			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
 			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
-			TrackingWrapper wp) throws RelativeException {
-		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
-		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wp,plw);
+			@QueryParam("proceso") ProcesoEnum proceso,
+			@QueryParam("actividad") String actividad,
+			@QueryParam("seccion") String seccion,
+			@QueryParam("codigoBpm") String codigoBpm,
+			@QueryParam("codigoOperacionSoftbank") String codigoOperacionSoftbank,
+			@QueryParam("usuarioCreacion") String usuarioCreacion,
+			@QueryParam("fechaDesde") Date fechaDesde,
+			@QueryParam("fechaHasta") Date fechaHasta
+			) throws RelativeException {
+		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
+		TrackingWrapper tra = new TrackingWrapper();
+		tra.setProceso(proceso);
+		tra.setActividad(actividad);
+		tra.setSeccion(seccion);
+		tra.setCodigoBpm(codigoBpm);
+		tra.setCodigoOperacionSoftbank(codigoOperacionSoftbank);
+		tra.setUsuarioCreacion(usuarioCreacion);
+		tra.setFechaDesde(fechaDesde);
+		tra.setFechaHasta(fechaHasta);
+		return findAllBusqueda( tra, new PaginatedWrapper(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated));
+	}
+	private PaginatedListWrapper<TbQoTracking> findAllBusqueda( TrackingWrapper wrapper, PaginatedWrapper pw) throws RelativeException {
+		PaginatedListWrapper<TbQoTracking> plw = new PaginatedListWrapper<>(pw);
+		List<TbQoTracking> actions = this.qos.findBusquedaParametros(wrapper, pw);
 		if (actions != null && !actions.isEmpty()) {
-			plw.setTotalResults(this.qos.countTracking(wp).intValue());
+			plw.setTotalResults(this.qos.countTracking(wrapper).intValue());
 			plw.setList(actions);
 		}
 		return plw;

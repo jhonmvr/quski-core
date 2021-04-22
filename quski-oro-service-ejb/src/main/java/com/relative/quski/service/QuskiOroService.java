@@ -7109,24 +7109,29 @@ public class QuskiOroService {
 	 * ************************** @TRACKING
 	 */
 	public List<TbQoTracking> findBusquedaParametros(TrackingWrapper wp, PaginatedWrapper pw) throws RelativeException {
-		if(wp == null) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS PARAMETROS DE BUSQUEDA");
-		}
-		log.info("-------->>>>"+wp.getCodigoBpm());
-		log.info("-------->>>>"+wp.getCodigoOperacionSoftbank());
-		log.info("-------->>>>"+wp.getUsuarioCreacion());
-		log.info("-------->>>>"+wp.getActividad());
-		log.info("-------->>>>"+wp.getFechaDesde());
-		log.info("-------->>>>"+wp.getFechaHasta());
-		log.info("-------->>>>"+wp.getProceso());
-		log.info("-------->>>>"+wp.getSeccion());
-		if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
-			
-				return this.trackingRepository.findByParams(wp,pw.getStartRecord(), pw.getPageSize(),
-						pw.getSortFields(), pw.getSortDirections());
-			
-		}else {
-			return this.trackingRepository.findByParams(wp);
+		try {
+			if(wp == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS PARAMETROS DE BUSQUEDA");
+			}
+			log.info("-------->>>>"+wp.getCodigoBpm());
+			log.info("-------->>>>"+wp.getCodigoOperacionSoftbank());
+			log.info("-------->>>>"+wp.getUsuarioCreacion());
+			log.info("-------->>>>"+wp.getActividad());
+			log.info("-------->>>>"+wp.getFechaDesde());
+			log.info("-------->>>>"+wp.getFechaHasta());
+			log.info("-------->>>>"+wp.getProceso());
+			log.info("-------->>>>"+wp.getSeccion());
+			if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+				return this.trackingRepository.findByParams(wp,pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+			}else {
+				return this.trackingRepository.findByParams(wp);
+			}
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
 

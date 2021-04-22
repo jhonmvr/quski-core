@@ -3,9 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.enums.SeccionEnum;
 
 public class TrackingWrapper implements Serializable {
 
@@ -16,8 +14,8 @@ public class TrackingWrapper implements Serializable {
 
 
 	private ProcesoEnum proceso;
-	private ActividadEnum actividad;
-	private SeccionEnum seccion;
+	private String actividad;
+	private String seccion;
 	private String codigoBpm;
 	private String codigoOperacionSoftbank;
 	private String usuarioCreacion;
@@ -55,11 +53,11 @@ public class TrackingWrapper implements Serializable {
 		this.fechaHasta = fechaHasta;
 	}
 
-	public ActividadEnum getActividad() {
+	public String getActividad() {
 		return actividad;
 	}
 
-	public void setActividad(ActividadEnum actividad) {
+	public void setActividad(String actividad) {
 		this.actividad = actividad;
 	}
 
@@ -71,11 +69,11 @@ public class TrackingWrapper implements Serializable {
 		this.proceso = proceso;
 	}
 
-	public SeccionEnum getSeccion() {
+	public String getSeccion() {
 		return seccion;
 	}
 
-	public void setSeccion(SeccionEnum seccion) {
+	public void setSeccion(String seccion) {
 		this.seccion = seccion;
 	}
 
