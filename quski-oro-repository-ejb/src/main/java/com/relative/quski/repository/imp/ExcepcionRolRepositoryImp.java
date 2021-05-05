@@ -63,6 +63,8 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 					tipos.add(l.getExcepcion().toString());
 				}
 				where.add(poll.get("tipoExcepcion").in(tipos));
+			}else {
+				return null;
 			}
 			if (StringUtils.isNotBlank(identificacion)) {
 				where.add(cb.like(joinCliente.get("cedulaCliente"), "%"+identificacion+"%"));
@@ -129,6 +131,8 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 					tipos.add(l.getExcepcion().toString());
 				}
 				where.add(poll.get("tipoExcepcion").in(tipos));
+			}else {
+				return null;
 			}
 
 			if (StringUtils.isNotBlank(identificacion)) {

@@ -43,7 +43,10 @@ public class TbQoNegociacion implements Serializable {
 	private String nombreAsesor;
 	
 	private String aprobador;
-
+	
+	@Column(name="observacion_asesor")
+	private String observacionAsesor;
+	
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoCreditoNegociacion> tbQoCreditoNegociacions;
@@ -252,5 +255,15 @@ public class TbQoNegociacion implements Serializable {
 	public void setNombreAsesor(String nombreAsesor) {
 		this.nombreAsesor = nombreAsesor;
 	}
+
+	public String getObservacionAsesor() {
+		return observacionAsesor;
+	}
+
+	public void setObservacionAsesor(String observacionAsesor) {
+		this.observacionAsesor = observacionAsesor;
+	}
+	
+	
 
 }

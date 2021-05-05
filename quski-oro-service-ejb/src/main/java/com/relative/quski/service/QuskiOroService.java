@@ -1747,8 +1747,6 @@ public class QuskiOroService {
 			}
 			if( send.getEstado() != null) {
 				persisted.setEstado( send.getEstado() );
-			}else {
-				persisted.setEstado( EstadoEnum.INA );
 			}
 			if( StringUtils.isNotBlank( send.getTipoOro())) {
 				persisted.setTipoOro( send.getTipoOro());
@@ -1819,7 +1817,7 @@ public class QuskiOroService {
 		this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_COBERTURA", credito.getTbQoNegociacion().getId());
 		credito.setCobertura(null);
 		manageCreditoNegociacion(credito);
-		return this.getDetalleJoya(credito.getTbQoNegociacion().getTbQoCliente(), joya);
+		return this.getDetalleJoya(joya);
 	
 	}
 	public List<TbQoTasacion> agregarJoyaCotizacion(TbQoTasacion joya, String asesor) throws RelativeException {
@@ -1834,6 +1832,13 @@ public class QuskiOroService {
 		this.manageCotizador(cotizador);
 		return this.getDetalleJoyaCotizacion(cotizador.getTbQoCliente(), joya);
 	}
+	
+	public List<TbQoTasacion> getDetalleJoyaCotizacion(TbQoTasacion j) throws RelativeException {	
+		this.manageTasacion(j);
+	
+		return this.tasacionRepository.findByIdCotizador(j.getTbQoCotizador().getId());
+	}
+	
 	public List<TbQoTasacion> getDetalleJoyaCotizacion(TbQoCliente cliente, TbQoTasacion joya) throws RelativeException {		
 		try {
 
@@ -5104,6 +5109,12 @@ public class QuskiOroService {
 
 			}
 	}
+	public List<TbQoTasacion> getDetalleJoya(TbQoTasacion j) throws RelativeException {			
+		this.manageTasacion(j);
+		
+		return this.tasacionRepository.findByIdCredito(j.getTbQoCreditoNegociacion().getId());
+	}
+	
 	public List<TbQoTasacion> getDetalleJoya(TbQoCliente cliente, TbQoTasacion joya) throws RelativeException {		
 		
 		try {
@@ -5333,6 +5344,10 @@ public class QuskiOroService {
 			if( joyas == null || joyas.isEmpty()) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
 			}
+			if ( montoSolicitado != null) {
+				this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_RIESGO", credito.getTbQoNegociacion().getId());
+				this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_COBERTURA", credito.getTbQoNegociacion().getId());
+			}
 			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
 			StringBuilder XMLGarantias = new StringBuilder();
 			for(TbQoTasacion joya:joyas) {
@@ -5341,16 +5356,16 @@ public class QuskiOroService {
 						.replace("--descripcion--",joya.getDescripcion())
 						.replace("--estado-joya--", joya.getEstadoJoya())
 						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-						.replace("--peso-gr--", joya.getPesoBruto().toString())
-						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
-						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-						.replace("--peso-neto--", joya.getPesoNeto().toString())
-						.replace("--precio-oro--", joya.getValorOro().toString())
-						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
-						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+						.replace("--peso-gr--", joya.getPesoBruto() != null ? joya.getPesoBruto().toString(): "0")
+						.replace("--tiene-piedras--", joya.getTienePiedras() ? "S":"N")
+						.replace("--detalle-piedras--", joya.getTienePiedras() ? joya.getDetallePiedras():" ")
+						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ? joya.getDescuentoPesoPiedra().toString(): "0")
+						.replace("--peso-neto--", joya.getPesoNeto() != null ? joya.getPesoNeto().toString(): "0")
+						.replace("--precio-oro--", joya.getValorOro() != null ? joya.getValorOro().toString(): "0")
+						.replace("--valor-aplicable-credito--", joya.getValorComercial() != null ?joya.getValorComercial().toString(): "0")
+						.replace("--valor-realizacion--", joya.getValorRealizacion() != null ? joya.getValorRealizacion().toString(): "0")
+						.replace("--numero-piezas--", joya.getNumeroPiezas() != null ? joya.getNumeroPiezas().toString():"0")
+						.replace("--descuento-suelda--", joya.getDescuentoSuelda() != null ? joya.getDescuentoSuelda().toString(): "0");
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5386,6 +5401,35 @@ public class QuskiOroService {
 						manageVariablesCrediticia(v);
 					}
 				} 
+				if(res != null && res.getSimularResult() != null && res.getSimularResult().getXmlGarantias() != null
+						 && res.getSimularResult().getXmlGarantias().getGarantias() != null && res.getSimularResult().getXmlGarantias().getGarantias().getGarantia() != null
+						 && !res.getSimularResult().getXmlGarantias().getGarantias().getGarantia().isEmpty()) {
+					log.info("==============> Resultado de garantias calculadora ");
+					this.tasacionRepository.deleteTasacionByNegociacionId(credito.getId());
+					for ( Garantia g : res.getSimularResult().getXmlGarantias().getGarantias().getGarantia()) {
+						TbQoTasacion j = new TbQoTasacion();
+						j.setDescripcion(g.getDescripcion());
+						j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
+						j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoSuelda()) );
+						j.setDetallePiedras(g.getDetallePiedras());
+						j.setEstado(EstadoEnum.ACT);
+						j.setEstadoJoya(g.getEstadoJoya());
+						//j.setId(joya.getId());
+						j.setNumeroPiezas(Long.valueOf(g.getNumeroPiezas()) );
+						j.setPesoBruto(BigDecimal.valueOf(g.getPesoGr()) );
+						j.setTienePiedras(StringUtils.isNotBlank(g.getTienePiedras()) && g.getTienePiedras().equalsIgnoreCase("S")?Boolean.TRUE:Boolean.FALSE);
+						j.setPesoNeto(BigDecimal.valueOf(g.getPesoNeto()) );
+						j.setTipoJoya(g.getTipoJoya());
+						j.setTipoOro(g.getTipoOroKilataje());
+						j.setValorAvaluo(BigDecimal.valueOf(g.getValorAvaluo()) );
+						j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
+						j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
+						j.setTbQoCreditoNegociacion(credito);
+						j.setValorOro(BigDecimal.valueOf(g.getValorOro()));
+						this.manageTasacion(j);
+					}
+					
+				}	
 				return res;
 		} catch (RelativeException e) {
 			// TODO Auto-generated catch block
@@ -7760,17 +7804,46 @@ public class QuskiOroService {
 		
 	}
 
-	public TbQoNegociacion solicitarAprobacionNuevo(Long idNegociacion, String correoAsesor, String nombreAsesor) throws RelativeException {
+	public TbQoNegociacion solicitarAprobacionNuevo(Long idNegociacion, String correoAsesor, String nombreAsesor, String observacionAsesor) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion wp = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
-			if(wp == null) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
+			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.NUEVO);
+			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
+				TbQoCreditoNegociacion wp = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+				if(wp == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
+				}
+				solicitarAprobacionNuevo(idNegociacion);
+				TbQoNegociacion nego = wp.getTbQoNegociacion();
+				nego.setCorreoAsesor(correoAsesor);
+				nego.setNombreAsesor( nombreAsesor );
+				nego.setObservacionAsesor(observacionAsesor);
+				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("16"),
+						ProcessEnum.NUEVO, String.valueOf(wp.getTbQoNegociacion().getId()));
+				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+				}
+				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(idNegociacion);
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("SOLICITAR APROBACION");
+				traking.setCodigoBpm(credito.getCodigo());
+				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(nombreAsesor);
+				traking.setUsuarioCreacion(nego.getAsesor());
+				traking.setObservacion(observacionAsesor);
+				traking.setProceso(ProcesoEnum.NUEVO);
+				traking.setSeccion("SOLICITAR APROBACION");
+				this.registrarTraking(traking);
+				return this.manageNegociacion( nego );
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
 			}
-			solicitarAprobacionNuevo(idNegociacion);
-			TbQoNegociacion nego = wp.getTbQoNegociacion();
-			nego.setCorreoAsesor(correoAsesor);
-			nego.setNombreAsesor( nombreAsesor );
-			return this.manageNegociacion( nego );
+			
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -7789,6 +7862,11 @@ public class QuskiOroService {
 				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("16"),
+						ProcessEnum.NOVACION, String.valueOf(idNegociacion));
+				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+				}
 				return this.manageProceso(proceso);
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");

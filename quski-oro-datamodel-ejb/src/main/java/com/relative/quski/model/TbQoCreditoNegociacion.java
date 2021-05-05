@@ -998,4 +998,5 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setFechaRegularizacion(Date fechaRegularizacion) {
 		this.fechaRegularizacion = fechaRegularizacion;
 	}
+
 }

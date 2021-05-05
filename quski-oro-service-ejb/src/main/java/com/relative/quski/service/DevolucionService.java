@@ -22,9 +22,12 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.DevolucionRepository;
+import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
@@ -57,6 +60,9 @@ public class DevolucionService {
 	private QuskiOroService qos;
 	@Inject
 	private ParametroRepository parametroRepository;
+	
+	@Inject
+	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
 
 	public TbQoDevolucion findDevolucionById(Long id) throws RelativeException {
 
@@ -732,7 +738,13 @@ public class DevolucionService {
 			TbQoProceso persisted = qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION);
 
 			if (persisted.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
-				return this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION, QuskiOroConstantes.EN_COLA);
+				TbQoProceso pro = this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION, QuskiOroConstantes.EN_COLA);
+				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("9"),
+						ProcessEnum.NOVACION, String.valueOf(idDevolucion));
+				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+				}
+				return pro;
 			} else {
 				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + persisted.getEstadoProceso());
 			}

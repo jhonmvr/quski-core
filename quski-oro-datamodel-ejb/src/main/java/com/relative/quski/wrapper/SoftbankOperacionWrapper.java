@@ -8,6 +8,7 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String referencia;
+	private String numeroOperacionMupi;
 	private String numeroOperacion;
 	private String numeroOperacionMadre;
 	private String codigoCarteraQuski;
@@ -33,7 +34,9 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private BigDecimal idMoneda;
 	private Boolean esDemandada;
 	private Long id;
-	private BigDecimal cobertura;
+	private Long idPrestamoOrigen;
+	private BigDecimal coberturaInicial;
+	private BigDecimal coberturaActual;
 	
 	public String getReferencia() {
 		return referencia;
@@ -191,10 +194,31 @@ public class SoftbankOperacionWrapper implements Serializable {
 	public void setMontoFinanciado(BigDecimal montoFinanciado) {
 		this.montoFinanciado = montoFinanciado;
 	}
-	public BigDecimal getCobertura() {
-		return cobertura;
+	public String getNumeroOperacionMupi() {
+		return numeroOperacionMupi;
 	}
-	public void setCobertura(BigDecimal cobertura) {
-		this.cobertura = cobertura;
+	public void setNumeroOperacionMupi(String numeroOperacionMupi) {
+		this.numeroOperacionMupi = numeroOperacionMupi;
 	}
+	public Long getIdPrestamoOrigen() {
+		return idPrestamoOrigen;
+	}
+	public void setIdPrestamoOrigen(Long idPrestamoOrigen) {
+		this.idPrestamoOrigen = idPrestamoOrigen;
+	}
+	public BigDecimal getCoberturaInicial() {
+		return coberturaInicial;
+	}
+	public void setCoberturaInicial(BigDecimal coberturaInicial) {
+		this.coberturaInicial = coberturaInicial;
+	}
+	public BigDecimal getCoberturaActual() {
+		return coberturaActual;
+	}
+	public void setCoberturaActual(BigDecimal coberturaActual) {
+		this.coberturaActual = coberturaActual;
+	}
+	
+	
+
 }
