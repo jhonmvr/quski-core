@@ -1,4 +1,5 @@
 package com.relative.quski.repository;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -23,5 +24,7 @@ public interface TasacionRepository extends CrudRepository<Long, TbQoTasacion>{
 	public List<TbQoTasacion> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
 	public Long countFindByIdNegociacion(Long idNegociacion) throws RelativeException;
 	public List<TbQoTasacion> findByIdCotizador(Long id)  throws RelativeException;
+
+	public BigDecimal totalAvaluo(Long id)throws RelativeException;
 
 }

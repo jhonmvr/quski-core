@@ -2151,7 +2151,7 @@ public class QuskiOroService {
 						return new NegociacionWrapper(false);
 					}else {
 						tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(id));
-						tmp.setRiesgos(this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()), tmp.getCredito().getTbQoNegociacion(), null));
+						tmp.setRiesgos(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()));
 						tmp.setJoyas(this.tasacionRepository.findByIdCredito(tmp.getCredito().getId() ));
 						tmp.setExcepciones(this.excepcionesRepository.findByIdNegociacion(id));
 						tmp.setRespuesta(true);
@@ -2178,21 +2178,31 @@ public class QuskiOroService {
 	public ClienteCompletoWrapper traerClienteByIdNegociacion(Long id) throws RelativeException {
 		try {
 			TbQoNegociacion nego = this.findNegociacionById( id );
+			
 			if(nego != null) {
 				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(id);
-				return traerCliente( nego.getTbQoCliente().getCedulaCliente(), credito.getCodigo() );
+				ClienteCompletoWrapper wp = traerCliente( nego.getTbQoCliente().getCedulaCliente(), credito.getCodigo() );
+				BigDecimal totalAvaluo = this.tasacionRepository.totalAvaluo(id);
+				wp.setTotalAvaluo(totalAvaluo);
+				return wp;
 			}else {
 				return null;
 			}
 		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}	
 	public ClienteCompletoWrapper traerClienteByNumeroOperacion(String numeroOperacionMadre) throws RelativeException {
 		try {
 			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacionMadre);
 			if(detalle != null) {
-				return traerCliente( detalle.getCliente().getIdentificacion(), null );
+				ClienteCompletoWrapper wp = traerCliente( detalle.getCliente().getIdentificacion(), null );
+				if(wp != null && wp.getCliente() != null) {
+					wp.setTotalAvaluo(wp.getCliente().getActivos());
+				}
+				return wp;
 			}else {
 				log.info("=================> No traje nada? <==================");
 				return null;
@@ -2606,7 +2616,7 @@ public class QuskiOroService {
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
 				List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente());
 				wrapper.setCredito(credito);
-				wrapper.setRiesgos(this.createRiesgoFrontSoftBank(riesgos, credito.getTbQoNegociacion(), null));
+				wrapper.setRiesgos(riesgos);
 				wrapper.setVariables(this.createVariablesFromEquifax(data.getXmlVariablesInternas().getVariablesInternas().getVariable(), credito.getTbQoNegociacion(), null));
 				//traer excepcion 
 				if(data.getCodigoError()== 3) {
