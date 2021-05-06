@@ -32,7 +32,6 @@ public class AprobacionNovacionWrapper implements Serializable {
 	private List<TbQoExcepcion> excepciones;
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
-	private List<TbQoTasacion> joyas;
 	private TbQoCuentaBancariaCliente cuenta;
 	private List<TbQoRegistrarPago> pagos;
 	private DetalleCreditoWrapper creditoAnterior;
@@ -76,10 +75,6 @@ public class AprobacionNovacionWrapper implements Serializable {
 	}
 	public void setTelefonos(List<TbQoTelefonoCliente> telefonos) {
 		this.telefonos = telefonos;
-		if( telefonos == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTEN TELEFONOS";
-		}
 	}
 	public List<TbQoDireccionCliente> getDirecciones() {
 		return direcciones;
@@ -96,10 +91,6 @@ public class AprobacionNovacionWrapper implements Serializable {
 	}
 	public void setTrabajos(List<TbQoDatoTrabajoCliente> trabajos) {
 		this.trabajos = trabajos;
-		if( trabajos == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTEN TRABAJOS";
-		}
 	}
 	public List<TbQoReferenciaPersonal> getReferencias() {
 		return referencias;
@@ -133,16 +124,6 @@ public class AprobacionNovacionWrapper implements Serializable {
 	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
 		this.riesgos = riesgos;
 	}
-	public List<TbQoTasacion> getJoyas() {
-		return joyas;
-	}
-	public void setJoyas(List<TbQoTasacion> joyas) {
-		this.joyas = joyas;
-		if( joyas == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTEN JOYAS";
-		}
-	}
 	public TbQoCuentaBancariaCliente getCuenta() {
 		return cuenta;
 	}
@@ -166,10 +147,6 @@ public class AprobacionNovacionWrapper implements Serializable {
 
 	public void setPagos(List<TbQoRegistrarPago> pagos) {
 		this.pagos = pagos;
-		if( pagos == null) {
-			this.existeError = true;
-			this.mensaje = "NO EXISTE PAGOS";
-		}
 	}
 
 	public DetalleCreditoWrapper getCreditoAnterior() {
