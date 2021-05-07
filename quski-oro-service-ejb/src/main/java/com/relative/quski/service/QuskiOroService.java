@@ -7412,7 +7412,7 @@ public class QuskiOroService {
 			if(credito == null) { 
 				throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION); 
 			}
-			DetalleCreditoWrapper detalle = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente( credito.getNumeroOperacionAnterior() );
 			if( detalle == null ) { 
 				throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION + " DE SOFTBANK.");
 			}
@@ -7433,7 +7433,17 @@ public class QuskiOroService {
 			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
 		}
 	}
-
+	public Informacion informacionClienteRenovacion(String cedula) throws RelativeException, UnsupportedEncodingException {
+			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
+			String content = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_PERSONA).getValor()
+					.replace("--tipoidentificacion--", "C")
+					.replace("--identificacion--", cedula)
+					.replace("--tipoconsulta--", "CC")
+					.replace("--calificacionmupi--","N");
+			return ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_PERSONA).getValor(),
+					token.getToken_type()+" "+token.getAccess_token(), content);
+	}
 	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego, String asesor, Long idAgencia, String numeroOperacionMadre) throws RelativeException {
 		try {
 			
@@ -7459,7 +7469,7 @@ public class QuskiOroService {
 				negociacion.setEstado( EstadoEnum.ACT);
 				negociacion.setTbQoCliente( cliente );
 				negociacion = this.manageNegociacion(negociacion);
-				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacionMadre,  idAgencia, null);
+				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null);
 				credito.setTbQoNegociacion( negociacion );
 				credito = this.manageCreditoNegociacion(credito);
 				credito = this.crearCodigoRenovacion(credito);
@@ -7468,7 +7478,7 @@ public class QuskiOroService {
 				if( garantias != null ) {
 					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito) );					
 				}
-				Informacion info = this.informacionCliente(cliente.getCedulaCliente());
+				Informacion info = this.informacionClienteRenovacion(cliente.getCedulaCliente());
 				if(info != null && info.getXmlVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
 					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), negociacion, null));	
 				}
@@ -7478,7 +7488,7 @@ public class QuskiOroService {
 				log.info( "============> ACTUALIZANDO CREDITO <============");
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
-				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId())));
+				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId())));
 				if( garantias != null ) {
 					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ) );
 				}
@@ -7559,7 +7569,7 @@ public class QuskiOroService {
 		return listTasacion;
 		
 	}
-	private TbQoCreditoNegociacion createCreditoNovacion(Opcion opcion, String numeroOperacionMadre, Long idAgencia, Long id) throws RelativeException {
+	private TbQoCreditoNegociacion createCreditoNovacion(Opcion opcion, String numeroOperacionAnterior, String numeroOperacionMadre, Long idAgencia, Long id) throws RelativeException {
 		TbQoCreditoNegociacion credito;						
 		if(id != null) {
 			credito = this.findCreditoNegociacionById(id);
@@ -7635,6 +7645,7 @@ public class QuskiOroService {
 		//credito.setriesgoTotalCliente( opcion.get);
 		credito.setEstado( EstadoEnum.ACT );
 		credito.setNumeroOperacionMadre(numeroOperacionMadre);
+		credito.setNumeroOperacionAnterior( numeroOperacionAnterior );
 		return credito;
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {

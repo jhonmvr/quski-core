@@ -12,7 +12,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -21,16 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
-import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
-import com.relative.quski.model.TbQoExcepcion;
-import com.relative.quski.model.TbQoExcepcionRol;
-import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoVerificacionTelefonica;
 import com.relative.quski.repository.ProcesoRepository;
@@ -366,10 +360,22 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 									ACTIVIDAD_OP+ " " + 
 									FROM_OP;
 			StringBuilder strQry = new StringBuilder( querySelect );
+			
 			if (wp.getEstado() != null) {
 				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
 			} else {
-				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO'  and proceso.ESTADO_PROCESO != 'CADUCADO') ");
+				if(wp.getProceso() != null || 
+						wp.getFechaCreacionDesde() != null || 
+						wp.getFechaCreacionHasta() != null || 
+						wp.getActividad() != null || 
+						wp.getNombreCompleto() != null || 
+						wp.getIdentificacion() != null || 
+						wp.getCodigoBpm() != null || 
+						wp.getCodigoSoft() != null ) {
+					strQry.append(" where 1=1 ");
+				}else {
+					strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO'  and proceso.ESTADO_PROCESO != 'CADUCADO') ");					
+				}
 			}
 			if(wp.getAsesor() != null) {
 				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
@@ -380,7 +386,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
 						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
 						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
-						"				else ' ' end end end end ilike :asesor");
+						"				else ' ' end end end end iLIKE :asesor");
 			}
 			if (wp.getProceso() != null) {
 				strQry.append(" and proceso.PROCESO =:proceso ");
@@ -405,7 +411,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 						"				(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
 						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
 						"					(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"					else '' end end LIKE :nombre ");
+						"					else '' end end iLIKE :nombre ");
 			}
 			if(wp.getIdentificacion() != null) {
 				log.info("================> WHERE: CEDULA ==> "+ wp.getIdentificacion() +" <====");

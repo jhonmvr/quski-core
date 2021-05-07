@@ -16,7 +16,6 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
-import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTelefonoCliente;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 

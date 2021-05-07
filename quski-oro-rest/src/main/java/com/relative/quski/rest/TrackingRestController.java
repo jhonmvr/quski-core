@@ -147,7 +147,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 			@QueryParam("fechaDesde") Date fechaDesde,
 			@QueryParam("fechaHasta") Date fechaHasta
 			) throws RelativeException {
-		Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
+		Integer firstItem = Integer.valueOf(page);
 		TrackingWrapper tra = new TrackingWrapper();
 		tra.setProceso(proceso);
 		tra.setActividad(actividad);

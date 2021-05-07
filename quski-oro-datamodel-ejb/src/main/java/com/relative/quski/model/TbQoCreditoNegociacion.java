@@ -98,6 +98,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="numero_operacion_madre")
 	private String numeroOperacionMadre;
 	
+	@Column(name="numero_operacion_anterior")
+	private String numeroOperacionAnterior;
+	
 	@Column(name="total_interes_vencimiento")
 	private BigDecimal totalInteresVencimiento;
 	
@@ -997,6 +1000,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaRegularizacion(Date fechaRegularizacion) {
 		this.fechaRegularizacion = fechaRegularizacion;
+	}
+
+	public String getNumeroOperacionAnterior() {
+		return numeroOperacionAnterior;
+	}
+
+	public void setNumeroOperacionAnterior(String numeroOperacionAnterior) {
+		this.numeroOperacionAnterior = numeroOperacionAnterior;
 	}
 
 }
