@@ -7772,7 +7772,7 @@ public class QuskiOroService {
 				AprobarWrapper ap = new AprobarWrapper();
 				ap.setNumeroOperacion( credito.getNumeroOperacion() );
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"),
-						ProcessEnum.RENOVACION, String.valueOf(credito.getTbQoNegociacion().getId()));
+						ProcessEnum.NOVACION, String.valueOf(credito.getTbQoNegociacion().getId()));
 				if(doc != null && StringUtils.isNotBlank(doc.getObjectId())) {
 					ap.setUriHabilitantesFirmados(doc.getObjectId());
 				}else {
@@ -7904,7 +7904,7 @@ public class QuskiOroService {
 				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
-				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("16"),
+				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"),
 						ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
