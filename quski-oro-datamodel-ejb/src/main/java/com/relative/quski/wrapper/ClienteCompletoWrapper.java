@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.relative.quski.model.TbQoCliente;
@@ -31,7 +32,7 @@ public class ClienteCompletoWrapper implements Serializable {
 	private Boolean isSoftbank;
 	private Boolean existeError;
 	private String mensaje;
-
+	private BigDecimal totalAvaluo;
 
 	
 	
@@ -144,6 +145,12 @@ public class ClienteCompletoWrapper implements Serializable {
 	}
 	public void setCodigoBpm(String codigoBpm) {
 		this.codigoBpm = codigoBpm;
+	}
+	public BigDecimal getTotalAvaluo() {
+		return totalAvaluo;
+	}
+	public void setTotalAvaluo(BigDecimal totalAvaluo) {
+		this.totalAvaluo = totalAvaluo;
 	}
 
 	

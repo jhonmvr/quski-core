@@ -16,7 +16,7 @@ public class NegociacionWrapper implements Serializable {
 	
 	private List<TbQoTasacion> joyas;
 	private List<TbQoVariablesCrediticia> variables;
-	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<SoftbankOperacionWrapper> riesgos;
 	private List<TbQoExcepcion> excepciones;
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
@@ -41,10 +41,10 @@ public class NegociacionWrapper implements Serializable {
 	public void setVariables(List<TbQoVariablesCrediticia> variables) {
 		this.variables = variables;
 	}
-	public List<TbQoRiesgoAcumulado> getRiesgos() {
+	public List<SoftbankOperacionWrapper> getRiesgos() {
 		return riesgos;
 	}
-	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
+	public void setRiesgos(List<SoftbankOperacionWrapper> riesgos) {
 		this.riesgos = riesgos;
 	}
 	public TbQoCreditoNegociacion getCredito() {

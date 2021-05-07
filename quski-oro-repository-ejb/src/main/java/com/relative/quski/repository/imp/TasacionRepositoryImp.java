@@ -1,5 +1,6 @@
 package com.relative.quski.repository.imp;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,6 +9,7 @@ import javax.persistence.Query;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.repository.TasacionRepository;
 import com.relative.quski.repository.spec.TasacionByIdCreditoNegociacionSpec;
@@ -141,6 +143,27 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 			}
 		}catch (Exception e) {
 			throw new RelativeException(": Al buscar tasacion por id de detalle imp " + e.getMessage());
+		}
+	}
+	@Override
+	public BigDecimal totalAvaluo(Long id) throws RelativeException {
+		
+		try {
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("select sum(tasa.valor_avaluo) from tb_qo_tasacion tasa " + 
+					"inner join tb_qo_credito_negociacion credito on credito.id = tasa.id_credito_negociacion " + 
+					"where 1=1 ");
+			
+			queryStr.append("and credito.id_negociacion =:idNegociacion and tasa.estado  =:estado ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idNegociacion", id);
+			query.setParameter("estado", "ACT");
+			return (BigDecimal)query.getSingleResult();
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR CALCULAR EL AVALUO");
 		}
 	}
 	

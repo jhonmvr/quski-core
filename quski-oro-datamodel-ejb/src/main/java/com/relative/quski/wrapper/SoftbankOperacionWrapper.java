@@ -37,6 +37,12 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private Long idPrestamoOrigen;
 	private BigDecimal coberturaInicial;
 	private BigDecimal coberturaActual;
+	private String bloqueo;
+	private BigDecimal capital;
+	private BigDecimal interes;
+	private BigDecimal mora;
+	private BigDecimal gastosCobranza;
+	private BigDecimal custodia;
 	
 	public String getReferencia() {
 		return referencia;
@@ -217,6 +223,42 @@ public class SoftbankOperacionWrapper implements Serializable {
 	}
 	public void setCoberturaActual(BigDecimal coberturaActual) {
 		this.coberturaActual = coberturaActual;
+	}
+	public String getBloqueo() {
+		return bloqueo;
+	}
+	public void setBloqueo(String bloqueo) {
+		this.bloqueo = bloqueo;
+	}
+	public BigDecimal getCapital() {
+		return capital;
+	}
+	public void setCapital(BigDecimal capital) {
+		this.capital = capital;
+	}
+	public BigDecimal getInteres() {
+		return interes;
+	}
+	public void setInteres(BigDecimal interes) {
+		this.interes = interes;
+	}
+	public BigDecimal getMora() {
+		return mora;
+	}
+	public void setMora(BigDecimal mora) {
+		this.mora = mora;
+	}
+	public BigDecimal getGastosCobranza() {
+		return gastosCobranza;
+	}
+	public void setGastosCobranza(BigDecimal gastosCobranza) {
+		this.gastosCobranza = gastosCobranza;
+	}
+	public BigDecimal getCustodia() {
+		return custodia;
+	}
+	public void setCustodia(BigDecimal custodia) {
+		this.custodia = custodia;
 	}
 	
 	
