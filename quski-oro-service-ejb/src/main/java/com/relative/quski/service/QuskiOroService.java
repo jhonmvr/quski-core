@@ -2065,6 +2065,27 @@ public class QuskiOroService {
 			}
 		
 	}
+	private List<TbQoVariablesCrediticia> createVariablesFromEquifax(List<TbQoVariablesCrediticia> variables, TbQoNegociacion negociacion) throws RelativeException {
+		if (variables != null) {
+			List<TbQoVariablesCrediticia> list = new ArrayList<>();
+			for(TbQoVariablesCrediticia e : variables) {
+				TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
+				v.setCodigo(e.getCodigo());
+				v.setNombre(e.getNombre());
+				v.setOrden(String.valueOf(e.getOrden()));
+				v.setValor(e.getValor());
+				if(negociacion != null) {
+					v.setTbQoNegociacion(negociacion);						
+				}
+				list.add(this.manageVariablesCrediticia(v));				
+			}
+
+			return list;
+		} else {
+			return null;
+		}
+	
+}
 	
 	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor, Long idAgencia) throws RelativeException {
 		try {
@@ -7454,7 +7475,7 @@ public class QuskiOroService {
 			return ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_PERSONA).getValor(),
 					token.getToken_type()+" "+token.getAccess_token(), content);
 	}
-	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego, String asesor, Long idAgencia, String numeroOperacionMadre) throws RelativeException {
+	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego, String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas) throws RelativeException {
 		try {
 			
 			RenovacionWrapper novacion;
@@ -7488,10 +7509,8 @@ public class QuskiOroService {
 				if( garantias != null ) {
 					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito) );					
 				}
-				Informacion info = this.informacionClienteRenovacion(cliente.getCedulaCliente());
-				if(info != null && info.getXmlVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
-					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), negociacion, null));	
-				}
+				
+				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, negociacion));
 				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion, null)  );
 			}else {
 				novacion = this.buscarRenovacionNegociacion(idNego);				
@@ -7502,10 +7521,8 @@ public class QuskiOroService {
 				if( garantias != null ) {
 					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ) );
 				}
-				Informacion info = this.informacionCliente(novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
-				if(info != null && info.getXmlVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas() != null && info.getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
-					novacion.setVariables( this.createVariablesFromEquifax(info.getXmlVariablesInternas().getVariablesInternas().getVariable(), novacion.getCredito().getTbQoNegociacion(), null));	
-				}
+				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
+				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
 				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null)  );
 			}
 			return novacion;
@@ -7540,7 +7557,7 @@ public class QuskiOroService {
 				if( e.getDescripcion().equalsIgnoreCase( s.getDescripcionJoya() ) && 
 						e.getTipoJoya().equalsIgnoreCase( s.getCodigoTipoJoya() ) &&
 						e.getTipoOroKilataje().equalsIgnoreCase(s.getCodigoTipoOro() ) &&
-						s.getPesoBruto().compareTo(BigDecimal.valueOf(e.getPesoGr()) ) == 0
+						String.valueOf(e.getPesoGr()).equalsIgnoreCase( String.valueOf(s.getPesoBruto()) )
 						) {
 					log.info( "============> CREANDO JOYA <============");
 					TbQoTasacion tasacion = new TbQoTasacion();

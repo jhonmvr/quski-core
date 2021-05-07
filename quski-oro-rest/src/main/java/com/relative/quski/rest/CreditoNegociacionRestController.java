@@ -291,7 +291,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@Path("/crearCreditoRenovacion")
 	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre);
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas());
 		loc.setEntidad(a);
 		return loc;			
 	}
