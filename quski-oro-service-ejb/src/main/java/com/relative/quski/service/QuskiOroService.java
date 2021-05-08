@@ -7883,7 +7883,7 @@ public class QuskiOroService {
 				this.registrarTraking(traking);
 				return this.manageNegociacion( nego );
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR EN ESTADO CREADO O DEVUELTO");
 			}
 			
 		} catch (RelativeException e) {
@@ -7895,23 +7895,37 @@ public class QuskiOroService {
 		}
 	}
 	 
-	public TbQoProceso solicitarAprobacionRenovacion(Long idNegociacion) throws RelativeException{
+	public TbQoProceso solicitarAprobacionRenovacion(Long idNegociacion,String nombreAsesor,String correoAsesor) throws RelativeException{
 		try {
+			
 			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.RENOVACION);
+			
 			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
 				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
-				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"),
-						ProcessEnum.NOVACION, String.valueOf(idNegociacion));
+				TbQoCreditoNegociacion wp = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+				if(wp == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
+				}
+				TbQoNegociacion nego = wp.getTbQoNegociacion();
+				nego.setCorreoAsesor(correoAsesor);
+				nego.setNombreAsesor( nombreAsesor );
+				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"), ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
+				this.manageNegociacion( nego );
+				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
+				log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
+				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+					this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
+				}
 				return this.manageProceso(proceso);
 			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR EN ESTADO CREADO O DEVUELTO");
 			}
 		}catch (RelativeException e) {
 			e.printStackTrace();

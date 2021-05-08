@@ -318,7 +318,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		if(StringUtils.isBlank(idNegociacion)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
 		}
-		TbQoProceso a = this.qos.solicitarAprobacionRenovacion( Long.valueOf(idNegociacion) );
+		TbQoProceso a = this.qos.solicitarAprobacionRenovacion( Long.valueOf(idNegociacion), nombreAsesor, correoAsesor );
 		loc.setEntidad(a);
 		return loc;			
 	}
