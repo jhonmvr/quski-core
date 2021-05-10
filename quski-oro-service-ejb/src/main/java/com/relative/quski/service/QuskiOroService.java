@@ -6239,8 +6239,8 @@ public class QuskiOroService {
 			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
 			tmp.setCredito( this.creditoNegociacionRepository.findCreditoByIdNegociacion( idNego ) );
 			tmp.setProceso( this.procesoRepository.findByIdCreditoNovacion( idNego ) );
-			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			if(tmp.getExisteError()) {return tmp;}			
+			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			tmp.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()), tmp.getCredito().getTbQoNegociacion(), null) );
 			tmp.setCreditoAnterior( this.traerCreditoVigente( tmp.getCredito().getNumeroOperacionAnterior() ));
 			tmp.setPagos( this.registrarPagoRepository.findByIdCredito(tmp.getCredito().getId() ));
