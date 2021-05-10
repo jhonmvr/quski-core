@@ -178,43 +178,37 @@ public class PagoService {
 			if (registro.getPagos() == null || registro.getPagos().isEmpty()) {
 				return null;
 			}
-			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			List<PagosNovacionSoftWrapper> pagosNovacion = new ArrayList<>();
-			registro.getPagos().forEach(e ->{
-				try {
-					PagosNovacionSoftWrapper pagoNovacion = new PagosNovacionSoftWrapper();
-					pagoNovacion.setNumeroDocumento( e.getNumeroDeposito() );
-					pagoNovacion.setFechaPago( QuskiOroUtil.dateToString(e.getFechaPago(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
-					pagoNovacion.setValor( e.getValorDepositado() );
-					pagosNovacion.add( pagoNovacion ); 
-					
-					TbQoRegistrarPago pago = new TbQoRegistrarPago();
-					if(e.getComprobante() != null) {
-						FileObjectStorage file = new FileObjectStorage();
-						file.setFileBase64(e.getComprobante().getFileBase64());
-						file.setName( e.getComprobante().getName() );
-						file.setProcess(EstadoEnum.ACT);
-						RespuestaObjectWrapper objeto;
-						String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
-						String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
-						String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-						objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
-						pago.setIdComprobante(objeto.getEntidad());
-					}
-					pago.setCuentas(e.getCuenta());
-					pago.setFechaPago(e.getFechaPago());
-					pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
-					pago.setNumeroDeposito(e.getNumeroDeposito());
-					pago.setValorPagado(e.getValorDepositado());
-					pago.setEstado(EstadoEnum.ACT);
-					pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getCredito().getId() ));
-					pago.setUsuarioCreacion( registro.getAsesor() );
-					pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
-					pagos.add( qos.manageRegistrarPago(pago) ); 
-				} catch (UnsupportedEncodingException | RelativeException e1) {
-					e1.printStackTrace();
-				}	
-			});
+			for(RegistroPagoRenovacionWrapper e : registro.getPagos()){
+				PagosNovacionSoftWrapper pagoNovacion = new PagosNovacionSoftWrapper();
+				pagoNovacion.setNumeroDocumento( e.getNumeroDeposito() );
+				pagoNovacion.setFechaPago( QuskiOroUtil.dateToString(e.getFechaPago(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+				pagoNovacion.setValor( e.getValorDepositado() );
+				pagosNovacion.add( pagoNovacion ); 
+				TbQoRegistrarPago pago = new TbQoRegistrarPago();
+				if(e.getComprobante() != null) {
+					FileObjectStorage file = new FileObjectStorage();
+					file.setFileBase64(e.getComprobante().getFileBase64());
+					file.setName( e.getComprobante().getName() );
+					file.setProcess(EstadoEnum.ACT);
+					RespuestaObjectWrapper objeto;
+					String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+					String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+					String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+					objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
+					pago.setIdComprobante(objeto.getEntidad());
+				}
+				pago.setCuentas(e.getCuenta());
+				pago.setFechaPago(e.getFechaPago());
+				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
+				pago.setNumeroDeposito(e.getNumeroDeposito());
+				pago.setValorPagado(e.getValorDepositado());
+				pago.setEstado(EstadoEnum.ACT);
+				pago.setTbQoCreditoNegociacion( this.qos.findCreditoNegociacionById( registro.getCredito().getId() ));
+				pago.setUsuarioCreacion( registro.getAsesor() );
+				pago.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				qos.manageRegistrarPago(pago);
+			}
 			return pagosNovacion;
 		} catch(RelativeException e) {
 			e.printStackTrace();

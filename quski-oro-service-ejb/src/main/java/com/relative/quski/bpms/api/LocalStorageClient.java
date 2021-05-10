@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -72,6 +73,40 @@ public class LocalStorageClient {
 		}
 	}
 	
+
+	public static RespuestaObjectWrapper updateObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String idObject)
+			throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(wrapper);
+			
+			String service = urlService.concat("updateObject?").concat("databaseName=").concat(databaseName).concat("&collectionName=").concat(collectionName)
+					.concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes())).concat("&objectId=").concat(idObject);
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			
+			
+			
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+				
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE updateObject:"+
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE updateObject:");
+		} 
+	}
+	
 	public static RespuestaObjectWrapper createObjectBig(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
@@ -105,30 +140,37 @@ public class LocalStorageClient {
 	
 	
 	public static RespuestaObjectWrapper findObjectById(String urlService,String databaseName, String collectionName,String objectId)
-			throws RelativeException, UnsupportedEncodingException {
+			throws RelativeException {
 	
-		String service = urlService.concat("findObjectById?").
-				concat("&databaseName=").concat(databaseName).
-				concat("&collectionName=").concat(collectionName).
-				concat("&objectId=").concat(objectId);
-		log.info("===> callBpmsInitProcesss con servcio " + service);
-		Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-				RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
-				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
-				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-		log.info("===> REspuesta de servicio " + response);
-		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
-		
-		
-		
-		if(status>=200 && status < 300) {
-			Gson gsons = new GsonBuilder().create();
-			return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+		try {
+			String service = urlService.concat("findObjectById?").
+					concat("&databaseName=").concat(databaseName).
+					concat("&collectionName=").concat(collectionName).
+					concat("&objectId=").concat(objectId);
+			log.info("===> callBpmsInitProcesss con servcio " + service);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
+			log.info("===> REspuesta de servicio " + response);
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			
-		}else {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE NOTIFICACION:"+
-					String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
-		}
+			
+			
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+				
+			}else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL LLAMAR SERVICIO OBJECT STORAGE:"+
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"OBJECT STORAGE");
+
+		} 
 	}
 	
 

@@ -27,6 +27,7 @@ public class RenovacionWrapper implements Serializable {
 	private List<TbQoVariablesCrediticia> variables;
 	private List<TbQoRiesgoAcumulado> riesgos;
 	private List<TbQoCuentaBancariaCliente> cuentas;
+	private List<RegistroPagoRenovacionWrapper> pagos;
 
 	
 	public RenovacionWrapper(DetalleCreditoWrapper operacionAnterior) {
@@ -91,5 +92,13 @@ public class RenovacionWrapper implements Serializable {
 
 	public void setCuentas(List<TbQoCuentaBancariaCliente> cuentas) {
 		this.cuentas = cuentas;
+	}
+
+	public List<RegistroPagoRenovacionWrapper> getPagos() {
+		return pagos;
+	}
+
+	public void setPagos(List<RegistroPagoRenovacionWrapper> pagos) {
+		this.pagos = pagos;
 	}
 }

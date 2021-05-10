@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.hazelcast.nio.ObjectDataOutput;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.enums.EmailSecurityTypeEnum;
 import com.relative.core.util.mail.EmailDefinition;
@@ -23,6 +28,8 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
+import com.relative.quski.bpms.api.LocalStorageClient;
+import com.relative.quski.bpms.api.ReRestClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;
@@ -89,6 +96,7 @@ import com.relative.quski.wrapper.AbonoWrapper;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
+import com.relative.quski.wrapper.ArchivoComprobanteWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
@@ -124,6 +132,7 @@ import com.relative.quski.wrapper.DatosRegistroWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
+import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.GaranteWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
@@ -138,11 +147,13 @@ import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.PagosNovacionSoftWrapper;
 import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
+import com.relative.quski.wrapper.RegistroPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
+import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SimularResponse;
@@ -6231,7 +6242,7 @@ public class QuskiOroService {
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			if(tmp.getExisteError()) {return tmp;}			
 			tmp.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()), tmp.getCredito().getTbQoNegociacion(), null) );
-			tmp.setCreditoAnterior( this.traerCreditoVigente( tmp.getCredito().getNumeroOperacionMadre() ));
+			tmp.setCreditoAnterior( this.traerCreditoVigente( tmp.getCredito().getNumeroOperacionAnterior() ));
 			tmp.setPagos( this.registrarPagoRepository.findByIdCredito(tmp.getCredito().getId() ));
 			Long idCliente = tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId();
 			tmp.setCuenta(     this.cuentaBancariaRepository.findByClienteAndCuenta( idCliente, tmp.getCredito().getNumeroCuenta() ));
@@ -6394,8 +6405,11 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	
 	public CreditoCreadoSoftbank crearOperacionRenovacion(  CrearRenovacionWrapper wp ) throws RelativeException{
 		try {
+			borrarDatosObjectStorageByPagos(this.registrarPagoRepository.findByIdCredito(wp.getCredito().getId()));
+			registrarPagoRepository.borrarPagos(wp.getCredito().getId());
 			List<PagosNovacionSoftWrapper> listPagos = this.ps.crearRegistrarComprobanteRenovacion( wp );
 			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( this.manageCreditoNegociacion( wp.getCredito() ), listPagos  ); 
 			if(op != null ) {
@@ -6414,6 +6428,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	
 	public RespuestaAbonoWrapper aplicarAbono(  AbonoWrapper wp ) throws RelativeException{
 		try {
 			if(wp != null) {
@@ -6427,6 +6442,19 @@ public class QuskiOroService {
 		}catch( Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
+	
+	void borrarDatosObjectStorageByPagos(List<TbQoRegistrarPago> pagos) {
+		for(TbQoRegistrarPago p : pagos) {
+			try {
+					String urlService = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+					String databaseName = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+					String collectionName = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+					LocalStorageClient.updateObject(urlService, databaseName, collectionName, new FileObjectStorage(),p.getIdComprobante());
+				} catch (Exception e) {
+					log.info("NO SE LOGRO ACTUALIZAR OBJECT STORAGE borrarDatosObjectStorageByPagos");
+				}
 		}
 	}
 	
@@ -7437,6 +7465,7 @@ public class QuskiOroService {
 			throw new RelativeException( Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION );
 		}
 	}
+	
 	public RenovacionWrapper buscarRenovacionNegociacion( Long idNegociacion ) throws RelativeException{
 		try {
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
@@ -7455,6 +7484,7 @@ public class QuskiOroService {
 			novacion.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion(idNegociacion));
 			novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), credito.getTbQoNegociacion(), null) );
 			novacion.setCuentas( this.cuentaBancariaRepository.findByIdCliente( credito.getTbQoNegociacion().getTbQoCliente().getId() ));
+			novacion.setPagos(mapPagos(this.registrarPagoRepository.findByIdCredito(credito.getId())) );
 			return novacion;
 		}catch(RelativeException e) {
 			e.printStackTrace();
@@ -7464,6 +7494,45 @@ public class QuskiOroService {
 			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_INTENTAR_LEER_LA_INFORMACION);
 		}
 	}
+	
+	List<RegistroPagoRenovacionWrapper> mapPagos(List<TbQoRegistrarPago> registroPago) throws RelativeException{
+		List<RegistroPagoRenovacionWrapper>  list = new ArrayList<>();
+		for(TbQoRegistrarPago pago :  registroPago) {
+			RegistroPagoRenovacionWrapper p = new RegistroPagoRenovacionWrapper();
+			ArchivoComprobanteWrapper comprobante = null;
+			try {
+				if(StringUtils.isNotBlank(pago.getIdComprobante())) {
+					String urlService = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+					String databaseName = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+					String collectionName = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+					RespuestaObjectWrapper objeto = LocalStorageClient.findObjectById(urlService, databaseName, collectionName, pago.getIdComprobante());
+					Gson gsons = new GsonBuilder().create();
+					FileObjectStorage file = gsons.fromJson( new String(Base64.getDecoder().decode(objeto.getEntidad()) ), FileObjectStorage.class);
+					comprobante = new ArchivoComprobanteWrapper();
+					comprobante.setFileBase64(file.getFileBase64());
+					comprobante.setName(file.getName());
+					comprobante.setProcess(file.getProcess() != null ?file.getProcess().toString(): null);
+					comprobante.setRelatedId(file.getRelatedId());
+					comprobante.setRelatedIdStr(file.getRelatedIdStr());
+					comprobante.setType(file.getType());
+					comprobante.setTypeAction(StringUtils.isNotBlank(file.getTypeAction())? Long.valueOf(file.getTypeAction()): null);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			p.setComprobante(comprobante);
+			p.setCuenta(pago.getCuentas());
+			p.setFechaPago(pago.getFechaPago());
+			p.setIntitucionFinanciera(pago.getInstitucionFinanciera());
+			p.setNumeroDeposito(pago.getNumeroDeposito());
+			p.setTipoPago(pago.getTipoPago());
+			p.setValorDepositado(pago.getValorPagado());
+			list.add(p);
+		}
+		return list;
+		
+	}
+	
 	public Informacion informacionClienteRenovacion(String cedula) throws RelativeException, UnsupportedEncodingException {
 			TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),
 					this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());

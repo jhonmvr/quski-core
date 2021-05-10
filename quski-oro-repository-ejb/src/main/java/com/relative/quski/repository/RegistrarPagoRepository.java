@@ -15,6 +15,7 @@ public interface RegistrarPagoRepository extends CrudRepository<Long, TbQoRegist
 
 	List<TbQoRegistrarPago> findByIdClientePago(Long idClientePago) throws RelativeException;
 	List<TbQoRegistrarPago> findByIdCredito(Long idCredito) throws RelativeException;
+	void borrarPagos(Long id)throws RelativeException;
 
 
 }

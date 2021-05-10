@@ -4,6 +4,7 @@ package com.relative.quski.repository.imp;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
@@ -50,6 +51,34 @@ public class RegistrarPagoRepositoryImp extends GeneralRepositoryImp<Long, TbQoR
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL BUSCAR EN TB_QO_REGISTRAR_PAGO POR ID_PAGO");
 		}
+	}
+	@Override
+	public void borrarPagos(Long idCredito) throws RelativeException {
+
+		try {
+			if(idCredito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRAR PAGOS ID CREDITO ES OBLIGATORIO");
+			}
+		
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_registrar_pago where 1=1 ");
+			
+			queryStr.append("and id_credito =:idCredito ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("idCredito", idCredito);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR PAGOS ID CREDITO");
+		}
+		
+	
 	}
 	
 }
