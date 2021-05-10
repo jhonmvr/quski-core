@@ -2227,9 +2227,9 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}	
-	public ClienteCompletoWrapper traerClienteByNumeroOperacion(String numeroOperacionMadre) throws RelativeException {
+	public ClienteCompletoWrapper traerClienteByNumeroOperacion(String numeroOperacion) throws RelativeException {
 		try {
-			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacionMadre);
+			DetalleCreditoWrapper detalle = this.traerCreditoVigente(numeroOperacion);
 			if(detalle != null) {
 				ClienteCompletoWrapper wp = traerCliente( detalle.getCliente().getIdentificacion(), null );
 				if(wp != null && wp.getCliente() != null) {
@@ -5569,7 +5569,7 @@ public class QuskiOroService {
 				if( credito == null ) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DEL CREDITO");}
 				List<TbQoTasacion> listTasacion = this.tasacionRepository.findByIdCredito(idCredito);
 				if(listTasacion == null || listTasacion.isEmpty()) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DE LAS JOYAS");}
-				DetalleCreditoWrapper creditoSoft = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
+				DetalleCreditoWrapper creditoSoft = this.traerCreditoVigente( credito.getNumeroOperacionAnterior() );
 				
 				String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
 				StringBuilder XMLGarantias = new StringBuilder();
@@ -5619,7 +5619,7 @@ public class QuskiOroService {
 						.replace("--monto-solicitado--", credito.getMontoSolicitado() == null ? "0.00" : credito.getMontoSolicitado().toString())
 						.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 								creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
-						.replace("--numero-operacion-renovar--", creditoSoft.getCredito().getNumeroOperacion())
+						.replace("--numero-operacion-renovar--", credito.getNumeroOperacionAnterior())
 						.replace("--referencia-adicional--", creditoSoft.getCredito().getNumeroOperacionMupi())
 						.replace("--operacion-propia--", creditoSoft.getCredito().getEsMigrado()?"NO":"SI");
 					log.info("==============>>>>> XML calculadora");
@@ -5707,7 +5707,7 @@ public class QuskiOroService {
 			if( credito == null ) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DEL CREDITO");}
 			List<TbQoTasacion> listTasacion = this.tasacionRepository.findByIdCredito(idCredito);
 			if(listTasacion == null || listTasacion.isEmpty()) {throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DE LAS JOYAS");}
-			DetalleCreditoWrapper creditoSoft = this.traerCreditoVigente( credito.getNumeroOperacionMadre() );
+			DetalleCreditoWrapper creditoSoft = this.traerCreditoVigente( credito.getNumeroOperacionAnterior() );
 			
 			String contentXMLGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_GARANTIA).getValor();
 			StringBuilder XMLGarantias = new StringBuilder();
@@ -5757,7 +5757,7 @@ public class QuskiOroService {
 					.replace("--monto-solicitado--", credito.getMontoSolicitado() == null ? "0.00" : credito.getMontoSolicitado().toString())
 					.replace("--numero-operacion-madre--",StringUtils.isNotBlank(creditoSoft.getCredito().getNumeroOperacionMadre())?
 							creditoSoft.getCredito().getNumeroOperacionMadre():creditoSoft.getCredito().getNumeroOperacion())
-					.replace("--numero-operacion-renovar--", creditoSoft.getCredito().getNumeroOperacion())
+					.replace("--numero-operacion-renovar--", credito.getNumeroOperacionAnterior())
 					.replace("--referencia-adicional--", creditoSoft.getCredito().getNumeroOperacionMupi())
 					.replace("--operacion-propia--", creditoSoft.getCredito().getEsMigrado()?"NO":"SI");
 				log.info("==============>>>>> XML calculadora");
@@ -7649,8 +7649,8 @@ public class QuskiOroService {
 					tasacion.setDescuentoSuelda( BigDecimal.valueOf(e.getDescuentoSuelda()) );
 					tasacion.setEstadoJoya( e.getEstadoJoya() );
 					tasacion.setNumeroPiezas( Long.valueOf( e.getNumeroPiezas() ) );
-					tasacion.setPesoBruto( BigDecimal.valueOf( e.getPesoGr()) );
-					tasacion.setPesoNeto(BigDecimal.valueOf( e.getPesoNeto() ) );
+					tasacion.setPesoBruto( s.getPesoBruto() );
+					tasacion.setPesoNeto( s.getPesoNeto() );
 					tasacion.setTipoJoya( s.getCodigoTipoJoya() );
 					tasacion.setValorAvaluo( BigDecimal.valueOf( e.getValorAvaluo() ) );
 					tasacion.setValorComercial( BigDecimal.valueOf( e.getValorAplicable() ) );
