@@ -2,6 +2,7 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6446,8 +6447,9 @@ public class QuskiOroService {
 	}
 	
 	void borrarDatosObjectStorageByPagos(List<TbQoRegistrarPago> pagos) {
-		for(TbQoRegistrarPago p : pagos) {
-			try {
+		if(pagos != null && !pagos.isEmpty() ) {
+			for(TbQoRegistrarPago p : pagos) {
+				try {
 					String urlService = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
 					String databaseName = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
 					String collectionName = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
@@ -6455,6 +6457,7 @@ public class QuskiOroService {
 				} catch (Exception e) {
 					log.info("NO SE LOGRO ACTUALIZAR OBJECT STORAGE borrarDatosObjectStorageByPagos");
 				}
+			}			
 		}
 	}
 	
@@ -7497,6 +7500,9 @@ public class QuskiOroService {
 	
 	List<RegistroPagoRenovacionWrapper> mapPagos(List<TbQoRegistrarPago> registroPago) throws RelativeException{
 		List<RegistroPagoRenovacionWrapper>  list = new ArrayList<>();
+		if( registroPago == null || registroPago.size() < 1 ) {
+			return null;
+		}
 		for(TbQoRegistrarPago pago :  registroPago) {
 			RegistroPagoRenovacionWrapper p = new RegistroPagoRenovacionWrapper();
 			ArchivoComprobanteWrapper comprobante = null;
@@ -7619,16 +7625,17 @@ public class QuskiOroService {
 		}
 		garantias.forEach(e->{
 			garantiasSoft.forEach(s ->{
-				log.info( "============> DESCRIPCION EN SOFTBANK  ===> '"+s.getDescripcionJoya()+"' DESCRIPCION EN SIMULADOR  ===> '"+ e.getDescripcion()+"' <========");
-				log.info( "============> TIPO JOYA EN SOFTBANK  ===> '"+s.getCodigoTipoJoya()+"' TIPO JOYA EN SIMULADOR   ===> '"+ e.getTipoJoya()+"' <========");
-				log.info( "============> TIPO ORO EN SOFTBANK  ===> '"+s.getCodigoTipoOro()+"' TIPO ORO EN SIMULADOR  ===> '"+ e.getTipoOroKilataje()+"' <========");
-				log.info( "============> GRAMOS COMPARADOS ===> " +s.getPesoBruto().compareTo(BigDecimal.valueOf(e.getPesoGr())));
+				log.info( "============> BIGDECIMAL REDONDO GRAMOS SOFTBANK ===> '" + s.getPesoBruto().setScale(1, RoundingMode.DOWN) +"' GRAMOS SIMULADOR ===> '"+ BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.DOWN) +"' <========" );
+				log.info( "============> BIGDECIMAL REDONDO GRAMOS SOFTBANK ===> '" + s.getPesoBruto().setScale(1, RoundingMode.UP)   +"' GRAMOS SIMULADOR ===> '"+ BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.UP)   +"' <========" );
+
 				if( e.getDescripcion().equalsIgnoreCase( s.getDescripcionJoya() ) && 
 						e.getTipoJoya().equalsIgnoreCase( s.getCodigoTipoJoya() ) &&
 						e.getTipoOroKilataje().equalsIgnoreCase(s.getCodigoTipoOro() ) &&
-						String.valueOf(e.getPesoGr()).equalsIgnoreCase( String.valueOf(s.getPesoBruto()) )
-						) {
-					log.info( "============> CREANDO JOYA <============");
+						( 
+							s.getPesoBruto().setScale(1, RoundingMode.DOWN).compareTo( BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.DOWN) ) == 0 ||
+							s.getPesoBruto().setScale(1, RoundingMode.UP).compareTo( BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.UP) ) == 0
+						)
+				) {
 					TbQoTasacion tasacion = new TbQoTasacion();
 					tasacion.setNumeroGarantia( s.getNumeroGarantia() );
 					tasacion.setNumeroExpediente( s.getNumeroExpediente() );
@@ -7636,6 +7643,7 @@ public class QuskiOroService {
 					tasacion.setSubTipoGarantia( s.getCodigoSubTipoGarantia() );
 					tasacion.setEstado(EstadoEnum.ACT );
 					tasacion.setDescripcion( s.getDescripcionJoya() );
+					log.info( "============> CREANDO JOYA <============");
 					log.info( "============> DESCRIPCION JOYA <============> "+ tasacion.getDescripcion());
 					tasacion.setDescuentoPesoPiedra( BigDecimal.valueOf( e.getDescuentoPesoPiedras() ) );
 					tasacion.setDescuentoSuelda( BigDecimal.valueOf(e.getDescuentoSuelda()) );
