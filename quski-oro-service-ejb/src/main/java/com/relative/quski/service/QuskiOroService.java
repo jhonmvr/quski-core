@@ -2652,9 +2652,8 @@ public class QuskiOroService {
 				wrapper.setRiesgos(riesgos);
 				wrapper.setVariables(this.createVariablesFromEquifax(data.getXmlVariablesInternas().getVariablesInternas().getVariable(), credito.getTbQoNegociacion(), null));
 				//traer excepcion 
-				if(data.getCodigoError()== 3) {
-					wrapper.setExcepcionBre(data.getMensaje());
-				}
+				wrapper.setCodigoExcepcionBre(new Long(data.getCodigoError()) );
+				wrapper.setExcepcionBre(data.getMensaje());
 				wrapper.setRespuesta(true);
 				wrapper.setProceso( proceso );
 				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "DOM"));
@@ -7813,10 +7812,30 @@ public class QuskiOroService {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}		
 				this.devolverAprobarCredito(credito, cash, descripcion, null);
+				//FIN APROBACION
+				TbQoTracking last = this.trackingRepository.findByParams(credito.getCodigo(),ProcesoEnum.NUEVO);
+				if(last != null) {
+					last.setFechaFin(new Timestamp(System.currentTimeMillis()));
+					this.manageTracking(last);
+				}
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO, null);
 				
 			}else {
 				this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("DEVUELTO");
+				traking.setCodigoBpm(credito.getCodigo());
+				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(credito.getTbQoNegociacion().getNombreAsesor());
+				traking.setUsuarioCreacion(usuario);
+				traking.setObservacion(descripcion);
+				traking.setProceso(ProcesoEnum.NUEVO);
+				traking.setSeccion("DEVUELTO");
+				this.registrarTraking(traking);
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
 		} catch( RelativeException e) {
@@ -7945,7 +7964,7 @@ public class QuskiOroService {
 				}
 				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(idNegociacion);
 				TbQoTracking traking = new TbQoTracking();
-				traking.setActividad("SOLICITAR APROBACION");
+				traking.setActividad("ENVIADO A APROBAR");
 				traking.setCodigoBpm(credito.getCodigo());
 				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
 				traking.setEstado(EstadoEnum.ACT);
@@ -7956,7 +7975,7 @@ public class QuskiOroService {
 				traking.setUsuarioCreacion(nego.getAsesor());
 				traking.setObservacion(observacionAsesor);
 				traking.setProceso(ProcesoEnum.NUEVO);
-				traking.setSeccion("SOLICITAR APROBACION");
+				traking.setSeccion("ENVIADO A APROBAR");
 				this.registrarTraking(traking);
 				return this.manageNegociacion( nego );
 			}else {
