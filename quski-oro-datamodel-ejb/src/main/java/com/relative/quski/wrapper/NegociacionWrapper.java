@@ -21,6 +21,7 @@ public class NegociacionWrapper implements Serializable {
 	private TbQoCreditoNegociacion credito;
 	private TbQoProceso proceso;
 	private String excepcionBre;
+	private Long codigoExcepcionBre;
 	private Boolean respuesta;
 	private TbQoTelefonoCliente telefonoMovil;
 	private TbQoTelefonoCliente telefonoDomicilio;
@@ -100,5 +101,11 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public void setTipoOro(List<TipoOroWrapper> tipoOro) {
 		this.tipoOro = tipoOro;
+	}
+	public Long getCodigoExcepcionBre() {
+		return codigoExcepcionBre;
+	}
+	public void setCodigoExcepcionBre(Long codigoExcepcionBre) {
+		this.codigoExcepcionBre = codigoExcepcionBre;
 	}
 }
