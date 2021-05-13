@@ -20,8 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.hazelcast.nio.ObjectDataOutput;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.enums.EmailSecurityTypeEnum;
 import com.relative.core.util.mail.EmailDefinition;
@@ -30,7 +28,6 @@ import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.CrmApiClient;
 import com.relative.quski.bpms.api.LocalStorageClient;
-import com.relative.quski.bpms.api.ReRestClient;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoEnum;
@@ -7030,6 +7027,53 @@ public class QuskiOroService {
 				persisted.setUsuario( usuario );				
 			}
 			return this.manageProceso(persisted);
+		}catch(RelativeException e) {
+			throw e;		
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());		
+		}
+	}
+	public String validarAprobador( Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
+		try {
+			TbQoProceso procesoValidar = this.findProcesoByIdReferencia( id, proceso );
+			if(procesoValidar == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EN PROCESO PARA LA REFERENCIA:" +id);
+			}
+			if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
+				TbQoNegociacion persisted = this.findNegociacionById( id );
+				if(persisted == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+				}
+				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+					return null; 
+				}else {
+					return persisted.getAprobador(); 
+				}
+			}				
+			if(proceso == ProcesoEnum.PAGO) {
+				TbQoClientePago persisted = this.findClientePagoById( id );
+				if(persisted == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+				}
+				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+					return null; 
+				}else {
+					return persisted.getAprobador(); 
+				}
+			}
+			if(proceso == ProcesoEnum.DEVOLUCION || proceso == ProcesoEnum.CANCELACION_DEVOLUCION) {
+				TbQoDevolucion persisted  = ds.findDevolucionById( id );
+				if(persisted == null) {
+					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+				}
+				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+					return null; 
+				}else {
+					return persisted.getAprobador(); 
+				}
+			}
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
 		}catch(RelativeException e) {
 			throw e;		
 		}catch(Exception e) {
