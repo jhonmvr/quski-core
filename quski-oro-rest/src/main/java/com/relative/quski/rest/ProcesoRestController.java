@@ -77,6 +77,16 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		return loc;
 	}	
 	@GET
+	@Path("/validarAprobador")
+	public GenericWrapper<String> validarAprobador(@QueryParam("idReferencia") String idReferencia, 
+			@QueryParam("proceso") ProcesoEnum proceso, 
+			@QueryParam("aprobador") String aprobador
+			) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.validarAprobador( Long.valueOf( idReferencia ), proceso, aprobador ) );
+		return loc;
+	}	
+	@GET
 	@Path("/getEntity")
 	public GenericWrapper<TbQoProceso> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();

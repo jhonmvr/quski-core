@@ -697,6 +697,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL CONSULTAR EN  findDevolucionesActivas " + e.getMessage());
 		}
 	}
+	
 	@Override
 	public Long caducarProcesos() throws RelativeException {
 		try {
