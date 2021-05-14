@@ -2653,7 +2653,13 @@ public class QuskiOroService {
 				wrapper.setVariables(this.createVariablesFromEquifax(data.getXmlVariablesInternas().getVariablesInternas().getVariable(), credito.getTbQoNegociacion(), null));
 				//traer excepcion 
 				wrapper.setCodigoExcepcionBre(new Long(data.getCodigoError()) );
-				wrapper.setExcepcionBre(data.getMensaje());
+				if(data.getCodigoError()== 3 || data.getCodigoError()== 1) {
+					wrapper.setExcepcionBre(data.getMensaje());
+				}
+				if(data.getCodigoError()== 1) {
+					proceso.setEstadoProceso(EstadoProcesoEnum.CADUCADO);
+					proceso = this.manageProceso(proceso);
+				}
 				wrapper.setRespuesta(true);
 				wrapper.setProceso( proceso );
 				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "DOM"));
@@ -4478,10 +4484,11 @@ public class QuskiOroService {
 			} else {
 				return null;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+					"RIESGO ACUMULADO" + e.getMessage());
 		}
 	}
 
