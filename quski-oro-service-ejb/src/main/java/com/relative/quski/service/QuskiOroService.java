@@ -4511,6 +4511,16 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+//	private List<CatalogoIdWrapper>  catalogoBanco() throws RelativeException {
+//		try {
+//			String service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_BANCO).getValor();
+//			return SoftBankApiClient.callCatalogoConIdRest( service );
+//		} catch (RelativeException e) {
+//			e.printStackTrace();
+//			throw new RelativeException(Constantes.ERROR_CODE_READ,
+//					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+//		}
+//	}
 	private List<TbQoRiesgoAcumulado> createRiesgoFrontSoftBank(List<SoftbankOperacionWrapper> operaciones, TbQoNegociacion negociacion, TbQoCotizador cotizacion) throws RelativeException {
 		if (operaciones != null) {
 			List<TbQoRiesgoAcumulado> list = new ArrayList<>();
@@ -6378,17 +6388,19 @@ public class QuskiOroService {
 		try {
 			
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
-			String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
-			log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
-			if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-				this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
-			}
-			
 			if(op != null ) {
 				CrearOperacionRespuestaWrapper operacion = 	SoftBankApiClient.callCrearOperacion01Rest(
 						op, this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION).getValor());
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
+				
+				TbQoNegociacion nego = result.getCredito().getTbQoNegociacion();
+				nego.setCorreoAsesor(correoAsesor);
+				this.manageNegociacion( nego );
+				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
+				if(StringUtils.isNotBlank(result.getCredito().getExcepcionOperativa()) && !result.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+					this.notificarExcepcionOperativa( result.getCredito(), Boolean.FALSE );
+				}
 				return result; 
 			}
 			return null;
@@ -6872,22 +6884,34 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
 	}
-	public void notificarExcepcionOperativa(String asesor, String correoAsesor, String excepcionOperativa) {
+	public void notificarExcepcionOperativa(TbQoCreditoNegociacion wrapper, Boolean novacion) {
 		try {
-			log.info("ESTOY LLEGANDO HASTA AQUI? ========> "+ correoAsesor);
-			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.PARA_EXC, false);
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_PARA_EXC, false);
 			String[] array = new String[paras.size()];
 			for (int i = 0; i < paras.size(); ++i) {
-				array[i] = paras.get(i).getValor().replace("--Correo asesor--", correoAsesor);
+				array[i] = paras.get(i).getValor().replace("--Correo asesor--", wrapper.getTbQoNegociacion().getCorreoAsesor() );
 				log.info(" ESTE ES UN PARA DEL CORREO ===========> "+ array[i]);
 			}
 					
 			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.M_ASUNTO).getValor()
-					.replace("--Tipo Excepcion--", excepcionOperativa);
-			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.M_CONTENIDO).getValor()
-					.replace("--asesor--", asesor)
-					.replace("--Tipo Excepcion--", excepcionOperativa);
+					.replace("--nombreCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+					.replace("--cedulaCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+					.replace("--codigoBpm--", wrapper.getCodigo() )
+					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion())
+					.replace("--numeroOperacionAnterior--", novacion ? wrapper.getNumeroOperacionAnterior() : "No aplica.");
 
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.M_CONTENIDO).getValor()
+					.replace("--nombreAsesor--", wrapper.getTbQoNegociacion().getNombreAsesor() )
+					.replace("--codigoBpm--", wrapper.getCodigo())
+					.replace("--nombreCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+					.replace("--monto--", wrapper.getMontoDesembolso().toString() )
+					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion())
+					.replace("--fechaVencimiento--", QuskiOroUtil.dateToString(wrapper.getFechaVencimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI) )
+					.replace("--numeroOperacionSoftbank--", novacion ? wrapper.getNumeroOperacionAnterior() : "No aplica.")
+					.replace("--nombreAsesor--", wrapper.getTbQoNegociacion().getNombreAsesor() )
+					.replace("--excepcionOperativa--", wrapper.getExcepcionOperativa() )
+					.replace("--fechaExcepcion--", QuskiOroUtil.dateToString(wrapper.getFechaRegularizacion(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+					.replace("--Observaciones--", wrapper.getTbQoNegociacion().getObservacionAsesor() );
 			this.mailNotificacion(array, asunto, contenido, null);
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -7352,10 +7376,6 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
-
-
-
 	public void devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
 		try {
 			if( persisted == null) { 
@@ -7365,12 +7385,44 @@ public class QuskiOroService {
 			persisted.setDescripcionDevuelto(descripcion);
 			if(cash != null) {
 				persisted.setCodigoCash(cash);
-				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_NUEVO_ASUNTO ).getValor()					
-						.replace("--codigoBpm--", persisted.getCodigo());
-				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_NUEVO_CONTENIDO ).getValor()
-						.replace("--nombreAsesor--", persisted.getTbQoNegociacion().getNombreAsesor() )
-						.replace("--codigoCash--", 	 persisted.getCodigoCash() )
-						.replace("--numeroOperacion--", persisted.getNumeroOperacion() );
+//				String banco = null;
+//				String numeroCuenta = null;
+//				String numeroTransaccion = "Que es?";
+//				String tipoCuenta = null;
+//
+//				List<CatalogoIdWrapper> lizCatalogo = this.catalogoBanco( );
+//				List<TbQoCuentaBancariaCliente> listCuenta = this.cuentaBancariaRepository.findByIdCliente(persisted.getTbQoNegociacion().getTbQoCliente().getId());
+//				if( !lizCatalogo.isEmpty() && !listCuenta.isEmpty() && listCuenta.size() == 1 ) {
+//					for (int e = 0; e < lizCatalogo.size(); ++e) {
+//						if(lizCatalogo.get(e).getId().equals( listCuenta.get(0).getBanco() )) {
+//							banco = lizCatalogo.get(e).getNombre();							
+//						}
+//					}
+//					if( listCuenta.get(0).getEsAhorros() ) {
+//						tipoCuenta = "Es ahorro";
+//					}else {
+//						tipoCuenta = "No es ahorro";
+//					}
+//					numeroCuenta = listCuenta.get(0).getCuenta();
+//				}
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
+						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+						.replace("--banco--", "-")
+						.replace("--numeroCuenta--", "-")
+						.replace("--numeroTransaccion--", "-")
+						.replace("--tipoCuenta--", "-")
+						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
+						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+						.replace("--banco--", "-")
+						.replace("--numeroCuenta--", "-")
+						.replace("--numeroTransaccion--", "-")
+						.replace("--tipoCuenta--", "-")
+						.replace("--valor--", persisted.getMontoDesembolso().toString() );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
@@ -7392,12 +7444,44 @@ public class QuskiOroService {
 			persisted.setDescripcionDevuelto(descripcion);
 			if(cash != null) {
 				persisted.setCodigoCash(cash);
-				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_RENOVACION_ASUNTO ).getValor()					
-						.replace("--codigoBpm--", persisted.getCodigo());
-				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_RENOVACION_CONTENIDO ).getValor()
-						.replace("--nombreAsesor--", persisted.getTbQoNegociacion().getNombreAsesor() )
-						.replace("--codigoCash--", 	 persisted.getCodigoCash() )
-						.replace("--numeroOperacion--", persisted.getNumeroOperacion() );
+//				String banco = null;
+//				String numeroCuenta = null;
+//				String numeroTransaccion = "Que es?";
+//				String tipoCuenta = null;
+//
+//				List<CatalogoIdWrapper> lizCatalogo = this.catalogoBanco( );
+//				List<TbQoCuentaBancariaCliente> listCuenta = this.cuentaBancariaRepository.findByIdCliente(persisted.getTbQoNegociacion().getTbQoCliente().getId());
+//				if( !lizCatalogo.isEmpty() && !listCuenta.isEmpty() && listCuenta.size() == 1 ) {
+//					for (int e = 0; e < lizCatalogo.size(); ++e) {
+//						if(lizCatalogo.get(e).getId().equals( listCuenta.get(0).getBanco() )) {
+//							banco = lizCatalogo.get(e).getNombre();							
+//						}
+//					}
+//					if( listCuenta.get(0).getEsAhorros() ) {
+//						tipoCuenta = "Es ahorro";
+//					}else {
+//						tipoCuenta = "No es ahorro";
+//					}
+//					numeroCuenta = listCuenta.get(0).getCuenta();
+//				}
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
+						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+						.replace("--banco--", "-")
+						.replace("--numeroCuenta--", "-")
+						.replace("--numeroTransaccion--", "-")
+						.replace("--tipoCuenta--", "-")
+						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
+						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+						.replace("--banco--", "-")
+						.replace("--numeroCuenta--", "-")
+						.replace("--numeroTransaccion--", "-")
+						.replace("--tipoCuenta--", "-")
+						.replace("--valor--", persisted.getMontoDesembolso().toString() );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
@@ -8053,15 +8137,15 @@ public class QuskiOroService {
 				TbQoNegociacion nego = wp.getTbQoNegociacion();
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
+				this.manageNegociacion( nego );
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"), ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
-				this.manageNegociacion( nego );
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
 				log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
 				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-					this.notificarExcepcionOperativa( wp.getTbQoNegociacion().getAsesor(), correoAsesor, wp.getExcepcionOperativa());
+					this.notificarExcepcionOperativa( wp, Boolean.TRUE );
 				}
 				return this.manageProceso(proceso);
 			}else {
