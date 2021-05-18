@@ -6384,7 +6384,7 @@ public class QuskiOroService {
 
 	
 	
-	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp, String correoAsesor) throws RelativeException{
+	public CreditoCreadoSoftbank crearOperacionNuevo(  TbQoCreditoNegociacion wp) throws RelativeException{
 		try {
 			
 			CrearOperacionEntradaWrapper op = this.convertirCreditoCoreToCreditoSoftbank( this.manageCreditoNegociacion( wp ) ); 
@@ -6393,16 +6393,9 @@ public class QuskiOroService {
 						op, this.parametroRepository.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION).getValor());
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro())  );
-				
-				TbQoNegociacion nego = result.getCredito().getTbQoNegociacion();
-				nego.setCorreoAsesor(correoAsesor);
-				this.manageNegociacion( nego );
-				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
-				if(StringUtils.isNotBlank(result.getCredito().getExcepcionOperativa()) && !result.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-					this.notificarExcepcionOperativa( result.getCredito(), Boolean.FALSE );
-				}
 				return result; 
 			}
+
 			return null;
 			
 				
@@ -8081,14 +8074,18 @@ public class QuskiOroService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
 				}
 				solicitarAprobacionNuevo(idNegociacion);
-				TbQoNegociacion nego = wp.getTbQoNegociacion();
-				nego.setCorreoAsesor(correoAsesor);
-				nego.setNombreAsesor( nombreAsesor );
-				nego.setObservacionAsesor(observacionAsesor);
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("16"),
 						ProcessEnum.NUEVO, String.valueOf(wp.getTbQoNegociacion().getId()));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+				}
+				TbQoNegociacion nego = wp.getTbQoNegociacion();
+				nego.setCorreoAsesor(correoAsesor);
+				nego.setNombreAsesor( nombreAsesor );
+				nego.setObservacionAsesor(observacionAsesor);
+				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
+				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+					this.notificarExcepcionOperativa( wp, Boolean.FALSE );
 				}
 				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(idNegociacion);
 				TbQoTracking traking = new TbQoTracking();
@@ -8134,16 +8131,15 @@ public class QuskiOroService {
 				if(wp == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
 				}
-				TbQoNegociacion nego = wp.getTbQoNegociacion();
-				nego.setCorreoAsesor(correoAsesor);
-				nego.setNombreAsesor( nombreAsesor );
-				this.manageNegociacion( nego );
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"), ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
+				TbQoNegociacion nego = wp.getTbQoNegociacion();
+				nego.setCorreoAsesor(correoAsesor);
+				nego.setNombreAsesor( nombreAsesor );
+				this.manageNegociacion( nego );
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
-				log.info("ESTA ES EL PARAMETRO ============> "+ sinExcepcion);
 				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 					this.notificarExcepcionOperativa( wp, Boolean.TRUE );
 				}
