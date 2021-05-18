@@ -6905,19 +6905,18 @@ public class QuskiOroService {
 					.replace("--cedulaCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
 					.replace("--codigoBpm--", wrapper.getCodigo() )
 					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion())
-					.replace("--numeroOperacionAnterior--", novacion ? wrapper.getNumeroOperacionAnterior() : "No aplica.");
+					.replace("--numeroOperacionAnterior--", novacion ? wrapper.getNumeroOperacionAnterior() : " ");
 
 			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.M_CONTENIDO).getValor()
-					.replace("--nombreAsesor--", wrapper.getTbQoNegociacion().getNombreAsesor() )
+					.replace("--nombreAsesor--", StringUtils.isNotBlank(wrapper.getTbQoNegociacion().getNombreAsesor())?wrapper.getTbQoNegociacion().getNombreAsesor():" " )
 					.replace("--codigoBpm--", wrapper.getCodigo())
 					.replace("--nombreCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
-					.replace("--monto--", wrapper.getMontoDesembolso().toString() )
+					.replace("--monto--", wrapper.getValorARecibir() != null ?wrapper.getValorARecibir().toString() :"0" )
 					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion())
 					.replace("--fechaVencimiento--", QuskiOroUtil.dateToString(wrapper.getFechaVencimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI) )
-					.replace("--numeroOperacionSoftbank--", novacion ? wrapper.getNumeroOperacionAnterior() : "No aplica.")
-					.replace("--nombreAsesor--", wrapper.getTbQoNegociacion().getNombreAsesor() )
+					.replace("--numeroOperacionSoftbank--", novacion ? wrapper.getNumeroOperacionAnterior() : " ")
 					.replace("--excepcionOperativa--", wrapper.getExcepcionOperativa() )
-					.replace("--fechaExcepcion--", QuskiOroUtil.dateToString(wrapper.getFechaRegularizacion(), QuskiOroUtil.DATE_FORMAT_QUSKI))
+					.replace("--fechaExcepcion--", wrapper.getFechaRegularizacion() != null ?QuskiOroUtil.dateToString(wrapper.getFechaRegularizacion(), QuskiOroUtil.DATE_FORMAT_QUSKI): " ")
 					.replace("--Observaciones--", wrapper.getTbQoNegociacion().getObservacionAsesor() );
 			this.mailNotificacion(array, asunto, contenido, null);
 		} catch (RelativeException e) {
@@ -7420,7 +7419,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+						.replace("--valor--", persisted.getValorARecibir().toString() );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
 						.replace("--codigoCash--", persisted.getCodigoCash())
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7429,7 +7428,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+						.replace("--valor--", persisted.getValorARecibir().toString() );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
@@ -7479,7 +7478,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+						.replace("--valor--", persisted.getValorARecibir() != null ? persisted.getValorARecibir().toString(): "0" );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
 						.replace("--codigoCash--", persisted.getCodigoCash())
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7488,7 +7487,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoDesembolso().toString() );
+						.replace("--valor--", persisted.getValorARecibir() != null ? persisted.getValorARecibir().toString(): "0"  );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
