@@ -113,9 +113,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="descripcion_producto")
 	private String descripcionProducto;
 
-	@Column(name="monto_diferido")
-	private BigDecimal montoDiferido;
-
 	@Column(name="monto_solicitado")
 	private BigDecimal montoSolicitado;
 
@@ -228,9 +225,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="impuesto_solca")
 	private BigDecimal impuestoSolca;
-
-	@Column(name="monto_desembolso")
-	private BigDecimal montoDesembolso;
 
 	@Column(name="monto_previo_desembolso")
 	private BigDecimal montoPrevioDesembolso;
@@ -387,14 +381,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setFechaVencimiento(Date fechaVencimiento) {
 		this.fechaVencimiento = fechaVencimiento;
-	}
-	
-	public BigDecimal getMontoDiferido() {
-		return this.montoDiferido;
-	}
-
-	public void setMontoDiferido(BigDecimal montoDiferido) {
-		this.montoDiferido = montoDiferido;
 	}
 
 	public BigDecimal getMontoSolicitado() {
@@ -784,14 +770,6 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setImpuestoSolca(BigDecimal impuestoSolca) {
 		this.impuestoSolca = impuestoSolca;
-	}
-
-	public BigDecimal getMontoDesembolso() {
-		return montoDesembolso;
-	}
-
-	public void setMontoDesembolso(BigDecimal montoDesembolso) {
-		this.montoDesembolso = montoDesembolso;
 	}
 
 	public BigDecimal getMontoPrevioDesembolso() {

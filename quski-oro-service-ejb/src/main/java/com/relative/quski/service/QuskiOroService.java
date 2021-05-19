@@ -6140,9 +6140,6 @@ public class QuskiOroService {
 			if( !StringUtils.isBlank( send.getDescripcionProducto() ) ) {
 			    persisted.setDescripcionProducto(  send.getDescripcionProducto() );
 			}
-			if( send.getMontoDiferido() != null ) {
-			    persisted.setMontoDiferido(  send.getMontoDiferido() );
-			}
 			if( send.getMontoSolicitado() != null ) {
 			    persisted.setMontoSolicitado(  send.getMontoSolicitado() );
 			}
@@ -7471,7 +7468,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getValorARecibir() != null ? persisted.getValorARecibir().toString(): "0" );
+						.replace("--valor--", persisted.getMontoFinanciado() != null ? persisted.getMontoFinanciado().toString(): "0" );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
 						.replace("--codigoCash--", persisted.getCodigoCash())
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7976,11 +7973,11 @@ public class QuskiOroService {
 	public TbQoProceso aprobarNovacion(Long idCredito, String descripcion, String cash, String codigoMotivo, Long agencia,	String usuario, Boolean aprobar) throws RelativeException {
 		try {
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(idCredito);
-			if( credito == null || StringUtils.isBlank( credito.getNumeroOperacion())) {
-				throw new RelativeException( Constantes.ERROR_CODE_READ, " NO EXISTE EL CREDITO O EL NUMERO DE OPERACION"); 
+			if( credito == null ) {
+				throw new RelativeException( Constantes.ERROR_CODE_READ, "NO EXISTE EL CREDITO"); 
 			}
 			if(StringUtils.isBlank(descripcion)) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA DESCRIPCION");
+				throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDE LEER LA DESCRIPCION");
 			}
 			TbQoProceso persisted = this.findProcesoByIdReferencia( credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION );
 			if(persisted == null || 
@@ -7989,8 +7986,11 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"LA OPERACION NO SE ENCUENTRA DISPONIBLE O YA FUE PROCESADA");
 			}
 			if(aprobar) {
-				if(StringUtils.isBlank(cash)) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER CODIGO CASH");
+				if(StringUtils.isBlank(cash) ) {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDE LEER CODIGO CASH");
+				} 
+				if( StringUtils.isBlank( credito.getNumeroOperacion()) ) {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,"NO EXISTE EL NUMERO DE OPERACION");
 				}
 				AprobarWrapper ap = new AprobarWrapper();
 				ap.setNumeroOperacion( credito.getNumeroOperacion() );
