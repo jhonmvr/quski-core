@@ -7477,7 +7477,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getValorARecibir() != null ? persisted.getValorARecibir().toString(): "0"  );
+						.replace("--valor--", persisted.getMontoFinanciado() != null ? persisted.getMontoFinanciado().toString(): "0"  );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
