@@ -34,7 +34,7 @@ public class AprobacionWrapper implements Serializable {
 	private List<TbQoReferenciaPersonal> referencias;
 	private List<TbQoExcepcion> excepciones;
 	private List<TbQoVariablesCrediticia> variables;
-	private List<TbQoRiesgoAcumulado> riesgos;
+	private List<SoftbankOperacionWrapper> riesgos;
 	private List<TbQoTasacion> joyas;
 	private TbQoCuentaBancariaCliente cuenta;
 	private Boolean existeError;
@@ -123,10 +123,10 @@ public class AprobacionWrapper implements Serializable {
 			this.mensaje = "NO EXISTEN VARIABLES CREDITICIAS";
 		}
 	}
-	public List<TbQoRiesgoAcumulado> getRiesgos() {
+	public List<SoftbankOperacionWrapper> getRiesgos() {
 		return riesgos;
 	}
-	public void setRiesgos(List<TbQoRiesgoAcumulado> riesgos) {
+	public void setRiesgos(List<SoftbankOperacionWrapper> riesgos) {
 		this.riesgos = riesgos;
 	}
 	public List<TbQoTasacion> getJoyas() {
