@@ -7377,10 +7377,8 @@ public class QuskiOroService {
 			if( persisted == null) { 
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
 			}
-			persisted.setCodigoDevuelto(codigo);
-			persisted.setDescripcionDevuelto(descripcion);
+			
 			if(cash != null) {
-				persisted.setCodigoCash(cash);
 //				String banco = null;
 //				String numeroCuenta = null;
 //				String numeroTransaccion = "Que es?";
@@ -7402,7 +7400,7 @@ public class QuskiOroService {
 //					numeroCuenta = listCuenta.get(0).getCuenta();
 //				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
-						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
 						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
 						.replace("--banco--", "-")
@@ -7411,7 +7409,7 @@ public class QuskiOroService {
 						.replace("--tipoCuenta--", "-")
 						.replace("--valor--", persisted.getValorARecibir().toString() );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
-						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
 						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
 						.replace("--banco--", "-")
@@ -7422,7 +7420,6 @@ public class QuskiOroService {
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
-			this.manageCreditoNegociacion(persisted);
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -7431,15 +7428,12 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
 		}
 	}
-	public void devolverAprobarCreditoRenovacion(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
+	public void devolverAprobarCreditoRenovacion(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo, BigDecimal valorCash) throws RelativeException {
 		try {
 			if( persisted == null) { 
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
 			}
-			persisted.setCodigoDevuelto(codigo);
-			persisted.setDescripcionDevuelto(descripcion);
 			if(cash != null) {
-				persisted.setCodigoCash(cash);
 //				String banco = null;
 //				String numeroCuenta = null;
 //				String numeroTransaccion = "Que es?";
@@ -7461,27 +7455,26 @@ public class QuskiOroService {
 //					numeroCuenta = listCuenta.get(0).getCuenta();
 //				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
-						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
 						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
 						.replace("--banco--", "-")
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoFinanciado() != null ? persisted.getMontoFinanciado().toString(): "0" );
+						.replace("--valor--",  valorCash != null ? valorCash.toString(): "0" );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
-						.replace("--codigoCash--", persisted.getCodigoCash())
+						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
 						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
 						.replace("--banco--", "-")
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getMontoFinanciado() != null ? persisted.getMontoFinanciado().toString(): "0"  );
+						.replace("--valor--", valorCash != null ? valorCash.toString(): "0"  );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
-			this.manageCreditoNegociacion(persisted);
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -7917,6 +7910,9 @@ public class QuskiOroService {
 					&& persisted.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO )) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"LA OPERACION NO SE ENCUENTRA DISPONIBLE O YA FUE PROCESADA");
 			}
+
+			credito.setCodigoDevuelto(codigoMotivo);
+			credito.setDescripcionDevuelto(descripcion);
 			if(aprobar) {
 				if(StringUtils.isBlank(cash)) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER CODIGO CASH");
@@ -7935,6 +7931,8 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}		
+
+				credito.setCodigoCash(cash);
 				this.devolverAprobarCredito(credito, cash, descripcion, null);
 				//FIN APROBACION
 				TbQoTracking last = this.trackingRepository.findByParams(credito.getCodigo(),ProcesoEnum.NUEVO);
@@ -7942,10 +7940,12 @@ public class QuskiOroService {
 					last.setFechaFin(new Timestamp(System.currentTimeMillis()));
 					this.manageTracking(last);
 				}
+
+				this.manageCreditoNegociacion(credito);
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO, null);
 				
 			}else {
-				this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
+				//this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
 				TbQoTracking traking = new TbQoTracking();
 				traking.setActividad("DEVUELTO");
 				traking.setCodigoBpm(credito.getCodigo());
@@ -7960,8 +7960,11 @@ public class QuskiOroService {
 				traking.setProceso(ProcesoEnum.NUEVO);
 				traking.setSeccion("DEVUELTO");
 				this.registrarTraking(traking);
+
+				this.manageCreditoNegociacion(credito);
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
+
 		} catch( RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -7970,7 +7973,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR APROBAR: " + e.getMessage());
 		}
 	}
-	public TbQoProceso aprobarNovacion(Long idCredito, String descripcion, String cash, String codigoMotivo, Long agencia,	String usuario, Boolean aprobar) throws RelativeException {
+	public TbQoProceso aprobarNovacion(BigDecimal valorCash, Long idCredito, String descripcion, String cash, String codigoMotivo, Long agencia,	String usuario, Boolean aprobar) throws RelativeException {
 		try {
 			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(idCredito);
 			if( credito == null ) {
@@ -7985,10 +7988,12 @@ public class QuskiOroService {
 					&& persisted.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO )) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"LA OPERACION NO SE ENCUENTRA DISPONIBLE O YA FUE PROCESADA");
 			}
+			credito.setCodigoDevuelto(codigoMotivo);
+			credito.setDescripcionDevuelto(descripcion);
 			if(aprobar) {
-				if(StringUtils.isBlank(cash) ) {
-					throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDE LEER CODIGO CASH");
-				} 
+				//if(StringUtils.isBlank(cash) ) {
+					//throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDE LEER CODIGO CASH");
+				//} 
 				if( StringUtils.isBlank( credito.getNumeroOperacion()) ) {
 					throw new RelativeException(Constantes.ERROR_CODE_READ,"NO EXISTE EL NUMERO DE OPERACION");
 				}
@@ -8006,11 +8011,39 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}		
-				this.devolverAprobarCreditoRenovacion(credito, cash, descripcion, null);
+				if(StringUtils.isNotBlank(cash)) {
+					credito.setCodigoCash(cash);
+					credito.setValorCash(valorCash);
+					this.devolverAprobarCreditoRenovacion(credito, cash, descripcion, null,valorCash);
+				}
+				//FIN APROBACION
+				TbQoTracking last = this.trackingRepository.findByParams(credito.getCodigo(),ProcesoEnum.RENOVACION);
+				if(last != null) {
+					last.setFechaFin(new Timestamp(System.currentTimeMillis()));
+					this.manageTracking(last);
+				}
+
+				this.manageCreditoNegociacion(credito);
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.APROBADO, null);
 				
 			}else {
-				this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
+				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("DEVUELTO");
+				traking.setCodigoBpm(credito.getCodigo());
+				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(credito.getTbQoNegociacion().getNombreAsesor());
+				traking.setUsuarioCreacion(usuario);
+				traking.setObservacion(descripcion);
+				traking.setProceso(ProcesoEnum.RENOVACION);
+				traking.setSeccion("DEVUELTO");
+				this.registrarTraking(traking);
+
+				this.manageCreditoNegociacion(credito);
 				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
 		} catch( RelativeException e) {

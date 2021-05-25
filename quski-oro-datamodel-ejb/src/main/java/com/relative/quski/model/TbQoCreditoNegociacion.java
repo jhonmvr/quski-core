@@ -292,6 +292,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="fecha_regularizacion")
 	private Date fechaRegularizacion;
 
+	@Column(name="valor_cash")
+	private BigDecimal valorCash;
+
 	
 	public TbQoCreditoNegociacion() {
 	}
@@ -986,6 +989,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setNumeroOperacionAnterior(String numeroOperacionAnterior) {
 		this.numeroOperacionAnterior = numeroOperacionAnterior;
+	}
+
+	public BigDecimal getValorCash() {
+		return valorCash;
+	}
+
+	public void setValorCash(BigDecimal valorCash) {
+		this.valorCash = valorCash;
 	}
 
 }

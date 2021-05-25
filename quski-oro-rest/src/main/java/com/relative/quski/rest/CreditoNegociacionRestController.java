@@ -1,5 +1,6 @@
 package com.relative.quski.rest;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -184,6 +185,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@GET
 	@Path("/aprobarNovacion")
 	public GenericWrapper<TbQoProceso> aprobarNovacion(
+			@QueryParam("valorCash") String valorCash, 
 			@QueryParam("idCredito") String idCredito, 
 			@QueryParam("descripcion") String descripcion,
 			@QueryParam("cash") String cash, 
@@ -193,7 +195,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@QueryParam("aprobar") String aprobar			
 			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
-		TbQoProceso a = this.qos.aprobarNovacion( Long.valueOf(idCredito),  descripcion, cash, codigoMotivo, Long.valueOf(agencia), usuario, Boolean.valueOf(aprobar) );
+		TbQoProceso a = this.qos.aprobarNovacion(StringUtils.isNotBlank(valorCash)? BigDecimal.valueOf(Double.valueOf(valorCash)):null, Long.valueOf(idCredito),  descripcion, cash, codigoMotivo, Long.valueOf(agencia), usuario, Boolean.valueOf(aprobar) );
 		loc.setEntidad(a);
 		return loc;
 	}
