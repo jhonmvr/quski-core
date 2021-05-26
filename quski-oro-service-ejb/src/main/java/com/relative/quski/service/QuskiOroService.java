@@ -6203,6 +6203,9 @@ public class QuskiOroService {
 			if( send.getFechaRegularizacion() != null ) {
 				persisted.setFechaRegularizacion( send.getFechaRegularizacion() );
 			}
+			if( send.getValorCash() != null) {
+				persisted.setValorCash(send.getValorCash());
+			}
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );

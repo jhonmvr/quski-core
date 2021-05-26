@@ -186,18 +186,18 @@ public class PagoService {
 				pagoNovacion.setValor( e.getValorDepositado() );
 				pagosNovacion.add( pagoNovacion ); 
 				TbQoRegistrarPago pago = new TbQoRegistrarPago();
-				if(e.getComprobante() != null) {
-					FileObjectStorage file = new FileObjectStorage();
-					file.setFileBase64(e.getComprobante().getFileBase64());
-					file.setName( e.getComprobante().getName() );
-					file.setProcess(EstadoEnum.ACT);
-					RespuestaObjectWrapper objeto;
-					String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
-					String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
-					String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-					objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
-					pago.setIdComprobante(objeto.getEntidad());
-				}
+//				if(e.getComprobante() != null) {
+//					FileObjectStorage file = new FileObjectStorage();
+//					file.setFileBase64(e.getComprobante().getFileBase64());
+//					file.setName( e.getComprobante().getName() );
+//					file.setProcess(EstadoEnum.ACT);
+//					RespuestaObjectWrapper objeto;
+//					String url = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
+//					String base = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
+//					String coleccion = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
+//					objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
+//					pago.setIdComprobante(objeto.getEntidad());
+//				}
 				pago.setCuentas(e.getCuenta());
 				pago.setFechaPago(e.getFechaPago());
 				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
