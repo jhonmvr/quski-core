@@ -16,6 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name="tb_qo_riesgo_acumulado")
 public class TbQoRiesgoAcumulado implements Serializable {
+	
 	public TbQoRiesgoAcumulado(TbQoCliente tbQoCliente) {
 		super();
 		this.tbQoCliente = tbQoCliente;
@@ -34,16 +35,28 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@SequenceGenerator(name = "TB_QO_RIESGO_ACUMULADO_ID_GENERATOR", sequenceName = "SEQ_RIESGO_ACUMULADO", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TB_QO_RIESGO_ACUMULADO_ID_GENERATOR")
 	private Long id;
-	
+
+	private String bloqueo;
+
+	private BigDecimal capital;
+
+	@Column(name="cobertura_actual")
+	private BigDecimal coberturaActual;
+
+	@Column(name="cobertura_inicial")
+	private BigDecimal coberturaInicial;
+
 	@Column(name="codigo_cartera_quski")
 	private String codigoCarteraQuski;
+
+	private BigDecimal custodia;
 
 	@Column(name="dias_mora_actual")
 	private BigDecimal diasMoraActual;
 
 	@Column(name="es_demandada")
 	private Boolean esDemandada;
-
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -53,30 +66,41 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@Column(name="estado_primera_cuota_vigente")
 	private String estadoPrimeraCuotaVigente;
 
-
+	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
 
-
+	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
 
-
+	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_efectiva")
 	private Date fechaEfectiva;
 
-
+	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
+	@Column(name="gastos_cobranza")
+	private BigDecimal gastosCobranza;
+
 	@Column(name="id_moneda")
 	private BigDecimal idMoneda;
+
+	@Column(name="id_prestamo_origen")
+	private Long idPrestamoOrigen;
 
 	@Column(name="id_softbank")
 	private Long idSoftbank;
 
 	@Column(name="interes_mora")
 	private BigDecimal interesMora;
+
+	@Column(name="monto_financiado")
+	private BigDecimal montoFinanciado;
+
+	private BigDecimal mora;
 
 	@Column(name="nombre_producto")
 	private String nombreProducto;
@@ -92,6 +116,14 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	@Column(name="numero_operacion")
 	private String numeroOperacion;
+
+	@Column(name="numero_operacion_madre")
+	private String numeroOperacionMadre;
+
+	@Column(name="numero_operacion_mupi")
+	private String numeroOperacionMupi;
+
+	private Long plazo;
 
 	@Column(name="primera_cuota_vigente")
 	private BigDecimal primeraCuotaVigente;
@@ -114,7 +146,7 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	@Column(name="valor_proyectado_cuota_actual")
 	private BigDecimal valorProyectadoCuotaActual;
-
+	
 	//bi-directional many-to-one association to TbQoCliente
 	@ManyToOne
 	@JoinColumn(name="id_cliente")
@@ -124,6 +156,7 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;	
+	
 	//bi-directional many-to-one association to TbQoNegociacion
 	@ManyToOne
 	@JoinColumn(name="id_cotizador")
@@ -132,12 +165,52 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	public TbQoRiesgoAcumulado() {
 	}
 
+	public String getBloqueo() {
+		return this.bloqueo;
+	}
+
+	public void setBloqueo(String bloqueo) {
+		this.bloqueo = bloqueo;
+	}
+
+	public BigDecimal getCapital() {
+		return this.capital;
+	}
+
+	public void setCapital(BigDecimal capital) {
+		this.capital = capital;
+	}
+
+	public BigDecimal getCoberturaActual() {
+		return this.coberturaActual;
+	}
+
+	public void setCoberturaActual(BigDecimal coberturaActual) {
+		this.coberturaActual = coberturaActual;
+	}
+
+	public BigDecimal getCoberturaInicial() {
+		return this.coberturaInicial;
+	}
+
+	public void setCoberturaInicial(BigDecimal coberturaInicial) {
+		this.coberturaInicial = coberturaInicial;
+	}
+
 	public String getCodigoCarteraQuski() {
 		return this.codigoCarteraQuski;
 	}
 
 	public void setCodigoCarteraQuski(String codigoCarteraQuski) {
 		this.codigoCarteraQuski = codigoCarteraQuski;
+	}
+
+	public BigDecimal getCustodia() {
+		return this.custodia;
+	}
+
+	public void setCustodia(BigDecimal custodia) {
+		this.custodia = custodia;
 	}
 
 	public BigDecimal getDiasMoraActual() {
@@ -212,6 +285,14 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
+	public BigDecimal getGastosCobranza() {
+		return this.gastosCobranza;
+	}
+
+	public void setGastosCobranza(BigDecimal gastosCobranza) {
+		this.gastosCobranza = gastosCobranza;
+	}
+
 	public Long getId() {
 		return this.id;
 	}
@@ -228,6 +309,14 @@ public class TbQoRiesgoAcumulado implements Serializable {
 		this.idMoneda = idMoneda;
 	}
 
+	public Long getIdPrestamoOrigen() {
+		return this.idPrestamoOrigen;
+	}
+
+	public void setIdPrestamoOrigen(Long idPrestamoOrigen) {
+		this.idPrestamoOrigen = idPrestamoOrigen;
+	}
+
 	public Long getIdSoftbank() {
 		return this.idSoftbank;
 	}
@@ -242,6 +331,22 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	public void setInteresMora(BigDecimal interesMora) {
 		this.interesMora = interesMora;
+	}
+
+	public BigDecimal getMontoFinanciado() {
+		return this.montoFinanciado;
+	}
+
+	public void setMontoFinanciado(BigDecimal montoFinanciado) {
+		this.montoFinanciado = montoFinanciado;
+	}
+
+	public BigDecimal getMora() {
+		return this.mora;
+	}
+
+	public void setMora(BigDecimal mora) {
+		this.mora = mora;
 	}
 
 	public String getNombreProducto() {
@@ -282,6 +387,30 @@ public class TbQoRiesgoAcumulado implements Serializable {
 
 	public void setNumeroOperacion(String numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
+	}
+
+	public String getNumeroOperacionMadre() {
+		return this.numeroOperacionMadre;
+	}
+
+	public void setNumeroOperacionMadre(String numeroOperacionMadre) {
+		this.numeroOperacionMadre = numeroOperacionMadre;
+	}
+
+	public String getNumeroOperacionMupi() {
+		return this.numeroOperacionMupi;
+	}
+
+	public void setNumeroOperacionMupi(String numeroOperacionMupi) {
+		this.numeroOperacionMupi = numeroOperacionMupi;
+	}
+
+	public Long getPlazo() {
+		return this.plazo;
+	}
+
+	public void setPlazo(Long plazo) {
+		this.plazo = plazo;
 	}
 
 	public BigDecimal getPrimeraCuotaVigente() {
@@ -347,7 +476,7 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	public void setValorProyectadoCuotaActual(BigDecimal valorProyectadoCuotaActual) {
 		this.valorProyectadoCuotaActual = valorProyectadoCuotaActual;
 	}
-
+	
 	public TbQoCliente getTbQoCliente() {
 		return this.tbQoCliente;
 	}

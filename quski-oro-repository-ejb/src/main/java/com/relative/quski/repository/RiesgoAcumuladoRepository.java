@@ -22,7 +22,8 @@ public interface RiesgoAcumuladoRepository extends CrudRepository<Long, TbQoRies
 	
 	public List<TbQoRiesgoAcumulado> findByIdCliente( Long idCliente ) throws RelativeException;
 	public List<TbQoRiesgoAcumulado> findByIdNegociacion( Long idNegociacion ) throws RelativeException;
-
+	public void deleteByIdNegociacion( Long idNegociacion ) throws RelativeException;
+	
 	public List<TbQoRiesgoAcumulado> findByIdCliente(Long idCliente, int startRecord, Integer pageSize,String sortFields, String sortDirections) throws RelativeException;
 	public Long countByIdCotizador(Long idCliente) throws RelativeException;
 
