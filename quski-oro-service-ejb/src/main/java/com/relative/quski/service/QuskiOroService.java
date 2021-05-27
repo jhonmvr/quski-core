@@ -3811,6 +3811,9 @@ public class QuskiOroService {
 	public List<TbQoRiesgoAcumulado> manageListRiesgoAcumulados(List<TbQoRiesgoAcumulado> send)
 			throws RelativeException {
 		try {
+			if(send == null || send.isEmpty()) {
+				return null;
+			}
 			List<TbQoRiesgoAcumulado> persisted = new ArrayList<>();
 			send.forEach(element -> {
 				element.setEstado(EstadoEnum.ACT);
