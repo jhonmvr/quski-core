@@ -7,6 +7,7 @@ import java.util.Date;
 public class SoftbankOperacionWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private Long id;
 	private String referencia;
 	private String numeroOperacionMupi;
 	private String numeroOperacion;
@@ -33,7 +34,6 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private String estadoOperacion;
 	private BigDecimal idMoneda;
 	private Boolean esDemandada;
-	private Long id;
 	private Long idPrestamoOrigen;
 	private BigDecimal coberturaInicial;
 	private BigDecimal coberturaActual;

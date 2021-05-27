@@ -2181,7 +2181,9 @@ public class QuskiOroService {
 						return new NegociacionWrapper(false);
 					}else {
 						tmp.setVariables(this.variablesCrediticiaRepository.findByIdNegociacion(id));
-						tmp.setRiesgos(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()));
+						this.riesgoAcumuladoRepository.deleteByIdNegociacion(id);
+						List<TbQoRiesgoAcumulado> riesgosTb = this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()), tmp.getCredito().getTbQoNegociacion(), null ));
+						tmp.setRiesgos( riesgosTb );
 						tmp.setJoyas(this.tasacionRepository.findByIdCredito(tmp.getCredito().getId() ));
 						tmp.setExcepciones(this.excepcionesRepository.findByIdNegociacion(id));
 						tmp.setRespuesta(true);
@@ -2644,9 +2646,9 @@ public class QuskiOroService {
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
-				List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente());
+				List<TbQoRiesgoAcumulado> riesgosTb = this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(cliente.getCedulaCliente()), credito.getTbQoNegociacion(), null ));
+				wrapper.setRiesgos( riesgosTb );
 				wrapper.setCredito(credito);
-				wrapper.setRiesgos(riesgos);
 				wrapper.setVariables(this.createVariablesFromEquifax(data.getXmlVariablesInternas().getVariablesInternas().getVariable(), credito.getTbQoNegociacion(), null));
 				//traer excepcion 
 				wrapper.setCodigoExcepcionBre(new Long(data.getCodigoError()) );
@@ -4539,29 +4541,43 @@ public class QuskiOroService {
 				if(cotizacion != null) {
 					r = new TbQoRiesgoAcumulado( cotizacion);
 				}
-				r.setReferencia(e.getReferencia());
-				r.setNumeroOperacion(e.getNumeroOperacion());
-				r.setCodigoCarteraQuski(e.getCodigoCarteraQuski());
-				r.setTipoOperacion(e.getTipoOperacion());
-				r.setEsDemandada(e.getEsDemandada());
-				r.setFechaEfectiva(e.getFechaEfectiva());
-				r.setFechaVencimiento(e.getFechaVencimiento());
-				r.setInteresMora(e.getInteresMora());
-				r.setSaldo(e.getSaldo());
-				r.setValorAlDia(e.getValorAlDia());
-				r.setValorAlDiaMasCuotaActual(e.getValorAlDiaMasCuotaActual());
-				r.setValorProyectadoCuotaActual(e.getValorProyectadoCuotaActual());
-				r.setValorCancelaPrestamo(e.getValorCancelaPrestamo());
-				r.setDiasMoraActual(e.getDiasMoraActual());
-				r.setNumeroCuotasTotales(e.getNumeroCuotasTotales());
-				r.setNumeroCuotasFaltantes(e.getNumeroCuotasFaltantes());
-				r.setEstadoPrimeraCuotaVigente(e.getEstadoPrimeraCuotaVigente());
-				r.setNombreProducto(e.getNombreProducto());
-				r.setPrimeraCuotaVigente(e.getPrimeraCuotaVigente());
-				r.setNumeroGarantiasReales(e.getNumeroGarantiasReales());
-				r.setEstadoOperacion(e.getEstadoOperacion());
-				r.setIdMoneda(e.getIdMoneda());
+				r.setBloqueo( e.getBloqueo() );
+				r.setCapital( e.getCapital() );
+				r.setCoberturaActual( e.getCoberturaActual() );
+				r.setCoberturaInicial( e.getCoberturaInicial() );
+				r.setCodigoCarteraQuski( e.getCodigoCarteraQuski() );
+				r.setCustodia( e.getCustodia() );
+				r.setDiasMoraActual( e.getDiasMoraActual() );
+				r.setEsDemandada( e.getEsDemandada() );
+				r.setEstado( EstadoEnum.ACT );
+				r.setEstadoOperacion( e.getEstadoOperacion() );
+				r.setEstadoPrimeraCuotaVigente( e.getEstadoPrimeraCuotaVigente() );
+				r.setFechaCreacion( new Timestamp(System.currentTimeMillis()) );
+				r.setFechaEfectiva( e.getFechaEfectiva() );
+				r.setFechaVencimiento( e.getFechaVencimiento() );
+				r.setGastosCobranza( e.getGastosCobranza() );
+				r.setIdMoneda( e.getIdMoneda() );
+				r.setIdPrestamoOrigen( e.getIdPrestamoOrigen() );
 				r.setIdSoftbank( e.getId() );
+				r.setInteresMora( e.getInteresMora() );
+				r.setMontoFinanciado( e.getMontoFinanciado() );
+				r.setMora( e.getMora() );
+				r.setNombreProducto( e.getNombreProducto() );
+				r.setNumeroCuotasFaltantes( e.getNumeroCuotasFaltantes() );
+				r.setNumeroCuotasTotales( e.getNumeroCuotasTotales() );
+				r.setNumeroGarantiasReales( e.getNumeroGarantiasReales() );
+				r.setNumeroOperacion( e.getNumeroOperacion() );
+				r.setNumeroOperacionMadre( e.getNumeroOperacionMadre() );
+				r.setNumeroOperacionMupi( e.getNumeroOperacionMupi() );
+				r.setPlazo( e.getPlazo() );
+				r.setPrimeraCuotaVigente( e.getPrimeraCuotaVigente() );
+				r.setReferencia( e.getReferencia() );
+				r.setSaldo( e.getSaldo() );
+				r.setTipoOperacion( e.getTipoOperacion() );
+				r.setValorAlDia( e.getValorAlDia() );
+				r.setValorAlDiaMasCuotaActual( e.getValorAlDiaMasCuotaActual() );
+				r.setValorCancelaPrestamo( e.getValorCancelaPrestamo() );
+				r.setValorProyectadoCuotaActual( e.getValorProyectadoCuotaActual() );
 				list.add(r);
 			});
 			return list;
@@ -6234,7 +6250,8 @@ public class QuskiOroService {
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			tmp.setJoyas( this.tasacionRepository.findByIdCredito( tmp.getCredito().getId() ) );
 			if(tmp.getExisteError()) {return tmp;}
-			tmp.setRiesgos( consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()));
+			List<TbQoRiesgoAcumulado> riesgosTb =  this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()), tmp.getCredito().getTbQoNegociacion(), null );
+			tmp.setRiesgos( riesgosTb );
 			Long idCliente = tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId();
 			tmp.setCuentas(     this.cuentaBancariaRepository.findByClienteAndCuenta( idCliente, tmp.getCredito().getNumeroCuenta() ));
 			tmp.setTelefonos(   this.telefonoClienteRepository.findByIdCliente( idCliente));
@@ -6278,7 +6295,7 @@ public class QuskiOroService {
 			tmp.setProceso( this.procesoRepository.findByIdCreditoNuevo( idNego ) );
 			if( tmp.getExisteError() ) {return tmp;}
 			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
-			tmp.setRiesgos(consultarRiesgoSoftbank(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente()));
+			tmp.setRiesgos( this.riesgoAcumuladoRepository.findByIdNegociacion( idNego ) );
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			tmp.setJoyas( this.tasacionRepository.findByIdCredito( tmp.getCredito().getId() ) );
 			Long idCliente = tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getId();
