@@ -10,6 +10,7 @@ public class AprobarWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String numeroOperacion;
 	private String uriHabilitantesFirmados;
+	private String codigoCash;
 	private DatosRegistroWrapper datosRegistro;
 	
 	
@@ -31,6 +32,12 @@ public class AprobarWrapper implements Serializable {
 	}
 	public void setDatosRegistro(DatosRegistroWrapper datosRegistro) {
 		this.datosRegistro = datosRegistro;
+	}
+	public String getCodigoCash() {
+		return codigoCash;
+	}
+	public void setCodigoCash(String codigoCash) {
+		this.codigoCash = codigoCash;
 	}
 	
 }

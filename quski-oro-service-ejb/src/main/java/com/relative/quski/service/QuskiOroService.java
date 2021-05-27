@@ -7930,11 +7930,6 @@ public class QuskiOroService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
 				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
-				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
-				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
-					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
-				}		
-
 				credito.setCodigoCash(cash);
 				this.devolverAprobarCredito(credito, cash, descripcion, null);
 				//FIN APROBACION
@@ -7945,7 +7940,12 @@ public class QuskiOroService {
 				}
 
 				this.manageCreditoNegociacion(credito);
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO, null);
+				persisted =  this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.APROBADO, null);
+				ap.setCodigoCash(cash);
+				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
+				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
+					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
+				}	
 				
 			}else {
 				//this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
@@ -7965,8 +7965,9 @@ public class QuskiOroService {
 				this.registrarTraking(traking);
 
 				this.manageCreditoNegociacion(credito);
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
+				persisted =   this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
+			return persisted;
 
 		} catch( RelativeException e) {
 			e.printStackTrace();
@@ -8010,12 +8011,10 @@ public class QuskiOroService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
 				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
-				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
-				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
-					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
-				}		
+				
 				if(StringUtils.isNotBlank(cash)) {
 					credito.setCodigoCash(cash);
+					ap.setCodigoCash(cash);
 					credito.setValorCash(valorCash);
 					this.devolverAprobarCreditoRenovacion(credito, cash, descripcion, null,valorCash);
 				}
@@ -8027,8 +8026,11 @@ public class QuskiOroService {
 				}
 
 				this.manageCreditoNegociacion(credito);
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.APROBADO, null);
-				
+				persisted = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
+				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
+				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
+					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
+				}	
 			}else {
 				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
 				TbQoTracking traking = new TbQoTracking();
@@ -8045,10 +8047,12 @@ public class QuskiOroService {
 				traking.setProceso(ProcesoEnum.RENOVACION);
 				traking.setSeccion("DEVUELTO");
 				this.registrarTraking(traking);
-
 				this.manageCreditoNegociacion(credito);
-				return this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
+				persisted = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
+				
+				
 			}
+			return persisted;
 		} catch( RelativeException e) {
 			e.printStackTrace();
 			throw e;
