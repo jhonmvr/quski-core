@@ -5624,7 +5624,7 @@ public class QuskiOroService {
 				String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA_RENOVAR).getValor();
 				contentXMLcalculadora = contentXMLcalculadora
 						.replace("--perfil-riesgo--", "1")
-						.replace("--origen-operacion--", creditoSoft.getCredito().getEsMigrado()?"O":"E")
+						.replace("--origen-operacion--", creditoSoft.getCredito().getEsMigrado()?"E":"Q")
 						.replace("--riesgo-total--", "0.00")
 						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 						.replace("--perfil-preferencia--", "A") 
