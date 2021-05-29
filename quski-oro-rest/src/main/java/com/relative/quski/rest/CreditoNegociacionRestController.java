@@ -315,12 +315,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	public GenericWrapper<TbQoProceso> solicitarAprobacionRenovacion(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("correoAsesor") String correoAsesor,
-			@QueryParam("nombreAsesor") String nombreAsesor) throws RelativeException {
+			@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("observacionAsesor") String observacionAsesor) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idNegociacion)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
 		}
-		TbQoProceso a = this.qos.solicitarAprobacionRenovacion( Long.valueOf(idNegociacion), nombreAsesor, correoAsesor );
+		TbQoProceso a = this.qos.solicitarAprobacionRenovacion( Long.valueOf(idNegociacion), nombreAsesor, correoAsesor,observacionAsesor );
 		loc.setEntidad(a);
 		return loc;			
 	}

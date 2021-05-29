@@ -740,7 +740,7 @@ public class DevolucionService {
 			if (persisted.getEstadoProceso().equals(EstadoProcesoEnum.CREADO)) {
 				TbQoProceso pro = this.qos.cambiarEstado( Long.valueOf( idDevolucion ), ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_APROBACION, QuskiOroConstantes.EN_COLA);
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("9"),
-						ProcessEnum.NOVACION, String.valueOf(idDevolucion));
+						ProcessEnum.SOLICITUD, String.valueOf(idDevolucion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}

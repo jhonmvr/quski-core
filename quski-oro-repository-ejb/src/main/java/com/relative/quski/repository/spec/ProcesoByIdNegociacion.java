@@ -35,7 +35,7 @@ public class ProcesoByIdNegociacion extends AbstractSpecification<TbQoProceso>  
 	public Predicate toPredicate(Root<TbQoProceso> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<>();
 		where.add(cb.equal(poll.get("idReferencia"), this.idNegociacion));
-		where.add(cb.equal(poll.get("proceso"), ProcesoEnum.NUEVO));
+		where.add(cb.or(cb.equal(poll.get("proceso"), ProcesoEnum.NUEVO),cb.equal(poll.get("proceso"), ProcesoEnum.RENOVACION)));
 		where.add(cb.equal(poll.get("estado"), EstadoEnum.ACT));
 		return cb.and(where.toArray(new Predicate[] {}));
 

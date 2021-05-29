@@ -8046,7 +8046,7 @@ public class QuskiOroService {
 				}
 
 				this.manageCreditoNegociacion(credito);
-				persisted = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
+				persisted = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.APROBADO, credito.getTbQoNegociacion().getAsesor() );
 				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), ap);
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
@@ -8149,6 +8149,7 @@ public class QuskiOroService {
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
 				nego.setObservacionAsesor(observacionAsesor);
+				nego.setAprobador(null);
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
 				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 					this.notificarExcepcionOperativa( wp, Boolean.FALSE );
@@ -8182,7 +8183,7 @@ public class QuskiOroService {
 		}
 	}
 	 
-	public TbQoProceso solicitarAprobacionRenovacion(Long idNegociacion,String nombreAsesor,String correoAsesor) throws RelativeException{
+	public TbQoProceso solicitarAprobacionRenovacion(Long idNegociacion,String nombreAsesor,String correoAsesor, String observacionAsesor) throws RelativeException{
 		try {
 			
 			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.RENOVACION);
@@ -8204,6 +8205,8 @@ public class QuskiOroService {
 				TbQoNegociacion nego = wp.getTbQoNegociacion();
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
+				nego.setObservacionAsesor(observacionAsesor);
+				nego.setAprobador(null);
 				this.manageNegociacion( nego );
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
 				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
