@@ -88,7 +88,7 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	response = GenericWrapper.class)
 	public GenericWrapper<TbQoVariablesCrediticia> persistEntity(GenericWrapper<TbQoVariablesCrediticia> vc) throws RelativeException {
 		GenericWrapper<TbQoVariablesCrediticia> gw= new GenericWrapper<>();
-		gw.setEntidades(this.qos.manageListVariablesCrediticias( vc.getEntidades() ));
+		gw.setEntidades(this.qos.manageListVariablesCrediticias( vc.getEntidades(), null ));
 		return gw;
 	}
 	@GET

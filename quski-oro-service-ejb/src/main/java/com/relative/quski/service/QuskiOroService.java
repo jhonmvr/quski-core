@@ -1218,14 +1218,17 @@ public class QuskiOroService {
 	 * * * * * * * * * * * @VARIABLE @CREDITICIA
 	 */
 
-	public List<TbQoVariablesCrediticia> manageListVariablesCrediticias(List<TbQoVariablesCrediticia> send)
+	public ArrayList<TbQoVariablesCrediticia> manageListVariablesCrediticias(List<TbQoVariablesCrediticia> send, TbQoNegociacion nego)
 			throws RelativeException {
 		try {
-			List<TbQoVariablesCrediticia> persisted = new ArrayList<>();
+			ArrayList<TbQoVariablesCrediticia> persisted = new ArrayList<>();
 			send.forEach(element -> {
+				log.info( "====================================> VARIABLE: " + element.getCodigo());
 				element.setEstado(EstadoEnum.ACT);
-				element.setId(null);
 				element.setFechaCreacion(new Date(System.currentTimeMillis()));
+				if( nego != null ) {
+					element.setTbQoNegociacion(nego);					
+				}
 				if (element.getTbQoCotizador() != null) {
 					try {
 						persisted.add(this.variablesCrediticiaRepository.add(element));
@@ -4173,8 +4176,40 @@ public class QuskiOroService {
 		
 		return this.manageExcepcion(excepcion);
 	}
+	
 
-
+	public ArrayList<TbQoVariablesCrediticia>  actualizarVariables(List<TbQoVariablesCrediticia> list, Long idNego) throws RelativeException {
+		try {
+			if(idNego == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL ACTUALIZAR VARIABLES CREDITICIAS, NO SEPUEDE LEER ID." );
+			}
+			TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion( idNego );
+			if(credito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL ACTUALIZAR VARIABLES CREDITICIAS, NO SEPUEDE LEER ID." );
+			}
+			this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(idNego);
+			ArrayList<TbQoVariablesCrediticia> lisrtDos = new ArrayList<>();
+			for(TbQoVariablesCrediticia e : list) {
+				TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
+				v.setCodigo(e.getCodigo());
+				v.setNombre(e.getNombre());
+				v.setOrden(String.valueOf(e.getOrden()));
+				v.setValor(e.getValor());
+				if(credito.getTbQoNegociacion() != null) {
+					v.setTbQoNegociacion(credito.getTbQoNegociacion());						
+				}
+				lisrtDos.add(this.manageVariablesCrediticia(v));				
+			}
+			return lisrtDos;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
 	
 	
 	/**
