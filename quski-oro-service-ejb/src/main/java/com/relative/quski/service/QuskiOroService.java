@@ -1218,14 +1218,17 @@ public class QuskiOroService {
 	 * * * * * * * * * * * @VARIABLE @CREDITICIA
 	 */
 
-	public List<TbQoVariablesCrediticia> manageListVariablesCrediticias(List<TbQoVariablesCrediticia> send)
+	public ArrayList<TbQoVariablesCrediticia> manageListVariablesCrediticias(List<TbQoVariablesCrediticia> send, TbQoNegociacion nego)
 			throws RelativeException {
 		try {
-			List<TbQoVariablesCrediticia> persisted = new ArrayList<>();
+			ArrayList<TbQoVariablesCrediticia> persisted = new ArrayList<>();
 			send.forEach(element -> {
+				log.info( "====================================> VARIABLE: " + element.getCodigo());
 				element.setEstado(EstadoEnum.ACT);
-				element.setId(null);
 				element.setFechaCreacion(new Date(System.currentTimeMillis()));
+				if( nego != null ) {
+					element.setTbQoNegociacion(nego);					
+				}
 				if (element.getTbQoCotizador() != null) {
 					try {
 						persisted.add(this.variablesCrediticiaRepository.add(element));
@@ -1939,7 +1942,9 @@ public class QuskiOroService {
 		if(StringUtils.isBlank( cliente.getAprobacionMupi() ) ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE APROBACION MUPI DEL CLIENTE");
 		}
-		
+		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
+			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
+		}
 		return this.tipoOro(this.manageCliente(cliente));
 	}
 
@@ -4171,8 +4176,40 @@ public class QuskiOroService {
 		
 		return this.manageExcepcion(excepcion);
 	}
+	
 
-
+	public ArrayList<TbQoVariablesCrediticia>  actualizarVariables(List<TbQoVariablesCrediticia> list, Long idNego) throws RelativeException {
+		try {
+			if(idNego == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL ACTUALIZAR VARIABLES CREDITICIAS, NO SEPUEDE LEER ID." );
+			}
+			TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion( idNego );
+			if(credito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL ACTUALIZAR VARIABLES CREDITICIAS, NO SEPUEDE LEER ID." );
+			}
+			this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(idNego);
+			ArrayList<TbQoVariablesCrediticia> lisrtDos = new ArrayList<>();
+			for(TbQoVariablesCrediticia e : list) {
+				TbQoVariablesCrediticia v = new TbQoVariablesCrediticia();
+				v.setCodigo(e.getCodigo());
+				v.setNombre(e.getNombre());
+				v.setOrden(String.valueOf(e.getOrden()));
+				v.setValor(e.getValor());
+				if(credito.getTbQoNegociacion() != null) {
+					v.setTbQoNegociacion(credito.getTbQoNegociacion());						
+				}
+				lisrtDos.add(this.manageVariablesCrediticia(v));				
+			}
+			return lisrtDos;
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ACCION_NO_ENCONTRADA + e.getMessage());
+		}
+	}
 	
 	
 	/**
@@ -6296,8 +6333,8 @@ public class QuskiOroService {
 			DetalleCreditoEnProcesoWrapper tmp = new DetalleCreditoEnProcesoWrapper( Boolean.FALSE );
 			tmp.setCredito( this.creditoNegociacionRepository.findCreditoByIdNegociacion( idNego ) );
 			tmp.setProceso( this.procesoRepository.findByIdCreditoNuevo( idNego ) );
-			if( tmp.getExisteError() ) {return tmp;}
 			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
+			if( tmp.getExisteError() ) {return tmp;}
 			tmp.setRiesgos( this.riesgoAcumuladoRepository.findByIdNegociacion( idNego ) );
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			tmp.setJoyas( this.tasacionRepository.findByIdCredito( tmp.getCredito().getId() ) );
@@ -7725,7 +7762,7 @@ public class QuskiOroService {
 				}
 				
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, negociacion));
-				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion, null)  );
+				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion, null) ) );
 			}else {
 				novacion = this.buscarRenovacionNegociacion(idNego);				
 				log.info( "============> ACTUALIZANDO CREDITO <============");
@@ -7737,7 +7774,7 @@ public class QuskiOroService {
 				}
 				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
-				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null)  );
+				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null) ) );
 			}
 			return novacion;
 		}catch(RelativeException e) {

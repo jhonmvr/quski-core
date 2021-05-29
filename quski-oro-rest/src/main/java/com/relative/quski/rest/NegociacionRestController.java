@@ -2,6 +2,7 @@ package com.relative.quski.rest;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoTasacion;
+import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
@@ -164,6 +166,14 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion);
 		loc.setEntidad(a);
+		return loc;
+	}
+	@POST
+	@Path("/actualizarVariables")
+	public GenericWrapper<TbQoVariablesCrediticia> actualizarVariables( GenericWrapper<TbQoVariablesCrediticia> wrapper, @QueryParam("idNego") String idNego) throws RelativeException {
+		GenericWrapper<TbQoVariablesCrediticia> loc = new GenericWrapper<>();
+		ArrayList<TbQoVariablesCrediticia> l = this.qos.actualizarVariables(wrapper.getEntidades(), Long.valueOf( idNego ));
+		loc.setEntidades(l);
 		return loc;
 	}
 	

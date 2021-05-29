@@ -5,6 +5,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.model.TbQoTelefonoCliente;
 
 public class TelefonoByClienteAndTipoSpec extends AbstractSpecification<TbQoTelefonoCliente> {
@@ -29,8 +30,11 @@ public class TelefonoByClienteAndTipoSpec extends AbstractSpecification<TbQoTele
 	@Override
 	public Predicate toPredicate(Root<TbQoTelefonoCliente> poll, CriteriaBuilder cb) {
 		// TODO Auto-generated method stub
-		return cb.and(cb.equal(poll.get("tbQoCliente").get("cedulaCliente"), this.identificacion),
-				cb.equal(poll.get("tipoTelefono"), this.tipoTelefono));
+		return cb.and(
+				cb.equal(poll.get("tbQoCliente").get("cedulaCliente"), this.identificacion),
+				cb.equal(poll.get("tipoTelefono"), this.tipoTelefono),
+				cb.equal(poll.get("estado"), EstadoEnum.ACT )
+				);
 	}
 
 }
