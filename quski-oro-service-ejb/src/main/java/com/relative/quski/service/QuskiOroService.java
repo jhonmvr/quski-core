@@ -7762,7 +7762,7 @@ public class QuskiOroService {
 				}
 				
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, negociacion));
-				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion, null)  );
+				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() ), negociacion, null) ) );
 			}else {
 				novacion = this.buscarRenovacionNegociacion(idNego);				
 				log.info( "============> ACTUALIZANDO CREDITO <============");
@@ -7774,7 +7774,7 @@ public class QuskiOroService {
 				}
 				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
-				novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null)  );
+				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null) ) );
 			}
 			return novacion;
 		}catch(RelativeException e) {
