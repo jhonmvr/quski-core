@@ -1939,7 +1939,9 @@ public class QuskiOroService {
 		if(StringUtils.isBlank( cliente.getAprobacionMupi() ) ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE APROBACION MUPI DEL CLIENTE");
 		}
-		
+		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
+			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
+		}
 		return this.tipoOro(this.manageCliente(cliente));
 	}
 
@@ -6293,8 +6295,8 @@ public class QuskiOroService {
 			DetalleCreditoEnProcesoWrapper tmp = new DetalleCreditoEnProcesoWrapper( Boolean.FALSE );
 			tmp.setCredito( this.creditoNegociacionRepository.findCreditoByIdNegociacion( idNego ) );
 			tmp.setProceso( this.procesoRepository.findByIdCreditoNuevo( idNego ) );
-			if( tmp.getExisteError() ) {return tmp;}
 			tmp.setExcepciones( this.excepcionesRepository.findByIdNegociacion( idNego ) );
+			if( tmp.getExisteError() ) {return tmp;}
 			tmp.setRiesgos( this.riesgoAcumuladoRepository.findByIdNegociacion( idNego ) );
 			tmp.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion( idNego ) );
 			tmp.setJoyas( this.tasacionRepository.findByIdCredito( tmp.getCredito().getId() ) );
