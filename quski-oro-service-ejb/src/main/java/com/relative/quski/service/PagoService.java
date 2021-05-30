@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.olap4j.impl.ArrayMap;
 
 import com.google.gson.Gson;
@@ -81,7 +82,7 @@ public class PagoService {
 			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			for (RegistroPagoRenovacionWrapper e : wrapper.getPagos()) {
 				TbQoRegistrarPago pago = new TbQoRegistrarPago();
-				if(e.getComprobante() != null) {
+				if(e.getComprobante() != null && StringUtils.isNotEmpty(e.getComprobante().getFileBase64())) {
 					FileObjectStorage file = new FileObjectStorage();
 					file.setFileBase64(e.getComprobante().getFileBase64());
 					file.setName( e.getComprobante().getName() );
@@ -140,16 +141,21 @@ public class PagoService {
 			}
 			List<TbQoRegistrarPago> pagos = new ArrayList<>();
 			for (RegistroPagoRenovacionWrapper e : wrapper.getPagos()) {
-				FileObjectStorage file = new FileObjectStorage();
-				file.setFileBase64(e.getComprobante().getFileBase64());
-				file.setName( e.getComprobante().getName() );
-				file.setProcess(EstadoEnum.ACT);
-				RespuestaObjectWrapper objeto;
-				objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
-						parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-						parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );
+
 				TbQoRegistrarPago pago = new TbQoRegistrarPago();
-				pago.setIdComprobante(objeto.getEntidad());					
+				
+				if(e.getComprobante() != null && StringUtils.isNotBlank(e.getComprobante().getFileBase64())) {
+					FileObjectStorage file = new FileObjectStorage();
+					file.setFileBase64(e.getComprobante().getFileBase64());
+					file.setName( e.getComprobante().getName() );
+					file.setProcess(EstadoEnum.ACT);			
+					RespuestaObjectWrapper objeto;
+					objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+							parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );
+					pago.setIdComprobante(objeto.getEntidad());		
+				}
+							
 				pago.setCuentas(e.getCuenta());
 				pago.setFechaPago(e.getFechaPago());
 				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());
@@ -363,7 +369,7 @@ public class PagoService {
 						.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
 						.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
 					String[] para= {mailAprobador};
-					String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
+					String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.RECHAZADO.toString(); 
 					qos.mailNotificacion(para, asunto, textoContenido, null);
 				}	
 			return proceso;
