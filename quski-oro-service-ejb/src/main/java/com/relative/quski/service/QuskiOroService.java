@@ -4618,6 +4618,7 @@ public class QuskiOroService {
 				r.setValorAlDiaMasCuotaActual( e.getValorAlDiaMasCuotaActual() );
 				r.setValorCancelaPrestamo( e.getValorCancelaPrestamo() );
 				r.setValorProyectadoCuotaActual( e.getValorProyectadoCuotaActual() );
+				r.setValorTotalPrestamoVencimiento(e.getValorTotalPrestamoVencimiento());
 				list.add(r);
 			});
 			return list;
@@ -7774,6 +7775,7 @@ public class QuskiOroService {
 				}
 				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
+				this.riesgoAcumuladoRepository.deleteByIdNegociacion(idNego);
 				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() ), novacion.getCredito().getTbQoNegociacion(), null) ) );
 			}
 			return novacion;

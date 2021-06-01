@@ -114,6 +114,9 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@Column(name="numero_garantias_reales")
 	private BigDecimal numeroGarantiasReales;
 
+	@Column(name="valor_total_prestamo_vencimiento")
+	private BigDecimal valorTotalPrestamoVencimiento;
+
 	@Column(name="numero_operacion")
 	private String numeroOperacion;
 
@@ -497,6 +500,12 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	}
 	public void setTbQoCotizador(TbQoCotizador tbQoCotizador) {
 		this.tbQoCotizador = tbQoCotizador;
+	}
+	public BigDecimal getValorTotalPrestamoVencimiento() {
+		return valorTotalPrestamoVencimiento;
+	}
+	public void setValorTotalPrestamoVencimiento(BigDecimal valorTotalPrestamoVencimiento) {
+		this.valorTotalPrestamoVencimiento = valorTotalPrestamoVencimiento;
 	}
 
 }

@@ -24,6 +24,7 @@ public class SoftbankOperacionWrapper implements Serializable {
 	private BigDecimal valorAlDiaMasCuotaActual;
 	private BigDecimal valorCancelaPrestamo;
 	private BigDecimal valorProyectadoCuotaActual;
+	private BigDecimal valorTotalPrestamoVencimiento;
 	private BigDecimal diasMoraActual;
 	private BigDecimal numeroCuotasTotales;
 	private String nombreProducto;
@@ -259,6 +260,12 @@ public class SoftbankOperacionWrapper implements Serializable {
 	}
 	public void setCustodia(BigDecimal custodia) {
 		this.custodia = custodia;
+	}
+	public BigDecimal getValorTotalPrestamoVencimiento() {
+		return valorTotalPrestamoVencimiento;
+	}
+	public void setValorTotalPrestamoVencimiento(BigDecimal valorTotalPrestamoVencimiento) {
+		this.valorTotalPrestamoVencimiento = valorTotalPrestamoVencimiento;
 	}
 	
 	
