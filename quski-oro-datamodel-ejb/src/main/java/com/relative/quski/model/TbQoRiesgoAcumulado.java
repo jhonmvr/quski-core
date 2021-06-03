@@ -94,6 +94,9 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	@Column(name="id_softbank")
 	private Long idSoftbank;
 
+	@Column(name="interes")
+	private BigDecimal interes;
+	
 	@Column(name="interes_mora")
 	private BigDecimal interesMora;
 
@@ -507,5 +510,13 @@ public class TbQoRiesgoAcumulado implements Serializable {
 	public void setValorTotalPrestamoVencimiento(BigDecimal valorTotalPrestamoVencimiento) {
 		this.valorTotalPrestamoVencimiento = valorTotalPrestamoVencimiento;
 	}
+	public BigDecimal getInteres() {
+		return interes;
+	}
+	public void setInteres(BigDecimal interes) {
+		this.interes = interes;
+	}
+	
+	
 
 }

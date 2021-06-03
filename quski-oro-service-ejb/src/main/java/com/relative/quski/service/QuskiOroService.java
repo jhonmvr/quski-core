@@ -69,6 +69,7 @@ import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.CuentaBancariaRepository;
 import com.relative.quski.repository.DatoTrabajoClienteRepository;
 import com.relative.quski.repository.DetalleCreditoRepository;
+import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ExcepcionRolRepository;
@@ -232,6 +233,8 @@ public class QuskiOroService {
 	private DevolucionService ds;
 	@Inject
 	private ReportService rs;
+	@Inject
+	private DevolucionRepository devolucionRepository;
 	@Inject
 	PagoService ps;
 	/**
@@ -1468,6 +1471,37 @@ public class QuskiOroService {
 		}
 
 	}
+	
+	public TbQoDevolucion manageDevolucion(TbQoDevolucion send) throws RelativeException {
+		try {
+			TbQoDevolucion persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.devolucionRepository.findById(send.getId());
+				return this.updateDevolucion(send, persisted);
+			} else if (send != null && send.getId() == null) {
+				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT);
+				return this.devolucionRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+
+	}
+	
+	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion pesisted) throws RelativeException {
+		try {
+			pesisted.setAsesor(send.getAsesor());
+			return this.devolucionRepository.update(pesisted);
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 	public TbQoDatoTrabajoCliente manageDatoTrabajoCliente(TbQoDatoTrabajoCliente send) throws RelativeException {
 		try {
 			TbQoDatoTrabajoCliente persisted = null;
@@ -2558,7 +2592,7 @@ public class QuskiOroService {
 			trabajo.setTbQoCliente( cliente ) ;
 			trabajo.setNombreEmpresa( e.getNombreEmpresa() );
 			trabajo.setIdSoftbank( e.getId() ) ;
-			trabajo.setCargo( e.getCodigoCargo() ) ;
+			trabajo.setCargo(e.getCodigoCargo()) ;
 			trabajo.setNombreEmpresa( e.getNombreEmpresa() ) ;
 			trabajo.setEsRelacionDependencia( e.getEsRelacionDependencia() ) ;
 			trabajo.setEsprincipal( e.getEsPrincipal() ) ;
@@ -4619,6 +4653,7 @@ public class QuskiOroService {
 				r.setValorCancelaPrestamo( e.getValorCancelaPrestamo() );
 				r.setValorProyectadoCuotaActual( e.getValorProyectadoCuotaActual() );
 				r.setValorTotalPrestamoVencimiento(e.getValorTotalPrestamoVencimiento());
+				r.setInteres(e.getInteres());
 				list.add(r);
 			});
 			return list;
@@ -5008,10 +5043,11 @@ public class QuskiOroService {
 				sof.setContactosCliente( contactosCliente );
 			}
 			if(wp.getDatosTrabajos() != null) {
+				String codigoCargo = this.parametroRepository.findByNombre(QuskiOroConstantes.CARGO_DEFAULT).getValor();
 				List<SoftbankDatosTrabajoWrapper> datosTrabajo = new ArrayList<>();
 				wp.getDatosTrabajos().forEach( t ->{
 					SoftbankDatosTrabajoWrapper da = new SoftbankDatosTrabajoWrapper();
-					da.setCodigoCargo( t.getCargo() );
+					da.setCodigoCargo( StringUtils.isNotBlank(t.getCargo())?t.getCargo():codigoCargo );
 					da.setCodigoActividadEconomicaClienteMupi( t.getActividadEconomicaMupi() != null ?  t.getActividadEconomicaMupi() : QuskiOroConstantes.OTRAS_ACTIVIDADES );
 					da.setCodigoOcupacion( t.getOcupacion() );
 					da.setCodigoOrigenIngreso( t.getOrigenIngreso() );
@@ -7163,6 +7199,9 @@ public class QuskiOroService {
 	}
 	public Boolean reasignarOperacion(Long id, ProcesoEnum proceso, String usuario) throws RelativeException {
 		try {
+			if(StringUtils.isBlank(usuario)) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ASESOR");
+			}
 			if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
 				TbQoNegociacion persisted = this.findNegociacionById( id );
 				persisted.setAsesor( usuario );
@@ -7174,8 +7213,15 @@ public class QuskiOroService {
 							QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 				}
 			}
-			if(proceso == ProcesoEnum.DEVOLUCION) {}
-			if(proceso == ProcesoEnum.VERIFICACION_TELEFONICA) {}
+			if(proceso == ProcesoEnum.DEVOLUCION) {
+				TbQoDevolucion devolucion = this.devolucionRepository.findById(id);
+				devolucion.setAsesor(usuario);
+				this.manageDevolucion(devolucion);
+				return true;
+			}
+			if(proceso == ProcesoEnum.VERIFICACION_TELEFONICA) {
+				
+			}
 			
 			if(proceso == ProcesoEnum.PAGO) {
 				TbQoClientePago persisted = this.findClientePagoById( id );

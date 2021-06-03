@@ -404,6 +404,7 @@ public class QuskiOroConstantes {
 	public static final String TIEMPO_APROBACION = "TIEMPO_APROBACION";
 	
 	public static final String PARA_TWELVE = "PARA_TWELVE";
+	public static final String CARGO_DEFAULT = "CARGO_DEFAULT";
 
 	
 	
