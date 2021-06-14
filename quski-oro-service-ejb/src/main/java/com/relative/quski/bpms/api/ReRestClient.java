@@ -3,7 +3,6 @@ package com.relative.quski.bpms.api;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
@@ -43,8 +42,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
@@ -92,25 +89,54 @@ public class ReRestClient<T> {
 	}
 	
 	@SuppressWarnings("unused")
+	public static void main2( String[] args ) throws RelativeException {
+		/*
+		 * RestClientWrapper cw= new RestClientWrapper(); cw.setAcceptCharset( "utf-8"
+		 * ); cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_JSON );
+		 * //cw.setAuthorization("Basic a2llc2VydmVyOmtpZXNlcnZlcjEh");
+		 * cw.setConnectTimeout( 15000 ); cw.setTransform(false); //cw.setContent( "{}"
+		 * ); String content=""; cw.setContent( content );
+		 * cw.setContentType(RestClientWrapper.CONTENT_TYPE_JSON ); cw.setHeaders(null);
+		 * cw.setMethod( RestClientWrapper.METHOD_POST ); //cw.setMethod(
+		 * RestClientWrapper.METHOD_GET ); cw.setPassword(null); cw.setUser(null);
+		 * cw.setReadTimeout(15000); cw.setRequireLogin(Boolean.FALSE); //cw.setUrlStr(
+		 * "http://172.16.101.60:8280/kie-server/services/rest/server/containers/SINIESTRO-AGRICOLA_1.0.1/tasks/136?withInputData=true&withOutputData=true"
+		 * ); //cw.setUrlStr(
+		 * "http://172.16.101.60:8280/kie-server/services/rest/server/queries/tasks/instances/process/46"
+		 * ); //cw.setUrlStr(
+		 * "http://172.16.101.60:8280/kie-server/services/rest/server/containers/SINIESTRO-AGRICOLA_1.0.4/processes/SINIESTRO-AGRICOLA.modeloFuncionalSiniestroAgricola/instances"
+		 * ); cw.setUrlStr("http://10.37.10.58:8094/SoftbankAPI/api/catalogo/impcom");
+		 * //cw.setUrlStr(
+		 * "http://192.168.100.182:8780/kie-server/services/rest/server/queries/processes/instances/34/variables/instances"
+		 * ); ReRestClient<String> b= new ReRestClient<>( cw );
+		 */
+		
+		try {
+			//cw.setHeaders("Content-Type=application/json;charset=utf-8");
+			/*callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(conten), RestClientWrapper.METHOD_POST, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, "http://10.37.10.58:8094/SoftbankAPI/api/cliente/editar", String.class);*/
+	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	
 	public static void main( String[] args ) {
 		RestClientWrapper cw= new RestClientWrapper();
-		cw.setAcceptCharset( "utf-8" );
+		cw.setAcceptCharset( "UTF-8" );
 		cw.setAcceptHeader( RestClientWrapper.CONTENT_TYPE_JSON );
-		cw.setAuthorization("Basic a2llc2VydmVyOmtpZXNlcnZlcjEh");
+		//cw.setAuthorization("Basic a2llc2VydmVyOmtpZXNlcnZlcjEh");
 		cw.setConnectTimeout( 15000 );
-		cw.setTransform(false);
+		
 		//cw.setContent( "{}" );
-		String content="{\r\n" + 
-				"  \"montoContrato\": \"3500.00\",\r\n" + 
-				"  \"plazoContrato\": \"92\",\r\n" + 
-				"  \"porcentajeTasacion\":\"0.04\",\r\n" + 
-				"  \"procentajeTransporte\":\"0.02\",\r\n" + 
-				"  \"porcentajeGastoAdministrativo\":\"0.16\",\r\n" + 
-				"  \"porcentajeRevaloracion\":\"0.04\"\r\n" + 
-				"}";
+		String content = "{\"idTipoIdentificacion\":1,\"identificacion\":\"1708107352\",\"nombreCompleto\":\"CAÑAR BENAVIDES MARCELA  \",\"primerApellido\":\"CAÑAR\",\"segundoApellido\":\"BENAVIDES\",\"primerNombre\":\"MARCELA\",\"segundoNombre\":\"\",\"esCliente\":true,\"codigoMotivoVisita\":\"WEB\",\"fechaIngreso\":\"2021-06-14\",\"idAgencia\":13,\"idPaisNacimiento\":52,\"idPais\":52,\"idLugarNacimiento\":203,\"actividadEconomica\":{\"idActividadEconomica\":331},\"fechaNacimiento\":\"1972-03-05\",\"codigoSexo\":\"F\",\"codigoProfesion\":\"CIAE\",\"codigoEstadoCivil\":\"CAS\",\"codigoEducacion\":\"PRI\",\"numeroCargasFamiliares\":0,\"email\":\"marcelacevallos72@gmail.com\",\"codigoUsuario\":\"luis.gomez\",\"codigoUsuarioAsesor\":\"luis.gomez\",\"direcciones\":[{\"codigoTipoDireccion\":\"OFI\",\"codigoVivienda\":\"NAP\",\"codigoSectorVivienda\":\"NORTE\",\"idUbicacion\":1247,\"callePrincipal\":\"JORGE PEREZ\",\"calleSecundaria\":\"LOS CIRUELOS Y LAURELES\",\"numero\":\"N6626\",\"barrio\":\"PONCEANO\",\"referencia\":\"POCEANO CONJ BARCINO 3A\",\"esDireccionLegal\":false,\"esDireccionEnvio\":false,\"activo\":true},{\"codigoTipoDireccion\":\"DOM\",\"codigoVivienda\":\"FAM\",\"codigoSectorVivienda\":\"NORTE\",\"idUbicacion\":1247,\"callePrincipal\":\"CONJUNTO BARCINO 1\",\"calleSecundaria\":\"LOS CIRUELOS Y LAURELES\",\"numero\":\"CASA 32\",\"barrio\":\"PONCEANO\",\"referencia\":\"POCEANO CONJ BARCINO\",\"esDireccionLegal\":true,\"esDireccionEnvio\":true,\"activo\":true}],\"telefonos\":[{\"id\":144408,\"codigoTipoTelefono\":\"OFI\",\"numero\":\"022573188\",\"activo\":true},{\"id\":144412,\"codigoTipoTelefono\":\"CEL\",\"numero\":\"0987084697\",\"activo\":true},{\"id\":144418,\"codigoTipoTelefono\":\"DOM\",\"numero\":\"022483570\",\"activo\":true}],\"cuentasBancariasCliente\":[{\"id\":49352,\"idBanco\":239,\"cuenta\":\"420174944\",\"activo\":true,\"esAhorros\":true}],\"contactosCliente\":[{\"id\":104888,\"codigoTipoReferencia\":\"C10\",\"nombres\":\"CRISTINA CEVALLOS\",\"apellidos\":\"CRISTINA CEVALLOS\",\"direccion\":\"SAN JUAN\",\"telefonos\":[{\"codigoTipoTelefono\":\"CEL\",\"numero\":\"0998785214\"}],\"activo\":true},{\"id\":104890,\"codigoTipoReferencia\":\"C12\",\"nombres\":\"ALEXANDER CEVALLOS\",\"apellidos\":\"ALÑÑÑÑÑÑÑEXANDER CEVALLOS\",\"direccion\":\"LA RUMIÑÑÑÑÑÑAHUI\",\"telefonos\":[{\"codigoTipoTelefono\":\"CEL\",\"numero\":\"0984643104\"}],\"activo\":true}],\"datosTrabajoCliente\":[{\"id\":49358,\"idActividadEconomica\":335,\"codigoActividadEconomicaClienteMupi\":\"2889\",\"esRelacionDependencia\":true,\"codigoOrigenIngreso\":\"2\",\"codigoOcupacion\":\"604\",\"nombreEmpresa\":\"nombre\",\"codigoCargo\":\"C1135\",\"esPrincipal\":true,\"activo\":true}],\"activos\":411.94,\"pasivos\":0.00,\"ingresos\":1234.00,\"egresos\":1.00}";
+		//String content = "{}";
 		cw.setContent( content );
 		cw.setContentType(RestClientWrapper.CONTENT_TYPE_JSON  );
-		cw.setHeaders(null);
+		//cw.setHeaders("Content-Type=application/json;charset=utf-8");
 		cw.setMethod( RestClientWrapper.METHOD_POST );
 		//cw.setMethod( RestClientWrapper.METHOD_GET );
 		cw.setPassword(null);
@@ -119,29 +145,15 @@ public class ReRestClient<T> {
 		cw.setRequireLogin(Boolean.FALSE);
 		//cw.setUrlStr("http://172.16.101.60:8280/kie-server/services/rest/server/containers/SINIESTRO-AGRICOLA_1.0.1/tasks/136?withInputData=true&withOutputData=true");
 		//cw.setUrlStr("http://172.16.101.60:8280/kie-server/services/rest/server/queries/tasks/instances/process/46");
-		//cw.setUrlStr("http://172.16.101.60:8280/kie-server/services/rest/server/containers/SINIESTRO-AGRICOLA_1.0.4/processes/SINIESTRO-AGRICOLA.modeloFuncionalSiniestroAgricola/instances");
-		cw.setUrlStr("http://192.168.100.182:8780/kie-server/services/rest/server/containers/midas-oro-bre_1.0.10/processes/midas-oro-bre.bpm-midas-bre/instances");
-		//cw.setUrlStr("http://192.168.100.182:8780/kie-server/services/rest/server/queries/processes/instances/34/variables/instances");
+		cw.setUrlStr("http://10.37.10.58:8094/SoftbankAPI/api/cliente/editar");
 		ReRestClient<String> b= new ReRestClient<>( cw );
 		try {
 			 Map<String, Object> retorno=b.execute(String.class);
-			 System.out.println("retorno: " + retorno.get("resultado") );
-			 Gson gson = new Gson();
-			 Type empMapType = new TypeToken<Map<String, Object>>() {}.getType();
-			 Map<String, Long> variables = gson.fromJson(String.valueOf(retorno.get("resultado")), empMapType);
-			 //System.out.println("===>datos has " +variables);
-			 /*System.out.println("===>datos has variable " +variables.get("variable-instance")); 
-			 System.out.println("===>datos has variable " +variables.get("variable-instance").getClass().getName());
-			 List<Map<String, Object>> ls=(List<Map<String, Object>>)variables.get("variable-instance");
-			 if( ls != null ) {
-				 for( Map<String, Object> x:ls ) {
-					 System.out.println("===>datos has variable iterando " +x); 
-				 }
-			 }*/
+			 System.out.println("retorno: " + retorno );
 			 /*TaskSummaryWrapper r=(TaskSummaryWrapper)retorno.get("resultado");
 			 System.out.println("===>sumary " + r.getTaskSummary());
 			 System.out.println("===>sumary " + r.getTaskSummary().get(0).getTaskId());*/
-		} catch (RelativeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} 
 	}
@@ -353,7 +365,22 @@ public class ReRestClient<T> {
 						"Cannot set body for REST request [" + builder.getMethod() + "] " + builder.getUri(), e);
 			}
 		}
-	}
+	}/*
+	private void setBody(RequestBuilder builder) {
+		// backwards compat to "Content" parameter
+		if (this.cw.getContent() != null && !this.cw.getContent().isEmpty()) {
+			try {
+				String content = this.cw.getContent();
+			
+				StringEntity entity = new StringEntity((String) content, this.cw.getAcceptCharset());
+				builder.setEntity(entity);
+			} catch (UnsupportedCharsetException e) {
+				throw new RuntimeException(
+						"Cannot set body for REST request [" + builder.getMethod() + "] " + builder.getUri(), e);
+			}
+		}
+	}*/
+
 
 	private String transformRequest(Object data, String contentType) {
 		try {
@@ -440,7 +467,7 @@ public class ReRestClient<T> {
 	}
 
 	private void postProcessResult(String result, Class<T> classType, String contentType, Map<String, Object> results) {
-		if( cw.getTransform() ) {
+		if( cw.getTransform() !=null && cw.getTransform() ) {
 			if ( result !=null && !StringUtils.isEmpty(result)) {
 				try {
 					Object resultObject = transformResult(classType, contentType, result);

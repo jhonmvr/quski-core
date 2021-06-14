@@ -92,6 +92,7 @@ import com.relative.quski.util.EmailUtil;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AbonoWrapper;
+import com.relative.quski.wrapper.ActualizarGaratiaWrapper;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.AprobarWrapper;
@@ -135,6 +136,7 @@ import com.relative.quski.wrapper.FileObjectStorage;
 import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.GaranteWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
+import com.relative.quski.wrapper.GaratiaAvaluoWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
@@ -5054,7 +5056,10 @@ public class QuskiOroService {
 					da.setNombreEmpresa( t.getNombreEmpresa() );
 					da.setEsRelacionDependencia( t.getEsRelacionDependencia() );
 					da.setEsPrincipal( t.getEsprincipal() );
-					da.setIdActividadEconomica( t.getActividadEconomica() != null ? t.getActividadEconomica() : Long.valueOf(QuskiOroConstantes.ACTIVIDADES_NO_ECONOMICAS) );
+					da.setIdActividadEconomica( t.getActividadEconomica() != null ? t.getActividadEconomica() : 
+						//Long.valueOf(QuskiOroConstantes.ACTIVIDADES_NO_ECONOMICAS) 
+						null
+						);
 					da.setActivo( t.getEstado() == EstadoEnum.ACT );
 					da.setId( t.getIdSoftbank() );
 					datosTrabajo.add( da );					
@@ -6795,6 +6800,7 @@ public class QuskiOroService {
 			String saldoMora = this.parametroRepository.findByNombre(QuskiOroConstantes.SALDO_MORA).getValor();
 			String gastoCobranza = this.parametroRepository.findByNombre(QuskiOroConstantes.GASTO_COBRANZA).getValor();
 			String custodiaDevengada = this.parametroRepository.findByNombre(QuskiOroConstantes.CUSTODIA_DEVENGADA).getValor();
+			String impuestoSolca = this.parametroRepository.findByNombre(QuskiOroConstantes.IMPUESTO_SOLCA).getValor();
 
 			listCatalogo.forEach(e->{
 				DatosImpComWrapper item = new DatosImpComWrapper();
@@ -6862,6 +6868,12 @@ public class QuskiOroService {
 					item.setCodigo( e.getCodigo() );
 					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodiaDevengada() );
 					item.setValor( credito.getCustodiaDevengada() );
+					listImpCom.add( item );
+				}
+				if( e.getCodigo().equals(impuestoSolca) && credito.getImpuestoSolca().compareTo( new BigDecimal( 0 ) )> 0){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoImpuestoSolca() );
+					item.setValor( credito.getImpuestoSolca() );
 					listImpCom.add( item );
 				}
 			});
@@ -7773,6 +7785,17 @@ public class QuskiOroService {
 			return ApiGatewayClient.callConsultarClienteEquifaxRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_PERSONA).getValor(),
 					token.getToken_type()+" "+token.getAccess_token(), content);
 	}
+	
+	
+	private void actualizarGarantiasSoftBank(List<Garantia> garantias, String numeroOperacionMadre, String asesor) throws RelativeException, Exception {
+		if(garantias != null && !garantias.isEmpty()) {
+			ActualizarGaratiaWrapper wr = new ActualizarGaratiaWrapper();
+			List<GaratiaAvaluoWrapper> avaluo = new ArrayList<>();
+			SoftBankApiClient.upDateGarantia(wr, "");
+			
+		}
+		
+	}
 	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego, String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas) throws RelativeException {
 		try {
 			
@@ -7805,6 +7828,7 @@ public class QuskiOroService {
 				novacion.setCredito( credito );
 				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
 				if( garantias != null ) {
+					actualizarGarantiasSoftBank(garantias,credito.getNumeroOperacionMadre(),asesor);
 					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito) );					
 				}
 				

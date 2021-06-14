@@ -224,7 +224,7 @@ public class QuskiOroConstantes {
 	public static final String PARAM_BPM_BUSINESS_PROCESS = "RE044";
 	public static final String PARAM_BPM_BUSINESS_PROCESS_APROBACION = "RE045";
 	
-	public static final  String  BPMS_REST_DEFAULT_CHARSET = "utf-8";
+	public static final  String  BPMS_REST_DEFAULT_CHARSET = "UTF-8";
 	public static final  Integer  BPMS_REST_TIMEOUT_DEFAULT = 60000;
 	public static final  String  BPMS_DEFAULT_USER = "agente";
 	
@@ -285,7 +285,8 @@ public class QuskiOroConstantes {
 	public static final String SALDO_MORA          = "SALDO_MORA" ;
 	public static final String GASTO_COBRANZA      = "GASTO_COBRANZA" ;
 	public static final String CUSTODIA_DEVENGADA  = "CUSTODIA_DEVENGADA" ;
-
+	public static final String IMPUESTO_SOLCA  	   = "IMPUESTO_SOLCA" ;
+	
 	// SOFTBANK
 	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
 	

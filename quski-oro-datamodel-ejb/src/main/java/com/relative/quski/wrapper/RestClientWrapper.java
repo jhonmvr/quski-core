@@ -10,7 +10,7 @@ public class RestClientWrapper implements Serializable {
 	private static final long serialVersionUID = -1500587640218947392L;
 	public static final String PREFIX_BASIC="Basic ";
 	public static final String PREFIX_BEARER="Bearer ";
-	public static final String CONTENT_TYPE_JSON="application/json";
+	public static final String CONTENT_TYPE_JSON="application/json; charset=utf-8";
 	public static final String CONTENT_TYPE_XML="application/xml";
 	public static final String CONTENT_TYPE_TEXT_XML="text/xml";
 	public static final String CONTENT_TYPE_X_WWW_FORM="application/x-www-form-urlencoded";
