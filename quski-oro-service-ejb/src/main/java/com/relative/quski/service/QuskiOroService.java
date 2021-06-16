@@ -5498,7 +5498,7 @@ public class QuskiOroService {
 			if( joyas == null || joyas.isEmpty()) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORACION DE LAS GARANTIAS");
 			}
-			if ( montoSolicitado != null) {
+			if ( montoSolicitado != null && !montoSolicitado.equals(BigDecimal.ZERO) ) {
 				this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_RIESGO", credito.getTbQoNegociacion().getId());
 				this.excepcionesRepository.inactivarExcepcionByTipoExcepcionAndIdNegociacion("EXCEPCION_COBERTURA", credito.getTbQoNegociacion().getId());
 			}
