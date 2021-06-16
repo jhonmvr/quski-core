@@ -7786,13 +7786,41 @@ public class QuskiOroService {
 					token.getToken_type()+" "+token.getAccess_token(), content);
 	}
 	
-	
-	private void actualizarGarantiasSoftBank(List<Garantia> garantias, String numeroOperacionMadre, String asesor) throws RelativeException, Exception {
-		if(garantias != null && !garantias.isEmpty()) {
-			ActualizarGaratiaWrapper wr = new ActualizarGaratiaWrapper();
-			List<GaratiaAvaluoWrapper> avaluo = new ArrayList<>();
-			SoftBankApiClient.upDateGarantia(wr, "");
-			
+	/**
+	 * ACTUALIZA LAS GARANTIAS EN SOFBANK
+	 * @param tasacion
+	 * @param numeroOperacionMadre
+	 * @param asesor
+	 * @throws RelativeException
+	 */
+	private void actualizarGarantiasSoftBank(List<TbQoTasacion> tasacion, String numeroOperacionMadre, String asesor) throws RelativeException {
+		try {
+			if(tasacion != null && !tasacion.isEmpty()) {
+				ActualizarGaratiaWrapper wr = new ActualizarGaratiaWrapper();
+				wr.setCodigoUsuario(asesor);
+				wr.setFechaAvaluo(QuskiOroUtil.dateToString(new Date(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+				wr.setNumeroOperacionMadre(numeroOperacionMadre);
+				List<GaratiaAvaluoWrapper> avaluo = new ArrayList<>();
+				for(TbQoTasacion g : tasacion) {
+					GaratiaAvaluoWrapper garantia = new GaratiaAvaluoWrapper();
+					garantia.setFechaAvaluo(QuskiOroUtil.dateToString(new Date(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+					garantia.setNumeroExpediente(g.getNumeroExpediente());
+					garantia.setNumeroGarantia(g.getNumeroGarantia());
+					garantia.setValorAvaluo(g.getValorAvaluo());
+					garantia.setValorComercial(g.getValorComercial());
+					garantia.setValorOro(g.getValorOro());
+					garantia.setValorRealizacion(g.getValorRealizacion());
+					avaluo.add(garantia);
+				}
+				wr.setGarantiaAvaluo(avaluo);
+				SoftBankApiClient.upDateGarantia(wr, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_ACTUALIZAR_GARANTIA).getValor());
+				
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL EDITAR GARANTIAS EN SOFTBANK | "+ e.getMessage());
 		}
 		
 	}
@@ -7828,8 +7856,10 @@ public class QuskiOroService {
 				novacion.setCredito( credito );
 				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
 				if( garantias != null ) {
-					actualizarGarantiasSoftBank(garantias,credito.getNumeroOperacionMadre(),asesor);
-					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito) );					
+					List<TbQoTasacion> tasacion =  this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito);
+
+					actualizarGarantiasSoftBank(tasacion,credito.getNumeroOperacionMadre(),asesor);
+					novacion.setTasacion(tasacion);					
 				}
 				
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, negociacion));
@@ -7841,7 +7871,9 @@ public class QuskiOroService {
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
 				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId())));
 				if( garantias != null ) {
-					novacion.setTasacion( this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ) );
+					List<TbQoTasacion> tasacion = this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ); 
+					actualizarGarantiasSoftBank(tasacion,novacion.getCredito().getNumeroOperacionMadre(),asesor);
+					novacion.setTasacion( tasacion);
 				}
 				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
 				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
