@@ -83,9 +83,10 @@ public class CalculadoraRestController extends BaseRestController
 		if(StringUtils.isBlank(idCredito)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO");
 		}
-		SimularResponse a = this.qos.simularOfertasCalculadora(Long.valueOf(idCredito), StringUtils.isNotBlank(montoSolicitado)?
-				BigDecimal.valueOf(Double.valueOf(montoSolicitado)):BigDecimal.ZERO,
-				StringUtils.isNotBlank(riesgoTotal)?BigDecimal.valueOf(Double.valueOf(riesgoTotal)):BigDecimal.ZERO, codigoAgencia);
+		SimularResponse a = this.qos.simularOfertasCalculadora(Long.valueOf(idCredito), 
+				StringUtils.isNotBlank(montoSolicitado) ? BigDecimal.valueOf(Double.valueOf(montoSolicitado)) : BigDecimal.ZERO,
+				StringUtils.isNotBlank(riesgoTotal) ? BigDecimal.valueOf(Double.valueOf(riesgoTotal)) : BigDecimal.ZERO, 
+						codigoAgencia);
 		loc.setEntidad(a);
 		return loc;
 	}
