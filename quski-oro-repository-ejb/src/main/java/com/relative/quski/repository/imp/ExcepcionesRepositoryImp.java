@@ -251,5 +251,4 @@ public class ExcepcionesRepositoryImp extends GeneralRepositoryImp<Long, TbQoExc
 		}
 		
 	}
-
 }

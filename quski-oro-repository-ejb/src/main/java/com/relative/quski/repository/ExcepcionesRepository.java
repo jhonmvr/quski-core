@@ -41,6 +41,5 @@ public interface ExcepcionesRepository extends CrudRepository<Long, TbQoExcepcio
 
 	public void inactivarExcepcionByTipoExcepcionAndIdNegociacion(String tipoExcepcion, Long idNegociacion)throws RelativeException ;
 
-
 	
 }
