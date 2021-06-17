@@ -343,7 +343,7 @@ public class QuskiOroConstantes {
 	public static final String CATALOGO_CARGO = "URL_SOFTBANK_CATALOGO_CARGO";
 	public static final String CATALOGO_ORIGEN_INGRESOS = "URL_SOFTBANK_CATALOGO_ORIGEN_INGRESOS";
 	public static final String SOFTBANK_PROCESAR_BLOQUEO = "SOFTBANK_PROCESAR_BLOQUEO";
-	
+	public static final String SOFTBANK_ACTUALIZAR_GARANTIA = "SOFTBANK_ACTUALIZAR_GARANTIA";
 	
 	
 	

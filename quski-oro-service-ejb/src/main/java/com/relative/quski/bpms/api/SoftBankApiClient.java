@@ -476,7 +476,7 @@ public class SoftBankApiClient {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(garantias);
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
-			log.info("=========> WRAPPER EDITAR CLIENTE ========> " + jsonString);
+			log.info("=========> WRAPPER EDITAR GARANTIA ========> " + jsonString);
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
