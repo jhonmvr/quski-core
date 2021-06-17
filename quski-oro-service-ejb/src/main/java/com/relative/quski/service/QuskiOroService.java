@@ -7857,8 +7857,7 @@ public class QuskiOroService {
 				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
 				if( garantias != null ) {
 					List<TbQoTasacion> tasacion =  this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito);
-
-					actualizarGarantiasSoftBank(tasacion,credito.getNumeroOperacionMadre(),asesor);
+					actualizarGarantiasSoftBank( tasacion, credito.getNumeroOperacionMadre(),asesor);
 					novacion.setTasacion(tasacion);					
 				}
 				
@@ -7914,8 +7913,13 @@ public class QuskiOroService {
 						( 
 							s.getPesoBruto().setScale(1, RoundingMode.DOWN).compareTo( BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.DOWN) ) == 0 ||
 							s.getPesoBruto().setScale(1, RoundingMode.UP).compareTo( BigDecimal.valueOf( e.getPesoGr() ).setScale(1, RoundingMode.UP) ) == 0
+						)&&
+						( 
+							s.getPesoNeto().setScale(1, RoundingMode.DOWN).compareTo( BigDecimal.valueOf( e.getPesoNeto() ).setScale(1, RoundingMode.DOWN) ) == 0 ||
+							s.getPesoNeto().setScale(1, RoundingMode.UP).compareTo( BigDecimal.valueOf( e.getPesoNeto() ).setScale(1, RoundingMode.UP) ) == 0
 						)
 				) {
+					log.info( "============> CREANDO JOYA <============" );
 					TbQoTasacion tasacion = new TbQoTasacion();
 					tasacion.setNumeroGarantia( s.getNumeroGarantia() );
 					tasacion.setNumeroExpediente( s.getNumeroExpediente() );
@@ -7923,8 +7927,6 @@ public class QuskiOroService {
 					tasacion.setSubTipoGarantia( s.getCodigoSubTipoGarantia() );
 					tasacion.setEstado(EstadoEnum.ACT );
 					tasacion.setDescripcion( s.getDescripcionJoya() );
-					log.info( "============> CREANDO JOYA <============");
-					log.info( "============> DESCRIPCION JOYA <============> "+ tasacion.getDescripcion());
 					tasacion.setDescuentoPesoPiedra( BigDecimal.valueOf( e.getDescuentoPesoPiedras() ) );
 					tasacion.setDescuentoSuelda( BigDecimal.valueOf(e.getDescuentoSuelda()) );
 					tasacion.setEstadoJoya( e.getEstadoJoya() );
