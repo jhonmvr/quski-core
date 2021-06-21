@@ -1896,12 +1896,12 @@ public class QuskiOroService {
 					.replace("--descripcion--","BUEN ESTADO")
 					.replace("--estado-joya--", "BUE")
 					.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-					.replace("--peso-gr--", joya.getPesoBruto().toString())
+					.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 					.replace("--tiene-piedras--", "s")
 					.replace("--detalle-piedras--", "PIEDRAS")
 					.replace("--descuento-peso-piedras--","0.73")
-					.replace("--peso-neto--", joya.getPesoNeto().toString())
-					.replace("--precio-oro--", joya.getValorOro().toString())
+					.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+					.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
 					.replace("--valor-aplicable-credito--", "293.02")
 					.replace("--valor-realizacion--", "232.07")
 					.replace("--numero-piezas--", "1")
@@ -5278,16 +5278,16 @@ public class QuskiOroService {
 					.replace("--descripcion--",joya.getDescripcion())
 					.replace("--estado-joya--", joya.getEstadoJoya())
 					.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-					.replace("--peso-gr--", joya.getPesoBruto().toString())
+					.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 					.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 					.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ?joya.getDescuentoPesoPiedra().toString():"0")
-					.replace("--peso-neto--", joya.getPesoNeto().toString())
-					.replace("--precio-oro--", joya.getValorOro().toString())
+					.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ? QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ):"0.00")
+					.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+					.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
 					.replace("--valor-aplicable-credito--", "293.02")
 					.replace("--valor-realizacion--", "232.07")
 					.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-					.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+					.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 				log.info("==============>>>>> XML garantia");
 			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
 			contentXMLcalculadora = contentXMLcalculadora
@@ -5363,16 +5363,16 @@ public class QuskiOroService {
 						.replace("--descripcion--",joya.getDescripcion())
 						.replace("--estado-joya--", joya.getEstadoJoya())
 						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-						.replace("--peso-gr--", joya.getPesoBruto().toString())
+						.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-						.replace("--peso-neto--", joya.getPesoNeto().toString())
-						.replace("--precio-oro--", joya.getValorOro().toString())
-						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+						.replace("--descuento-peso-piedras--", QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ))
+						.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+						.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
+						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
+						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5510,16 +5510,16 @@ public class QuskiOroService {
 						.replace("--descripcion--",joya.getDescripcion())
 						.replace("--estado-joya--", joya.getEstadoJoya())
 						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-						.replace("--peso-gr--", joya.getPesoBruto() != null ? joya.getPesoBruto().toString(): "0")
+						.replace("--peso-gr--", joya.getPesoBruto() != null ? QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ): "0")
 						.replace("--tiene-piedras--", joya.getTienePiedras() ? "S":"N")
 						.replace("--detalle-piedras--", joya.getTienePiedras() ? joya.getDetallePiedras():" ")
-						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ? joya.getDescuentoPesoPiedra().toString(): "0")
-						.replace("--peso-neto--", joya.getPesoNeto() != null ? joya.getPesoNeto().toString(): "0")
-						.replace("--precio-oro--", joya.getValorOro() != null ? joya.getValorOro().toString(): "0")
-						.replace("--valor-aplicable-credito--", joya.getValorComercial() != null ?joya.getValorComercial().toString(): "0")
-						.replace("--valor-realizacion--", joya.getValorRealizacion() != null ? joya.getValorRealizacion().toString(): "0")
-						.replace("--numero-piezas--", joya.getNumeroPiezas() != null ? joya.getNumeroPiezas().toString():"0")
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda() != null ? joya.getDescuentoSuelda().toString(): "0");
+						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra() != null ? QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ): "0.00")
+						.replace("--peso-neto--", joya.getPesoNeto() != null ? QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ): "0")
+						.replace("--precio-oro--", joya.getValorOro() != null ? QuskiOroUtil.formatoDecimal( joya.getValorOro() ): "0")
+						.replace("--valor-aplicable-credito--", joya.getValorComercial() != null ?QuskiOroUtil.formatoDecimal( joya.getValorComercial() ): "0.00")
+						.replace("--valor-realizacion--", joya.getValorRealizacion() != null ? QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ): "0.00")
+						.replace("--numero-piezas--", joya.getNumeroPiezas() != null ?joya.getNumeroPiezas().toString():"0")
+						.replace("--descuento-suelda--", joya.getDescuentoSuelda() != null ? QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ): "0.00");
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5530,7 +5530,7 @@ public class QuskiOroService {
 					.replace("--riesgo-total--", riesgoTotal.toString())
 					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 					.replace("--perfil-preferencia--", "A") //donde saco el tipo
-					.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
+					.replace("--agencia-originacion--", codigoAgencia)
 					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
 					.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(credito.getCobertura())?credito.getCobertura():"0" )
@@ -5613,16 +5613,16 @@ public class QuskiOroService {
 							.replace("--descripcion--",joya.getDescripcionJoya())
 							.replace("--estado-joya--", joya.getCodigoEstadoJoya())
 							.replace("--tipo-oro-quilataje--", joya.getCodigoTipoOro())
-							.replace("--peso-gr--", joya.getPesoBruto().toString())
+							.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto()))
 							.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 							.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-							.replace("--descuento-peso-piedras--", joya.getDescuentoPiedras().toString())
-							.replace("--peso-neto--", joya.getPesoNeto().toString())
-							.replace("--precio-oro--", joya.getValorOro().toString())
-							.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-							.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+							.replace("--descuento-peso-piedras--", QuskiOroUtil.formatoDecimal( joya.getDescuentoPiedras()))
+							.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+							.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
+							.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
+							.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 							.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-							.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+							.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 					XMLGarantias.append(x);
 				}
 				log.info("==============>>>>> XML garantia");
@@ -5633,7 +5633,7 @@ public class QuskiOroService {
 						.replace("--riesgo-total--", riesgoTotal.toString())
 						.replace("--fecha-nacimiento--", creditoSoft.getCliente().getFechaNacimiento())
 						.replace("--perfil-preferencia--", "A") 
-						.replace("--agencia-originacion--", StringUtils.isBlank(codigoAgencia)?"01":codigoAgencia)
+						.replace("--agencia-originacion--", codigoAgencia)
 						.replace("--identificacion-cliente--",creditoSoft.getCliente().getIdentificacion())
 						.replace("--calificacion-mupi--", "N")//consultar que pasa con la aprobacion de mupi
 						.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(coberturaExcepcionada)?coberturaExcepcionada:"0" )
@@ -5690,16 +5690,16 @@ public class QuskiOroService {
 							.replace("--descripcion--",joya.getDescripcion())
 							.replace("--estado-joya--", joya.getEstadoJoya())
 							.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-							.replace("--peso-gr--", joya.getPesoBruto().toString())
+							.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 							.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 							.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-							.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-							.replace("--peso-neto--", joya.getPesoNeto().toString())
-							.replace("--precio-oro--", joya.getValorOro().toString())
-							.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-							.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+							.replace("--descuento-peso-piedras--", QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ))
+							.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+							.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
+							.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
+							.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 							.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-							.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+							.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 					XMLGarantias.append(x);
 				}
 				log.info("==============>>>>> XML garantia");
@@ -5749,7 +5749,7 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR WS CALCULADORA Y AGREGAR LA GARANTIA");
 			}
 		}
-	public List<OpcionWrapper> simularOfertaExcepcionada(Long idCredito, Long cobertura, Long idAgencia) throws Exception {				
+	public List<OpcionWrapper> simularOfertaExcepcionada(Long idCredito, Long cobertura, Long idAgencia, String codigoAgencia) throws Exception {				
 		try {
 			TbQoCreditoNegociacion credito = creditoNegociacionRepository.findById(idCredito);
 			List<TbQoTasacion> joyas = this.tasacionRepository.findByIdCredito(idCredito);
@@ -5764,16 +5764,16 @@ public class QuskiOroService {
 						.replace("--descripcion--",joya.getDescripcion())
 						.replace("--estado-joya--", joya.getEstadoJoya())
 						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-						.replace("--peso-gr--", joya.getPesoBruto().toString())
+						.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-						.replace("--peso-neto--", joya.getPesoNeto().toString())
-						.replace("--precio-oro--", joya.getValorOro().toString())
-						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+						.replace("--descuento-peso-piedras--", QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ))
+						.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+						.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
+						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
+						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 				XMLGarantias.append(x);
 			}
 				log.info("==============>>>>> XML garantia");
@@ -5784,7 +5784,7 @@ public class QuskiOroService {
 						.replace("--riesgo-total--", "0.00")
 						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 						.replace("--perfil-preferencia--", "A") //donde saco el tipo
-						.replace("--agencia-originacion--", idAgencia == null ? "01" : idAgencia.toString())
+						.replace("--agencia-originacion--", codigoAgencia)
 						.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 						.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
 						.replace("--cobertura-exepcionada--", cobertura.toString())//de donde saco esto
@@ -5812,7 +5812,7 @@ public class QuskiOroService {
 				throw e;
 			}			
 	}
-	public List<OpcionWrapper> simularOfertaExcepcionadaRenovacion(Long idCredito, String cobertura) throws Exception {				
+	public List<OpcionWrapper> simularOfertaExcepcionadaRenovacion(Long idCredito, String cobertura, String codigoAgencia) throws Exception {				
 		try {
 			TbQoCreditoNegociacion credito = this.findCreditoNegociacionById(idCredito);
 			if( credito == null ) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DEL CREDITO");}
@@ -5828,16 +5828,16 @@ public class QuskiOroService {
 						.replace("--descripcion--",joya.getDescripcion())
 						.replace("--estado-joya--", joya.getEstadoJoya())
 						.replace("--tipo-oro-quilataje--", joya.getTipoOro())
-						.replace("--peso-gr--", joya.getPesoBruto().toString())
+						.replace("--peso-gr--", QuskiOroUtil.formatoDecimal( joya.getPesoBruto() ))
 						.replace("--tiene-piedras--", joya.getTienePiedras()?"S":"N")
 						.replace("--detalle-piedras--", joya.getTienePiedras()?joya.getDetallePiedras():" ")
-						.replace("--descuento-peso-piedras--", joya.getDescuentoPesoPiedra().toString())
-						.replace("--peso-neto--", joya.getPesoNeto().toString())
-						.replace("--precio-oro--", joya.getValorOro().toString())
-						.replace("--valor-aplicable-credito--", joya.getValorComercial().toString())
-						.replace("--valor-realizacion--", joya.getValorRealizacion().toString())
+						.replace("--descuento-peso-piedras--", QuskiOroUtil.formatoDecimal( joya.getDescuentoPesoPiedra() ))
+						.replace("--peso-neto--", QuskiOroUtil.formatoDecimal( joya.getPesoNeto() ))
+						.replace("--precio-oro--", QuskiOroUtil.formatoDecimal( joya.getValorOro() ))
+						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
+						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda().toString());
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5848,7 +5848,7 @@ public class QuskiOroService {
 					.replace("--riesgo-total--", "0.00")
 					.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 					.replace("--perfil-preferencia--", "A") 
-					.replace("--agencia-originacion--", credito.getIdAgencia() != null ? credito.getIdAgencia().toString() : "1" )
+					.replace("--agencia-originacion--", codigoAgencia)
 					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 					.replace("--calificacion-mupi--", "N")//consultar que pasa con la aprobacion de mupi
 					.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(cobertura)?cobertura:"0" )

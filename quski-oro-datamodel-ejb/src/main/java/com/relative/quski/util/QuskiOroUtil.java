@@ -5,8 +5,10 @@ import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -642,5 +644,32 @@ public class QuskiOroUtil {
 //				  kcontext.setVariable("siniestro",siniestro);
 //				}
 //		    }
+
+	/**
+	 * FORMATEA LOS NUMERO A ##.## DOS DECIMALES SI EL NUMERO ES NULO DEVUELVE 0.00
+	 * @param bd
+	 * @return String
+	 * @throws RelativeException
+	 */
+	public static CharSequence formatoDecimal(BigDecimal bd) throws RelativeException {
+		try {
+			if(bd == null) {
+				return "0.00";
+			}
+			bd = bd.setScale(2, BigDecimal.ROUND_DOWN);
+
+			DecimalFormat df = new DecimalFormat();
+
+			df.setMaximumFractionDigits(2);
+
+			df.setMinimumFractionDigits(2);
+
+			df.setGroupingUsed(false);
+
+			return df.format(bd);
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.NUMBER_AS_STRING_FORMAT,"NO SE PUDO CONVERTIR: "+bd);
+		}
+	}
 
 }

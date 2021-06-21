@@ -118,17 +118,19 @@ public class CalculadoraRestController extends BaseRestController
 	
 	@GET
 	@Path("/simularOfertaExcepcionada")
-	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionada(@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura, @QueryParam("idAgencia") String idAgencia) throws NumberFormatException, Exception {
+	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionada(@QueryParam("codigoAgencia") String codigoAgencia,
+			@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura, @QueryParam("idAgencia") String idAgencia) throws NumberFormatException, Exception {
 		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
-		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionada(Long.valueOf( idCredito ), Long.valueOf( cobertura ), Long.valueOf( idAgencia ));
+		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionada(Long.valueOf( idCredito ), Long.valueOf( cobertura ), Long.valueOf( idAgencia ), codigoAgencia);
 		loc.setEntidades( as );
 		return loc;
 	}	
 	@GET
 	@Path("/simularOfertaExcepcionadaRenovacion")
-	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura) throws NumberFormatException, Exception {
+	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("codigoAgencia") String codigoAgencia,
+			@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura) throws NumberFormatException, Exception {
 		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
-		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionadaRenovacion(Long.valueOf( idCredito ), cobertura );
+		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionadaRenovacion(Long.valueOf( idCredito ), cobertura,codigoAgencia );
 		loc.setEntidades( as );
 		return loc;
 	}
