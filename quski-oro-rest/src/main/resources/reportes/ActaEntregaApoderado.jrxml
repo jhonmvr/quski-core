@@ -120,7 +120,7 @@
 				<textFieldExpression><![CDATA["Para constancia de lo actuado firman las partes en unidad de acto," +$P{BEAN_DS}.getCiudad() +", "+ $P{BEAN_DS}.getFechaDevolucion()]]></textFieldExpression>
 			</textField>
 			<frame>
-				<reportElement positionType="Float" x="0" y="327" width="510" height="130" uuid="d4c9ddea-d359-4118-940a-3d5f57ccb9de"/>
+				<reportElement positionType="Float" x="0" y="300" width="510" height="180" uuid="d4c9ddea-d359-4118-940a-3d5f57ccb9de"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -135,14 +135,14 @@
 					<text><![CDATA[Recibo conforme:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="30" width="230" height="20" uuid="46c7f39f-c488-47aa-ad17-e0924de2ff0d"/>
+					<reportElement positionType="Float" x="0" y="67" width="230" height="20" uuid="46c7f39f-c488-47aa-ad17-e0924de2ff0d"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["SR.(A) " +$P{BEAN_DS}.getNombreApoderado()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="1" y="61" width="229" height="20" uuid="49955c4f-7456-4476-a74d-3b9fb511cea7"/>
+					<reportElement positionType="Float" x="1" y="98" width="229" height="20" uuid="49955c4f-7456-4476-a74d-3b9fb511cea7"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
@@ -156,7 +156,7 @@
 					<text><![CDATA[ Entrega Por : (Quski C.A. )]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="80" width="210" height="20" uuid="5bd7fafc-ed99-405e-b13f-b6574a2cbcbe"/>
+					<reportElement x="0" y="117" width="210" height="20" uuid="5bd7fafc-ed99-405e-b13f-b6574a2cbcbe"/>
 					<textElement>
 						<font fontName="Arial" isBold="false"/>
 					</textElement>
@@ -164,28 +164,28 @@
 ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="110" width="230" height="20" uuid="7f5b7131-dcbd-4d60-ad5b-2dea02d183c3"/>
+					<reportElement positionType="Float" x="0" y="147" width="230" height="20" uuid="7f5b7131-dcbd-4d60-ad5b-2dea02d183c3"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCompletoCliente()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="289" y="30" width="53" height="20" uuid="2ab834ad-534d-45c1-8519-119351046efb"/>
+					<reportElement x="289" y="68" width="53" height="20" uuid="2ab834ad-534d-45c1-8519-119351046efb"/>
 					<textElement>
 						<font fontName="Arial" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ASESOR:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="343" y="30" width="166" height="20" uuid="a768ad8f-455a-4d1d-9438-3a7f2b5e48e6"/>
+					<reportElement x="343" y="68" width="166" height="20" uuid="a768ad8f-455a-4d1d-9438-3a7f2b5e48e6"/>
 					<textElement>
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="289" y="50" width="50" height="20" uuid="98729033-ef7c-4141-9f49-f2b5b1b2e874"/>
+					<reportElement x="289" y="88" width="50" height="20" uuid="98729033-ef7c-4141-9f49-f2b5b1b2e874"/>
 					<textElement>
 						<font fontName="Arial" isBold="true"/>
 					</textElement>

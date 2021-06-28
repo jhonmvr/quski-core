@@ -293,7 +293,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		//log.info("================PATH===> P" +path);
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
 		this.setParametersDevolucion(map,path,    idDevolucion, td);
-		this.setReportDataDevolucion(map, path,   idDevolucion, td);
+		this.setReportDataDevolucion(map, path,   idDevolucion, td,nombreAsesor);
 		return this.generateReport(map, path, formato, td);
 	}
 	
@@ -315,7 +315,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	
 	
 	private void setReportDataDevolucion(Map<String, Object> map,String path, 
-			 String idDevolucion,  TbQoTipoDocumento td) throws RelativeException{
+			 String idDevolucion,  TbQoTipoDocumento td, String nombreAsesor) throws RelativeException{
 		
 		
 			
@@ -329,33 +329,33 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 			
 			if(td.getProceso().equals(ProcessEnum.SOLICITUD)) {
 				if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.DEUDOR)) {
-					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion)));
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucion(Long.valueOf(idDevolucion), nombreAsesor) );
 					map.put("mainReportName", td.getPlantilla());
 					
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
-					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero((Long.valueOf(idDevolucion))));
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionHeredero(Long.valueOf(idDevolucion),nombreAsesor) );
 					map.put("LIST_DS", dos.setListaHerederosString(((Long.valueOf(idDevolucion)))));
 					map.put("mainReportName", td.getPlantillaDos());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
-					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionApoderado((Long.valueOf(idDevolucion))));
+					map.put("BEAN_DS", dos.setHabilitanteSolicitudDevolucionApoderado(Long.valueOf(idDevolucion),nombreAsesor ) );
 					map.put("mainReportName", td.getPlantillaUno());
 					
 				} 
 			}else if(td.getProceso().equals(ProcessEnum.ENTREGA)) {
 				if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.DEUDOR)) {
-					map.put("BEAN_DS", dos.setHabilitanteActaEntrega((Long.valueOf(idDevolucion))));
+					map.put("BEAN_DS", dos.setHabilitanteActaEntrega(Long.valueOf(idDevolucion),nombreAsesor ) );
 					map.put("mainReportName", td.getPlantilla());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.HEREDERO)) {
-					map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero((Long.valueOf(idDevolucion))));
+					map.put("BEAN_DS", dos.setHabilitanteActaEntregaHeredero(Long.valueOf(idDevolucion),nombreAsesor ) );
 					map.put("LIST_DS", dos.setListaHerederosString(((Long.valueOf(idDevolucion)))));
 					map.put("mainReportName", td.getPlantillaDos());
 				}else if(devolucion.getTipoCliente().equalsIgnoreCase(QuskiOroConstantes.APODERADO)) {
-					map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado((Long.valueOf(idDevolucion))));
+					map.put("BEAN_DS", dos.setHabilitanteActaEntregaApoderado(Long.valueOf(idDevolucion),nombreAsesor ) );
 					map.put("mainReportName", td.getPlantillaUno());
 				} 
 			}else if(td.getProceso().equals(ProcessEnum.TERMINACIONCONTRATO)) {
 				List<HabilitanteTerminacionContratoWrapper> terminacionContrato = new ArrayList<>();
-				terminacionContrato.add(dos.setHabilitanteTerminacionContrato(Long.valueOf(idDevolucion)));
+				terminacionContrato.add(dos.setHabilitanteTerminacionContrato(Long.valueOf(idDevolucion), nombreAsesor) );
 				map.put("LIST_DS", terminacionContrato);
 				map.put("mainReportName", td.getPlantilla());
 			}

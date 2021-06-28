@@ -7064,6 +7064,7 @@ public class QuskiOroService {
 			} else if (send.getId() == null) {
 				send.setEstado(EstadoEnum.ACT);
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return this.procesoRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,

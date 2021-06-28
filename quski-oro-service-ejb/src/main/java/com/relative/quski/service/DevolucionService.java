@@ -824,7 +824,7 @@ public class DevolucionService {
 	 * HABILITANTES devolucion
 	 */
 
-	public HabilitanteTerminacionContratoWrapper setHabilitanteTerminacionContrato(Long idDevolucion)
+	public HabilitanteTerminacionContratoWrapper setHabilitanteTerminacionContrato(Long idDevolucion, String nombreAsesor)
 			throws RelativeException {
 
 		HabilitanteTerminacionContratoWrapper habilitante = new HabilitanteTerminacionContratoWrapper();
@@ -842,51 +842,51 @@ public class DevolucionService {
 		return habilitante;
 	}
 
-	public ActaEntregaRecepcionWrapper setHabilitanteActaEntrega(Long idDevolucion) throws RelativeException {
+	public ActaEntregaRecepcionWrapper setHabilitanteActaEntrega(Long idDevolucion, String nombreAsesor) throws RelativeException {
 
 		ActaEntregaRecepcionWrapper habilitante = new ActaEntregaRecepcionWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setCiudad(devolucion.getCiudadEntrega());
 		habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
-		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(new Date()));
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setNombreAsesor(devolucion.getAsesor());
+		habilitante.setNombreAsesor(nombreAsesor);
 		habilitante.setCedulaCliente(
 				StringUtils.isNotBlank(devolucion.getCedulaCliente()) ? devolucion.getCedulaCliente() : "");
 
 		return habilitante;
 	}
 
-	public ActaEntregaRecepcionApoderadoWrapper setHabilitanteActaEntregaApoderado(Long idDevolucion)
+	public ActaEntregaRecepcionApoderadoWrapper setHabilitanteActaEntregaApoderado(Long idDevolucion, String nombreAsesor)
 			throws RelativeException {
 
 		ActaEntregaRecepcionApoderadoWrapper habilitante = new ActaEntregaRecepcionApoderadoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setCiudad(devolucion.getCiudadEntrega());
 		habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
-		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(new Date()));
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setNombreAsesor(devolucion.getAsesor());
+		habilitante.setNombreAsesor(nombreAsesor);
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setCedulaApoderado(devolucion.getCedulaApoderado());
 		habilitante.setNombreApoderado(devolucion.getNombreApoderado());
 		return habilitante;
 	}
 
-	public ActaEntregaRecepcionHerederoWrapper setHabilitanteActaEntregaHeredero(Long idDevolucion)
+	public ActaEntregaRecepcionHerederoWrapper setHabilitanteActaEntregaHeredero(Long idDevolucion, String nombreAsesor)
 			throws RelativeException {
 
 		ActaEntregaRecepcionHerederoWrapper habilitante = new ActaEntregaRecepcionHerederoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setCiudad(devolucion.getCiudadEntrega());
 		habilitante.setNombreCompletoCliente(devolucion.getNombreCliente());
-		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(devolucion.getFechaCreacion()));
+		habilitante.setFechaDevolucion(QuskiOroUtil.dateToFullString(new Date()));
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setNombreAsesor(devolucion.getAsesor());
+		habilitante.setNombreAsesor(nombreAsesor);
 		habilitante.setHerederos((setStringHeredero(getHerederos(idDevolucion))));
 		return habilitante;
 	}
@@ -949,33 +949,33 @@ public class DevolucionService {
 
 	}
 
-	public SolicitudDevolucionWrapper setHabilitanteSolicitudDevolucion(Long idDevolucion) throws RelativeException {
+	public SolicitudDevolucionWrapper setHabilitanteSolicitudDevolucion(Long idDevolucion, String nombreAsesor) throws RelativeException {
 
 		SolicitudDevolucionWrapper habilitante = new SolicitudDevolucionWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(new Date(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setAsesor(devolucion.getAsesor());
+		habilitante.setAsesor(nombreAsesor);
 		habilitante.setNombreCliente(devolucion.getNombreCliente());
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 
 		return habilitante;
 	}
 
-	public SolicitudDevolucionApoderadoWrapper setHabilitanteSolicitudDevolucionApoderado(Long idDevolucion)
+	public SolicitudDevolucionApoderadoWrapper setHabilitanteSolicitudDevolucionApoderado(Long idDevolucion, String nombreAsesor)
 			throws RelativeException {
 
 		SolicitudDevolucionApoderadoWrapper habilitante = new SolicitudDevolucionApoderadoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(new Date(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setAsesor(devolucion.getAsesor());
+		habilitante.setAsesor(nombreAsesor);
 		habilitante.setNombreCliente(devolucion.getNombreCliente());
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setNombreApoderado(devolucion.getNombreApoderado());
@@ -984,17 +984,17 @@ public class DevolucionService {
 		return habilitante;
 	}
 
-	public SolicitudDevolucionHerederoWrapper setHabilitanteSolicitudDevolucionHeredero(Long idDevolucion)
+	public SolicitudDevolucionHerederoWrapper setHabilitanteSolicitudDevolucionHeredero(Long idDevolucion, String nombreAsesor)
 			throws RelativeException {
 
 		SolicitudDevolucionHerederoWrapper habilitante = new SolicitudDevolucionHerederoWrapper();
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		habilitante.setAgenciaEntrega(devolucion.getAgenciaEntrega());
-		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(devolucion.getFechaCreacion(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
+		habilitante.setFechaSolicitud(QuskiOroUtil.dateToString(new Date(),QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 		habilitante.setAgenciaSolicitante(devolucion.getNombreAgenciaSolicitud());
 		habilitante.setNumeroFunda(devolucion.getFundaActual());
 		habilitante.setNumeroOperacion(devolucion.getCodigoOperacion());
-		habilitante.setAsesor(devolucion.getAsesor());
+		habilitante.setAsesor(nombreAsesor);
 		habilitante.setNombreCliente(devolucion.getNombreCliente());
 		habilitante.setCedulaCliente(devolucion.getCedulaCliente());
 		habilitante.setHeredero(setStringHeredero(getHerederos(idDevolucion)));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LiquidacionCD" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="bd61ad2f-9f25-415f-9c3b-33012cc4371a">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
@@ -11,6 +11,7 @@
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<subDataset name="LIST_DS" uuid="724bf12e-3cdb-406d-a6d1-d138ebb030a6">
 		<queryString>
 			<![CDATA[]]>
@@ -76,7 +77,7 @@
 		<fieldDescription><![CDATA[valorenLetras]]></fieldDescription>
 	</field>
 	<title>
-		<band height="731" splitType="Stretch">
+		<band height="758" splitType="Stretch">
 			<staticText>
 				<reportElement x="130" y="10" width="297" height="20" uuid="d083857a-31a8-450d-8a31-baaed91ab671"/>
 				<textElement>
@@ -99,7 +100,7 @@
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
 			<frame>
-				<reportElement x="10" y="300" width="500" height="241" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
+				<reportElement x="10" y="300" width="500" height="270" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
 				<textField isStretchWithOverflow="true">
 					<reportElement positionType="Float" x="0" y="10" width="280" height="20" uuid="a2e6fc46-b1cc-48a0-b100-00834aad4418"/>
 					<textElement textAlignment="Justified" markup="html">
@@ -108,7 +109,7 @@
 					<textFieldExpression><![CDATA["Fecha: " +$P{BEAN_DS}.getFechaSolicitud()+"."]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="40" width="280" height="20" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
+					<reportElement positionType="Float" x="0" y="40" width="300" height="30" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
@@ -143,14 +144,14 @@
 					<text><![CDATA[HUELLA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="16" y="198" width="104" height="20" uuid="4467ae4e-d56e-44b7-8e6e-baf50c01e0fe"/>
+					<reportElement x="16" y="237" width="104" height="20" uuid="4467ae4e-d56e-44b7-8e6e-baf50c01e0fe"/>
 					<textElement>
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[Firma]]></text>
 				</staticText>
 				<line>
-					<reportElement x="50" y="213" width="190" height="1" uuid="0a511b24-f15c-420b-a58f-51a679795da6"/>
+					<reportElement x="50" y="252" width="190" height="1" uuid="0a511b24-f15c-420b-a58f-51a679795da6"/>
 				</line>
 				<rectangle>
 					<reportElement x="320" y="10" width="171" height="81" uuid="54ce64c3-0f8b-4197-ab8a-ace510fc8d52"/>
@@ -340,8 +341,8 @@
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="14" y="630" width="501" height="101" uuid="3952a34e-748e-4777-a5a0-ef29e01c38a5"/>
-				<textElement>
-					<font fontName="Arial"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="11"/>
 				</textElement>
 				<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
 Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
@@ -352,11 +353,18 @@ Recuerde que el tiempo adicional de custodia de la garantía, que respalda su op
 				<reportElement positionType="Float" x="3" y="590" width="511" height="1" uuid="d61401bd-ed20-4aaf-856e-3792dad0fe3e"/>
 			</line>
 			<staticText>
-				<reportElement positionType="Float" x="133" y="600" width="257" height="20" uuid="5c9d1917-7e58-4cd4-bc3c-38cd2e6b35c3"/>
-				<textElement>
+				<reportElement positionType="Float" mode="Opaque" x="14" y="600" width="501" height="20" backcolor="#BFBFBF" uuid="5c9d1917-7e58-4cd4-bc3c-38cd2e6b35c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="14" y="738" width="501" height="20" backcolor="#BFBFBF" uuid="dfe792d0-9372-48eb-a1c0-0def71f09a30"/>
+				<textElement textAlignment="Center">
 					<font fontName="Arial" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[CONSIDERACIONES PARA EL RETORNO DE GARANTÍAS]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 		</band>
 	</title>
