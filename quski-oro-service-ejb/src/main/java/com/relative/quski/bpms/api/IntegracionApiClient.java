@@ -38,7 +38,7 @@ public class IntegracionApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, IntegracionRespuestaWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
+			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();

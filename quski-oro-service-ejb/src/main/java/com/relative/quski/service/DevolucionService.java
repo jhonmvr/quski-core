@@ -143,6 +143,7 @@ public class DevolucionService {
 					}
 				}
 			}
+			send.setUsuarioSolicitud(send.getAsesor());
 			send = this.manageDevolucion(send);
 			proceso.setProceso(ProcesoEnum.DEVOLUCION);
 			proceso.setIdReferencia(send.getId());
@@ -466,12 +467,13 @@ public class DevolucionService {
 		}
 	}
 
-	public List<TbQoDevolucion> registrarArriboAgencia(List<Long> idDevoluciones) throws RelativeException {
+	public List<TbQoDevolucion> registrarArriboAgencia(List<Long> idDevoluciones, String asesor) throws RelativeException {
 		try {
 			List<TbQoDevolucion> devoluciones = new ArrayList<>();
 			for (Long id : idDevoluciones) {
 				
 				TbQoDevolucion devolucion = devolucionRepository.findById(id);
+				qos.reasignarOperacion(id, ProcesoEnum.DEVOLUCION, asesor);
 				if( devolucion == null) {
 					throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION RELACIONADO A ESTE ID: " + id );
 				}
@@ -621,6 +623,7 @@ public class DevolucionService {
 	public TbQoDevolucion aprobarVerificacionFirmas(Long id) throws RelativeException {
 		try {
 			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
+			TbQoProceso cancelar = qos.findProcesoByIdReferencia(id, ProcesoEnum.CANCELACION_DEVOLUCION);
 			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
 			if(devolucion == null || procesoDevolucion == null) {
 				throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION PARA ESTE CREDITO. " );
@@ -628,7 +631,11 @@ public class DevolucionService {
 			if( !procesoDevolucion.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA ) ) {
 				throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ procesoDevolucion.getEstadoProceso() );
 			}
+			if(cancelar != null) {
+				this.qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO , null);
+			}
 			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO , null);
+			devolucion.setFechaEntrega(new Date());
 			TbQoDevolucion devo = this.manageDevolucion(devolucion);
 			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE);
 			return devo;

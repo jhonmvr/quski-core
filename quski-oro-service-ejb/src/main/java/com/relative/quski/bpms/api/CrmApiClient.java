@@ -49,7 +49,7 @@ public class CrmApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrmRespuestaWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
+			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -79,7 +79,7 @@ public class CrmApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrmRespuestaPersistWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
+			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();

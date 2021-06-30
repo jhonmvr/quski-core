@@ -242,9 +242,9 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@POST
 	@Path("/registrarArribo")
-	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones) throws RelativeException {
+	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones,@QueryParam("asesor") String asesor) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
-		loc= this.dos.registrarArriboAgencia(idDevoluciones);
+		loc= this.dos.registrarArriboAgencia(idDevoluciones,asesor);
 		return loc;
 	}
 	

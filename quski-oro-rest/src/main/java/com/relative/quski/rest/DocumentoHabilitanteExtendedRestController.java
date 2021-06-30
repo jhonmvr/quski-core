@@ -28,6 +28,7 @@ import com.relative.quski.model.TbQoRolTipoDocumento;
 import com.relative.quski.service.CreditoNuevoService;
 import com.relative.quski.service.GestorHabilitanteService;
 import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
+import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
 
 @Path("/documentoHabilitanteExtendedRestController")
@@ -106,7 +107,7 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@GET
 	@Path("/getDocumentoCredito")
-	public RespuestaHabilitanteCreditoWrapper getDocumentoCredito(
+	public ObjetoHabilitanteWrapper getDocumentoCredito(
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
 	if(StringUtils.isBlank(idReferencia)) {
 		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DE REFERENCIA"); 
@@ -114,4 +115,13 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 		return cs.generarHabilitanteCredito(Long.valueOf(idReferencia));
 	}
 	
+	@GET
+	@Path("/getDocumentoCreditozip")
+	public byte[] getDocumentoCreditozip(
+			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
+	if(StringUtils.isBlank(idReferencia)) {
+		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DE REFERENCIA"); 
+	}
+		return cs.generarHabilitanteCreditozip(Long.valueOf(idReferencia));
+	} 
 }

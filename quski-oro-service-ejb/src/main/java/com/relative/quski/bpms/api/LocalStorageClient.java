@@ -58,7 +58,7 @@ public class LocalStorageClient {
 				RestClientWrapper.CONTENT_TYPE_JSON, authorization, null, RestClientWrapper.METHOD_GET, null, null,
 				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-		log.info("===> REspuesta de servicio " + response);
+		//log.info("===> REspuesta de servicio " + response);
 		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 		
 		
@@ -87,7 +87,7 @@ public class LocalStorageClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			
 			
@@ -123,7 +123,7 @@ public class LocalStorageClient {
 				RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String(content), RestClientWrapper.METHOD_POST, null, null,
 				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-		log.info("===> REspuesta de servicio " + response);
+		//log.info("===> REspuesta de servicio " + response);
 		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 		
 		
@@ -152,7 +152,7 @@ public class LocalStorageClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			
 			
@@ -183,7 +183,7 @@ public class LocalStorageClient {
 				RestClientWrapper.CONTENT_TYPE_JSON, authorization, null, RestClientWrapper.METHOD_GET, null, null,
 				null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
-		log.info("===> REspuesta de servicio " + response);
+		//log.info("===> REspuesta de servicio " + response);
 		Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 		if(status>=200 && status < 300) {
 					
@@ -205,7 +205,7 @@ public class LocalStorageClient {
 				RestClientWrapper.CONTENT_TYPE_X_WWW_FORM, authorization, empty, RestClientWrapper.METHOD_POST, null,
 				null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 				QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE,Boolean.FALSE, service, TokenWrapper.class);
-		log.info("===> getToken wraooer generados " + response);
+		//log.info("===> getToken wraooer generados " + response);
 		if (response != null && response.get("message") != null
 				&& response.get("message").toString().indexOf("Unsuccessful") < 0) {
 			TokenWrapper tmp = (TokenWrapper) response.get(ReRestClient.RETURN_OBJECT);

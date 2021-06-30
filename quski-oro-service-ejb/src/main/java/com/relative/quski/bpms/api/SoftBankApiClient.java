@@ -529,7 +529,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrearOperacionRespuestaWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -572,7 +572,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrearOperacionRespuestaWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -611,7 +611,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaAbonoWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
+			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			log.info("=============================> ESTADO DEL SERVICIO " + status);
 			if(status >= 200 && status < 300) {
@@ -655,7 +655,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaConsultaGlobalWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -711,7 +711,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaRubroWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -743,7 +743,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				Gson gsons = new GsonBuilder().create();
@@ -776,7 +776,7 @@ public class SoftBankApiClient {
 					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
-			log.info("===> REspuesta de servicio " + response);
+			//log.info("===> REspuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				

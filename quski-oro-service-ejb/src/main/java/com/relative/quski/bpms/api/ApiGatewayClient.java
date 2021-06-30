@@ -144,12 +144,12 @@ public class ApiGatewayClient {
 			
 			log.info("=====> wrapper " + content);
 			String service = urlService;
-			log.info("===> callBpmsInitProcesss con servcio " + service);
+			//log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
 					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, EquifaxConsultaPersonaWrapper.class);
-			log.info("===> Respuesta de servicio " + response);
+			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
 			if(status>=200 && status < 300) {
 				String respuesta = String.valueOf(response.get(ReRestClient.RETURN_OBJECT));

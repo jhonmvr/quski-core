@@ -149,7 +149,7 @@ public class ReRestClient<T> {
 		ReRestClient<String> b= new ReRestClient<>( cw );
 		try {
 			 Map<String, Object> retorno=b.execute(String.class);
-			 System.out.println("retorno: " + retorno );
+			 //System.out.println("retorno: " + retorno );
 			 /*TaskSummaryWrapper r=(TaskSummaryWrapper)retorno.get("resultado");
 			 System.out.println("===>sumary " + r.getTaskSummary());
 			 System.out.println("===>sumary " + r.getTaskSummary().get(0).getTaskId());*/
@@ -266,7 +266,7 @@ public class ReRestClient<T> {
 			String contentType = null;
 			if (respEntity != null) {
 				responseBody = EntityUtils.toString(respEntity, this.cw.getAcceptCharset());
-				System.out.println("====>responseBody " + responseBody);
+				//System.out.println("====>responseBody " + responseBody);
 				if (respEntity.getContentType() != null) {
 					contentType = respEntity.getContentType().getValue();
 				}

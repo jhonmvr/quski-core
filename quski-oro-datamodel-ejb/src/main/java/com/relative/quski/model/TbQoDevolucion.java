@@ -25,6 +25,9 @@ public class TbQoDevolucion implements Serializable {
 
 	@Column(name="agencia_entrega")
 	private String agenciaEntrega;
+	
+	@Column(name="usuario_solicitud")
+	private String usuarioSolicitud;
 
 	private String aprobador;
 
@@ -65,6 +68,9 @@ public class TbQoDevolucion implements Serializable {
 
 	@Column(name="fecha_actualizacion")
 	private Date fechaActualizacion;
+
+	@Column(name="fecha_entrega")
+	private Date fechaEntrega;
 
 
 	@Column(name="fecha_creacion")
@@ -508,6 +514,22 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setEsMigrado(Boolean esMigrado) {
 		this.esMigrado = esMigrado;
+	}
+
+	public Date getFechaEntrega() {
+		return fechaEntrega;
+	}
+
+	public void setFechaEntrega(Date fechaEntrega) {
+		this.fechaEntrega = fechaEntrega;
+	}
+
+	public String getUsuarioSolicitud() {
+		return usuarioSolicitud;
+	}
+
+	public void setUsuarioSolicitud(String usuarioSolicitud) {
+		this.usuarioSolicitud = usuarioSolicitud;
 	}
 
 
