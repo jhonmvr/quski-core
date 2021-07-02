@@ -522,7 +522,7 @@ public class DevolucionService {
 			procesoCancelacion.setIdReferencia(devolucion.getId());
 			procesoCancelacion.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
 			procesoCancelacion.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
-			procesoCancelacion.setUsuario(usuario);
+			procesoCancelacion.setUsuario(QuskiOroConstantes.EN_COLA);
 			procesoCancelacion = this.qos.manageProceso(procesoCancelacion);
 			devolucion.setObservacionCancelacion(motivo);
 			this.manageDevolucion(devolucion);

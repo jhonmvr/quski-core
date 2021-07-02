@@ -5541,7 +5541,8 @@ public class QuskiOroService {
 						this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
 				SimularResponse res = ApiGatewayClient.callCalculadoraRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CALCULADORA).getValor(),
 						token.getToken_type() +" "+ token.getAccess_token(), contentXMLcalculadora);
-				if (res.getSimularResult().getXmlVariablesInternas().getVariablesInternas().getVariable() != null) {
+				if (res.getSimularResult().getXmlVariablesInternas().getVariablesInternas().getVariable() != null
+						&& !res.getSimularResult().getXmlVariablesInternas().getVariablesInternas().getVariable().isEmpty()) {
 					//ELIMINO LAS VARIABLES CREDITIAS Y MUESTRO LAS DEL CREDITO
 					variablesCrediticiaRepository.deleteVariablesByNegociacionId(credito.getTbQoNegociacion().getId());
 					for(com.relative.quski.wrapper.SimularResponse.SimularResult.XmlVariablesInternas.VariablesInternas.Variable e
@@ -5560,29 +5561,31 @@ public class QuskiOroService {
 						 && !res.getSimularResult().getXmlGarantias().getGarantias().getGarantia().isEmpty()) {
 					log.info("==============> Resultado de garantias calculadora ");
 					this.tasacionRepository.deleteTasacionByNegociacionId(credito.getId());
-					for ( Garantia g : res.getSimularResult().getXmlGarantias().getGarantias().getGarantia()) {
-						TbQoTasacion j = new TbQoTasacion();
-						j.setDescripcion(g.getDescripcion());
-						j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
-						j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoSuelda()) );
-						j.setDetallePiedras(g.getDetallePiedras());
-						j.setEstado(EstadoEnum.ACT);
-						j.setEstadoJoya(g.getEstadoJoya());
-						//j.setId(joya.getId());
-						j.setNumeroPiezas(Long.valueOf(g.getNumeroPiezas()) );
-						j.setPesoBruto(BigDecimal.valueOf(g.getPesoGr()) );
-						j.setTienePiedras(StringUtils.isNotBlank(g.getTienePiedras()) && g.getTienePiedras().equalsIgnoreCase("S")?Boolean.TRUE:Boolean.FALSE);
-						j.setPesoNeto(BigDecimal.valueOf(g.getPesoNeto()) );
-						j.setTipoJoya(g.getTipoJoya());
-						j.setTipoOro(g.getTipoOroKilataje());
-						j.setValorAvaluo(BigDecimal.valueOf(g.getValorAvaluo()) );
-						j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
-						j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
-						j.setTbQoCreditoNegociacion(credito);
-						j.setValorOro(BigDecimal.valueOf(g.getValorOro()));
-						this.manageTasacion(j);
-					}
-					
+					if(res.getSimularResult().getXmlGarantias().getGarantias().getGarantia() != null 
+							&& !res.getSimularResult().getXmlGarantias().getGarantias().getGarantia().isEmpty()) {
+						for ( Garantia g : res.getSimularResult().getXmlGarantias().getGarantias().getGarantia()) {
+							TbQoTasacion j = new TbQoTasacion();
+							j.setDescripcion(g.getDescripcion());
+							j.setDescuentoPesoPiedra(BigDecimal.valueOf(g.getDescuentoPesoPiedras()) );
+							j.setDescuentoSuelda(BigDecimal.valueOf(g.getDescuentoSuelda()) );
+							j.setDetallePiedras(g.getDetallePiedras());
+							j.setEstado(EstadoEnum.ACT);
+							j.setEstadoJoya(g.getEstadoJoya());
+							//j.setId(joya.getId());
+							j.setNumeroPiezas(Long.valueOf(g.getNumeroPiezas()) );
+							j.setPesoBruto(BigDecimal.valueOf(g.getPesoGr()) );
+							j.setTienePiedras(StringUtils.isNotBlank(g.getTienePiedras()) && g.getTienePiedras().equalsIgnoreCase("S")?Boolean.TRUE:Boolean.FALSE);
+							j.setPesoNeto(BigDecimal.valueOf(g.getPesoNeto()) );
+							j.setTipoJoya(g.getTipoJoya());
+							j.setTipoOro(g.getTipoOroKilataje());
+							j.setValorAvaluo(BigDecimal.valueOf(g.getValorAvaluo()) );
+							j.setValorRealizacion(BigDecimal.valueOf(g.getValorRealizacion()) );
+							j.setValorComercial(BigDecimal.valueOf(g.getValorAplicable()) );
+							j.setTbQoCreditoNegociacion(credito);
+							j.setValorOro(BigDecimal.valueOf(g.getValorOro()));
+							this.manageTasacion(j);
+						}
+					}					
 				}	
 				return res;
 		} catch (RelativeException e) {
@@ -7492,6 +7495,14 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
+	/**
+	 * Notificacion popr email. Codigo Cash
+	 * @param persisted
+	 * @param cash
+	 * @param descripcion
+	 * @param codigo
+	 * @throws RelativeException
+	 */
 	public void devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
 		try {
 			if( persisted == null) { 
@@ -8095,7 +8106,7 @@ public class QuskiOroService {
 				}
 				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
 				credito.setCodigoCash(cash);
-				this.devolverAprobarCredito(credito, cash, descripcion, null);
+				
 				//FIN APROBACION
 				TbQoTracking last = this.trackingRepository.findByParams(credito.getCodigo(),ProcesoEnum.NUEVO);
 				if(last != null) {
@@ -8110,6 +8121,7 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
+				this.devolverAprobarCredito(credito, cash, descripcion, null);
 				
 			}else {
 				//this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
