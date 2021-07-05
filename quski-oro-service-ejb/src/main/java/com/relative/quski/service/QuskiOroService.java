@@ -6167,7 +6167,8 @@ public class QuskiOroService {
 	}
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			persisted.setCodigo( QuskiOroConstantes.CODIGO_NUEVO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			
+			persisted.setCodigo(procesoRepository.generarSecuencia(QuskiOroConstantes.CODIGO_NUEVO));
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch(RelativeException e) {
 			e.printStackTrace();
@@ -8048,7 +8049,7 @@ public class QuskiOroService {
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			persisted.setCodigo( QuskiOroConstantes.CODIGO_RENOVACION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			persisted.setCodigo(procesoRepository.generarSecuencia(QuskiOroConstantes.CODIGO_RENOVACION));
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch(RelativeException e) {
 			e.printStackTrace();
@@ -8057,6 +8058,10 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
+	}
+	
+	public String generarCodigo(String codigo) throws RelativeException {
+		return procesoRepository.generarSecuencia(codigo);
 	}
 	public String traerNumeroOperacionMadre(String codigoBpm)  throws RelativeException {
 		try {
