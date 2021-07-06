@@ -23,6 +23,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoProceso;
@@ -359,9 +360,10 @@ public class DevolucionService {
 				proceso = this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, null);
 				result.setProceso(proceso);
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE);
+				this.notificarDevolucionAprobacion(aprobado, result.getDevolucion());
 			} else {
-				result.setProceso(
-						this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null));
+				result.setProceso(this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null));
+				this.notificarDevolucionAprobacion(aprobado, result.getDevolucion());
 			}
 			return result;
 		} catch (RelativeException e) {
@@ -373,6 +375,109 @@ public class DevolucionService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
 		}
 		
+	}
+	public void notificarDevolucionAprobacion(Boolean aprobado, TbQoDevolucion dev) {
+		try {
+			if(aprobado) {
+				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+				String[] array = new String[paras.size()];
+				for (int i = 0; i < paras.size(); ++i) {
+					array[i] = paras.get(i).getValor()
+							.replace("--correoAsesor--", " ")
+							.replace("--correoCliente--",  dev.getCorreoCliente());
+				}
+				
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_DEVOLUCION_APROBACION).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_DEVOLUCION_APROBACION).getValor()
+						.replace("--nombreCliente--", dev.getNombreCliente() )
+						.replace("--nombreAgenciaEntrega--",  dev.getAgenciaEntrega())
+						.replace("--fechaAprobacion--",  QuskiOroUtil.dateToFullString( dev.getFechaAprobacionSolicitud() ) );
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}else {
+				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+				String[] array = new String[paras.size()];
+				for (int i = 0; i < paras.size(); ++i) {
+					array[i] = paras.get(i).getValor()
+							.replace("--correoAsesor--",  dev.getCorreoAsesor())
+							.replace("--correoCliente--",  " ");
+				}
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_DEVOLUCION_RECHAZO).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_DEVOLUCION_RECHAZO).getValor()
+						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
+						.replace("--nombreAgenciaEntrega--",  dev.getAgenciaEntrega())
+						.replace("--fechaAprobacion--",  QuskiOroUtil.dateToFullString( dev.getFechaAprobacionSolicitud() ) );
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}		
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
+	}
+	public void notificarDevolucionVerificacionFirmas(Boolean aprobado, TbQoDevolucion dev) {
+		try {
+			if(aprobado) {
+				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+				String[] array = new String[paras.size()];
+				for (int i = 0; i < paras.size(); ++i) {
+					array[i] = paras.get(i).getValor()
+							.replace("--correoAsesor--",  dev.getCorreoAsesor())
+							.replace("--correoCliente--",  dev.getCorreoCliente());
+				}
+				
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_APROBACION).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_APROBACION).getValor()
+						.replace("--nombreCliente--", dev.getNombreCliente() )
+						.replace("--codigoBpm--",  dev.getCodigo());
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}else {
+				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+				String[] array = new String[paras.size()];
+				for (int i = 0; i < paras.size(); ++i) {
+					array[i] = paras.get(i).getValor()
+							.replace("--correoAsesor--",  dev.getCorreoAsesor())
+							.replace("--correoCliente--",  " ");
+				}
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_RECHAZO).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_RECHAZO).getValor()
+						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
+						.replace("--codigoBpm--",  dev.getCodigo());
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}		
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
+	}
+	public void notificarCancelacionDevolucion(Boolean aprobado, TbQoDevolucion dev) {
+		try {
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+			String[] array = new String[paras.size()];
+			for (int i = 0; i < paras.size(); ++i) {
+				array[i] = paras.get(i).getValor()
+						.replace("--correoAsesor--",  dev.getCorreoAsesor())
+						.replace("--correoCliente--",  " ");
+			}
+			
+			if(aprobado) {
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_CANCELACION_DEVOLUCION_APROBACION).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_CANCELACION_DEVOLUCION_APROBACION).getValor()
+						.replace("--nombreAsesor--",  dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
+						.replace("--codigoBpmDevolucion--",  dev.getCodigo());
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}else {
+				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_CANCELACION_DEVOLUCION_RECHAZO).getValor();
+				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_CANCELACION_DEVOLUCION_RECHAZO).getValor()
+						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
+						.replace("--codigoBpmDevolucion--",  dev.getCodigo());
+				this.qos.mailNotificacion(array, asunto, contenido, null);
+			}		
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
 	}
 
 	private void bloquear(TbQoProceso proceso, TbQoDevolucion devolucion, String tipoBloqueo,Boolean esBloqueo) throws RelativeException {
@@ -565,8 +670,8 @@ public class DevolucionService {
 				bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
 			}
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO, null);
+			this.notificarCancelacionDevolucion(Boolean.TRUE, devolucion);
 			TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.APROBADO, null);
-			
 			return pro;
 		} catch ( RelativeException e ) {
 			throw e;
@@ -588,6 +693,7 @@ public class DevolucionService {
 			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
 				throw new RelativeException( "EL PROCESO DE CANCELACION NO SE ENCUENTRA EN ESTADO PENDIENTE DE APROBACION.");
 			}
+			this.notificarCancelacionDevolucion(Boolean.FALSE, devolucion);
 			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null);
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
@@ -636,9 +742,10 @@ public class DevolucionService {
 			}
 			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO , null);
 			devolucion.setFechaEntrega(new Date());
-			TbQoDevolucion devo = this.manageDevolucion(devolucion);
+			devolucion = this.manageDevolucion(devolucion);
 			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE);
-			return devo;
+			this.notificarDevolucionVerificacionFirmas(Boolean.TRUE, devolucion);
+			return devolucion;
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
 			throw e;
@@ -660,7 +767,9 @@ public class DevolucionService {
 			}
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 			devolucion.setDevuelto(true);
-			return this.manageDevolucion(devolucion);
+			devolucion =  this.manageDevolucion(devolucion);
+			this.notificarDevolucionVerificacionFirmas(Boolean.FALSE, devolucion);
+			return devolucion;
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
 			throw e;
