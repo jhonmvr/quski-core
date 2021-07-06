@@ -1981,7 +1981,7 @@ public class QuskiOroService {
 		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
 			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
 		}
-		return this.tipoOro(this.manageCliente(cliente));
+		return this.tipoOro();
 	}
 
 
@@ -5168,7 +5168,23 @@ public class QuskiOroService {
 
 	} */
 	
-
+	public List<TipoOroWrapper> tipoOro() throws RelativeException {		
+		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor());
+		
+		if(response != null && response.getCatalogo() != null && !response.getCatalogo().isEmpty()) {
+			List<TipoOroWrapper> tiposOro = new ArrayList<>();
+			for (CatalogoWrapper c:response.getCatalogo()) {
+				TipoOroWrapper tipo = new TipoOroWrapper();
+				tipo.setNombre(c.getNombre());
+				tipo.setCodigo(c.getCodigo());
+				tiposOro.add(tipo);
+			}
+			return tiposOro;
+		}
+		return null;
+		
+	}
+	
 	public List<TipoOroWrapper> tipoOro(TbQoCliente cliente) throws RelativeException {		
 		
 		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor());
@@ -6167,7 +6183,8 @@ public class QuskiOroService {
 	}
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			persisted.setCodigo( QuskiOroConstantes.CODIGO_NUEVO.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			
+			persisted.setCodigo(procesoRepository.generarSecuencia(QuskiOroConstantes.CODIGO_NUEVO));
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch(RelativeException e) {
 			e.printStackTrace();
@@ -8048,7 +8065,7 @@ public class QuskiOroService {
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			persisted.setCodigo( QuskiOroConstantes.CODIGO_RENOVACION.concat(StringUtils.leftPad(persisted.getId().toString(), 7, "0")));
+			persisted.setCodigo(procesoRepository.generarSecuencia(QuskiOroConstantes.CODIGO_RENOVACION));
 			return this.creditoNegociacionRepository.update(persisted);
 		} catch(RelativeException e) {
 			e.printStackTrace();
@@ -8057,6 +8074,10 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
+	}
+	
+	public String generarCodigo(String codigo) throws RelativeException {
+		return procesoRepository.generarSecuencia(codigo);
 	}
 	public String traerNumeroOperacionMadre(String codigoBpm)  throws RelativeException {
 		try {

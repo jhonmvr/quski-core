@@ -244,4 +244,12 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		return loc;
 	}
 	
+	@GET
+	@Path("/generarCodigo")
+	public GenericWrapper<String> generarCodigo(@QueryParam("codigo") String codigo) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad(this.qos.generarCodigo(codigo) );
+		return loc;
+	}
+	
 }

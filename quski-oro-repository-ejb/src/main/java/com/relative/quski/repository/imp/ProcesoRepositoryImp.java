@@ -825,5 +825,24 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
 		}
 	}
+	@Override
+	public String generarSecuencia(String codigo) throws RelativeException {
+		try {
+			StringBuilder strQry = new StringBuilder();
+			if(codigo.equalsIgnoreCase(QuskiOroConstantes.CODIGO_RENOVACION)) {
+				strQry.append("select nextval('seq_renovacion')");
+			}else if(codigo.equalsIgnoreCase(QuskiOroConstantes.CODIGO_NUEVO)) {
+				strQry.append("select nextval('seq_nuevo')");
+			}
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			BigInteger  seq = (BigInteger) query.getSingleResult();
+			
+			return codigo.concat(StringUtils.leftPad(String.valueOf(seq), 7, "0"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL CREAR SECUENCIAL");
+		}
+	}
 
 }

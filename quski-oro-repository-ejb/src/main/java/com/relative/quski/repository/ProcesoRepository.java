@@ -40,5 +40,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public List<ProcesoCaducadoWrapper> findByTiempoBaseAprobadorProcesoEstadoProceso( Long tiempoBase, List<String> aprobadores, List<ProcesoEnum> procesos, List<EstadoProcesoEnum> estados ) throws RelativeException;
 	public Integer findByNumeroOperacionMadreAndProcesoAndEstado(String numeroOperacionMadre, ProcesoEnum proceso,
 			List<EstadoProcesoEnum> estados)throws RelativeException;
+	public String generarSecuencia(String codigoRenovacion) throws RelativeException;
 
 }
