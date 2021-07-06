@@ -47,6 +47,12 @@ public class TbQoDevolucion implements Serializable {
 
 	@Column(name="code_detalle_garantia")
 	private String codeDetalleGarantia;
+	
+	@Column(name="correo_asesor")
+	private String correoAsesor;
+	
+	@Column(name="correo_cliente")
+	private String correoCliente;
 
 	@Column(name="code_herederos")
 	private String codeHerederos;
@@ -530,6 +536,22 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setUsuarioSolicitud(String usuarioSolicitud) {
 		this.usuarioSolicitud = usuarioSolicitud;
+	}
+
+	public String getCorreoAsesor() {
+		return correoAsesor;
+	}
+
+	public void setCorreoAsesor(String correoAsesor) {
+		this.correoAsesor = correoAsesor;
+	}
+
+	public String getCorreoCliente() {
+		return correoCliente;
+	}
+
+	public void setCorreoCliente(String correoCliente) {
+		this.correoCliente = correoCliente;
 	}
 
 
