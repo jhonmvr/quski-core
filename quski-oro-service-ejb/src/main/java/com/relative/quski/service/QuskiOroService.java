@@ -1981,7 +1981,7 @@ public class QuskiOroService {
 		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
 			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
 		}
-		return this.tipoOro(this.manageCliente(cliente));
+		return this.tipoOro();
 	}
 
 
@@ -5168,7 +5168,23 @@ public class QuskiOroService {
 
 	} */
 	
-
+	public List<TipoOroWrapper> tipoOro() throws RelativeException {		
+		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor());
+		
+		if(response != null && response.getCatalogo() != null && !response.getCatalogo().isEmpty()) {
+			List<TipoOroWrapper> tiposOro = new ArrayList<>();
+			for (CatalogoWrapper c:response.getCatalogo()) {
+				TipoOroWrapper tipo = new TipoOroWrapper();
+				tipo.setNombre(c.getNombre());
+				tipo.setCodigo(c.getCodigo());
+				tiposOro.add(tipo);
+			}
+			return tiposOro;
+		}
+		return null;
+		
+	}
+	
 	public List<TipoOroWrapper> tipoOro(TbQoCliente cliente) throws RelativeException {		
 		
 		CatalogoResponseWrapper response = ApiGatewayClient.getTipoOro(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TIPO_ORO).getValor());
