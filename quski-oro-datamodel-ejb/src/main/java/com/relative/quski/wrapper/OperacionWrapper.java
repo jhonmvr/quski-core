@@ -41,7 +41,7 @@ public class OperacionWrapper implements Serializable {
 	private String codigoEstadoUbicacionGrantia;
 	private Boolean esMigrado;
 	private Long numeroCuotas;
-	private String datosBloqueo;
+	private DatosBloqueoWrapper datosBloqueo;
 	private String uriHabilitante;
 	private String uriHabilitanteFirmado;
 	private String uriImagenGarantiaConFunda;
@@ -247,10 +247,10 @@ public class OperacionWrapper implements Serializable {
 	public void setNumeroCuotas(Long numeroCuotas) {
 		this.numeroCuotas = numeroCuotas;
 	}
-	public String getDatosBloqueo() {
+	public DatosBloqueoWrapper getDatosBloqueo() {
 		return datosBloqueo;
 	}
-	public void setDatosBloqueo(String datosBloqueo) {
+	public void setDatosBloqueo(DatosBloqueoWrapper datosBloqueo) {
 		this.datosBloqueo = datosBloqueo;
 	}
 	public String getCodigoTipoCarteraQuski() {
