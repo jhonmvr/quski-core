@@ -14,6 +14,7 @@ public class SoftbankCuentasBancariasWrapper implements Serializable{
     private String cuenta;
     private Boolean activo;
     private Boolean esAhorros;
+    private Boolean esNueva;
     
 	public Long getId() {
 		return id;
@@ -44,6 +45,12 @@ public class SoftbankCuentasBancariasWrapper implements Serializable{
 	}
 	public void setEsAhorros(Boolean esAhorros) {
 		this.esAhorros = esAhorros;
+	}
+	public Boolean getEsNueva() {
+		return esNueva;
+	}
+	public void setEsNueva(Boolean esNueva) {
+		this.esNueva = esNueva;
 	}
 	
 }

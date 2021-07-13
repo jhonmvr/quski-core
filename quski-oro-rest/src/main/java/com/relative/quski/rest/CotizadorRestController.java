@@ -158,7 +158,8 @@ public class CotizadorRestController extends BaseRestController
 	@Path("/eliminarJoya")
 	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
-		TbQoTasacion a = this.qos.eliminarJoya(Long.valueOf(id));
+		TbQoTasacion a = null;
+		this.qos.eliminarJoya(Long.valueOf(id));
 		loc.setEntidad(a);
 		return loc;
 	}

@@ -22,6 +22,12 @@ public class TbQoCuentaBancariaCliente implements Serializable {
 	private Long banco;
 
 	private String cuenta;
+	
+	@Column(name="es_nueva")
+	private Boolean esNueva;
+
+	
+
 
 	@Column(name="es_ahorros")
 	private Boolean esAhorros;
@@ -37,7 +43,18 @@ public class TbQoCuentaBancariaCliente implements Serializable {
 	@Column(name="id_softbank")
 	private Long idSoftbank;
 
+	
+	
 	public TbQoCuentaBancariaCliente() {
+	}
+	
+
+	public Boolean getEsNueva() {
+		return esNueva;
+	}
+
+	public void setEsNueva(Boolean esNueva) {
+		this.esNueva = esNueva;
 	}
 
 	public Long getId() {

@@ -166,6 +166,32 @@ public class TasacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoTasaci
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BORRAR CALCULAR EL AVALUO");
 		}
 	}
+	@Override
+	public void deleteTasacionById(Long id) throws RelativeException {
+
+		try {
+			if(id == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"BORRARTASACION ID CREDITO ES OBLIGATORIO");
+			}
+
+			StringBuilder queryStr =  new StringBuilder();
+			queryStr.append("DELETE FROM tb_qo_tasacion where 1=1 ");
+			
+			queryStr.append("and id =:id ");
+			Query query = this.getEntityManager().createNativeQuery(queryStr.toString());
+			
+			query.setParameter("id", id);
+			query.executeUpdate();
+		} catch (RelativeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"al borrar tasacion id=" + id +" " + e.getCause());
+		}
+	
+		
+	}
 	
 	
 	

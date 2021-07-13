@@ -27,4 +27,6 @@ public interface TasacionRepository extends CrudRepository<Long, TbQoTasacion>{
 
 	public BigDecimal totalAvaluo(Long id)throws RelativeException;
 
+	public void deleteTasacionById(Long id)throws RelativeException;
+
 }

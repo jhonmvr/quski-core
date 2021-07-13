@@ -325,6 +325,12 @@ public class DevolucionService {
 			if (StringUtils.isNotBlank(send.getCiudadEntrega())) {
 				persisted.setCiudadEntrega(send.getCiudadEntrega());
 			}
+			if (StringUtils.isNotBlank(send.getCorreoCliente())) {
+				persisted.setCorreoCliente(send.getCorreoCliente());
+			}
+			if (StringUtils.isNotBlank(send.getCorreoAsesor())) {
+				persisted.setCorreoAsesor(send.getCorreoAsesor());
+			}
 			return devolucionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;
@@ -372,7 +378,7 @@ public class DevolucionService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getCause());
 		}
 		
 	}
@@ -383,7 +389,7 @@ public class DevolucionService {
 				String[] array = new String[paras.size()];
 				for (int i = 0; i < paras.size(); ++i) {
 					array[i] = paras.get(i).getValor()
-							.replace("--correoAsesor--", " ")
+							.replace("--correoAsesor--", dev.getCorreoAsesor())
 							.replace("--correoCliente--",  dev.getCorreoCliente());
 				}
 				
@@ -397,9 +403,13 @@ public class DevolucionService {
 				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
 				String[] array = new String[paras.size()];
 				for (int i = 0; i < paras.size(); ++i) {
-					array[i] = paras.get(i).getValor()
-							.replace("--correoAsesor--",  dev.getCorreoAsesor())
-							.replace("--correoCliente--",  " ");
+					if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
+						if(StringUtils.isBlank(dev.getCorreoAsesor())) {
+							throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
+						}
+						array[i] = paras.get(i).getValor()
+								.replace("--correoAsesor--",  dev.getCorreoAsesor());
+					}
 				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_DEVOLUCION_RECHAZO).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_DEVOLUCION_RECHAZO).getValor()
@@ -434,9 +444,13 @@ public class DevolucionService {
 				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
 				String[] array = new String[paras.size()];
 				for (int i = 0; i < paras.size(); ++i) {
-					array[i] = paras.get(i).getValor()
-							.replace("--correoAsesor--",  dev.getCorreoAsesor())
-							.replace("--correoCliente--",  " ");
+					if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
+						if(StringUtils.isBlank(dev.getCorreoAsesor())) {
+							throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
+						}
+						array[i] = paras.get(i).getValor()
+								.replace("--correoAsesor--",  dev.getCorreoAsesor());
+					}
 				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_RECHAZO).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_RECHAZO).getValor()
@@ -455,9 +469,14 @@ public class DevolucionService {
 			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
 			String[] array = new String[paras.size()];
 			for (int i = 0; i < paras.size(); ++i) {
-				array[i] = paras.get(i).getValor()
-						.replace("--correoAsesor--",  dev.getCorreoAsesor())
-						.replace("--correoCliente--",  " ");
+				if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
+					if(StringUtils.isBlank(dev.getCorreoAsesor())) {
+						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
+					}
+					array[i] = paras.get(i).getValor()
+							.replace("--correoAsesor--",  dev.getCorreoAsesor());
+				}
+				
 			}
 			
 			if(aprobado) {
@@ -475,7 +494,7 @@ public class DevolucionService {
 			}		
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getCause());
 			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
 		}
 	}

@@ -419,12 +419,12 @@ public class QuskiOroService {
 				persisted.setNombreCompleto(  send.getNombreCompleto() ); 
 			}
 			if( send.getApellidoPaterno() != null || send.getApellidoMaterno() != null || send.getPrimerNombre() != null || send.getSegundoNombre() != null) {
-				String apP = send.getApellidoPaterno() != null ? send.getApellidoPaterno() + " ": "";
-				String apM = send.getApellidoMaterno() != null ? send.getApellidoMaterno() + " ": "";
-				String noP = send.getPrimerNombre() != null ? send.getPrimerNombre()  + " ": "";
-				String noS = send.getSegundoNombre() != null ? send.getSegundoNombre()  + " ": "";
-				String nombre = apP + apM + noP + noS;
-				persisted.setNombreCompleto(nombre);
+				StringBuilder str = new StringBuilder();
+				str.append(StringUtils.isNotBlank(send.getApellidoPaterno() )? send.getApellidoPaterno().trim() + " ": "");
+				str.append(StringUtils.isNotBlank(send.getApellidoMaterno() )?send.getApellidoMaterno().trim() + " ": "");
+				str.append(StringUtils.isNotBlank(send.getPrimerNombre() )? send.getPrimerNombre().trim()  + " ": "");
+				str.append(StringUtils.isNotBlank(send.getSegundoNombre() )? send.getSegundoNombre().trim(): "");			
+				persisted.setNombreCompleto(str.toString());
 			}
 			log.info("NOMBRE COMPLETO LUEGO DE SETEAR EN UPDATE ====================> " + persisted.getNombreCompleto() );
 			if( send.getIngresos() != null ) {
@@ -1612,7 +1612,7 @@ public class QuskiOroService {
 		}catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL GUARDAR TELEFONOS DEL CLIENTE"+e.getCause());
 		}
 
 	}
@@ -1979,7 +1979,10 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE APROBACION MUPI DEL CLIENTE");
 		}
 		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
+			updateCliente(cliente);
 			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
+		}else {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS NUMEROS DE TELEFONO");
 		}
 		return this.tipoOro();
 	}
@@ -2327,6 +2330,7 @@ public class QuskiOroService {
 		cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
 		cuenta.setEstado(EstadoEnum.ACT);
 		cuenta.setTbQoCliente( wr.getCliente() );
+		cuenta.setEsNueva(cuentaWS.getFirmaRegularizada().equalsIgnoreCase("S"));
 		listCreate.add( cuenta );
 		wr.setCuentas( listCreate );
 		wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
@@ -2396,6 +2400,7 @@ public class QuskiOroService {
 			cuenta.setCuenta(cuentaWS.getNumeroCuenta() );
 			cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
 			cuenta.setIdSoftbank( c.getId() );
+			cuenta.setEsNueva(cuentaWS.getFirmaRegularizada().equalsIgnoreCase("S"));
 			listCreate.add( cuenta );				
 		});
 		return listCreate.isEmpty() ? null : listCreate;
@@ -4420,16 +4425,8 @@ public class QuskiOroService {
 		return this.tasacionRepository.countFindByIdCredito(idCreditoNegociacion);
 	}
 
-	public TbQoTasacion eliminarJoya(Long id) throws RelativeException {
-		TbQoTasacion tasacion = this.tasacionRepository.findById(id);
-		tasacion.setEstado(EstadoEnum.INA);
-		try {
-			return this.tasacionRepository.update(tasacion);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
-
+	public void eliminarJoya(Long id) throws RelativeException {
+		this.tasacionRepository.deleteTasacionById(id);
 	}
 	public List<TbQoTasacion> findTasacionByIdCredito(PaginatedWrapper pw, Long idCredito)
 			throws RelativeException {
@@ -5018,6 +5015,7 @@ public class QuskiOroService {
 					cu.setCuenta( e.getCuenta() );
 					cu.setEsAhorros( e.getEsAhorros() );
 					cu.setActivo( e.getEstado() == EstadoEnum.ACT );
+					cu.setEsNueva(e.getEsNueva());
 					cuentasBancarias.add(cu);
 				});
 				sof.setCuentasBancariasCliente(cuentasBancarias);
@@ -6993,7 +6991,7 @@ public class QuskiOroService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getCause());
 		} 
 	}
 
@@ -8371,23 +8369,37 @@ public class QuskiOroService {
 				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
-				TbQoCreditoNegociacion wp = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
-				if(wp == null) {
+				TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
+				if(credito == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
 				}
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"), ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
-				TbQoNegociacion nego = wp.getTbQoNegociacion();
+				TbQoNegociacion nego = credito.getTbQoNegociacion();
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
 				nego.setObservacionAsesor(observacionAsesor);
 				nego.setAprobador(null);
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("ENVIADO A APROBAR");
+				traking.setCodigoBpm(credito.getCodigo());
+				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(nombreAsesor);
+				traking.setUsuarioCreacion(nego.getAsesor());
+				traking.setObservacion(observacionAsesor);
+				traking.setProceso(ProcesoEnum.NUEVO);
+				traking.setSeccion("ENVIADO A APROBAR");
+				this.registrarTraking(traking);
 				this.manageNegociacion( nego );
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
-				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-					this.notificarExcepcionOperativa( wp, Boolean.TRUE );
+				if(StringUtils.isNotBlank(credito.getExcepcionOperativa()) && !credito.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+					this.notificarExcepcionOperativa( credito, Boolean.TRUE );
 				}
 				return this.manageProceso(proceso);
 			}else {
