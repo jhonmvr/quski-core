@@ -32,6 +32,8 @@ import com.relative.quski.wrapper.RespuestaProcesoPagoBloqueoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/registrarPagoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -61,9 +63,10 @@ public class RegistrarPagoRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoRegistrarPago", 
-	response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada TbQoRegistrarPago", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoRegistrarPago> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
 		TbQoRegistrarPago a = this.qos.findRegistrarPagoById(Long.valueOf(id));
@@ -77,6 +80,9 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "PaginatedListWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoRegistrarPago", 
 	response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoRegistrarPago> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -103,6 +109,9 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
 	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoRegistrarPago> persistEntity(GenericWrapper<TbQoRegistrarPago> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
@@ -113,6 +122,12 @@ public class RegistrarPagoRestController extends BaseRestController
 	}
 	@POST
 	@Path("/iniciarProcesoRegistrarPago")
+	@ApiOperation(value = "GenericWrapper<InicioProcesoPagoWrapper>", 
+	notes = "Metodo Post iniciarProcesoRegistrarPago Retorna GenericWrapper de la entidad encontrada RespuestaProcesoPagoBloqueoWrapper", 
+	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarPago(InicioProcesoPagoWrapper wrapper) throws RelativeException {
 		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad( this.ps.crearRegistrarPago( wrapper ) );
@@ -120,6 +135,12 @@ public class RegistrarPagoRestController extends BaseRestController
 	}
 	@POST
 	@Path("/iniciarProcesoRegistrarBloqueo")
+	@ApiOperation(value = "GenericWrapper<InicioProcesoBloqueoWrapper>", 
+	notes = "Metodo Post iniciarProcesoRegistrarBloqueo Retorna GenericWrapper de la entidad encontrada RespuestaProcesoPagoBloqueoWrapper", 
+	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper) throws RelativeException {
 		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
 		
@@ -148,9 +169,12 @@ public class RegistrarPagoRestController extends BaseRestController
 
 	@GET
 	@Path("/findByIdClientePago")
-	@ApiOperation(value = "GenericWrapper<TbQoRegistrarPago>", 
-	notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoRegistrarPago", 
+	@ApiOperation(value = "id", 
+	notes = "Metodo GET findByIdClientePago Retorna GenericWrapper de la entidad encontradas TbQoRegistrarPago", 
 	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoRegistrarPago> findByIdClientePago(@QueryParam("id")  String id) throws RelativeException {
 		GenericWrapper<TbQoRegistrarPago> loc = new GenericWrapper<>();
 		
@@ -159,6 +183,12 @@ public class RegistrarPagoRestController extends BaseRestController
 	}
 	@GET
 	@Path("/enviarRespuesta")
+	@ApiOperation(value = "id, isRegistro , isAprobar, nombreAprobador, correoAprobador, valorAprobador", 
+	notes = "Metodo GET enviarRespuesta Retorna GenericWrapper de la entidad encontrada TbQoProceso", 
+	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> enviarRespuesta(
 			@QueryParam("id") String id, 
 			@QueryParam("isRegistro")  String isRegistro,

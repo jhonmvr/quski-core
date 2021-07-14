@@ -23,6 +23,8 @@ import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/tasacionRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -41,6 +43,10 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 
 	@GET
 	@Path("/eliminarJoya")
+	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo eliminarJoya elimina una entidad encontrada en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		TbQoTasacion a = null;
@@ -53,6 +59,9 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		//TbQoTasacion a = this.qos.findTasacionById(Long.valueOf(id));
@@ -64,6 +73,9 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoTasacion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoTasacion> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -89,6 +101,9 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoTasacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> persistEntity(GenericWrapper<TbQoTasacion> wp) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageTasacion(wp.getEntidad()));
@@ -98,7 +113,10 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 		
 	@GET
 	@Path("/getByCreditoNegociacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbMiCotizacion", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoTasacion> getByCreditoNegociacion(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -121,7 +139,10 @@ implements CrudRestControllerInterface<TbQoTasacion, GenericWrapper<TbQoTasacion
 	}
 	@GET
 	@Path("/findByIdCredito")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbMiCotizacion", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoTasacion>", notes = "Metodo getEntityByEstado Retorna wrapper de entidades encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoTasacion> findByIdCredito(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

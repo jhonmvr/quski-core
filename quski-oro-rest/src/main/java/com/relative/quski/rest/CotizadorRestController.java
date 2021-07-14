@@ -26,6 +26,8 @@ import com.relative.quski.wrapper.CotizacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/cotizadorRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -98,6 +100,9 @@ public class CotizadorRestController extends BaseRestController
 	@GET
 	@Path("/cotizadorByCliente")
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo CotizadorBycedulaCliente Retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoCotizador> cotizadorByIdCotizador(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -122,6 +127,10 @@ public class CotizadorRestController extends BaseRestController
 	
 	@GET
 	@Path("/iniciarCotizacion")
+	@ApiOperation(value = "cedula, asesor", notes = "Metodo iniciarCotizacion Retorna wrapper de entidades encontradas en CotizacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CotizacionWrapper> iniciarCotizacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
 		CotizacionWrapper a = this.qos.iniciarCotizacion(cedula, asesor, Long.valueOf(idAgencia));
@@ -131,6 +140,10 @@ public class CotizadorRestController extends BaseRestController
 	
 	@GET
 	@Path("/iniciarCotizacionEquifax")
+	@ApiOperation(value = "cedula, asesor", notes = "Metodo iniciarCotizacionEquifax Retorna wrapper de entidades encontradas en CotizacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
 		CotizacionWrapper a = this.qos.iniciarCotizacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
@@ -140,6 +153,10 @@ public class CotizadorRestController extends BaseRestController
 	
 	@POST
 	@Path("/agregarJoya")
+	@ApiOperation(value = "GenericWrapper<TbQoTasacion>, asesor", notes = "Metodo POST agregarJoya registra y retorna wrapper de entidades encontradas en CotizacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		List<TbQoTasacion> a = this.qos.agregarJoyaCotizacion(joya, asesor);
@@ -148,6 +165,7 @@ public class CotizadorRestController extends BaseRestController
 	}
 	@POST
 	@Path("/guardarGestion")
+	@ApiOperation(value = "GenericWrapper<CotizacionWrapper>", notes = "Metodo POST guardarGestion registra y retorna wrapper de entidades encontradas en TbQoCotizador", response = GenericWrapper.class)
 	public GenericWrapper<TbQoCotizador> guardarGestion(CotizacionWrapper wrapper) throws RelativeException {
 		GenericWrapper<TbQoCotizador> loc = new GenericWrapper<>();
 		TbQoCotizador a = this.qos.guardarGestion(wrapper);
@@ -156,6 +174,10 @@ public class CotizadorRestController extends BaseRestController
 	}
 	@GET
 	@Path("/eliminarJoya")
+	@ApiOperation(value = "id", notes = "Metodo GET elimina la entidad encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> eliminarJoya(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		TbQoTasacion a = null;
@@ -165,6 +187,10 @@ public class CotizadorRestController extends BaseRestController
 	}
 	@GET
 	@Path("/findByCedula")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoCotizador>", notes = "Metodo GET elimina la entidad encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoCotizador> findByCedula(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -178,6 +204,10 @@ public class CotizadorRestController extends BaseRestController
 	}
 	@GET
 	@Path("/buscarGestionCotizacion")
+	@ApiOperation(value = "id", notes = "Metodo GET retorna la entidad encontrada en CotizacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
 		CotizacionWrapper a = this.qos.buscarGestionCotizacion(Long.valueOf(id));

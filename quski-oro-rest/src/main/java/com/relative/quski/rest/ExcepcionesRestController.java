@@ -28,6 +28,8 @@ import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/excepcionesRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -52,7 +54,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 
 	@GET
 	@Path("/findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion")
-	@ApiOperation(value = "GenericWrapper<TbQoExcepcion>", notes = "Metodo Especifico Retorna entidad encontradas en TbQoExcepcion por id de negociacion, tipo de excepcion y estado de la excepcion", response = GenericWrapper.class)
+	@ApiOperation(value = "idNegociacion, tipoExcepcion, estadoExcepcion", notes = "Metodo Get findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion Retorna GenericWrapper de la entidad encontrada TbQoExcepcion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcion> findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("tipoExcepcion") String tipoExcepcion,
@@ -66,7 +71,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoExcepcion>", notes = "Metodo getEntity Retorna entidad encontradas en TbQoExcepcion", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna entidad encontradas en TbQoExcepcion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		TbQoExcepcion a = this.qos.finExcepcionById(Long.valueOf( id ));
@@ -75,6 +83,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	}
 	@GET
 	@Path("/negarExcepcion")
+	@ApiOperation(value = "idExc, obsAprobador, aprobador, proceso", notes = "Metodo Get negarExcepcion Retorna GenericWrapper de la entidad encontrada booleana", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		ProcesoEnum proc = null;
@@ -90,6 +102,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	}
 	@GET
 	@Path("/aprobarCobertura")
+	@ApiOperation(value = "idExc, obsAprobador, aprobador, cobertura, proceso", notes = "Metodo Get aprobarCobertura Retorna GenericWrapper de la entidad encontrada booleana", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		ProcesoEnum proc = null;
@@ -114,6 +130,9 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcion> persistEntity(GenericWrapper<TbQoExcepcion> wp) throws RelativeException {
 		log.info("INGRESA AL PERSIST====> "+wp);
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
@@ -123,7 +142,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	}
 	@GET
 	@Path("/findByIdNegociacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo Get findByIdNegociacion Retorna entidades encontradas en TbQoExcepcion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoExcepcion> findByIdNegociacion( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -149,7 +171,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	}
 	@GET
 	@Path("/findByIdCliente")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Cliente", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo Get findByIdCliente Retorna entidades encontradas en TbQoExcepcion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoExcepcion> findByIdCliente( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -173,7 +198,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	
 	@GET
 	@Path("/findByTipoExcepcionAndIdNegociacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Cliente", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo Geeet findByTipoExcepcionAndIdNegociacion Retorna entidades encontradas en TbQoExcepcion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoExcepcion> findByIdClfindByTipoExcepcionAndIdNegociacioniente( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -198,7 +226,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	
 	@GET
 	@Path("/findByTipoExcepcionAndIdNegociacionAndCaracteristica")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Cliente", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo Get findByTipoExcepcionAndIdNegociacionAndCaracteristica Retorna entidades encontradas en TbQoExcepcion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoExcepcion> findByIdClfindByTipoExcepcionAndIdNegociacionAndCaracteristica( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -225,6 +256,10 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 
 	@GET
 	@Path("/excepcionCliente")
+	@ApiOperation(value = "id, obsAprobador, aprobador, aprobado ", notes = "Metodo Get excepcionCliente Retorna GenericWrapper de la entidad encontrada TbQoExcepcion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcion> excepcionCliente(@QueryParam("id") String id, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("aprobado") String aprobado ) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(id)) {

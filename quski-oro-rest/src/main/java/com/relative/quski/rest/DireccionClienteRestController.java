@@ -47,8 +47,7 @@ public class DireccionClienteRestController extends BaseRestController implement
 	 	
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoDireccionCliente>", notes = "Metodo Get Retorna GenericWrapper de el registro de TbQoDireccionCliente", 
-	response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada TbQoDireccionCliente", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -62,7 +61,10 @@ public class DireccionClienteRestController extends BaseRestController implement
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoDireccionCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoDireccionCliente", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoDireccionCliente", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoDireccionCliente", response = GenericWrapper.class)
+		@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDireccionCliente> persistEntity(GenericWrapper<TbQoDireccionCliente> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoDireccionCliente> loc = new GenericWrapper<>();
@@ -78,7 +80,10 @@ public class DireccionClienteRestController extends BaseRestController implement
 	
 	@GET
 	@Path("/direccionByIdCliente")
-	@ApiOperation(value = "GenericWrapper<TbQoDireccionCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiCliente", response = GenericWrapper.class)
+	@ApiOperation(value = "idC, tipoDireccion", notes = "Metodo Get direccionByIdCliente Retorna Genericwrapper de entidades encontradas en TbQoDireccionCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDireccionCliente> direccionByIdCliente(@QueryParam("idC") String idC, @QueryParam("tipoDireccion") String tipoDireccion)
 			throws RelativeException {
 		GenericWrapper<TbQoDireccionCliente> loc = new GenericWrapper<>();

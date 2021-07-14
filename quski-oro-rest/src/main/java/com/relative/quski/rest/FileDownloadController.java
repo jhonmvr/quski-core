@@ -49,8 +49,7 @@ public class FileDownloadController extends BaseRestController {
 	
 	@POST
 	@Path("/downloadFileHabilitante")
-	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFile", 
-	response = FileWrapper.class)
+	@ApiOperation(value = "objectFullName, methodName, idHabilitante, idTipoDocumento, proceso, estadoOperacion, idReferencia, format, mainReportName", notes = "Metodo Post downloadFileHabilitante retorna la entidad encontrada byte[]", 	response = byte[].class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = FileWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })

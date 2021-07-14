@@ -36,6 +36,8 @@ import com.relative.quski.util.QuskiOroConstantes;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/tipoArchivoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -76,6 +78,9 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoTipoArchivo>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoTipoArchivo", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoTipoArchivo> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -102,6 +107,9 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoTipoArchivo>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoTipoArchivo", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTipoArchivo> persistEntity(GenericWrapper<TbQoTipoArchivo> wp) throws RelativeException {
 		GenericWrapper<TbQoTipoArchivo> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageTipoArchivo(wp.getEntidad()));
@@ -121,6 +129,9 @@ implements CrudRestControllerInterface<TbQoTipoArchivo, GenericWrapper<TbQoTipoA
 	@Path("/getPlantilla")
 	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
 	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 		public byte[] getPlantilla(
 			@QueryParam("id") String id,
 			@QueryParam("format") String formato,

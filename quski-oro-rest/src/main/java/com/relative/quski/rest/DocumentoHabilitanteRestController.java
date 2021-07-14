@@ -27,6 +27,8 @@ import com.relative.quski.util.QuskiOroUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/documentoHabilitanteRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,7 +50,10 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoDocumentoHabilitante", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoDocumentoHabilitante", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDocumentoHabilitante> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoDocumentoHabilitante> loc = new GenericWrapper<>();
 		TbQoDocumentoHabilitante a = this.qos.findDocumentoHabilitanteById(Long.valueOf(id));
@@ -59,7 +64,10 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 	@Override
 	@GET
 	@Path("/listAllEntities")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoCotizador>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoDocumentoHabilitante", response = PaginatedListWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbQoDocumentoHabilitante>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoDocumentoHabilitante", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoDocumentoHabilitante> listAllEntities(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -87,6 +95,9 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbMiDocumentoHabilitante>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbMiDocumentoHabilitante", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDocumentoHabilitante> persistEntity(GenericWrapper<TbQoDocumentoHabilitante> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoDocumentoHabilitante> loc = new GenericWrapper<>();
@@ -149,6 +160,9 @@ implements CrudRestControllerInterface<TbQoDocumentoHabilitante, GenericWrapper<
 	@GET
 	@Path("/getByProcesoTipoDocumentoReferencia")
 	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoDocumentoHabilitante", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDocumentoHabilitante> getByTipoDocumentoProcesoReferencia(@QueryParam("idTipoDocumento") String idTipoDocumento, 
 			@QueryParam("proceso") String proceso, @QueryParam("referencia") String referencia) throws RelativeException {
 		GenericWrapper<TbQoDocumentoHabilitante> loc = new GenericWrapper<>();

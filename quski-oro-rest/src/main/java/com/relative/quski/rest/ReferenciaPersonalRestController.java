@@ -21,6 +21,8 @@ import com.relative.quski.model.TbQoReferenciaPersonal;
 import com.relative.quski.service.QuskiOroService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/referenciaPersonalRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -47,6 +49,9 @@ implements CrudRestControllerInterface<TbQoReferenciaPersonal, GenericWrapper<Tb
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoReferenciaPersonal>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoReferenciaPersonal", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoReferenciaPersonal> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoReferenciaPersonal> loc = new GenericWrapper<>();
 		TbQoReferenciaPersonal a = this.qos.findReferenciaPersonalById(Long.valueOf(id));
@@ -58,6 +63,9 @@ implements CrudRestControllerInterface<TbQoReferenciaPersonal, GenericWrapper<Tb
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoReferenciaPersonal>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoReferenciaPersonal", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoReferenciaPersonal> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -83,6 +91,9 @@ implements CrudRestControllerInterface<TbQoReferenciaPersonal, GenericWrapper<Tb
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoReferenciaPersonal>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoReferenciaPersonal", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoReferenciaPersonal> persistEntity(GenericWrapper<TbQoReferenciaPersonal> wp) throws RelativeException {
 		GenericWrapper<TbQoReferenciaPersonal> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageReferenciaPersonal(wp.getEntidad()));

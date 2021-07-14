@@ -34,6 +34,8 @@ import com.relative.quski.wrapper.TrackingWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 @Path("/trackingRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -132,6 +134,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 //	}
 	@GET
 	@Path("/busquedaTracking")
+	@ApiOperation(value = "", notes = "Metodo que devuelve la lista de procesos encontrados en TbQoTracking", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoTracking> busquedaTracking(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -171,7 +177,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	
 	@GET
 	@Path("/listProceso")
-	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de procesos encontrados en TbQoTraking", response = GenericWrapper.class)
+	@ApiOperation(value = "", notes = "Metodo que devuelve la lista de procesos encontrados en ProcesoEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ProcesoEnum> listProceso() throws RelativeException {
 		GenericWrapper<ProcesoEnum> loc = new GenericWrapper<>();
 		List<ProcesoEnum> a = this.qos.findListProcesos();
@@ -180,7 +189,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	}
 	@GET
 	@Path("/listActividad")
-	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de actividades encontradas en TbQoTraking", response = GenericWrapper.class)
+	@ApiOperation(value = "String proceso", notes = "Metodo que devuelve la lista de actividades encontradas en ActividadEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ActividadEnum> listActividad(@QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<ActividadEnum> loc = new GenericWrapper<>();
 		List<ActividadEnum> a = this.qos.findListActividadByProceso(proceso);
@@ -189,7 +201,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	}
 	@GET
 	@Path("/listSeccion")
-	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de secciones encontradas en TbQoTraking", response = GenericWrapper.class)
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SeccionEnum> listSeccion(@QueryParam("actividad") String actividad) throws RelativeException {
 		GenericWrapper<SeccionEnum> loc = new GenericWrapper<>();
 		List<SeccionEnum> a = this.qos.findListSeccionByActividad(actividad);
@@ -199,7 +214,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 	
 	@POST
 	@Path("/registrar")
-	@ApiOperation(value = "GenericWrapper<String>", notes = "Metodo que devuelve la lista de secciones encontradas en TbQoTraking", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoTracking>", notes = "Metodo Post persistEntity Registra  y retorna la entidad TbQoTracking", response = TbQoTracking.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTracking> registrar(TbQoTracking wp) throws RelativeException {
 		GenericWrapper<TbQoTracking> loc = new GenericWrapper<>();
 		TbQoTracking a = this.qos.registrarTraking(wp);
@@ -209,6 +227,10 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 
 	@GET	
 	@Path("/getActividadesProcesosAndSecciones")
+	@ApiOperation(value = "", notes = "Metodo Get getActividadesProcesosAndSecciones Retorna GenericWrapper de la entidad encontrada EnumsWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<EnumsWrapper> getActividadesProcesosAndSecciones() throws RelativeException {
 		GenericWrapper<EnumsWrapper> w = new GenericWrapper<>();
 		EnumsWrapper enums = new EnumsWrapper();

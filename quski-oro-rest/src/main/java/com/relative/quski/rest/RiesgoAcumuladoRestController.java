@@ -23,6 +23,8 @@ import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/riesgoAcumuladoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -50,6 +52,7 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	@Override
 	@GET
 	@Path("/listAllEntities")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoCotizador>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoRiesgoAcumulado", response = PaginatedListWrapper.class)
 	public PaginatedListWrapper<TbQoRiesgoAcumulado> listAllEntities(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -75,8 +78,8 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	 */
 	@POST
 	@Path("/persistEntities")
-	@ApiOperation(value = "GenericWrapper<TbQoRiesgoAcumulado> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbQoRiesgoAcumulado", 
-	response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoRiesgoAcumulado>", 
+	notes = "Metodo Post persistEntity Registra  y retorna la entidad TbQoRiesgoAcumulado", response = GenericWrapper.class)
 	public GenericWrapper<TbQoRiesgoAcumulado> persistEntities(GenericWrapper<TbQoRiesgoAcumulado> ra) throws RelativeException {
 		GenericWrapper<TbQoRiesgoAcumulado> gw= new GenericWrapper<>();
 		gw.setEntidades(this.qos.manageListRiesgoAcumulados( ra.getEntidades() ));
@@ -93,6 +96,9 @@ implements CrudRestControllerInterface<TbQoRiesgoAcumulado, GenericWrapper<TbQoR
 	@GET
 	@Path("/findRiesgoAcumuladoByIdCliente")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoRiesgoAcumulado>", notes = "Metodo Retorna List de entidades encontradas en TbQoRiesgoAcumulado", response = List.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoRiesgoAcumulado> findRiesgoAcumuladoByIdCliente( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

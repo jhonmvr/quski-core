@@ -32,6 +32,8 @@ import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/softbankClienteRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -55,6 +57,10 @@ public class SoftbankClienteRestController extends BaseRestController
 	
 	@POST
 	@Path("/consultarClienteSoftbank")
+	@ApiOperation(value = "SoftbankConsultaWrapper, autentication", notes = "Metodo Get consultarClienteSoftbank Retorna GenericWrapper de la entidad encontrada SoftbankClienteWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
 			throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
@@ -65,6 +71,10 @@ public class SoftbankClienteRestController extends BaseRestController
 	
 	@POST
 	@Path("/crearClienteSoftbank")
+	@ApiOperation(value = "SoftbankConsultaWrapper", notes = "Metodo Post crearClienteSoftbank registra y retorna GenericWrapper de la entidad  SoftbankClienteWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SoftbankRespuestaWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper) throws RelativeException {
 		GenericWrapper<SoftbankRespuestaWrapper> loc = new GenericWrapper<>();
 		try {
@@ -79,6 +89,11 @@ public class SoftbankClienteRestController extends BaseRestController
 	}
 	@POST
 	@Path("/buscarCreditos")
+	@ApiOperation(value = "ConsultaGlobalWrapper",
+	notes = "Metodo Get buscarCreditos Retorna GenericWrapper de la entidad encontrada ConsultaGlobalRespuestaWrapper", response = ConsultaGlobalRespuestaWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ConsultaGlobalRespuestaWrapper> buscarCreditos(ConsultaGlobalWrapper wrapper) throws RelativeException {
 		GenericWrapper<ConsultaGlobalRespuestaWrapper> loc = new GenericWrapper<>();
 		try {
@@ -99,6 +114,11 @@ public class SoftbankClienteRestController extends BaseRestController
 	
 	@GET
 	@Path("/getEntity")
+	@ApiOperation(value = "SoftbankConsultaWrapper", 
+	notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada SoftbankClienteWrapper", response = SoftbankClienteWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SoftbankClienteWrapper> getEntity(SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 	
@@ -109,6 +129,11 @@ public class SoftbankClienteRestController extends BaseRestController
 	}
 	@GET
 	@Path("/traerCatalogos")
+	@ApiOperation(value = "", 
+	notes = "Metodo Get getEntity Retorna GenericWrapper de las entidades encontradas CatalogosSoftbankWrapper", response = CatalogosSoftbankWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CatalogosSoftbankWrapper> traerCatalogos() throws RelativeException {
 		GenericWrapper<CatalogosSoftbankWrapper> loc = new GenericWrapper<>();
 		CatalogosSoftbankWrapper a = qos.traerCatalogos();
@@ -119,6 +144,9 @@ public class SoftbankClienteRestController extends BaseRestController
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<SoftbankClienteWrapper>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en SoftbankClienteWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<SoftbankClienteWrapper> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -139,6 +167,9 @@ public class SoftbankClienteRestController extends BaseRestController
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<SoftbankClienteWrapper>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas SoftbankClienteWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SoftbankClienteWrapper> persistEntity(GenericWrapper<SoftbankClienteWrapper> pw) {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 		return loc;

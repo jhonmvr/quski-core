@@ -45,8 +45,7 @@ public class FileUploadController extends BaseRestController {
 	
 	@POST
 	@Path("/loadFileHabilitante")
-	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFile", 
-	response = FileWrapper.class)
+	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFileHabilitante Retorna  la entidad encontrada loadFile", response= FileWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = FileWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -75,8 +74,7 @@ public class FileUploadController extends BaseRestController {
 	
 	@POST
 	@Path("/loadFileHabilitanteSimplified")
-	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFile", 
-	response = FileWrapper.class)
+	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFileHabilitanteSimplified Retorna  la entidad encontrada FileWrapper", response= FileWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = FileWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })

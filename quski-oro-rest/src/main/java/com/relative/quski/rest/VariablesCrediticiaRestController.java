@@ -23,6 +23,8 @@ import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 
 
@@ -48,7 +50,10 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoTipoOro>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoTipoOro", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoVariablesCrediticia>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoVariablesCrediticia", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoVariablesCrediticia> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoVariablesCrediticia> loc = new GenericWrapper<>();
 		TbQoVariablesCrediticia a = this.qos.findVariablesCrediticiaById(Long.valueOf(id));
@@ -59,8 +64,10 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/listAllEntities")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoVariableCrediticia>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoTipoOro", response = PaginatedListWrapper.class)
-
+	@ApiOperation(value = "PaginatedListWrapper<TbQoVariableCrediticia>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoVariablesCrediticia", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoVariablesCrediticia> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -93,7 +100,10 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	}
 	@GET
 	@Path("/variablesCrediticiaByIdCotizacion")
-	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variablesCrediticiaByIdCotizacion Retorna wrapper de entidades encontradas en TbQoVariablesCrediticia", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoVariablesCrediticia> variableCrediticiaByIdCotizador(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -125,7 +135,10 @@ public class VariablesCrediticiaRestController extends BaseRestController
 	 */
 	@GET
 	@Path("/variablesCrediticiaByIdNegociacion")
-	@ApiOperation(value = "GenericWrapper<TbQoVariableCrediticia>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = GenericWrapper.class)
+	@ApiOperation(value = "idNegociacion>", notes = "Metodo variableCrediticiaByIdCotizador Retorna wrapper de entidades encontradas en TbQoVariableCrediticia", response = List.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public List<TbQoVariablesCrediticia> variablesCrediticiaByIdNegociacion( @QueryParam("idNegociacion") String idNegociacion ) throws RelativeException {
 			return this.qos.findVariablesCrediticiaByIdNegociacion( Long.valueOf(idNegociacion) );
 	}

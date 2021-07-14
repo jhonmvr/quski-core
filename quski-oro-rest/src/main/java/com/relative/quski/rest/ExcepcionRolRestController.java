@@ -27,6 +27,8 @@ import com.relative.quski.wrapper.ExcepcionRolWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * @author KLÉBER GUERRA relative Engine
@@ -56,7 +58,7 @@ public class ExcepcionRolRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoExcepcionRol>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoExcepcionRol", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna wrapper de entidades encontradas en TbQoExcepcionRol", response = GenericWrapper.class)
 	public GenericWrapper<TbQoExcepcionRol> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoExcepcionRol> loc = new GenericWrapper<>();
 		TbQoExcepcionRol a = this.qos.findById(Long.valueOf(id));
@@ -93,7 +95,9 @@ public class ExcepcionRolRestController extends BaseRestController
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoExcepcionRol>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoExcepcionRol", response = GenericWrapper.class)
-
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcionRol> persistEntity(GenericWrapper<TbQoExcepcionRol> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoExcepcionRol> loc = new GenericWrapper<>();
@@ -103,7 +107,10 @@ public class ExcepcionRolRestController extends BaseRestController
 	
 	@GET
 	@Path("/findByRolAndIdentificacion")
-	@ApiOperation(value = "PaginatedListWrapper<TbQoExcepcion>", notes = "Metodo PaginatedListWrapper Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = GenericWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<ExcepcionRolWrapper>", notes = "Metodo Get indByRolAndIdentificacion Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<ExcepcionRolWrapper> findByRolAndIdentificacion( 
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,

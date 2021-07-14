@@ -26,6 +26,10 @@ import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Path("/calculadoraRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +67,10 @@ public class CalculadoraRestController extends BaseRestController
 	}
 	@GET
 	@Path("/simularOfertaCotizacion")
+	@ApiOperation(value = "idCotizador", notes = "Metodo Get que simula las ofertas Cotizacion  y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SimularResponse> simularOfertaCotizacion(@QueryParam("idCotizador") String idCotizador) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCotizador)) {
@@ -75,6 +83,10 @@ public class CalculadoraRestController extends BaseRestController
 	}
 	@GET
 	@Path("/simularOferta")
+	@ApiOperation(value = "idCredito", notes = "Metodo Get que simula las ofertas y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SimularResponse> simularOferta(@QueryParam("idCredito") String idCredito,
 			@QueryParam("montoSolicitado") String montoSolicitado,
 			@QueryParam("riesgoTotal") String riesgoTotal,
@@ -93,6 +105,10 @@ public class CalculadoraRestController extends BaseRestController
 	
 	@POST
 	@Path("/simularOfertaRenovacion")
+	@ApiOperation(value = "GenericWrapper<DetalleCreditoWrapper>", notes = "Metodo Get que simula las ofertas de Renovacion  y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SimularResponse> simularOfertaRenovacion(DetalleCreditoWrapper credito,
 			@QueryParam("riesgoTotal") String riesgoTotal,
 			@QueryParam("coberturaExcepcionada") String coberturaExcepcionada,
@@ -109,6 +125,10 @@ public class CalculadoraRestController extends BaseRestController
 	}
 	@GET
 	@Path("/simularOfertaRenovacionExcepcion")
+	@ApiOperation(value = "idCredito,  cobertura", notes = "Metodo Get que simula las ofertas de Renovacion con Excepcion  y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("idCredito") String idCredito,@QueryParam("cobertura") String cobertura) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
 		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura );
@@ -118,6 +138,10 @@ public class CalculadoraRestController extends BaseRestController
 	
 	@GET
 	@Path("/simularOfertaExcepcionada")
+	@ApiOperation(value = "idCredito,  cobertura, idAgencia", notes = "Metodo Get que simula las ofertas excepcionadas  y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionada(@QueryParam("codigoAgencia") String codigoAgencia,
 			@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura, @QueryParam("idAgencia") String idAgencia) throws NumberFormatException, Exception {
 		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
@@ -127,6 +151,10 @@ public class CalculadoraRestController extends BaseRestController
 	}	
 	@GET
 	@Path("/simularOfertaExcepcionadaRenovacion")
+	@ApiOperation(value =  "codigoAgencia, idCredito,  cobertura", notes = "Metodo Get que simula las ofertas excepcionadas  de renovacion  y retorna la entidad SimularResponse", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("codigoAgencia") String codigoAgencia,
 			@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura) throws NumberFormatException, Exception {
 		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();

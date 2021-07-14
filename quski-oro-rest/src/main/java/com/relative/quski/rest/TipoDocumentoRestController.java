@@ -42,6 +42,8 @@ import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/tipoDocumentoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -113,7 +115,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo Post persistEntity registra y retorna GenericWrapper de la entidad  TbQoTipoDocumento", response = GenericWrapper.class)
 	public GenericWrapper<TbQoTipoDocumento> persistEntity(GenericWrapper<TbQoTipoDocumento> wp) throws RelativeException {
 		GenericWrapper<TbQoTipoDocumento> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageDocumento(wp.getEntidad()));
@@ -131,8 +133,12 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	
 	@GET
 	@Path("/getPlantilla")
-	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
-	response = GenericWrapper.class)
+	@ApiOperation(value = "id, format, identificacionCliente, nombreCliente, idCotizador, idNegociacion, idDevolucion, nombreAsesor, identificacionAsesor", 
+	notes = "Metodo getPlantilla Retorna wrapper de entidades encontradas en ObjetoHabilitanteWrapper", 
+	response = ObjetoHabilitanteWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 		public ObjetoHabilitanteWrapper getPlantilla(
 			@QueryParam("id") String id,
 			@QueryParam("format") String formato,
@@ -266,8 +272,11 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 	
 	@GET
 	@Path("/getPlantillaDevolucion")
-	@ApiOperation(value = "GenericWrapper<TbQoTipoDocumento>", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en TbQoTipoDocumento", 
+	@ApiOperation(value = "idTipoDocumento, format, idReferencia, nombreAsesor, identificacionAsesor", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en ObjetoHabilitanteWrapper", 
 	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 		public ObjetoHabilitanteWrapper getPlantillaDevolucion(
 			@QueryParam("idTipoDocumento") String id,
 			@QueryParam("format") String formato,

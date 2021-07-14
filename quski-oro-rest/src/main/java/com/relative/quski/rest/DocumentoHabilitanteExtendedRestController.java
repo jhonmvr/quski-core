@@ -31,6 +31,10 @@ import com.relative.quski.wrapper.DocumentoHabilitanteWrapper;
 import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 import com.relative.quski.wrapper.RespuestaHabilitanteCreditoWrapper;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Path("/documentoHabilitanteExtendedRestController")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +54,10 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@GET
 	@Path("/loadHabilitantes")
+	@ApiOperation(value = "PaginatedListWrapper<DocumentoHabilitanteWrapper>", notes = "Metodo Get loadHabilitantes Retorna wrapper de informacion de paginacion y entidades encontradas en DocumentoHabilitanteWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<DocumentoHabilitanteWrapper> loadHabilitantes (  
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -93,6 +101,10 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@GET
 	@Path("/getPermisoHabilitanteRol")
+	@ApiOperation(value = "idTipoDocumento, idRol, proceso, estadoOperacion", notes = "Metodo Get getPermisoHabilitanteRol Retorna GenericWrapper de la entidad encontrada TbQoRolTipoDocumento", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoRolTipoDocumento> getPermisoHabilitanteRol(
 			@QueryParam("idTipoDocumento") String idTipoDocumento,@QueryParam("idRol") String  idRol,
 			@QueryParam("proceso") String  proceso,@QueryParam("estadoOperacion") String estadoOperacion
@@ -107,6 +119,10 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@GET
 	@Path("/getDocumentoCredito")
+	@ApiOperation(value = "idReferencia", notes = "Metodo Get getDocumentoCredito Retorna la entidad encontrada ObjetoHabilitanteWrapper", response = ObjetoHabilitanteWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public ObjetoHabilitanteWrapper getDocumentoCredito(
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
 	if(StringUtils.isBlank(idReferencia)) {
@@ -117,6 +133,10 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	
 	@GET
 	@Path("/getDocumentoCreditozip")
+	@ApiOperation(value = "idReferencia", notes = "Metodo Get getDocumentoCreditozip Retorna la entidad encontrada byte[]", response = byte[].class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public byte[] getDocumentoCreditozip(
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
 	if(StringUtils.isBlank(idReferencia)) {

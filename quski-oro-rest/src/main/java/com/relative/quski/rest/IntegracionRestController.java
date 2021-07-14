@@ -10,6 +10,7 @@ import javax.ws.rs.QueryParam;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.BaseWrapper;
 import com.relative.core.web.util.BaseRestController;
+import com.relative.core.web.util.GenericWrapper;
 //import com.relative.integracion.calculadora.cliente.consumer.ClienteCalculadoraOfertaGarantiaConsumer;
 import com.relative.integracion.calculadora.cliente.wrapper.Informacion;
 //import com.relative.integracion.calculadora.garantia.wrapper.EnvioInformacionPersonaOfertaWrapper;
@@ -17,6 +18,8 @@ import com.relative.integracion.calculadora.oferta.wrapper.SimularResponse;
 import com.relative.quski.service.IntegracionServiceImp;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/integracionRestController")
 @Consumes({ "application/json" })
@@ -31,6 +34,10 @@ public class IntegracionRestController extends BaseRestController {
 
 	@GET
 	@Path("/getInformacionPersona")
+	@ApiOperation(value = "tipoIdentificacion, identificacion, tipoConsulta, calificacion", notes = "Metodo Get getInformacionPersona Retorna Wrapper de la entidad encontrada Informacion", response = BaseWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public BaseWrapper<Informacion> getInformacionPersona(
 			@QueryParam("tipoIdentificacion")  String tipoIdentificacion,
 			@QueryParam("identificacion")  String identificacion,
@@ -44,6 +51,10 @@ public class IntegracionRestController extends BaseRestController {
 
 	@GET
 	@Path("/getInformacionOferta")
+	@ApiOperation(value = "perfilRiesgo, tipoJoya, descripcion, estadoJoya, numeroPiezas, tipoOroKilataje, descuentoSuelda, precioOro, valorRealizacion, valorAplicableCredito,  pesoGr, pesoNeto, tienePiedras, origenOperacion, riesgoTotal, fechaNacimiento, perfilPreferencia, agenciaOriginacion, identificacionCliente, calificacionMupi, coberturaExcepcionada, ", notes = "Metodo Get getInformacionOferta Retorna Wrapper de la entidad encontrada SimularResponse", response = BaseWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public BaseWrapper<SimularResponse> getInformacionPersonaOferta(
 			@QueryParam("perfilRiesgo")  String perfilRiesgo,
 			@QueryParam("origenOperacion")  String origenOperacion,

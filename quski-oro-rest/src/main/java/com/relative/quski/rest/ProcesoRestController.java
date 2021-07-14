@@ -33,6 +33,10 @@ import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 
 @Path("/procesoRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -53,6 +57,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 
 	@GET
 	@Path("/cancelarNegociacion")
+	@ApiOperation(value = "idNegociacion, usuario", notes = "Metodo Get cancelarNegociacion Retorna wrapper de entidades encontradas en TbQoProceso", response = GenericWrapper.class)
 	public GenericWrapper<TbQoProceso> cancelarNegociacion(@QueryParam("idNegociacion") String idNegociacion, @QueryParam("usuario") String usuario) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.cancelarNegociacion( Long.valueOf( idNegociacion ), usuario ) );
@@ -60,6 +65,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/findByIdReferencia")
+	@ApiOperation(value = "id, proceso", notes = "Metodo Get findByIdReferencia Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
 	public GenericWrapper<TbQoProceso> findByIdReferencia(@QueryParam("id") String id, @QueryParam("proceso") ProcesoEnum proceso) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.findProcesoByIdReferencia( Long.valueOf( id ), proceso ) );
@@ -67,6 +73,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/cambiarEstadoProceso")
+	@ApiOperation(value = "idReferencia, proceso, newEstado, usuario ", notes = "Metodo Get cambiarEstadoProceso Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
 	public GenericWrapper<TbQoProceso> cambiarEstadoProceso(@QueryParam("idReferencia") String idReferencia, 
 			@QueryParam("proceso") ProcesoEnum proceso, 
 			@QueryParam("newEstado") EstadoProcesoEnum newEstado,
@@ -78,6 +85,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/validarAprobador")
+	@ApiOperation(value = "idReferencia, proceso, aprobador ", notes = "Metodo Get validarAprobador Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
 	public GenericWrapper<String> validarAprobador(@QueryParam("idReferencia") String idReferencia, 
 			@QueryParam("proceso") ProcesoEnum proceso, 
 			@QueryParam("aprobador") String aprobador
@@ -88,6 +96,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/getEntity")
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
 	public GenericWrapper<TbQoProceso> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		TbQoProceso inEg = this.qos.findProcesoById(Long.valueOf(id));
@@ -96,6 +105,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET
 	@Path("/listAlertaDeProcesos")
+	@ApiOperation(value = "", notes = "Metodo Get listAlertaDeProcesos Retorna GenericWrapper de la entidad encontrada ProcesoCaducadoWrapper", response = GenericWrapper.class)
 	public GenericWrapper<ProcesoCaducadoWrapper> listAlertaDeProcesos() throws RelativeException {
 		GenericWrapper<ProcesoCaducadoWrapper> loc = new GenericWrapper<>();
 		List<ProcesoCaducadoWrapper> a = this.qos.listAlertaDeProcesos();
@@ -104,6 +114,7 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET
 	@Path("/listAlertaDeProcesosAprobador")
+	@ApiOperation(value = "aprobador", notes = "Metodo Get listAlertaDeProcesosAprobador Retorna GenericWrapper de la entidad encontrada ProcesoCaducadoWrapper", response = GenericWrapper.class)
 	public GenericWrapper<ProcesoCaducadoWrapper> listAlertaDeProcesosAprobador(@QueryParam("aprobador") String aprobador) throws RelativeException {
 		GenericWrapper<ProcesoCaducadoWrapper> loc = new GenericWrapper<>();
 		List<ProcesoCaducadoWrapper> a = this.qos.listAlertaDeProcesosAprobador( aprobador );
@@ -123,6 +134,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	@Override
 	@POST
 	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoProceso>", notes = "Metodo Get persistEntity Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> persistEntity(GenericWrapper<TbQoProceso> wp) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.manageProceso( wp.getEntidad() ) );
@@ -131,6 +146,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	@Override
 	@GET
 	@Path("/listAllEntities")
+	@ApiOperation(value = "PaginatedListWrapper<TbQoProceso>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoProceso", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoProceso> listAllEntities(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -153,6 +172,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@POST
 	@Path("/buscarOperaciones")
+	@ApiOperation(value = "BusquedaOperacionesWrapper", notes = "Metodo Post buscarOperaciones Retorna GenericWrapper de la entidad encontrada ResultOperacionesWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ResultOperacionesWrapper> buscarOperaciones( BusquedaOperacionesWrapper wp) throws RelativeException {
 		GenericWrapper<ResultOperacionesWrapper> loc = new GenericWrapper<>();
 		if(wp.getNumberPage() == null ) {
@@ -166,6 +189,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@POST
 	@Path("/buscarOperacionesAprobador")
+	@ApiOperation(value = "BusquedaPorAprobarWrapper", notes = "Metodo Post buscarOperacionesAprobador Retorna GenericWrapper de la entidad encontrada ResultOperacionesAprobarWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ResultOperacionesAprobarWrapper> buscarOperacionesAprobador( BusquedaPorAprobarWrapper wp) throws RelativeException {
 		GenericWrapper<ResultOperacionesAprobarWrapper> loc = new GenericWrapper<>();
 		if(wp.getNumberPage() == null ) {
@@ -179,6 +206,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET	
 	@Path("/getProcesos")
+	@ApiOperation(value = "", notes = "Metodo Get getProcesos Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> getProcesos() throws RelativeException {
 		GenericWrapper<String> w = new GenericWrapper<>();
 		List<ProcesoEnum> enumProcesos = Arrays.asList(ProcesoEnum.values());
@@ -189,6 +220,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET	
 	@Path("/getEstadosProceso")
+	@ApiOperation(value = "", notes = "Metodo Get getEstadosProceso Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> getEstadosProceso() throws RelativeException {
 		GenericWrapper<String> w = new GenericWrapper<>();
 		List<EstadoProcesoEnum> enumEstadosProceso = Arrays.asList(EstadoProcesoEnum.values());
@@ -199,6 +234,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET	
 	@Path("/getActividades")
+	@ApiOperation(value = "", notes = "Metodo Get getActividades Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> getActividades() throws RelativeException {
 		GenericWrapper<String> w = new GenericWrapper<>();
 		List<ActividadEnum> enumActividades = Arrays.asList(ActividadEnum.values());
@@ -209,6 +248,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET
 	@Path("/reasignarOperacion")
+	@ApiOperation(value = "id, proceso, usuario", notes = "Metodo Get reasignarOperacion Retorna GenericWrapper de la entidad encontrada Booleana", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> reasignarOperacion(@QueryParam("id") String id, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("usuario") String usuario) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.reasignarOperacion( Long.valueOf( id ),proceso, usuario ) );
@@ -216,6 +259,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/asignarAprobador")
+	@ApiOperation(value = "idReferencia, proceso, aprobador ", notes = "Metodo Get asignarAprobador Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("aprobador") String aprobador) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador ) );
@@ -223,6 +270,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}	
 	@GET
 	@Path("/asignarAprobadorExcepcion")
+	@ApiOperation(value = "idReferencia, aprobador", notes = "Metodo Get asignarAprobadorExcepcion Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia,@QueryParam("aprobador") String aprobador) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.asignarAprobadorExcepcion( Long.valueOf( idReferencia ), aprobador ) );
@@ -230,6 +281,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET
 	@Path("/traerNumeroOperacionMadre")
+	@ApiOperation(value = "codigoBpm", notes = "Metodo Get traerNumeroOperacionMadre Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> traerNumeroOperacionMadre(@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
 		String a = this.qos.traerNumeroOperacionMadre( codigoBpm );
@@ -238,6 +293,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	}
 	@GET
 	@Path("/caducarCreditos")
+	@ApiOperation(value = "", notes = "Metodo Get caducarCreditos Retorna GenericWrapper de la entidad encontrada Long", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Long> caducarCreditos() throws RelativeException {
 		GenericWrapper<Long> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.caducarCreditos() );
@@ -246,6 +305,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	
 	@GET
 	@Path("/generarCodigo")
+	@ApiOperation(value = "codigo", notes = "Metodo Get generarCodigo Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<String> generarCodigo(@QueryParam("codigo") String codigo) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.generarCodigo(codigo) );

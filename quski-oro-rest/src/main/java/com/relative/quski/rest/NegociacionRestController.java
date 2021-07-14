@@ -36,6 +36,8 @@ import com.relative.quski.wrapper.TipoOroWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/negociacionRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -64,7 +66,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoNegociacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCotizador", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoNegociacion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoNegociacion", response = GenericWrapper.class)
 	public GenericWrapper<TbQoNegociacion> persistEntity(GenericWrapper<TbQoNegociacion> wp) throws RelativeException {
 		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
 		loc.setEntidad(this.qos.manageNegociacion(wp.getEntidad()));
@@ -75,7 +77,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoNegociacion>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoNegociacion", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna wrapper de entidades encontradas en TbQoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoNegociacion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoNegociacion> loc = new GenericWrapper<>();
 		TbQoNegociacion a = this.qos.findNegociacionById(Long.valueOf(id));
@@ -91,6 +96,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@GET
 	@Path("/iniciarNegociacion")
+	@ApiOperation(value = "cedula, asesor, idAgencia", notes = "Metodo Get iniciarNegociacion Retorna wrapper de entidades encontradas en NegociacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
 		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia));
@@ -100,7 +109,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	
 	@GET
 	@Path("/iniciarNegociacionEquifax")
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	@ApiOperation(value = "cedula, asesor, idAgencia", notes = "Metodo Get iniciarNegociacionEquifax Retorna wrapper de entidades encontradas en NegociacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
 		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
 		loc.setEntidad(a);
@@ -108,6 +120,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@GET
 	@Path("/iniciarNegociacionFromCot")
+	@ApiOperation(value = "idCotizacion, asesor, idAgencia", notes = "Metodo Get iniciarNegociacionFromCot Retorna wrapper de entidades encontradas en NegociacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
 		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia));
@@ -116,6 +132,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@GET
 	@Path("/traerNegociacionExistente")
+	@ApiOperation(value = "id", notes = "Metodo Get traerNegociacionExistente Retorna wrapper de entidades encontradas en NegociacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<NegociacionWrapper> traerNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
 		NegociacionWrapper a = this.qos.traerNegociacionExistente(Long.valueOf( id ));
@@ -125,6 +145,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 
 	@GET
 	@Path("/pruebaWSPersona")
+	@ApiOperation(value = "cedula", notes = "Metodo Get pruebaWSPersona Retorna wrapper de entidades encontradas en EquifaxVariableWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<EquifaxVariableWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<EquifaxVariableWrapper> loc = new GenericWrapper<>();
 		//List<EquifaxVariableWrapper> a = this.qos.traerVariablesEquifax(cedula);
@@ -134,6 +158,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	
 	@POST
 	@Path("/agregarJoya")
+	@ApiOperation(value = "asesor", notes = "Metodo Post agregarJoya Retorna wrapper de entidades encontradas en TbQoTasacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
 		List<TbQoTasacion> a = this.qos.agregarJoya(joya, asesor);
@@ -143,6 +171,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 
 	@POST
 	@Path("/guardarOpcionCredito")
+	@ApiOperation(value = "List<CalculadoraOpcionWrapper> ", notes = "Metodo Post guardarOpcionCredito Retorna wrapper de entidades encontradas en TbQoCreditoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {
@@ -154,6 +186,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@POST
 	@Path("/verPrecio")
+	@ApiOperation(value = "cliente, asesor", notes = "Metodo Post verPrecio Retorna wrapper de entidades encontradas en TipoOroWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TipoOroWrapper> verPrecio(TbQoCliente cliente, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TipoOroWrapper> loc = new GenericWrapper<>();
 		List<TipoOroWrapper> a = this.qos.verPrecio(cliente);
@@ -162,6 +198,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@POST
 	@Path("/solicitarExcepcion")
+	@ApiOperation(value = "TbQoExcepcion", notes = "Metodo Post solicitarExcepcion Retorna wrapper de entidades encontradas en TbQoExcepcion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion);
@@ -170,6 +210,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	}
 	@POST
 	@Path("/actualizarVariables")
+	@ApiOperation(value = "GenericWrapper<TbQoVariablesCrediticia>", notes = "Metodo Post actualizarVariables Retorna wrapper de entidades encontradas en TbQoVariablesCrediticia", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoVariablesCrediticia> actualizarVariables( GenericWrapper<TbQoVariablesCrediticia> wrapper, @QueryParam("idNego") String idNego) throws RelativeException {
 		GenericWrapper<TbQoVariablesCrediticia> loc = new GenericWrapper<>();
 		ArrayList<TbQoVariablesCrediticia> l = this.qos.actualizarVariables(wrapper.getEntidades(), Long.valueOf( idNego ));

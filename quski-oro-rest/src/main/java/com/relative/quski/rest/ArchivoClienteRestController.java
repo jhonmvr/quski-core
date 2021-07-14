@@ -24,6 +24,8 @@ import com.relative.quski.service.QuskiOroService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/archivoClienteRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,7 +45,10 @@ public class ArchivoClienteRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoCotizador>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoArchivoCliente", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoArchivoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoArchivoCliente> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoArchivoCliente> loc = new GenericWrapper<>();
 		TbQoArchivoCliente a = this.qos.findArchivoClienteById(Long.valueOf(id));
@@ -55,6 +60,9 @@ public class ArchivoClienteRestController extends BaseRestController
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoArchivoCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoArchivoCliente", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoArchivoCliente> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -79,7 +87,10 @@ public class ArchivoClienteRestController extends BaseRestController
 	@Override
 	@POST
 	@Path("/persistEntity")
-	@ApiOperation(value = "GenericWrapper<TbMiDocumentoHabilitante>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbMiDocumentoHabilitante", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoArchivoCliente>", notes = "Metodo Post persistEntity Registra  y retorna la entidad TbQoArchivoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoArchivoCliente> persistEntity(GenericWrapper<TbQoArchivoCliente> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoArchivoCliente> loc = new GenericWrapper<>();
@@ -95,6 +106,12 @@ public class ArchivoClienteRestController extends BaseRestController
 
 	@GET
 	@Path("/enviarCorreoPrueba")
+	@ApiOperation(value = "@QueryParam(\"para\") String para,\r\n" + "@QueryParam(\"asunto\") String asunto, @QueryParam(\"contenido\")"
+			+ " String contenido, Map<String, byte[]> adjunto "
+			, notes = "Metodo Get envia un correo y retorna un GenericWrapper booleano", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> enviarCorreoPrueba(@QueryParam("para") String para,
 			@QueryParam("asunto") String asunto, @QueryParam("contenido") String contenido, Map<String, byte[]> adjunto) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();

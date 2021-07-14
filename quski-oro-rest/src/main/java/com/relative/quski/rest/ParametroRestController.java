@@ -70,7 +70,7 @@ public class ParametroRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbMiParametro> ", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -84,7 +84,7 @@ public class ParametroRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/listAllEntities")
-	@ApiOperation(value = "PaginatedListWrapper<TbMiParametro> ", notes = "Metodo listAllEntities Retorna wrapper de entidades encontradas en TbMiParametro", response = PaginatedListWrapper.class)
+	@ApiOperation(value = "PaginatedListWrapper<TbMiParametro> ", notes = "Metodo Get listAllEntities Retorna wrapper de entidades encontradas en TbMiParametro", response = PaginatedListWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = PaginatedListWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -111,7 +111,7 @@ public class ParametroRestController extends BaseRestController
 	@POST
 	@Path("/persistEntity")
 	@Override
-	@ApiOperation(value = "GenericWrapper<TbMiParametro> ", notes = "Metodo persistEntity Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbMiParametro> ", notes = "Metodo Get persistEntity Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -130,7 +130,7 @@ public class ParametroRestController extends BaseRestController
 
 	@GET
 	@Path("/getEntityByNombre")
-	@ApiOperation(value = "GenericWrapper<TbMiParametro> ", notes = "Metodo getEntityByNombre Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
+	@ApiOperation(value = "nombre ", notes = "Metodo Get getEntityByNombre Retorna wrapper de entidades encontradas en TbMiParametro", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
@@ -152,7 +152,7 @@ public class ParametroRestController extends BaseRestController
 
 	@GET
 	@Path("/getParametrosSingleton")
-	@ApiOperation(value = "Map<String,TbMiParametro> ", notes = "Metodo getParametrosSingleton", response = Map.class)
+	@ApiOperation(value = "Map<String,TbMiParametro> ", notes = "Metodo Get  getParametrosSingleton ", response = Map.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = Map.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public Map<String, TbMiParametro> getParametrosSingleton() throws RelativeException {
@@ -169,6 +169,7 @@ public class ParametroRestController extends BaseRestController
 	@Path("/getSystemDate")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = Map.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	
 	public GenericWrapper<Date> getSystemDate() throws RelativeException {
 		try {
 			GenericWrapper<Date> sd = new GenericWrapper<Date>();

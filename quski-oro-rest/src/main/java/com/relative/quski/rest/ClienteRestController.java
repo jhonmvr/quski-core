@@ -34,6 +34,8 @@ import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/clienteRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -61,7 +63,10 @@ public class ClienteRestController extends BaseRestController
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCliente> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		TbQoCliente a = this.qos.findClienteById(Long.valueOf(id));
@@ -73,6 +78,9 @@ public class ClienteRestController extends BaseRestController
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoCliente", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoCliente> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -98,6 +106,9 @@ public class ClienteRestController extends BaseRestController
 	@POST
 	@Path("/persistEntity")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCliente> persistEntity(GenericWrapper<TbQoCliente> wp) throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		log.info("INGRESA AL REST DE persistEntity cliente ");		
@@ -107,6 +118,9 @@ public class ClienteRestController extends BaseRestController
 	@GET
 	@Path("/findClienteByIdentificacion")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo findByIdentificacion Retorna wrapper de entidad encontrada en TbQoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCliente> findClienteByIdentificacion(@QueryParam("identificacion") String identificacion)
 			throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
@@ -117,6 +131,9 @@ public class ClienteRestController extends BaseRestController
 	@GET
 	@Path("/findByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbMiCliente>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiCliente", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoCliente> findByParams(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -155,7 +172,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@POST
 	@Path("/crearCliente")
-	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de  de entidad encontrada RespuestaCrearClienteWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaCrearClienteWrapper> crearCliente(GenericWrapper<TbQoCliente> wp,@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RespuestaCrearClienteWrapper> loc = new GenericWrapper<>();
 		
@@ -164,6 +184,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@GET
 	@Path("/traerClienteByIdNegociacion")
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada ClienteCompletoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByIdNegociacion(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
 		ClienteCompletoWrapper a = this.qos.traerClienteByIdNegociacion(Long.valueOf( id ));
@@ -172,6 +196,10 @@ public class ClienteRestController extends BaseRestController
 	}	
 	@GET
 	@Path("/traerClienteByNumeroOperacion")
+	@ApiOperation(value = "numeroOperacionMadre", notes = "Metodo Get  retorna GenericWrapper de la entidad encontrada ClienteCompletoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByNumeroOperacion(@QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
 		ClienteCompletoWrapper a = this.qos.traerClienteByNumeroOperacion(numeroOperacionMadre);
@@ -180,6 +208,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@GET
 	@Path("/traerClienteByCedula")
+	@ApiOperation(value = "cedula", notes = "Metodo Get  retorna GenericWrapper de la entidad encontrada ClienteCompletoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
 		ClienteCompletoWrapper a = this.qos.traerCliente( cedula, null );
@@ -188,6 +220,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@GET
 	@Path("/buscarClienteCrm")
+	@ApiOperation(value = "cedula", notes = "Metodo Get retorna GenericWrapper de la entidad encontrada CrmProspectoCortoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CrmProspectoCortoWrapper> buscarClienteCrm(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<CrmProspectoCortoWrapper> loc = new GenericWrapper<>();
 		CrmProspectoCortoWrapper a = this.qos.findProspectoCrm( cedula );
@@ -196,6 +232,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@POST
 	@Path("/guardarEnCrm")
+	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo POST guardarEnCrm Retorna GenericWrapper de la entidad encontrada CrmProspectoCortoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CrmProspectoWrapper> guardarEnCrm(TbQoCliente cliente) throws RelativeException {
 		GenericWrapper<CrmProspectoWrapper> loc = new GenericWrapper<>();
 		CrmProspectoWrapper a = this.qos.guardarProspectoCrm( cliente );
@@ -204,6 +244,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@GET
 	@Path("/consultarCuentaMupi")
+	@ApiOperation(value = "cedula", notes = "Metodo GET consultarCuentaMupi  Retorna GenericWrapper de la entidad encontrada CuentaWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CuentaWrapper> consultarCuentaMupi(@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<CuentaWrapper> loc = new GenericWrapper<>();
 		CuentaWrapper a = this.qos.consultaCuentaApiGateWay( cedula );
@@ -212,6 +256,10 @@ public class ClienteRestController extends BaseRestController
 	}
 	@POST
 	@Path("/registrarCliente")
+	@ApiOperation(value = "GenericWrapper<ClienteCompletoWrapper>", notes = "Metodo POST guardarEnCrm registra y retorna GenericWrapper de la entidad encontrada CreacionClienteRespuestaCoreWp", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CreacionClienteRespuestaCoreWp> registrarCliente(ClienteCompletoWrapper wp ) throws RelativeException {
 		GenericWrapper<CreacionClienteRespuestaCoreWp> loc = new GenericWrapper<>();
 		loc.setEntidad( this.qos.registrarCliente(wp) );
@@ -221,6 +269,9 @@ public class ClienteRestController extends BaseRestController
 	@POST
 	@Path("/updateCliente")
 	@ApiOperation(value = "GenericWrapper<TbQoCliente>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoCliente", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCliente> updateCliente(TbQoCliente cliente) throws RelativeException {
 		GenericWrapper<TbQoCliente> loc = new GenericWrapper<>();
 		

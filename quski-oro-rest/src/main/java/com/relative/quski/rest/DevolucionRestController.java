@@ -36,6 +36,8 @@ import com.relative.quski.wrapper.RespuestaValidacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/devolucionRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -68,7 +70,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@Override
 	@GET
 	@Path("/getEntity")
-	@ApiOperation(value = "TbQoDevolucion", notes = "Metodo que retorna devolucion por id", response = GenericWrapper.class)
+	@ApiOperation(value = "id", notes = "Metodo Get getEntity que retorna GenericWrapper TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		TbQoDevolucion a = this.dos.findDevolucionById(Long.valueOf(id));
@@ -80,6 +85,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@Override
 	@POST
 	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoDevolucion>", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> persistEntity(GenericWrapper<TbQoDevolucion> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
@@ -90,6 +99,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/registrarSolicitudDevolucion")
+	@ApiOperation(value = "GenericWrapper<TbQoDevolucion>", notes = "Metodo Post registrarSolicitudDevolucion Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas ProcesoDevolucionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ProcesoDevolucionWrapper> registrarSolicitudDevolucion(GenericWrapper<TbQoDevolucion> wp)
 			throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
@@ -99,6 +112,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 
 	@GET
 	@Path("/buscarProcesoDevolucion")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get buscarProcesoDevolucion Retorna GenericWrapper de la entidad encontrada ProcesoDevolucionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoDevolucion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.buscarProcesoDevolucion( Long.valueOf( idDevolucion )) );
@@ -106,6 +123,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}	
 	@GET
 	@Path("/buscarProcesoCancelacion")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get buscarProcesoCancelacion Retorna GenericWrapper de la entidad encontrada ProcesoDevolucionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoCancelacion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.buscarProcesoCancelacion( Long.valueOf( idDevolucion )) );
@@ -113,6 +134,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}	
 	@GET
 	@Path("/validarProcesoActivo")
+	@ApiOperation(value = "numeroOperacion", notes = "Metodo Get validarProcesoActivo Retorna GenericWrapper de la entidad encontrada RespuestaValidacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaValidacionWrapper> validarProcesoActivo(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
 		GenericWrapper<RespuestaValidacionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.validarProcesoActivo(  numeroOperacion ) );
@@ -122,6 +147,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/mandarAprobacionSolicitudDevolucion")
+	@ApiOperation(value = "id", notes = "Metodo Post mandarAprobacionSolicitudDevolucion Retorna GenericWrapper de la entidad encontrada TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> mandarAprobarSolicitudDevolucion(@QueryParam("id") String idDevolucion,
 			@QueryParam("usuario") String usuario
 			)
@@ -137,6 +166,9 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@GET
 	@Path("/listAllEntities")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoDevolucion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoDevolucion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoDevolucion> listAllEntities(@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
 			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
@@ -160,6 +192,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/aprobarNegarSolicitudDevolucion")
+	@ApiOperation(value = "idDevolucion, aprobado", notes = "Metodo Get aprobarNegarSolicitudDevolucion Retorna GenericWrapper de la entidad encontrada ProcesoDevolucionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<ProcesoDevolucionWrapper> aprobarNegarSolicitudDevolucion(@QueryParam("idDevolucion") String idDevolucion, @QueryParam("aprobado") String aprobado)throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.aprobarNegarSolicitudDevolucion(Long.valueOf(idDevolucion), Boolean.valueOf( aprobado )));
@@ -169,6 +205,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/buscarDevolucion")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionProcesoWrapper>", notes = "Metodo Get buscarDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionProcesoWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<DevolucionProcesoWrapper> listarSeleccionFecha(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -210,6 +250,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/buscarDevolucionPendienteArribo")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionPendienteArribosWrapper>", notes = "Metodo Get buscarDevolucionPendienteArribo Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<DevolucionPendienteArribosWrapper> listarPendienteArribo(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -235,6 +279,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/registrarFechaArribo")
+	@ApiOperation(value = "RegistroFechaArriboWrapper", notes = "Metodo Post registrarFechaArribo Retorna List de las entidadades encontradas TbQoDevolucion", response = List.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public List<TbQoDevolucion> registrarFechaArribo( RegistroFechaArriboWrapper rfaw ) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
 		loc= this.dos.registrarFechaArribo(rfaw);
@@ -242,6 +290,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@POST
 	@Path("/registrarArribo")
+	@ApiOperation(value = "idDevoluciones, asesor", notes = "Metodo Post registrarArribo Retorna List de las entidadades encontradas TbQoDevolucion", response = List.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones,@QueryParam("asesor") String asesor) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
 		loc= this.dos.registrarArriboAgencia(idDevoluciones,asesor);
@@ -250,6 +302,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/iniciarProcesoCancelacion")
+	@ApiOperation(value = "id, usuario, motivo", notes = "Metodo Get iniciarProcesoCancelacion Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> iniciarProcesoCancelacion(@QueryParam("id") String id, @QueryParam("usuario") String usuario, @QueryParam("motivo") String motivo )
 			throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
@@ -258,6 +314,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@POST
 	@Path("/aprobarCancelacionSolicitudDevolucion")
+	@ApiOperation(value = "id", notes = "Metodo Post aprobarCancelacionSolicitudDevolucion Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> aprobarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
 		loc.setEntidad(this.dos.aprobarCancelacionSolicitudDevolucion(Long.valueOf(idDevolucion)));
@@ -266,6 +326,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/rechazarCancelacionSolicitudDevolucion")
+	@ApiOperation(value = "id", notes = "Metodo Post rechazarCancelacionSolicitudDevolucion Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> rechazarCancelacionSolicitudDevolucion(@QueryParam("id") String idDevolucion)
 			throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
@@ -277,6 +341,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/guardarEntregaRecepcion")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Post guardarEntregaRecepcion Retorna GenericWrapper de la entidad encontrada TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> guardarEntregaRecepcion( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
@@ -286,6 +354,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validarInicioDeFlujo")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validarInicioDeFlujo Retorna GenericWrapper Booleano", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> validarInicioDeFlujo(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 		if (StringUtils.isBlank(idDevolucion)) {
@@ -297,6 +369,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@POST
 	@Path("/aprobarVerificacionFirmas")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Post aprobarVerificacionFirmas Retorna GenericWrapper de la entidad encontrada TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
@@ -307,6 +383,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@POST
 	@Path("/rechazarVerificacionFirmas")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Post rechazarVerificacionFirmas Retorna GenericWrapper de la entidad encontrada TbQoDevolucion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
@@ -315,6 +395,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	@GET
 	@Path("/validateAprobarCancelarSolicitud")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validateAprobarCancelarSolicitud Retorna GenericWrapper Booleano", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> validateAprobacionCancelarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 		if (StringUtils.isBlank(idDevolucion)) {
@@ -327,6 +411,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validateSolicitarAprobacion")
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validateSolicitarAprobacion Retorna GenericWrapper de la entidad encontrada TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> validateSolicitarAprobacion(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 			if (StringUtils.isBlank(idDevolucion)) {
@@ -339,7 +427,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validateAprobarRechazarSolicitud")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validateAprobarRechazarSolicitud retorna un GenericWrapper de la entidadad encontrada RespuestaBooleanaWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaBooleanaWrapper>  validateAprobarRechazarSolicitud(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 			if (StringUtils.isBlank(idDevolucion)) {
@@ -352,7 +443,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validateEntregaRecepcion")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validateEntregaRecepcion retorna un GenericWrapper de la entidadad encontrada RespuestaBooleanaWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaBooleanaWrapper> validateEntregaRecepcion(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 			if (StringUtils.isBlank(idDevolucion)) {
@@ -366,7 +460,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	
 	@GET
 	@Path("/validateVerificacionFirma")
-	@ApiOperation(value = "GenericWrapper<Boolean>", notes = "valida el boton reverso perfeccionar en gestion de contratos", response = GenericWrapper.class)
+	@ApiOperation(value = "idDevolucion", notes = "Metodo Get validateVerificacionFirma retorna un GenericWrapper de la entidadad encontrada RespuestaBooleanaWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaBooleanaWrapper> validateVerificacionFirma(@QueryParam("idDevolucion") String idDevolucion)
 			throws RelativeException {
 			if (StringUtils.isBlank(idDevolucion)) {

@@ -44,6 +44,8 @@ import com.relative.quski.wrapper.RenovacionWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/creditoNegociacionRestController")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -75,6 +77,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@GET
 	@Path("/getEntity")
 	@ApiOperation(value = "TbQoCreditoNegociacion", notes = "Metodo que retorna credito negociacion por id", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCreditoNegociacion> getEntity(@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		TbQoCreditoNegociacion a = this.qos.findCreditoNegociacionById(Long.valueOf(id));
@@ -91,6 +96,9 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@Path("/creditoNegociacionByParams")
 	@ApiOperation(value = "PaginatedListWrapper<TbQoCreditoNegociacion>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbMiAgente", 
 	response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public PaginatedListWrapper<TbQoCreditoNegociacion> creditoNegociacionByParams(
 			@QueryParam("page") @DefaultValue("1") String page,
 			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
@@ -135,6 +143,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@Override
 	@POST
 	@Path("/persistEntity")
+	@ApiOperation(value = "GenericWrapper<TbQoCreditoNegociacion>", notes = "Metodo Post persistEntity Registra  y retorna la entidad TbQoCreditoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCreditoNegociacion> persistEntity(GenericWrapper<TbQoCreditoNegociacion> wp)
 			throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
@@ -142,9 +154,13 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;
 	}
 
-
+	
 	@GET
 	@Path("/traerCreditoNegociacionExistente")
+	@ApiOperation(value = "idNegociacion", notes = "Metodo Get getEntity Retorna GenericWrapper de la entidad encontrada AprobacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<AprobacionWrapper> traerCreditoNegociacionExistente(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<AprobacionWrapper> loc = new GenericWrapper<>();
 		AprobacionWrapper a = this.qos.traerCreditoNegociacionExistente(Long.valueOf( idNegociacion ));
@@ -154,6 +170,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/traerCreditonovacionPorAprobar")
+	@ApiOperation(value = "idNegociacion", notes = "Metodo Get  Retorna GenericWrapper de la entidad encontrada AprobacionNovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<AprobacionNovacionWrapper> traerCreditonovacionPorAprobar(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<AprobacionNovacionWrapper> loc = new GenericWrapper<>();
 		AprobacionNovacionWrapper a = this.qos.traerCreditonovacionPorAprobar(Long.valueOf( idNegociacion ));
@@ -163,11 +183,20 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/devolverAprobar")
+	@ApiOperation(value = "idCredito", notes = "Metodo Get  Retorna GenericWrapper booleano", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<Boolean> devolverAprobar(@QueryParam("idCredito") String idCredito, @QueryParam("cash") String cash, @QueryParam("descripcion") String descripcion, @QueryParam("codigo") String codigo ) throws RelativeException {
 		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO IMPLEMENTADO");
 	}	
 	@GET
 	@Path("/aprobarNuevo")
+	@ApiOperation(value = "	String idCredito ,String descripcion, String cash,String agencia,"
+			+ " String usuario,String codigoMotivo, String aprobar", notes = "Metodo Get aprobarNuevo Retorna un  GenericWrapper TbQoProceso aprobado", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> aprobarNuevo(
 			@QueryParam("idCredito") String idCredito, 
 			@QueryParam("descripcion") String descripcion,
@@ -184,6 +213,11 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/aprobarNovacion")
+	@ApiOperation(value = "	String idCredito ,String descripcion, String cash,String agencia,"
+			+ " String usuario,String codigoMotivo, String aprobar", notes = "Metodo Get aprobarNuevo Retorna un  GenericWrapper TbQoProceso aprobada una novacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> aprobarNovacion(
 			@QueryParam("valorCash") String valorCash, 
 			@QueryParam("idCredito") String idCredito, 
@@ -201,6 +235,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/traerCreditoNuevo")
+	@ApiOperation(value = "idNegociacion", notes = "Metodo Get traerCreditoNuevo Retorna un  GenericWrapper OperacionCreditoNuevoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<OperacionCreditoNuevoWrapper> traerCreditoNuevo(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<OperacionCreditoNuevoWrapper> loc = new GenericWrapper<>();
 		log.info("INGRESA A traerCreditoNuevo  -----> "+ Long.valueOf( idNegociacion ));
@@ -210,6 +248,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/consultarTablaAmortizacion")
+	@ApiOperation(value = "numeroOperacion, usuario, agencia", notes = "Metodo Get consultarTablaAmortizacion Retorna un  GenericWrapper CuotasAmortizacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CuotasAmortizacionWrapper> consultarTablaAmortizacion(
 			@QueryParam("numeroOperacion") String numeroOperacion,
 			@QueryParam("usuario") String usuario,
@@ -222,6 +264,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionNuevo")
+	@ApiOperation(value = "GenericWrapper<TbQoCreditoNegociacion>", notes = "Metodo Post crearOperacionNuevo Retorna un  GenericWrapper CreditoCreadoSoftbank", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionNuevo(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
 		if(wp.getEntidad().getId() != null) {
@@ -234,6 +280,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearOperacionRenovacion")
+	@ApiOperation(value = "CrearRenovacionWrapper", notes = "Metodo Post crearOperacionRenovacion Retorna un  GenericWrapper CreditoCreadoSoftbank", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<CreditoCreadoSoftbank> crearOperacionRenovacion( CrearRenovacionWrapper wp) throws RelativeException {
 		GenericWrapper<CreditoCreadoSoftbank> loc = new GenericWrapper<>();
 		if(wp.getCredito().getId() == null) {
@@ -246,6 +296,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@POST
 	@Path("/optenerNumeroDeFunda")
+	@ApiOperation(value = "GenericWrapper<TbQoCreditoNegociacion>", notes = "Metodo Post optenerNumeroDeFunda Retorna un  GenericWrapper TbQoCreditoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoCreditoNegociacion> optenerNumeroDeFunda(GenericWrapper<TbQoCreditoNegociacion> wp) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(wp.getEntidad().getId() != null) {
@@ -258,6 +312,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/traerCreditoVigente")
+	@ApiOperation(value = "numeroOperacion", notes = "Metodo Get traerCreditoVigente Retorna un  GenericWrapper DetalleCreditoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<DetalleCreditoWrapper> traerCreditoVigente(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
 		GenericWrapper<DetalleCreditoWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
@@ -270,6 +328,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/buscarRenovacionByNumeroOperacionMadre")
+	@ApiOperation(value = "numeroOperacion", notes = "Metodo Get buscarRenovacionByNumeroOperacionMadre Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RenovacionWrapper> buscarRenovacionByNumeroOperacionMadre(@QueryParam("numeroOperacion") String numeroOperacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		if( !numeroOperacion.isEmpty() ) { 
@@ -283,6 +345,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 
 	@GET
 	@Path("/traerCreditoNegociacion")
+	@ApiOperation(value = "idNegociacion", notes = "Metodo Get traerCreditoNegociacion Retorna un  GenericWrapper DetalleCreditoEnProcesoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<DetalleCreditoEnProcesoWrapper> traerCreditoNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<DetalleCreditoEnProcesoWrapper> loc = new GenericWrapper<>();
 		DetalleCreditoEnProcesoWrapper a = this.qos.traerCreditoNegociacion(Long.valueOf( idNegociacion ));
@@ -291,6 +357,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@POST
 	@Path("/crearCreditoRenovacion")
+	@ApiOperation(value = "numeroOperacion, numeroOperacionMadre, asesor, idAgencia, idNegociacion", notes = "Metodo Post crearCreditoRenovacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas());
@@ -299,6 +369,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/buscarRenovacionByIdNegociacion")
+	@ApiOperation(value = "idNegociacion", notes = "Metodo Get buscarRenovacionByIdNegociacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RenovacionWrapper> buscarRenovacionByIdNegociacion(@QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		if( !idNegociacion.isEmpty() ) { 
@@ -312,6 +386,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	@GET
 	@Path("/solicitarAprobacionRenovacion")
+	@ApiOperation(value = "idNegociacion, correoAsesor, nombreAsesor, observacionAsesor", notes = "Metodo Get solicitarAprobacionRenovacion Retorna un  GenericWrapper TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoProceso> solicitarAprobacionRenovacion(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("correoAsesor") String correoAsesor,
@@ -327,6 +405,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	}
 	@GET
 	@Path("/solicitarAprobacionNuevo")
+	@ApiOperation(value = "idNegociacion, correoAsesor, nombreAsesor, observacionAsesor", notes = "Metodo Get solicitarAprobacionNuevo Retorna un  GenericWrapper de la entidad encontrda TbQoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<TbQoNegociacion> solicitarAprobacionNuevo(
 			@QueryParam("idNegociacion") String idNegociacion,
 			@QueryParam("correoAsesor") String correoAsesor,
