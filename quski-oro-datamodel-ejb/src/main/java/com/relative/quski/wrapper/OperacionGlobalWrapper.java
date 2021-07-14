@@ -40,7 +40,7 @@ public class OperacionGlobalWrapper implements Serializable {
 	private String codigoEstadoUbicacionGrantia;
 	private Boolean esMigrado;
 	private Long numeroCuotas;
-	private String datosBloqueo;
+	private DatosBloqueoWrapper datosBloqueo;
 	
 	public Long getId() {
 		return id;
@@ -192,10 +192,10 @@ public class OperacionGlobalWrapper implements Serializable {
 	public void setNumeroCuotas(Long numeroCuotas) {
 		this.numeroCuotas = numeroCuotas;
 	}
-	public String getDatosBloqueo() {
+	public DatosBloqueoWrapper getDatosBloqueo() {
 		return datosBloqueo;
 	}
-	public void setDatosBloqueo(String datosBloqueo) {
+	public void setDatosBloqueo(DatosBloqueoWrapper datosBloqueo) {
 		this.datosBloqueo = datosBloqueo;
 	}
 	public Boolean getImpago() {
