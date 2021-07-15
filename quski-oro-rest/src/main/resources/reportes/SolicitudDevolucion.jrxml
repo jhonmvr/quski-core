@@ -86,7 +86,7 @@
 				<text><![CDATA[SOLICITUD DE DEVOLUCIÓN DE GARANTÍA DE JOYAS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="200" width="510" height="90" uuid="69ba6d57-0fa3-42cc-b379-b67c6ad112fc"/>
+				<reportElement x="0" y="200" width="510" height="80" uuid="69ba6d57-0fa3-42cc-b379-b67c6ad112fc"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
@@ -100,61 +100,63 @@
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
 			<frame>
-				<reportElement x="10" y="300" width="500" height="270" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
+				<reportElement x="3" y="300" width="507" height="270" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="10" width="280" height="20" uuid="a2e6fc46-b1cc-48a0-b100-00834aad4418"/>
+					<reportElement positionType="Float" x="0" y="36" width="330" height="20" uuid="a2e6fc46-b1cc-48a0-b100-00834aad4418"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Fecha: " +$P{BEAN_DS}.getFechaSolicitud()+"."]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="40" width="300" height="30" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
+					<reportElement positionType="Float" x="0" y="62" width="330" height="20" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["NOMBRE CLIENTE: " +$P{BEAN_DS}.getNombreCliente()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="70" width="280" height="20" uuid="6215f942-e78c-44ba-8b4d-319fa3a01d36"/>
+					<reportElement positionType="Float" x="0" y="88" width="330" height="23" uuid="6215f942-e78c-44ba-8b4d-319fa3a01d36"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["CI: " +$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="10" y="143" width="169" height="20" uuid="4ecd339b-0ef4-4296-aa99-87035ab6220d"/>
+					<reportElement positionType="Float" x="2" y="173" width="227" height="20" uuid="4ecd339b-0ef4-4296-aa99-87035ab6220d"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FCFCFC"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[Tramitado Por: (Quski C.A.)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="10" y="173" width="230" height="20" uuid="e19bb3ba-79ae-4a73-9c9c-32df624bb27b"/>
+					<reportElement positionType="Float" x="1" y="200" width="230" height="20" uuid="e19bb3ba-79ae-4a73-9c9c-32df624bb27b"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Nombre: " + $P{BEAN_DS}.getAsesor()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="353" y="100" width="104" height="20" uuid="1099ca1e-c9a1-4c18-9912-320311fba561"/>
+					<reportElement x="350" y="120" width="104" height="20" uuid="1099ca1e-c9a1-4c18-9912-320311fba561"/>
 					<textElement textAlignment="Center">
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[HUELLA]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="16" y="237" width="104" height="20" uuid="4467ae4e-d56e-44b7-8e6e-baf50c01e0fe"/>
-					<textElement>
-						<font fontName="Arial"/>
-					</textElement>
-					<text><![CDATA[Firma]]></text>
-				</staticText>
-				<line>
-					<reportElement x="50" y="252" width="190" height="1" uuid="0a511b24-f15c-420b-a58f-51a679795da6"/>
-				</line>
 				<rectangle>
-					<reportElement x="320" y="10" width="171" height="81" uuid="54ce64c3-0f8b-4197-ab8a-ace510fc8d52"/>
+					<reportElement x="350" y="30" width="121" height="80" uuid="54ce64c3-0f8b-4197-ab8a-ace510fc8d52"/>
 				</rectangle>
 			</frame>
 			<staticText>
@@ -339,33 +341,37 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement positionType="Float" x="14" y="630" width="501" height="101" uuid="3952a34e-748e-4777-a5a0-ef29e01c38a5"/>
-				<textElement textAlignment="Justified">
-					<font fontName="Arial" size="11"/>
-				</textElement>
-				<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
+			<frame>
+				<reportElement positionType="Float" x="-11" y="569" width="521" height="171" uuid="959c5d12-e7f6-410c-bd82-12d0279c9f26"/>
+				<line>
+					<reportElement positionType="Float" x="-1" y="8" width="511" height="1" uuid="0f1a906f-e4ea-48f4-a92c-098d4e0fbc37"/>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="5" y="15" width="501" height="20" backcolor="#BFBFBF" uuid="d4e1020d-455d-4561-8184-647ca86d520f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="17" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="5" y="45" width="500" height="100" uuid="7fb57027-e41f-483d-bcb0-f7133f925f09"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
 Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
 Recuerde que el tiempo adicional de custodia de la garantía, que respalda su operación cancelada, tendrá un costo.
 ]]></text>
-			</staticText>
-			<line>
-				<reportElement positionType="Float" x="3" y="590" width="511" height="1" uuid="d61401bd-ed20-4aaf-856e-3792dad0fe3e"/>
-			</line>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="14" y="600" width="501" height="20" backcolor="#BFBFBF" uuid="5c9d1917-7e58-4cd4-bc3c-38cd2e6b35c3"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="14" y="738" width="501" height="20" backcolor="#BFBFBF" uuid="dfe792d0-9372-48eb-a1c0-0def71f09a30"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="4" y="145" width="501" height="20" backcolor="#BFBFBF" uuid="051cb7f8-7b41-41d0-bb90-22fefcb648d9"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
 		</band>
 	</title>
 </jasperReport>

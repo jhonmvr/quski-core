@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolicitudDevolucionApoderado" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="28" bottomMargin="42" uuid="bd61ad2f-9f25-415f-9c3b-33012cc4371a">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
@@ -279,104 +279,111 @@
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
 			<frame>
-				<reportElement x="0" y="300" width="561" height="280" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
+				<reportElement x="0" y="300" width="511" height="280" uuid="f7fca6da-b7e8-4c1f-899d-fc5d9ebf1518"/>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="20" width="320" height="20" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
+					<reportElement positionType="Float" x="0" y="37" width="350" height="20" uuid="9a9285ab-68af-45c2-93e2-756fced1e2c6"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["SR(A)" +$P{BEAN_DS}.getNombreApoderado()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="50" width="320" height="20" uuid="6215f942-e78c-44ba-8b4d-319fa3a01d36"/>
+					<reportElement positionType="Float" x="0" y="62" width="350" height="20" uuid="6215f942-e78c-44ba-8b4d-319fa3a01d36"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["CI: " +$P{BEAN_DS}.getCedulaApoderado()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="80" width="184" height="20" uuid="4ecd339b-0ef4-4296-aa99-87035ab6220d"/>
+					<reportElement x="0" y="91" width="184" height="20" uuid="4ecd339b-0ef4-4296-aa99-87035ab6220d"/>
 					<textElement>
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[Apoderado(a) Especial del señor (a)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="10" y="190" width="230" height="20" uuid="e19bb3ba-79ae-4a73-9c9c-32df624bb27b"/>
+					<reportElement positionType="Float" x="0" y="230" width="360" height="20" uuid="e19bb3ba-79ae-4a73-9c9c-32df624bb27b"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Nombre: " + $P{BEAN_DS}.getAsesor()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="360" y="100" width="104" height="20" uuid="1099ca1e-c9a1-4c18-9912-320311fba561"/>
+					<reportElement x="390" y="120" width="104" height="20" uuid="1099ca1e-c9a1-4c18-9912-320311fba561"/>
 					<textElement textAlignment="Center">
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[HUELLA]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="16" y="246" width="104" height="20" uuid="4467ae4e-d56e-44b7-8e6e-baf50c01e0fe"/>
-					<textElement>
-						<font fontName="Arial"/>
-					</textElement>
-					<text><![CDATA[Firma]]></text>
-				</staticText>
-				<line>
-					<reportElement x="60" y="261" width="190" height="1" uuid="0a511b24-f15c-420b-a58f-51a679795da6"/>
-				</line>
 				<rectangle>
-					<reportElement x="330" y="10" width="171" height="81" uuid="54ce64c3-0f8b-4197-ab8a-ace510fc8d52"/>
+					<reportElement x="380" y="10" width="121" height="100" uuid="54ce64c3-0f8b-4197-ab8a-ace510fc8d52"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="15" y="165" width="169" height="20" uuid="78e4d1ad-162b-4ced-91d8-977d3449297d"/>
+					<reportElement x="0" y="207" width="360" height="20" uuid="78e4d1ad-162b-4ced-91d8-977d3449297d"/>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
 						<font fontName="Arial"/>
 					</textElement>
 					<text><![CDATA[Tramitado Por: (Quski C.A.)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="100" width="320" height="20" uuid="2d4fbb0f-ee3c-4d70-818b-76961303905c"/>
+					<reportElement positionType="Float" x="0" y="116" width="350" height="20" uuid="2d4fbb0f-ee3c-4d70-818b-76961303905c"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCliente()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement positionType="Float" x="0" y="130" width="320" height="20" uuid="b72452b6-fe57-4fb4-bf58-80146927ebb6"/>
+					<reportElement positionType="Float" x="0" y="140" width="350" height="20" uuid="b72452b6-fe57-4fb4-bf58-80146927ebb6"/>
 					<textElement textAlignment="Justified" markup="html">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA["CI CLIENTE" +$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
 				</textField>
 			</frame>
-			<staticText>
-				<reportElement positionType="Float" x="10" y="630" width="501" height="101" uuid="4717eb55-71f6-41d3-8375-6fb4756c117c"/>
-				<textElement textAlignment="Justified">
-					<font fontName="Arial" size="11"/>
-				</textElement>
-				<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
+			<frame>
+				<reportElement positionType="Float" x="-8" y="592" width="521" height="171" uuid="9ad70407-6282-45ae-878a-da3e3d692b2a"/>
+				<line>
+					<reportElement positionType="Float" x="4" y="10" width="511" height="1" uuid="db3de819-2561-4654-a16b-55798aba4bb1"/>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="5" y="15" width="501" height="20" backcolor="#BFBFBF" uuid="9330c72a-c50f-4bf9-9ddd-881de0f89085"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="17" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="5" y="45" width="500" height="100" uuid="d52483fa-bc14-45ef-a566-213c9f43583d"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
 Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
 Recuerde que el tiempo adicional de custodia de la garantía, que respalda su operación cancelada, tendrá un costo.
 ]]></text>
-			</staticText>
-			<line>
-				<reportElement positionType="Float" x="-1" y="590" width="511" height="1" uuid="b67b1e1f-1b8d-441c-a19b-53fc0e56ce51"/>
-			</line>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="10" y="600" width="501" height="20" backcolor="#BFBFBF" uuid="cefce311-476a-4259-b107-687d11d88171"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="12" y="739" width="501" height="20" backcolor="#BFBFBF" uuid="4a418757-ef98-400f-9f94-eebd5ac96d03"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="4" y="145" width="501" height="20" backcolor="#BFBFBF" uuid="a8b5c766-e37b-4169-b96b-a29a6a4ccd24"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
 		</band>
 	</title>
 </jasperReport>

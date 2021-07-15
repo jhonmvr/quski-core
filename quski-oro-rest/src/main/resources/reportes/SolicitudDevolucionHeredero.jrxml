@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LiquidacionCD" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="bd61ad2f-9f25-415f-9c3b-33012cc4371a">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
@@ -88,7 +88,7 @@
 		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
 	</field>
 	<title>
-		<band height="757" splitType="Stretch">
+		<band height="691" splitType="Stretch">
 			<staticText>
 				<reportElement x="130" y="10" width="297" height="20" uuid="d083857a-31a8-450d-8a31-baaed91ab671"/>
 				<textElement>
@@ -285,28 +285,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement positionType="Float" x="-1" y="590" width="511" height="1" uuid="c45e6455-923e-4551-96c5-3874d30223f9"/>
-			</line>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="10" y="600" width="500" height="20" backcolor="#BFBFBF" uuid="0ec64830-ac29-4066-889f-4dbea7bcedce"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="10" y="630" width="501" height="101" uuid="3f1ae3a0-2707-460e-aee0-bbba927f253d"/>
-				<textElement textAlignment="Justified">
-					<font fontName="Arial" size="11"/>
-				</textElement>
-				<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
-Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
-Recuerde que el tiempo adicional de custodia de la garantía, que respalda su operación cancelada, tendrá un costo.
-]]></text>
-			</staticText>
 			<componentElement>
-				<reportElement x="50" y="310" width="412" height="70" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
+				<reportElement x="20" y="310" width="442" height="70" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -367,37 +347,57 @@ Recuerde que el tiempo adicional de custodia de la garantía, que respalda su op
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<staticText>
-				<reportElement positionType="Float" x="36" y="534" width="104" height="20" uuid="7afbbfb2-b391-4e1d-a6ca-1e48f9ca4110"/>
-				<textElement>
-					<font fontName="Arial"/>
-				</textElement>
-				<text><![CDATA[Firma]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="30" y="470" width="230" height="20" uuid="7cad9f5a-7649-466c-ada4-a944f53a2ec2"/>
+				<reportElement positionType="Float" x="0" y="470" width="360" height="20" uuid="7cad9f5a-7649-466c-ada4-a944f53a2ec2"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nombre: " + $P{BEAN_DS}.getAsesor()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="30" y="440" width="169" height="20" uuid="affd73ff-a3fe-44f1-a0b6-368b51f117d1"/>
+				<reportElement positionType="Float" x="-1" y="440" width="361" height="20" uuid="affd73ff-a3fe-44f1-a0b6-368b51f117d1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Tramitado Por: (Quski C.A.)]]></text>
 			</staticText>
-			<line>
-				<reportElement positionType="Float" x="70" y="549" width="190" height="1" uuid="4a4baa30-ec0c-4b0d-87d4-44f82479708d"/>
-			</line>
-			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="10" y="730" width="500" height="20" backcolor="#BFBFBF" uuid="21104929-6db8-493a-b314-ca03fb9eb487"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+			<frame>
+				<reportElement positionType="Float" x="-11" y="520" width="521" height="171" uuid="c8dc476d-a1e9-4f61-a79d-0b23f7f48f94"/>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="5" y="15" width="501" height="20" backcolor="#BFBFBF" uuid="97bff37d-a2af-44d4-997f-8e8b8f811d78"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="17" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[CONSIDERACIONES PARA EL RETIRO DE LA GARANTÍA
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="5" y="45" width="500" height="100" uuid="3fedd0e4-a2d2-446b-a5d9-8b47d2090a16"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Estimado Cliente, recuerde que la única persona autorizada a realizar el retiro es el titular o una persona debidamente autorizada a través de un poder legalizado.  El documento habilitante para el retiro de joya será la cédula de identidad original y copia a color.
+Tenga presente que una vez que su garantía se encuentre disponible para la entrega en la agencia asignada, tendrá 8 días laborables para su retiro.  Luego de lo cual la presente solicitud perderá validez.
+Recuerde que el tiempo adicional de custodia de la garantía, que respalda su operación cancelada, tendrá un costo.
+]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" mode="Opaque" x="4" y="145" width="501" height="20" backcolor="#BFBFBF" uuid="e52e4dc5-b048-41f7-8d26-5aafb53ee6f9"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<line>
+					<reportElement positionType="Float" x="0" y="10" width="511" height="1" uuid="0f59728f-74a6-4be5-a284-23d72edf1595"/>
+				</line>
+			</frame>
 		</band>
 	</title>
 </jasperReport>

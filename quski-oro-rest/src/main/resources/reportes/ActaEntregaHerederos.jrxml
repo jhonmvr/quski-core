@@ -125,14 +125,14 @@
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="341" y="371" width="169" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
+				<reportElement x="1" y="380" width="169" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Entrega Por: (Quski C.A.)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="340" y="422" width="169" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
+				<reportElement positionType="Float" x="0" y="431" width="169" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 				</box>
@@ -142,7 +142,7 @@
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor() +"/Firma"]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="40" y="280" width="412" height="70" uuid="f1de7d70-de1e-4e67-848e-a4eb4b0121b2">
+				<reportElement x="27" y="280" width="439" height="80" uuid="f1de7d70-de1e-4e67-848e-a4eb4b0121b2">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -204,7 +204,7 @@
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="340" y="442" width="169" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
+				<reportElement positionType="Float" x="0" y="451" width="169" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
