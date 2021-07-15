@@ -169,39 +169,6 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCompletoCliente()]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="2" y="279" width="60" height="20" uuid="2ab834ad-534d-45c1-8519-119351046efb"/>
-					<box>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement>
-						<font fontName="Arial" isBold="true"/>
-					</textElement>
-					<text><![CDATA[ASESOR:]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="62" y="279" width="289" height="20" uuid="a768ad8f-455a-4d1d-9438-3a7f2b5e48e6"/>
-					<box>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement>
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="4" y="309" width="50" height="20" uuid="98729033-ef7c-4141-9f49-f2b5b1b2e874"/>
-					<textElement>
-						<font fontName="Arial" isBold="true"/>
-					</textElement>
-					<text><![CDATA[CI:]]></text>
-				</staticText>
 				<rectangle>
 					<reportElement x="331" y="16" width="140" height="122" uuid="5eb4ffd5-c405-49b3-8a4a-a992372929d8"/>
 				</rectangle>
@@ -219,6 +186,39 @@
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ Entrega Por : (Quski C.A. )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="579" width="60" height="20" uuid="2ab834ad-534d-45c1-8519-119351046efb"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ASESOR:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="57" y="579" width="289" height="20" uuid="a768ad8f-455a-4d1d-9438-3a7f2b5e48e6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="610" width="50" height="20" uuid="98729033-ef7c-4141-9f49-f2b5b1b2e874"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CI:]]></text>
 			</staticText>
 		</band>
 	</title>

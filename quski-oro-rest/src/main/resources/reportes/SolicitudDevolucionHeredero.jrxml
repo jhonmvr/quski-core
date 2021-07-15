@@ -88,7 +88,7 @@
 		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
 	</field>
 	<title>
-		<band height="691" splitType="Stretch">
+		<band height="743" splitType="Stretch">
 			<staticText>
 				<reportElement x="130" y="10" width="297" height="20" uuid="d083857a-31a8-450d-8a31-baaed91ab671"/>
 				<textElement>
@@ -286,7 +286,7 @@
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="20" y="310" width="442" height="70" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
+				<reportElement x="3" y="310" width="507" height="100" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -298,11 +298,11 @@
 							<datasetParameterExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LIST_DS})]]></datasetParameterExpression>
 						</datasetParameter>
 					</datasetRun>
-					<jr:column width="140" uuid="5032ff7b-947c-4f88-a344-4c7669b50247">
+					<jr:column width="340" uuid="5032ff7b-947c-4f88-a344-4c7669b50247">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell height="150">
-							<textField>
-								<reportElement x="0" y="0" width="140" height="150" uuid="2cded28d-94ab-44a1-9579-f8520dc961f5"/>
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="340" height="75" uuid="2cded28d-94ab-44a1-9579-f8520dc961f5"/>
 								<box>
 									<pen lineWidth="1.0"/>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -310,12 +310,19 @@
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
+								<textElement verticalAlignment="Top" markup="html"/>
+							</textField>
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="75" width="340" height="75" uuid="e67f9b2b-b0ed-4291-9d2b-465f14203c24"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+								</box>
 								<textElement markup="html"/>
 								<textFieldExpression><![CDATA["<br>"+$F{campoCompleto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="170" uuid="0b213413-de94-4b66-a77f-c7177d259494">
+					<jr:column width="72" uuid="0b213413-de94-4b66-a77f-c7177d259494">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:detailCell height="150">
 							<box>
@@ -326,7 +333,7 @@
 							</box>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="200" uuid="4abbd969-475c-4070-a46c-3fd907264a2c">
+					<jr:column width="88" uuid="4abbd969-475c-4070-a46c-3fd907264a2c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:detailCell height="150">
 							<box>
@@ -336,10 +343,10 @@
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<rectangle>
-								<reportElement x="0" y="0" width="200" height="110" uuid="8f4c6201-86c7-407b-a5cf-6881e4cfafa3"/>
+								<reportElement x="0" y="0" width="88" height="75" uuid="8f4c6201-86c7-407b-a5cf-6881e4cfafa3"/>
 							</rectangle>
 							<staticText>
-								<reportElement x="0" y="110" width="200" height="40" uuid="0f4b6943-105a-45d0-8be5-31a06c4fad67"/>
+								<reportElement x="0" y="75" width="88" height="75" uuid="0f4b6943-105a-45d0-8be5-31a06c4fad67"/>
 								<textElement textAlignment="Center"/>
 								<text><![CDATA[HUELLA]]></text>
 							</staticText>
@@ -355,7 +362,7 @@
 				<textFieldExpression><![CDATA["Nombre: " + $P{BEAN_DS}.getAsesor()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="-1" y="440" width="361" height="20" uuid="affd73ff-a3fe-44f1-a0b6-368b51f117d1"/>
+				<reportElement positionType="Float" x="-1" y="448" width="361" height="20" uuid="affd73ff-a3fe-44f1-a0b6-368b51f117d1"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -368,7 +375,7 @@
 				<text><![CDATA[Tramitado Por: (Quski C.A.)]]></text>
 			</staticText>
 			<frame>
-				<reportElement positionType="Float" x="-11" y="520" width="521" height="171" uuid="c8dc476d-a1e9-4f61-a79d-0b23f7f48f94"/>
+				<reportElement positionType="Float" x="-11" y="510" width="521" height="181" uuid="c8dc476d-a1e9-4f61-a79d-0b23f7f48f94"/>
 				<staticText>
 					<reportElement positionType="Float" mode="Opaque" x="5" y="15" width="501" height="20" backcolor="#BFBFBF" uuid="97bff37d-a2af-44d4-997f-8e8b8f811d78"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -395,7 +402,7 @@ Recuerde que el tiempo adicional de custodia de la garantía, que respalda su op
 					<text><![CDATA[]]></text>
 				</staticText>
 				<line>
-					<reportElement positionType="Float" x="0" y="10" width="511" height="1" uuid="0f59728f-74a6-4be5-a284-23d72edf1595"/>
+					<reportElement positionType="Float" x="4" y="10" width="511" height="1" uuid="0f59728f-74a6-4be5-a284-23d72edf1595"/>
 				</line>
 			</frame>
 		</band>
