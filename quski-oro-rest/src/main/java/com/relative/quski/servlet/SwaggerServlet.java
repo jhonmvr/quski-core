@@ -4,6 +4,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
+import com.relative.quski.rest.ClienteRestController;
+
 import io.swagger.jaxrs.config.BeanConfig;
 
 @WebServlet(
@@ -13,11 +15,6 @@ import io.swagger.jaxrs.config.BeanConfig;
         )
 
 public class SwaggerServlet extends HttpServlet {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public void init(ServletConfig config) {
 		
         System.out.println("My servlet has been initialized");
@@ -26,10 +23,10 @@ public class SwaggerServlet extends HttpServlet {
         beanConfig.setVersion("1.0.0");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8080");
-        beanConfig.setBasePath("/midas-oro-rest/resources/");
-        beanConfig.setResourcePackage(ReportServlet.class.getPackage().getName());
-        beanConfig.setTitle("MIDAS ORO - API REFERENCES");
-        beanConfig.setDescription("MODULO PARA MIDAS ORO");
+        beanConfig.setBasePath("/quski-oro-rest/resources/");
+        beanConfig.setResourcePackage(ClienteRestController.class.getPackage().getName());
+        beanConfig.setTitle("QUSKI CORE- API REFERENCES");
+        beanConfig.setDescription("MODULO PARA QUSKI CORE");
         beanConfig.setScan(true);
     }
 
