@@ -6700,10 +6700,10 @@ public class QuskiOroService {
 			result.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
 			GaranteWrapper garante = null;
 			if(credito.getIdentificacionApoderado() != null && credito.getNombreCompletoApoderado() != null) {
-				garante = new GaranteWrapper( Long.valueOf(1), Long.valueOf( credito.getIdentificacionApoderado() ), "SAP", credito.getNombreCompletoApoderado());				
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionApoderado() , "SAP", credito.getNombreCompletoApoderado());				
 			}
 			if(credito.getIdentificacionCodeudor() != null && credito.getNombreCompletoCodeudor() != null) {
-				garante = new GaranteWrapper( Long.valueOf(1), Long.valueOf( credito.getIdentificacionCodeudor() ), "SCD", credito.getNombreCompletoCodeudor());				
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionCodeudor() , "SCD", credito.getNombreCompletoCodeudor());				
 			}
 			result.setDatosCodeudorApoderado( garante );
 			result.setDatosRegistro(

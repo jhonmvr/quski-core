@@ -9,14 +9,14 @@ public class GaranteWrapper implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long idTipoIdentificacion;
-	private Long identificacion;
+	private String identificacion;
 	private String codigoTipoCliente;
 	private String nombre;
 	
 	public Long getIdTipoIdentificacion() {
 		return idTipoIdentificacion;
 	}
-	public GaranteWrapper(Long idTipoIdentificacion, Long identificacion, String codigoTipoCliente, String nombre) {
+	public GaranteWrapper(Long idTipoIdentificacion, String identificacion, String codigoTipoCliente, String nombre) {
 		super();
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.identificacion = identificacion;
@@ -26,10 +26,10 @@ public class GaranteWrapper implements Serializable {
 	public void setIdTipoIdentificacion(Long idTipoIdentificacion) {
 		this.idTipoIdentificacion = idTipoIdentificacion;
 	}
-	public Long getIdentificacion() {
+	public String getIdentificacion() {
 		return identificacion;
 	}
-	public void setIdentificacion(Long identificacion) {
+	public void setIdentificacion(String identificacion) {
 		this.identificacion = identificacion;
 	}
 	public String getCodigoTipoCliente() {
