@@ -218,120 +218,85 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public Long countOperacion(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			String querySelect =  COUNT_OP + FROM_OP;
+			String querySelect = "select count(*) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')\r\n" + 
+					"union " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
+					"union " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
+					"union " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
-			if (wp.getEstado() != null) {
-				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
+		
+			
+			if (wp.getEstado() == null) {
+				strQry.append(" and (ESTADO_PROCESO != 'CANCELADO' and  ESTADO_PROCESO != 'APROBADO' and ESTADO_PROCESO != 'RECHAZADO'  and ESTADO_PROCESO != 'CADUCADO') ");
 			} else {
-				strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO' and proceso.ESTADO_PROCESO != 'CADUCADO') ");
+				strQry.append(" and ESTADO_PROCESO=:estado");
 			}
-			if(wp.getAsesor() != null) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
-						"	(select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
-						"	else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"		(select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
-						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
-						"				else ' ' end end end end ilike :asesor");
+			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
+				strQry.append(" and asesor=:asesor");
 			}
 			if (wp.getProceso() != null) {
-				strQry.append(" and proceso.PROCESO =:proceso ");
+				strQry.append(" and PROCESO =:proceso ");
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
-				strQry.append(" and proceso.FECHA_CREACION >=:desde ");
+				strQry.append(" and FECHA_CREACION >=:desde ");
 			}	
 			if (wp.getFechaCreacionHasta() != null) {
-				strQry.append(" and PROCESO.FECHA_CREACION <=:hasta ");
+				strQry.append(" and FECHA_CREACION <=:hasta ");
 			}
-			if(wp.getActividad() != null) {
-				log.info("================> WHERE: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"				(select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"					else ' ' end end =:actividad ");
+			if(StringUtils.isNotBlank(wp.getActividad()) ) {
+				strQry.append(" and actividad =:actividad ");
 			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("================> WHERE: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				strQry.append(" and case when ( proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION' ) then " + 
-						"				(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"					else '' end end LIKE :nombre ");
+			if(StringUtils.isNotBlank(wp.getNombreCompleto() )) {
+				strQry.append(" and nombre_completo iLIKE :nombre ");
 			}
-			if(wp.getIdentificacion() != null) {
-				log.info("================> WHERE: CEDULA ==> "+ wp.getIdentificacion() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"			(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"			else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"				else ' ' end end =:cedula ");
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
+				strQry.append(" and CEDULA_CLIENTE =:cedula ");
 			}
-			if(wp.getCodigoBpm() != null ) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
-						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"					(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"							(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"									(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"										else ' ' end end end end iLIKE :codigoBpm ");
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and CODIGO_OPERACION iLIKE :codigoBpm ");
 			}
-			if(wp.getCodigoSoft() != null ) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
-						"			(select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"					(select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)  " + 
-						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"							(select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)   " + 
-						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"									(select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"										else ' ' end end end end iLIKE :codigosoft ");
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
+				strQry.append(" and operacion iLIKE :codigosoft ");
 			}
+
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
-			if (wp.getAsesor() != null) {
-				log.info("=========> SET: ASESOR ==> "+ wp.getAsesor() +" <====");
-				query.setParameter("asesor", wp.getAsesor() );
-			}
+			
 			if (wp.getEstado() != null) {
-				log.info("=========> SET: ESTADO ==> "+ wp.getEstado() +" <====");
 				query.setParameter("estado", wp.getEstado().toString());
 			}
+			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+				query.setParameter("asesor", wp.getAsesor() );
+			}
 			if (wp.getProceso() != null) {
-				log.info("=========> SET: PROCESO ==> "+ wp.getProceso() +" <====");
 				query.setParameter("proceso", wp.getProceso().toString());
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
-				log.info("=========> SET: DESDE ==> "+ wp.getFechaCreacionDesde() +" <====");
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
 			}	
 			if (wp.getFechaCreacionHasta() != null) {
-				log.info("=========> SET: HASTA ==> "+ wp.getFechaCreacionHasta() +" <====");
 				query.setParameter("hasta", wp.getFechaCreacionHasta() );
 			}
-			if(wp.getActividad() != null) {
-				log.info("=========> SET: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
+			if(StringUtils.isNotBlank(wp.getActividad() )) {
 				query.setParameter("actividad", wp.getActividad());
 			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("=========> SET: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				query.setParameter("nombre", "%"+wp.getNombreCompleto()+"%");
+			if(StringUtils.isNotBlank(wp.getNombreCompleto())) {
+				query.setParameter("nombre", "%"+wp.getNombreCompleto().trim()+"%");
 			}
-			if(wp.getIdentificacion() != null) {
-				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
 				query.setParameter("cedula", wp.getIdentificacion());
+			}
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm().trim()+"%");
 			}			
-			if(wp.getCodigoBpm() != null) {
-				log.info("=========> SET: CODIGO BPM ==> "+ wp.getCodigoBpm() +" <====");
-				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm()+"%");
-			}			
-			if(wp.getCodigoSoft() != null) {
-				log.info("=========> SET: CODIGO SOFTBANK ==> "+ wp.getCodigoSoft() +" <====");
-				query.setParameter("codigosoft", "%"+wp.getCodigoSoft()+"%");
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() )) {
+				query.setParameter("codigosoft", "%"+wp.getCodigoSoft().trim()+"%");
 			}
 			int count = ((BigInteger) query.getSingleResult()).intValue();
 			return Long.valueOf( count );
@@ -344,147 +309,85 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException {
 		try {
-			String querySelect = "SELECT "+ 
-									ID_OP 		+ "," + 
-									CODIGO_BPM 	+ "," + 
-									CODIGO_OP 	+ "," + 
-									NOMBRE_OP   + "," + 
-									CEDULA_OP   + "," +
-									MONTO_OP 	+ "," +
-									" PROCESO.FECHA_CREACION, " + 
-									AGENCIA_OP  + "," +
-									" PROCESO.ESTADO_PROCESO, " + 
-									" PROCESO.PROCESO, "   		+ 
-									ASESOR_OP  	+ "," + 
-									" COALESCE(PROCESO.USUARIO, 'NULL') USUARIO "+ "," + 
-									ACTIVIDAD_OP+ " " + 
-									FROM_OP;
+			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')\r\n" + 
+					"union " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
+					"union " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
+					"union " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
+		
 			
-			if (wp.getEstado() != null) {
-				strQry.append(" where proceso.ESTADO_PROCESO =:estado ");
+			if (wp.getEstado() == null) {
+				strQry.append(" and (ESTADO_PROCESO != 'CANCELADO' and  ESTADO_PROCESO != 'APROBADO' and ESTADO_PROCESO != 'RECHAZADO'  and ESTADO_PROCESO != 'CADUCADO') ");
 			} else {
-				if(wp.getProceso() != null || 
-						wp.getFechaCreacionDesde() != null || 
-						wp.getFechaCreacionHasta() != null || 
-						wp.getActividad() != null || 
-						wp.getNombreCompleto() != null || 
-						wp.getIdentificacion() != null || 
-						wp.getCodigoBpm() != null || 
-						wp.getCodigoSoft() != null ) {
-					strQry.append(" where 1=1 ");
-				}else {
-					strQry.append(" where (proceso.ESTADO_PROCESO != 'CANCELADO' and  proceso.ESTADO_PROCESO != 'APROBADO' and proceso.ESTADO_PROCESO != 'RECHAZADO'  and proceso.ESTADO_PROCESO != 'CADUCADO') ");					
-				}
+				strQry.append(" and ESTADO_PROCESO=:estado");
 			}
-			if(wp.getAsesor() != null) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
-						"	(select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia) " + 
-						"	else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"		(select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"			(select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ) " + 
-						"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"				(select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) " + 
-						"				else ' ' end end end end iLIKE :asesor");
+			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
+				strQry.append(" and asesor=:asesor");
 			}
 			if (wp.getProceso() != null) {
-				strQry.append(" and proceso.PROCESO =:proceso ");
+				strQry.append(" and PROCESO =:proceso ");
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
-				strQry.append(" and proceso.FECHA_CREACION >=:desde ");
+				strQry.append(" and FECHA_CREACION >=:desde ");
 			}	
 			if (wp.getFechaCreacionHasta() != null) {
-				strQry.append(" and PROCESO.FECHA_CREACION <=:hasta ");
+				strQry.append(" and FECHA_CREACION <=:hasta ");
 			}
-			if(wp.getActividad() != null) {
-				log.info("================> WHERE: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"				(select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1) " + 
-						"					else ' ' end end =:actividad ");
+			if(StringUtils.isNotBlank(wp.getActividad()) ) {
+				strQry.append(" and actividad =:actividad ");
 			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("================> WHERE: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				strQry.append(" and case when ( proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION' ) then " + 
-						"				(select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"				else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"					(select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"					else '' end end iLIKE :nombre ");
+			if(StringUtils.isNotBlank(wp.getNombreCompleto() )) {
+				strQry.append(" and nombre_completo iLIKE :nombre ");
 			}
-			if(wp.getIdentificacion() != null) {
-				log.info("================> WHERE: CEDULA ==> "+ wp.getIdentificacion() +" <====");
-				strQry.append(" and case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-						"			(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ) " + 
-						"			else case when (proceso.proceso ='DEVOLUCION') then " + 
-						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ) " + 
-						"				else ' ' end end =:cedula ");
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
+				strQry.append(" and CEDULA_CLIENTE =:cedula ");
 			}
-			if(wp.getCodigoBpm() != null ) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
-						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"					(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"							(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"									(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"										else ' ' end end end end iLIKE :codigoBpm ");
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and CODIGO_OPERACION iLIKE :codigoBpm ");
 			}
-			if(wp.getCodigoSoft() != null ) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO +" then " + 
-						"			(select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"					(select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)  " + 
-						"						else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"							(select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-						"								else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"									(select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"										else ' ' end end end end iLIKE :codigosoft ");
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
+				strQry.append(" and operacion iLIKE :codigosoft ");
 			}
 			strQry.append(" LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
-			if (wp.getAsesor() != null) {
-				log.info("=========> SET: ASESOR ==> "+ wp.getAsesor() +" <====");
-				query.setParameter("asesor", wp.getAsesor() );
-			}
+			
 			if (wp.getEstado() != null) {
-				log.info("=========> SET: ESTADO ==> "+ wp.getEstado() +" <====");
 				query.setParameter("estado", wp.getEstado().toString());
 			}
+			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+				query.setParameter("asesor", wp.getAsesor() );
+			}
 			if (wp.getProceso() != null) {
-				log.info("=========> SET: PROCESO ==> "+ wp.getProceso() +" <====");
 				query.setParameter("proceso", wp.getProceso().toString());
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
-				log.info("=========> SET: DESDE ==> "+ wp.getFechaCreacionDesde() +" <====");
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
 			}	
 			if (wp.getFechaCreacionHasta() != null) {
-				log.info("=========> SET: HASTA ==> "+ wp.getFechaCreacionHasta() +" <====");
 				query.setParameter("hasta", wp.getFechaCreacionHasta() );
 			}
-			if(wp.getActividad() != null) {
-				log.info("=========> SET: ACTIVIDAD ==> "+ wp.getActividad() +" <====");
+			if(StringUtils.isNotBlank(wp.getActividad() )) {
 				query.setParameter("actividad", wp.getActividad());
 			}
-			if(wp.getNombreCompleto() != null) {
-				log.info("=========> SET: NOMBRE ==> "+ wp.getNombreCompleto() +" <====");
-				query.setParameter("nombre", "%"+wp.getNombreCompleto()+"%");
+			if(StringUtils.isNotBlank(wp.getNombreCompleto())) {
+				query.setParameter("nombre", "%"+wp.getNombreCompleto().trim()+"%");
 			}
-			if(wp.getIdentificacion() != null) {
-				log.info("=========> SET: CEDULA ==> "+ wp.getIdentificacion() +" <====");
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
 				query.setParameter("cedula", wp.getIdentificacion());
 			}
-			if(wp.getCodigoBpm() != null) {
-				log.info("=========> SET: CODIGO BPM ==> "+ wp.getCodigoBpm() +" <====");
-				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm()+"%");
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm().trim()+"%");
 			}			
-			if(wp.getCodigoSoft() != null) {
-				log.info("=========> SET: CODIGO SOFTBANK ==> "+ wp.getCodigoSoft() +" <====");
-				query.setParameter("codigosoft", "%"+wp.getCodigoSoft()+"%");
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() )) {
+				query.setParameter("codigosoft", "%"+wp.getCodigoSoft().trim()+"%");
 			}
 			query.setParameter("limite", wp.getNumberItems() );
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());

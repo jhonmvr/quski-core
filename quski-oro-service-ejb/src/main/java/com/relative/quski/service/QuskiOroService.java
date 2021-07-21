@@ -2330,7 +2330,7 @@ public class QuskiOroService {
 		cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
 		cuenta.setEstado(EstadoEnum.ACT);
 		cuenta.setTbQoCliente( wr.getCliente() );
-		cuenta.setEsNueva(cuentaWS.getFirmaRegularizada().equalsIgnoreCase("S"));
+		cuenta.setEsNueva(cuentaWS.getCuentaNueva().equalsIgnoreCase("S"));
 		listCreate.add( cuenta );
 		wr.setCuentas( listCreate );
 		wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
@@ -2400,7 +2400,7 @@ public class QuskiOroService {
 			cuenta.setCuenta(cuentaWS.getNumeroCuenta() );
 			cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
 			cuenta.setIdSoftbank( c.getId() );
-			cuenta.setEsNueva(cuentaWS.getFirmaRegularizada().equalsIgnoreCase("S"));
+			cuenta.setEsNueva(cuentaWS.getCuentaNueva().equalsIgnoreCase("S"));
 			listCreate.add( cuenta );				
 		});
 		return listCreate.isEmpty() ? null : listCreate;
@@ -5268,6 +5268,7 @@ public class QuskiOroService {
 					retorno.setTipoCuenta( response.getINFOFINAN().getTIPOCUENTA() );
 					retorno.setNumeroCuenta( String.valueOf( response.getINFOFINAN().getNUMEROCUENTA() ) );
 					retorno.setFirmaRegularizada( response.getINFOFINAN().getFIRMAREGULARIZADA());
+					retorno.setCuentaNueva(response.getINFOFINAN().getCUENTANUEVA());
 					return retorno;
 				}
 				return null;

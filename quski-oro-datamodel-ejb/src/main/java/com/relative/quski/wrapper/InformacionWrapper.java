@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlType;
  *                   &lt;element name="TIPO_CUENTA" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                   &lt;element name="NUMERO_CUENTA" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
  *                   &lt;element name="FIRMA_REGULARIZADA" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *                   &lt;element name="CUENTA_NUEVA" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -169,6 +170,7 @@ public class InformacionWrapper {
      *         &lt;element name="TIPO_CUENTA" type="{http://www.w3.org/2001/XMLSchema}string"/>
      *         &lt;element name="NUMERO_CUENTA" type="{http://www.w3.org/2001/XMLSchema}unsignedInt"/>
      *         &lt;element name="FIRMA_REGULARIZADA" type="{http://www.w3.org/2001/XMLSchema}string"/>
+     *         &lt;element name="CUENTA_NUEVA" type="{http://www.w3.org/2001/XMLSchema}string"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -183,7 +185,8 @@ public class InformacionWrapper {
         "institucionfinanciera",
         "tipocuenta",
         "numerocuenta",
-        "firmaregularizada"
+        "firmaregularizada",
+        "cuentanueva"
     })
     public static class INFOFINAN {
 
@@ -199,6 +202,8 @@ public class InformacionWrapper {
         protected long numerocuenta;
         @XmlElement(name = "FIRMA_REGULARIZADA", required = true)
         protected String firmaregularizada;
+        @XmlElement(name = "CUENTA_NUEVA", required = true)
+        protected String cuentanueva;
 
         /**
          * Obtiene el valor de la propiedad tipopago.
@@ -302,6 +307,29 @@ public class InformacionWrapper {
          */
         public void setFIRMAREGULARIZADA(String value) {
             this.firmaregularizada = value;
+        }
+        /**
+         * Obtiene el valor de la propiedad cuentanueva.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getCUENTANUEVA() {
+            return cuentanueva;
+        }
+
+        /**
+         * Define el valor de la propiedad cuentanueva.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setCUENTANUEVA(String value) {
+            this.cuentanueva = value;
         }
 
     }

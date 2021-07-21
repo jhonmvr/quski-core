@@ -35,6 +35,9 @@ public class TbQoClientePago implements Serializable {
 	@Column(name="tipo_pago_proceso")
 	private String tipoPagoProceso;
 	
+	@Column(name="mail_asesor")
+	private String mailAsesor;
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoEnum estado;
 
@@ -264,6 +267,14 @@ public class TbQoClientePago implements Serializable {
 
 	public void setTipoPagoProceso(String tipoPagoProceso) {
 		this.tipoPagoProceso = tipoPagoProceso;
+	}
+
+	public String getMailAsesor() {
+		return mailAsesor;
+	}
+
+	public void setMailAsesor(String mailAsesor) {
+		this.mailAsesor = mailAsesor;
 	}
 
 }

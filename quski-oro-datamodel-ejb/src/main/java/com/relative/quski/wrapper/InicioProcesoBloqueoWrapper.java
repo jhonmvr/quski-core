@@ -14,6 +14,7 @@ public class InicioProcesoBloqueoWrapper implements Serializable {
 	private String asesor; 
 	private Long agencia; 
 	private String cedula;  
+	private String mailAsesor;  
 	private String nombreCompleto; 
 	private String observacion;
 	private BigDecimal valorDepositado;
@@ -66,6 +67,12 @@ public class InicioProcesoBloqueoWrapper implements Serializable {
 	}
 	public void setIdBanco(Long idBanco) {
 		this.idBanco = idBanco;
+	}
+	public String getMailAsesor() {
+		return mailAsesor;
+	}
+	public void setMailAsesor(String mailAsesor) {
+		this.mailAsesor = mailAsesor;
 	}
 	
 }

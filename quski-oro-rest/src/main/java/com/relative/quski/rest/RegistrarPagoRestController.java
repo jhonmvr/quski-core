@@ -202,8 +202,8 @@ public class RegistrarPagoRestController extends BaseRestController
 			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, 
 					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null) );
 		} else if( StringUtils.isNotBlank(isAprobar) && !Boolean.valueOf( isAprobar ) ) {
-			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
 		} else {
+			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );
 			throw new RelativeException( Constantes.ERROR_CODE_READ, " AL LEER BOLLEANO DE ENTRADA.");
 		}
 		return loc;

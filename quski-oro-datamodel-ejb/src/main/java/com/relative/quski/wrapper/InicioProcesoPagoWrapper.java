@@ -22,6 +22,7 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	private BigDecimal valorDepositado;
 	private BigDecimal valorPrecancelado;
 	private Long idBanco;
+	private String mailAsesor;
 	
 	public List<RegistroPagoRenovacionWrapper> getPagos() {
 		return pagos;
@@ -94,6 +95,12 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	}
 	public void setTipoPagoProceso(String tipoPagoProceso) {
 		this.tipoPagoProceso = tipoPagoProceso;
+	}
+	public String getMailAsesor() {
+		return mailAsesor;
+	}
+	public void setMailAsesor(String mailAsesor) {
+		this.mailAsesor = mailAsesor;
 	}
 
 }

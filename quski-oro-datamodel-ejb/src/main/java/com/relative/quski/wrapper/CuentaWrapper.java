@@ -16,6 +16,7 @@ public class CuentaWrapper implements Serializable {
 	private String tipoCuenta;
 	private String numeroCuenta;
 	private String firmaRegularizada;
+	private String cuentaNueva;
 	
 	public CuentaWrapper(String identificacion) {
 		super();
@@ -57,6 +58,14 @@ public class CuentaWrapper implements Serializable {
 	}
 	public void setFirmaRegularizada(String firmaRegularizada) {
 		this.firmaRegularizada = firmaRegularizada;
+	}
+
+	public String getCuentaNueva() {
+		return cuentaNueva;
+	}
+
+	public void setCuentaNueva(String cuentaNueva) {
+		this.cuentaNueva = cuentaNueva;
 	}
 
 }
