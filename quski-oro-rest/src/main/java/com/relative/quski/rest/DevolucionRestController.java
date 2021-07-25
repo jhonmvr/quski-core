@@ -295,9 +295,9 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones,@QueryParam("asesor") String asesor) throws RelativeException {
+	public List<TbQoDevolucion> registrarArribo( List<Long> idDevoluciones,@QueryParam("usuario") String usuario) throws RelativeException {
 		List<TbQoDevolucion> loc = new ArrayList<>();
-		loc= this.dos.registrarArriboAgencia(idDevoluciones,asesor);
+		loc= this.dos.registrarArriboAgencia(idDevoluciones,usuario);
 		return loc;
 	}
 	

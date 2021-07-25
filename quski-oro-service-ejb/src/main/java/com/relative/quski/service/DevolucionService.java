@@ -682,7 +682,7 @@ public class DevolucionService {
 			if(procesoDevolucion == null || procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.RECHAZADO || 
 					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.APROBADO || 
 					procesoDevolucion.getEstadoProceso() == EstadoProcesoEnum.CANCELADO ) {
-				throw new RelativeException( "EL PROCESO DE DEVOLUCION LA FUE FINALIZADO, NO SE PUEDE REALIZAR LA CANCELACION.");
+				throw new RelativeException( "EL PROCESO DE DEVOLUCION YA FUE FINALIZADO, NO SE PUEDE REALIZAR LA CANCELACION.");
 			}
 			TbQoProceso procesoCancelacion = this.qos.findProcesoByIdReferencia(id,  ProcesoEnum.CANCELACION_DEVOLUCION );
 			if(procesoCancelacion == null || procesoCancelacion.getEstadoProceso() != EstadoProcesoEnum.PENDIENTE_APROBACION ) {
@@ -890,7 +890,7 @@ public class DevolucionService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
 				pro.setUsuario(usuario);
-				bloquear(pro, this.findDevolucionById(idDevolucion), this.parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BLOQUEO_F).getValor(), Boolean.TRUE);
+				bloquear(pro, this.findDevolucionById(idDevolucion),QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE);
 				return pro;
 			} else {
 				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + persisted.getEstadoProceso());

@@ -514,7 +514,7 @@ public class EmailUtil {
 			return locals.toArray(new InternetAddress[locals.size()]);
 		} catch (AddressException e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"ERROR AddressException " + EmailUtil.class.getName() + " SENDEMAIL " + e.getMessage());
+					"ERROR AddressException " + EmailUtil.class.getName() + " SENDEMAIL " + e.getMessage() + e.getCause());
 		}
 	}
 	
