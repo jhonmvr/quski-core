@@ -131,9 +131,9 @@ public class CotizadorRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CotizacionWrapper> iniciarCotizacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<CotizacionWrapper> iniciarCotizacion(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
-		CotizacionWrapper a = this.qos.iniciarCotizacion(cedula, asesor, Long.valueOf(idAgencia));
+		CotizacionWrapper a = this.qos.iniciarCotizacion(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -144,9 +144,9 @@ public class CotizadorRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<CotizacionWrapper> iniciarCotizacionEquifax(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<CotizacionWrapper> loc = new GenericWrapper<>();
-		CotizacionWrapper a = this.qos.iniciarCotizacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
+		CotizacionWrapper a = this.qos.iniciarCotizacionEquifax(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}

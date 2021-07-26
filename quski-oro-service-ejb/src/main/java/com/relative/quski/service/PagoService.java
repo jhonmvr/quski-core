@@ -267,7 +267,7 @@ public class PagoService {
 	}
 
 	
-	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, Double valorAprobador) throws RelativeException {
+	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, Double valorAprobador, String autorizacion) throws RelativeException {
 		TbQoClientePago clientePago = null;
 		TbQoProceso proceso = null;
 		try {
@@ -294,7 +294,7 @@ public class PagoService {
 						clientePago.getValorDepositado(),
 						QuskiOroUtil.dateToString(clientePago.getFechaCreacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK)
 						);
-				RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono );
+				RespuestaAbonoWrapper abonoRespuesta = this.qos.aplicarAbono( abono, autorizacion );
 				if(abonoRespuesta == null || abonoRespuesta.getExisteError()) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL REGISTRAR EL PAGO EN SOFTBANK.");
 				}

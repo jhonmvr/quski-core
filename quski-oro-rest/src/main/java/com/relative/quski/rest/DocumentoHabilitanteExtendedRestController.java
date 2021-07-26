@@ -123,12 +123,12 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public ObjetoHabilitanteWrapper getDocumentoCredito(
+	public ObjetoHabilitanteWrapper getDocumentoCredito(@QueryParam("autorizacion") String autorizacion,
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
 	if(StringUtils.isBlank(idReferencia)) {
 		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DE REFERENCIA"); 
 	}
-		return cs.generarHabilitanteCredito(Long.valueOf(idReferencia));
+		return cs.generarHabilitanteCredito(Long.valueOf(idReferencia), autorizacion);
 	}
 	
 	@GET
@@ -137,11 +137,11 @@ public class DocumentoHabilitanteExtendedRestController extends BaseRestControll
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public byte[] getDocumentoCreditozip(
+	public byte[] getDocumentoCreditozip(@QueryParam("autorizacion") String autorizacion,
 			@QueryParam("idReferencia") String idReferencia) throws RelativeException{
 	if(StringUtils.isBlank(idReferencia)) {
 		throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DE REFERENCIA"); 
 	}
-		return cs.generarHabilitanteCreditozip(Long.valueOf(idReferencia));
+		return cs.generarHabilitanteCreditozip(Long.valueOf(idReferencia), autorizacion);
 	} 
 }

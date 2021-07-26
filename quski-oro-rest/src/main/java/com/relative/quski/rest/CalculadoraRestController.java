@@ -129,9 +129,10 @@ public class CalculadoraRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("idCredito") String idCredito,@QueryParam("cobertura") String cobertura) throws RelativeException {
+	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("autorizacion") String autorizacion,
+			@QueryParam("idCredito") String idCredito,@QueryParam("cobertura") String cobertura) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
-		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura );
+		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura , autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -155,10 +156,11 @@ public class CalculadoraRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("codigoAgencia") String codigoAgencia,
+	public GenericWrapper<OpcionWrapper> simularOfertaExcepcionadaRenovacion(@QueryParam("autorizacion") String autorizacion,
+			@QueryParam("codigoAgencia") String codigoAgencia,
 			@QueryParam("idCredito") String idCredito, @QueryParam("cobertura") String cobertura) throws NumberFormatException, Exception {
 		GenericWrapper<OpcionWrapper> loc = new GenericWrapper<>();
-		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionadaRenovacion(Long.valueOf( idCredito ), cobertura,codigoAgencia );
+		List<OpcionWrapper> as = this.qos.simularOfertaExcepcionadaRenovacion(Long.valueOf( idCredito ), cobertura,codigoAgencia , autorizacion);
 		loc.setEntidades( as );
 		return loc;
 	}

@@ -100,9 +100,9 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia));
+		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -112,9 +112,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiOperation(value = "cedula, asesor, idAgencia", notes = "Metodo Get iniciarNegociacionEquifax Retorna wrapper de entidades encontradas en NegociacionWrapper", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
-			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia));
+		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -124,9 +125,9 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("autorizacion") String autorizacion,@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia));
+		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -136,9 +137,9 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> traerNegociacionExistente(@QueryParam("id") String id) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> traerNegociacionExistente(@QueryParam("autorizacion") String autorizacion,@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.traerNegociacionExistente(Long.valueOf( id ));
+		NegociacionWrapper a = this.qos.traerNegociacionExistente(Long.valueOf( id ), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -175,12 +176,12 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
+	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(@QueryParam("autorizacion") String autorizacion,List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CREDITO");
 		}
-		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) );
+		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) , autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}

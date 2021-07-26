@@ -61,10 +61,10 @@ public class SoftbankClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(SoftbankConsultaWrapper wrapper,String autentication) 
+	public GenericWrapper<SoftbankClienteWrapper> getClienteSoftbank(@QueryParam("autorizacion") String autorizacion,SoftbankConsultaWrapper wrapper) 
 			throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
-		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion());
+		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion(), autorizacion);
 		loc.setEntidad( a );
 		return loc;
 	}
@@ -75,11 +75,11 @@ public class SoftbankClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<SoftbankRespuestaWrapper> crearClienteSoftbank(SoftbankClienteWrapper wrapper) throws RelativeException {
+	public GenericWrapper<SoftbankRespuestaWrapper> crearClienteSoftbank(@QueryParam("autorizacion") String autorizacion,SoftbankClienteWrapper wrapper) throws RelativeException {
 		GenericWrapper<SoftbankRespuestaWrapper> loc = new GenericWrapper<>();
 		try {
 			SoftbankRespuestaWrapper a = SoftBankApiClient.callCrearClienteRest(this.parametroRepository
-					.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE).getValor(),wrapper);
+					.findByNombre(QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE).getValor(), autorizacion,wrapper);
 			loc.setEntidad(a);
 			return loc;
 		} catch (RelativeException e) {
@@ -94,10 +94,10 @@ public class SoftbankClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ConsultaGlobalRespuestaWrapper> buscarCreditos(ConsultaGlobalWrapper wrapper) throws RelativeException {
+	public GenericWrapper<ConsultaGlobalRespuestaWrapper> buscarCreditos(@QueryParam("autorizacion") String autorizacion,ConsultaGlobalWrapper wrapper) throws RelativeException {
 		GenericWrapper<ConsultaGlobalRespuestaWrapper> loc = new GenericWrapper<>();
 		try {
-			ConsultaGlobalRespuestaWrapper a = qos.buscarCreditos( wrapper );
+			ConsultaGlobalRespuestaWrapper a = qos.buscarCreditos( wrapper, autorizacion );
 			loc.setEntidad(a);
 			return loc;
 		} catch (RelativeException e) {
@@ -119,10 +119,10 @@ public class SoftbankClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<SoftbankClienteWrapper> getEntity(SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
+	public GenericWrapper<SoftbankClienteWrapper> getEntity(@QueryParam("autorizacion") String autorizacion,SoftbankConsultaWrapper wrapper) throws RelativeException, UnsupportedEncodingException {
 		GenericWrapper<SoftbankClienteWrapper> loc = new GenericWrapper<>();
 	
-		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion());
+		SoftbankClienteWrapper a = qos.findClienteSoftbank(wrapper.getIdentificacion(), autorizacion);
 		loc.setEntidad(a);
 		
 		return loc;
@@ -134,9 +134,9 @@ public class SoftbankClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CatalogosSoftbankWrapper> traerCatalogos() throws RelativeException {
+	public GenericWrapper<CatalogosSoftbankWrapper> traerCatalogos(@QueryParam("autorizacion") String autorizacion) throws RelativeException {
 		GenericWrapper<CatalogosSoftbankWrapper> loc = new GenericWrapper<>();
-		CatalogosSoftbankWrapper a = qos.traerCatalogos();
+		CatalogosSoftbankWrapper a = qos.traerCatalogos(autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}

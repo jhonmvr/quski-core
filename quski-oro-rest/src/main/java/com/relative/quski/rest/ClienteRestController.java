@@ -188,9 +188,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ClienteCompletoWrapper> traerClienteByIdNegociacion(@QueryParam("id") String id) throws RelativeException {
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByIdNegociacion(@QueryParam("autorizacion") String autorizacion,@QueryParam("id") String id) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
-		ClienteCompletoWrapper a = this.qos.traerClienteByIdNegociacion(Long.valueOf( id ));
+		ClienteCompletoWrapper a = this.qos.traerClienteByIdNegociacion(Long.valueOf( id ), autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}	
@@ -200,9 +200,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ClienteCompletoWrapper> traerClienteByNumeroOperacion(@QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByNumeroOperacion(@QueryParam("autorizacion") String autorizacion,@QueryParam("numeroOperacionMadre") String numeroOperacionMadre) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
-		ClienteCompletoWrapper a = this.qos.traerClienteByNumeroOperacion(numeroOperacionMadre);
+		ClienteCompletoWrapper a = this.qos.traerClienteByNumeroOperacion(numeroOperacionMadre, autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -212,9 +212,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("cedula") String cedula) throws RelativeException {
+	public GenericWrapper<ClienteCompletoWrapper> traerClienteByCedula(@QueryParam("autorizacion") String autorizacion, @QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<ClienteCompletoWrapper> loc = new GenericWrapper<>();
-		ClienteCompletoWrapper a = this.qos.traerCliente( cedula, null );
+		ClienteCompletoWrapper a = this.qos.traerCliente( cedula, null , autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -260,9 +260,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CreacionClienteRespuestaCoreWp> registrarCliente(ClienteCompletoWrapper wp ) throws RelativeException {
+	public GenericWrapper<CreacionClienteRespuestaCoreWp> registrarCliente(@QueryParam("autorizacion") String autorizacion,ClienteCompletoWrapper wp ) throws RelativeException {
 		GenericWrapper<CreacionClienteRespuestaCoreWp> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.registrarCliente(wp) );
+		loc.setEntidad( this.qos.registrarCliente(wp, autorizacion) );
 		return loc;
 	}
 	

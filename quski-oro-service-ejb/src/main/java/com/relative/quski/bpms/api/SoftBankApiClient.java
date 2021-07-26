@@ -61,7 +61,7 @@ public class SoftBankApiClient {
 		try {
 			
 			CrearOperacionRenovacionWrapper wp = new CrearOperacionRenovacionWrapper();
-			CrearOperacionRespuestaWrapper x = callRenovarOperacionRest( wp ,"http://10.37.10.58:8094/SoftbankAPI/api/credito/operacion/renovar");
+			CrearOperacionRespuestaWrapper x = callRenovarOperacionRest( wp ,"","http://10.37.10.58:8094/SoftbankAPI/api/credito/operacion/renovar");
 			System.out.println("==============>>>"+ x.getDescripcion());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -77,7 +77,7 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws Exception
 	 */
-	public static SoftbankRespuestaWrapper callCrearClienteRest(String service,SoftbankClienteWrapper wrapper)
+	public static SoftbankRespuestaWrapper callCrearClienteRest(String service,String authorization,SoftbankClienteWrapper wrapper)
 			throws RelativeException {
 		try {
 			Gson gson = new Gson();
@@ -118,7 +118,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:" + e.getMessage());
 		} 
 	}
-	public static ConsultaGlobalRespuestaWrapper callConsultaGlobalRest(String service, ConsultaGlobalWrapper wrapper)
+	public static ConsultaGlobalRespuestaWrapper callConsultaGlobalRest(String service,String authorization, ConsultaGlobalWrapper wrapper)
 			throws RelativeException {
 		try {
 			Gson gson = new Gson();
@@ -165,7 +165,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + e.getMessage() );
 		}
 	}
-	public static RespuestaAprobarWrapper callAprobarRest(String service, AprobarWrapper wrapper) throws RelativeException {
+	public static RespuestaAprobarWrapper callAprobarRest(String service,String authorization, AprobarWrapper wrapper) throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(wrapper);
@@ -213,7 +213,7 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws Exception
 	 */
-	public static SoftbankClienteWrapper callConsultaClienteRest(String service,String identificacion)
+	public static SoftbankClienteWrapper callConsultaClienteRest(String service,String authorization,String identificacion)
 			throws RelativeException, Exception {
 		try {
 			SoftbankConsultaWrapper consulta = new SoftbankConsultaWrapper(identificacion);
@@ -241,7 +241,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta, String service) throws RelativeException, Exception {
+	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta,String authorization, String service) throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(consulta);
@@ -284,7 +284,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service, ConsultaTablaWrapper cont)	throws RelativeException, Exception {
+	public static SoftbankTablaAmortizacionWrapper callConsultaTablaAmortizacionRest(String service,String authorization, ConsultaTablaWrapper cont)	throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(cont);
@@ -314,7 +314,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest(String service) throws RelativeException {
+	public static List<CatalogoTablaAmortizacionWrapper> callCatalogoTablaAmortizacionRest(String service,String authorization) throws RelativeException {
 		try {
 			//String service = QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
@@ -343,7 +343,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service ) throws RelativeException {
+	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service,String authorization ) throws RelativeException {
 		try {
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoResponseAgenciaWrapper.class);
@@ -356,7 +356,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoActividadWrapper> callCatalogoActividadEconomicaRest( String service ) throws RelativeException {
+	public static List<CatalogoActividadWrapper> callCatalogoActividadEconomicaRest( String service,String authorization ) throws RelativeException {
 		try {
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoResponseActividadWrapper.class);
@@ -369,7 +369,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoDivicionWrapper> callCatalogoDivicionPoliticaRest( String service ) throws RelativeException {
+	public static List<CatalogoDivicionWrapper> callCatalogoDivicionPoliticaRest( String service,String authorization ) throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson("{}");
@@ -388,7 +388,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoIdWrapper> callCatalogoConIdRest(String service) throws RelativeException {
+	public static List<CatalogoIdWrapper> callCatalogoConIdRest(String service,String authorization) throws RelativeException {
 		try {
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoIdResponseWrapper.class);
@@ -401,7 +401,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		}
 	}
-	public static List<CatalogoWrapper> callCatalogoRest(String service) throws RelativeException {
+	public static List<CatalogoWrapper> callCatalogoRest(String service,String authorization) throws RelativeException {
 		try {
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
 					service, CatalogoResponseWrapper.class);
@@ -424,7 +424,7 @@ public class SoftBankApiClient {
 	 * @throws RelativeException
 	 * @throws Exception
 	 */
-	public static SoftbankRespuestaWrapper callEditarClienteRest(SoftbankClienteWrapper consulta,String service)
+	public static SoftbankRespuestaWrapper callEditarClienteRest(SoftbankClienteWrapper consulta,String authorization,String service)
 			throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
@@ -469,7 +469,7 @@ public class SoftBankApiClient {
 		} 
 	}
 	
-	public static SoftbankRespuestaWrapper upDateGarantia(ActualizarGaratiaWrapper garantias,String service)
+	public static SoftbankRespuestaWrapper upDateGarantia(ActualizarGaratiaWrapper garantias,String authorization,String service)
 			throws RelativeException {
 		try {
 			Gson gson = new Gson();
@@ -514,7 +514,7 @@ public class SoftBankApiClient {
 		} 
 	}
 	
-	public static CrearOperacionRespuestaWrapper callCrearOperacion01Rest(CrearOperacionEntradaWrapper datosEntradaOperacion, String service)
+	public static CrearOperacionRespuestaWrapper callCrearOperacion01Rest(CrearOperacionEntradaWrapper datosEntradaOperacion,String authorization, String service)
 			throws RelativeException {
 		
 		try {
@@ -558,7 +558,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
 		}
 	}
-	public static CrearOperacionRespuestaWrapper callRenovarOperacionRest(CrearOperacionRenovacionWrapper datosEntradaOperacion, String service)
+	public static CrearOperacionRespuestaWrapper callRenovarOperacionRest(CrearOperacionRenovacionWrapper datosEntradaOperacion, String authorization,String service)
 			throws RelativeException {
 		
 		try {
@@ -599,7 +599,7 @@ public class SoftBankApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBANK");
 		}
 	}
-	public static RespuestaAbonoWrapper callAbonoRest(AbonoWrapper abono, String service) throws RelativeException {
+	public static RespuestaAbonoWrapper callAbonoRest(AbonoWrapper abono,String authorization, String service) throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(abono);
@@ -643,7 +643,7 @@ public class SoftBankApiClient {
 	}
 	
 	
-	public static RespuestaConsultaGlobalWrapper callConsultarOperacionRest(ConsultaOperacionGlobalWrapper entrada, String service)throws RelativeException {
+	public static RespuestaConsultaGlobalWrapper callConsultarOperacionRest(ConsultaOperacionGlobalWrapper entrada,String authorization, String service)throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
@@ -670,7 +670,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static List<GarantiaOperacionWrapper> callConsultarGarantiasRest(ConsultaGarantiaWrapper entrada, String service)throws RelativeException {
+	public static List<GarantiaOperacionWrapper> callConsultarGarantiasRest(ConsultaGarantiaWrapper entrada, String authorization,String service)throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
@@ -699,7 +699,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
-	public static List<RubroOperacionWrapper> callConsultarRubrosRest(ConsultaRubrosWrapper entrada, String service)throws RelativeException {
+	public static List<RubroOperacionWrapper> callConsultarRubrosRest(ConsultaRubrosWrapper entrada,String authorization, String service)throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( entrada );
@@ -729,7 +729,7 @@ public class SoftBankApiClient {
 		}
 	}
 	
-	public static RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(String numeroOperacion, String service)throws RelativeException {
+	public static RespuestaHabilitanteCreditoWrapper generarHabilitanteCredito(String numeroOperacion, String authorization,String service)throws RelativeException {
 		try {
 			
 			String jsonString ="{\r\n" + 
@@ -764,7 +764,7 @@ public class SoftBankApiClient {
 		}
 	}
 	
-	public static SoftbankRespuestaWrapper procesarBloqueo(BloqueoWrapper bloqueo, String service)throws RelativeException {
+	public static SoftbankRespuestaWrapper procesarBloqueo(BloqueoWrapper bloqueo, String authorization,String service)throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( bloqueo );

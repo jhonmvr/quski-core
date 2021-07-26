@@ -189,7 +189,7 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoProceso> enviarRespuesta(
+	public GenericWrapper<TbQoProceso> enviarRespuesta(@QueryParam("autorizacion") String autorizacion,
 			@QueryParam("id") String id, 
 			@QueryParam("isRegistro")  String isRegistro,
 			@QueryParam("isAprobar")  String isAprobar,			
@@ -200,7 +200,7 @@ public class RegistrarPagoRestController extends BaseRestController
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<TbQoProceso>();
 		if( StringUtils.isNotBlank(isAprobar) && Boolean.valueOf( isAprobar )) {
 			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, 
-					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null) );
+					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null, autorizacion) );
 		} else if( StringUtils.isNotBlank(isAprobar) && !Boolean.valueOf( isAprobar ) ) {
 		} else {
 			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador) );

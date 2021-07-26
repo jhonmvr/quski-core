@@ -20,14 +20,14 @@ public class NotificacionService {
 	@Inject
 	private ParametroRepository parametroRepository;
 
-	public RespuestaObjectWrapper plantillaOperacionHabilitante(String codigoOperacion)
+	public RespuestaObjectWrapper plantillaOperacionHabilitante(String codigoOperacion, String autorizacion)
 			throws RelativeException, UnsupportedEncodingException {
 		try {
 			RespuestaObjectWrapper objeto = LocalStorageClient.findObjectById(
 					parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
 					parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
 					parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
-					SoftBankApiClient.generarHabilitanteCredito(codigoOperacion, parametroRepository
+					SoftBankApiClient.generarHabilitanteCredito(codigoOperacion, autorizacion, parametroRepository
 							.findByNombre(QuskiOroConstantes.SOFTBANK_GENERAR_HABILITANTE).getValor()).getUriHabilitantes());
 
 			return objeto;
