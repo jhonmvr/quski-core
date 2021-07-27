@@ -86,7 +86,7 @@ public class SoftBankApiClient {
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_CLIENTE;
 			log.info("=========> WRAPPER CREAR ========> " + jsonString);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClienteWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -126,7 +126,7 @@ public class SoftBankApiClient {
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CREAR ========> " + jsonString);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, ConsultaGlobalRespuestaWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -172,7 +172,7 @@ public class SoftBankApiClient {
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CREAR ========> " + jsonString);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaAprobarWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -222,7 +222,7 @@ public class SoftBankApiClient {
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CONSULTA_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClienteWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -250,7 +250,7 @@ public class SoftBankApiClient {
 			//String service = QuskiOroConstantes.URL_SOFTBANK_RIESGO_ACUMULADO;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankRiesgoWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
@@ -293,7 +293,7 @@ public class SoftBankApiClient {
 			//String service = QuskiOroConstantes.URL_SOFTBANK_TABLA_AMORTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankTablaAmortizacionWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
@@ -319,7 +319,7 @@ public class SoftBankApiClient {
 			//String service = QuskiOroConstantes.URL_SOFTBANK_CATALOGO_TABLA_AMOTIZACION;
 			log.info("=========> SERVICIO URL ========> " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, new String("{}"), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, new String("{}"), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CatalogoTablaAmoritzacionResponseWrapper.class);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -345,7 +345,7 @@ public class SoftBankApiClient {
 	}
 	public static List<CatalogoAgenciaWrapper> callCatalogoAgenciaRest( String service,String authorization ) throws RelativeException {
 		try {
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, authorization, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoResponseAgenciaWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -358,7 +358,7 @@ public class SoftBankApiClient {
 	}
 	public static List<CatalogoActividadWrapper> callCatalogoActividadEconomicaRest( String service,String authorization ) throws RelativeException {
 		try {
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, authorization, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoResponseActividadWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -375,7 +375,7 @@ public class SoftBankApiClient {
 			String jsonString = gson.toJson("{}");
 			//byte[] content = jsonString.getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
 			log.info("=========> WRAPPER CONSULTA ========> " + jsonString);
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, authorization, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
 					service, CatalogoResponseDivicionWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -390,7 +390,7 @@ public class SoftBankApiClient {
 	}
 	public static List<CatalogoIdWrapper> callCatalogoConIdRest(String service,String authorization) throws RelativeException {
 		try {
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, authorization, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, 
 					service, CatalogoIdResponseWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -403,7 +403,7 @@ public class SoftBankApiClient {
 	}
 	public static List<CatalogoWrapper> callCatalogoRest(String service,String authorization) throws RelativeException {
 		try {
-			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, null, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON, RestClientWrapper.CONTENT_TYPE_JSON, authorization, "{}", RestClientWrapper.METHOD_POST, null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,
 					service, CatalogoResponseWrapper.class);
 			log.info("=========> RESPUESTA DEL SERVICIO response ========> "+ response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
@@ -433,7 +433,7 @@ public class SoftBankApiClient {
 			log.info("=========> WRAPPER EDITAR CLIENTE ========> " + jsonString);
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClienteWrapper.class);
 			
@@ -478,7 +478,7 @@ public class SoftBankApiClient {
 			log.info("=========> WRAPPER EDITAR GARANTIA ========> " + jsonString);
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_EDITAR_CLIENTE;
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, SoftbankClienteWrapper.class);
 			
@@ -525,7 +525,7 @@ public class SoftBankApiClient {
 			//String service = QuskiOroConstantes.URL_SERVICIO_SOFTBANK_CREAR_OPERACION;
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrearOperacionRespuestaWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -568,7 +568,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrearOperacionRespuestaWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -607,7 +607,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaAbonoWrapper.class);
 			//log.info("===> Respuesta de servicio " + response);
@@ -651,7 +651,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaConsultaGlobalWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -678,7 +678,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaGarantiaWrapper.class);
 			log.info("===> REspuesta de servicio " + response);
@@ -707,7 +707,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaRubroWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -739,7 +739,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -772,7 +772,7 @@ public class SoftBankApiClient {
 			log.info("=====>  " + jsonString);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, jsonString, RestClientWrapper.METHOD_POST, "", "",
+					RestClientWrapper.CONTENT_TYPE_JSON, authorization, jsonString, RestClientWrapper.METHOD_POST, "", "",
 					"", QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, RespuestaHabilitanteCreditoWrapper.class);
 			//log.info("===> REspuesta de servicio " + response);
