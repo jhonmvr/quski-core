@@ -46,7 +46,8 @@ public class LocalStorageClient {
 
 	}
 
-	public static RespuestaObjectWrapper createObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String authorization)
+	public static RespuestaObjectWrapper createObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper,
+			String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
@@ -74,7 +75,8 @@ public class LocalStorageClient {
 	}
 	
 
-	public static RespuestaObjectWrapper updateObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String idObject)
+	public static RespuestaObjectWrapper updateObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper,
+			String idObject, String autorizacion)
 			throws RelativeException {
 		try {
 			Gson gson = new Gson();
@@ -84,7 +86,7 @@ public class LocalStorageClient {
 					.concat("&objectEncripted=").concat(Base64.getEncoder().encodeToString(jsonString.getBytes())).concat("&objectId=").concat(idObject);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, autorizacion, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
 			//log.info("===> REspuesta de servicio " + response);
@@ -107,7 +109,8 @@ public class LocalStorageClient {
 		} 
 	}
 	
-	public static RespuestaObjectWrapper createObjectBig(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper, String authorization)
+	public static RespuestaObjectWrapper createObjectBig(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper,
+			String authorization)
 			throws RelativeException, UnsupportedEncodingException {
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(wrapper);
@@ -139,7 +142,7 @@ public class LocalStorageClient {
 	}
 	
 	
-	public static RespuestaObjectWrapper findObjectById(String urlService,String databaseName, String collectionName,String objectId)
+	public static RespuestaObjectWrapper findObjectById(String urlService,String databaseName, String collectionName,String objectId, String autorizacion)
 			throws RelativeException {
 	
 		try {
@@ -149,7 +152,7 @@ public class LocalStorageClient {
 					concat("&objectId=").concat(objectId);
 			log.info("===> callBpmsInitProcesss con servcio " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, autorizacion, null, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE,service, String.class);
 			//log.info("===> REspuesta de servicio " + response);

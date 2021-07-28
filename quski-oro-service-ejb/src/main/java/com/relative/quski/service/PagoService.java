@@ -53,7 +53,7 @@ public class PagoService {
 	@Inject
 	private ParametroRepository parametroRepository;
 	
-	public RespuestaProcesoPagoBloqueoWrapper crearRegistrarPago(InicioProcesoPagoWrapper wrapper	)throws RelativeException {
+	public RespuestaProcesoPagoBloqueoWrapper crearRegistrarPago(InicioProcesoPagoWrapper wrapper, String autorizacion	)throws RelativeException {
 		try {
 			if (wrapper.getPagos() == null || wrapper.getPagos().size() < 0) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DE LOS PAGOS.");
@@ -91,7 +91,7 @@ public class PagoService {
 					RespuestaObjectWrapper objeto;
 					objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
 							parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );					
+							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, autorizacion );					
 					pago.setIdComprobante(objeto.getEntidad());					
 				}				
 				pago.setCuentas(e.getCuenta());
@@ -115,7 +115,7 @@ public class PagoService {
 			throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION, " EN METODO, crearRegistrarPago FALLO. ");
 		}
 	}
-	public RespuestaProcesoPagoBloqueoWrapper crearRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper )throws RelativeException {
+	public RespuestaProcesoPagoBloqueoWrapper crearRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper, String autorizacion )throws RelativeException {
 		try {
 			if (wrapper.getPagos() == null || wrapper.getPagos().size() < 0) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER LA INFORMACION DE LOS PAGOS.");
@@ -154,7 +154,7 @@ public class PagoService {
 					RespuestaObjectWrapper objeto;
 					objeto = LocalStorageClient.createObjectBig(parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
 							parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, null );
+							parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),file, autorizacion );
 					pago.setIdComprobante(objeto.getEntidad());		
 				}
 							

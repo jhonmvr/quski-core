@@ -128,9 +128,9 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarPago(InicioProcesoPagoWrapper wrapper) throws RelativeException {
+	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarPago(@QueryParam("autorizacion") String autorizacion,InicioProcesoPagoWrapper wrapper) throws RelativeException {
 		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad( this.ps.crearRegistrarPago( wrapper ) );
+		loc.setEntidad( this.ps.crearRegistrarPago( wrapper,autorizacion ) );
 		return loc;
 	}
 	@POST
@@ -141,11 +141,11 @@ public class RegistrarPagoRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper) throws RelativeException {
+	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarBloqueo(@QueryParam("autorizacion") String autorizacion,InicioProcesoBloqueoWrapper wrapper) throws RelativeException {
 		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
 		
 		try {
-			loc.setEntidad( this.ps.crearRegistrarBloqueo(wrapper));
+			loc.setEntidad( this.ps.crearRegistrarBloqueo(wrapper,autorizacion));
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"INTENTAR GUARDAR EN LOCAL STORAGE ");

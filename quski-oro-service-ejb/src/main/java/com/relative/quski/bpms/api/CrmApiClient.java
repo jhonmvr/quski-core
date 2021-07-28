@@ -36,7 +36,7 @@ public class CrmApiClient {
 	 * @throws RelativeException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static CrmProspectoCortoWrapper callConsultaProspectoRest(String service,String cedula) throws RelativeException, UnsupportedEncodingException {
+	public static CrmProspectoCortoWrapper callConsultaProspectoRest(String service,String cedula, String autorizacion) throws RelativeException, UnsupportedEncodingException {
 		try {
 			CrmConsultaWrapper wrapper = new CrmConsultaWrapper(cedula);
 			Gson gson = new Gson();
@@ -46,7 +46,7 @@ public class CrmApiClient {
 			//String service = QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO;
 			log.info("===> URL CRM " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, autorizacion, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrmRespuestaWrapper.class);
 			//log.info("===> Respuesta de servicio " + response);
@@ -66,7 +66,7 @@ public class CrmApiClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callConsultaProspectoRest:");
 		}
 	}
-	public static CrmProspectoWrapper callPersistProspectoRest(String service,CrmGuardarProspectoWrapper wrapper ) throws RelativeException, UnsupportedEncodingException {
+	public static CrmProspectoWrapper callPersistProspectoRest(String service,CrmGuardarProspectoWrapper wrapper, String autorizacion ) throws RelativeException, UnsupportedEncodingException {
 		try {
 	
 			Gson gson = new Gson();
@@ -76,7 +76,7 @@ public class CrmApiClient {
 			//String service = QuskiOroConstantes.URL_CRM_PERSIST;
 			log.info("===> URL CRM " + service);
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
-					RestClientWrapper.CONTENT_TYPE_JSON, null, new String(content), RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_JSON, autorizacion, new String(content), RestClientWrapper.METHOD_POST, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, CrmRespuestaPersistWrapper.class);
 			//log.info("===> Respuesta de servicio " + response);

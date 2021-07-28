@@ -224,9 +224,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CrmProspectoCortoWrapper> buscarClienteCrm(@QueryParam("cedula") String cedula) throws RelativeException {
+	public GenericWrapper<CrmProspectoCortoWrapper> buscarClienteCrm(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula) throws RelativeException {
 		GenericWrapper<CrmProspectoCortoWrapper> loc = new GenericWrapper<>();
-		CrmProspectoCortoWrapper a = this.qos.findProspectoCrm( cedula );
+		CrmProspectoCortoWrapper a = this.qos.findProspectoCrm( cedula, autorizacion );
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -236,9 +236,9 @@ public class ClienteRestController extends BaseRestController
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CrmProspectoWrapper> guardarEnCrm(TbQoCliente cliente) throws RelativeException {
+	public GenericWrapper<CrmProspectoWrapper> guardarEnCrm(@QueryParam("autorizacion") String autorizacion, TbQoCliente cliente) throws RelativeException {
 		GenericWrapper<CrmProspectoWrapper> loc = new GenericWrapper<>();
-		CrmProspectoWrapper a = this.qos.guardarProspectoCrm( cliente );
+		CrmProspectoWrapper a = this.qos.guardarProspectoCrm( cliente, autorizacion );
 		loc.setEntidad(a);
 		return loc;
 	}

@@ -764,7 +764,7 @@ public class SoftBankApiClient {
 		}
 	}
 	
-	public static SoftbankRespuestaWrapper procesarBloqueo(BloqueoWrapper bloqueo, String authorization,String service)throws RelativeException {
+	public static SoftbankRespuestaWrapper procesarBloqueo(BloqueoWrapper bloqueo,String service, String authorization)throws RelativeException {
 		try {
 			Gson gson = new Gson();
 			String jsonString = gson.toJson( bloqueo );

@@ -1086,7 +1086,7 @@ public class QuskiOroService {
 			if (cliente != null) {
 				return this.manageCliente(cliente);
 			} 
-			cliente = this.prospectoCrmToTbQoCliente( this.findProspectoCrm(cedula) );
+			cliente = this.prospectoCrmToTbQoCliente( this.findProspectoCrm(cedula, autorizacion) );
 			if (cliente != null) { 
 				return this.manageCliente(cliente); 
 			}
@@ -2664,7 +2664,7 @@ public class QuskiOroService {
 	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data, String autorizacion) throws RelativeException {
 		try {
 			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia);
-			this.guardarProspectoCrm(cliente);
+			this.guardarProspectoCrm(cliente, autorizacion);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
 				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
@@ -2709,7 +2709,7 @@ public class QuskiOroService {
 			if (cot == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE, " AL GENERAR TODAS LAS TABLAS INICIALES.");			
 			}
-			this.guardarProspectoCrm(cliente);
+			this.guardarProspectoCrm(cliente, autorizacion);
 			CotizacionWrapper wrapper = new CotizacionWrapper();
 			List<SoftbankOperacionWrapper> riesgos = consultarRiesgoSoftbank(cliente.getCedulaCliente(), autorizacion);
 			wrapper.setCotizacion(cot);
@@ -2777,10 +2777,10 @@ public class QuskiOroService {
 
 	}
 	/** ********************************************* @CRM ************ */
-	public CrmProspectoCortoWrapper findProspectoCrm(String cedula) throws RelativeException {
+	public CrmProspectoCortoWrapper findProspectoCrm(String cedula, String autorizacion) throws RelativeException {
 		try {
 			CrmProspectoCortoWrapper prospecto = CrmApiClient
-					.callConsultaProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO).getValor(),cedula);
+					.callConsultaProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PROSPECTO_CORTO).getValor(),cedula, autorizacion);
 			if (prospecto != null) {
 				return prospecto;
 			} else {
@@ -2792,7 +2792,7 @@ public class QuskiOroService {
 		}
 
 	}
-	public CrmProspectoWrapper guardarProspectoCrm(TbQoCliente cliente) throws RelativeException {
+	public CrmProspectoWrapper guardarProspectoCrm(TbQoCliente cliente, String autorizacion) throws RelativeException {
 		try {
 			CrmEntidadWrapper entidad = new CrmEntidadWrapper();
 			entidad.setCedulaC(cliente.getCedulaCliente());
@@ -2809,7 +2809,7 @@ public class QuskiOroService {
 				entidad.setPhoneMobile( tlfCasa.getNumero() );				
 			}
 			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
-			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp);
+			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp, autorizacion);
 			log.info( " GUARDANDO EN CRM =====================================> " + pro.getCedulaC() );
 			return pro;
 		} catch (RelativeException e) {
@@ -6450,7 +6450,7 @@ public class QuskiOroService {
 	
 	public CreditoCreadoSoftbank crearOperacionRenovacion(  CrearRenovacionWrapper wp , String autorizacion) throws RelativeException{
 		try {
-			borrarDatosObjectStorageByPagos(this.registrarPagoRepository.findByIdCredito(wp.getCredito().getId()));
+			borrarDatosObjectStorageByPagos(this.registrarPagoRepository.findByIdCredito(wp.getCredito().getId()), autorizacion);
 			registrarPagoRepository.borrarPagos(wp.getCredito().getId());
 			List<PagosNovacionSoftWrapper> listPagos = this.ps.crearRegistrarComprobanteRenovacion( wp );
 			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( this.manageCreditoNegociacion( wp.getCredito() ), listPagos, autorizacion  ); 
@@ -6487,14 +6487,14 @@ public class QuskiOroService {
 		}
 	}
 	
-	void borrarDatosObjectStorageByPagos(List<TbQoRegistrarPago> pagos) {
+	void borrarDatosObjectStorageByPagos(List<TbQoRegistrarPago> pagos, String autorizacion) {
 		if(pagos != null && !pagos.isEmpty() ) {
 			for(TbQoRegistrarPago p : pagos) {
 				try {
 					String urlService = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
 					String databaseName = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
 					String collectionName = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-					LocalStorageClient.updateObject(urlService, databaseName, collectionName, new FileObjectStorage(),p.getIdComprobante());
+					LocalStorageClient.updateObject(urlService, databaseName, collectionName, new FileObjectStorage(),p.getIdComprobante(), autorizacion);
 				} catch (Exception e) {
 					log.info("NO SE LOGRO ACTUALIZAR OBJECT STORAGE borrarDatosObjectStorageByPagos");
 				}
@@ -7665,7 +7665,7 @@ public class QuskiOroService {
 			novacion.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion(idNegociacion));
 			novacion.setRiesgos( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() , autorizacion), credito.getTbQoNegociacion(), null) );
 			novacion.setCuentas( this.cuentaBancariaRepository.findByIdCliente( credito.getTbQoNegociacion().getTbQoCliente().getId() ));
-			novacion.setPagos(mapPagos(this.registrarPagoRepository.findByIdCredito(credito.getId())) );
+			novacion.setPagos(mapPagos(this.registrarPagoRepository.findByIdCredito(credito.getId()), autorizacion) );
 			return novacion;
 		}catch(RelativeException e) {
 			e.printStackTrace();
@@ -7676,7 +7676,7 @@ public class QuskiOroService {
 		}
 	}
 	
-	List<RegistroPagoRenovacionWrapper> mapPagos(List<TbQoRegistrarPago> registroPago) throws RelativeException{
+	List<RegistroPagoRenovacionWrapper> mapPagos(List<TbQoRegistrarPago> registroPago, String autorizacion) throws RelativeException{
 		List<RegistroPagoRenovacionWrapper>  list = new ArrayList<>();
 		if( registroPago == null || registroPago.size() < 1 ) {
 			return null;
@@ -7689,7 +7689,7 @@ public class QuskiOroService {
 					String urlService = parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor();
 					String databaseName = parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor();
 					String collectionName = parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor();
-					RespuestaObjectWrapper objeto = LocalStorageClient.findObjectById(urlService, databaseName, collectionName, pago.getIdComprobante());
+					RespuestaObjectWrapper objeto = LocalStorageClient.findObjectById(urlService, databaseName, collectionName, pago.getIdComprobante(), autorizacion);
 					Gson gsons = new GsonBuilder().create();
 					FileObjectStorage file = gsons.fromJson( new String(Base64.getDecoder().decode(objeto.getEntidad()) ), FileObjectStorage.class);
 					comprobante = new ArchivoComprobanteWrapper();
