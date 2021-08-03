@@ -72,6 +72,36 @@ public class FileUploadController extends BaseRestController {
 		} 
 	}
 	
+	
+	@POST
+	@Path("/loadFileHabilitanteBuro")
+	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFileHabilitante Retorna  la entidad encontrada loadFile", response= FileWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = FileWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public FileWrapper  loadFileHabilitanteBuro(FileWrapper fw) throws RelativeException {
+		try {
+			log.info("===============>loadFile "  );
+			log.info("===============>loadFile FW getRelatedIdStr " + fw.getRelatedIdStr()  );
+			log.info("===============>loadFile FW getProcess " + fw.getProcess() );
+			log.info("===============>loadFile FW getTypeAction " + fw.getTypeAction() );
+			if( fw.getFileBase64() == null || fw.getFileBase64().isEmpty() ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO LLEGA ARCHIVO");
+			}
+			
+			fw.setFile(  QuskiOroUtil.convertBase64ToByteArray( fw.getFileBase64() ));
+			log.info("===============>GENERADO " + fw.getFileBase64() );
+			this.qos.generateDocumentoHabilitanteBuro(fw);
+			
+			return fw;
+		}catch (RelativeException e) {
+			throw e;
+		}  
+		 catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR Exception REGISTRO DE ARCHIVO");
+		} 
+	}
+	
 	@POST
 	@Path("/loadFileHabilitanteSimplified")
 	@ApiOperation(value = "FileWrapper ", notes = "Metodo Post loadFileHabilitanteSimplified Retorna  la entidad encontrada FileWrapper", response= FileWrapper.class)

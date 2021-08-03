@@ -259,7 +259,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and CEDULA_CLIENTE =:cedula ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
-				strQry.append(" and CODIGO_OPERACION iLIKE :codigoBpm ");
+				strQry.append(" and codigo iLIKE :codigoBpm ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
 				strQry.append(" and operacion iLIKE :codigosoft ");
@@ -350,7 +350,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and CEDULA_CLIENTE =:cedula ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
-				strQry.append(" and CODIGO_OPERACION iLIKE :codigoBpm ");
+				strQry.append(" and codigo iLIKE :codigoBpm ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
 				strQry.append(" and operacion iLIKE :codigosoft ");

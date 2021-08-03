@@ -3031,6 +3031,11 @@ public class QuskiOroService {
 		da.setNombreArchivo(fw.getName());
 		return this.manageDocumentoHabilitante(da);
 	}
+	
+	public TbQoDocumentoHabilitante generateDocumentoHabilitanteBuro(FileWrapper fw) throws RelativeException {
+		
+		return null;
+	}
 
 	public TbQoDocumentoHabilitante findDocumentoHabilitanteByTipoDocumentoAndIdentificacionCliente(
 			String identificacionCliente, Long idCotizador, Long idNegociacion, Long idTipoDocumento)
