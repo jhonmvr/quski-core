@@ -27,6 +27,7 @@ import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoCreditoNegociacion;
+import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
@@ -422,4 +423,74 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;			
 	}
+	
+	
+	
+	
+	
+	@GET
+	@Path("/enviarCorreoAprobacionBienvenida")
+	public GenericWrapper<Boolean> enviarCorreoAprobacionBienvenida(
+			@QueryParam("idNego") String idNego,
+			@QueryParam("nombreAgencia") String nombreAgencia,
+			@QueryParam("telefonoQuski") String telefonoQuski,
+			@QueryParam("telefonoAsesor") String telefonoAsesor) throws RelativeException{
+		
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNego)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		try {
+			
+			TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion( Long.valueOf( idNego ));
+			this.qos.enviarCorreoAprobacionBienvenida( credito, nombreAgencia, telefonoQuski, telefonoAsesor );	
+			
+		}catch( RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		return loc;			
+	}
+	@GET
+	@Path("/enviarCorreoDevolucionOperaciones")
+	public GenericWrapper<Boolean> enviarCorreoDevolucionOperaciones(
+			@QueryParam("idNego") String idNego) throws RelativeException{
+		
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNego)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		try {
+			
+			TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion( Long.valueOf( idNego ));
+			this.qos.enviarCorreoDevolucionOperaciones( credito );	
+			
+		}catch( RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		return loc;			
+	}
+	
+	@GET
+	@Path("/enviarCorreoExcepcionAsesor")
+	public GenericWrapper<Boolean> enviarCorreoExcepcionAsesor(
+			@QueryParam("idNego") String idNego,
+			@QueryParam("tipoExcepcion") String tipoExcepcion,
+			@QueryParam("estadoExcepcion") String estadoExcepcion) throws RelativeException{
+		
+		GenericWrapper<Boolean> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNego)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		try {
+			
+			TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion( Long.valueOf( idNego ));
+			TbQoExcepcion excepcion = this.qos.findByIdNegociacionAndTipoExcepcionAndEstadoExcepcion(Long.valueOf( idNego ), tipoExcepcion, estadoExcepcion);
+			this.qos.enviarCorreoExcepcionAsesor( credito, excepcion);	
+			
+		}catch( RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
+		}
+		return loc;			
+	}
 }
+
