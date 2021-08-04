@@ -8404,5 +8404,106 @@ public class QuskiOroService {
 		}
 		return this.manageTracking(wp);
 	}
+	public void enviarCorreoAprobacionBienvenida(TbQoCreditoNegociacion persisted, String nombreAgencia, String telefonoQuski, String telefonoAsesor) throws RelativeException {
+		try {
+			if( persisted == null || nombreAgencia == null || telefonoQuski == null || telefonoAsesor == null ) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
+			}
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_APROBACION_BIENVENIDA ).getValor()					
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+						.replace("--nombreAgencia--", nombreAgencia);
+			
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_APROBACION_BIENVENIDA ).getValor()
+						.replace("--telefonoQuski--",  telefonoQuski)
+						.replace("--nombreAsesor--",   persisted.getTbQoNegociacion().getNombreAsesor())
+						.replace("--telefonoAsesor--", telefonoAsesor);
+				String[] listCorreos = {persisted.getTbQoNegociacion().getTbQoCliente().getEmail()};
+				this.mailNotificacion( listCorreos, asunto, contenido,  null);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
+		}
+	}
+	public void enviarCorreoDevolucionOperaciones(TbQoCreditoNegociacion persisted) throws RelativeException {
+		try {
+			if( persisted == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
+			}
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_APROBACION_BIENVENIDA ).getValor()					
+						.replace("--numeroProceso--", persisted.getCodigo() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() );
+			
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_APROBACION_BIENVENIDA ).getValor()
+						.replace("--numeroProceso--", persisted.getCodigo() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
+						.replace("--motivoDevolucion--", persisted.getDescripcionDevuelto() );
+				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
+				this.mailNotificacion( listCorreos, asunto, contenido,  null);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
+		}
+	}
+	public void enviarCorreoExcepcionAprobador(TbQoCreditoNegociacion persisted, TbQoExcepcion excepcion, String correoAprobador) throws RelativeException {
+		try {
+			if( persisted == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
+			}
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_APROBACION_BIENVENIDA ).getValor()					
+						.replace("--tipoExcepcion--", excepcion.getTipoExcepcion() )
+						.replace("--numeroProceso--", persisted.getCodigo())
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() );
+
+			
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_APROBACION_BIENVENIDA ).getValor()
+						.replace("--numeroProceso--", persisted.getCodigo() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
+						.replace("--tipoExcepcion", excepcion.getTipoExcepcion() )
+						.replace("--observacionAsesor", excepcion.getObservacionAsesor() );
+			
+				String[] listCorreos = {correoAprobador};
+				this.mailNotificacion( listCorreos, asunto, contenido,  null);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
+		}
+	}
+	public void enviarCorreoExcepcionAsesor(TbQoCreditoNegociacion persisted, TbQoExcepcion excepcion) throws RelativeException {
+		try {
+			if( persisted == null) { 
+				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
+			}
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_APROBACION_BIENVENIDA ).getValor()					
+						.replace("--tipoExcepcion--", excepcion.getTipoExcepcion() )
+						.replace("--numeroProceso--", persisted.getCodigo())
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() );
+
+				
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_APROBACION_BIENVENIDA ).getValor()
+						.replace("--numeroProceso--", persisted.getCodigo() )
+						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
+						.replace("--tipoExcepcion", excepcion.getTipoExcepcion() )
+						.replace("--estadoExcepcion", excepcion.getEstadoExcepcion().toString() )
+						.replace("--obvervacionAsesor", excepcion.getObservacionAsesor() );
+			
+				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
+				this.mailNotificacion( listCorreos, asunto, contenido,  null);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch ( Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
+		}
+	}
 	
 }
