@@ -136,7 +136,7 @@ public class DevolucionService {
 				if(devoluciones != null) {
 					for(TbQoDevolucion e : devoluciones) {
 						TbQoProceso procesoActivo = this.qos.findProcesoByIdReferencia( e.getId(), ProcesoEnum.DEVOLUCION);
-						if(procesoActivo.getEstadoProceso() != EstadoProcesoEnum.CANCELADO && procesoActivo.getEstadoProceso() != EstadoProcesoEnum.RECHAZADO) {
+						if(procesoActivo != null && procesoActivo.getEstadoProceso() != EstadoProcesoEnum.CANCELADO && procesoActivo.getEstadoProceso() != EstadoProcesoEnum.RECHAZADO) {
 							throw new RelativeException(" YA EXISTE UN PROCESO DE DEVOLUCION ACTIVO PARA ESTE CREDITO: " +e.getCodigo() );				
 						}		
 					}
