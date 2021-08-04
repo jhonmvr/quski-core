@@ -7,40 +7,45 @@ import java.sql.Date;
 public class OpPorAprobarWrapper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-    private BigDecimal  id;
-    private String codigoBpm;
-    private String codigoOperacion;
-    private String proceso;
-    private Date fechaSolicitud;
-    private String cedulaCliente;
-    private String nombreCliente;
-    private BigDecimal   idAgencia;
-    private String asesor;
-    private String aprobador;
-    private Integer orden;
-
-    
-	public OpPorAprobarWrapper(	BigDecimal id, String codigoBpm, String codigoOperacion, String proceso, 
-								Date fechaSolicitud, String cedulaCliente,
-								String nombreCliente, BigDecimal idAgencia, String asesor, String aprobador, Integer orden) {
+	
+	private BigDecimal id;
+	private BigDecimal idReferencia;
+	private String codigo;
+	private String operacion;
+	private String nombreCompleto;
+	private String cedulaCliente;
+	private BigDecimal monto;
+	private Date fechaCreacion;
+	private BigDecimal idAgencia;
+	private String estadoProceso;
+	private String proceso;
+	private String asesor;
+	private String usuario;
+	private String actividad;
+	private String aprobador;
+	private Date fechaActualizacion;
+	private Integer orden;
+	public OpPorAprobarWrapper(BigDecimal id, BigDecimal idReferencia, String codigo, String operacion,
+			String nombreCompleto, String cedulaCliente, BigDecimal monto, Date fechaCreacion, BigDecimal idAgencia,
+			String estadoProceso, String proceso, String asesor, String usuario, String actividad, String aprobador,
+			Date fechaActualizacion, Integer orden) {
 		super();
 		this.id = id;
-		this.codigoBpm = codigoBpm;
-		this.codigoOperacion = codigoOperacion;
-		this.proceso = proceso;
-		this.fechaSolicitud = fechaSolicitud;
+		this.idReferencia = idReferencia;
+		this.codigo = codigo;
+		this.operacion = operacion;
+		this.nombreCompleto = nombreCompleto;
 		this.cedulaCliente = cedulaCliente;
-		this.nombreCliente = nombreCliente;
+		this.monto = monto;
+		this.fechaCreacion = fechaCreacion;
 		this.idAgencia = idAgencia;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
 		this.asesor = asesor;
+		this.usuario = usuario;
+		this.actividad = actividad;
 		this.aprobador = aprobador;
-		this.orden = orden;
-	}
-	public Integer getOrden() {
-		return orden;
-	}
-	public void setOrden(Integer orden) {
+		this.fechaActualizacion = fechaActualizacion;
 		this.orden = orden;
 	}
 	public BigDecimal getId() {
@@ -49,17 +54,29 @@ public class OpPorAprobarWrapper implements Serializable {
 	public void setId(BigDecimal id) {
 		this.id = id;
 	}
-	public String getProceso() {
-		return proceso;
+	public BigDecimal getIdReferencia() {
+		return idReferencia;
 	}
-	public void setProceso(String proceso) {
-		this.proceso = proceso;
+	public void setIdReferencia(BigDecimal idReferencia) {
+		this.idReferencia = idReferencia;
 	}
-	public Date getFechaSolicitud() {
-		return fechaSolicitud;
+	public String getCodigo() {
+		return codigo;
 	}
-	public void setFechaSolicitud(Date fechaSolicitud) {
-		this.fechaSolicitud = fechaSolicitud;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+	public String getOperacion() {
+		return operacion;
+	}
+	public void setOperacion(String operacion) {
+		this.operacion = operacion;
+	}
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
 	}
 	public String getCedulaCliente() {
 		return cedulaCliente;
@@ -67,11 +84,17 @@ public class OpPorAprobarWrapper implements Serializable {
 	public void setCedulaCliente(String cedulaCliente) {
 		this.cedulaCliente = cedulaCliente;
 	}
-	public String getNombreCliente() {
-		return nombreCliente;
+	public BigDecimal getMonto() {
+		return monto;
 	}
-	public void setNombreCliente(String nombreCliente) {
-		this.nombreCliente = nombreCliente;
+	public void setMonto(BigDecimal monto) {
+		this.monto = monto;
+	}
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 	public BigDecimal getIdAgencia() {
 		return idAgencia;
@@ -79,11 +102,35 @@ public class OpPorAprobarWrapper implements Serializable {
 	public void setIdAgencia(BigDecimal idAgencia) {
 		this.idAgencia = idAgencia;
 	}
+	public String getEstadoProceso() {
+		return estadoProceso;
+	}
+	public void setEstadoProceso(String estadoProceso) {
+		this.estadoProceso = estadoProceso;
+	}
+	public String getProceso() {
+		return proceso;
+	}
+	public void setProceso(String proceso) {
+		this.proceso = proceso;
+	}
 	public String getAsesor() {
 		return asesor;
 	}
 	public void setAsesor(String asesor) {
 		this.asesor = asesor;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	public String getActividad() {
+		return actividad;
+	}
+	public void setActividad(String actividad) {
+		this.actividad = actividad;
 	}
 	public String getAprobador() {
 		return aprobador;
@@ -91,20 +138,20 @@ public class OpPorAprobarWrapper implements Serializable {
 	public void setAprobador(String aprobador) {
 		this.aprobador = aprobador;
 	}
-	public String getCodigoBpm() {
-		return codigoBpm;
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
-	public void setCodigoBpm(String codigoBpm) {
-		this.codigoBpm = codigoBpm;
+	public void setFechaActualizacion(Date fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
 	}
-	public String getCodigoOperacion() {
-		return codigoOperacion;
+	public Integer getOrden() {
+		return orden;
 	}
-	public void setCodigoOperacion(String codigoOperacion) {
-		this.codigoOperacion = codigoOperacion;
+	public void setOrden(Integer orden) {
+		this.orden = orden;
 	}
-
-
-
+	
+	
+	
 
 }

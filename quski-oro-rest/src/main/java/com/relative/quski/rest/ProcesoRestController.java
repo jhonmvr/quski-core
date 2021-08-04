@@ -87,11 +87,11 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	@Path("/validarAprobador")
 	@ApiOperation(value = "idReferencia, proceso, aprobador ", notes = "Metodo Get validarAprobador Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
 	public GenericWrapper<String> validarAprobador(@QueryParam("idReferencia") String idReferencia, 
-			@QueryParam("proceso") ProcesoEnum proceso, 
+			@QueryParam("proceso") ProcesoEnum proceso, @QueryParam("idProceso") String idProceso,
 			@QueryParam("aprobador") String aprobador
 			) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.validarAprobador( Long.valueOf( idReferencia ), proceso, aprobador ) );
+		loc.setEntidad( this.qos.validarAprobador( Long.valueOf( idReferencia ), proceso, aprobador, Long.valueOf( idProceso ) ) );
 		return loc;
 	}	
 	@GET
@@ -263,9 +263,10 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia, @QueryParam("proceso") ProcesoEnum proceso, @QueryParam("aprobador") String aprobador) throws RelativeException {
+	public GenericWrapper<String> asignarAprobador(@QueryParam("idReferencia") String idReferencia, @QueryParam("idProceso") String idProceso, 
+			@QueryParam("proceso") ProcesoEnum proceso, @QueryParam("aprobador") String aprobador) throws RelativeException {
 		GenericWrapper<String> loc = new GenericWrapper<>();
-		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador ) );
+		loc.setEntidad( this.qos.asignarAprobador( Long.valueOf( idReferencia ),proceso, aprobador , Long.valueOf( idProceso )) );
 		return loc;
 	}	
 	@GET

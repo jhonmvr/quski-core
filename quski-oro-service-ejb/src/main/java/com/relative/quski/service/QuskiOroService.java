@@ -6980,6 +6980,7 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		}catch (Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
@@ -7009,6 +7010,9 @@ public class QuskiOroService {
 						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
 			}
 		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
@@ -7100,40 +7104,42 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());		
 		}
 	}
-	public String validarAprobador( Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
+	public String validarAprobador( Long id, ProcesoEnum proceso, String aprobador, Long idProceso) throws RelativeException {
 		try {
-			TbQoProceso procesoValidar = this.findProcesoByIdReferencia( id, proceso );
+			TbQoProceso procesoValidar = procesoRepository.findById(idProceso);
 			if(procesoValidar == null) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EN PROCESO PARA LA REFERENCIA:" +id);
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR EN PROCESO ID:" +id);
 			}
 			if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
+				
 				TbQoNegociacion persisted = this.findNegociacionById( id );
 				if(persisted == null) {
-					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUDO ENCONTRAR LA OPERACION CON ID: " + id);					
 				}
-				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+				if( StringUtils.isBlank(persisted.getAprobador() ) || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
 					return null; 
 				}else {
 					return persisted.getAprobador(); 
 				}
 			}				
 			if(proceso == ProcesoEnum.PAGO) {
+				
 				TbQoClientePago persisted = this.findClientePagoById( id );
 				if(persisted == null) {
-					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUDO ENCONTRAR EL PAGO CON ID: " + id);					
 				}
-				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+				if( StringUtils.isBlank(persisted.getAprobador() ) || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
 					return null; 
 				}else {
 					return persisted.getAprobador(); 
 				}
 			}
 			if(proceso == ProcesoEnum.DEVOLUCION || proceso == ProcesoEnum.CANCELACION_DEVOLUCION) {
-				TbQoDevolucion persisted  = ds.findDevolucionById( id );
+				TbQoDevolucion persisted  = devolucionRepository.findById( id );
 				if(persisted == null) {
-					throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUDO ENCONTRAR LA DEVOLUCION CON ID: " + id);					
 				}
-				if( persisted.getAprobador() == null || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
+				if( StringUtils.isBlank(persisted.getAprobador() ) || persisted.getAprobador().equalsIgnoreCase( aprobador ) ) {
 					return null; 
 				}else {
 					return persisted.getAprobador(); 
@@ -7141,6 +7147,7 @@ public class QuskiOroService {
 			}
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);					
 		}catch(RelativeException e) {
+			e.printStackTrace();
 			throw e;		
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -7223,9 +7230,10 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_UPDATE, e.getMessage());
 		}
 	}
-	public String asignarAprobador(Long id, ProcesoEnum proceso, String aprobador) throws RelativeException {
+	public String asignarAprobador(Long id, ProcesoEnum proceso, String aprobador, Long idProceso) throws RelativeException {
 		try {
-			TbQoProceso persistedProceso = this.findProcesoByIdReferencia(id, proceso);
+			TbQoProceso persistedProceso = procesoRepository.findById(idProceso);
+			log.info("entra en persistedProceso ID: " + persistedProceso.getId());
 			if(persistedProceso != null) {
 				persistedProceso.setUsuario( aprobador );
 				persistedProceso.setHoraAprobador( new Timestamp(System.currentTimeMillis()) );
@@ -7247,7 +7255,8 @@ public class QuskiOroService {
 					this.manageClientePago( persisted );
 				}
 				if(proceso == ProcesoEnum.DEVOLUCION || proceso == ProcesoEnum.CANCELACION_DEVOLUCION) {
-					TbQoDevolucion persistedDevolucion  = ds.findDevolucionById( id );
+					log.info("entra en devolucione");
+					TbQoDevolucion persistedDevolucion  = devolucionRepository.findById(id);
 					if(persistedDevolucion != null) {
 						persistedDevolucion.setAprobador( aprobador );
 						ds.manageDevolucion( persistedDevolucion );
@@ -7784,6 +7793,7 @@ public class QuskiOroService {
 				estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
 				estados.add( EstadoProcesoEnum.EXCEPCIONADO );
 				estados.add( EstadoProcesoEnum.PENDIENTE_EXCEPCION );
+				estados.add( EstadoProcesoEnum.DEVUELTO );
 				if(this.procesoRepository.findByNumeroOperacionMadreAndProcesoAndEstado(numeroOperacionMadre,  ProcesoEnum.RENOVACION, estados) > 0 ) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"YA EXISTE UN PROCESO DE RENOVACION ACTIVO PARA EL NUMERO DE OPERACION MADRE: "+ numeroOperacionMadre);
 				}

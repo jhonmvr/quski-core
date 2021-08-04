@@ -127,9 +127,9 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoCancelacion(@QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+	public GenericWrapper<ProcesoDevolucionWrapper> buscarProcesoCancelacion(@QueryParam("idProceso") String idProceso) throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.buscarProcesoCancelacion( Long.valueOf( idDevolucion )) );
+		loc.setEntidad(this.dos.buscarProcesoCancelacion( Long.valueOf( idProceso )) );
 		return loc;
 	}	
 	@GET

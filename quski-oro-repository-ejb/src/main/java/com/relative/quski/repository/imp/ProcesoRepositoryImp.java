@@ -55,123 +55,13 @@ import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso> implements ProcesoRepository {
 	@Inject
 	Logger log;
-	private final String ID_OP = " case when "+QueryConstantes.WHEN_NEGO+"  then " + 
-			"COALESCE( (select nego.ID from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 0) " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"		COALESCE( (select devo.ID from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 0) " + 
-			"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"			COALESCE( (select pago.ID from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 0) " + 
-			"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"				COALESCE( (select veri.ID from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 0) " + 
-			"				else 0 end end end end ID ";
-	private final String CODIGO_BPM = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
-			"COALESCE( (select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE( (select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 'NULL')  " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
-			"			else ' ' end end end end CODIGO_BPM ";
-	private final String CODIGO_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
-			"COALESCE( (select cre.numero_operacion from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 'NULL')  " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE( (select devo.CODIGO_OPERACION from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL')  " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.CODIGO_OPERACION from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia), 'NULL')  " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.CODIGO_OPERACION from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia), 'NULL')  " + 
-			"			else ' ' end end end end CODIGO_OPERACION ";
-	private final String CEDULA_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
-			"COALESCE( (select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL')  " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE( (select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL')  " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.CEDULA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL')  " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL')  " + 
-			"			else ' ' end end end end cedula_cliente ";
-	private final String NOMBRE_OP = " case when "+QueryConstantes.WHEN_NEGO +" then " + 
-			"COALESCE( (select cli.nombre_completo from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id ), 'NULL') " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE( (select DEVO.NOMBRE_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia ), 'NULL') " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.NOMBRE_CLIENTE  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.NOMBRE_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
-			"			else ' ' end end end end nombre_cliente ";
-	private final String AGENCIA_OP = " case when " + QueryConstantes.WHEN_NEGO + " then " + 
-			" COALESCE( (select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0) " + 
-			"else case when  "+QueryConstantes.WHEN_DEVO+"  then " + 
-			"	COALESCE( (select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 0)  " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.ID_AGENCIA  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 0)  " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 0)  " + 
-			"			else 0 end end end end AGENCIA	";
-	private final String ASESOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			"COALESCE( (select nego.ASESOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"	COALESCE((select devo.ASESOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"		COALESCE( (select pago.ASESOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') " + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"			COALESCE( (select veri.ASESOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') " + 
-			"			else ' ' end end end end ASESOR ";
-	private final String APROBADOR_OP = " case when "+QueryConstantes.WHEN_NEGO+" then " + 
-			" COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia and nego.APROBADOR != ''), 'NULL') " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " +
-			"	COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia and devo.APROBADOR != ''), 'NULL') " + 
-			"	else case when "+QueryConstantes.WHEN_PAGO+" then " +
-			"		COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA and pago.APROBADOR != ''), 'NULL')" + 
-			"		else case when "+QueryConstantes.WHEN_VERI+" then " +
-			"			COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA and veri.APROBADOR != ''), 'NULL') " + 
-			"			else ' ' end end end end APROBADOR ";
-	private final String ORDEN_OP = " CASE WHEN (proceso.proceso ='NUEVO') THEN" +
-			"			CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" +
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 1 ELSE 8 end" +
-			"			ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN" +
-			"				CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 2 ELSE 9 end" +
-			"			ELSE 0 END END" +
-			"		ELSE CASE WHEN (proceso.proceso ='RENOVACION') THEN " +
-			"				CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN" +
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 3 ELSE 10 end" +
-			"				ELSE CASE WHEN (PROCESO.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN" + 
-			"					CASE WHEN  (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia),'NULL') = 'NULL') or (COALESCE((select nego.APROBADOR from tb_qo_negociacion nego where nego.id = proceso.id_referencia), 'NULL') = '') then 4 ELSE 11 end" +
-			"				ELSE 0 END END" + 
-			"		ELSE CASE WHEN (proceso.proceso ='PAGO') THEN " + 
-			"				CASE WHEN  (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ),'NULL') = 'NULL') or (COALESCE((select pago.APROBADOR  from TB_QO_CLIENTE_PAGO pago where pago.ID = proceso.ID_REFERENCIA ), 'NULL') = '') then 5  ELSE 12 end" +
-			"		ELSE CASE WHEN ("+QueryConstantes.WHEN_DEVO+") THEN " + 
-			"				CASE WHEN  (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia),'NULL') = 'NULL' ) or (COALESCE((select devo.APROBADOR from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia), 'NULL') = '' ) then 6  ELSE 13 end" +
-			"		ELSE CASE WHEN (proceso.proceso ='VERIFICACION_TELEFONICA') THEN " + 
-			"				CASE WHEN  (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ) ,'NULL') = 'NULL') or (COALESCE((select veri.APROBADOR from TB_QO_VERIFICACION_TELEFONICA veri where veri.ID = PROCESO.ID_REFERENCIA ), 'NULL') = '') then 7  ELSE 14 end" + 
-			"		ELSE 0 END END END END END AS orden ";
-	private final String MONTO_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-			"			COALESCE((select cre.monto_financiado from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia), 0)" + 
-			"			else 0 end monto_financiado ";
-	private final String ACTIVIDAD_OP = " case when (proceso.proceso ='NUEVO' or proceso.proceso ='RENOVACION') then " + 
-			"			COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.CODIGO = tra.CODIGO_BPM and cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL') " + 
-			"			else case when (proceso.proceso ='DEVOLUCION'  or proceso.proceso = 'CANCELACION_DEVOLUCION' ) then " + 
-			"				COALESCE((select tra.ACTIVIDAD from TB_QO_DEVOLUCION devo, TB_QO_TRACKING tra where devo.id = proceso.id_referencia and devo.CODIGO = tra.CODIGO_BPM ORDER BY tra.FECHA_INICIO DESC limit 1), 'NULL')" + 
-			"				else case when (proceso.proceso = 'PAGO') then " +
-			"					COALESCE((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pago where pago.codigo = tra.CODIGO_BPM and pago.id = proceso.id_referencia order by tra.FECHA_INICIO desc limit 1), 'NULL')"+ 
-			"						else ' ' end  end end ACTIVIDAD ";
-	private final String COUNT_OP = "SELECT  COUNT(case when "+QueryConstantes.WHEN_NEGO+"  then " + 
-			"(select cre.ID from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-			"else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-			"		(select devo.ID from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-			"		else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-			"			(select pago.ID from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-			"			else case when "+QueryConstantes.WHEN_VERI+" then " + 
-			"				(select veri.ID from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-			"				else 0 end end end end)  ";
-	private final String FROM_OP = " FROM tb_qo_proceso proceso ";
+	
 	
 	@Override
 	public TbQoProceso findById(Long id) throws RelativeException {
 		try {
 			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdSpec(id));
-			if (!list.isEmpty()) {
+			if (list != null && !list.isEmpty()) {
 				if (list.size() == 1) {
 					return list.get(0);
 				} else {
@@ -188,9 +78,9 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	}
 	@Override
 	public TbQoProceso findByIdReferencia(Long id, ProcesoEnum proceso) throws RelativeException {
-		try {
+		
 			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdReferenciaSpec(id, proceso));
-			if (!list.isEmpty()) {
+			if (list != null && !list.isEmpty()) {
 				if (list.size() == 1) {
 					return list.get(0);
 				} else {
@@ -200,16 +90,13 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			} else {
 				return null;
 			}
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMensaje());
-		}
+		
 	}
 
 	@Override
 	public List<TbQoProceso> findProcesosByAsesor(String asesor) throws RelativeException {
 		List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByAsesorSpec(asesor));
-		if (!list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 			return list;
 		} else {
 			return null;
@@ -219,7 +106,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	public Long countOperacion(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
 			String querySelect = "select count(*) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')\r\n" + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
 					"union " + 
 					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
 					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
@@ -310,7 +197,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException {
 		try {
 			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')\r\n" + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
 					"union " + 
 					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
 					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
@@ -442,52 +329,69 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			String querySelect = "SELECT " + 
-									ID_OP 							+ "," +
-									CODIGO_BPM 						+ "," +
-									CODIGO_OP 						+ "," +
-									" PROCESO.PROCESO " 			+ "," +
-									"coalesce( PROCESO.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION, "+
-									CEDULA_OP 						+ "," +
-									NOMBRE_OP 						+ "," +
-									AGENCIA_OP 						+ "," +
-									ASESOR_OP 						+ "," +
-									APROBADOR_OP 					+ "," +
-									ORDEN_OP 						+ " " +
-									FROM_OP;
-			StringBuilder strQry = new StringBuilder(querySelect).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado or proceso.ESTADO_PROCESO =:tercerEstado ) ");
-			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				strQry.append(" and case when "+ QueryConstantes.WHEN_NEGO +"  then " + 
-						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"			else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"				(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"					(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"						(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"						else ' ' end end end end =:codigo  ");
-			}if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
-						"		(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id )" + 
-						"		else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia )" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"						(select pago.CEDULA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
-						"						else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"							(select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
-						"							else ' ' end end end end =:cedula   ");
-			}if(wp.getProceso() != null) {
-				strQry.append(" and proceso.PROCESO =:proceso ");
-			}if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " +
-						"		(select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia)" + 
-						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " +
-						"				(select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " +
-						"					(select pago.ID_AGENCIA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
-						"					else case when "+QueryConstantes.WHEN_VERI+" then " +
-						"					(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
-						"					else 0 end end end end =:idAgencia ");
+			String querySelect = "select TABL.id, TABL.id_referencia, TABL.codigo, TABL.operacion, TABL.nombre_completo, TABL.cedula_cliente, TABL.monto, TABL.fecha_creacion, TABL.id_agencia, TABL.estado_proceso, TABL.proceso, TABL.asesor, TABL.usuario, TABL.actividad, TABL.aprobador, TABL.fecha_actualizacion,CASE WHEN (TABL.proceso ='NUEVO') THEN " + 
+					"			CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN " + 
+					"				CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
+					"					then 1  " + 
+					"					ELSE 8  " + 
+					"				end " + 
+					"			ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN " + 
+					"				CASE WHEN  (APROBADOR= 'NULL' or TABL.APROBADOR = '')  " + 
+					"					then 2  " + 
+					"					ELSE 9  " + 
+					"				end " + 
+					"			ELSE 100 END END " + 
+					"		ELSE CASE WHEN (TABL.proceso ='RENOVACION') THEN  " + 
+					"				CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN " + 
+					"					CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR= '')  " + 
+					"					then 3  " + 
+					"					ELSE 10  " + 
+					"					end " + 
+					"				ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN " + 
+					"					CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
+					"					then 4  " + 
+					"					ELSE 11  " + 
+					"					end " + 
+					"				ELSE 100 END END " + 
+					"		ELSE CASE WHEN (TABL.proceso ='PAGO') THEN  " + 
+					"				CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR = '')  " + 
+					"					then 5   " + 
+					"					ELSE 12  " + 
+					"				end " + 
+					"		ELSE CASE WHEN (TABL.proceso ='DEVOLUCION' or TABL.proceso ='CANCELACION_DEVOLUCION') THEN  " + 
+					"				CASE WHEN  (TABL.APROBADOR= 'NULL'  or TABL.APROBADOR = '' )  " + 
+					"					then 6   " + 
+					"					ELSE 13  " + 
+					"				end " + 
+					"		ELSE CASE WHEN (TABL.proceso ='VERIFICACION_TELEFONICA') THEN  " + 
+					"				CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
+					"					then 7   " + 
+					"					ELSE 14  " + 
+					"				end " + 
+					"		ELSE 100 END END END END END AS orden  from (select  pro.id, cre.id_negociacion  as ID_REFERENCIA , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto,  pro.FECHA_CREACION, cre.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, nego.asesor, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad , coalesce( nego.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso pro on  pro.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
+					"union  " + 
+					"select  pro.id, devo.id as ID_REFERENCIA, devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, devo.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, devo.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( devo.aprobador, 'NULL')  as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION  " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso pro on  pro.id_referencia = devo.id and  pro.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"union  " + 
+					"select  pro.id, pago.id  as ID_REFERENCIA, pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, pago.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, pago.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( pago.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso pro on  pro.id_referencia = pago.id and  pro.proceso ='PAGO'  " + 
+					"union  " + 
+					"select  pro.id, veri.id  as ID_REFERENCIA, veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, veri.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, veri.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( veri.aprobador, 'NULL')   as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso pro on  pro.id_referencia = veri.id and  pro.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
+			
+			StringBuilder strQry = new StringBuilder(querySelect).append(" and (ESTADO_PROCESO =:primerEstado or ESTADO_PROCESO =:segundoEstado or ESTADO_PROCESO =:tercerEstado ) ");
+			if (StringUtils.isNotBlank(wp.getCodigo())) {
+				strQry.append(" and codigo iLIKE :codigo");
+			}
+			if (StringUtils.isNotBlank(wp.getCedula() )) {
+				strQry.append(" and  cedula_cliente =:cedula");
+			}
+			if(wp.getProceso() != null) {
+				strQry.append(" and proceso =:proceso ");
+			}
+			if(wp.getIdAgencia() != null) {
+				strQry.append(" and id_agencia =:idAgencia ");
 			}
 			strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -495,7 +399,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );			
 			query.setParameter("tercerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString() );			
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				query.setParameter("codigo", wp.getCodigo() );
+				query.setParameter("codigo",  "%"+wp.getCodigo().trim()+"%" );
 			}
 			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				query.setParameter("cedula", wp.getCedula() );
@@ -519,54 +423,43 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public Long countOperacionAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			String querySelect =  COUNT_OP + FROM_OP;
-			StringBuilder strQry = new StringBuilder( querySelect ).append(" WHERE (proceso.ESTADO_PROCESO =:primerEstado or proceso.ESTADO_PROCESO =:segundoEstado ) ");
-			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " + 
-						"			(select cre.CODIGO from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia) " + 
-						"			else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"				(select devo.CODIGO from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia) " + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"					(select pago.CODIGO from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia) " + 
-						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"						(select veri.CODIGO from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia) " + 
-						"						else ' ' end end end end =:codigo  ");
-			}	
-			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+" then " + 
-						"		(select cli.cedula_cliente from tb_qo_negociacion nego, tb_qo_cliente cli where nego.id = proceso.id_referencia and nego.id_cliente = cli.id )" + 
-						"		else case when "+QueryConstantes.WHEN_DEVO+" then " + 
-						"				(select devo.CEDULA_CLIENTE from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia )" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " + 
-						"						(select pago.CEDULA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
-						"						else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"							(select veri.CEDULA_CLIENTE from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
-						"							else ' ' end end end end =:cedula   ");
-			}	
+			String querySelect = "select count(*)  from (select  pro.id as id, cre.id_negociacion  as ID_REFERENCIA , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto,  pro.FECHA_CREACION, cre.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, nego.asesor, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad , coalesce( nego.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso pro on  pro.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
+					"union  " + 
+					"select  pro.id as id, devo.id as ID_REFERENCIA, devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, devo.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, devo.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( devo.aprobador, 'NULL')  as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION  " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso pro on  pro.id_referencia = devo.id and  pro.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"union  " + 
+					"select  pro.id as id, pago.id  as ID_REFERENCIA, pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, pago.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, pago.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( pago.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso pro on  pro.id_referencia = pago.id and  pro.proceso ='PAGO'  " + 
+					"union  " + 
+					"select  pro.id as id, veri.id  as ID_REFERENCIA, veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, veri.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, veri.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad , coalesce( veri.aprobador, 'NULL')   as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso pro on  pro.id_referencia = veri.id and  pro.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
+			StringBuilder strQry = new StringBuilder( querySelect ).append(" and ( ESTADO_PROCESO =:primerEstado or  ESTADO_PROCESO =:segundoEstado ) ");
+			if (StringUtils.isNotBlank(wp.getCodigo())) {
+				strQry.append(" and codigo iLIKE :codigo");
+			}
+			if (StringUtils.isNotBlank(wp.getCedula() )) {
+				strQry.append(" and  cedula_cliente =:cedula");
+			}
 			if(wp.getProceso() != null) {
-				strQry.append(" and proceso.PROCESO =:proceso ");
-			} 
-			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
-				strQry.append(" and case when "+QueryConstantes.WHEN_NEGO+"  then " +
-						"		(select cre.ID_AGENCIA from tb_qo_negociacion nego, TB_QO_CREDITO_NEGOCIACION cre where cre.ID_NEGOCIACION = nego.ID and nego.id = proceso.id_referencia)" + 
-						"			else case when  "+QueryConstantes.WHEN_DEVO+" then " +
-						"				(select devo.ID_AGENCIA from TB_QO_DEVOLUCION devo where devo.id = proceso.id_referencia)" + 
-						"				else case when "+QueryConstantes.WHEN_PAGO+" then " +
-						"					(select pago.ID_AGENCIA from TB_QO_CLIENTE_PAGO pago where pago.id = proceso.id_referencia)" + 
-						"					else case when "+QueryConstantes.WHEN_VERI+" then " + 
-						"					(select veri.ID_AGENCIA from TB_QO_VERIFICACION_TELEFONICA veri where veri.id = proceso.id_referencia)" + 
-						"					else 0 end end end end =:idAgencia ");
+				strQry.append(" and proceso =:proceso ");
+			}
+			if(wp.getIdAgencia() != null) {
+				strQry.append(" and id_agencia =:idAgencia ");
 			}
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
 			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );
 			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				query.setParameter("codigo", wp.getCodigo() );
-			}if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
+				query.setParameter("codigo",  "%"+wp.getCodigo().trim()+"%" );
+			}
+			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				query.setParameter("cedula", wp.getCedula() );
-			}if(wp.getProceso() != null ) {
+			}
+			if(wp.getProceso() != null ) {
 				query.setParameter("proceso", wp.getProceso().toString() );
-			}if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
+			}
+			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
 				query.setParameter("idAgencia", wp.getIdAgencia() );
 			}
 			int count = ((BigInteger) query.getSingleResult()).intValue();

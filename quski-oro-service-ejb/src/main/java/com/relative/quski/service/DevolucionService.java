@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.criteria.Predicate;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -68,13 +69,8 @@ public class DevolucionService {
 	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
 
 	public TbQoDevolucion findDevolucionById(Long id) throws RelativeException {
-
-		try {
-			return devolucionRepository.findById(id);
-		} catch (RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_READ,
-					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
-		}
+		return devolucionRepository.findById(id);
+		
 	}
 
 	public List<TbQoDevolucion> findAllDevolucion(PaginatedWrapper pw) throws RelativeException {
@@ -165,10 +161,11 @@ public class DevolucionService {
 		
 	}
 	
-	public ProcesoDevolucionWrapper buscarProcesoCancelacion(Long idDevolucion) throws RelativeException {
+	public ProcesoDevolucionWrapper buscarProcesoCancelacion( Long idProceso) throws RelativeException {
 		ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
-		result.setDevolucion(devolucionRepository.findById(idDevolucion));
-		result.setProceso(this.qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.CANCELACION_DEVOLUCION));
+		
+		result.setProceso(this.qos.findProcesoById(idProceso));
+		result.setDevolucion(devolucionRepository.findById(result.getProceso().getIdReferencia()));
 		return result;
 	}
 	public ProcesoDevolucionWrapper buscarProcesoDevolucion(Long idDevolucion) throws RelativeException {
@@ -387,13 +384,14 @@ public class DevolucionService {
 	}
 	public void notificarDevolucionAprobacion(Boolean aprobado, TbQoDevolucion dev) {
 		try {
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+			List<String> array = new ArrayList<String>();
 			if(aprobado) {
-				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
-				String[] array = new String[paras.size()];
+				
 				for (int i = 0; i < paras.size(); ++i) {
-					array[i] = paras.get(i).getValor()
+					array.add(paras.get(i).getValor()
 							.replace("--correoAsesor--", dev.getCorreoAsesor())
-							.replace("--correoCliente--",  dev.getCorreoCliente());
+							.replace("--correoCliente--",  dev.getCorreoCliente()) );
 				}
 				
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_DEVOLUCION_APROBACION).getValor();
@@ -401,17 +399,16 @@ public class DevolucionService {
 						.replace("--nombreCliente--", dev.getNombreCliente() )
 						.replace("--nombreAgenciaEntrega--",  dev.getAgenciaEntrega())
 						.replace("--fechaAprobacion--",  QuskiOroUtil.dateToFullString( dev.getFechaAprobacionSolicitud() ) );
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}else {
-				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
-				String[] array = new String[paras.size()];
+				
 				for (int i = 0; i < paras.size(); ++i) {
 					if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
 						if(StringUtils.isBlank(dev.getCorreoAsesor())) {
 							throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
 						}
-						array[i] = paras.get(i).getValor()
-								.replace("--correoAsesor--",  dev.getCorreoAsesor());
+						array.add( paras.get(i).getValor()
+								.replace("--correoAsesor--",  dev.getCorreoAsesor()) );
 					}
 				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_DEVOLUCION_RECHAZO).getValor();
@@ -419,7 +416,7 @@ public class DevolucionService {
 						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
 						.replace("--nombreAgenciaEntrega--",  dev.getAgenciaEntrega())
 						.replace("--fechaAprobacion--",  QuskiOroUtil.dateToFullString( dev.getFechaAprobacionSolicitud() ) );
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}		
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -429,37 +426,36 @@ public class DevolucionService {
 	}
 	public void notificarDevolucionVerificacionFirmas(Boolean aprobado, TbQoDevolucion dev) {
 		try {
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
+			List<String> array = new ArrayList<String>();
 			if(aprobado) {
-				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
-				String[] array = new String[paras.size()];
+				
 				for (int i = 0; i < paras.size(); ++i) {
-					array[i] = paras.get(i).getValor()
+					array.add(paras.get(i).getValor()
 							.replace("--correoAsesor--",  dev.getCorreoAsesor())
-							.replace("--correoCliente--",  dev.getCorreoCliente());
+							.replace("--correoCliente--",  dev.getCorreoCliente()) );
 				}
 				
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_APROBACION).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_APROBACION).getValor()
 						.replace("--nombreCliente--", dev.getNombreCliente() )
 						.replace("--codigoBpm--",  dev.getCodigo());
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}else {
-				List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
-				String[] array = new String[paras.size()];
 				for (int i = 0; i < paras.size(); ++i) {
 					if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
 						if(StringUtils.isBlank(dev.getCorreoAsesor())) {
 							throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
 						}
-						array[i] = paras.get(i).getValor()
-								.replace("--correoAsesor--",  dev.getCorreoAsesor());
+						array.add(paras.get(i).getValor()
+								.replace("--correoAsesor--",  dev.getCorreoAsesor()));
 					}
 				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_RECHAZO).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_RECHAZO).getValor()
 						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
 						.replace("--codigoBpm--",  dev.getCodigo());
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}		
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -470,14 +466,14 @@ public class DevolucionService {
 	public void notificarCancelacionDevolucion(Boolean aprobado, TbQoDevolucion dev) {
 		try {
 			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_DEVOLUCION_PARA, false);
-			String[] array = new String[paras.size()];
+			List<String> array = new ArrayList<String>();
 			for (int i = 0; i < paras.size(); ++i) {
 				if(!paras.get(i).getValor().equalsIgnoreCase("--correoCliente--")) {
 					if(StringUtils.isBlank(dev.getCorreoAsesor())) {
 						throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL EMAIL DEL ASESOR");
 					}
-					array[i] = paras.get(i).getValor()
-							.replace("--correoAsesor--",  dev.getCorreoAsesor());
+					array.add(paras.get(i).getValor()
+							.replace("--correoAsesor--",  dev.getCorreoAsesor()) );
 				}
 				
 			}
@@ -487,13 +483,13 @@ public class DevolucionService {
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_CANCELACION_DEVOLUCION_APROBACION).getValor()
 						.replace("--nombreAsesor--",  dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
 						.replace("--codigoBpmDevolucion--",  dev.getCodigo());
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}else {
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_CANCELACION_DEVOLUCION_RECHAZO).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_CANCELACION_DEVOLUCION_RECHAZO).getValor()
 						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
 						.replace("--codigoBpmDevolucion--",  dev.getCodigo());
-				this.qos.mailNotificacion(array, asunto, contenido, null);
+				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}		
 		} catch (RelativeException e) {
 			e.printStackTrace();

@@ -314,7 +314,7 @@ public class PagoService {
 		}
 	}
 	private void enviarCorreoPagoAprobado(Boolean isRegistro, TbQoClientePago clientePago, String mailAprobador) throws RelativeException {
-		if(isRegistro) {
+		if(isRegistro) { //pago
 			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
 			textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
 				.replace("--tipo--", clientePago.getTipo()).replace("--Nombre Cliente--", clientePago.getNombreCliente())
@@ -324,7 +324,7 @@ public class PagoService {
 			String[] para= {mailAprobador};
 			String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.APROBADO.toString(); 
 			qos.mailNotificacion(para, asunto, textoContenido, null);
-		}else { 	
+		}else { 	//bloqueo
 			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
 			textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.APROBADO.toString())
 				.replace("--tipo--", clientePago.getTipo()).replace("--Nombre Cliente--", clientePago.getNombreCliente())
@@ -353,7 +353,7 @@ public class PagoService {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
 			}
 			TbQoClientePago rPago = qos.manageClientePago(clientePago);
-			if(isRegistro) {
+			if(isRegistro) { // pago
 				String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
 				textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
 					.replace("--tipo--", "Pago").replace("--Nombre Cliente--", clientePago.getNombreCliente())
@@ -363,7 +363,7 @@ public class PagoService {
 				String[] para= {mailAprobador};
 				String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.RECHAZADO.toString(); 
 				qos.mailNotificacion(para, asunto, textoContenido, null);
-				} else{ 	
+				} else{ 	//bloqueo
 					String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_APROBACION_PAGO).getValor();
 					textoContenido=textoContenido.replace("--Nombre Asesor--", clientePago.getAsesor()).replace("--Estado Pago--", EstadoProcesoEnum.RECHAZADO.toString())
 						.replace("--tipo--", "BLOQUEO").replace("--Nombre Cliente--", clientePago.getNombreCliente())
