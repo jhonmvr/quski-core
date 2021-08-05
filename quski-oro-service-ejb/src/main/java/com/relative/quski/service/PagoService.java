@@ -360,7 +360,7 @@ public class PagoService {
 					.replace("--Identificacion Cliente--", clientePago.getCedula())
 					.replace("--Cuenta Mupi--", clientePago.getCodigoCuentaMupi()).replace("--Operacion--", clientePago.getCodigoOperacion())
 					.replace("--Fecha AprobacionRechazo--", QuskiOroUtil.dateToFullString( rPago.getFechaActualizacion()));
-				String[] para= {mailAprobador};
+				String[] para= {clientePago.getMailAsesor()};
 				String asunto ="Aprobacion de solictud "+ EstadoProcesoEnum.RECHAZADO.toString(); 
 				qos.mailNotificacion(para, asunto, textoContenido, null);
 				} else{ 	//bloqueo

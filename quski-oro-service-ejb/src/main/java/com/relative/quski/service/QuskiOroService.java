@@ -2213,6 +2213,8 @@ public class QuskiOroService {
 								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "DOM"));
 						tmp.setTelefonoMovil(this.telefonoClienteRepository
 								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "CEL"));
+						tmp.setCodigoExcepcionBre(Long.valueOf(tmp.getCredito().getTbQoNegociacion().getCodigoBre()) );
+						tmp.setExcepcionBre(tmp.getCredito().getTbQoNegociacion().getMensajeBre() );
 						return tmp;
 					}
 				}else {
@@ -2681,6 +2683,9 @@ public class QuskiOroService {
 					proceso.setEstadoProceso(EstadoProcesoEnum.CADUCADO);
 					proceso = this.manageProceso(proceso);
 				}
+				credito.getTbQoNegociacion().setCodigoBre(String.valueOf(data.getCodigoError()));
+				credito.getTbQoNegociacion().setMensajeBre(data.getMensaje());
+				this.manageNegociacion(credito.getTbQoNegociacion());
 				wrapper.setRespuesta(true);
 				wrapper.setProceso( proceso );
 				wrapper.setTelefonoDomicilio(this.telefonoClienteRepository.findByClienteAndTipo(cliente.getCedulaCliente(), "DOM"));

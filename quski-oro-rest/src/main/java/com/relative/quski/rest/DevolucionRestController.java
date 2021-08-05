@@ -196,10 +196,11 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<ProcesoDevolucionWrapper> aprobarNegarSolicitudDevolucion(@QueryParam("autorizacion") String autorizacion,@QueryParam("idDevolucion") String idDevolucion, @QueryParam("aprobado") String aprobado
+	public GenericWrapper<ProcesoDevolucionWrapper> aprobarNegarSolicitudDevolucion(@QueryParam("motivo") String motivo,
+			@QueryParam("autorizacion") String autorizacion,@QueryParam("idDevolucion") String idDevolucion, @QueryParam("aprobado") String aprobado
 			, @QueryParam("usuario") String usuario)throws RelativeException {
 		GenericWrapper<ProcesoDevolucionWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad(this.dos.aprobarNegarSolicitudDevolucion(Long.valueOf(idDevolucion), Boolean.valueOf( aprobado ), usuario, autorizacion));
+		loc.setEntidad(this.dos.aprobarNegarSolicitudDevolucion(Long.valueOf(idDevolucion), Boolean.valueOf( aprobado ), usuario, autorizacion, motivo));
 		return loc;
 	}
 	

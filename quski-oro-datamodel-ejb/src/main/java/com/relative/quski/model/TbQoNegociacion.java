@@ -47,6 +47,12 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="observacion_asesor")
 	private String observacionAsesor;
 	
+	@Column(name="codigo_bre")
+	private String codigoBre;
+	
+	@Column(name="mensaje_bre")
+	private String mensajeBre;
+	
 	//bi-directional many-to-one association to TbQoCreditoNegociacion
 	@OneToMany(mappedBy="tbQoNegociacion")
 	private List<TbQoCreditoNegociacion> tbQoCreditoNegociacions;
@@ -73,6 +79,22 @@ public class TbQoNegociacion implements Serializable {
 	private List<TbQoRiesgoAcumulado> tbQoRiesgoAcumulados;
 
 	public TbQoNegociacion() {
+	}
+
+	public String getCodigoBre() {
+		return codigoBre;
+	}
+
+	public void setCodigoBre(String codigoBre) {
+		this.codigoBre = codigoBre;
+	}
+
+	public String getMensajeBre() {
+		return mensajeBre;
+	}
+
+	public void setMensajeBre(String mensajeBre) {
+		this.mensajeBre = mensajeBre;
 	}
 
 	public Long getId() {
