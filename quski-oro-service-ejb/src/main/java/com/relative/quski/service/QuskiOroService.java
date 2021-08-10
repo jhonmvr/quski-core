@@ -1730,6 +1730,9 @@ public class QuskiOroService {
 			if(send.getDescripcion() != null) {
 				persisted.setDescripcion(send.getDescripcion());
 			}
+			if(StringUtils.isNotBlank(send.getTipoJoya()) ) {
+				persisted.setTipoJoya(send.getTipoJoya());
+			}
 			
 			if( send.getTienePiedras() != null && send.getTienePiedras()) {
 				persisted.setTienePiedras( send.getTienePiedras() );
@@ -6619,7 +6622,9 @@ public class QuskiOroService {
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  ) ;
 			
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion() );
-			if(result.getCodigoTablaAmortizacionQuski() == null) { throw new RelativeException(Constantes.ERROR_CODE_READ); }
+			if(result.getCodigoTablaAmortizacionQuski() == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ); 
+			}
 			result.setCodigoTipoPrestamo( tipoPrestamo );
 			result.setCodigoGradoInteres( gradoInteres );
 			result.setMontoFinanciado( credito.getMontoFinanciado() ) ;
@@ -6673,7 +6678,9 @@ public class QuskiOroService {
 			result.setFechaEfectiva( QuskiOroUtil.dateToString(credito.getFechaCreacion(), QuskiOroConstantes.SOFT_DATE_FORMAT)  );
 		
 			result.setCodigoTablaAmortizacionQuski( credito.getTablaAmortizacion()  ); 				
-			if(result.getCodigoTablaAmortizacionQuski() == null) { return null;}
+			if(result.getCodigoTablaAmortizacionQuski() == null) {
+				return null;
+			}
 			result.setDatosImpCom( this.generarImpCom( credito, autorizacion ) );
 			result.setCodigoTipoCarteraQuski( credito.getTipoCarteraQuski() );
 			if(StringUtils.isNotBlank(credito.getNumeroOperacion() ) ) {
@@ -7068,6 +7075,12 @@ public class QuskiOroService {
 	}
 	public ResultOperacionesWrapper findOperaciones(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
+			log.info("entra con estados ====>>>>>");
+			if(wp != null && wp.getEstado() != null && !wp.getEstado().isEmpty()) {
+				for(EstadoProcesoEnum e : wp.getEstado()) {
+					log.info("estado =="+e.toString());
+				}
+			}
 			ResultOperacionesWrapper result = new ResultOperacionesWrapper();
 			result.setOperaciones(this.procesoRepository.findOperacion( wp ) );
 			result.setResult( this.procesoRepository.countOperacion( wp ));

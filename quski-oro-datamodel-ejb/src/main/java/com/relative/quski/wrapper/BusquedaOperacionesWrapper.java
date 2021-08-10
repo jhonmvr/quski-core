@@ -2,6 +2,7 @@ package com.relative.quski.wrapper;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
@@ -13,7 +14,7 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	private ProcesoEnum proceso; 		// Proceso //
 	private Date fechaCreacionDesde;	// Proceso //
 	private Date fechaCreacionHasta; 	// Proceso //
-	private EstadoProcesoEnum estado;   // Proceso //
+	private List<EstadoProcesoEnum> estado;   // Proceso //
 	private String asesor; 				// Proceso // 
 	
 	private String codigoBpm; 				// Varia // 
@@ -56,10 +57,10 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	public void setFechaCreacionHasta(Date fechaCreacionHasta) {
 		this.fechaCreacionHasta = fechaCreacionHasta;
 	}
-	public EstadoProcesoEnum getEstado() {
+	public List<EstadoProcesoEnum> getEstado() {
 		return estado;
 	}
-	public void setEstado(EstadoProcesoEnum estado) {
+	public void setEstado(List<EstadoProcesoEnum> estado) {
 		this.estado = estado;
 	}
 	public String getActividad() {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -38,7 +39,6 @@ import com.relative.quski.repository.spec.ProcesoByIdReferenciaSpec;
 import com.relative.quski.repository.spec.ProcesoByIdSpec;
 import com.relative.quski.repository.spec.ProcesoByProcesosEstadosAndTimeDiferenceSpec;
 import com.relative.quski.repository.spec.VerificacionByListIdsAndAprobadoresSpec;
-import com.relative.quski.util.QueryConstantes;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
@@ -119,10 +119,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
 			
-			if (wp.getEstado() == null) {
+			if (wp.getEstado() == null || wp.getEstado().isEmpty()) {
 				strQry.append(" and (ESTADO_PROCESO != 'CANCELADO' and  ESTADO_PROCESO != 'APROBADO' and ESTADO_PROCESO != 'RECHAZADO'  and ESTADO_PROCESO != 'CADUCADO') ");
 			} else {
-				strQry.append(" and ESTADO_PROCESO=:estado");
+				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
 			}
 			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
 				strQry.append(" and asesor=:asesor");
@@ -155,9 +156,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
 			
-			if (wp.getEstado() != null) {
-				query.setParameter("estado", wp.getEstado().toString());
-			}
 			if (StringUtils.isNotBlank(wp.getAsesor() )) {
 				query.setParameter("asesor", wp.getAsesor() );
 			}
@@ -210,10 +208,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
 			
-			if (wp.getEstado() == null) {
+			if (wp.getEstado() == null || wp.getEstado().isEmpty()) {
 				strQry.append(" and (ESTADO_PROCESO != 'CANCELADO' and  ESTADO_PROCESO != 'APROBADO' and ESTADO_PROCESO != 'RECHAZADO'  and ESTADO_PROCESO != 'CADUCADO') ");
 			} else {
-				strQry.append(" and ESTADO_PROCESO=:estado");
+				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
 			}
 			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
 				strQry.append(" and asesor=:asesor");
@@ -245,10 +244,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			strQry.append(" LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
-			
-			if (wp.getEstado() != null) {
-				query.setParameter("estado", wp.getEstado().toString());
-			}
 			if (StringUtils.isNotBlank(wp.getAsesor() )) {
 				query.setParameter("asesor", wp.getAsesor() );
 			}
