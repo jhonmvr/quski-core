@@ -433,6 +433,7 @@ public class QuskiOroConstantes {
 	
 	public static final String PARA_TWELVE = "PARA_TWELVE";
 	public static final String CARGO_DEFAULT = "CARGO_DEFAULT";
+	public static final String TELEFONO_QUSKI = "TELEFONO_QUSKI";
 
 	
 	

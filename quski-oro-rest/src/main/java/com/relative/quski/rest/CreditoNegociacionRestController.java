@@ -362,9 +362,10 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( @QueryParam("autorizacion") String autorizacion,OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( @QueryParam("autorizacion") String autorizacion,@QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion);
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor);
 		loc.setEntidad(a);
 		return loc;			
 	}
@@ -427,29 +428,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	
 	
 	
-	
-	@GET
-	@Path("/enviarCorreoAprobacionBienvenida")
-	public GenericWrapper<Boolean> enviarCorreoAprobacionBienvenida(
-			@QueryParam("idNego") String idNego,
-			@QueryParam("nombreAgencia") String nombreAgencia,
-			@QueryParam("telefonoQuski") String telefonoQuski,
-			@QueryParam("telefonoAsesor") String telefonoAsesor) throws RelativeException{
-		
-		GenericWrapper<Boolean> loc = new GenericWrapper<>();
-		if(StringUtils.isBlank(idNego)) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
-		}
-		try {
-			
-			TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion( Long.valueOf( idNego ));
-			this.qos.enviarCorreoAprobacionBienvenida( credito, nombreAgencia, telefonoQuski, telefonoAsesor );	
-			
-		}catch( RelativeException e) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CODIGO NEGOCIACION");
-		}
-		return loc;			
-	}
 	@GET
 	@Path("/enviarCorreoDevolucionOperaciones")
 	public GenericWrapper<Boolean> enviarCorreoDevolucionOperaciones(

@@ -39,6 +39,9 @@ public class TbQoNegociacion implements Serializable {
 	@Column(name="correo_asesor")
 	private String correoAsesor;
 	
+	@Column(name="telefono_asesor")
+	private String telefonoAsesor;
+	
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
 	
@@ -284,6 +287,14 @@ public class TbQoNegociacion implements Serializable {
 
 	public void setObservacionAsesor(String observacionAsesor) {
 		this.observacionAsesor = observacionAsesor;
+	}
+
+	public String getTelefonoAsesor() {
+		return telefonoAsesor;
+	}
+
+	public void setTelefonoAsesor(String telefonoAsesor) {
+		this.telefonoAsesor = telefonoAsesor;
 	}
 	
 	

@@ -100,9 +100,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacion(@QueryParam("autorizacion") String autorizacion, @QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+			@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
+		NegociacionWrapper a = this.qos.iniciarNegociacion(cedula, asesor, Long.valueOf(idAgencia), autorizacion,nombreAgencia, telefonoAsesor);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -113,9 +114,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("autorizacion") String autorizacion,@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionEquifax(@QueryParam("autorizacion") String autorizacion, @QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+			@QueryParam("cedula") String cedula, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia), autorizacion);
+		NegociacionWrapper a = this.qos.iniciarNegociacionEquifax(cedula, asesor, Long.valueOf(idAgencia), autorizacion,nombreAgencia, telefonoAsesor);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -125,9 +127,10 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("autorizacion") String autorizacion,@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
+	public GenericWrapper<NegociacionWrapper> iniciarNegociacionFromCot(@QueryParam("autorizacion") String autorizacion, @QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+			@QueryParam("idCotizacion") String idCotizacion, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia) throws RelativeException {
 		GenericWrapper<NegociacionWrapper> loc = new GenericWrapper<>();
-		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia), autorizacion);
+		NegociacionWrapper a = this.qos.iniciarNegociacionFromCot(Long.valueOf( idCotizacion ), asesor, Long.valueOf(idAgencia), autorizacion,nombreAgencia, telefonoAsesor);
 		loc.setEntidad(a);
 		return loc;
 	}

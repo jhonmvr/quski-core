@@ -1788,14 +1788,14 @@ public class QuskiOroService {
 	/**
 	 * * * * * * * * * * * @NEGOCIACION_WRAPPER
 	 */
-	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor, Long idAgencia, String autorizacion) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor, Long idAgencia, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
 			log.info("<<=================ENTRAR A INICIAR NEGOCIACION=============>>>");
 			TbQoCliente cliente = this.createCliente(cedula, autorizacion);
 			
 			if (cliente != null) {
 				Informacion data = informacionCliente(cedula);
-				return generarTablasIniciales(cliente, asesor, idAgencia, data,autorizacion);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data,autorizacion, nombreAgencia, telefonoAsesor);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2119,13 +2119,13 @@ public class QuskiOroService {
 	
 }
 	
-	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor, Long idAgencia, String autorizacion) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacionEquifax(String cedula, String asesor, Long idAgencia, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
 			Informacion data = informacionCliente(cedula);
 			
 			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE());
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2156,12 +2156,12 @@ public class QuskiOroService {
 		}
 	}
 
-	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor, Long idAgencia, String autorizacion) throws RelativeException {
+	public NegociacionWrapper iniciarNegociacionFromCot(Long id, String asesor, Long idAgencia, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador(id);
 			if (cliente != null) {
 				Informacion data = informacionCliente(cliente.getCedulaCliente());
-				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion);
+				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2666,9 +2666,9 @@ public class QuskiOroService {
 	
 	
 	
-	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data, String autorizacion) throws RelativeException {
+	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia);
+			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia, nombreAgencia, telefonoAsesor);
 			this.guardarProspectoCrm(cliente, autorizacion);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
@@ -2759,17 +2759,19 @@ public class QuskiOroService {
 		}
 
 	}
-	private TbQoCreditoNegociacion createCredito(TbQoCliente cl, String asesor, Long idAgencia) throws RelativeException { 
+	private TbQoCreditoNegociacion createCredito(TbQoCliente cl, String asesor, Long idAgencia, String nombreAgencia, String telefonoAsesor) throws RelativeException { 
 		try {
 			if (cl != null) {
 				TbQoNegociacion ng = new TbQoNegociacion();
 				ng.setAsesor(asesor);
 				ng.setTbQoCliente(cl);
+				ng.setTelefonoAsesor(telefonoAsesor);
 				TbQoNegociacion negociacion = this.manageNegociacion(ng);
 				if (negociacion != null) {
 					TbQoCreditoNegociacion cr = new TbQoCreditoNegociacion();
 					cr.setTbQoNegociacion(negociacion);
 					cr.setIdAgencia(idAgencia);
+					cr.setNombreAgencia(nombreAgencia);
 					return this.manageCreditoNegociacion(cr);
 				} else {
 					throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -6126,6 +6128,10 @@ public class QuskiOroService {
 	private TbQoCreditoNegociacion updateCreditoNegociacion(TbQoCreditoNegociacion send,
 			TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
+			
+			if(StringUtils.isNotBlank(send.getNombreAgencia())) {
+				persisted.setNombreAgencia(send.getNombreAgencia());
+			}
 
 			if( send.getaPagarCliente() != null ) {
 			    persisted.setaPagarCliente(  send.getaPagarCliente() );
@@ -7800,7 +7806,7 @@ public class QuskiOroService {
 		
 	}
 	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego,
-			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion) throws RelativeException {
+			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
 			
 			RenovacionWrapper novacion;
@@ -7825,8 +7831,9 @@ public class QuskiOroService {
 				negociacion.setAsesor(asesor);
 				negociacion.setEstado( EstadoEnum.ACT);
 				negociacion.setTbQoCliente( cliente );
+				negociacion.setTelefonoAsesor(telefonoAsesor);
 				negociacion = this.manageNegociacion(negociacion);
-				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion);
+				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion, nombreAgencia);
 				credito.setTbQoNegociacion( negociacion );
 				credito = this.manageCreditoNegociacion(credito);
 				credito = this.crearCodigoRenovacion(credito);
@@ -7844,8 +7851,9 @@ public class QuskiOroService {
 				novacion = this.buscarRenovacionNegociacion(idNego, autorizacion);				
 				log.info( "============> ACTUALIZANDO CREDITO <============");
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
+				novacion.getCredito().getTbQoNegociacion().setTelefonoAsesor(telefonoAsesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
-				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion)));
+				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion,nombreAgencia)));
 				if( garantias != null ) {
 					List<TbQoTasacion> tasacion = this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ); 
 					actualizarGarantiasSoftBank(tasacion,novacion.getCredito().getNumeroOperacionMadre(),asesor, autorizacion);
@@ -7933,7 +7941,7 @@ public class QuskiOroService {
 		
 	}
 	private TbQoCreditoNegociacion createCreditoNovacion(Opcion opcion, String numeroOperacionAnterior, String numeroOperacionMadre, 
-			Long idAgencia, Long id, String autorizacion) throws RelativeException {
+			Long idAgencia, Long id, String autorizacion, String nombreAgencia) throws RelativeException {
 		TbQoCreditoNegociacion credito;						
 		if(id != null) {
 			credito = this.findCreditoNegociacionById(id);
@@ -7945,6 +7953,7 @@ public class QuskiOroService {
 			credito = new TbQoCreditoNegociacion();
 		}
 		if(opcion != null) {
+			credito.setNombreAgencia(nombreAgencia);
 			credito.setaPagarCliente( BigDecimal.valueOf( opcion.getValorAPagar() ));
 			credito.setMontoFinanciado( BigDecimal.valueOf(opcion.getMontoFinanciado()) );
 			credito.setPlazoCredito( Long.valueOf(opcion.getPlazo()) );
@@ -8092,6 +8101,7 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
+				enviarCorreoAprobacionBienvenida(credito);
 				this.devolverAprobarCredito(credito, cash, descripcion, null);
 				
 			}else {
@@ -8179,6 +8189,7 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
+				this.enviarCorreoAprobacionBienvenida(credito);
 			}else {
 				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
 				TbQoTracking traking = new TbQoTracking();
@@ -8422,27 +8433,27 @@ public class QuskiOroService {
 		}
 		return this.manageTracking(wp);
 	}
-	public void enviarCorreoAprobacionBienvenida(TbQoCreditoNegociacion persisted, String nombreAgencia, String telefonoQuski, String telefonoAsesor) throws RelativeException {
+	public void enviarCorreoAprobacionBienvenida(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
-			if( persisted == null || nombreAgencia == null || telefonoQuski == null || telefonoAsesor == null ) { 
+			if( persisted == null ) { 
 				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
 			}
 			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_APROBACION_BIENVENIDA ).getValor()					
 						.replace("--nombreCliente--", persisted.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
-						.replace("--nombreAgencia--", nombreAgencia);
-			
+						.replace("--nombreAgencia--", StringUtils.isNotBlank(persisted.getNombreAgencia())?persisted.getNombreAgencia(): " ");
+			String telefonoQuski = this.parametroRepository.findByNombre(QuskiOroConstantes.TELEFONO_QUSKI).getValor();
 			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_APROBACION_BIENVENIDA ).getValor()
 						.replace("--telefonoQuski--",  telefonoQuski)
 						.replace("--nombreAsesor--",   persisted.getTbQoNegociacion().getNombreAsesor())
-						.replace("--telefonoAsesor--", telefonoAsesor);
+						.replace("--telefonoAsesor--", StringUtils.isNotBlank(persisted.getTbQoNegociacion().getTelefonoAsesor())?persisted.getTbQoNegociacion().getTelefonoAsesor(): " ");
 				String[] listCorreos = {persisted.getTbQoNegociacion().getTbQoCliente().getEmail()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw e;
+			log.info("error correo bienvenida");
 		}catch ( Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
+			log.info("error correo bienvenida");
 		}
 	}
 	public void enviarCorreoDevolucionOperaciones(TbQoCreditoNegociacion persisted) throws RelativeException {

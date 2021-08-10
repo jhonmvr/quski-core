@@ -47,6 +47,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="codigo_cash")
 	private String codigoCash;
 	
+	@Column(name="nombre_agencia")
+	private String nombreAgencia;
+
 	@Column(name="codigo_devuelto")
 	private String codigoDevuelto;
 	
@@ -404,6 +407,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public BigDecimal getRiesgoTotalCliente() {
 		return this.riesgoTotalCliente;
+	}
+	
+	public String getNombreAgencia() {
+		return nombreAgencia;
+	}
+
+	public void setNombreAgencia(String nombreAgencia) {
+		this.nombreAgencia = nombreAgencia;
 	}
 
 	public void setRiesgoTotalCliente(BigDecimal riesgoTotalCliente) {
