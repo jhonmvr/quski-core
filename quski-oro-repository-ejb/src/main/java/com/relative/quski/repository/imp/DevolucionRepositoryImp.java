@@ -81,10 +81,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 				strQry.append(" and j.cedula_cliente like :identificacion   ");
 			}
 
-			if (fechaAprobacionDesde != null) {
+			if ( StringUtils.isNotBlank(fechaAprobacionDesde ) ) {
 				strQry.append(" and j.fecha_aprobacion_solicitud  >= TO_DATE(:desde, 'YYYY-MM-DD') ");
 			}
-			if (fechaAprobacionHasta != null) {
+			if ( StringUtils.isNotBlank(fechaAprobacionHasta )  ) {
 				strQry.append(" and  j.fecha_aprobacion_solicitud  <= TO_DATE(:hasta, 'YYYY-MM-DD') ");
 			}
 			
@@ -104,11 +104,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 				query.setParameter("identificacion","%"+ identificacion+"%");
 			}
-			if (fechaAprobacionDesde != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionDesde )) {
 
 				query.setParameter("desde",fechaAprobacionDesde);
 			}
-			if (fechaAprobacionHasta != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionHasta ) ) {
 
 				query.setParameter("hasta", fechaAprobacionHasta);
 			}
@@ -161,10 +161,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 				strQry.append(" and j.cedula_cliente like :identificacion   ");
 			}
 
-			if (fechaAprobacionDesde != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionDesde )) {
 				strQry.append(" and j.fecha_aprobacion_solicitud  >= TO_DATE(:desde, 'YYYY-MM-DD') ");
 			}
-			if (fechaAprobacionHasta != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionHasta ) ) {
 				strQry.append(" and  j.fecha_aprobacion_solicitud  <= TO_DATE(:hasta, 'YYYY-MM-DD') ");
 			}
 			
@@ -183,11 +183,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 				query.setParameter("identificacion","%"+ identificacion+"%");
 			}
-			if (fechaAprobacionDesde != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionDesde )) {
 
 				query.setParameter("desde",fechaAprobacionDesde);
 			}
-			if (fechaAprobacionHasta != null) {
+			if (StringUtils.isNotBlank(fechaAprobacionHasta ) ) {
 
 				query.setParameter("hasta", fechaAprobacionHasta);
 			}

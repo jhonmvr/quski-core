@@ -355,7 +355,7 @@ public class DevolucionService {
 		try {
 			TbQoProceso proceso = qos.findProcesoByIdReferencia(idDevolucion, ProcesoEnum.DEVOLUCION);
 			if ( !proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_APROBACION) ) {
-				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + proceso.getEstadoProceso());				
+				throw new RelativeException(Constantes.ERROR_CODE_UPDATE,"EL PROCESO DE DEVOLUCION YA FUE APROBADO O RECHAZADO. ESTADO ACTUAL: " + proceso.getEstadoProceso());				
 			}
 			TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 			ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
