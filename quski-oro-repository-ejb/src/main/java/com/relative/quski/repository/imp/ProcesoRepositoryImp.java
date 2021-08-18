@@ -603,6 +603,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (estados != null && !estados.isEmpty()) {
 				where.add(poll.get("estadoProceso").in(estados));
 			}
+			where.add(cb.equal(poll.get("proceso"), ProcesoEnum.RENOVACION));
 			
 
 			query.where(cb.and(where.toArray(new Predicate[] {})));

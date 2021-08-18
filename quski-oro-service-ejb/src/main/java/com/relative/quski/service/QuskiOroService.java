@@ -7866,7 +7866,7 @@ public class QuskiOroService {
 			}
 			return novacion;
 		}catch(RelativeException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw e;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -8001,7 +8001,8 @@ public class QuskiOroService {
 				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
 						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
 						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-						e.getPlazo() == credito.getPlazoCredito() 
+						e.getPlazo() == credito.getPlazoCredito()  &&
+						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
 						){
 					credito.setTablaAmortizacion( e.getCodigo() );
 					credito.setNumeroCuotas(e.getNumeroCuotas());					
