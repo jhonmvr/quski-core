@@ -50,6 +50,7 @@ import com.relative.quski.model.TbQoDireccionCliente;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoExcepcionRol;
+import com.relative.quski.model.TbQoHistoricoObservacion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoReferenciaPersonal;
@@ -74,6 +75,7 @@ import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
+import com.relative.quski.repository.HistoricoObservacionRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ProcesoRepository;
@@ -137,6 +139,7 @@ import com.relative.quski.wrapper.FileWrapper;
 import com.relative.quski.wrapper.GaranteWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
 import com.relative.quski.wrapper.GaratiaAvaluoWrapper;
+import com.relative.quski.wrapper.HistoricoObservacionWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
@@ -239,6 +242,9 @@ public class QuskiOroService {
 	private DevolucionRepository devolucionRepository;
 	@Inject
 	PagoService ps;
+	
+	@Inject
+	HistoricoObservacionRepository historicoObservacionRepository;
 	/**
 	 * * * * * * * * * * ********************************** * @TBQOCLIENTE
 	 */
@@ -8072,6 +8078,7 @@ public class QuskiOroService {
 
 			credito.setCodigoDevuelto(codigoMotivo);
 			credito.setDescripcionDevuelto(descripcion);
+			this.guardaraObservacion(descripcion, credito, usuario);
 			if(aprobar) {
 				if(StringUtils.isBlank(cash)) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER CODIGO CASH");
@@ -8153,6 +8160,7 @@ public class QuskiOroService {
 			}
 			credito.setCodigoDevuelto(codigoMotivo);
 			credito.setDescripcionDevuelto(descripcion);
+			this.guardaraObservacion(descripcion, credito, usuario);
 			if(aprobar) {
 				//if(StringUtils.isBlank(cash) ) {
 					//throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDE LEER CODIGO CASH");
@@ -8295,6 +8303,7 @@ public class QuskiOroService {
 					this.notificarExcepcionOperativa( wp, Boolean.FALSE );
 				}
 				TbQoCreditoNegociacion credito = this.findCreditoByIdNegociacion(idNegociacion);
+				this.guardaraObservacion(observacionAsesor, credito, nego.getAsesor());
 				TbQoTracking traking = new TbQoTracking();
 				traking.setActividad("ENVIADO A APROBAR");
 				traking.setCodigoBpm(credito.getCodigo());
@@ -8343,6 +8352,7 @@ public class QuskiOroService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
 				TbQoNegociacion nego = credito.getTbQoNegociacion();
+				this.guardaraObservacion(observacionAsesor, credito, nego.getAsesor());
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
 				nego.setObservacionAsesor(observacionAsesor);
@@ -8534,6 +8544,100 @@ public class QuskiOroService {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO enviarCorreoAprobacionBienvenida() => " + e.getMessage() );
 		}
+	}
+	
+	
+
+	public TbQoHistoricoObservacion findHistoricoObservacionById(Long id) throws RelativeException {
+	
+			return historicoObservacionRepository.findById(id);
+		
+	}
+
+	public List<TbQoHistoricoObservacion> findAllHistoricoObservacion(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.historicoObservacionRepository.findAll(TbQoHistoricoObservacion.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.historicoObservacionRepository.findAll(TbQoHistoricoObservacion.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+
+				} else {
+					return this.historicoObservacionRepository.findAll(TbQoHistoricoObservacion.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author DIEGO SERRANO - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countHistoricoObservacion() throws RelativeException {
+		try {
+			return historicoObservacionRepository.countAll(TbQoHistoricoObservacion.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	public TbQoHistoricoObservacion manageHistoricoObservacion(TbQoHistoricoObservacion send) throws RelativeException {
+		try {
+			TbQoHistoricoObservacion persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.findHistoricoObservacionById(send.getId());
+				return this.updateHistoricoObservacion(send, persisted);
+			} else if (send != null && send.getId() == null) {
+
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return historicoObservacionRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	public TbQoHistoricoObservacion updateHistoricoObservacion(TbQoHistoricoObservacion send, TbQoHistoricoObservacion persisted) throws RelativeException {
+		try {
+
+			persisted.setFechaCreacion(send.getFechaCreacion());
+			persisted.setObservacion(send.getObservacion());
+			persisted.setTbQoCreditoNegociacion(send.getTbQoCreditoNegociacion());
+			persisted.setUsuario(send.getUsuario());
+			return historicoObservacionRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+	
+	public TbQoHistoricoObservacion guardaraObservacion(String observacion, TbQoCreditoNegociacion credito, String usuario) throws RelativeException {
+		try {
+			TbQoHistoricoObservacion historico = new TbQoHistoricoObservacion();
+			historico.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+			historico.setUsuario(usuario);
+			historico.setObservacion(observacion);
+			historico.setTbQoCreditoNegociacion(credito);
+			return manageHistoricoObservacion(historico);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	public List<HistoricoObservacionWrapper> findHistoricoObservacionByIdCredito(Long idCredito) throws RelativeException {
+		return this.historicoObservacionRepository.findByIdCredito(idCredito);
 	}
 	
 }
