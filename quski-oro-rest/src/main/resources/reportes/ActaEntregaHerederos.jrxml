@@ -104,28 +104,28 @@
 				<text><![CDATA[ACTA ENTREGA RECEPCIÓN DE JOYAS EN GARANTÍA]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="1" y="129" width="509" height="141" uuid="485f57c0-3ea6-4013-8130-24f6bdae5942"/>
+				<reportElement positionType="Float" x="1" y="129" width="509" height="111" uuid="485f57c0-3ea6-4013-8130-24f6bdae5942"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA["El (la) Cliente "+$P{BEAN_DS}.getNombreCompletoCliente() + "con cedula de ciudadanía No." +$P{BEAN_DS}.getCedulaCliente()+ ",  representado (a) en legal y debida forma por el señor (a)"+$P{BEAN_DS}.getHerederos() + " conforme consta en la Escritura de Posesión Efectiva que adjunta como documento habilitante, declara expresamente recibir en las mismas condiciones que fueron entregadas las joyas que servían de garantía de la operación de crediticia indicada. El cliente declara aceptar expresamente su conformidad, renunciando incondicional e irrevocablemente, a realizar reclamo futuro alguno, relacionado con el estado y cantidad de las joyas, ya que las recibe a entera y completa satisfacción."]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="44" width="509" height="76" uuid="caf4b55a-1e91-461a-a75d-cf1bffeaa1ea"/>
+				<reportElement positionType="Float" x="1" y="44" width="509" height="76" uuid="caf4b55a-1e91-461a-a75d-cf1bffeaa1ea"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCiudad() +" "+ $P{BEAN_DS}.getFechaDevolucion() + ", por solicitud expresa y escrita del cliente señor (a) " +$P{BEAN_DS}.getNombreCompletoCliente()+ ", se procede a la entrega de la funda " + $P{BEAN_DS}.getNumeroFunda()  + " sin alteraciones de ninguna naturaleza y en las mismas condiciones recibidas inicialmente; joyas que garantizaban la operación de crédito" + $P{BEAN_DS}.getNumeroOperacion() +", misma que se encuentra cancelada."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="19" y="481" width="5" height="5" uuid="13dbc615-8ee3-41ae-b5f1-99acb1ad8167"/>
+				<reportElement x="19" y="546" width="5" height="5" uuid="13dbc615-8ee3-41ae-b5f1-99acb1ad8167"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Transparent" x="-1" y="408" width="361" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
+				<reportElement positionType="Float" mode="Transparent" x="-1" y="473" width="361" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -138,7 +138,7 @@
 				<text><![CDATA[Entrega Por: (Quski C.A.)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="-1" y="435" width="361" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
+				<reportElement positionType="Float" x="-1" y="500" width="361" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -148,10 +148,10 @@
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor() +"/Firma"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor() ]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="10" y="260" width="480" height="120" uuid="f1de7d70-de1e-4e67-848e-a4eb4b0121b2">
+				<reportElement positionType="Float" x="0" y="270" width="480" height="120" uuid="f1de7d70-de1e-4e67-848e-a4eb4b0121b2">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -166,7 +166,7 @@
 					<jr:column width="290" uuid="c0618ac5-89f6-4255-8a91-082050ccac52">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell height="150">
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="290" height="75" uuid="a0162f89-1a0e-4b9f-9427-4b055ada03b4"/>
 								<box>
 									<pen lineWidth="1.0"/>
@@ -177,12 +177,13 @@
 								</box>
 								<textElement markup="html"/>
 							</textField>
-							<textField>
-								<reportElement x="0" y="75" width="290" height="75" uuid="fe7c6dd9-5f68-45f4-aa47-432a747f6b6f"/>
+							<textField evaluationTime="Page">
+								<reportElement positionType="Float" x="0" y="75" width="290" height="75" uuid="fe7c6dd9-5f68-45f4-aa47-432a747f6b6f"/>
 								<box>
 									<topPen lineWidth="1.0"/>
 								</box>
-								<textFieldExpression><![CDATA["<br>"+ $F{campoCompleto}]]></textFieldExpression>
+								<textElement markup="none"/>
+								<textFieldExpression><![CDATA[$F{campoCompleto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -219,7 +220,7 @@
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="457" width="360" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
+				<reportElement positionType="Float" x="0" y="522" width="360" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
