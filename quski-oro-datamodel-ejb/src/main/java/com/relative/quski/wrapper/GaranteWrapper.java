@@ -23,6 +23,8 @@ public class GaranteWrapper implements Serializable {
 		this.codigoTipoCliente = codigoTipoCliente;
 		this.nombre = nombre;
 	}
+	public GaranteWrapper() {
+	}
 	public void setIdTipoIdentificacion(Long idTipoIdentificacion) {
 		this.idTipoIdentificacion = idTipoIdentificacion;
 	}

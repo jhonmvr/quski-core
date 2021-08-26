@@ -7804,10 +7804,10 @@ public class QuskiOroService {
 				
 			}
 		} catch (RelativeException e) {
-			throw e;
+			//throw e;
 		}catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL EDITAR GARANTIAS EN SOFTBANK | "+ e.getMessage());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL EDITAR GARANTIAS EN SOFTBANK | "+ e.getMessage());
 		}
 		
 	}
@@ -8007,7 +8007,7 @@ public class QuskiOroService {
 				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
 						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
 						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-						e.getPlazo() == credito.getPlazoCredito()  &&
+						e.getPlazo().equals( credito.getPlazoCredito() ) &&
 						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
 						){
 					credito.setTablaAmortizacion( e.getCodigo() );

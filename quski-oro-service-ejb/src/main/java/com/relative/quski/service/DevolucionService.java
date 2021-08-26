@@ -1064,7 +1064,7 @@ public class DevolucionService {
 		
 		for (HerederoWrapper h : herederos) {
 			HerederoConsolidadoWrapper heredero = new HerederoConsolidadoWrapper();
-			heredero.setCampoCompleto("SR.(A)".concat(h.getNombre().concat("\n ").concat("C.I.").concat(h.getCedula()).concat("\n\n").concat("Heredero (a) del señor (a) \n").
+			heredero.setCampoCompleto("SR.(A) ".concat(h.getNombre().concat("\n ").concat("C.I.").concat(h.getCedula()).concat("\n\n").concat("Heredero (a) del señor (a) \n").
 					concat(devolucion.getNombreCliente())));
 		herederosList.add(heredero);
 		} 
