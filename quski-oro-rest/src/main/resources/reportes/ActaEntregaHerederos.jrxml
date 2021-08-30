@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AdendaCP" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="0aca80b7-95f1-4f1d-bbe5-5064e8fb3526">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -112,7 +112,7 @@
 		<fieldDescription><![CDATA[nombreAgente]]></fieldDescription>
 	</field>
 	<title>
-		<band height="567" splitType="Stretch">
+		<band height="660" splitType="Stretch">
 			<staticText>
 				<reportElement x="126" y="12" width="300" height="16" uuid="423f258f-f251-42f2-aa61-9245599f1358"/>
 				<textElement>
@@ -135,47 +135,14 @@
 				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCiudad() +" "+ $P{BEAN_DS}.getFechaDevolucion() + ", por solicitud expresa y escrita del cliente señor (a) " +$P{BEAN_DS}.getNombreCompletoCliente()+ ", se procede a la entrega de la funda " + $P{BEAN_DS}.getNumeroFunda()  + " sin alteraciones de ninguna naturaleza y en las mismas condiciones recibidas inicialmente; joyas que garantizaban la operación de crédito" + $P{BEAN_DS}.getNumeroOperacion() +", misma que se encuentra cancelada."]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="19" y="546" width="5" height="5" uuid="13dbc615-8ee3-41ae-b5f1-99acb1ad8167"/>
+				<reportElement x="510" y="558" width="5" height="5" uuid="13dbc615-8ee3-41ae-b5f1-99acb1ad8167"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Static Text]]></text>
 			</staticText>
-			<staticText>
-				<reportElement positionType="Float" mode="Transparent" x="-1" y="473" width="361" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Arial"/>
-				</textElement>
-				<text><![CDATA[Entrega Por: (Quski C.A.)]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="-1" y="500" width="361" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Justified" markup="html">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="522" width="360" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
-				<textElement textAlignment="Justified" markup="html">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA["C.I..................................."]]></textFieldExpression>
-			</textField>
 			<componentElement>
-				<reportElement positionType="Float" x="1" y="280" width="449" height="100" uuid="2c08e7f2-d5ff-46f0-be66-fe7a6927e3fb">
+				<reportElement positionType="Float" x="1" y="258" width="510" height="100" uuid="2c08e7f2-d5ff-46f0-be66-fe7a6927e3fb">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
@@ -187,7 +154,7 @@
 							<datasetParameterExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LIST_DS})]]></datasetParameterExpression>
 						</datasetParameter>
 					</datasetRun>
-					<jr:column width="300" uuid="11f7ad68-4c03-46f9-ad59-4ea33f5af495">
+					<jr:column width="360" uuid="11f7ad68-4c03-46f9-ad59-4ea33f5af495">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell style="Table 1_TD" height="100">
 							<box>
@@ -197,7 +164,7 @@
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="300" height="50" uuid="80da1b75-1bb7-4482-a038-3e71ade28ad8"/>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="360" height="60" uuid="80da1b75-1bb7-4482-a038-3e71ade28ad8"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -206,7 +173,7 @@
 								</box>
 							</textField>
 							<textField>
-								<reportElement x="0" y="50" width="300" height="50" uuid="385a386a-5769-4c76-a347-f6e232ea0204"/>
+								<reportElement x="0" y="60" width="360" height="40" uuid="385a386a-5769-4c76-a347-f6e232ea0204"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -228,7 +195,7 @@
 							</box>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="60" uuid="f0c710ff-c442-471a-bbe8-82564d5fecf4">
+					<jr:column width="70" uuid="f0c710ff-c442-471a-bbe8-82564d5fecf4">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:detailCell style="Table 1_TD" height="100">
 							<box>
@@ -238,13 +205,13 @@
 								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<rectangle>
-								<reportElement x="0" y="0" width="60" height="50" uuid="18ebef12-8bb3-4d60-b4e5-685bbb5d683b"/>
+								<reportElement x="0" y="0" width="70" height="60" uuid="18ebef12-8bb3-4d60-b4e5-685bbb5d683b"/>
 								<graphicElement>
 									<pen lineStyle="Solid"/>
 								</graphicElement>
 							</rectangle>
 							<textField>
-								<reportElement x="0" y="50" width="60" height="50" uuid="db2aa824-6edf-4756-8380-29811863c71b"/>
+								<reportElement x="0" y="60" width="70" height="40" uuid="db2aa824-6edf-4756-8380-29811863c71b"/>
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -260,6 +227,48 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<rectangle>
+				<reportElement positionType="Float" x="0" y="370" width="511" height="41" uuid="803ee9e9-f0d8-4556-bd0e-8eb0b19bdc7f"/>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<frame>
+				<reportElement positionType="Float" x="0" y="411" width="510" height="120" uuid="04c88e10-cc07-4902-93b3-db7d144fc490"/>
+				<staticText>
+					<reportElement positionType="Float" mode="Transparent" x="3" y="25" width="361" height="20" uuid="a5428771-2256-40b4-88d3-a2ab19861bc8"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[Entrega Por: (Quski C.A.)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="4" y="55" width="361" height="20" uuid="e286a6aa-db22-47ce-bd27-2988cbc04074"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Justified" markup="html">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreAsesor()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" x="2" y="82" width="360" height="20" uuid="6e27fa34-8458-4937-9a7e-806cb871e0a9"/>
+					<textElement textAlignment="Justified" markup="html">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA["C.I..................................."]]></textFieldExpression>
+				</textField>
+			</frame>
 		</band>
 	</title>
 </jasperReport>
