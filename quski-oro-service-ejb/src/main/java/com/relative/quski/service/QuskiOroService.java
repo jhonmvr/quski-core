@@ -4888,9 +4888,9 @@ public class QuskiOroService {
 			sof.setIdTipoIdentificacion(Integer.valueOf("1"));
 			sof.setNombreCompleto( cli.getNombreCompleto() );                         
 			sof.setPrimerApellido( cli.getApellidoPaterno() );                           
-			sof.setSegundoApellido( cli.getApellidoMaterno() );              
+			sof.setSegundoApellido( StringUtils.isBlank(cli.getApellidoMaterno())?" ":cli.getApellidoMaterno()  );              
 			sof.setPrimerNombre( cli.getPrimerNombre() );             
-			sof.setSegundoNombre( cli.getSegundoNombre() );      
+			sof.setSegundoNombre( StringUtils.isBlank(cli.getSegundoNombre())?" ":cli.getSegundoNombre()  );      
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );
 			sof.setEsCliente( true );              
 			sof.setCodigoMotivoVisita( cli.getCanalContacto() );                             
@@ -6504,10 +6504,10 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO EXISTE WRAPPER PARA APLICAR ABONO.");
 			}
 		}catch(RelativeException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw e;
 		}catch( Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -6642,11 +6642,10 @@ public class QuskiOroService {
 			result.setMontoFinanciado( credito.getMontoFinanciado() ) ;
 			result.setPagoDia( Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 ) );
 			GaranteWrapper garante = null;
-			if(credito.getIdentificacionApoderado() != null && credito.getNombreCompletoApoderado() != null) {
-				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionApoderado() , "SAP", credito.getNombreCompletoApoderado());				
-			}
-			if(credito.getIdentificacionCodeudor() != null && credito.getNombreCompletoCodeudor() != null) {
-				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionCodeudor() , "SCD", credito.getNombreCompletoCodeudor());				
+			if(credito.getTipoCliente().equalsIgnoreCase("SAP")) {
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionApoderado() , "SAP", credito.getNombreCompletoApoderado());	
+			}else if(credito.getTipoCliente().equalsIgnoreCase("SCD")) {
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionCodeudor() , "SCD", credito.getNombreCompletoCodeudor());	
 			}
 			result.setDatosCodeudorApoderado( garante );
 			result.setDatosRegistro(
@@ -8003,13 +8002,28 @@ public class QuskiOroService {
 			credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
 			List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 			if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
+			log.info("<<<<<<<================================= VALIDADOR TABLA==========================>>>>>");
+			log.info(" credito.getPeriodoPlazo()"+ credito.getPeriodoPlazo());
+			log.info(" credito.getPeriodicidadPlazo()"+ credito.getPeriodicidadPlazo());
+			log.info(" credito.getTipoOferta()"+ credito.getTipoOferta());
+			log.info(" credito.getPlazoCredito()"+ credito.getPlazoCredito());
+			log.info(" credito.getPorcentajeFlujoPlaneado()"+ credito.getPorcentajeFlujoPlaneado());
+			log.info("CATALOGO===================");
 			listTablas.forEach(e->{
+				log.info("CODIGO" + e.getCodigo());
+				log.info("e.getNumeroCuotas()" + e.getNumeroCuotas());
+				log.info("e.getPeriodoPlazo()"+e.getPeriodoPlazo());
+				log.info("e.getPeriodicidadPlazo()"+e.getPeriodicidadPlazo());
+				log.info("e.getTipoOferta()"+e.getTipoOferta());
+				log.info("e.getPlazo()"+e.getPlazo());
+				log.info("e.getPorcentajeAmortizacion()"+e.getPorcentajeAmortizacion());
 				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
 						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
 						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
 						e.getPlazo().equals( credito.getPlazoCredito() ) &&
-						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
+						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado())
 						){
+					log.info("VALOR:"+","+credito.getPeriodoPlazo()+","+credito.getPeriodicidadPlazo()+","+credito.getTipoOferta()+","+credito.getPlazoCredito()+","+credito.getPorcentajeFlujoPlaneado());
 					credito.setTablaAmortizacion( e.getCodigo() );
 					credito.setNumeroCuotas(e.getNumeroCuotas());					
 				}
@@ -8368,7 +8382,7 @@ public class QuskiOroService {
 				traking.setNombreAsesor(nombreAsesor);
 				traking.setUsuarioCreacion(nego.getAsesor());
 				traking.setObservacion(observacionAsesor);
-				traking.setProceso(ProcesoEnum.NUEVO);
+				traking.setProceso(ProcesoEnum.RENOVACION);
 				traking.setSeccion("ENVIADO A APROBAR");
 				this.registrarTraking(traking);
 				this.manageNegociacion( nego );

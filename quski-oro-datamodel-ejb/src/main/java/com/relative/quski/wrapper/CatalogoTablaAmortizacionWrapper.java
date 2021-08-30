@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class CatalogoTablaAmortizacionWrapper implements Serializable {
 		/**
@@ -16,11 +17,11 @@ public class CatalogoTablaAmortizacionWrapper implements Serializable {
 		private String nombreTipoTablaAmortizacion;
 		private Long frecuenciaPago;
 		private Long numeroCuotas;
-		private Long porcentajeAmortizacion;
+		private BigDecimal porcentajeAmortizacion;
 		
 		public CatalogoTablaAmortizacionWrapper(String codigo, String periodoPlazo, String periodicidadPlazo,
 				String tipoOferta, Long plazo, Long idTipoTablaAmortizacion, String nombreTipoTablaAmortizacion,
-				Long frecuenciaPago, Long numeroCuotas, Long porcentajeAmortizacion) {
+				Long frecuenciaPago, Long numeroCuotas, BigDecimal porcentajeAmortizacion) {
 			super();
 			this.codigo = codigo;
 			this.periodoPlazo = periodoPlazo;
@@ -88,10 +89,10 @@ public class CatalogoTablaAmortizacionWrapper implements Serializable {
 		public void setNumeroCuotas(Long numeroCuotas) {
 			this.numeroCuotas = numeroCuotas;
 		}
-		public Long getPorcentajeAmortizacion() {
+		public BigDecimal getPorcentajeAmortizacion() {
 			return porcentajeAmortizacion;
 		}
-		public void setPorcentajeAmortizacion(Long porcentajeAmortizacion) {
+		public void setPorcentajeAmortizacion(BigDecimal porcentajeAmortizacion) {
 			this.porcentajeAmortizacion = porcentajeAmortizacion;
 		}
 }

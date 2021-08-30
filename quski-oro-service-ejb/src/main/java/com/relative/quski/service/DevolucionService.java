@@ -1061,11 +1061,12 @@ public class DevolucionService {
 		TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 		 List<HerederoWrapper> herederos = this.getHerederos(devolucion);
 		 List<HerederoConsolidadoWrapper> herederosList = new ArrayList<HerederoConsolidadoWrapper>();
-		
+		//log.info("HEREDEROS ¡¡¡¡¡¡¡¡¡¡¡¡¡¡:::::::::::::::::::::::::::::::::::::::::::");
 		for (HerederoWrapper h : herederos) {
 			HerederoConsolidadoWrapper heredero = new HerederoConsolidadoWrapper();
 			heredero.setCampoCompleto("SR.(A) ".concat(h.getNombre().concat("\n ").concat("C.I.").concat(h.getCedula()).concat("\n\n").concat("Heredero (a) del señor (a) \n").
 					concat(devolucion.getNombreCliente())));
+			//log.info(heredero.getCampoCompleto());
 		herederosList.add(heredero);
 		} 
 		

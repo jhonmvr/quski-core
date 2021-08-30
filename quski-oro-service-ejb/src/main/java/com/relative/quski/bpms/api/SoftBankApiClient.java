@@ -65,7 +65,7 @@ public class SoftBankApiClient {
 			System.out.println("==============>>>"+ x.getDescripcion());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} 
 	}
 	/**
@@ -111,10 +111,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:" + e.getMessage());
 		} 
 	}
@@ -158,10 +158,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," Existe Error: " + e.getMessage() );
 		}
 	}
@@ -197,10 +197,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," ERROR:" + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL LLAMAR SERVICIO APROBAR REST SOFTBANK: " + e.getMessage());
 		} 
 	}
@@ -234,10 +234,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -277,10 +277,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -307,10 +307,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -336,10 +336,10 @@ public class SoftBankApiClient {
 						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -461,10 +461,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:" + e.getMessage());
 		} 
 	}
@@ -506,10 +506,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO callEditarClienteRest:" + e.getMessage());
 		} 
 	}
@@ -550,11 +550,11 @@ public class SoftBankApiClient {
 			}
 		}  catch (RelativeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
 		}
 	}
@@ -592,10 +592,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}  catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBANK");
 		}
 	}
@@ -633,11 +633,11 @@ public class SoftBankApiClient {
 			}
 		}  catch (RelativeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//
 			throw e;
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL CONSUMIR EL WS DE CREAR OPERACION SOFTBAN");
 		}
 	}
@@ -663,10 +663,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		}catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -692,10 +692,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -721,10 +721,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -756,10 +756,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
@@ -797,10 +797,10 @@ public class SoftBankApiClient {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 			}
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			
 			throw e;
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
