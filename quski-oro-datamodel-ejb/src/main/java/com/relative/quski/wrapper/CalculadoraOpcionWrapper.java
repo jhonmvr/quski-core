@@ -25,6 +25,7 @@ public class CalculadoraOpcionWrapper implements Serializable {
     private BigDecimal costoValoracion;
     private BigDecimal impuestoSolca;
     private String formaPagoImpuestoSolca;
+    private String codigoTabla;
     private String formaPagoCapital;
     private String formaPagoCustodia;
     private String formaPagoFideicomiso;
@@ -283,6 +284,12 @@ public class CalculadoraOpcionWrapper implements Serializable {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public String getCodigoTabla() {
+		return codigoTabla;
+	}
+	public void setCodigoTabla(String codigoTabla) {
+		this.codigoTabla = codigoTabla;
 	}
 
 

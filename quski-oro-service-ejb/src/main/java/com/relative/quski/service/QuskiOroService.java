@@ -8021,7 +8021,7 @@ public class QuskiOroService {
 						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
 						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
 						e.getPlazo().equals( credito.getPlazoCredito() ) &&
-						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado())
+						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
 						){
 					log.info("VALOR:"+","+credito.getPeriodoPlazo()+","+credito.getPeriodicidadPlazo()+","+credito.getTipoOferta()+","+credito.getPlazoCredito()+","+credito.getPorcentajeFlujoPlaneado());
 					credito.setTablaAmortizacion( e.getCodigo() );

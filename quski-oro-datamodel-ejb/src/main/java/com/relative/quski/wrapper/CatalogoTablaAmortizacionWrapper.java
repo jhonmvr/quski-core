@@ -17,11 +17,11 @@ public class CatalogoTablaAmortizacionWrapper implements Serializable {
 		private String nombreTipoTablaAmortizacion;
 		private Long frecuenciaPago;
 		private Long numeroCuotas;
-		private BigDecimal porcentajeAmortizacion;
+		private Long porcentajeAmortizacion;
 		
 		public CatalogoTablaAmortizacionWrapper(String codigo, String periodoPlazo, String periodicidadPlazo,
 				String tipoOferta, Long plazo, Long idTipoTablaAmortizacion, String nombreTipoTablaAmortizacion,
-				Long frecuenciaPago, Long numeroCuotas, BigDecimal porcentajeAmortizacion) {
+				Long frecuenciaPago, Long numeroCuotas, Long porcentajeAmortizacion) {
 			super();
 			this.codigo = codigo;
 			this.periodoPlazo = periodoPlazo;
@@ -89,10 +89,10 @@ public class CatalogoTablaAmortizacionWrapper implements Serializable {
 		public void setNumeroCuotas(Long numeroCuotas) {
 			this.numeroCuotas = numeroCuotas;
 		}
-		public BigDecimal getPorcentajeAmortizacion() {
+		public Long getPorcentajeAmortizacion() {
 			return porcentajeAmortizacion;
 		}
-		public void setPorcentajeAmortizacion(BigDecimal porcentajeAmortizacion) {
+		public void setPorcentajeAmortizacion(Long porcentajeAmortizacion) {
 			this.porcentajeAmortizacion = porcentajeAmortizacion;
 		}
 }

@@ -1392,6 +1392,7 @@ public class SimularResponse implements Serializable{
                     "costoTasacion",
                     "costoTransporte",
                     "costoValoracion",
+                    "codigoTabla",
                     "impuestoSolca",
                     "formaPagoImpuestoSolca",
                     "formaPagoCapital",
@@ -1445,6 +1446,8 @@ public class SimularResponse implements Serializable{
                     protected float costoTransporte;
                     @XmlElement(name = "CostoValoracion")
                     protected float costoValoracion;
+                    @XmlElement(name = "CodigoTabla")
+                    protected String codigoTabla;
                     @XmlElement(name = "ImpuestoSolca")
                     protected float impuestoSolca;
                     @XmlElement(name = "FormaPagoImpuestoSolca", required = true)
@@ -1704,6 +1707,22 @@ public class SimularResponse implements Serializable{
                      */
                     public void setCostoValoracion(float value) {
                         this.costoValoracion = value;
+                    }
+                    
+                    /**
+                     * Gets the value of the codigoTabla property.
+                     * 
+                     */
+                    public String getCodigoTabla() {
+                        return codigoTabla;
+                    }
+
+                    /**
+                     * Sets the value of the codigoTabla property.
+                     * 
+                     */
+                    public void setCodigoTabla(String value) {
+                        this.codigoTabla = value;
                     }
 
                     /**
