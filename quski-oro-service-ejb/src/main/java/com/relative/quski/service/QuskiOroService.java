@@ -2026,24 +2026,33 @@ public class QuskiOroService {
 		credito.setPorcentajeFlujoPlaneado(opcion.getPorcentajeflujoplaneado());
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
-		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(
-				this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
-		if(listTablas == null || listTablas.isEmpty()) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
+		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
+//		if(listTablas == null || listTablas.isEmpty()) {
+//			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
+//		}
+//		listTablas.forEach(e->{
+//			if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+//				e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+//				e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+//				e.getPlazo() == credito.getPlazoCredito() 
+//			){
+//				credito.setTablaAmortizacion( e.getCodigo() );
+//				credito.setNumeroCuotas(e.getNumeroCuotas());					
+//			}
+//		});
+//		if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
+//			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+//		}
+		if(listTablas != null && !listTablas.isEmpty()) {
+			listTablas.forEach(e->{
+				if(e.getCodigo().equalsIgnoreCase(opcion.getCodigoTabla())) {
+					credito.setNumeroCuotas(e.getNumeroCuotas());
+				}
+				
+			});
 		}
-		listTablas.forEach(e->{
-			if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
-				e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
-				e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-				e.getPlazo() == credito.getPlazoCredito() 
-			){
-				credito.setTablaAmortizacion( e.getCodigo() );
-				credito.setNumeroCuotas(e.getNumeroCuotas());					
-			}
-		});
-		if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
-		}
+		
+		credito.setTablaAmortizacion(opcion.getCodigoTabla() );
 		return this.creditoNegociacionRepository.update(credito);
 	}
 
@@ -8001,36 +8010,46 @@ public class QuskiOroService {
 			credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
 			credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
 			List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
-			if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
-			log.info("<<<<<<<================================= VALIDADOR TABLA==========================>>>>>");
-			log.info(" credito.getPeriodoPlazo()"+ credito.getPeriodoPlazo());
-			log.info(" credito.getPeriodicidadPlazo()"+ credito.getPeriodicidadPlazo());
-			log.info(" credito.getTipoOferta()"+ credito.getTipoOferta());
-			log.info(" credito.getPlazoCredito()"+ credito.getPlazoCredito());
-			log.info(" credito.getPorcentajeFlujoPlaneado()"+ credito.getPorcentajeFlujoPlaneado());
-			log.info("CATALOGO===================");
-			listTablas.forEach(e->{
-				log.info("CODIGO" + e.getCodigo());
-				log.info("e.getNumeroCuotas()" + e.getNumeroCuotas());
-				log.info("e.getPeriodoPlazo()"+e.getPeriodoPlazo());
-				log.info("e.getPeriodicidadPlazo()"+e.getPeriodicidadPlazo());
-				log.info("e.getTipoOferta()"+e.getTipoOferta());
-				log.info("e.getPlazo()"+e.getPlazo());
-				log.info("e.getPorcentajeAmortizacion()"+e.getPorcentajeAmortizacion());
-				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
-						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
-						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
-						e.getPlazo().equals( credito.getPlazoCredito() ) &&
-						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
-						){
-					log.info("VALOR:"+","+credito.getPeriodoPlazo()+","+credito.getPeriodicidadPlazo()+","+credito.getTipoOferta()+","+credito.getPlazoCredito()+","+credito.getPorcentajeFlujoPlaneado());
-					credito.setTablaAmortizacion( e.getCodigo() );
-					credito.setNumeroCuotas(e.getNumeroCuotas());					
-				}
-			});
-			if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+//			if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
+//			log.info("<<<<<<<================================= VALIDADOR TABLA==========================>>>>>");
+//			log.info(" credito.getPeriodoPlazo()"+ credito.getPeriodoPlazo());
+//			log.info(" credito.getPeriodicidadPlazo()"+ credito.getPeriodicidadPlazo());
+//			log.info(" credito.getTipoOferta()"+ credito.getTipoOferta());
+//			log.info(" credito.getPlazoCredito()"+ credito.getPlazoCredito());
+//			log.info(" credito.getPorcentajeFlujoPlaneado()"+ credito.getPorcentajeFlujoPlaneado());
+//			log.info("CATALOGO===================");
+//			listTablas.forEach(e->{
+//				log.info("CODIGO" + e.getCodigo());
+//				log.info("e.getNumeroCuotas()" + e.getNumeroCuotas());
+//				log.info("e.getPeriodoPlazo()"+e.getPeriodoPlazo());
+//				log.info("e.getPeriodicidadPlazo()"+e.getPeriodicidadPlazo());
+//				log.info("e.getTipoOferta()"+e.getTipoOferta());
+//				log.info("e.getPlazo()"+e.getPlazo());
+//				log.info("e.getPorcentajeAmortizacion()"+e.getPorcentajeAmortizacion());
+//				if( e.getPeriodoPlazo().equalsIgnoreCase( credito.getPeriodoPlazo()) && 
+//						e.getPeriodicidadPlazo().equalsIgnoreCase( credito.getPeriodicidadPlazo()) &&
+//						e.getTipoOferta().equalsIgnoreCase( credito.getTipoOferta() ) &&
+//						e.getPlazo().equals( credito.getPlazoCredito() ) &&
+//						e.getPorcentajeAmortizacion().equals(credito.getPorcentajeFlujoPlaneado().longValue())
+//						){
+//					log.info("VALOR:"+","+credito.getPeriodoPlazo()+","+credito.getPeriodicidadPlazo()+","+credito.getTipoOferta()+","+credito.getPlazoCredito()+","+credito.getPorcentajeFlujoPlaneado());
+//					credito.setTablaAmortizacion( e.getCodigo() );
+//					credito.setNumeroCuotas(e.getNumeroCuotas());					
+//				}
+//			});
+			if(listTablas != null && !listTablas.isEmpty()) {
+				listTablas.forEach(e->{
+					if(e.getCodigo().equalsIgnoreCase(opcion.getCodigoTabla())) {
+						credito.setNumeroCuotas(e.getNumeroCuotas());
+					}
+					
+				});
 			}
+			credito.setTablaAmortizacion( opcion.getCodigoTabla() );
+  			//credito.setNumeroCuotas(e.getNumeroCuotas());
+//			if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
+//				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
+//			}
 		}
 		credito.setIdAgencia( idAgencia );
 		//credito.setcobertura();
