@@ -252,7 +252,7 @@ public class QuskiOroConstantes {
 	public static final String PARAM_BPM_BUSINESS_PROCESS_APROBACION = "RE045";
 	
 	public static final  String  BPMS_REST_DEFAULT_CHARSET = "UTF-8";
-	public static final  Integer  BPMS_REST_TIMEOUT_DEFAULT = 60000;
+	public static final  Integer  BPMS_REST_TIMEOUT_DEFAULT = 120000;
 	public static final  String  BPMS_DEFAULT_USER = "agente";
 	
 	
