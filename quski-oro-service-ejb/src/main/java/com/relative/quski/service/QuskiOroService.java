@@ -7521,7 +7521,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getValorARecibir().toString() );
+						.replace("--valor--", persisted.getaRecibirCliente().toString() );
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_CONTENIDO ).getValor()
 						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7530,7 +7530,7 @@ public class QuskiOroService {
 						.replace("--numeroCuenta--", "-")
 						.replace("--numeroTransaccion--", "-")
 						.replace("--tipoCuenta--", "-")
-						.replace("--valor--", persisted.getValorARecibir().toString() );
+						.replace("--valor--", persisted.getaRecibirCliente().toString() );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
 			}
