@@ -2061,7 +2061,7 @@ public class QuskiOroService {
 	public TbQoCliente createClienteFromEquifax(DATOSCLIENTE cliente) throws RelativeException {
 		if (cliente != null) {
 				TbQoCliente c = new TbQoCliente();
-				c.setCedulaCliente(StringUtils.leftPad(String.valueOf(cliente.getIDENTIFICACION()), 10, "0"));
+				c.setCedulaCliente(cliente.getIDENTIFICACION());
 				c.setNombreCompleto(cliente.getNOMBRESCOMPLETOS());
 				c.setEmail(cliente.getCORREOELECTRONICO());
 				c.setCargasFamiliares(Long.valueOf(cliente.getCARGASFAMILIARES()));

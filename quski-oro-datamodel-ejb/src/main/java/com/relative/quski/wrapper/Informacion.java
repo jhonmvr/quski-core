@@ -407,7 +407,7 @@ public class Informacion implements Serializable{
         @XmlElement(name = "CODIGO_CAMPANIA")
         protected short codigocampania;
         @XmlElement(name = "IDENTIFICACION")
-        protected int identificacion;
+        protected String identificacion;
         @XmlElement(name = "TIPO_IDENTIFICACION", required = true)
         protected String tipoidentificacion;
         @XmlElement(name = "PERFIL_RIESGO")
@@ -509,7 +509,7 @@ public class Informacion implements Serializable{
          * Obtiene el valor de la propiedad identificacion.
          * 
          */
-        public int getIDENTIFICACION() {
+        public String getIDENTIFICACION() {
             return identificacion;
         }
 
@@ -517,7 +517,7 @@ public class Informacion implements Serializable{
          * Define el valor de la propiedad identificacion.
          * 
          */
-        public void setIDENTIFICACION(int value) {
+        public void setIDENTIFICACION(String value) {
             this.identificacion = value;
         }
 
