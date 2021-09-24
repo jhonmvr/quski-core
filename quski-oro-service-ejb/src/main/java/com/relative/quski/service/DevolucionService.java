@@ -609,6 +609,7 @@ public class DevolucionService {
 				if ( devolucion.getArribo() == null ) {
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 					devolucion.setArribo(Boolean.TRUE);
+					devolucion.setFechaEfectiva(new Timestamp(System.currentTimeMillis()));
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
 					bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE, autorizacion);
