@@ -288,9 +288,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 	
 	@Column(name="fecha_nacimiento_apoderado")
 	private Date fechaNacimientoApoderado;
-	
+
 	@Column(name="excepcion_operativa")
 	private String excepcionOperativa;
+	
+	@Column(name="canal_contacto")
+	private String canalContacto;
 	
 	@Column(name="fecha_regularizacion")
 	private Date fechaRegularizacion;
@@ -1008,6 +1011,14 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setValorCash(BigDecimal valorCash) {
 		this.valorCash = valorCash;
+	}
+
+	public String getCanalContacto() {
+		return canalContacto;
+	}
+
+	public void setCanalContacto(String canalContacto) {
+		this.canalContacto = canalContacto;
 	}
 
 }

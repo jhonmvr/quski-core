@@ -306,7 +306,7 @@ public class PagoService {
 			this.enviarCorreoPagoAprobado(isRegistro, clientePago, clientePago.getMailAsesor());
 			return proceso;
 		} catch (RelativeException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw e;
 		}catch ( Exception e) {
 			e.printStackTrace();

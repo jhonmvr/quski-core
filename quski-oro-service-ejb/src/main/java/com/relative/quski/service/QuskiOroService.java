@@ -1654,6 +1654,9 @@ public class QuskiOroService {
 			if (send.getIdSoftbank() != null) {
 				persisted.setIdSoftbank(send.getIdSoftbank());
 			}
+			if (send.getEsNueva() != null) {
+				persisted.setEsNueva(send.getEsNueva());
+			}
 			if(send.getBanco() != null ){
 				persisted.setBanco( send.getBanco() );
 			}
@@ -2026,6 +2029,7 @@ public class QuskiOroService {
 		credito.setPorcentajeFlujoPlaneado(opcion.getPorcentajeflujoplaneado());
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
+		credito.setCanalContacto(credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto());
 		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 //		if(listTablas == null || listTablas.isEmpty()) {
 //			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
@@ -2673,6 +2677,7 @@ public class QuskiOroService {
 			cuenta.setEsAhorros( e.getEsAhorros() );
 			cuenta.setCuenta( e.getCuenta() );
 			cuenta.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
+			cuenta.setEsNueva(e.getEsNueva());
 			cuenta.setTbQoCliente( cliente );
 			this.manageCuentaBancariaCliente( cuenta ); 
 		}		
@@ -6273,6 +6278,9 @@ public class QuskiOroService {
 			if( send.getValorCash() != null) {
 				persisted.setValorCash(send.getValorCash());
 			}
+			if(StringUtils.isNotBlank(send.getCanalContacto()) ) {
+				persisted.setCanalContacto(send.getCanalContacto());
+			}
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );
@@ -7486,33 +7494,8 @@ public class QuskiOroService {
 	 * @param codigo
 	 * @throws RelativeException
 	 */
-	public void devolverAprobarCredito(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
+	public void enviarCorreoCashNuevo(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo) throws RelativeException {
 		try {
-			if( persisted == null) { 
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
-			}
-			
-			if(cash != null) {
-//				String banco = null;
-//				String numeroCuenta = null;
-//				String numeroTransaccion = "Que es?";
-//				String tipoCuenta = null;
-//
-//				List<CatalogoIdWrapper> lizCatalogo = this.catalogoBanco( );
-//				List<TbQoCuentaBancariaCliente> listCuenta = this.cuentaBancariaRepository.findByIdCliente(persisted.getTbQoNegociacion().getTbQoCliente().getId());
-//				if( !lizCatalogo.isEmpty() && !listCuenta.isEmpty() && listCuenta.size() == 1 ) {
-//					for (int e = 0; e < lizCatalogo.size(); ++e) {
-//						if(lizCatalogo.get(e).getId().equals( listCuenta.get(0).getBanco() )) {
-//							banco = lizCatalogo.get(e).getNombre();							
-//						}
-//					}
-//					if( listCuenta.get(0).getEsAhorros() ) {
-//						tipoCuenta = "Es ahorro";
-//					}else {
-//						tipoCuenta = "No es ahorro";
-//					}
-//					numeroCuenta = listCuenta.get(0).getCuenta();
-//				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
 						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7533,41 +7516,14 @@ public class QuskiOroService {
 						.replace("--valor--", persisted.getaRecibirCliente().toString() );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
 		}catch ( Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
+			//e.printStackTrace();
+			log.info("NO SE ENVIO CORREO CASH:" + "cash");
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
 		}
 	}
-	public void devolverAprobarCreditoRenovacion(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo, BigDecimal valorCash) throws RelativeException {
+	public void enviarCodigoCashRenovacion(TbQoCreditoNegociacion persisted, String cash, String descripcion, String codigo, BigDecimal valorCash) throws RelativeException {
 		try {
-			if( persisted == null) { 
-				throw new RelativeException(Constantes.ERROR_CODE_READ, "NO SE ENCONTRO CREDITO EN LA EDICION");
-			}
-			if(cash != null) {
-//				String banco = null;
-//				String numeroCuenta = null;
-//				String numeroTransaccion = "Que es?";
-//				String tipoCuenta = null;
-//
-//				List<CatalogoIdWrapper> lizCatalogo = this.catalogoBanco( );
-//				List<TbQoCuentaBancariaCliente> listCuenta = this.cuentaBancariaRepository.findByIdCliente(persisted.getTbQoNegociacion().getTbQoCliente().getId());
-//				if( !lizCatalogo.isEmpty() && !listCuenta.isEmpty() && listCuenta.size() == 1 ) {
-//					for (int e = 0; e < lizCatalogo.size(); ++e) {
-//						if(lizCatalogo.get(e).getId().equals( listCuenta.get(0).getBanco() )) {
-//							banco = lizCatalogo.get(e).getNombre();							
-//						}
-//					}
-//					if( listCuenta.get(0).getEsAhorros() ) {
-//						tipoCuenta = "Es ahorro";
-//					}else {
-//						tipoCuenta = "No es ahorro";
-//					}
-//					numeroCuenta = listCuenta.get(0).getCuenta();
-//				}
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.APROBACION_ASUNTO ).getValor()					
 						.replace("--codigoCash--", cash)
 						.replace("--cedula--", persisted.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
@@ -7588,13 +7544,10 @@ public class QuskiOroService {
 						.replace("--valor--", valorCash != null ? valorCash.toString(): "0"  );
 				String[] listCorreos = {persisted.getTbQoNegociacion().getCorreoAsesor()};
 				this.mailNotificacion( listCorreos, asunto, contenido,  null);
-			}
-		} catch (RelativeException e) {
-			e.printStackTrace();
-			throw e;
 		}catch ( Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
+			//e.printStackTrace();
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " DESCONOCIDO EN METODO devolverAprobarCredito() => " + e.getMessage() );
+			log.info("NO SE ENVIO CODIGO CASH:" + cash);
 		}
 	}
 
@@ -8143,7 +8096,7 @@ public class QuskiOroService {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
 				enviarCorreoAprobacionBienvenida(credito);
-				this.devolverAprobarCredito(credito, cash, descripcion, null);
+				this.enviarCorreoCashNuevo(credito, cash, descripcion, null);
 				
 			}else {
 				//this.devolverAprobarCredito(credito, null, descripcion, codigoMotivo); 
@@ -8212,12 +8165,7 @@ public class QuskiOroService {
 				}
 				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
 				
-				if(StringUtils.isNotBlank(cash)) {
-					credito.setCodigoCash(cash);
-					ap.setCodigoCash(cash);
-					credito.setValorCash(valorCash);
-					this.devolverAprobarCreditoRenovacion(credito, cash, descripcion, null,valorCash);
-				}
+				
 				//FIN APROBACION
 				TbQoTracking last = this.trackingRepository.findByParams(credito.getCodigo(),ProcesoEnum.RENOVACION);
 				if(last != null) {
@@ -8231,6 +8179,12 @@ public class QuskiOroService {
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
+				if(StringUtils.isNotBlank(cash)) {
+					credito.setCodigoCash(cash);
+					ap.setCodigoCash(cash);
+					credito.setValorCash(valorCash);
+					this.enviarCodigoCashRenovacion(credito, cash, descripcion, null,valorCash);
+				}
 				this.enviarCorreoAprobacionBienvenida(credito);
 			}else {
 				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
