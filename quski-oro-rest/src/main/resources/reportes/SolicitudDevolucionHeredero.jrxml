@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LiquidacionCD" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="bd61ad2f-9f25-415f-9c3b-33012cc4371a">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
@@ -96,7 +96,7 @@
 				</textElement>
 				<text><![CDATA[SOLICITUD DE DEVOLUCIÓN DE GARANTÍA DE JOYAS]]></text>
 			</staticText>
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="200" width="510" height="90" uuid="69ba6d57-0fa3-42cc-b379-b67c6ad112fc"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
@@ -166,7 +166,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getAgenciaSolicitante()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getAgenciaSolicitante()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="250" y="80" width="230" height="20" uuid="6806ced6-da08-4ee6-a9c5-46f5d307fd88"/>
@@ -179,7 +179,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCliente()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getNombreCliente()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="250" y="100" width="230" height="20" uuid="1eaa7d81-2fa0-4e66-b909-6a49b32944b5"/>
@@ -192,7 +192,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="100" y="120" width="150" height="20" uuid="c78c357f-a9e1-4539-8d2f-85bea68462b3"/>
@@ -218,7 +218,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroOperacion()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getNumeroOperacion()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="250" y="40" width="230" height="20" uuid="f032aaa0-c2c3-4142-8baf-9baef1dc8611"/>
@@ -231,7 +231,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getFechaSolicitud()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getFechaSolicitud()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="100" y="140" width="150" height="20" uuid="702f79a2-31a0-4192-b2a1-fba92601b0d4"/>
@@ -270,7 +270,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getAgenciaEntrega()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getAgenciaEntrega()]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="250" y="160" width="230" height="20" uuid="87c3fac4-0d53-4182-abf5-fd75f29c9aae"/>
@@ -283,7 +283,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$P{BEAN_DS}.getNumeroFunda()]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="3" y="310" width="507" height="100" uuid="44ac38e1-5cc2-4515-9148-7c397ed36ed4">
@@ -293,7 +293,7 @@
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="herederos" uuid="a4e5cf01-1af6-45b9-89f6-b6fb0ce4c1fa">
+					<datasetRun subDataset="herederos" uuid="117ef5f1-c335-4c39-b9ae-6ca2caa08dca">
 						<datasetParameter name="REPORT_DATA_SOURCE">
 							<datasetParameterExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{LIST_DS})]]></datasetParameterExpression>
 						</datasetParameter>
