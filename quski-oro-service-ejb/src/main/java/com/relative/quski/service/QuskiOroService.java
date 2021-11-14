@@ -4905,9 +4905,8 @@ public class QuskiOroService {
 			sof.setSegundoApellido( StringUtils.isBlank(cli.getApellidoMaterno())?" ":cli.getApellidoMaterno()  );              
 			sof.setPrimerNombre( cli.getPrimerNombre() );             
 			sof.setSegundoNombre( StringUtils.isBlank(cli.getSegundoNombre())?" ":cli.getSegundoNombre()  );      
-			sof.setCodigoMotivoVisita( cli.getCanalContacto() );
-			sof.setEsCliente( true );              
-			sof.setCodigoMotivoVisita( cli.getCanalContacto() );                             
+			sof.setCodigoMotivoVisita(wp.getCliente().getCanalContacto());
+			sof.setEsCliente( true );                                        
 			sof.setFechaIngreso(QuskiOroUtil.dateToString(cli.getFechaActualizacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));                                  
 			sof.setIdPaisNacimiento( cli.getNacionalidad() );                            
 			sof.setIdPais( cli.getNacionalidad() );                                      
@@ -6438,7 +6437,7 @@ public class QuskiOroService {
 						credito.getTbQoNegociacion().getAsesor(), 
 						c.getIdAgencia(),  
 						QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT),
-						credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto(),
+						credito.getTbQoNegociacion().getTbQoCliente().getPublicidad(),
 						credito.getCodigo())
 				); 
 		DatosGarantiasWrapper datos = new DatosGarantiasWrapper();
@@ -6670,7 +6669,7 @@ public class QuskiOroService {
 					credito.getTbQoNegociacion().getAsesor(), 
 					credito.getIdAgencia(),  
 					QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT),
-					cliente.getCanalContacto(),
+					StringUtils.isBlank(cliente.getPublicidad())?"RENOVACION":cliente.getPublicidad(),
 					credito.getCodigo())
 					);
 			result.setDatosImpCom(this.generarImpCom( credito, autorizacion )  );
@@ -6724,7 +6723,7 @@ public class QuskiOroService {
 							credito.getTbQoNegociacion().getAsesor(), 
 							credito.getIdAgencia(),  
 							QuskiOroUtil.dateToString( new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT),
-							cliente.getCanalContacto(),
+							cliente.getPublicidad(),
 							credito.getCodigo()) 
 					); 
 			List<DatosCuentaClienteWrapper> listCuenta = new ArrayList<>();
