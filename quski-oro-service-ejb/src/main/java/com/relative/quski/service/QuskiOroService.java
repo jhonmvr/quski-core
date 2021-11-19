@@ -8174,13 +8174,13 @@ public class QuskiOroService {
 
 				this.manageCreditoNegociacion(credito);
 				persisted = this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.RENOVACION, EstadoProcesoEnum.APROBADO, credito.getTbQoNegociacion().getAsesor() );
+				ap.setCodigoCash(cash);
 				RespuestaAprobarWrapper result = SoftBankApiClient.callAprobarRest( this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APROBAR_NUEVO).getValor(), autorizacion, ap);
 				if(result.getMontoEntregado() == null || result.getNumeroOperacion() == null) {
 					throw new RelativeException( Constantes.ERROR_CODE_CREATE, " LA RESPUESTA NO TRAJO EL MONTO O EL NUMERO DE OPERACION APROBADO" + result.getMensaje() );
 				}	
 				if(StringUtils.isNotBlank(cash)) {
 					credito.setCodigoCash(cash);
-					ap.setCodigoCash(cash);
 					credito.setValorCash(valorCash);
 					this.enviarCodigoCashRenovacion(credito, cash, descripcion, null,valorCash);
 				}
