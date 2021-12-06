@@ -53,7 +53,9 @@ import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoHistoricoObservacion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoPublicidad;
 import com.relative.quski.model.TbQoReferenciaPersonal;
+import com.relative.quski.model.TbQoReferido;
 import com.relative.quski.model.TbQoRegistrarPago;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
@@ -79,7 +81,9 @@ import com.relative.quski.repository.HistoricoObservacionRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ProcesoRepository;
+import com.relative.quski.repository.PublicidadRepository;
 import com.relative.quski.repository.ReferenciaPersonalRepository;
+import com.relative.quski.repository.ReferidoRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
 import com.relative.quski.repository.RiesgoAcumuladoRepository;
 import com.relative.quski.repository.TasacionRepository;
@@ -242,6 +246,11 @@ public class QuskiOroService {
 	private DevolucionRepository devolucionRepository;
 	@Inject
 	PagoService ps;
+	@Inject
+	private PublicidadRepository publicidadRepository;
+	@Inject
+	private ReferidoRepository referidoRepository;
+	
 	
 	@Inject
 	HistoricoObservacionRepository historicoObservacionRepository;
@@ -8626,4 +8635,288 @@ public class QuskiOroService {
 		return this.historicoObservacionRepository.findByIdCredito(idCredito);
 	}
 	
+	
+	/// PUBLICIDAD
+	/**
+	 * 
+	 * @param id Pk de la entidad
+	 * @return Entidad encontrada
+	 * @author Diego Serrano - Relative Engine
+	 * @throws RelativeException
+	 */
+	public TbQoPublicidad findPublicidadById(Long id) throws RelativeException {
+		try {
+			return publicidadRepository.findById(id);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Metodo que lista la informacion de las entidades encontradas
+	 * 
+	 * @param pw Objeto generico que tiene la informacion que determina si el
+	 *           resultado es total o paginado
+	 * @return Listado de entidades encontradas
+	 * @author Diego Serrano - Relative Engine
+	 * @throws RelativeException
+	 */
+	public List<TbQoPublicidad> findAllPublicidad(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.publicidadRepository.findAll(TbQoPublicidad.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.publicidadRepository.findAll(TbQoPublicidad.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+
+				} else {
+					return this.publicidadRepository.findAll(TbQoPublicidad.class, pw.getSortFields(),
+							pw.getSortDirections());
+
+				}
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	public List<TbQoPublicidad> managePublicidades(List<TbQoPublicidad> sends) {
+		List<TbQoPublicidad> persisteds = new ArrayList<>();
+		sends.forEach(element -> {
+			element.setEstado(EstadoEnum.ACT);
+			element.setId(null);
+			element.setFechaCreacion(new Date(System.currentTimeMillis()));
+			try {
+				this.managePublicidad(element);
+			} catch (RelativeException e) {
+				e.printStackTrace();
+			}
+		});
+		return persisteds;
+	}
+
+	/**
+	 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+	 * 
+	 * @author Diego Serrano - Relative Engine
+	 * @param send entidad con la informacion de creacion o actualizacion
+	 * @return Entidad modificada o actualizada
+	 * @throws RelativeException
+	 */
+	public TbQoPublicidad managePublicidad(TbQoPublicidad send) throws RelativeException {
+		try {
+			TbQoPublicidad persisted = null;
+			if (send.getId() != null) {
+				persisted = this.findPublicidadById(send.getId());
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+				return this.updatePublicidad(send, persisted);
+			} else if (send.getId() == null) {
+				send.setEstado(EstadoEnum.ACT);
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return publicidadRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " AL LEER LA ENTIDAD DE DETALLE DE CREDITO.");
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+
+	/**
+	 * Metodo que actualiza la entidad
+	 * 
+	 * 
+	 * 
+	 * @param send      informacion enviada para update
+	 * @param persisted entidad existente sobre la que se actualiza
+	 * @return Entidad actualizada
+	 * @throws RelativeException
+	 */
+
+	public TbQoPublicidad updatePublicidad(TbQoPublicidad send, TbQoPublicidad persisted)
+			throws RelativeException {
+		try {
+			persisted.setFechaActualizacion( send.getFechaActualizacion() );	
+			if( send.getEstado() != null ){
+			    persisted.setEstado( send.getEstado() );
+			}
+			if( send.getNombre() != null ){
+			    persisted.setNombre( send.getNombre() );
+			}
+			
+			persisted.setBandera( send.isBandera());
+			
+			
+			
+			return publicidadRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Metodo que cuenta la cantidad de entidades existentes
+	 * 
+	 * @author Diego Serrano - Relative Engine
+	 * @return Cantidad de entidades encontradas
+	 * @throws RelativeException
+	 */
+	public Long countPublicidad() throws RelativeException {
+		try {
+			return publicidadRepository.countAll(TbQoPublicidad.class);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+
+	/// REFERIDO
+		/**
+		 * 
+		 * @param id Pk de la entidad
+		 * @return Entidad encontrada
+		 * @author Diego Serrano - Relative Engine
+		 * @throws RelativeException
+		 */
+		public TbQoReferido findReferidoById(Long id) throws RelativeException {
+			try {
+				return referidoRepository.findById(id);
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+
+		/**
+		 * Metodo que lista la informacion de las entidades encontradas
+		 * 
+		 * @param pw Objeto generico que tiene la informacion que determina si el
+		 *           resultado es total o paginado
+		 * @return Listado de entidades encontradas
+		 * @author Diego Serrano - Relative Engine
+		 * @throws RelativeException
+		 */
+		public List<TbQoReferido> findAllReferido(PaginatedWrapper pw) throws RelativeException {
+			try {
+				if (pw == null) {
+					return this.referidoRepository.findAll(TbQoReferido.class);
+				} else {
+					if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+						return this.referidoRepository.findAll(TbQoReferido.class, pw.getStartRecord(),
+								pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+
+					} else {
+						return this.referidoRepository.findAll(TbQoReferido.class, pw.getSortFields(),
+								pw.getSortDirections());
+
+					}
+				}
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+
+		public List<TbQoReferido> manageReferidos(List<TbQoReferido> sends) {
+			List<TbQoReferido> persisteds = new ArrayList<>();
+			sends.forEach(element -> {
+				element.setEstado(EstadoEnum.ACT);
+				element.setId(null);
+				element.setFechaCreacion(new Date(System.currentTimeMillis()));
+				try {
+					this.manageReferido(element);
+				} catch (RelativeException e) {
+					e.printStackTrace();
+				}
+			});
+			return persisteds;
+		}
+
+		/**
+		 * Metodo que se encarga de gestionar la entidad sea creacion o actualizacion
+		 * 
+		 * @author Diego Serrano - Relative Engine
+		 * @param send entidad con la informacion de creacion o actualizacion
+		 * @return Entidad modificada o actualizada
+		 * @throws RelativeException
+		 */
+		public TbQoReferido manageReferido(TbQoReferido send) throws RelativeException {
+			try {
+				TbQoReferido persisted = null;
+				if (send.getId() != null) {
+					persisted = this.findReferidoById(send.getId());
+					send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+					return this.updateReferido(send, persisted);
+				} else if (send.getId() == null) {
+					send.setEstado(EstadoEnum.ACT);
+					send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+					return referidoRepository.add(send);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, " AL LEER LA ENTIDAD DE DETALLE DE CREDITO.");
+				}
+			} catch (RelativeException e) {
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+			}
+		}
+
+		/**
+		 * Metodo que actualiza la entidad
+		 * 
+		 * 
+		 * 
+		 * @param send      informacion enviada para update
+		 * @param persisted entidad existente sobre la que se actualiza
+		 * @return Entidad actualizada
+		 * @throws RelativeException
+		 */
+
+		public TbQoReferido updateReferido(TbQoReferido send, TbQoReferido persisted)
+				throws RelativeException {
+			try {
+				persisted.setFechaActualizacion( send.getFechaActualizacion() );	
+				if( send.getEstado() != null ){
+				    persisted.setEstado( send.getEstado() );
+				}
+				if( send.getNombre() != null ){
+				    persisted.setNombre( send.getNombre() );
+				}
+				
+				if( send.getTelefono() != null ){
+				    persisted.setTelefono( send.getTelefono() );
+				}
+				
+				
+				return referidoRepository.update(persisted);
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+
+		/**
+		 * Metodo que cuenta la cantidad de entidades existentes
+		 * 
+		 * @author Diego Serrano - Relative Engine
+		 * @return Cantidad de entidades encontradas
+		 * @throws RelativeException
+		 */
+		public Long countReferido() throws RelativeException {
+			try {
+				return referidoRepository.countAll(TbQoReferido.class);
+			} catch (RelativeException e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			}
+		}
+
+
+
 }
