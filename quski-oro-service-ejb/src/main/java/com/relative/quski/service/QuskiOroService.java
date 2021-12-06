@@ -6684,7 +6684,7 @@ public class QuskiOroService {
 			return result;
 		}catch(RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+			throw e;
 		}
 	}
 	@SuppressWarnings("deprecation")
