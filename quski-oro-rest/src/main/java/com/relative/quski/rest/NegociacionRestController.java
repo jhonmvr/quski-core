@@ -22,7 +22,6 @@ import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.web.util.BaseRestController;
 import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
-import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
@@ -30,6 +29,7 @@ import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
+import com.relative.quski.wrapper.ClienteYReferidoWrapper;
 import com.relative.quski.wrapper.EquifaxVariableWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.TipoOroWrapper;
@@ -194,12 +194,14 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TipoOroWrapper> verPrecio(TbQoCliente cliente, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<TipoOroWrapper> verPrecio(ClienteYReferidoWrapper cliente, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TipoOroWrapper> loc = new GenericWrapper<>();
 		List<TipoOroWrapper> a = this.qos.verPrecio(cliente);
 		loc.setEntidades(a);
 		return loc;
 	}
+	
+	
 	@POST
 	@Path("/solicitarExcepcion")
 	@ApiOperation(value = "TbQoExcepcion", notes = "Metodo Post solicitarExcepcion Retorna wrapper de entidades encontradas en TbQoExcepcion", response = GenericWrapper.class)
