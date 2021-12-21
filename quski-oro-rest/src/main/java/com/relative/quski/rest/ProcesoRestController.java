@@ -16,7 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -29,6 +32,7 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
@@ -316,4 +320,15 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		return loc;
 	}
 	
+
+	@GET
+	@Path("/getCabecera")
+	public CabeceraWrapper getCabecera( @QueryParam("idReferencia") String idReferencia, @QueryParam("proceso") String proceso) throws RelativeException{
+		
+		if(StringUtils.isBlank(idReferencia) || StringUtils.isBlank(proceso)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID REFERENCIA");
+		}
+		
+		return this.qos.getCabecera(idReferencia, proceso);		
+	}
 }

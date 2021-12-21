@@ -34,6 +34,7 @@ import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
@@ -362,10 +363,12 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( @QueryParam("autorizacion") String autorizacion,@QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( @QueryParam("autorizacion") String autorizacion,@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
 			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null, asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor);
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null,
+				asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor);
 		loc.setEntidad(a);
 		return loc;			
 	}
@@ -470,5 +473,6 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		}
 		return loc;			
 	}
+	
 }
 

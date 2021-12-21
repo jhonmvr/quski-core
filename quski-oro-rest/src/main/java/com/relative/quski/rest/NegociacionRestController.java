@@ -179,12 +179,13 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(@QueryParam("autorizacion") String autorizacion,List<CalculadoraOpcionWrapper> opcionCredito, @QueryParam("asesor") String asesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
+	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(@QueryParam("autorizacion") String autorizacion,List<CalculadoraOpcionWrapper> opcionCredito,
+			@QueryParam("asesor") String asesor,@QueryParam("nombreAsesor") String nombreAsesor, @QueryParam("idCredito") String idCredito) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CREDITO");
 		}
-		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) , autorizacion);
+		TbQoCreditoNegociacion a = this.qos.guardarOpcionCredito(opcionCredito, asesor, Long.valueOf(idCredito) , autorizacion,nombreAsesor);
 		loc.setEntidad(a);
 		return loc;
 	}

@@ -11,6 +11,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
@@ -41,5 +42,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public Integer findByNumeroOperacionMadreAndProcesoAndEstado(String numeroOperacionMadre, ProcesoEnum proceso,
 			List<EstadoProcesoEnum> estados)throws RelativeException;
 	public String generarSecuencia(String codigoRenovacion) throws RelativeException;
+	public CabeceraWrapper getCabecera(String idReferencia, String proceso)throws RelativeException;
 
 }
