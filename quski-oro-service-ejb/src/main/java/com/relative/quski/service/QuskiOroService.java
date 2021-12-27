@@ -106,6 +106,7 @@ import com.relative.quski.wrapper.ArchivoComprobanteWrapper;
 import com.relative.quski.wrapper.AutorizacionBuroWrapper;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.CalculadoraOpcionWrapper;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
 import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
@@ -2006,7 +2007,7 @@ public class QuskiOroService {
 	 * @throws RelativeException 
 	 */
 	public TbQoCreditoNegociacion guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, String asesor,
-			Long idCredito, String autorizacion) throws RelativeException {
+			Long idCredito, String autorizacion, String nombreAsesor) throws RelativeException {
 		
 		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
 		CalculadoraOpcionWrapper opcion = opcionCredito.get(0);
@@ -2051,6 +2052,8 @@ public class QuskiOroService {
 		credito.setDividendoFlujoPlaneado(opcion.getDividendoflujoplaneado());
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
 		credito.setCanalContacto(credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto());
+		credito.getTbQoNegociacion().setNombreAsesor(nombreAsesor);
+		this.negociacionRepository.update(credito.getTbQoNegociacion());
 		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 //		if(listTablas == null || listTablas.isEmpty()) {
 //			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK");
@@ -7793,7 +7796,7 @@ public class QuskiOroService {
 		
 	}
 	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego,
-			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
+			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion, String nombreAgencia, String telefonoAsesor, String nombreAsesor) throws RelativeException {
 		try {
 			
 			RenovacionWrapper novacion;
@@ -7819,6 +7822,7 @@ public class QuskiOroService {
 				negociacion.setEstado( EstadoEnum.ACT);
 				negociacion.setTbQoCliente( cliente );
 				negociacion.setTelefonoAsesor(telefonoAsesor);
+				negociacion.setNombreAsesor(nombreAsesor);
 				negociacion = this.manageNegociacion(negociacion);
 				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion, nombreAgencia);
 				credito.setTbQoNegociacion( negociacion );
@@ -7838,6 +7842,7 @@ public class QuskiOroService {
 				novacion = this.buscarRenovacionNegociacion(idNego, autorizacion);				
 				log.info( "============> ACTUALIZANDO CREDITO <============");
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
+				novacion.getCredito().getTbQoNegociacion().setNombreAsesor(nombreAsesor);
 				novacion.getCredito().getTbQoNegociacion().setTelefonoAsesor(telefonoAsesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
 				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion,nombreAgencia)));
@@ -8927,6 +8932,11 @@ public class QuskiOroService {
 				throw new RelativeException(Constantes.ERROR_CODE_READ,
 						QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 			}
+		}
+
+		public CabeceraWrapper getCabecera(String idReferencia, String proceso) throws RelativeException {
+
+			return this.procesoRepository.getCabecera(idReferencia, proceso);
 		}
 
 

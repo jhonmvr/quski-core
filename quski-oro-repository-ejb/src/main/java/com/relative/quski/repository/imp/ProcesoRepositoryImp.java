@@ -43,6 +43,7 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
+import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
 import com.relative.quski.wrapper.OperacionesWrapper;
 import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
@@ -634,6 +635,60 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL CREAR SECUENCIAL");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public CabeceraWrapper getCabecera(String idReferencia, String proceso) throws RelativeException {
+
+		try {
+			List<CabeceraWrapper> tmp;
+			String querySelect = "";		
+			if(StringUtils.isNotBlank(proceso) ) {
+				if(proceso.equalsIgnoreCase(ProcesoEnum.NUEVO.toString()) || proceso.equalsIgnoreCase(ProcesoEnum.RENOVACION.toString())) {
+					querySelect = "select " + 
+							"	coalesce(cli.nombre_completo, 'NULL') as nombre_completo, " + 
+							"	coalesce(cli.cedula_cliente, 'NULL') as cedula_cliente, " + 
+							"	coalesce(cre.numero_operacion, 'NULL') as numero_operacion, " + 
+							"	coalesce(cre.codigo, 'NULL') as codigo, " + 
+							"	coalesce(cre.monto_financiado, '0') as monto_financiado, " + 
+							"	coalesce(cre.plazo_credito, '0') as plazo_credito, " + 
+							"	coalesce(cre.periodo_plazo, 'NULL') as periodo_plazo, " + 
+							"	coalesce(cuenta.cuenta, 'NULL') as cuenta, " + 
+							"	coalesce(nego.nombre_asesor, 'NULL') as nombre_asesor " + 
+							"from tb_qo_negociacion nego " + 
+							"inner join tb_qo_credito_negociacion cre on " + 
+							"	cre.id_negociacion = nego.id " + 
+							"inner join tb_qo_cliente cli on " + 
+							"	cli.id = nego.id_cliente " + 
+							"left join tb_qo_cuenta_bancaria_cliente cuenta on " + 
+							"	cuenta.id_cliente = nego.id_cliente where nego.id = :idReferencia";
+				}
+				if(proceso.equalsIgnoreCase(ProcesoEnum.DEVOLUCION.toString())) {
+					querySelect = "select coalesce(dev.nombre_cliente,'NULL') as nombre_cliente, coalesce(dev.cedula_cliente,'NULL') as cedula_cliente, coalesce(dev.codigo_operacion,'NULL') as codigo_operacion, coalesce(dev.codigo,'NULL') as codigo, 'NA' as monto , 'NA' as plazo, 'NA' as tipo, 'NA' as cuenta , coalesce(dev.asesor,'NULL') as asesor " + 
+							"from tb_qo_devolucion dev where dev.id = :idReferencia";
+				}
+				if(proceso.equalsIgnoreCase(ProcesoEnum.PAGO.toString())) {
+					querySelect = "select coalesce(pago.nombre_cliente,'NULL') as nombre, coalesce(pago.cedula,'NULL') as cedula, coalesce(codigo_operacion,'NULL') as codigo_operacion, coalesce(codigo,'NULL') as codigo, 'NA' as monto, 'NA' as plazo, coalesce(pago.tipo_credito,'NULL') as tipo,  'NA' as cuenta, coalesce(pago.asesor,'NULL') as asesor " + 
+							"from tb_qo_cliente_pago pago where pago.id = :idReferencia";
+				}
+				
+			}
+			StringBuilder strQry = new StringBuilder( querySelect );
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			
+			query.setParameter("idReferencia", Long.valueOf(idReferencia) );
+			
+			if(query.getResultList() != null && !query.getResultList().isEmpty()) {
+				tmp = QuskiOroUtil.getResultList(query.getResultList(), CabeceraWrapper.class);
+				return tmp.get(0);
+			}
+			
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
 		}
 	}
 
