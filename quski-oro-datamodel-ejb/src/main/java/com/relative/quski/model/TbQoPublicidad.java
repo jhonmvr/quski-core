@@ -35,7 +35,7 @@ public class TbQoPublicidad implements Serializable {
 
 	private String nombre;
 
-	private boolean bandera;
+	private Boolean bandera;
 
 	public Long getId() {
 		return id;
@@ -77,11 +77,11 @@ public class TbQoPublicidad implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public boolean isBandera() {
+	public Boolean isBandera() {
 		return bandera;
 	}
 
-	public void setBandera(boolean bandera) {
+	public void setBandera(Boolean bandera) {
 		this.bandera = bandera;
 	}
 

@@ -113,6 +113,7 @@ import com.relative.quski.wrapper.CatalogoTablaAmortizacionWrapper;
 import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
+import com.relative.quski.wrapper.ClienteYReferidoWrapper;
 import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalWrapper;
@@ -1969,27 +1970,38 @@ public class QuskiOroService {
 	}
 	
 
-	public List<TipoOroWrapper> verPrecio(TbQoCliente cliente) throws RelativeException {
+	public List<TipoOroWrapper> verPrecio(ClienteYReferidoWrapper clienteWrapper) throws RelativeException {
 		
-		if(cliente == null) {
+		if(clienteWrapper.getCliente() == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CLIENTE");
 		}
 		
-		if(cliente.getFechaNacimiento() == null) {
+		if(clienteWrapper.getCliente().getFechaNacimiento() == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA FECHA DE NACIMIENTO DEL CLIENTE");
 		}
 		
-		if(StringUtils.isBlank( cliente.getAprobacionMupi() ) ) {
+		if(StringUtils.isBlank( clienteWrapper.getCliente().getAprobacionMupi() ) ) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE APROBACION MUPI DEL CLIENTE");
 		}
-		if(cliente.getTbQoTelefonoClientes() != null && !cliente.getTbQoTelefonoClientes().isEmpty() ) {
-			updateCliente(cliente);
-			this.createTelefonosCliente(cliente, cliente.getTbQoTelefonoClientes());
-		}else {
+		if(clienteWrapper.getBandera() == true ) {
+			if(clienteWrapper.getReferido() ==  null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL REFERIDO");
+			}else {
+				this.manageReferido(clienteWrapper.getReferido());
+			}
+		}
+		
+		if(clienteWrapper.getCliente().getTbQoTelefonoClientes() != null && !clienteWrapper.getCliente().getTbQoTelefonoClientes().isEmpty() ) {
+			updateCliente(clienteWrapper.getCliente());
+			this.createTelefonosCliente(clienteWrapper.getCliente(), clienteWrapper.getCliente().getTbQoTelefonoClientes());
+		}
+		
+		else {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS NUMEROS DE TELEFONO");
 		}
 		return this.tipoOro();
 	}
+	
 
 
 	/**
