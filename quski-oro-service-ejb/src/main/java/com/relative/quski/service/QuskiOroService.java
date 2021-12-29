@@ -1493,7 +1493,13 @@ public class QuskiOroService {
 	
 	public TbQoDevolucion updateDevolucion(TbQoDevolucion send, TbQoDevolucion pesisted) throws RelativeException {
 		try {
+			pesisted.setMontoCredito(pesisted.getMontoCredito());
+			pesisted.setPlazoCredito(pesisted.getPlazoCredito());
+			pesisted.setTipoCredito(pesisted.getTipoCredito());
+			pesisted.setNumeroCuentaCliente(pesisted.getNumeroCuentaCliente());
+			pesisted.setNombreAsesor(pesisted.getNombreAsesor());
 			pesisted.setAsesor(send.getAsesor());
+			
 			return this.devolucionRepository.update(pesisted);
 		} catch (RelativeException e) {
 			

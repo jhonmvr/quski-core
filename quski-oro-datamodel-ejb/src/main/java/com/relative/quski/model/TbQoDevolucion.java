@@ -160,7 +160,22 @@ public class TbQoDevolucion implements Serializable {
 	
 	@Column(name="cedula_apoderado")
 	private String cedulaApoderado;
-	
+
+	@Column(name="monto_credito")
+	private BigDecimal montoCredito;
+
+	@Column(name="plazo_credito")
+	private String plazoCredito;
+
+	@Column(name="tipo_credito")
+	private String tipoCredito;
+
+	@Column(name="numero_cuenta_cliente")
+	private String numeroCuentaCliente;
+
+	@Column(name="nombre_asesor")
+	private String nombreAsesor;
+
 	@Column(name="ciudad_entrega")
 	private String ciudadEntrega;
 	
@@ -552,6 +567,46 @@ public class TbQoDevolucion implements Serializable {
 
 	public void setCorreoCliente(String correoCliente) {
 		this.correoCliente = correoCliente;
+	}
+
+	public BigDecimal getMontoCredito() {
+		return montoCredito;
+	}
+
+	public void setMontoCredito(BigDecimal montoCredito) {
+		this.montoCredito = montoCredito;
+	}
+
+	public String getPlazoCredito() {
+		return plazoCredito;
+	}
+
+	public void setPlazoCredito(String plazoCredito) {
+		this.plazoCredito = plazoCredito;
+	}
+
+	public String getTipoCredito() {
+		return tipoCredito;
+	}
+
+	public void setTipoCredito(String tipoCredito) {
+		this.tipoCredito = tipoCredito;
+	}
+
+	public String getNumeroCuentaCliente() {
+		return numeroCuentaCliente;
+	}
+
+	public void setNumeroCuentaCliente(String numeroCuentaCliente) {
+		this.numeroCuentaCliente = numeroCuentaCliente;
+	}
+
+	public String getNombreAsesor() {
+		return nombreAsesor;
+	}
+
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
 	}
 
 
