@@ -330,6 +330,21 @@ public class DevolucionService {
 			if (StringUtils.isNotBlank(send.getCorreoAsesor())) {
 				persisted.setCorreoAsesor(send.getCorreoAsesor());
 			}
+			if (send.getMontoCredito() != null) {
+				persisted.setMontoCredito(send.getMontoCredito());
+			}
+			if (StringUtils.isNotBlank(send.getPlazoCredito())) {
+				persisted.setPlazoCredito(send.getPlazoCredito());
+			}
+			if (StringUtils.isNotBlank(send.getTipoCredito())) {
+				persisted.setTipoCredito(send.getTipoCredito());
+			}
+			if (StringUtils.isNotBlank(send.getNumeroCuentaCliente())) {
+				persisted.setNumeroCuentaCliente(send.getNumeroCuentaCliente());
+			}
+			if (StringUtils.isNotBlank(send.getNombreAsesor())) {
+				persisted.setNombreAsesor(send.getNombreAsesor());
+			}
 			return devolucionRepository.update(persisted);
 		} catch (RelativeException e) {
 			throw e;

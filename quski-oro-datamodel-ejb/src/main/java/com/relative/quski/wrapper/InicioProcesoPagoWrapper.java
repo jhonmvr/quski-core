@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.Column;
+
 public class InicioProcesoPagoWrapper implements Serializable {
 
 	/**
@@ -23,7 +25,37 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	private BigDecimal valorPrecancelado;
 	private Long idBanco;
 	private String mailAsesor;
+	private BigDecimal montoCredito;
+	private String plazoCredito;
+	private String numeroCuentaCliente;
+	private String nombreAsesor;
 	
+	
+	
+	public BigDecimal getMontoCredito() {
+		return montoCredito;
+	}
+	public void setMontoCredito(BigDecimal montoCredito) {
+		this.montoCredito = montoCredito;
+	}
+	public String getPlazoCredito() {
+		return plazoCredito;
+	}
+	public void setPlazoCredito(String plazoCredito) {
+		this.plazoCredito = plazoCredito;
+	}
+	public String getNumeroCuentaCliente() {
+		return numeroCuentaCliente;
+	}
+	public void setNumeroCuentaCliente(String numeroCuentaCliente) {
+		this.numeroCuentaCliente = numeroCuentaCliente;
+	}
+	public String getNombreAsesor() {
+		return nombreAsesor;
+	}
+	public void setNombreAsesor(String nombreAsesor) {
+		this.nombreAsesor = nombreAsesor;
+	}
 	public List<RegistroPagoRenovacionWrapper> getPagos() {
 		return pagos;
 	}
