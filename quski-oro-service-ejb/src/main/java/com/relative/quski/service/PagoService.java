@@ -73,6 +73,10 @@ public class PagoService {
 			clienteCast.setCodigoCuentaMupi( String.valueOf( wrapper.getIdBanco() ));
 			clienteCast.setTipoPagoProceso( wrapper.getTipoPagoProceso() );
 			clienteCast.setMailAsesor(wrapper.getMailAsesor());
+			clienteCast.setMontoCredito(wrapper.getMontoCredito());
+			clienteCast.setPlazoCredito(wrapper.getPlazoCredito());
+			clienteCast.setNumeroCuentaCliente(wrapper.getNumeroCuentaCliente());
+			clienteCast.setNombreAsesor(wrapper.getNombreAsesor());
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
@@ -134,6 +138,10 @@ public class PagoService {
 			clienteCast.setValorPrecancelado( null );
 			clienteCast.setCodigoCuentaMupi( String.valueOf( wrapper.getIdBanco() ));
 			clienteCast.setMailAsesor(wrapper.getMailAsesor());
+			clienteCast.setMontoCredito(wrapper.getMontoCredito());
+			clienteCast.setPlazoCredito(wrapper.getPlazoCredito());
+			clienteCast.setNumeroCuentaCliente(wrapper.getNumeroCuentaCliente());
+			clienteCast.setNombreAsesor(wrapper.getNombreAsesor());
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
