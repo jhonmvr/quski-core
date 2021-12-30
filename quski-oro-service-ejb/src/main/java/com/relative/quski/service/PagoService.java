@@ -74,6 +74,8 @@ public class PagoService {
 			clienteCast.setTipoPagoProceso( wrapper.getTipoPagoProceso() );
 			clienteCast.setMailAsesor(wrapper.getMailAsesor());
 			clienteCast = qos.manageClientePago( clienteCast );
+	//		log.info("se va a enviar el mail");
+		//	this.enviarCorreoSolicitudPago( clienteCast, "jukishio@hotmail.com");
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
 			result.setProceso( qos.createProcesoPago( clienteCast.getId(), QuskiOroConstantes.EN_COLA ) );
@@ -385,4 +387,32 @@ public class PagoService {
 		
 	}
 
+	
+	/**
+	 * metodo para enviar mail al solicitar pago
+	 */
+	private void enviarCorreoSolicitudPago( TbQoClientePago clientePago, String mailAprobador) throws RelativeException {
+			
+			log.info("==============>>>>>" );
+			String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_SOLICITUD_DE_PAGO).getValor();
+			asunto =  asunto.replace("--nombre--", clientePago.getNombreCliente()).replace("--cedulaCliente--", clientePago.getCedula())
+					.replace("--codigoBPM--", clientePago.getCodigo()).replace("--numeroOperación--", clientePago.getCodigoOperacion());
+			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_CORREO_SOLICITUD_DE_PAGO).getValor();
+			log.info("asunto==============>>>>>"+ asunto  );
+			log.info("texto contenido==============>>>>>"+ textoContenido  );
+			log.info("numero Operacion==============>>>>>" +   clientePago.getCodigoOperacion() );
+			log.info("nombre completo==============>>>>>" +  clientePago.getNombreCliente() );
+			log.info("asesor==============>>>>>" +  clientePago.getAsesor() );
+			log.info("valor Depositado==============>>>>>" +  clientePago.getValorDepositado() );
+			log.info("asesor==============>>>>>" +  clientePago.getObservacion() );
+			textoContenido=textoContenido.replace("--numeroOperacion--", clientePago.getCodigoOperacion()).replace("--nombre--", clientePago.getNombreCliente())
+				.replace("--asesor--", clientePago.getAsesor()).replace("--valorPago--", clientePago.getValorDepositado().toString())
+				.replace("--observacionesAsesor--", clientePago.getObservacion());
+
+			String[] para= {mailAprobador};
+			
+			qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+		
+	}
 }

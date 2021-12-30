@@ -8940,5 +8940,33 @@ public class QuskiOroService {
 		}
 
 
+		/**
+		 * Metodo para enviar correo en excepcion
+		 */
+		/*
+	private void enviarCorreoSolicitudExcepcion( TbQoExcepcion  excepcion, String mailAprobador) throws RelativeException {
+			
+			log.info("==============>>>>>" );
+			String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_SOLICITUD_DE_PAGO).getValor();
+			asunto =  asunto.replace("--codigoBPM--", excepcion.getTbQoNegociacion().getTbQoCreditoNegociacions().get(0).getCodigo()).replace("--nombre--", excepcion.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
+					.replace("--riesgoAcumulado--", excepcion.getTbQoNegociacion().getTbQoRiesgoAcumulados().get(0).get)
+					.replace("--numeroOperación--", excepcion.getCodigoOperacion());
+			String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_CORREO_SOLICITUD_DE_PAGO).getValor();
+			log.info("asunto==============>>>>>"+ asunto  );
+			log.info("texto contenido==============>>>>>"+ textoContenido  );
+			log.info("numero Operacion==============>>>>>" +   excepcion.getCodigoOperacion() );
+			log.info("nombre completo==============>>>>>" +  excepcion.getNombreCliente() );
+			log.info("asesor==============>>>>>" +  excepcion.getAsesor() );
+			log.info("valor Depositado==============>>>>>" +  excepcion.getValorDepositado() );
+			log.info("asesor==============>>>>>" +  excepcion.getObservacion() );
+			textoContenido=textoContenido.replace("--numeroOperacion--", excepcion.getCodigoOperacion()).replace("--nombre--", excepcion.getNombreCliente())
+				.replace("--asesor--", excepcion.getAsesor()).replace("--valorPago--", excepcion.getValorDepositado().toString())
+				.replace("--observacionesAsesor--", excepcion.getObservacion());
 
+			String[] para= {mailAprobador};
+			
+			qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+		
+	}*/
 }
