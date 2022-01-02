@@ -6,6 +6,7 @@ import java.util.List;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoReferido;
 import com.relative.quski.model.TbQoRiesgoAcumulado;
 import com.relative.quski.model.TbQoTasacion;
 import com.relative.quski.model.TbQoTelefonoCliente;
@@ -26,6 +27,7 @@ public class NegociacionWrapper implements Serializable {
 	private TbQoTelefonoCliente telefonoMovil;
 	private TbQoTelefonoCliente telefonoDomicilio;
 	private List<TipoOroWrapper> tipoOro;
+	private TbQoReferido referedio;
 	
 	
 
@@ -107,5 +109,11 @@ public class NegociacionWrapper implements Serializable {
 	}
 	public void setCodigoExcepcionBre(Long codigoExcepcionBre) {
 		this.codigoExcepcionBre = codigoExcepcionBre;
+	}
+	public TbQoReferido getReferedio() {
+		return referedio;
+	}
+	public void setReferedio(TbQoReferido referedio) {
+		this.referedio = referedio;
 	}
 }

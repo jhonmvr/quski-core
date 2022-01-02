@@ -2267,6 +2267,7 @@ public class QuskiOroService {
 								.findByClienteAndTipo(tmp.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), "CEL"));
 						tmp.setCodigoExcepcionBre(Long.valueOf(tmp.getCredito().getTbQoNegociacion().getCodigoBre()) );
 						tmp.setExcepcionBre(tmp.getCredito().getTbQoNegociacion().getMensajeBre() );
+						tmp.setReferedio(this.referidoRepository.findByIdNegociacion(id));
 						return tmp;
 					}
 				}else {
