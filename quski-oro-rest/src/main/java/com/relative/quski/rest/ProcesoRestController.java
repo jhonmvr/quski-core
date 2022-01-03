@@ -2,6 +2,7 @@ package com.relative.quski.rest;
 
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -189,6 +190,24 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 			wp.setNumberItems(Long.valueOf(5));
 		}
 		loc.setEntidad( this.qos.findOperaciones( wp ) );
+		return loc;
+	}
+	
+	@POST
+	@Path("/getMontoFinanciado")
+	@ApiOperation(value = "BusquedaOperacionesWrapper", notes = "Metodo Post buscarOperaciones Retorna GenericWrapper de la entidad encontrada ResultOperacionesWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<BigDecimal> getMontoFinanciado( BusquedaOperacionesWrapper wp) throws RelativeException {
+		GenericWrapper<BigDecimal> loc = new GenericWrapper<>();
+		if(wp.getNumberPage() == null ) {
+			wp.setNumberPage( Long.valueOf(0) );
+		}
+		if(wp.getNumberItems() == null) {
+			wp.setNumberItems(Long.valueOf(5));
+		}
+		loc.setEntidad( this.qos.getMontoFinanciado( wp ) );
 		return loc;
 	}
 	@POST

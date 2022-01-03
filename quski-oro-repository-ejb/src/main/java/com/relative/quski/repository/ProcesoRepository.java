@@ -1,5 +1,6 @@
 package com.relative.quski.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -44,5 +45,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public String generarSecuencia(String codigoRenovacion) throws RelativeException;
 	public CabeceraWrapper getCabecera(String idReferencia, String proceso)throws RelativeException;
 	public List<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException;
+	public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException;
 
 }

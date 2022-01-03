@@ -1,5 +1,6 @@
 package com.relative.quski.repository.imp;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -709,6 +710,91 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "AL LEER LAS ACTIVIDADES DE TRAKING");
+		}
+	}
+	@Override
+	public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException {
+		try {
+			String querySelect = "select sum(monto) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
+					"union " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
+					"union " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
+					"union " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
+			StringBuilder strQry = new StringBuilder( querySelect );
+		
+			
+			if (wp.getEstado() == null || wp.getEstado().isEmpty()) {
+				strQry.append(" and (ESTADO_PROCESO != 'CANCELADO' and  ESTADO_PROCESO != 'APROBADO' and ESTADO_PROCESO != 'RECHAZADO'  and ESTADO_PROCESO != 'CADUCADO') ");
+			} else {
+				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
+			}
+			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
+				strQry.append(" and asesor=:asesor");
+			}
+			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
+			}	
+			if (wp.getFechaCreacionDesde() != null) {
+				strQry.append(" and FECHA_CREACION >=:desde ");
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				strQry.append(" and FECHA_CREACION <=:hasta ");
+			}
+			if(StringUtils.isNotBlank(wp.getActividad()) ) {
+				strQry.append(" and actividad =:actividad ");
+			}
+			if(StringUtils.isNotBlank(wp.getNombreCompleto() )) {
+				strQry.append(" and nombre_completo iLIKE :nombre ");
+			}
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
+				strQry.append(" and CEDULA_CLIENTE =:cedula ");
+			}
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and codigo iLIKE :codigoBpm ");
+			}
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
+				strQry.append(" and operacion iLIKE :codigosoft ");
+			}
+
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			
+			
+			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+				query.setParameter("asesor", wp.getAsesor() );
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				query.setParameter("desde", wp.getFechaCreacionDesde() );
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				query.setParameter("hasta", wp.getFechaCreacionHasta() );
+			}
+			if(StringUtils.isNotBlank(wp.getActividad() )) {
+				query.setParameter("actividad", wp.getActividad());
+			}
+			if(StringUtils.isNotBlank(wp.getNombreCompleto())) {
+				query.setParameter("nombre", "%"+wp.getNombreCompleto().trim()+"%");
+			}
+			if(StringUtils.isNotBlank(wp.getIdentificacion())) {
+				query.setParameter("cedula", wp.getIdentificacion());
+			}
+			if(StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+wp.getCodigoBpm().trim()+"%");
+			}			
+			if(StringUtils.isNotBlank(wp.getCodigoSoft() )) {
+				query.setParameter("codigosoft", "%"+wp.getCodigoSoft().trim()+"%");
+			}
+			return (BigDecimal) query.getSingleResult();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
 		}
 	}
 

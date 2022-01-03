@@ -8955,6 +8955,11 @@ public class QuskiOroService {
 			return this.procesoRepository.getEstadosProceso(proceso);
 		}
 
+		public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException {
+			
+			return this.procesoRepository.getMontoFinanciado(wp);
+		}
+
 
 		/**
 		 * Metodo para enviar correo en excepcion
