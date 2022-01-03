@@ -222,32 +222,32 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		w.setEntidades(stringsProcesos);
 		return w;
 	}
-	@GET	
+	@POST	
 	@Path("/getEstadosProceso")
 	@ApiOperation(value = "", notes = "Metodo Get getEstadosProceso Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<String> getEstadosProceso() throws RelativeException {
-		GenericWrapper<String> w = new GenericWrapper<>();
+	public GenericWrapper<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException {
+		GenericWrapper<EstadoProcesoEnum> w = new GenericWrapper<>();
 		List<EstadoProcesoEnum> enumEstadosProceso = Arrays.asList(EstadoProcesoEnum.values());
 		List<String> stringsEstadosProceso = new ArrayList<String>();
 		enumEstadosProceso.forEach(f -> stringsEstadosProceso.add(f.toString().replace('_', ' ')));
-		w.setEntidades(stringsEstadosProceso);
+		w.setEntidades( this.qos.getEstadosProceso(proceso));
 		return w;
 	}
-	@GET	
+	@POST	
 	@Path("/getActividades")
 	@ApiOperation(value = "", notes = "Metodo Get getActividades Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<String> getActividades() throws RelativeException {
+	public GenericWrapper<String> getActividades(List<ProcesoEnum> proceso) throws RelativeException {
 		GenericWrapper<String> w = new GenericWrapper<>();
 		List<ActividadEnum> enumActividades = Arrays.asList(ActividadEnum.values());
 		List<String> stringsActividades = new ArrayList<String>();
 		enumActividades.forEach(f -> stringsActividades.add(f.toString().replace('_', ' ')));
-		w.setEntidades(stringsActividades);
+		w.setEntidades( this.qos.getActividades(proceso));
 		return w;
 	}
 	@GET

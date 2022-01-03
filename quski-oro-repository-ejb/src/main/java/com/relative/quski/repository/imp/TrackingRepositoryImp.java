@@ -157,4 +157,27 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "AL LEER LAS ACTIVIDADES DE TRAKING");
 		}
 	}
+
+	@Override
+	public List<String> getActividad(List<ProcesoEnum> proceso) throws RelativeException {
+		try {
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<String> query = cb.createQuery(String.class);
+			Root<TbQoTracking> poll = query.from(TbQoTracking.class);
+			if(proceso != null && !proceso.isEmpty()) {
+				query.where(poll.get("proceso").in(proceso));
+			}
+			query.select(poll.get("actividad")).distinct(true);
+			TypedQuery<String> tq = this.getEntityManager().createQuery(query);
+			List<String> resultList = tq.getResultList();
+			if (resultList != null && !resultList.isEmpty()) {
+				return resultList;
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "AL LEER LAS ACTIVIDADES DE TRAKING");
+		}
+	}
 }

@@ -8946,6 +8946,15 @@ public class QuskiOroService {
 			return this.procesoRepository.getCabecera(idReferencia, proceso);
 		}
 
+		public List<String> getActividades(List<ProcesoEnum> proceso) throws RelativeException {
+			return this.trackingRepository.getActividad(proceso);
+			
+		}
+
+		public List<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException {
+			return this.procesoRepository.getEstadosProceso(proceso);
+		}
+
 
 		/**
 		 * Metodo para enviar correo en excepcion

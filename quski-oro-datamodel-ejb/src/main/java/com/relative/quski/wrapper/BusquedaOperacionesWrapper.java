@@ -11,7 +11,7 @@ import com.relative.quski.enums.ProcesoEnum;
 public class BusquedaOperacionesWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private ProcesoEnum proceso; 		// Proceso //
+	private List<ProcesoEnum> proceso; 		// Proceso //
 	private Date fechaCreacionDesde;	// Proceso //
 	private Date fechaCreacionHasta; 	// Proceso //
 	private List<EstadoProcesoEnum> estado;   // Proceso //
@@ -39,10 +39,10 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	public void setIdentificacion(String identificacion) {
 		this.identificacion = identificacion;
 	}
-	public ProcesoEnum getProceso() {
+	public List<ProcesoEnum> getProceso() {
 		return proceso;
 	}
-	public void setProceso(ProcesoEnum proceso) {
+	public void setProceso(List<ProcesoEnum> proceso) {
 		this.proceso = proceso;
 	}
 	public Date getFechaCreacionDesde() {

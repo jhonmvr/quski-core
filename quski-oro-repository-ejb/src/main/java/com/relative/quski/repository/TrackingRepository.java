@@ -32,6 +32,8 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 
 	public TbQoTracking findByParams(String codigoBpm, ProcesoEnum proceso)throws RelativeException;
 
+	public List<String> getActividad(List<ProcesoEnum> proceso) throws RelativeException;
+
 	
 	
 }

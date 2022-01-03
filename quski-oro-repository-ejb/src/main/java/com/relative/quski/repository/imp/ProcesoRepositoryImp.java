@@ -27,6 +27,7 @@ import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVerificacionTelefonica;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.spec.CreditoByListIdsAndAprobadoresSpec;
@@ -129,8 +130,9 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
 				strQry.append(" and asesor=:asesor");
 			}
-			if (wp.getProceso() != null) {
-				strQry.append(" and PROCESO =:proceso ");
+			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
 				strQry.append(" and FECHA_CREACION >=:desde ");
@@ -160,9 +162,6 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (StringUtils.isNotBlank(wp.getAsesor() )) {
 				query.setParameter("asesor", wp.getAsesor() );
 			}
-			if (wp.getProceso() != null) {
-				query.setParameter("proceso", wp.getProceso().toString());
-			}	
 			if (wp.getFechaCreacionDesde() != null) {
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
 			}	
@@ -218,8 +217,9 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
 				strQry.append(" and asesor=:asesor");
 			}
-			if (wp.getProceso() != null) {
-				strQry.append(" and PROCESO =:proceso ");
+			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
 			}	
 			if (wp.getFechaCreacionDesde() != null) {
 				strQry.append(" and FECHA_CREACION >=:desde ");
@@ -248,9 +248,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (StringUtils.isNotBlank(wp.getAsesor() )) {
 				query.setParameter("asesor", wp.getAsesor() );
 			}
-			if (wp.getProceso() != null) {
-				query.setParameter("proceso", wp.getProceso().toString());
-			}	
+			
 			if (wp.getFechaCreacionDesde() != null) {
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
 			}	
@@ -689,6 +687,28 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
+	@Override
+	public List<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException {
+		try {
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<EstadoProcesoEnum> query = cb.createQuery(EstadoProcesoEnum.class);
+			Root<TbQoProceso> poll = query.from(TbQoProceso.class);
+			if(proceso != null && !proceso.isEmpty()) {
+				query.where(poll.get("proceso").in(proceso));
+			}
+			query.select(poll.get("estadoProceso")).distinct(true);
+			TypedQuery<EstadoProcesoEnum> tq = this.getEntityManager().createQuery(query);
+			List<EstadoProcesoEnum> resultList = tq.getResultList();
+			if (resultList != null && !resultList.isEmpty()) {
+				return resultList;
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "AL LEER LAS ACTIVIDADES DE TRAKING");
 		}
 	}
 
