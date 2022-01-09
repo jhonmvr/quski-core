@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
+import com.relative.quski.enums.TipoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 
@@ -23,6 +24,8 @@ public interface ExcepcionRolRepository extends CrudRepository<Long, TbQoExcepci
 	public List<ExcepcionRolWrapper> findByRolAndIdentificacion(String rol, String identificacion) throws RelativeException ;
 
 	public Integer countByRolAndIdentificacion(String rol, String identificacion) throws RelativeException ;
+
+	public List<String> findCorreoByTipoExcepcion(TipoExcepcionEnum tipoExcepcion) throws RelativeException ;
 
 
 }

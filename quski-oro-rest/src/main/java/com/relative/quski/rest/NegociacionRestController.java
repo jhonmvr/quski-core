@@ -166,9 +166,9 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoTasacion> agregarJoya(TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
+	public GenericWrapper<TbQoTasacion> agregarJoya(@QueryParam("nombreAsesor") String nombreAsesor, @QueryParam("correoAsesor") String correoAsesor,TbQoTasacion joya, @QueryParam("asesor") String asesor) throws RelativeException {
 		GenericWrapper<TbQoTasacion> loc = new GenericWrapper<>();
-		List<TbQoTasacion> a = this.qos.agregarJoya(joya, asesor);
+		List<TbQoTasacion> a = this.qos.agregarJoya(joya, asesor,nombreAsesor,correoAsesor);
 		loc.setEntidades(a);
 		return loc;
 	}
@@ -209,9 +209,9 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(TbQoExcepcion excepcion) throws RelativeException {
+	public GenericWrapper<TbQoExcepcion> solicitarExcepcion(@QueryParam("nombreAsesor") String nombreAsesor,@QueryParam("correoAsesor") String correoAsesor,@QueryParam("autorizacion") String autorizacion,TbQoExcepcion excepcion) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
-		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion);
+		TbQoExcepcion a = this.qos.solicitarExcepcion(excepcion,autorizacion,correoAsesor,nombreAsesor);
 		loc.setEntidad(a);
 		return loc;
 	}

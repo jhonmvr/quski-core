@@ -87,7 +87,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador, @QueryParam("proceso") String proceso) throws RelativeException {
+	public GenericWrapper<Boolean> negarExcepcion(@QueryParam("autorizacion") String autorizacion, @QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		ProcesoEnum proc = null;
 		if( proceso.equalsIgnoreCase(ProcesoEnum.NUEVO.toString())) {
@@ -96,7 +96,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		if( proceso.equalsIgnoreCase(ProcesoEnum.RENOVACION.toString())) {
 			proc = ProcesoEnum.RENOVACION;
 		}
-		Boolean a = this.qos.negarExcepcion( Long.valueOf( idExc ), obsAprobador, aprobador, proc);
+		Boolean a = this.qos.negarExcepcion( Long.valueOf( idExc ), obsAprobador, aprobador, proc, autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -106,7 +106,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura, @QueryParam("proceso") String proceso) throws RelativeException {
+	public GenericWrapper<Boolean> aprobarCobertura(@QueryParam("autorizacion") String autorizacion,@QueryParam("idExc") String idExc, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("cobertura") String cobertura, @QueryParam("proceso") String proceso) throws RelativeException {
 		GenericWrapper<Boolean> loc = new GenericWrapper<>();
 		ProcesoEnum proc = null;
 		if( proceso.equalsIgnoreCase(ProcesoEnum.NUEVO.toString())) {
@@ -115,7 +115,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		if( proceso.equalsIgnoreCase(ProcesoEnum.RENOVACION.toString())) {
 			proc = ProcesoEnum.RENOVACION;
 		}
-		Boolean a = this.qos.aprobarCobertura(Long.valueOf( idExc ), obsAprobador, aprobador, cobertura, proc);
+		Boolean a = this.qos.aprobarCobertura(Long.valueOf( idExc ), obsAprobador, aprobador, cobertura, proc,autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
@@ -260,7 +260,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoExcepcion> excepcionCliente(@QueryParam("id") String id, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("aprobado") String aprobado ) throws RelativeException {
+	public GenericWrapper<TbQoExcepcion> excepcionCliente(@QueryParam("autorizacion") String autorizacion,@QueryParam("id") String id, @QueryParam("obsAprobador") String obsAprobador, @QueryParam("aprobador") String aprobador,@QueryParam("aprobado") String aprobado ) throws RelativeException {
 		GenericWrapper<TbQoExcepcion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(id)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER ID EXCEPCION");
@@ -274,7 +274,7 @@ implements CrudRestControllerInterface<TbQoExcepcion, GenericWrapper<TbQoExcepci
 		if(StringUtils.isBlank(aprobado)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER APROBADO/RECHAZADO");
 		}
-		TbQoExcepcion a = this.qos.excepcionCliente(Long.valueOf( id ), obsAprobador, aprobador, aprobado );
+		TbQoExcepcion a = this.qos.excepcionCliente(Long.valueOf( id ), obsAprobador, aprobador, aprobado,autorizacion );
 		loc.setEntidad(a);
 		return loc;
 	}
