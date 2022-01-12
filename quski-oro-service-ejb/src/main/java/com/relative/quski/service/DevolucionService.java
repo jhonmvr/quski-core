@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -380,12 +381,13 @@ public class DevolucionService {
 				proceso = this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, usuario);
 				result.setProceso(proceso);
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE, autorizacion);
-				this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
+				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			} else {
 				result.setProceso(this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, usuario));
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_F,Boolean.FALSE, autorizacion);
-				this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
+				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			}
+			this.mailSolicitudEntregaNegada(devolucion, proceso);
 			return result;
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -587,14 +589,16 @@ public class DevolucionService {
 					throw new RelativeException(" NO EXISTE PROCESO DE DEVOLUCION RELACIONADO A ESTE ID: " + id );
 				}
 				TbQoProceso proceso = this.qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
-				if( proceso == null || !proceso.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_FECHA) ) {
+				/*if( proceso == null || !proceso.getEstadoProceso().equals( EstadoProcesoEnum.PENDIENTE_FECHA) ) {
 					throw new RelativeException(" EL PROCESO: " + devolucion.getCodigo()+" NO SE ENCUENTRA EL ESTADO CORRECTO. ESTADO ACTUAL: "+ proceso.getEstadoProceso() );
-				}
-				if (devolucion.getFechaArribo() == null) {
+				}*/
+				if (devolucion.getFechaArribo() == null && proceso != null && proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_FECHA)) {
 					devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO, QuskiOroConstantes.EN_COLA);
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
+					this.mailFechaArribo(devolucion, proceso);
+					this.mailFechaArriboCliente(devolucion, proceso);
 				}
 			}
 			return devoluciones;
@@ -904,7 +908,9 @@ public class DevolucionService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
 				pro.setUsuario(usuario);
-				bloquear(pro, this.findDevolucionById(idDevolucion),QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
+				TbQoDevolucion devolucion =  this.findDevolucionById(idDevolucion);
+				bloquear(pro, devolucion,QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
+				this.mailSolicitudEntrega(devolucion,pro );
 				return pro;
 			} else {
 				throw new RelativeException("EL PROCESO DE DEVOLUCION NO SE ENCUENTRA EN EL ESTADO REQUERIDO. ESTADO ACTUAL: " + persisted.getEstadoProceso());
@@ -917,6 +923,7 @@ public class DevolucionService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION + e.getMessage());
 		}
 	}
+
 
 	public RespuestaBooleanaWrapper validateAprobarRechazarSolicitud(Long idDevolucion, String usuario) throws RelativeException {
 		RespuestaBooleanaWrapper respuesta = new RespuestaBooleanaWrapper();
@@ -1164,6 +1171,92 @@ public class DevolucionService {
 		return habilitante;
 	}
 
+
+	private void mailSolicitudEntrega(TbQoDevolucion devolucion, TbQoProceso proceso) throws RelativeException {
+		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_CORREO_SOLICITUD_DE_GARANTIA).getValor();
+		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_SOLICITUD_DE_GARANTIA).getValor();
+		
+		asunto = asunto
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--cedulaCliente--", StringUtils.isNotBlank(devolucion.getCedulaCliente())?devolucion.getCedulaCliente() : "")
+				.replace("--codigoBPM--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(devolucion.getCodigoOperacion())?devolucion.getCodigoOperacion() : "")
+				.replace("--flujoCredito--", proceso.getProceso().toString())
+				.replace("--operacionNovada--", StringUtils.isNotBlank(devolucion.getCodigoOperacionMadre())?devolucion.getCodigoOperacionMadre() : "");
+		textoContenido = textoContenido
+				.replace("--codigoBPM--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(devolucion.getCodigoOperacion())?devolucion.getCodigoOperacion() : "")
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--asesor--", StringUtils.isNotBlank(devolucion.getNombreAsesor())?devolucion.getNombreAsesor() : "")
+				.replace("--monto--", String.valueOf(devolucion.getMontoCredito().doubleValue()))
+				.replace("--plazo--",  StringUtils.isNotBlank(devolucion.getPlazoCredito())?devolucion.getPlazoCredito() :"" )
+				.replace("--observacion--", StringUtils.isNotBlank(devolucion.getObservaciones())?devolucion.getObservaciones() :"" );
+		String[] para = Stream.of(this.parametroRepository.findByNombre(QuskiOroConstantes.MAIL_SOLICITUD_ENTREGA).getValor()).toArray(String[]::new);
+		
+		this.qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+	}
+	
+	private void mailFechaArribo(TbQoDevolucion devolucion, TbQoProceso proceso) throws RelativeException {
+		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_CORREO_DE_NOTIFICACION_FECHA_DE_ARRIBO).getValor();
+		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_DE_FECHA_DE_ARRIBO_ASESOR).getValor();
+		
+		asunto = asunto
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--cedulaCliente--", StringUtils.isNotBlank(devolucion.getCedulaCliente())?devolucion.getCedulaCliente() : "")
+				.replace("--codigoBPM--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(devolucion.getCodigoOperacion())?devolucion.getCodigoOperacion() : "");
+		textoContenido = textoContenido
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--asesor--", StringUtils.isNotBlank(devolucion.getNombreAsesor())?devolucion.getNombreAsesor() : "")
+				.replace("--fechaArribo--", devolucion.getFechaArribo() != null ?QuskiOroUtil.dateToString(devolucion.getFechaArribo(), QuskiOroUtil.DATE_FORMAT_QUSKI) : "")
+				.replace("--agencia--", StringUtils.isNotBlank(devolucion.getAgenciaEntrega())?devolucion.getAgenciaEntrega() : "")
+				.replace("--observacionAsesor--",  StringUtils.isNotBlank(devolucion.getObservaciones())?devolucion.getObservaciones() :"" )
+				.replace("--observacionAprobador--", StringUtils.isNotBlank(devolucion.getObservacionAprobador())?devolucion.getObservacionAprobador() :"" );
+		String[] para = Stream.of(devolucion.getCorreoAsesor()).toArray(String[]::new);
+		
+		this.qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+	}
+	
+	private void mailFechaArriboCliente(TbQoDevolucion devolucion, TbQoProceso proceso) throws RelativeException {
+		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_CORREO_NOTIFICACION_FECHA_ARRIBO_CLIENTE).getValor();
+		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_NOTIFICACION_FECHA_ARRIBO_CLIENTE).getValor();
+		
+		asunto = asunto
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--cedulaCliente--", StringUtils.isNotBlank(devolucion.getCedulaCliente())?devolucion.getCedulaCliente() : "");
+		textoContenido = textoContenido
+				.replace("--agencia--", StringUtils.isNotBlank(devolucion.getAgenciaEntrega())?devolucion.getAgenciaEntrega() : "")
+				.replace("--fechaEntrega--", devolucion.getFechaArribo() != null ?QuskiOroUtil.dateToString(devolucion.getFechaArribo(), QuskiOroUtil.DATE_FORMAT_QUSKI) : "");
+		String[] para = Stream.of(devolucion.getCorreoCliente()).toArray(String[]::new);
+		
+		this.qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+	}
+	
+	private void mailSolicitudEntregaNegada(TbQoDevolucion devolucion, TbQoProceso proceso) throws RelativeException {
+		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_SOLICITUD_DEVOLUCION_GARANTIA_DEVUELTA).getValor();
+		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_SOLICITUD_DEVOLUCION_DE_GARANTIA_DEVUELTA).getValor();
+		
+		asunto = asunto
+				.replace("--statusAprobada--", proceso.getEstadoProceso().toString())
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--cedulaCliente--", StringUtils.isNotBlank(devolucion.getCedulaCliente())?devolucion.getCedulaCliente() : "")
+				.replace("--codigoBPM--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(devolucion.getCodigoOperacion())?devolucion.getCodigoOperacion() : "");
+		textoContenido = textoContenido
+				.replace("--codigoBPM--", StringUtils.isNotBlank(devolucion.getCodigo())?devolucion.getCodigo() : "")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(devolucion.getCodigoOperacion())?devolucion.getCodigoOperacion() : "")
+				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
+				.replace("--asesor--", StringUtils.isNotBlank(devolucion.getNombreAsesor())?devolucion.getNombreAsesor() : "")
+				.replace("--observacionesAsesor--", StringUtils.isNotBlank(devolucion.getObservaciones())?devolucion.getObservaciones() :"" )
+				.replace("--observacionAprobador--", StringUtils.isNotBlank(devolucion.getObservacionAprobador())?devolucion.getObservacionAprobador() :"" );
+		String[] para = Stream.of(devolucion.getCorreoAsesor()).toArray(String[]::new);
+		
+		this.qos.mailNotificacion(para, asunto, textoContenido, null);
+		
+	}
 	public static void main(String[] args) {
 		try {
 			// String code =

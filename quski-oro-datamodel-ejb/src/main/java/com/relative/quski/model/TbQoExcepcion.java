@@ -65,6 +65,7 @@ public class TbQoExcepcion implements Serializable {
 	@JoinColumn(name="id_negociacion")
 	private TbQoNegociacion tbQoNegociacion;
 
+	
 	public TbQoExcepcion() {
 	}
 
@@ -171,4 +172,5 @@ public class TbQoExcepcion implements Serializable {
 	public void setTbQoNegociacion(TbQoNegociacion tbQoNegociacion) {
 		this.tbQoNegociacion = tbQoNegociacion;
 	}
+
 }

@@ -36,6 +36,9 @@ public class TbQoExcepcionRol implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	private TipoExcepcionEnum excepcion;
+	
+
+	private String correo;
 
 
 	@Column(name="fecha_actualizacion")
@@ -96,6 +99,14 @@ public class TbQoExcepcionRol implements Serializable {
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 
 }

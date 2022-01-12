@@ -20,9 +20,10 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoExcepcionEnum;
+import com.relative.quski.enums.TipoExcepcionEnum;
 import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoExcepcion;
+import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
@@ -202,6 +203,24 @@ public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoEx
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
+		}
+	}
+
+	@Override
+	public List<String> findCorreoByTipoExcepcion(TipoExcepcionEnum tipoExcepcion) throws RelativeException {
+		try {
+			List<TbQoExcepcionRol> listRol = null;
+			CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<String> queryy = cbb.createQuery(String.class);
+			Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
+			queryy.where( cbb.equal(pollRol.get("excepcion"),tipoExcepcion) );
+			queryy.select(pollRol.get("correo"));
+			TypedQuery<String> createQue = this.getEntityManager().createQuery(queryy);
+			return createQue.getResultList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR CORREO EXCEPCION");
 		}
 	}
 }
