@@ -143,6 +143,7 @@ public class ClienteRestController extends BaseRestController
 			@QueryParam("apellidoPaterno") String apellidoPaterno, @QueryParam("segundoNombre") String segundoNombre,
 			@QueryParam("apellidoMaterno") String apellidoMaterno, @QueryParam("telefono") String telefono,
 			@QueryParam("celular") String celular, @QueryParam("correo") String correo,
+			@QueryParam("nombreCompleto") String nombreCompleto, 
 			@QueryParam("estado") String estado) throws RelativeException {
 		return findByParams(
 				new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections,
@@ -154,18 +155,19 @@ public class ClienteRestController extends BaseRestController
 				StringUtils.isNotBlank(apellidoMaterno) ? apellidoMaterno : null,
 				StringUtils.isNotBlank(telefono) ? telefono : null, StringUtils.isNotBlank(celular) ? celular : null,
 				StringUtils.isNotBlank(correo) ? correo : null,
+				StringUtils.isNotBlank(nombreCompleto) ? nombreCompleto : null,
 				StringUtils.isNotBlank(estado) ? QuskiOroUtil.getEnumFromString(EstadoEnum.class, estado) : null);
 	}
 	private PaginatedListWrapper<TbQoCliente> findByParams(PaginatedWrapper pw, String identificacion,
 			String primerNombre, String apellidoPaterno, String segundoNombre, String apellidoMaterno, String telefono,
-			String celular, String correo, EstadoEnum estado) throws RelativeException {
+			String celular, String correo, String nombreCompleto, EstadoEnum estado) throws RelativeException {
 
 		PaginatedListWrapper<TbQoCliente> plw = new PaginatedListWrapper<>(pw);
 		List<TbQoCliente> actions = this.qos.findClienteByParams(pw, identificacion, primerNombre, apellidoPaterno,
-				segundoNombre, apellidoMaterno, telefono, celular, correo, estado);
+				segundoNombre, apellidoMaterno, telefono, celular, correo, nombreCompleto, estado);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countClienteByParams(identificacion, primerNombre, apellidoPaterno,
-					segundoNombre, apellidoMaterno, telefono, celular, correo, estado).intValue());
+					segundoNombre, apellidoMaterno, telefono, celular, correo, nombreCompleto, estado).intValue());
 			plw.setList(actions);
 		}
 		return plw;
