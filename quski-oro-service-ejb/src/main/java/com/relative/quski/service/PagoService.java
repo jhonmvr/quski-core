@@ -339,7 +339,7 @@ public class PagoService {
 					.replace("--codigoBPM--",clientePago.getCodigo())
 					.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
 					.replace("--nombreCliente--", clientePago.getNombreCliente())
-					.replace("--asesor--", clientePago.getAsesor())
+					.replace("--asesor--", clientePago.getNombreAsesor())
 					.replace("--valorPago--", String.valueOf(clientePago.getValorDepositado().doubleValue()) )
 					.replace("--observacionAsesor--", clientePago.getObservacion())
 					.replace("--observacionAprobador--"," ");
@@ -351,7 +351,8 @@ public class PagoService {
 					.replace("--codigoBPM--",clientePago.getCodigo())
 					.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
 					.replace("--nombreCliente--", clientePago.getNombreCliente())
-					.replace("--asesor--", clientePago.getAsesor())
+					.replace("--asesor--", clientePago.getNombreAsesor())
+					.replace("--valorPago--", String.valueOf(clientePago.getValorDepositado().doubleValue()) )
 					.replace("--observacionAsesor--", clientePago.getObservacion())
 					.replace("--observacionAprobador--"," ");
 			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();

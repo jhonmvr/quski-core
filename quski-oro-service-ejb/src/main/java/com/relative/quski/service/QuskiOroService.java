@@ -2018,7 +2018,7 @@ public class QuskiOroService {
 	 * @throws RelativeException 
 	 */
 	public TbQoCreditoNegociacion guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, String asesor,
-			Long idCredito, String autorizacion, String nombreAsesor) throws RelativeException {
+			Long idCredito, String autorizacion, String nombreAsesor, String correoAsesor) throws RelativeException {
 		
 		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
 		CalculadoraOpcionWrapper opcion = opcionCredito.get(0);
@@ -2064,6 +2064,7 @@ public class QuskiOroService {
 		credito.setDividendoProrrateo(opcion.getDividendosprorrateoserviciosdiferido());
 		credito.setCanalContacto(credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto());
 		credito.getTbQoNegociacion().setNombreAsesor(nombreAsesor);
+		credito.getTbQoNegociacion().setCorreoAsesor(correoAsesor);
 		this.negociacionRepository.update(credito.getTbQoNegociacion());
 		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 //		if(listTablas == null || listTablas.isEmpty()) {
@@ -7045,7 +7046,7 @@ public class QuskiOroService {
 					.replace("--gastoCobranza--", String.valueOf(wrapper.getGastoCobranza().doubleValue() ) )
 					.replace("--mora--", String.valueOf(wrapper.getSaldoMora().doubleValue() ) )
 					.replace("--fechaExcepcion--", wrapper.getFechaRegularizacion() != null ?QuskiOroUtil.dateToString(wrapper.getFechaRegularizacion(), QuskiOroUtil.DATE_FORMAT_QUSKI): " ")
-					.replace("--Observaciones--", wrapper.getTbQoNegociacion().getObservacionAsesor() );
+					.replace("--Observaciones--", StringUtils.isNotBlank(wrapper.getTbQoNegociacion().getObservacionAsesor())?wrapper.getTbQoNegociacion().getObservacionAsesor() :" ");
 			this.mailNotificacion(array, asunto, contenido, null);
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -7854,7 +7855,8 @@ public class QuskiOroService {
 		
 	}
 	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego,
-			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion, String nombreAgencia, String telefonoAsesor, String nombreAsesor) throws RelativeException {
+			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion,
+			String nombreAgencia, String telefonoAsesor, String nombreAsesor, String correoAsesor) throws RelativeException {
 		try {
 			
 			RenovacionWrapper novacion;
@@ -7881,6 +7883,7 @@ public class QuskiOroService {
 				negociacion.setTbQoCliente( cliente );
 				negociacion.setTelefonoAsesor(telefonoAsesor);
 				negociacion.setNombreAsesor(nombreAsesor);
+				negociacion.setCorreoAsesor(correoAsesor);
 				negociacion = this.manageNegociacion(negociacion);
 				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion, nombreAgencia);
 				credito.setTbQoNegociacion( negociacion );
@@ -7901,6 +7904,7 @@ public class QuskiOroService {
 				log.info( "============> ACTUALIZANDO CREDITO <============");
 				novacion.getCredito().getTbQoNegociacion().setAsesor(asesor);
 				novacion.getCredito().getTbQoNegociacion().setNombreAsesor(nombreAsesor);
+				novacion.getCredito().getTbQoNegociacion().setCorreoAsesor(correoAsesor);
 				novacion.getCredito().getTbQoNegociacion().setTelefonoAsesor(telefonoAsesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
 				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion,nombreAgencia)));
@@ -9076,22 +9080,24 @@ public class QuskiOroService {
 				}
 			}
 			textoContenido = textoContenido
-					.replace("--codigoBPM--", credito.getCodigo())
+					.replace("--codigoBPM--", StringUtils.isNotBlank(credito.getCodigo())? credito.getCodigo() : " ")
 					.replace("--nombreCliente--", credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
 					.replace("--riesgoAcumulado--", String.valueOf(riesgoAcumulado))
 					.replace("--asesor--",StringUtils.isNotBlank(credito.getTbQoNegociacion().getNombreAsesor())?credito.getTbQoNegociacion().getNombreAsesor():"")
 					.replace("--noCreditosImpagos--", String.valueOf(noCreditosImpagos) )
 					.replace("--creditosVigentes--", String.valueOf(numeroCreditos) )
-					.replace("--excepcion--", excepcion.getMensajeBre() )
+					.replace("--excepcion--", StringUtils.isNotBlank(excepcion.getMensajeBre())? excepcion.getMensajeBre() : " "  )
 					.replace("--edad--", String.valueOf(credito.getTbQoNegociacion().getTbQoCliente().getEdad() != null? credito.getTbQoNegociacion().getTbQoCliente().getEdad():"") )
-					.replace("--observacionAsesor--", excepcion.getObservacionAsesor())
+					.replace("--observacionAsesor--", StringUtils.isNotBlank(excepcion.getObservacionAsesor())? excepcion.getObservacionAsesor() : " ")
 					.replace("--numeroOperacion--", StringUtils.isNotBlank(credito.getNumeroOperacion())? credito.getNumeroOperacion() : " ")
 					.replace("--perfilInterno--", StringUtils.isNotBlank(variables.stream().filter( var -> "PerfilInterno".equals(var.getCodigo())).findAny().orElse(new TbQoVariablesCrediticia()).getValor() )?
-							variables.stream().filter( var -> "PerfilInterno".equals(var.getCodigo())).findAny().orElse(new TbQoVariablesCrediticia()).getValor(): "")
+							variables.stream().filter( var -> "PerfilInterno".equals(var.getCodigo())).findAny().orElse(new TbQoVariablesCrediticia()).getValor(): " ")
+					.replace("--perfilExterno--", StringUtils.isNotBlank(variables.stream().filter( var -> "PerfilExterno".equals(var.getCodigo())).findAny().orElse(new TbQoVariablesCrediticia()).getValor() )?
+							variables.stream().filter( var -> "PerfilExterno".equals(var.getCodigo())).findAny().orElse(new TbQoVariablesCrediticia()).getValor(): " ")
 					.replace("--cobertura--", cobertura )
 					.replace("--monto--", credito.getMontoFinanciado() != null? String.valueOf(credito.getMontoFinanciado().doubleValue()) : " ")
 					.replace("--plazo--", String.valueOf(credito.getPlazoCredito()) )
-					.replace("--tipoCredito--", credito.getPeriodoPlazo() != null ? credito.getPeriodoPlazo() :" ")
+					.replace("--tipoCredito--", StringUtils.isNotBlank(credito.getPeriodoPlazo())? credito.getPeriodoPlazo().equalsIgnoreCase("C")?"Cuotas":"Vencimiento" : " ")
 					.replace("--excepcionCliente--", excepcionCliente != null ? "SI": "NO")
 					.replace("--excepcionCobertura--",  excepcionCobertura != null ? "SI": "NO")
 					.replace("--excepcionRiesgo--",  excepcionRiesgo != null ? "SI": "NO")
@@ -9120,22 +9126,24 @@ public class QuskiOroService {
 		}
 		asunto = asunto
 				.replace("--operacionNovada--", StringUtils.isNotBlank(credito.getNumeroOperacionAnterior())?credito.getNumeroOperacionAnterior() : "")
-				.replace("--statusAprobacion--", proceso.getEstadoProceso().toString())
-				.replace("--flujoCredito--", proceso.getProceso().toString())
+				.replace("--statusAprobacion--", proceso.getEstadoProceso() != null ? proceso.getEstadoProceso().toString(): " ")
+				.replace("--flujoCredito--", proceso.getProceso() != null ? proceso.getProceso().toString() : " ")
+				.replace("--codigoBPM--", StringUtils.isNotBlank(credito.getCodigo()) ? credito.getCodigo() : " ")
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(credito.getNumeroOperacion())? credito.getNumeroOperacion() : " ")
 				.replace("--nombreCliente--", credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
 				.replace("--cedulaCliente--", credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 				.replace("--asesor--", StringUtils.isNotBlank(credito.getTbQoNegociacion().getNombreAsesor())?credito.getTbQoNegociacion().getNombreAsesor():"")
 				.replace("--agencia--", credito.getNombreAgencia());
 		textoContenido = textoContenido
-				.replace("--codigoBPM--", credito.getCodigo())
+				.replace("--codigoBPM--", StringUtils.isNotBlank(credito.getCodigo()) ? credito.getCodigo() : " ")
 				.replace("--nombreCliente--", credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto())
 				.replace("--asesor--",StringUtils.isNotBlank(credito.getTbQoNegociacion().getNombreAsesor())?credito.getTbQoNegociacion().getNombreAsesor():"")
 				.replace("--edad--", String.valueOf(credito.getTbQoNegociacion().getTbQoCliente().getEdad() != null? credito.getTbQoNegociacion().getTbQoCliente().getEdad():"") )
 				.replace("--numeroOperacion--", StringUtils.isNotBlank(credito.getNumeroOperacion())? credito.getNumeroOperacion() : " ")
-				.replace("--monto--", String.valueOf(credito.getMontoFinanciado().doubleValue()))
-				.replace("--plazo--", String.valueOf(credito.getPlazoCredito()) )
-				.replace("--tipoCredito--", credito.getPeriodoPlazo())
-				.replace("--observacionAsesor--", credito.getDescripcionDevuelto())
+				.replace("--monto--", credito.getMontoFinanciado() != null ? String.valueOf(credito.getMontoFinanciado().doubleValue()): " ")
+				.replace("--plazo--", credito.getPlazoCredito() != null ? String.valueOf(credito.getPlazoCredito()): " " )
+				.replace("--tipoCredito--", StringUtils.isNotBlank(credito.getPeriodoPlazo())? credito.getPeriodoPlazo().equalsIgnoreCase("C")?"Cuotas":"Vencimiento" : " ")
+				.replace("--observacionAsesor--", StringUtils.isNotBlank(credito.getDescripcionDevuelto()) ? credito.getDescripcionDevuelto() : " ")
 				.replace("--observacionAprobador--", StringUtils.isNotBlank(credito.getDescripcionDevuelto())? credito.getDescripcionDevuelto(): "");
 		String[] para = null;
 		if(proceso.getEstadoProceso().equals(EstadoProcesoEnum.APROBADO) || proceso.getEstadoProceso().equals(EstadoProcesoEnum.DEVUELTO)) {

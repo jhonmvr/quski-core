@@ -365,10 +365,11 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacion( @QueryParam("autorizacion") String autorizacion,@QueryParam("nombreAsesor") String nombreAsesor,
 			@QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
-			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre,
+			 @QueryParam("correoAsesor") String correoAsesor, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
 		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null,
-				asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor);
+				asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor, correoAsesor);
 		loc.setEntidad(a);
 		return loc;			
 	}

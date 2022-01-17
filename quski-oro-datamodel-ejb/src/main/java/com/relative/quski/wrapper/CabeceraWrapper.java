@@ -19,6 +19,7 @@ public class CabeceraWrapper implements Serializable{
 	private String tipoCredito;
 	private String numeroCuenta;
 	private String nombreAsesor;
+	private String numeroCreditoAnterior;
 	
 	
 	
@@ -46,6 +47,19 @@ public class CabeceraWrapper implements Serializable{
 		this.tipoCredito = tipoCredito;
 		this.numeroCuenta = numeroCuenta;
 		this.nombreAsesor = nombreAsesor;
+	}
+	public CabeceraWrapper(String nombre, String cedula, String numeroCredito, String codigoBPM, BigDecimal monto,
+			BigDecimal plazo, String tipoCredito, String numeroCuenta, String nombreAsesor, String numeroCreditoAnterior) {
+		this.nombre = nombre;
+		this.cedula = cedula;
+		this.numeroCredito = numeroCredito;
+		this.codigoBPM = codigoBPM;
+		this.monto = String.valueOf(monto);
+		this.plazo = String.valueOf(plazo);
+		this.tipoCredito = tipoCredito;
+		this.numeroCuenta = numeroCuenta;
+		this.nombreAsesor = nombreAsesor;
+		this.numeroCreditoAnterior  = numeroCreditoAnterior;
 	}
 	public String getNombre() {
 		return nombre;
@@ -100,6 +114,14 @@ public class CabeceraWrapper implements Serializable{
 	}
 	public void setNombreAsesor(String nombreAsesor) {
 		this.nombreAsesor = nombreAsesor;
+	}
+
+	public String getNumeroCreditoAnterior() {
+		return numeroCreditoAnterior;
+	}
+
+	public void setNumeroCreditoAnterior(String numeroCreditoAnterior) {
+		this.numeroCreditoAnterior = numeroCreditoAnterior;
 	}
 
 	
