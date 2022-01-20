@@ -8099,6 +8099,7 @@ public class QuskiOroService {
 		credito.setEstado( EstadoEnum.ACT );
 		credito.setNumeroOperacionMadre(numeroOperacionMadre);
 		credito.setNumeroOperacionAnterior( numeroOperacionAnterior );
+		credito.setNombreAgencia(nombreAgencia);
 		return credito;
 	}
 	private TbQoCreditoNegociacion crearCodigoRenovacion(TbQoCreditoNegociacion persisted) throws RelativeException {
@@ -8448,7 +8449,8 @@ public class QuskiOroService {
 				this.registrarTraking(traking);
 				this.manageNegociacion( nego );
 				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
-			
+
+				this.mailSolicitudAprobacion(credito, proceso);
 				return this.manageProceso(proceso);
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR EN ESTADO CREADO O DEVUELTO");
