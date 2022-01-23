@@ -28,20 +28,20 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 	@Override
 	public List<TbQoCliente> findByParams(PaginatedWrapper pw, String identificacion, String primerNombre,
 			String segundoNombre, String apellidoPaterno, String apellidoMaterno, String telefono, String celular,
-			String correo, EstadoEnum estado) throws RelativeException {
+			String correo, String nombreCompleto, EstadoEnum estado) throws RelativeException {
 		try {
 			if (pw == null) {
 				return this.findAllBySpecification(new ClienteByParamsSpec(identificacion, primerNombre, segundoNombre,
-						apellidoPaterno, apellidoMaterno, telefono, celular, correo, estado));
+						apellidoPaterno, apellidoMaterno, telefono, celular, correo, nombreCompleto, estado));
 			} else {
 				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 					return this.findAllBySpecificationPaged(
 							new ClienteByParamsSpec(identificacion, primerNombre, segundoNombre, apellidoPaterno,
-									apellidoMaterno, telefono, celular, correo, estado),
+									apellidoMaterno, telefono, celular, correo, nombreCompleto, estado),
 							pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 				} else {
 					return this.findAllBySpecification(new ClienteByParamsSpec(identificacion, primerNombre,
-							segundoNombre, apellidoPaterno, apellidoMaterno, telefono, celular, correo, estado));
+							segundoNombre, apellidoPaterno, apellidoMaterno, telefono, celular, correo, nombreCompleto, estado));
 				}
 			}
 		} catch (Exception e) {
@@ -52,11 +52,11 @@ public class ClienteRepositoryImp extends GeneralRepositoryImp<Long, TbQoCliente
 
 	@Override
 	public Long countByParams(String identificacion, String primerNombre, String segundoNombre, String apellidoPaterno,
-			String apellidoMaterno, String telefono, String celular, String correo, EstadoEnum estado)
+			String apellidoMaterno, String telefono, String celular, String correo, String nombreCompleto, EstadoEnum estado)
 			throws RelativeException {
 		try {
 			return this.countBySpecification(new ClienteByParamsSpec(identificacion, primerNombre, segundoNombre,
-					apellidoPaterno, apellidoMaterno, telefono, celular, correo, estado));
+					apellidoPaterno, apellidoMaterno, telefono, celular, correo, nombreCompleto , estado));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, "Conteo de registros cliente, " + e.getMessage());

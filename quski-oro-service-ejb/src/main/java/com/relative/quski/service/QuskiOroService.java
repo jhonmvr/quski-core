@@ -1196,10 +1196,10 @@ public class QuskiOroService {
 	}
 
 	public Long countClienteByParams(String identificacion, String primerNombre, String apellidoPaterno,
-			String segundoNombre, String apellidoMaterno, String telefono, String celular, String correo,
+			String segundoNombre, String apellidoMaterno, String telefono, String celular, String correo, String nombreCompleto,
 			EstadoEnum estado) throws RelativeException {
 		return this.clienteRepository.countByParams(identificacion, primerNombre, apellidoPaterno, segundoNombre,
-				apellidoMaterno, telefono, celular, correo, estado);
+				apellidoMaterno, telefono, celular, correo, nombreCompleto, estado);
 	}
 
 	/**
@@ -1221,9 +1221,12 @@ public class QuskiOroService {
 	 */
 	public List<TbQoCliente> findClienteByParams(PaginatedWrapper pw, String identificacion, String primerNombre,
 			String apellidoPaterno, String segundoNombre, String apellidoMaterno, String telefono, String celular,
-			String correo, EstadoEnum estado) throws RelativeException {
+			String correo, String nombreCompleto, EstadoEnum estado) throws RelativeException {
+		
+		log.info("=================> " + identificacion);
+		log.info("=================> " + nombreCompleto);
 		return this.clienteRepository.findByParams(pw, identificacion, primerNombre, apellidoPaterno, segundoNombre,
-				apellidoMaterno, telefono, celular, correo, estado);
+				apellidoMaterno, telefono, celular, correo, nombreCompleto, estado);
 	}
 
 	/**

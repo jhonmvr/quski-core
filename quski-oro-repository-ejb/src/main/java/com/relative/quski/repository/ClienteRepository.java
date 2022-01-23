@@ -14,11 +14,11 @@ import com.relative.quski.model.TbQoCliente;
 public interface ClienteRepository extends CrudRepository<Long, TbQoCliente> {
 	public List<TbQoCliente>  findByParams(PaginatedWrapper pw, String identificacion, String primerNombre, 
 			String segundoNombre, String apellidoPaterno, String apellidoMaterno, 
-			String telefono, String celular, String correo,  EstadoEnum estado) throws RelativeException;
+			String telefono, String celular, String correo, String nombreCompleto,  EstadoEnum estado) throws RelativeException;
 	
 	
 	public Long countByParams(String identificacion, String primerNombre, String segundoNombre, String apellidoPaterno, String apellidoMaterno, 
-			String telefono, String celular, String correo,  EstadoEnum estado) throws RelativeException;
+			String telefono, String celular, String correo, String nombreCompleto, EstadoEnum estado) throws RelativeException;
 
 	public TbQoCliente findClienteByIdentificacion(String identificacion)  throws RelativeException;
 	

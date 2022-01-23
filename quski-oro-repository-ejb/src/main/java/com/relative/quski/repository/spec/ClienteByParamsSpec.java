@@ -8,6 +8,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jfree.util.Log;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.enums.EstadoEnum;
@@ -23,10 +24,12 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 	private String telefono;
 	private String celular;
 	private String correo;
+	private String nombreCompleto;
 	private EstadoEnum estado;
 	
+	
 	public ClienteByParamsSpec(String identificacion, String primerNombre, String segundoNombre, String apellidoPaterno, String apellidoMaterno,
-			String telefono, String celular, String correo,  EstadoEnum estado) {
+			String telefono, String celular, String correo, String nombreCompleto, EstadoEnum estado) {
 		super();
 		this.identificacion = identificacion;
 		this.primerNombre = primerNombre;
@@ -36,6 +39,7 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 		this.telefono = telefono;
 		this.celular = celular;
 		this.correo = correo;
+		this.nombreCompleto = nombreCompleto;
 		this.estado = estado;
 	}
 
@@ -46,8 +50,9 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 	@Override
 	public Predicate toPredicate(Root<TbQoCliente> poll, CriteriaBuilder cb) {
 		List<Predicate> where = new ArrayList<Predicate>();
+		 
 		if(StringUtils.isNotBlank(this.identificacion)) {
-			where.add(cb.like(poll.<String>get("identificacion"), "%" + this.identificacion + "%"));
+			where.add(cb.like(poll.<String>get("cedulaCliente"), "%" + this.identificacion + "%"));
 		}
 		if(StringUtils.isNotBlank(this.primerNombre)) {
 			where.add(cb.like(poll.<String>get("primerNombre"), "%" + this.primerNombre + "%"));
@@ -61,8 +66,6 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 		if(StringUtils.isNotBlank(this.apellidoMaterno)) {
 			where.add(cb.like(poll.<String>get("apellidoMaterno"), "%" + this.apellidoMaterno + "%"));
 		}
-		
-
 		if(StringUtils.isNotBlank(this.telefono)) {
 			where.add(cb.like(poll.<String>get("telefonoFijo"), "%" + this.telefono + "%"));
 		}
@@ -72,8 +75,18 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 		if(StringUtils.isNotBlank(this.correo)) {
 			where.add(cb.like(poll.<String>get("email"), "%" + this.correo + "%"));
 		}
-	
-		
+		if(StringUtils.isNotBlank(this.nombreCompleto)) {
+			 
+			String queryNombre = ""; 
+			
+		     String[] arrOfStr = nombreCompleto.split(" ");
+		     for (String a : arrOfStr) {
+		    	 System.out.println(a);
+		    	 where.add(cb.like(poll.<String>get("nombreCompleto"), "%" + arrOfStr[0] + "%"));
+		     }
+		           
+			
+		}
 		if(this.estado != null) {
 			where.add(cb.equal(poll.<EstadoEnum>get("estado"), EstadoEnum.ACT));
 		}
