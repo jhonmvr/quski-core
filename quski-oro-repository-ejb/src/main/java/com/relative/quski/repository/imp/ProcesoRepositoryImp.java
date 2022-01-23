@@ -655,7 +655,8 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 							"	coalesce(cre.plazo_credito, '0') as plazo_credito, " + 
 							"	coalesce(cre.periodo_plazo, 'NULL') as periodo_plazo, " + 
 							"	coalesce(cuenta.cuenta, 'NULL') as cuenta, " + 
-							"	coalesce(nego.nombre_asesor, 'NULL') as nombre_asesor " + 
+							"	coalesce(nego.nombre_asesor, 'NULL') as nombre_asesor, " + 
+							"	coalesce(cre.numero_operacion_anterior, 'NULL') as numero_operacion_anterior " + 
 							"from tb_qo_negociacion nego " + 
 							"inner join tb_qo_credito_negociacion cre on " + 
 							"	cre.id_negociacion = nego.id " + 
