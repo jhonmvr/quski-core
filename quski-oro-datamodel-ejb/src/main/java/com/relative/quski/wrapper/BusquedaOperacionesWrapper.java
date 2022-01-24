@@ -15,7 +15,8 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	private Date fechaCreacionDesde;	// Proceso //
 	private Date fechaCreacionHasta; 	// Proceso //
 	private List<EstadoProcesoEnum> estado;   // Proceso //
-	private String asesor; 				// Proceso // 
+	private List<String> asesor;
+	private List<Long> agencia;// Proceso // 
 	
 	private String codigoBpm; 				// Varia // 
 	private String codigoSoft; 				// Varia // 
@@ -69,10 +70,10 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	public void setActividad(String actividad) {
 		this.actividad = actividad;
 	}
-	public String getAsesor() {
+	public List<String> getAsesor() {
 		return asesor;
 	}
-	public void setAsesor(String asesor) {
+	public void setAsesor(List<String> asesor) {
 		this.asesor = asesor;
 	}
 	public Long getNumberPage() {
@@ -98,6 +99,12 @@ public class BusquedaOperacionesWrapper implements Serializable {
 	}
 	public void setCodigoSoft(String codigoSoft) {
 		this.codigoSoft = codigoSoft;
+	}
+	public List<Long> getAgencia() {
+		return agencia;
+	}
+	public void setAgencia(List<Long> agencia) {
+		this.agencia = agencia;
 	}
 	
 

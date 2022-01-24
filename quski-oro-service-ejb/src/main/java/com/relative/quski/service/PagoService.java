@@ -217,6 +217,7 @@ public class PagoService {
 //					objeto = LocalStorageClient.createObject(url,base,coleccion,file, null );
 //					pago.setIdComprobante(objeto.getEntidad());
 //				}
+				pago.setTipoPago(e.getTipoPago());
 				pago.setCuentas(e.getCuenta());
 				pago.setFechaPago(e.getFechaPago());
 				pago.setInstitucionFinanciera(e.getIntitucionFinanciera());

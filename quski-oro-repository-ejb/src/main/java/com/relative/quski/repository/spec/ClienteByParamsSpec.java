@@ -55,16 +55,16 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 			where.add(cb.like(poll.<String>get("cedulaCliente"), "%" + this.identificacion + "%"));
 		}
 		if(StringUtils.isNotBlank(this.primerNombre)) {
-			where.add(cb.like(poll.<String>get("primerNombre"), "%" + this.primerNombre + "%"));
+			where.add(cb.like(poll.<String>get("primerNombre"), "%" + this.primerNombre.toUpperCase() + "%"));
 		}
 		if(StringUtils.isNotBlank(this.apellidoPaterno)) {
-			where.add(cb.like(poll.<String>get("apellidoPaterno"), "%" + this.apellidoPaterno + "%"));
+			where.add(cb.like(poll.<String>get("apellidoPaterno"), "%" + this.apellidoPaterno.toUpperCase() + "%"));
 		}
 		if(StringUtils.isNotBlank(this.segundoNombre)) {
-			where.add(cb.like(poll.<String>get("segundoNombre"), "%" + this.segundoNombre + "%"));
+			where.add(cb.like(poll.<String>get("segundoNombre"), "%" + this.segundoNombre.toUpperCase() + "%"));
 		}
 		if(StringUtils.isNotBlank(this.apellidoMaterno)) {
-			where.add(cb.like(poll.<String>get("apellidoMaterno"), "%" + this.apellidoMaterno + "%"));
+			where.add(cb.like(poll.<String>get("apellidoMaterno"), "%" + this.apellidoMaterno.toUpperCase() + "%"));
 		}
 		if(StringUtils.isNotBlank(this.telefono)) {
 			where.add(cb.like(poll.<String>get("telefonoFijo"), "%" + this.telefono + "%"));
@@ -76,13 +76,11 @@ public class ClienteByParamsSpec extends AbstractSpecification<TbQoCliente> {
 			where.add(cb.like(poll.<String>get("email"), "%" + this.correo + "%"));
 		}
 		if(StringUtils.isNotBlank(this.nombreCompleto)) {
-			 
-			String queryNombre = ""; 
-			
 		     String[] arrOfStr = nombreCompleto.split(" ");
 		     for (String a : arrOfStr) {
-		    	 System.out.println(a);
-		    	 where.add(cb.like(poll.<String>get("nombreCompleto"), "%" + arrOfStr[0] + "%"));
+		    	 if(StringUtils.isNotBlank(a)) {
+			    	 where.add(cb.like(poll.<String>get("nombreCompleto"), "%" + a.toUpperCase() + "%"));
+		    	 }
 		     }
 		           
 			

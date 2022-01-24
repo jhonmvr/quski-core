@@ -128,8 +128,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
 			}
-			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
-				strQry.append(" and asesor=:asesor");
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
+				strQry.append(" and asesor in :asesor");
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				strQry.append(" and ID_AGENCIA in :agencia");
 			}
 			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
 				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
@@ -160,8 +163,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
 			
-			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
 				query.setParameter("asesor", wp.getAsesor() );
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				query.setParameter("agencia", wp.getAgencia() );
 			}
 			if (wp.getFechaCreacionDesde() != null) {
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
@@ -215,8 +221,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
 			}
-			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
-				strQry.append(" and asesor=:asesor");
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
+				strQry.append(" and asesor in :asesor");
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				strQry.append(" and ID_AGENCIA in :agencia");
 			}
 			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
 				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
@@ -246,8 +255,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			strQry.append(" LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
-			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
 				query.setParameter("asesor", wp.getAsesor() );
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				query.setParameter("agencia", wp.getAgencia() );
 			}
 			
 			if (wp.getFechaCreacionDesde() != null) {
@@ -736,8 +748,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				String st = wp.getEstado().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and ESTADO_PROCESO in ('"+st+"') ");
 			}
-			if(StringUtils.isNotBlank(wp.getAsesor() ) ) {
-				strQry.append(" and asesor=:asesor");
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
+				strQry.append(" and asesor in :asesor");
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				strQry.append(" and ID_AGENCIA in :agencia");
 			}
 			if (wp.getProceso() != null && !wp.getProceso().isEmpty()) {
 				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
@@ -768,8 +783,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			
 			
-			if (StringUtils.isNotBlank(wp.getAsesor() )) {
+			if(wp.getAsesor() != null && !wp.getAsesor().isEmpty() ) {
 				query.setParameter("asesor", wp.getAsesor() );
+			}
+			if(wp.getAgencia() != null && !wp.getAgencia().isEmpty() ) {
+				query.setParameter("agencia", wp.getAgencia() );
 			}
 			if (wp.getFechaCreacionDesde() != null) {
 				query.setParameter("desde", wp.getFechaCreacionDesde() );
