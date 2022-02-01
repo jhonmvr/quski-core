@@ -31,6 +31,7 @@ import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.EnumsWrapper;
 import com.relative.quski.wrapper.TrackingWrapper;
+import com.relative.quski.wrapper.TrakingProcesoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -251,6 +252,100 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		enums.setSecciones(stringSecciones); 
 		w.setEntidad( enums );
 		return w;
+	}
+	
+	
+
+	@GET
+	@Path("/findTrakingByCodigoBpm")
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<TrakingProcesoWrapper> byProceso(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+			@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<TrakingProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<TrakingProcesoWrapper> actions = this.qos.findTrakingByCodigoBpm(codigoBpm, pw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTrakingByCodigoBpm(codigoBpm).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	
+	@GET
+	@Path("/findTrakingActividadByCodigoBpm")
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<TrakingProcesoWrapper> findTrakingActividadByCodigoBpm(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+			@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<TrakingProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<TrakingProcesoWrapper> actions = this.qos.findTrakingActividadByCodigoBpm(codigoBpm, pw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTrakingActividadByCodigoBpm(codigoBpm).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	
+	@GET
+	@Path("/findTrakingSeccionByCodigoBpm")
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<TrakingProcesoWrapper> findTrakingSeccionByCodigoBpm(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+			@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<TrakingProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<TrakingProcesoWrapper> actions = this.qos.findTrakingSeccionByCodigoBpm(codigoBpm, pw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTrakingSeccionByCodigoBpm(codigoBpm).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+	
+	@GET
+	@Path("/findTrakingSeccionConsolidadoByCodigoBpm")
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<TrakingProcesoWrapper> findTrakingSeccionConsolidadoByCodigoBpm(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+			@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<TrakingProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<TrakingProcesoWrapper> actions = this.qos.findTrakingSeccionConsolidadoByCodigoBpm(codigoBpm, pw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTrakingSeccionConsolidadoByCodigoBpm(codigoBpm).intValue());
+			plw.setList(actions);
+		}
+		return plw;
 	}
 
 }

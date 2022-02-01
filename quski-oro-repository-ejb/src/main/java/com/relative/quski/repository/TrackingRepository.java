@@ -11,6 +11,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.wrapper.TrackingWrapper;
+import com.relative.quski.wrapper.TrakingProcesoWrapper;
 
 @Local
 public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
@@ -33,6 +34,27 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 	public TbQoTracking findByParams(String codigoBpm, ProcesoEnum proceso)throws RelativeException;
 
 	public List<String> getActividad(List<ProcesoEnum> proceso) throws RelativeException;
+	
+
+	public List<TrakingProcesoWrapper> trakingByCodigoBpm(String codigoBpm, Integer startRecord, Integer pageSize,
+			String sortFields, String sortDirections) throws RelativeException;
+
+	public Long trakingByCodigoBpm(String codigoBpm) throws RelativeException;
+
+	public List<TrakingProcesoWrapper> trakingActividadByCodigoBpm(String codigoBpm, int startRecord, Integer pageSize,
+			String sortFields, String sortDirections) throws RelativeException;
+
+	public Long trakingActividadByCodigoBpm(String codigoBpm) throws RelativeException;
+
+	public Long trakingSeccionByCodigoBpm(String codigoBpm) throws RelativeException;
+
+	public List<TrakingProcesoWrapper> trakingSeccionByCodigoBpm(String codigoBpm, int startRecord, Integer pageSize,
+			String sortFields, String sortDirections) throws RelativeException;
+
+	public List<TrakingProcesoWrapper> trakingSeccionConsolidadoByCodigoBpm(String codigoBpm, int startRecord,
+			Integer pageSize, String sortFields, String sortDirections) throws RelativeException;
+
+	public Long trakingSeccionConsolidadoByCodigoBpm(String codigoBpm) throws RelativeException;
 
 	
 	
