@@ -324,7 +324,7 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		}
 		return plw;
 	}
-	
+
 	@GET
 	@Path("/findTrakingSeccionConsolidadoByCodigoBpm")
 	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
@@ -343,6 +343,29 @@ public class TrackingRestController extends BaseRestController implements CrudRe
 		List<TrakingProcesoWrapper> actions = this.qos.findTrakingSeccionConsolidadoByCodigoBpm(codigoBpm, pw);
 		if (actions != null && !actions.isEmpty()) {
 			plw.setTotalResults(this.qos.countTrakingSeccionConsolidadoByCodigoBpm(codigoBpm).intValue());
+			plw.setList(actions);
+		}
+		return plw;
+	}
+
+	@GET
+	@Path("/findTrakingAreaByCodigoBpm")
+	@ApiOperation(value = "String actividad", notes = "Metodo que devuelve la lista de secciones encontradas en SeccionEnum", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<TrakingProcesoWrapper> findTrakingAreaByCodigoBpm(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("Y") String isPaginated,
+			@QueryParam("codigoBpm") String codigoBpm) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<TrakingProcesoWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<TrakingProcesoWrapper> actions = this.qos.findTrakingAreaByCodigoBpm(codigoBpm, pw);
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countTrakingAreaByCodigoBpm(codigoBpm).intValue());
 			plw.setList(actions);
 		}
 		return plw;

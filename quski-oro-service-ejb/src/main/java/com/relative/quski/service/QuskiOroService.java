@@ -9207,4 +9207,17 @@ public class QuskiOroService {
 	public Long countTrakingSeccionConsolidadoByCodigoBpm(String codigoBpm) throws RelativeException {
 		return this.trackingRepository.trakingSeccionConsolidadoByCodigoBpm(codigoBpm);
 	}
+
+	public List<TrakingProcesoWrapper> findTrakingAreaByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingAreaByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm);
+	}
 }
