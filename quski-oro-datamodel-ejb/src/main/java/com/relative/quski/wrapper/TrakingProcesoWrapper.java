@@ -1,6 +1,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class TrakingProcesoWrapper implements Serializable{
@@ -25,7 +26,21 @@ public class TrakingProcesoWrapper implements Serializable{
 	private String usuario;
 	private String seccion;
 	private String area;
+	private BigDecimal orden;
 	
+	
+	
+	public TrakingProcesoWrapper( String codigoBpm,String proceso,  String actividad,
+			String seccion,String tiempoTranscurrido, BigDecimal orden) {
+		super();
+		this.proceso = proceso;
+		this.codigoBpm = codigoBpm;
+		this.tiempoTranscurrido = tiempoTranscurrido;
+		this.actividad = actividad;
+		this.seccion = seccion;
+		this.orden = orden;
+	}
+
 	public TrakingProcesoWrapper(String codigoBpm, String proceso, String codigoSoftbank, Date fechaCreacion, String actividad, String  tiempoTranscurrido, String  usuario) {
 		this.proceso = proceso;
 		this.codigoBpm = codigoBpm;
@@ -171,6 +186,14 @@ public class TrakingProcesoWrapper implements Serializable{
 	}
 	public void setArea(String area) {
 		this.area = area;
+	}
+
+	public BigDecimal getOrden() {
+		return orden;
+	}
+
+	public void setOrden(BigDecimal orden) {
+		this.orden = orden;
 	}
 	
 }

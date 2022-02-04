@@ -451,13 +451,15 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 	public List<TrakingProcesoWrapper> trakingSeccionConsolidadoByCodigoBpm(String codigoBpm, int startRecord,
 			Integer pageSize, String sortFields, String sortDirections) throws RelativeException {
 		try {
-			String querySelect = "select * from (" + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"seccion," + 
-					"coalesce(to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS'),' ') as tiempoTranscurrido " + 
-					"from tb_qo_tracking traking " + 
-					"group by codigo_bpm , seccion" + 
+			String querySelect = "select codigo_bpm, proceso,actividad, seccion, tiempoTranscurrido, orden  from ( " + 
+					"select  codigo_bpm , " + 
+					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso, " + 
+					"coalesce(seccion,' ') as seccion, " + 
+					"coalesce(actividad,' ') as actividad, " + 
+					"coalesce(to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS'),' ') as tiempoTranscurrido, " + 
+					"coalesce((select orden from tb_qo_traking_orden where seccion = traking.seccion and etiqueta = traking.actividad limit 1),0) as orden  " + 
+					"from tb_qo_tracking traking  " + 
+					"group by codigo_bpm , seccion, actividad order by orden " + 
 					") as tbl where 1=1";
 			StringBuilder strQry = new StringBuilder( querySelect );
 			if(StringUtils.isNotBlank(codigoBpm) ) {
