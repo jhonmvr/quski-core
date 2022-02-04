@@ -108,16 +108,16 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public Long countOperacion(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			String querySelect = "select count(*) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
-					"union " + 
-					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
-					"union " + 
-					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
-					"union " + 
-					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+			String querySelect = "select count(*) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,' ') as operacion,coalesce(cre.numero_operacion_anterior,' ') as operacion_ant, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad   " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')  " + 
+					"union  " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"union  " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'  " + 
+					"union  " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
 					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
@@ -157,7 +157,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and codigo iLIKE :codigoBpm ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
-				strQry.append(" and operacion iLIKE :codigosoft ");
+				strQry.append(" and (operacion iLIKE :codigosoft or operacion_ant iLIKE :codigosoft)");
 			}
 
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -201,16 +201,16 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException {
 		try {
-			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
-					"union " + 
-					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
-					"union " + 
-					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
-					"union " + 
-					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,' ') as operacion,coalesce(cre.numero_operacion_anterior,' ') as operacion_ant, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad   " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')  " + 
+					"union  " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"union  " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'  " + 
+					"union  " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
 					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
@@ -250,7 +250,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and codigo iLIKE :codigoBpm ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
-				strQry.append(" and operacion iLIKE :codigosoft ");
+				strQry.append(" and (operacion iLIKE :codigosoft or operacion_ant iLIKE :codigosoft)");
 			}
 			strQry.append(" LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -728,16 +728,16 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException {
 		try {
-			String querySelect = "select sum(monto) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad  " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
-					"union " + 
-					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
-					"union " + 
-					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
-					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO' " + 
-					"union " + 
-					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, 'NULL') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad " + 
+			String querySelect = "select sum(monto) from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,' ') as operacion,coalesce(cre.numero_operacion_anterior,' ') as operacion_ant, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CREDITO_NEGOCIACION cr where cr.CODIGO = tra.CODIGO_BPM  order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD' ) as actividad   " + 
+					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')  " + 
+					"union  " + 
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_DEVOLUCION dev, TB_QO_TRACKING tra where dev.CODIGO = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"union  " + 
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_CLIENTE_PAGO pag where pag.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
+					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'  " + 
+					"union  " + 
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, coalesce ((select tra.ACTIVIDAD from TB_QO_TRACKING tra, TB_QO_VERIFICACION_TELEFONICA ver where ver.codigo = tra.CODIGO_BPM order by tra.FECHA_INICIO desc limit 1),'SIN ACTIVIDAD') as actividad  " + 
 					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
@@ -777,7 +777,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and codigo iLIKE :codigoBpm ");
 			}
 			if(StringUtils.isNotBlank(wp.getCodigoSoft() ) ) {
-				strQry.append(" and operacion iLIKE :codigosoft ");
+				strQry.append(" and (operacion iLIKE :codigosoft or operacion_ant iLIKE :codigosoft)");
 			}
 
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
