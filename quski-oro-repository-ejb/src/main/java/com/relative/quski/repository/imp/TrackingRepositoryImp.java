@@ -193,51 +193,48 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 	public List<TrakingProcesoWrapper> trakingByCodigoBpm(String codigoBpm, Integer startRecord, Integer pageSize,
 			String sortFields, String sortDirections) throws RelativeException {
 		try {
-			String querySelect = "select codigo_bpm, proceso,coalesce(codigoSoftbank,' ') as codigoSoftbank  , fechacreacion , coalesce(to_char(horainicio, 'HH24:MI:SS'),' ') as horainicio  ,   coalesce(to_char(horafin, 'HH24:MI:SS'),' ') as horafin ,coalesce(tiempotranscurrido,' ') as tiempotranscurrido  ,coalesce(vendedor,' ') as vendedor ,coalesce(aprobador,' ') as aprobador  , coalesce(observacion,' ') as observacion from (" + 
+			String querySelect = "select codigo_bpm, proceso,coalesce(codigoSoftbank,' ') as codigoSoftbank  , fechacreacion , coalesce(to_char(horainicio, 'HH24:MI:SS'),' ') as horainicio  ,   coalesce(to_char(horafin, 'HH24:MI:SS'),' ') as horafin ,coalesce(tiempotranscurrido,' ') as tiempotranscurrido  ,coalesce(vendedor,' ') as vendedor ,coalesce(aprobador,' ') as aprobador  , coalesce(observacion,' ') as observacion from ( " + 
+					"select  codigo_bpm ,  " + 
+					"proceso, " + 
+					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank , " + 
+					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion, " + 
+					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio, " + 
+					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin, " + 
+					"(select nego.asesor  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm ) as vendedor, " + 
+					"(select nego.aprobador  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm ) as aprobador, " + 
+					"(select 'Fabrica:'||cre.descripcion_devuelto ||' Asesor:' || nego.observacion_asesor  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm ) as observacion, " + 
+					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido  " + 
+					"from tb_qo_tracking traking  " + 
+					"where  proceso in ('RENOVACION','NUEVO')  " + 
+					"group by codigo_bpm , proceso " + 
+					"union all  " + 
 					"select  codigo_bpm , " + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select nego.asesor  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select nego.aprobador  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select his.observacion from tb_qo_historico_observacion his inner join tb_qo_credito_negociacion cre on cre.id = his.id_credito where cre.codigo = traking.codigo_bpm order by his.id desc limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('RENOVACION','NUEVO') " + 
-					"group by codigo_bpm " + 
-					"union all " + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select devo.asesor  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select devo.aprobador  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select devo.observaciones  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
-					"group by codigo_bpm " + 
-					"union all " + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"' '  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select pago.asesor  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select pago.aprobador  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select pago.observacion  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('PAGO') " + 
-					"group by codigo_bpm  " + 
+					"proceso, " + 
+					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank , " + 
+					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion, " + 
+					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio, " + 
+					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin, " + 
+					"(select devo.asesor  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm ) as vendedor, " + 
+					"(select devo.aprobador  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm ) as aprobador, " + 
+					"(select devo.observaciones  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm ) as observacion , " + 
+					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido  " + 
+					"from tb_qo_tracking traking  " + 
+					"where  proceso in ('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
+					"group by codigo_bpm , proceso " + 
+					"union all  " + 
+					"select  codigo_bpm , " + 
+					"proceso, " + 
+					"' '  as codigoSoftbank , " + 
+					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion, " + 
+					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio, " + 
+					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin, " + 
+					"(select pago.asesor  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm ) as vendedor, " + 
+					"(select pago.aprobador  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm ) as aprobador, " + 
+					"(select pago.observacion  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm ) as observacion , " + 
+					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido  " + 
+					"from tb_qo_tracking traking  " + 
+					"where  proceso in ('PAGO')  " + 
+					"group by codigo_bpm , proceso " + 
 					") as TBL  where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 			if(StringUtils.isNotBlank(codigoBpm) ) {
@@ -262,51 +259,24 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 	@Override
 	public Long trakingByCodigoBpm(String codigoBpm) throws RelativeException {
 		try {
-			String querySelect ="select count(*) from (" + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select nego.asesor  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select nego.aprobador  from tb_qo_credito_negociacion cre inner join tb_qo_negociacion nego on cre.id_negociacion  = nego.id where codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select his.observacion from tb_qo_historico_observacion his inner join tb_qo_credito_negociacion cre on cre.id = his.id_credito where cre.codigo = traking.codigo_bpm order by his.id desc limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('RENOVACION','NUEVO') " + 
-					"group by codigo_bpm " + 
-					"union all " + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"(select codigo_operacion_softbank   from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm and codigo_operacion_softbank is not null and codigo_operacion_softbank <> '' order by id desc limit 1)  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select devo.asesor  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select devo.aprobador  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select devo.observaciones  from tb_qo_devolucion devo where devo.codigo = traking.codigo_bpm limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('DEVOLUCION','CANCELACION_DEVOLUCION') " + 
-					"group by codigo_bpm " + 
-					"union all " + 
-					"select  codigo_bpm ," + 
-					"(select proceso from tb_qo_tracking where codigo_bpm = traking.codigo_bpm limit 1 ) as proceso," + 
-					"' '  as codigoSoftbank ," + 
-					"(select fecha_creacion    from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as fechaCreacion," + 
-					"(select fecha_inicio     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id asc limit 1) as horaInicio," + 
-					"(select fecha_fin     from tb_qo_tracking  where codigo_bpm = traking.codigo_bpm order by id desc limit 1) as horaFin," + 
-					"to_char(to_timestamp(sum(extract( epoch  from (fecha_fin - fecha_inicio)))) at time zone 'utc', 'HH24:MI:SS') as tiempoTranscurrido ," + 
-					"sum(tiempo_transcurrido)," + 
-					"(select pago.asesor  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as vendedor," + 
-					"(select pago.aprobador  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as aprobador," + 
-					"(select pago.observacion  from tb_qo_cliente_pago pago where pago.codigo = traking.codigo_bpm limit 1) as observacion " + 
-					"from tb_qo_tracking traking " + 
-					"where  proceso in ('PAGO') " + 
-					"group by codigo_bpm  " + 
+			String querySelect = "select count(*) from (  " + 
+					"select  codigo_bpm ,   " + 
+					"proceso " + 
+					"from tb_qo_tracking traking   " + 
+					"where  proceso in ('RENOVACION','NUEVO')   " + 
+					"group by codigo_bpm , proceso  " + 
+					"union all   " + 
+					"select  codigo_bpm ,  " + 
+					"proceso " + 
+					"from tb_qo_tracking traking   " + 
+					"where  proceso in ('DEVOLUCION','CANCELACION_DEVOLUCION')   " + 
+					"group by codigo_bpm , proceso  " + 
+					"union all   " + 
+					"select  codigo_bpm ,  " + 
+					"proceso " + 
+					"from tb_qo_tracking traking   " + 
+					"where  proceso in ('PAGO')   " + 
+					"group by codigo_bpm , proceso  " + 
 					") as TBL  where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 			if(StringUtils.isNotBlank(codigoBpm) ) {
