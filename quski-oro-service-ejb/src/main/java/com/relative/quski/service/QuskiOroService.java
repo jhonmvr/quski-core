@@ -187,6 +187,7 @@ import com.relative.quski.wrapper.TelefonosContactoClienteWrapper;
 import com.relative.quski.wrapper.TipoOroWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
 import com.relative.quski.wrapper.TrackingWrapper;
+import com.relative.quski.wrapper.TrakingProcesoWrapper;
 
 @Stateless
 public class QuskiOroService {
@@ -7448,14 +7449,7 @@ public class QuskiOroService {
 			if(wp == null) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS PARAMETROS DE BUSQUEDA");
 			}
-			log.info("-------->>>>"+wp.getCodigoBpm());
-			log.info("-------->>>>"+wp.getCodigoOperacionSoftbank());
-			log.info("-------->>>>"+wp.getUsuarioCreacion());
-			log.info("-------->>>>"+wp.getActividad());
-			log.info("-------->>>>"+wp.getFechaDesde());
-			log.info("-------->>>>"+wp.getFechaHasta());
-			log.info("-------->>>>"+wp.getProceso());
-			log.info("-------->>>>"+wp.getSeccion());
+			
 			if (pw != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
 				return this.trackingRepository.findByParams(wp,pw.getStartRecord(), pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
 			}else {
@@ -9160,5 +9154,70 @@ public class QuskiOroService {
 		mailNotificacion(para, asunto, textoContenido, null);
 			
 			
+	}
+
+	public List<TrakingProcesoWrapper> findTrakingByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingByCodigoBpm(codigoBpm);
+	}
+
+	public List<TrakingProcesoWrapper> findTrakingActividadByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingActividadByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingActividadByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingActividadByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingActividadByCodigoBpm(codigoBpm);
+	}
+
+	public List<TrakingProcesoWrapper> findTrakingSeccionByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingSeccionByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingSeccionByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingSeccionByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingSeccionByCodigoBpm(codigoBpm);
+	}
+
+	public List<TrakingProcesoWrapper> findTrakingSeccionConsolidadoByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingSeccionConsolidadoByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingSeccionConsolidadoByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingSeccionConsolidadoByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingSeccionConsolidadoByCodigoBpm(codigoBpm);
+	}
+
+	public List<TrakingProcesoWrapper> findTrakingAreaByCodigoBpm(String codigoBpm, PaginatedWrapper pw) throws RelativeException {
+		if (pw != null && pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm, pw.getStartRecord(), pw.getPageSize(),
+					pw.getSortFields(), pw.getSortDirections());
+		} else {
+			return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm,0, 10,"","");
+		}
+	}
+
+	public Long countTrakingAreaByCodigoBpm(String codigoBpm) throws RelativeException {
+		return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm);
 	}
 }
