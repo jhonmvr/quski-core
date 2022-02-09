@@ -36,6 +36,7 @@ public class ProcesoByIdReferenciaSpec extends AbstractSpecification<TbQoProceso
 		where.add(cb.notEqual(poll.get("estadoProceso"), EstadoProcesoEnum.RECHAZADO));
 		where.add(cb.notEqual(poll.get("estadoProceso"), EstadoProcesoEnum.CANCELADO));
 		where.add(cb.notEqual(poll.get("estadoProceso"), EstadoProcesoEnum.CADUCADO));
+		where.add(cb.notEqual(poll.get("estadoProceso"), EstadoProcesoEnum.APROBADO));
 		return cb.and(where.toArray(new Predicate[] {}));
 
 	}
