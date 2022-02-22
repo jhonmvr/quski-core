@@ -53,6 +53,8 @@ import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoHistoricoObservacion;
+import com.relative.quski.model.TbQoHistoricoObservacionEntrega;
+import com.relative.quski.model.TbQoHistoricoOperativa;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoPublicidad;
@@ -79,7 +81,9 @@ import com.relative.quski.repository.DireccionClienteRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ExcepcionRolRepository;
 import com.relative.quski.repository.ExcepcionesRepository;
+import com.relative.quski.repository.HistoricoObservacionEntregaRepository;
 import com.relative.quski.repository.HistoricoObservacionRepository;
+import com.relative.quski.repository.HistoricoOperativaRepository;
 import com.relative.quski.repository.NegociacionRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.ProcesoRepository;
@@ -148,6 +152,7 @@ import com.relative.quski.wrapper.GaranteWrapper;
 import com.relative.quski.wrapper.GarantiaOperacionWrapper;
 import com.relative.quski.wrapper.GaratiaAvaluoWrapper;
 import com.relative.quski.wrapper.HistoricoObservacionWrapper;
+import com.relative.quski.wrapper.HistoricoOperativaWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
@@ -255,6 +260,10 @@ public class QuskiOroService {
 	private PublicidadRepository publicidadRepository;
 	@Inject
 	private ReferidoRepository referidoRepository;
+	@Inject
+	private HistoricoOperativaRepository historicoOperativaRepository;
+	@Inject
+	private HistoricoObservacionEntregaRepository historicoObservacionEntregaRepository;
 	
 	
 	@Inject
@@ -6519,9 +6528,10 @@ public class QuskiOroService {
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(), autorizacion)  );
 
-				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
+				String sinExcepcion = "[\"SIN EXCEPCION\"]";
 				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 					this.notificarExcepcionOperativa( wp, Boolean.FALSE );
+					this.guardaraOperativa(wp.getExcepcionOperativa(), wp.getFechaRegularizacion(),  wp.getTbQoNegociacion(), wp.getTbQoNegociacion().getAsesor());
 				}
 				return result; 
 			}
@@ -6549,9 +6559,10 @@ public class QuskiOroService {
 						op, autorizacion, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_RENOVAR_OPERACION).getValor());
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp.getCredito() ) );
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
-				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION).getValor();
+				String sinExcepcion = "[\"SIN EXCEPCION\"]";
 				if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 					this.notificarExcepcionOperativa( wp.getCredito(), Boolean.TRUE );
+					this.guardaraOperativa(wp.getCredito().getExcepcionOperativa(), wp.getCredito().getFechaRegularizacion(), wp.getCredito().getTbQoNegociacion(), wp.getAsesor());
 				}
 				return result; 
 			}
@@ -8445,7 +8456,6 @@ public class QuskiOroService {
 				traking.setSeccion("ENVIADO A APROBAR");
 				this.registrarTraking(traking);
 				this.manageNegociacion( nego );
-				String sinExcepcion = this.parametroRepository.findByNombre( QuskiOroConstantes.SIN_EXCEPCION ).getValor();
 
 				this.mailSolicitudAprobacion(credito, proceso);
 				return this.manageProceso(proceso);
@@ -9220,4 +9230,179 @@ public class QuskiOroService {
 	public Long countTrakingAreaByCodigoBpm(String codigoBpm) throws RelativeException {
 		return this.trackingRepository.trakingAreaByCodigoBpm(codigoBpm);
 	}
+	
+	///hitorico operativa
+	
+	public TbQoHistoricoOperativa findHistoricoOperativaById(Long id) throws RelativeException {
+		
+		return historicoOperativaRepository.findById(id);
+	
+	}
+	
+	public List<TbQoHistoricoOperativa> findAllHistoricoOperativa(PaginatedWrapper pw) throws RelativeException {
+		try {
+			if (pw == null) {
+				return this.historicoOperativaRepository.findAll(TbQoHistoricoOperativa.class);
+			} else {
+				if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+					return this.historicoOperativaRepository.findAll(TbQoHistoricoOperativa.class, pw.getStartRecord(),
+							pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+	
+				} else {
+					return this.historicoOperativaRepository.findAll(TbQoHistoricoOperativa.class, pw.getSortFields(),
+							pw.getSortDirections());
+				}
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+	
+	public Long countHistoricoOperativa() throws RelativeException {
+		try {
+			return historicoOperativaRepository.countAll(TbQoHistoricoOperativa.class);
+		} catch (RelativeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+		}
+	}
+	
+	public TbQoHistoricoOperativa manageHistoricoOperativa(TbQoHistoricoOperativa send) throws RelativeException {
+		try {
+			TbQoHistoricoOperativa persisted = null;
+			if (send != null && send.getId() != null) {
+				persisted = this.findHistoricoOperativaById(send.getId());
+				return this.updateHistoricoOperativa(send, persisted);
+			} else if (send != null && send.getId() == null) {
+	
+				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				return historicoOperativaRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+	
+	public TbQoHistoricoOperativa updateHistoricoOperativa(TbQoHistoricoOperativa send, TbQoHistoricoOperativa persisted) throws RelativeException {
+		try {
+	
+			persisted.setFechaCreacion(send.getFechaCreacion());
+		
+			persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+			persisted.setUsuario(send.getUsuario());
+			return historicoOperativaRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+	
+	public TbQoHistoricoOperativa guardaraOperativa(String excepcionOperativa,Date fechaRegularizacion, TbQoNegociacion credito, String usuario) throws RelativeException {
+		try {
+			TbQoHistoricoOperativa historico = new TbQoHistoricoOperativa();
+			historico.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+			historico.setUsuario(usuario);
+			historico.setFechaRegularizacion(fechaRegularizacion);
+			historico.setExcepcion(excepcionOperativa);
+			historico.setTbQoNegociacion(credito);
+			return manageHistoricoOperativa(historico);
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
+	
+	public List<HistoricoOperativaWrapper> findHistoricoOperativaByIdCredito(Long idCredito) throws RelativeException {
+		return this.historicoOperativaRepository.findByIdCredito(idCredito);
+	}
+	
+	///hitorico observacion entrega
+	
+		public TbQoHistoricoObservacionEntrega findHistoricoObservacionEntregaById(Long id) throws RelativeException {
+			
+			return historicoObservacionEntregaRepository.findById(id);
+		
+		}
+		
+		public List<TbQoHistoricoObservacionEntrega> findAllHistoricoObservacionEntrega(PaginatedWrapper pw) throws RelativeException {
+			try {
+				if (pw == null) {
+					return this.historicoObservacionEntregaRepository.findAll(TbQoHistoricoObservacionEntrega.class);
+				} else {
+					if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+						return this.historicoObservacionEntregaRepository.findAll(TbQoHistoricoObservacionEntrega.class, pw.getStartRecord(),
+								pw.getPageSize(), pw.getSortFields(), pw.getSortDirections());
+		
+					} else {
+						return this.historicoObservacionEntregaRepository.findAll(TbQoHistoricoObservacionEntrega.class, pw.getSortFields(),
+								pw.getSortDirections());
+					}
+				}
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+		
+		public Long countHistoricoObservacionEntrega() throws RelativeException {
+			try {
+				return historicoObservacionEntregaRepository.countAll(TbQoHistoricoObservacionEntrega.class);
+			} catch (RelativeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
+			}
+		}
+		
+		public TbQoHistoricoObservacionEntrega manageHistoricoObservacionEntrega(TbQoHistoricoObservacionEntrega send) throws RelativeException {
+			try {
+				TbQoHistoricoObservacionEntrega persisted = null;
+				if (send != null && send.getId() != null) {
+					persisted = this.findHistoricoObservacionEntregaById(send.getId());
+					return this.updateHistoricoObservacionEntrega(send, persisted);
+				} else if (send != null && send.getId() == null) {
+		
+					send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+					return historicoObservacionEntregaRepository.add(send);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+							QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+				}
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+		
+		public TbQoHistoricoObservacionEntrega updateHistoricoObservacionEntrega(TbQoHistoricoObservacionEntrega send, TbQoHistoricoObservacionEntrega persisted) throws RelativeException {
+			try {
+		
+				persisted.setFechaCreacion(send.getFechaCreacion());
+			
+				//persisted.setTbQoNegociacion(send.getTbQoNegociacion());
+				persisted.setUsuario(send.getUsuario());
+				return historicoObservacionEntregaRepository.update(persisted);
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+		
+		public TbQoHistoricoObservacionEntrega guardaraObservacionEntrega(String excepcionOperativa,Date fechaRegularizacion, TbQoNegociacion credito, String usuario) throws RelativeException {
+			try {
+				TbQoHistoricoObservacionEntrega historico = new TbQoHistoricoObservacionEntrega();
+				historico.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				historico.setUsuario(usuario);
+				
+				return manageHistoricoObservacionEntrega(historico);
+			} catch (RelativeException e) {
+				throw e;
+			}
+		}
+		
+		public List<TbQoHistoricoObservacionEntrega> findHistoricoObservacionEntregaByIdCredito(Long idCredito) throws RelativeException {
+			return this.historicoObservacionEntregaRepository.findByIdCredito(idCredito);
+		}
+
 }
