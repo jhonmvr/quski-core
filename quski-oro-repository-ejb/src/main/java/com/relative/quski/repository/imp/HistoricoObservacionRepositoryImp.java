@@ -18,7 +18,7 @@ import com.relative.quski.wrapper.HistoricoObservacionWrapper;
 /**
  * Session Bean implementation class ParametrosRepositoryImp
  */
-@Stateless(mappedName = "rolTipoDocumentoRepository")
+@Stateless(mappedName = "historicoObservacionRepository")
 public class HistoricoObservacionRepositoryImp extends GeneralRepositoryImp<Long, TbQoHistoricoObservacion> implements HistoricoObservacionRepository {
 
 	@Override

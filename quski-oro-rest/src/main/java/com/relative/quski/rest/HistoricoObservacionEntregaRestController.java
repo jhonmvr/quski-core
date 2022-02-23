@@ -121,14 +121,14 @@ implements CrudRestControllerInterface<TbQoHistoricoObservacionEntrega, GenericW
 	}	
 	
 	@GET
-	@Path("/byIdCredito")
+	@Path("/byIdEntrega")
 	@ApiOperation(value = "GenericWrapper<TbQoHistoricoObservacionEntrega>", notes = "Metodo getEntity Retorna wrapper de entidades encontradas en TbQoHistoricoObservacionEntrega", response = GenericWrapper.class)
-	public GenericWrapper<TbQoHistoricoObservacionEntrega> byIdCredito(@QueryParam("idCredito") String idCredito) throws RelativeException {
+	public GenericWrapper<TbQoHistoricoObservacionEntrega> byIdCredito(@QueryParam("idEntrega") String idEntrega) throws RelativeException {
 		GenericWrapper<TbQoHistoricoObservacionEntrega> loc = new GenericWrapper<>();
-		if(StringUtils.isBlank(idCredito)) {
+		if(StringUtils.isBlank(idEntrega)) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID DEL CREDITO - HISTORICO OBSERVACION");
 		}
-		loc.setEntidades(this.qos.findHistoricoObservacionEntregaByIdCredito(Long.valueOf(idCredito)) );
+		loc.setEntidades(this.qos.findHistoricoObservacionEntregaByIdCredito(Long.valueOf(idEntrega)) );
 		return loc;
 	}
 	

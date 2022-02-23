@@ -9389,12 +9389,13 @@ public class QuskiOroService {
 			}
 		}
 		
-		public TbQoHistoricoObservacionEntrega guardaraObservacionEntrega(String excepcionOperativa,Date fechaRegularizacion, TbQoNegociacion credito, String usuario) throws RelativeException {
+		public TbQoHistoricoObservacionEntrega guardaraObservacionEntrega(String observacion, BigDecimal idDevolucion, String usuario) throws RelativeException {
 			try {
 				TbQoHistoricoObservacionEntrega historico = new TbQoHistoricoObservacionEntrega();
 				historico.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
 				historico.setUsuario(usuario);
-				
+				historico.setIdDevolucion(idDevolucion);
+				historico.setObservacion(observacion);
 				return manageHistoricoObservacionEntrega(historico);
 			} catch (RelativeException e) {
 				throw e;

@@ -376,10 +376,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas(@QueryParam("autorizacion") String autorizacion, @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+	public GenericWrapper<TbQoDevolucion> aprobarVerificacionFirmas(@QueryParam("autorizacion") String autorizacion,@QueryParam("usuario") String usuario,@QueryParam("motivo") String motivo, @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
-		loc.setEntidad(this.dos.aprobarVerificacionFirmas((Long.valueOf(idDevolucion)), autorizacion));
+		loc.setEntidad(this.dos.aprobarVerificacionFirmas(Long.valueOf(idDevolucion), autorizacion, motivo, usuario));
 		return loc;
 	}
 	
@@ -390,10 +390,10 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion) throws RelativeException {
+	public GenericWrapper<TbQoDevolucion> rechazarVerificacionFirmas( @QueryParam("idDevolucion") String idDevolucion,@QueryParam("usuario") String usuario, @QueryParam("motivo") String motivo) throws RelativeException {
 		GenericWrapper<TbQoDevolucion> loc = new GenericWrapper<>();
 		
-		loc.setEntidad(this.dos.rechazarVerificacionFirmas((Long.valueOf(idDevolucion))));
+		loc.setEntidad(this.dos.rechazarVerificacionFirmas(Long.valueOf(idDevolucion), motivo, usuario));
 		return loc;
 	}
 	@GET

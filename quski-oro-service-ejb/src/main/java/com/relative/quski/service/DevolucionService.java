@@ -1,6 +1,7 @@
 
 package com.relative.quski.service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -376,6 +377,7 @@ public class DevolucionService {
 			TbQoDevolucion devolucion = devolucionRepository.findById(idDevolucion);
 			ProcesoDevolucionWrapper result = new ProcesoDevolucionWrapper();
 			devolucion.setFechaAprobacionSolicitud(new Timestamp(System.currentTimeMillis()));
+			devolucion.setObservacionAprobador(motivo);
 			result.setDevolucion(this.manageDevolucion(devolucion));
 			if (aprobado) {
 				proceso = this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, usuario);
@@ -388,6 +390,7 @@ public class DevolucionService {
 				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			}
 			this.mailSolicitudEntregaNegada(devolucion, proceso);
+			this.qos.guardaraObservacionEntrega(devolucion.getObservacionAprobador(), BigDecimal.valueOf(devolucion.getId()), usuario);
 			return result;
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -773,7 +776,7 @@ public class DevolucionService {
 		}
 	}
 
-	public TbQoDevolucion aprobarVerificacionFirmas(Long id, String autorizacion) throws RelativeException {
+	public TbQoDevolucion aprobarVerificacionFirmas(Long id, String autorizacion, String motivo, String usuario) throws RelativeException {
 		try {
 			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
 			TbQoProceso cancelar = qos.findProcesoByIdReferencia(id, ProcesoEnum.CANCELACION_DEVOLUCION);
@@ -789,8 +792,10 @@ public class DevolucionService {
 			}
 			this.qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.APROBADO , null);
 			devolucion.setFechaEntrega(new Date());
+			devolucion.setObservacionAprobador(motivo);
 			devolucion = this.manageDevolucion(devolucion);
 			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE, autorizacion);
+			this.qos.guardaraObservacionEntrega(devolucion.getObservacionAprobador(), BigDecimal.valueOf(devolucion.getId()), usuario);
 			this.notificarDevolucionVerificacionFirmas(Boolean.TRUE, devolucion);
 			return devolucion;
 		} catch ( RelativeException e ) {
@@ -802,7 +807,7 @@ public class DevolucionService {
 		}
 	}
 
-	public TbQoDevolucion rechazarVerificacionFirmas(Long id) throws RelativeException {
+	public TbQoDevolucion rechazarVerificacionFirmas(Long id, String motivo, String usuario) throws RelativeException {
 		try {
 			TbQoProceso procesoDevolucion = qos.findProcesoByIdReferencia(id, ProcesoEnum.DEVOLUCION);
 			TbQoDevolucion devolucion = devolucionRepository.findById(id); 
@@ -814,7 +819,9 @@ public class DevolucionService {
 			}
 			qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 			devolucion.setDevuelto(true);
+			devolucion.setObservacionAprobador(motivo);
 			devolucion =  this.manageDevolucion(devolucion);
+			this.qos.guardaraObservacionEntrega(devolucion.getObservacionAprobador(), BigDecimal.valueOf(devolucion.getId()), usuario);
 			this.notificarDevolucionVerificacionFirmas(Boolean.FALSE, devolucion);
 			return devolucion;
 		} catch ( RelativeException e ) {
@@ -909,6 +916,7 @@ public class DevolucionService {
 				}
 				pro.setUsuario(usuario);
 				TbQoDevolucion devolucion =  this.findDevolucionById(idDevolucion);
+				this.qos.guardaraObservacionEntrega(devolucion.getObservaciones(), BigDecimal.valueOf(devolucion.getId()), devolucion.getAsesor());
 				bloquear(pro, devolucion,QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
 				this.mailSolicitudEntrega(devolucion,pro );
 				return pro;
