@@ -1259,6 +1259,7 @@ public class DevolucionService {
 				.replace("--nombreCliente--", StringUtils.isNotBlank(devolucion.getNombreCliente())?devolucion.getNombreCliente() : "")
 				.replace("--asesor--", StringUtils.isNotBlank(devolucion.getNombreAsesor())?devolucion.getNombreAsesor() : "")
 				.replace("--observacionesAsesor--", StringUtils.isNotBlank(devolucion.getObservaciones())?devolucion.getObservaciones() :"" )
+				.replace("--observacionesAprobador--", StringUtils.isNotBlank(devolucion.getObservacionAprobador())?devolucion.getObservacionAprobador() :"" )
 				.replace("--observacionAprobador--", StringUtils.isNotBlank(devolucion.getObservacionAprobador())?devolucion.getObservacionAprobador() :"" );
 		String[] para = Stream.of(devolucion.getCorreoAsesor()).toArray(String[]::new);
 		
