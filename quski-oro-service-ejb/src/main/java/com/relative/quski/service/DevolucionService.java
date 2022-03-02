@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
@@ -31,22 +32,22 @@ import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoProceso;
-import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ParametroRepository;
-import com.relative.quski.repository.imp.DevolucionRepositoryImp;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.ActaEntregaRecepcionApoderadoWrapper;
 import com.relative.quski.wrapper.ActaEntregaRecepcionHerederoWrapper;
 import com.relative.quski.wrapper.ActaEntregaRecepcionWrapper;
 import com.relative.quski.wrapper.BloqueoWrapper;
+import com.relative.quski.wrapper.CatalogoAgenciaWrapper;
 import com.relative.quski.wrapper.ConsultaOperacionGlobalWrapper;
 import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.DevolucionReporteWrapper;
+import com.relative.quski.wrapper.EntregaGarantiasReporteWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.HerederoConsolidadoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
@@ -77,6 +78,7 @@ public class DevolucionService {
 	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
 	@Inject 
 	ReportService rs;
+	
 
 	public TbQoDevolucion findDevolucionById(Long id) throws RelativeException {
 		return devolucionRepository.findById(id);
@@ -1296,24 +1298,63 @@ public class DevolucionService {
 	public Integer countDevolucionReporte(DevolucionParamsWrapper wp) throws RelativeException {
 		return this.devolucionRepository.countDevolucionReporte(wp);
 	}
-//private ObjetoHabilitanteWrapper generateReport(Map<String, Object> map,String path, String format,TbQoTipoDocumento td) throws RelativeException{
-	public List<DevolucionReporteWrapper> descargarReporte(DevolucionParamsWrapper wp) throws RelativeException {
+
+	public ObjetoHabilitanteWrapper descargarReporte(DevolucionParamsWrapper wp, String autorizacion) throws RelativeException {
 		
-		byte[] reportFile = null;
-		Map<String, Object> map = new HashMap<>();
-		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
-		map.put("mainReportName", "");
-		map.put("REPORT_PATH", path );
-		ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
-		//String mainReportName = td.getPlantilla();
-		log.info("REPORT PATH DATA ==>>>"+map.get("REPORT_PATH")+map.get("mainReportName"));
-		reportFile = this.rs.generateReporteBeanCsv(null,map,		
-				map.get("REPORT_PATH")+map.get("mainReportName").toString() );
-		ohw.setDocumentoHabilitanteByte(reportFile);
-		log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
-		log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
+		try {
+			byte[] reportFile = null;
+			Map<String, Object> map = new HashMap<>();
+			String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+			map.put("mainReportName", "");
+			map.put("REPORT_PATH", path );
+			List<EntregaGarantiasReporteWrapper> list = this.setDataReporte(wp,autorizacion);
+			map.put("BEAN_DS",list );
+			ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
+			//String mainReportName = td.getPlantilla();
+			log.info("REPORT PATH DATA ==>>>"+"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper");
+			reportFile = this.rs.generateReporteFromBeanPDF(list,map,"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper" );
+			ohw.setDocumentoHabilitanteByte(reportFile);
+			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
+			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
+			
+			return ohw;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	private List<EntregaGarantiasReporteWrapper>  setDataReporte(DevolucionParamsWrapper wp, String autorizacion) throws RelativeException {
+		List<DevolucionReporteWrapper> list = this.devolucionRepository.findDevolucionReporte(wp);
+		List<EntregaGarantiasReporteWrapper> result = new ArrayList<>();
+		String service = this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_AGENCIA).getValor();
+		List<CatalogoAgenciaWrapper> agencias= SoftBankApiClient.callCatalogoAgenciaRest( service, autorizacion );
+		if(list != null && !list.isEmpty() && agencias != null && !agencias.isEmpty()) {
+			log.info("=========>=========>MAP TO REPORTE ENTREGA con mapear agencias");
+			result = list.stream().map(i -> new EntregaGarantiasReporteWrapper(i.getCodigoOperacion() ,  i.getCodigoBpm(),  i.getNombreCliente(),
+					i.getCedulaCliente(),  i.getEstadoProceso(), 
+					i.getIgAgenciaEntrega() != null?   agencias.stream().filter(p-> p.getId() == i.getIgAgenciaEntrega().longValue() ).findFirst().get().getNombre():"",
+					i.getIdAgencia() != null? agencias.stream().filter(p-> p.getId() == i.getIdAgencia().longValue() ).findFirst().get().getNombre():"",
+					i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega()))
+		    .collect(Collectors.toList());
+			
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(result);
+			
+			log.info("=========>=========>jsonString TO REPORTE ENTREGA con mapear agencias");
+			log.info(jsonString);
+		} else if (list != null && !list.isEmpty()) {
+			
+			log.info("=========>=========>MAP TO REPORTE ENTREGA sin agencias");
+			result = list.stream().map(i -> new EntregaGarantiasReporteWrapper(i.getCodigoOperacion() ,  i.getCodigoBpm(),  i.getNombreCliente(),
+					i.getCedulaCliente(),  i.getEstadoProceso(),  i.getIgAgenciaEntrega() != null?   i.getIgAgenciaEntrega().toString():"",  i.getIdAgencia() != null? i.getIdAgencia().toString():"",
+							i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega()))
+		    .collect(Collectors.toList());
 		
-		return null;
+		}
+		
+		return result;
 	}
 
 }

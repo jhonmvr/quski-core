@@ -31,6 +31,7 @@ import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.DevolucionReporteWrapper;
+import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
@@ -510,11 +511,11 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public PaginatedListWrapper<DevolucionReporteWrapper> descargarReporte(DevolucionParamsWrapper wp) throws RelativeException {
+	public ObjetoHabilitanteWrapper descargarReporte(@QueryParam("autorizacion") String autorizacion,DevolucionParamsWrapper wp) throws RelativeException {
 		
-		List<DevolucionReporteWrapper> actions = this.dos.descargarReporte( wp );
+	
 		
-		return null;
+		return  this.dos.descargarReporte( wp, autorizacion );
 		
 	}
 	

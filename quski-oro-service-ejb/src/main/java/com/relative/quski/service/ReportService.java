@@ -55,8 +55,8 @@ public class ReportService {
     
     public  byte[] generateReporteFromBeanPDF( @SuppressWarnings("rawtypes") List dataSource, Map<String, Object> parameters, String reportFilePath ) throws RelativeException{
     	try {
-    		log.info( "++++++>> Ingresa en el generateReportPdf con conexion " + dataSource + " path " +  reportFilePath );
-    		log.info( "++++++>> Ingresa en el generateReportPdf con parametros " + parameters );
+    		log.info( "++++++>> Ingresa en el generateReportPdf con  path " +  reportFilePath );
+    		//log.info( "++++++>> Ingresa en el generateReportPdf con parametros " + parameters );
 			ReportGenerator rg = new ReportGenerator(dataSource,parameters,reportFilePath);
 			ByteArrayOutputStream baos = rg.generateReportWithListDatasource();
 			if( baos != null ){
@@ -120,6 +120,8 @@ public class ReportService {
 				return baos.toByteArray();
 			}
 			return null;
+		}catch (RelativeException e) {
+			throw e;
 		}catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"ERROR GENERAL generateAvisoSiniestro " + e.getMessage());
 		}

@@ -516,14 +516,15 @@ public class ReportGenerator {
 			exporter.exportReport();
 			return baos;
 		} catch (JRException e) {
-			log.info("====>ERROR EN LA GENERACION DEL REPORTE  " + e.getMessage());
+			log.info("====>ERROR EN LA GENERACION DEL REPORTE JRException " + e.getMessage());
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					"====>ERROR EN LA GENERACION DEL REPORTE  " + e.getMessage());
 
 		} catch (Exception ex) {
-			log.info("====>ERROR EN LA GENERACION DEL REPORTE  " + ex.getMessage());
+			log.info("====>ERROR EN LA GENERACION DEL REPORTE Exception " + ex.getMessage());
+			ex.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
-					"====>ERROR EN LA GENERACION DEL REPORTE  " + ex.getMessage());
+					"====>ERROR EN LA GENERACION DEL REPORTE  " + ex.getCause());
 		}
 	}
 
