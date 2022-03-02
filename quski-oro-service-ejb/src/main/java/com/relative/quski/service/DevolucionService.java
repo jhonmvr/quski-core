@@ -1304,15 +1304,17 @@ public class DevolucionService {
 		try {
 			byte[] reportFile = null;
 			Map<String, Object> map = new HashMap<>();
-			String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+			//String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+			String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/ReporteEntregaGarantiasNew.jasper";
 			map.put("mainReportName", "");
 			map.put("REPORT_PATH", path );
 			List<EntregaGarantiasReporteWrapper> list = this.setDataReporte(wp,autorizacion);
-			map.put("BEAN_DS",list );
+			map.put("LIST_DS",list );
 			ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
 			//String mainReportName = td.getPlantilla();
-			log.info("REPORT PATH DATA ==>>>"+"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper");
-			reportFile = this.rs.generateReporteFromBeanPDF(list,map,"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper" );
+		//	log.info("REPORT PATH DATA ==>>>"+"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper");
+			
+			reportFile = this.rs.generateReporteBeanExcel(list,map, path );
 			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
