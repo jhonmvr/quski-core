@@ -6,13 +6,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.criteria.Predicate;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,9 +31,11 @@ import com.relative.quski.model.TbMiParametro;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ParametroRepository;
+import com.relative.quski.repository.imp.DevolucionRepositoryImp;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.ActaEntregaRecepcionApoderadoWrapper;
@@ -40,12 +43,15 @@ import com.relative.quski.wrapper.ActaEntregaRecepcionHerederoWrapper;
 import com.relative.quski.wrapper.ActaEntregaRecepcionWrapper;
 import com.relative.quski.wrapper.BloqueoWrapper;
 import com.relative.quski.wrapper.ConsultaOperacionGlobalWrapper;
+import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.DevolucionReporteWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.HerederoConsolidadoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
 import com.relative.quski.wrapper.ListHerederoWrapper;
+import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
@@ -69,6 +75,8 @@ public class DevolucionService {
 	
 	@Inject
 	private DocumentoHabilitanteRepository documentoHabilitanteRepository;
+	@Inject 
+	ReportService rs;
 
 	public TbQoDevolucion findDevolucionById(Long id) throws RelativeException {
 		return devolucionRepository.findById(id);
@@ -1268,37 +1276,44 @@ public class DevolucionService {
 	}
 	public static void main(String[] args) {
 		try {
-			// String code =
-			// "ewoJImhlcmVkZXJvIiA6IFt7ImNlZHVsYSI6IjE3MjA4MTIyMzciLCJub21icmUiOiJEaWVnbyBTZXJyYW5vIn0sIHsiY2VkdWxhIjoiMTcyMDgxMjIzOCIsIm5vbWJyZSI6IkRpZWdvIFNlcnJhbnUifV0KfQ==";
-
-			// String decodedUrl = new String(Base64.getDecoder().decode(code));
-			// Gson gsons = new GsonBuilder().create();
-			// System.out.print("decode" + decodedUrl);
-			// ListHerederoWrapper listHeredero= gsons.fromJson(decodedUrl,
-			// ListHerederoWrapper.class);
-			// String pepito = setStringHeredero(listHeredero.getHeredero());
-			// List<HerederoWrapper> lista = gsons.fromJson(decodedUrl, new
-			// ArrayList<HerederoWrapper>().getClass());
-			// Class<? extends ArrayList> listType = new
-			// ArrayList<HerederoWrapper>().getClass();
-
-			// List<HerederoWrapper> list = gsons.fromJson((String) decodedUrl, listType);
-			// HerederoWrapper heredero = list.get(0);
-
-			// System.out.print("HOLI" + listHeredero.getHeredero().get(0));
-			/*
-			 * for (HerederoWrapper h : listHeredero.getHeredero()) {
-			 * System.out.println(h.getCedula() +" " + h.getNombre() ); }
-			 */
-			/*
-			 * for (int i = 0; i < list.size(); i++) { gsons.fromJson((String) list.get(i),
-			 * HerederoWrapper.class); System.out.println(list.get(i)); }
-			 */
-			// System.out.print("HOLI" + list.get(1));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public List<DevolucionReporteWrapper> findDevolucionReporte(PaginatedWrapper pw,
+			DevolucionParamsWrapper wp) throws RelativeException {
+		if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.devolucionRepository.findDevolucionReporte(pw.getStartRecord(), pw.getPageSize(),pw.getSortFields(), pw.getSortDirections(),wp);
+		} else {
+			return this.devolucionRepository.findDevolucionReporte(wp);
+		}
+		
+	}
+
+	public Integer countDevolucionReporte(DevolucionParamsWrapper wp) throws RelativeException {
+		return this.devolucionRepository.countDevolucionReporte(wp);
+	}
+//private ObjetoHabilitanteWrapper generateReport(Map<String, Object> map,String path, String format,TbQoTipoDocumento td) throws RelativeException{
+	public List<DevolucionReporteWrapper> descargarReporte(DevolucionParamsWrapper wp) throws RelativeException {
+		
+		byte[] reportFile = null;
+		Map<String, Object> map = new HashMap<>();
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		map.put("mainReportName", "");
+		map.put("REPORT_PATH", path );
+		ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
+		//String mainReportName = td.getPlantilla();
+		log.info("REPORT PATH DATA ==>>>"+map.get("REPORT_PATH")+map.get("mainReportName"));
+		reportFile = this.rs.generateReporteBeanCsv(null,map,		
+				map.get("REPORT_PATH")+map.get("mainReportName").toString() );
+		ohw.setDocumentoHabilitanteByte(reportFile);
+		log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
+		log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
+		
+		return null;
 	}
 
 }

@@ -1,25 +1,43 @@
 package com.relative.quski.repository.imp;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoDevolucion;
+import com.relative.quski.model.TbQoExcepcion;
+import com.relative.quski.model.TbQoExcepcionRol;
+import com.relative.quski.model.TbQoNegociacion;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.repository.DevolucionRepository;
 import com.relative.quski.repository.spec.DevolucionByNumeroOperacionSpec;
 import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.DevolucionReporteWrapper;
+import com.relative.quski.wrapper.ExcepcionRolWrapper;
 
 /**
  * Session Bean implementation class ParametrosRepositoryImp
@@ -341,6 +359,321 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}
 		} catch (Exception e) {
 			throw new RelativeException(Constantes.ERROR_CODE_READ, " AL TRAER LOS RESULTADOS DE LA CONSULTA. ");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DevolucionReporteWrapper> findDevolucionReporte(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, DevolucionParamsWrapper wp) throws RelativeException {
+		try {
+
+			String querySelect = "select codigo_operacion, codigo, nombre_cliente, cedula_cliente, pro.estado_proceso, pro.proceso, id_agencia, id_agencia_entrega, " + 
+					"coalesce(to_char(dev.fecha_creacion at time zone 'utc', 'YYYY-MM-dd'),' ') as fc, " + 
+					"coalesce(to_char(dev.fecha_arribo at time zone 'utc', 'YYYY-MM-dd'),' ') as fa, " + 
+					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe " + 
+					"from tb_qo_devolucion dev inner join tb_qo_proceso pro on pro.id_referencia = dev.id and proceso = 'DEVOLUCION' where 1=1";
+
+
+			StringBuilder strQry = new StringBuilder(querySelect);
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and dev.codigo  like :codigoBpm ");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				strQry.append(" and pro.estado_proceso  = :estado ");
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				strQry.append(" and dev.id_agencia  = :agenciaRecepcion ");
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				strQry.append(" and dev.fecha_creacion >=:fcdesde ");
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				strQry.append(" and dev.fecha_creacion <=:fchasta ");
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				strQry.append(" and dev.fecha_arribo >=:fadesde ");
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				strQry.append(" and dev.fecha_arribo <=:fahasta ");
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				strQry.append(" and dev.fecha_entrega >=:fedesde ");
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				strQry.append(" and dev.fecha_entrega <=:fehasta ");
+			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				query.setParameter("codigoOperacion", "%"+ wp.getCodigoOperacion()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+ wp.getCodigoBpm()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				query.setParameter("estado",  wp.getEstado());
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				query.setParameter("identificacionCliente", "%"+ wp.getIdentificacionCliente()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				query.setParameter("nombreCliente", "%"+ wp.getNombreCliente()+"%");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				query.setParameter("agenciaEntrega",  wp.getAgenciaEntrega());
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				query.setParameter("agenciaRecepcion",  wp.getAgenciaRecepcion());
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				query.setParameter("fcdesde", wp.getFechaCreacionDesde());
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				query.setParameter("fchasta", wp.getFechaCreacionHasta());
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				query.setParameter("fadesde", wp.getFechaArriboDesde());
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				query.setParameter("fahasta", wp.getFechaArriboHasta());
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				query.setParameter("fedesde", wp.getFechaEntregaDesde());
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				query.setParameter("fehasta", wp.getFechaEntregaHasta());
+			}
+			
+			
+
+			query.setFirstResult(startRecord);
+			query.setMaxResults(pageSize);
+			
+
+		
+			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionReporteWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DevolucionReporteWrapper> findDevolucionReporte(DevolucionParamsWrapper wp) throws RelativeException {
+		try {
+
+			String querySelect = "select codigo_operacion, codigo, nombre_cliente, cedula_cliente, pro.estado_proceso, pro.proceso, id_agencia, id_agencia_entrega, " + 
+					"coalesce(to_char(dev.fecha_creacion at time zone 'utc', 'YYYY-MM-dd'),' ') as fc, " + 
+					"coalesce(to_char(dev.fecha_arribo at time zone 'utc', 'YYYY-MM-dd'),' ') as fa, " + 
+					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe " + 
+					"from tb_qo_devolucion dev inner join tb_qo_proceso pro on pro.id_referencia = dev.id and proceso = 'DEVOLUCION' where 1=1";
+
+
+			StringBuilder strQry = new StringBuilder(querySelect);
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and dev.codigo  like :codigoBpm ");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				strQry.append(" and pro.estado_proceso  = :estado ");
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				strQry.append(" and dev.id_agencia  = :agenciaRecepcion ");
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				strQry.append(" and dev.fecha_creacion >=:fcdesde ");
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				strQry.append(" and dev.fecha_creacion <=:fchasta ");
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				strQry.append(" and dev.fecha_arribo >=:fadesde ");
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				strQry.append(" and dev.fecha_arribo <=:fahasta ");
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				strQry.append(" and dev.fecha_entrega >=:fedesde ");
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				strQry.append(" and dev.fecha_entrega <=:fehasta ");
+			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				query.setParameter("codigoOperacion", "%"+ wp.getCodigoOperacion()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+ wp.getCodigoBpm()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				query.setParameter("estado",  wp.getEstado());
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				query.setParameter("identificacionCliente", "%"+ wp.getIdentificacionCliente()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				query.setParameter("nombreCliente", "%"+ wp.getNombreCliente()+"%");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				query.setParameter("agenciaEntrega",  wp.getAgenciaEntrega());
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				query.setParameter("agenciaRecepcion",  wp.getAgenciaRecepcion());
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				query.setParameter("fcdesde", wp.getFechaCreacionDesde());
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				query.setParameter("fchasta", wp.getFechaCreacionHasta());
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				query.setParameter("fadesde", wp.getFechaArriboDesde());
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				query.setParameter("fahasta", wp.getFechaArriboHasta());
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				query.setParameter("fedesde", wp.getFechaEntregaDesde());
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				query.setParameter("fehasta", wp.getFechaEntregaHasta());
+			}
+					
+			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionReporteWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
+		}
+	}
+	
+
+	@Override
+	public Integer countDevolucionReporte(DevolucionParamsWrapper wp) throws RelativeException {
+		try {
+
+			String querySelect = "select count(*) " + 
+					"from tb_qo_devolucion dev inner join tb_qo_proceso pro on pro.id_referencia = dev.id and proceso = 'DEVOLUCION'";
+
+
+			StringBuilder strQry = new StringBuilder(querySelect);
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				strQry.append(" and dev.codigo  like :codigoBpm ");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				strQry.append(" and pro.estado_proceso  = :estado ");
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				strQry.append(" and dev.id_agencia  = :agenciaRecepcion ");
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				strQry.append(" and dev.fecha_creacion >=:fcdesde ");
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				strQry.append(" and dev.fecha_creacion <=:fchasta ");
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				strQry.append(" and dev.fecha_arribo >=:fadesde ");
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				strQry.append(" and dev.fecha_arribo <=:fahasta ");
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				strQry.append(" and dev.fecha_entrega >=:fedesde ");
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				strQry.append(" and dev.fecha_entrega <=:fehasta ");
+			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+
+			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
+				query.setParameter("codigoOperacion", "%"+ wp.getCodigoOperacion()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
+				query.setParameter("codigoBpm", "%"+ wp.getCodigoBpm()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getEstado())) {
+				query.setParameter("estado",  wp.getEstado());
+			}
+			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
+				query.setParameter("identificacionCliente", "%"+ wp.getIdentificacionCliente()+"%");
+			}
+			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
+				query.setParameter("nombreCliente", "%"+ wp.getNombreCliente()+"%");
+			}
+			if (wp.getAgenciaEntrega() != null) {
+				query.setParameter("agenciaEntrega",  wp.getAgenciaEntrega());
+			}
+			if (wp.getAgenciaRecepcion() != null) {
+				query.setParameter("agenciaRecepcion",  wp.getAgenciaRecepcion());
+			}
+			if (wp.getFechaCreacionDesde() != null) {
+				query.setParameter("fcdesde", wp.getFechaCreacionDesde());
+			}	
+			if (wp.getFechaCreacionHasta() != null) {
+				query.setParameter("fchasta", wp.getFechaCreacionHasta());
+			}
+			if (wp.getFechaArriboDesde() != null) {
+				query.setParameter("fadesde", wp.getFechaArriboDesde());
+			}	
+			if (wp.getFechaArriboHasta() != null) {
+				query.setParameter("fahasta", wp.getFechaArriboHasta());
+			}
+			if (wp.getFechaEntregaDesde() != null) {
+				query.setParameter("fedesde", wp.getFechaEntregaDesde());
+			}	
+			if (wp.getFechaEntregaHasta() != null) {
+				query.setParameter("fehasta", wp.getFechaEntregaHasta());
+			}
+
+		
+			return ((BigInteger) query.getSingleResult()).intValue();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
 		}
 	}
 

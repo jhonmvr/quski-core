@@ -27,8 +27,10 @@ import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.DevolucionService;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
+import com.relative.quski.wrapper.DevolucionReporteWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
 import com.relative.quski.wrapper.RespuestaBooleanaWrapper;
@@ -477,5 +479,43 @@ public class DevolucionRestController extends BaseRestController implements Crud
 			loc.setEntidad(a);
 			return loc;
 		}
-
+	
+	@POST
+	@Path("/reporteDevolucion")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<DevolucionReporteWrapper> reporteDevolucion(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, DevolucionParamsWrapper wp
+			) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<DevolucionReporteWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<DevolucionReporteWrapper> actions = this.dos.findDevolucionReporte(pw, wp );
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.dos.countDevolucionReporte(wp));
+			plw.setList(actions);
+		}
+		return plw;
+		
+	}
+	
+	@POST
+	@Path("/descargarReporte")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<DevolucionReporteWrapper> descargarReporte(DevolucionParamsWrapper wp) throws RelativeException {
+		
+		List<DevolucionReporteWrapper> actions = this.dos.descargarReporte( wp );
+		
+		return null;
+		
+	}
+	
 }
