@@ -8379,6 +8379,12 @@ public class QuskiOroService {
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
+				
+				TbQoDocumentoHabilitante docCliente = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("2"),
+						ProcessEnum.CLIENTE, wp.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
+				if(docCliente == null || StringUtils.isBlank(docCliente.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
+				}
 				TbQoNegociacion nego = wp.getTbQoNegociacion();
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
@@ -8434,6 +8440,11 @@ public class QuskiOroService {
 				TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("10"), ProcessEnum.NOVACION, String.valueOf(idNegociacion));
 				if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+				}
+				TbQoDocumentoHabilitante docCliente = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("2"),
+						ProcessEnum.CLIENTE, credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
+				if(docCliente == null || StringUtils.isBlank(docCliente.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
 				}
 				TbQoNegociacion nego = credito.getTbQoNegociacion();
 				this.guardaraObservacion(observacionAsesor, credito, nego.getAsesor());

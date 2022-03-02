@@ -1,23 +1,26 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
+import java.util.List;
+
 import com.relative.quski.enums.ProcesoEnum;
+
 
 
 public class BusquedaPorAprobarWrapper implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private ProcesoEnum proceso; 		
+	private List<ProcesoEnum> proceso; 		
 	private String codigo;
-	private Long idAgencia; 	
+	private List<Long> idAgencia; 	
 	private String cedula;
 	private Long numberPage;
 	private Long numberItems;
 	
-	public ProcesoEnum getProceso() {
+	public List<ProcesoEnum> getProceso() {
 		return proceso;
 	}
-	public void setProceso(ProcesoEnum proceso) {
+	public void setProceso(List<ProcesoEnum> proceso) {
 		this.proceso = proceso;
 	}
 	public String getCodigo() {
@@ -26,10 +29,10 @@ public class BusquedaPorAprobarWrapper implements Serializable {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
-	public Long getIdAgencia() {
+	public List<Long> getIdAgencia() {
 		return idAgencia;
 	}
-	public void setIdAgencia(Long idAgencia) {
+	public void setIdAgencia(List<Long> idAgencia) {
 		this.idAgencia = idAgencia;
 	}
 	public String getCedula() {

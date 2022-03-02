@@ -395,10 +395,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and  cedula_cliente =:cedula");
 			}
 			if(wp.getProceso() != null) {
-				strQry.append(" and proceso =:proceso ");
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
 			}
-			if(wp.getIdAgencia() != null) {
-				strQry.append(" and id_agencia =:idAgencia ");
+			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
+				strQry.append(" and id_agencia in :idAgencia ");
 			}
 			strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -411,10 +412,8 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				query.setParameter("cedula", wp.getCedula() );
 			}
-			if(wp.getProceso() != null ) {
-				query.setParameter("proceso", wp.getProceso().toString() );
-			}
-			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
+			
+			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
 				query.setParameter("idAgencia", wp.getIdAgencia() );
 			}
 			query.setParameter("limite", wp.getNumberItems() );
@@ -449,10 +448,11 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				strQry.append(" and  cedula_cliente =:cedula");
 			}
 			if(wp.getProceso() != null) {
-				strQry.append(" and proceso =:proceso ");
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
 			}
 			if(wp.getIdAgencia() != null) {
-				strQry.append(" and id_agencia =:idAgencia ");
+				strQry.append(" and id_agencia in :idAgencia ");
 			}
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
@@ -463,10 +463,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
 				query.setParameter("cedula", wp.getCedula() );
 			}
-			if(wp.getProceso() != null ) {
-				query.setParameter("proceso", wp.getProceso().toString() );
-			}
-			if(wp.getIdAgencia() != null && wp.getIdAgencia() != 0) {
+			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
 				query.setParameter("idAgencia", wp.getIdAgencia() );
 			}
 			int count = ((BigInteger) query.getSingleResult()).intValue();
