@@ -377,19 +377,19 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 			StringBuilder strQry = new StringBuilder(querySelect);
 			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
-				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+				strQry.append(" and dev.codigo_operacion  iLIKE :codigoOperacion ");
 			}
 			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
-				strQry.append(" and dev.codigo  like :codigoBpm ");
+				strQry.append(" and dev.codigo  iLIKE :codigoBpm ");
 			}
 			if (StringUtils.isNotBlank(wp.getEstado())) {
 				strQry.append(" and pro.estado_proceso  = :estado ");
 			}
 			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
-				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+				strQry.append(" and dev.cedula_cliente  iLIKE :identificacionCliente ");
 			}
 			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
-				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+				strQry.append(" and dev.nombre_cliente  iLIKE :nombreCliente ");
 			}
 			if (wp.getAgenciaEntrega() != null) {
 				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");
@@ -487,19 +487,19 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 			StringBuilder strQry = new StringBuilder(querySelect);
 			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
-				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+				strQry.append(" and dev.codigo_operacion  iLIKE :codigoOperacion ");
 			}
 			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
-				strQry.append(" and dev.codigo  like :codigoBpm ");
+				strQry.append(" and dev.codigo  iLIKE :codigoBpm ");
 			}
 			if (StringUtils.isNotBlank(wp.getEstado())) {
 				strQry.append(" and pro.estado_proceso  = :estado ");
 			}
 			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
-				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+				strQry.append(" and dev.cedula_cliente  iLIKE :identificacionCliente ");
 			}
 			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
-				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+				strQry.append(" and dev.nombre_cliente  iLIKE :nombreCliente ");
 			}
 			if (wp.getAgenciaEntrega() != null) {
 				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");
@@ -587,19 +587,19 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 
 			StringBuilder strQry = new StringBuilder(querySelect);
 			if (StringUtils.isNotBlank(wp.getCodigoOperacion())) {
-				strQry.append(" and dev.codigo_operacion  like :codigoOperacion ");
+				strQry.append(" and dev.codigo_operacion  iLIKE :codigoOperacion ");
 			}
 			if (StringUtils.isNotBlank(wp.getCodigoBpm())) {
-				strQry.append(" and dev.codigo  like :codigoBpm ");
+				strQry.append(" and dev.codigo  iLIKE :codigoBpm ");
 			}
 			if (StringUtils.isNotBlank(wp.getEstado())) {
 				strQry.append(" and pro.estado_proceso  = :estado ");
 			}
 			if (StringUtils.isNotBlank(wp.getIdentificacionCliente())) {
-				strQry.append(" and dev.cedula_cliente  like :identificacionCliente ");
+				strQry.append(" and dev.cedula_cliente  iLIKE :identificacionCliente ");
 			}
 			if (StringUtils.isNotBlank(wp.getNombreCliente())) {
-				strQry.append(" and dev.nombre_cliente  like :nombreCliente ");
+				strQry.append(" and dev.nombre_cliente  iLIKE :nombreCliente ");
 			}
 			if (wp.getAgenciaEntrega() != null) {
 				strQry.append(" and dev.id_agencia_entrega  = :agenciaEntrega ");

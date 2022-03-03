@@ -1314,7 +1314,7 @@ public class DevolucionService {
 			//String mainReportName = td.getPlantilla();
 		//	log.info("REPORT PATH DATA ==>>>"+"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper");
 			
-			reportFile = this.rs.generateReporteBeanExcel(list,map, path );
+			reportFile = this.rs.generateReporteBeanExcel(list,map, "/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper" );
 			ohw.setDocumentoHabilitanteByte(reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
