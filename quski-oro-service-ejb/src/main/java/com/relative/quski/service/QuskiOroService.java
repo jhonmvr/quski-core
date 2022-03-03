@@ -8044,7 +8044,7 @@ public class QuskiOroService {
 			credito.setFormaPagoValoracion( opcion.getFormaPagoValoracion() );
 			credito.setGastoCobranza(  BigDecimal.valueOf(opcion.getGastoCobranza()) );
 			credito.setImpuestoSolca(  BigDecimal.valueOf(opcion.getImpuestoSolca()) );
-			credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
+			//credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
 			credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(opcion.getMontoPrevioDesembolso() ));
 			credito.setPeriodicidadPlazo( opcion.getPeriodicidadPlazo() );
 			credito.setPeriodoPlazo( opcion.getPeriodoPlazo() );
