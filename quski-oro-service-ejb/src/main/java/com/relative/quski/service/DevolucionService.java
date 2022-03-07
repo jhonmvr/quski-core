@@ -1304,19 +1304,15 @@ public class DevolucionService {
 		try {
 			byte[] reportFile = null;
 			Map<String, Object> map = new HashMap<>();
-			//String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
-			String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/ReporteEntregaGarantiasNew.jasper";
+			String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+			path = path+ "ReporteEntregaGarantiasNew.jasper";
 			map.put("mainReportName", "");
 			map.put("REPORT_PATH", path );
 			List<EntregaGarantiasReporteWrapper> list = this.setDataReporte(wp,autorizacion);
 			map.put("LIST_DS",list );
 			ObjetoHabilitanteWrapper ohw = new ObjetoHabilitanteWrapper();
-			//String mainReportName = td.getPlantilla();
-		//	log.info("REPORT PATH DATA ==>>>"+"/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper");
-			
-			reportFile = this.rs.generateReporteBeanExcel(list,map, "/opt/jboss/wildfly/portalservicios_dir/reportes/ReporteEntregaGarantias.jasper" );
+			reportFile = this.rs.generateReporteBeanExcel(list,map, path );
 			ohw.setDocumentoHabilitanteByte(reportFile);
-			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile);
 			log.info("=========>=========>ENTRA EN TipoDocumentoRestController generateReport EXCEL 9 " + reportFile.length);
 			
 			return ohw;
@@ -1340,12 +1336,6 @@ public class DevolucionService {
 					i.getIdAgencia() != null? agencias.stream().filter(p-> p.getId() == i.getIdAgencia().longValue() ).findFirst().get().getNombre():"",
 					i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega()))
 		    .collect(Collectors.toList());
-			
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(result);
-			
-			log.info("=========>=========>jsonString TO REPORTE ENTREGA con mapear agencias");
-			log.info(jsonString);
 		} else if (list != null && !list.isEmpty()) {
 			
 			log.info("=========>=========>MAP TO REPORTE ENTREGA sin agencias");
