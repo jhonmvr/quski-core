@@ -5553,7 +5553,7 @@ public class QuskiOroService {
 					.replace("--perfil-preferencia--", "A") //donde saco el tipo
 					.replace("--agencia-originacion--", codigoAgencia)
 					.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
-					.replace("--calificacion-mupi--", credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())
+					.replace("--calificacion-mupi--", StringUtils.isNotBlank(credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi())?credito.getTbQoNegociacion().getTbQoCliente().getAprobacionMupi() :"N")
 					.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(credito.getCobertura())?credito.getCobertura():"0" )
 					.replace("--garanttias-detalle--", XMLGarantias.toString())
 					.replace("--monto-solicitado--", montoSolicitado.toString());
