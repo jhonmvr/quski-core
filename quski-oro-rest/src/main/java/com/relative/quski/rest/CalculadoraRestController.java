@@ -130,9 +130,10 @@ public class CalculadoraRestController extends BaseRestController
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<SimularResponse> simularOfertaRenovacionExcepcion(@QueryParam("autorizacion") String autorizacion,
+			@QueryParam("codigoAgencia") String codigoAgencia,
 			@QueryParam("idCredito") String idCredito,@QueryParam("cobertura") String cobertura) throws RelativeException {
 		GenericWrapper<SimularResponse> loc = new GenericWrapper<>();
-		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura , autorizacion);
+		SimularResponse a = this.qos.simularOfertaRenovacionExcepcion( Long.valueOf( idCredito ), cobertura ,codigoAgencia, autorizacion);
 		loc.setEntidad(a);
 		return loc;
 	}
