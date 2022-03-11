@@ -1990,6 +1990,10 @@ public class QuskiOroService {
 
 	public List<TipoOroWrapper> verPrecio(ClienteYReferidoWrapper clienteWrapper) throws RelativeException {
 		
+		if(clienteWrapper.getIdCreditoNegociacion() == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER ID DEL CREDITO");
+		}
+		
 		if(clienteWrapper.getCliente() == null) {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL CLIENTE");
 		}
@@ -2012,11 +2016,18 @@ public class QuskiOroService {
 		if(clienteWrapper.getCliente().getTbQoTelefonoClientes() != null && !clienteWrapper.getCliente().getTbQoTelefonoClientes().isEmpty() ) {
 			updateCliente(clienteWrapper.getCliente());
 			this.createTelefonosCliente(clienteWrapper.getCliente(), clienteWrapper.getCliente().getTbQoTelefonoClientes());
-		}
-		
-		else {
+		} else {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LOS NUMEROS DE TELEFONO");
 		}
+		TbQoCreditoNegociacion credito =  this.findCreditoNegociacionById(clienteWrapper.getIdCreditoNegociacion());
+		credito.setNombreCompletoApoderado(clienteWrapper.getNombreApoderado());
+		credito.setNombreCompletoCodeudor(clienteWrapper.getNombreCodeudor());
+		credito.setTipoCliente(clienteWrapper.getTipoCliente());
+		credito.setIdentificacionApoderado(clienteWrapper.getIdentificacionApoderado());
+		credito.setIdentificacionCodeudor(clienteWrapper.getIdentificacionCodeudor());
+		credito.setFechaNacimientoApoderado(clienteWrapper.getFechaNacimientoApoderado());
+		credito.setFechaNacimientoCodeudor(clienteWrapper.getFechaNacimientoCodeudor());
+		this.creditoNegociacionRepository.update(credito);
 		return this.tipoOro();
 	}
 	
@@ -2030,11 +2041,11 @@ public class QuskiOroService {
 	 * @return
 	 * @throws RelativeException 
 	 */
-	public TbQoCreditoNegociacion guardarOpcionCredito(List<CalculadoraOpcionWrapper> opcionCredito, String asesor,
+	public TbQoCreditoNegociacion guardarOpcionCredito(ClienteYReferidoWrapper opcionCredito, String asesor,
 			Long idCredito, String autorizacion, String nombreAsesor, String correoAsesor) throws RelativeException {
 		
 		log.info("==============> ENTRA A GUARDAR OPCION CREDITO");
-		CalculadoraOpcionWrapper opcion = opcionCredito.get(0);
+		CalculadoraOpcionWrapper opcion = opcionCredito.getOpcionCredito().get(0);
 		TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(idCredito);
 		credito.setId(idCredito);
 		credito.setPlazoCredito(opcion.getPlazo());
@@ -2078,6 +2089,13 @@ public class QuskiOroService {
 		credito.setCanalContacto(credito.getTbQoNegociacion().getTbQoCliente().getCanalContacto());
 		credito.getTbQoNegociacion().setNombreAsesor(nombreAsesor);
 		credito.getTbQoNegociacion().setCorreoAsesor(correoAsesor);
+		credito.setNombreCompletoApoderado(opcionCredito.getNombreApoderado());
+		credito.setNombreCompletoCodeudor(opcionCredito.getNombreCodeudor());
+		credito.setIdentificacionApoderado(opcionCredito.getIdentificacionApoderado());
+		credito.setIdentificacionCodeudor(opcionCredito.getIdentificacionCodeudor());
+		credito.setTipoCliente(opcionCredito.getTipoCliente());
+		credito.setFechaNacimientoApoderado(opcionCredito.getFechaNacimientoApoderado());
+		credito.setFechaNacimientoCodeudor(opcionCredito.getFechaNacimientoCodeudor());
 		this.negociacionRepository.update(credito.getTbQoNegociacion());
 		List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest(this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 //		if(listTablas == null || listTablas.isEmpty()) {
@@ -6812,6 +6830,14 @@ public class QuskiOroService {
 			List<JoyaWrapper> listjoyas = generarJoyas(credito, joyas);
 			datos.setGarantias( listjoyas );
 			result.setDatosGarantias( datos );
+			
+			GaranteWrapper garante = null;
+			if(credito.getTipoCliente().equalsIgnoreCase("SAP")) {
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionApoderado() , "SAP", credito.getNombreCompletoApoderado());	
+			}else if(credito.getTipoCliente().equalsIgnoreCase("SCD")) {
+				garante = new GaranteWrapper( Long.valueOf(1), credito.getIdentificacionCodeudor() , "SCD", credito.getNombreCompletoCodeudor());	
+			}
+			result.setDatosCodeudorApoderado( garante );
 			return result;
 		}catch(RelativeException e) {
 			e.printStackTrace();

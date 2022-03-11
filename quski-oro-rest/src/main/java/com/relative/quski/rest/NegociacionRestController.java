@@ -179,7 +179,7 @@ implements CrudRestControllerInterface<TbQoNegociacion, GenericWrapper<TbQoNegoc
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(@QueryParam("autorizacion") String autorizacion,List<CalculadoraOpcionWrapper> opcionCredito,
+	public GenericWrapper<TbQoCreditoNegociacion> guardarOpcionCredito(@QueryParam("autorizacion") String autorizacion,ClienteYReferidoWrapper opcionCredito,
 			@QueryParam("asesor") String asesor,@QueryParam("nombreAsesor") String nombreAsesor, @QueryParam("idCredito") String idCredito, @QueryParam("correoAsesor") String correoAsesor) throws RelativeException {
 		GenericWrapper<TbQoCreditoNegociacion> loc = new GenericWrapper<>();
 		if(StringUtils.isBlank(idCredito)) {

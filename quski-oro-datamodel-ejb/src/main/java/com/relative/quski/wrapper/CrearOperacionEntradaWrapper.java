@@ -25,6 +25,7 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 	private String codigoGradoInteres;
 	private DatosRegistroWrapper datosRegistro; 
 	private List<DatosCuentaClienteWrapper> datosCuentaCliente;
+	private GaranteWrapper datosCodeudorApoderado;
 	
 	
 	public CrearOperacionEntradaWrapper(String identificacion, String nombreCliente) {
@@ -136,5 +137,19 @@ public class CrearOperacionEntradaWrapper implements Serializable {
 
 	public void setNumeroOperacion(String numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
+	}
+
+
+
+
+	public GaranteWrapper getDatosCodeudorApoderado() {
+		return datosCodeudorApoderado;
+	}
+
+
+
+
+	public void setDatosCodeudorApoderado(GaranteWrapper datosCodeudorApoderado) {
+		this.datosCodeudorApoderado = datosCodeudorApoderado;
 	}
 }
