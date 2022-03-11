@@ -5716,7 +5716,7 @@ public class QuskiOroService {
 			}
 			
 		}
-		public SimularResponse simularOfertaRenovacionExcepcion(Long idCredito, String cobertura, String autorizacion) throws RelativeException {				
+		public SimularResponse simularOfertaRenovacionExcepcion(Long idCredito, String cobertura,String codigoAgencia, String autorizacion) throws RelativeException {				
 			try {
 				TbQoCreditoNegociacion credito = this.findCreditoNegociacionById(idCredito);
 				if( credito == null ) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO LA INFORMACION DEL CREDITO");}
@@ -5752,7 +5752,7 @@ public class QuskiOroService {
 						.replace("--riesgo-total--", "0.00")
 						.replace("--fecha-nacimiento--", QuskiOroUtil.dateToString(credito.getTbQoNegociacion().getTbQoCliente().getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI))
 						.replace("--perfil-preferencia--", "A") 
-						.replace("--agencia-originacion--", credito.getIdAgencia() != null ? credito.getIdAgencia().toString() : "1" )
+						.replace("--agencia-originacion--", codigoAgencia)
 						.replace("--identificacion-cliente--",credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente())
 						.replace("--calificacion-mupi--", "N")//consultar que pasa con la aprobacion de mupi
 						.replace("--cobertura-exepcionada--", StringUtils.isNotBlank(cobertura)?cobertura:"0" )
