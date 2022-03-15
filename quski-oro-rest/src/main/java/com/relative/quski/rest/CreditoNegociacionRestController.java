@@ -368,8 +368,8 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre,
 			 @QueryParam("correoAsesor") String correoAsesor, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
 		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
-		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp.getOpcion() != null ? wp.getOpcion() : null , wp.getGarantias() != null ? wp.getGarantias() : null , numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null,
-				asesor, Long.valueOf(idAgencia), numeroOperacionMadre, wp.getVariablesInternas(), autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor, correoAsesor);
+		RenovacionWrapper a = this.qos.crearCreditoRenovacion( wp, numeroOperacion, idNegociacion != null ? Long.valueOf( idNegociacion ): null,
+				asesor, Long.valueOf(idAgencia), numeroOperacionMadre, autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor, correoAsesor);
 		loc.setEntidad(a);
 		return loc;			
 	}

@@ -159,6 +159,7 @@ import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInte
 import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
+import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OpcionWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.PagosNovacionSoftWrapper;
@@ -175,7 +176,6 @@ import com.relative.quski.wrapper.ResultOperacionesAprobarWrapper;
 import com.relative.quski.wrapper.ResultOperacionesWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Garantias.Garantia;
-import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlOpcionesRenovacion.OpcionesRenovacion.Opcion;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
@@ -7888,8 +7888,8 @@ public class QuskiOroService {
 		}
 		
 	}
-	public RenovacionWrapper crearCreditoRenovacion(Opcion opcion, List<Garantia> garantias, String numeroOperacion, Long idNego,
-			String asesor, Long idAgencia, String numeroOperacionMadre, List<TbQoVariablesCrediticia> variablesInternas, String autorizacion,
+	public RenovacionWrapper crearCreditoRenovacion(OpcionAndGarantiasWrapper wp, String numeroOperacion, Long idNego,
+			String asesor, Long idAgencia, String numeroOperacionMadre, String autorizacion,
 			String nombreAgencia, String telefonoAsesor, String nombreAsesor, String correoAsesor) throws RelativeException {
 		try {
 			
@@ -7919,19 +7919,19 @@ public class QuskiOroService {
 				negociacion.setNombreAsesor(nombreAsesor);
 				negociacion.setCorreoAsesor(correoAsesor);
 				negociacion = this.manageNegociacion(negociacion);
-				TbQoCreditoNegociacion credito = this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion, nombreAgencia);
+				TbQoCreditoNegociacion credito = this.createCreditoNovacion(wp, numeroOperacion, numeroOperacionMadre,  idAgencia, null, autorizacion, nombreAgencia);
 				credito.setTbQoNegociacion( negociacion );
 				credito = this.manageCreditoNegociacion(credito);
 				credito = this.crearCodigoRenovacion(credito);
 				novacion.setCredito( credito );
 				novacion.setProceso( this.createProcesoNovacion(negociacion.getId(), asesor) );
-				if( garantias != null ) {
-					List<TbQoTasacion> tasacion =  this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), credito);
+				if( wp.getGarantias() != null ) {
+					List<TbQoTasacion> tasacion =  this.createTasacionByGarantia(wp.getGarantias(), novacion.getOperacionAnterior().getGarantias(), credito);
 					actualizarGarantiasSoftBank( tasacion, credito.getNumeroOperacionMadre(),asesor, autorizacion);
 					novacion.setTasacion(tasacion);					
 				}
 				
-				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, negociacion));
+				novacion.setVariables(this.createVariablesFromEquifax(wp.getVariablesInternas(), negociacion));
 				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() , autorizacion), negociacion, null) ) );
 			}else {
 				novacion = this.buscarRenovacionNegociacion(idNego, autorizacion);				
@@ -7941,14 +7941,14 @@ public class QuskiOroService {
 				novacion.getCredito().getTbQoNegociacion().setCorreoAsesor(correoAsesor);
 				novacion.getCredito().getTbQoNegociacion().setTelefonoAsesor(telefonoAsesor);
 				novacion.getCredito().setTbQoNegociacion( this.manageNegociacion( novacion.getCredito().getTbQoNegociacion()));
-				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(opcion, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion,nombreAgencia)));
-				if( garantias != null ) {
-					List<TbQoTasacion> tasacion = this.createTasacionByGarantia(garantias, novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ); 
+				novacion.setCredito( this.manageCreditoNegociacion( this.createCreditoNovacion(wp, numeroOperacion, numeroOperacionMadre, idAgencia, novacion.getCredito().getId(), autorizacion,nombreAgencia)));
+				if(  wp.getGarantias() != null ) {
+					List<TbQoTasacion> tasacion = this.createTasacionByGarantia( wp.getGarantias(), novacion.getOperacionAnterior().getGarantias(), novacion.getCredito() ); 
 					actualizarGarantiasSoftBank(tasacion,novacion.getCredito().getNumeroOperacionMadre(),asesor, autorizacion);
 					novacion.setTasacion( tasacion);
 				}
 				this.variablesCrediticiaRepository.deleteVariablesByNegociacionId(novacion.getCredito().getTbQoNegociacion().getId());
-				novacion.setVariables(this.createVariablesFromEquifax(variablesInternas, novacion.getCredito().getTbQoNegociacion()));
+				novacion.setVariables(this.createVariablesFromEquifax(wp.getVariablesInternas(), novacion.getCredito().getTbQoNegociacion()));
 				this.riesgoAcumuladoRepository.deleteByIdNegociacion(idNego);
 				novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( novacion.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente() , autorizacion), novacion.getCredito().getTbQoNegociacion(), null) ) );
 			}
@@ -8028,7 +8028,7 @@ public class QuskiOroService {
 		return listTasacion;
 		
 	}
-	private TbQoCreditoNegociacion createCreditoNovacion(Opcion opcion, String numeroOperacionAnterior, String numeroOperacionMadre, 
+	private TbQoCreditoNegociacion createCreditoNovacion(OpcionAndGarantiasWrapper wp, String numeroOperacionAnterior, String numeroOperacionMadre, 
 			Long idAgencia, Long id, String autorizacion, String nombreAgencia) throws RelativeException {
 		TbQoCreditoNegociacion credito;						
 		if(id != null) {
@@ -8040,49 +8040,49 @@ public class QuskiOroService {
 		}else {
 			credito = new TbQoCreditoNegociacion();
 		}
-		if(opcion != null) {
+		if(wp.getOpcion() != null) {
 			credito.setNombreAgencia(nombreAgencia);
-			credito.setaPagarCliente( BigDecimal.valueOf( opcion.getValorAPagar() ));
-			credito.setMontoFinanciado( BigDecimal.valueOf(opcion.getMontoFinanciado()) );
-			credito.setPlazoCredito( Long.valueOf(opcion.getPlazo()) );
-			credito.setValorCuota( BigDecimal.valueOf(opcion.getCuota() ));
-			credito.setCostoCustodia( BigDecimal.valueOf(opcion.getCostoCustodia()));
-			credito.setCostoFideicomiso(BigDecimal.valueOf( opcion.getCostoFideicomiso()));
-			credito.setCostoSeguro(BigDecimal.valueOf( opcion.getCostoSeguro()));
-			credito.setCostoTasacion( BigDecimal.valueOf( opcion.getCostoTasacion() ) );
-			credito.setCostoTransporte( BigDecimal.valueOf( opcion.getCostoTransporte()) );
-			credito.setCostoValoracion( BigDecimal.valueOf( opcion.getCostoValoracion()) );
-			credito.setCuota( BigDecimal.valueOf(opcion.getCuota() ));
-			credito.setCustodiaDevengada( BigDecimal.valueOf(opcion.getCustodiaDevengada() ));
-			credito.setDividendoFlujoPlaneado( BigDecimal.valueOf(opcion.getDIVIDENDOFLUJOPLANEADO() ));
-			credito.setDividendoProrrateo( BigDecimal.valueOf(opcion.getDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO() ));
-			credito.setFormaPagoCapital( opcion.getFormaPagoCapital());
-			credito.setFormaPagoCustodia( opcion.getFormaPagoCustodia() );
-			credito.setFormaPagoCustodiaDevengada( opcion.getFormaPagoCustodiaDevengada() );
-			credito.setFormaPagoFideicomiso( opcion.getFormaPagoFideicomiso() );
-			credito.setFormaPagoGastoCobranza( opcion.getFormaPagoGastoCobranza() );
-			credito.setFormaPagoImpuestoSolca( opcion.getFormaPagoImpuestoSolca() );
-			credito.setFormaPagoInteres( opcion.getFormaPagoInteres() );
-			credito.setFormaPagoMora( opcion.getFormaPagoMora() );
-			credito.setFormaPagoSeguro( opcion.getFormaPagoSeguro() );
-			credito.setFormaPagoTasador( opcion.getFormaPagoTasador() );
-			credito.setFormaPagoTransporte( opcion.getFormaPagoTransporte() );
-			credito.setFormaPagoValoracion( opcion.getFormaPagoValoracion() );
-			credito.setGastoCobranza(  BigDecimal.valueOf(opcion.getGastoCobranza()) );
-			credito.setImpuestoSolca(  BigDecimal.valueOf(opcion.getImpuestoSolca()) );
-			//credito.setaRecibirCliente( BigDecimal.valueOf( opcion.getValorARecibir()) );
-			credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(opcion.getMontoPrevioDesembolso() ));
-			credito.setPeriodicidadPlazo( opcion.getPeriodicidadPlazo() );
-			credito.setPeriodoPlazo( opcion.getPeriodoPlazo() );
-			credito.setPorcentajeFlujoPlaneado(  BigDecimal.valueOf(opcion.getPORCENTAJEFLUJOPLANEADO()) );
-			credito.setSaldoCapitalRenov(  BigDecimal.valueOf(opcion.getSaldoCapitalRenov()) );
-			credito.setSaldoInteres(  BigDecimal.valueOf(opcion.getSaldoInteres()) );
-			credito.setSaldoMora(  BigDecimal.valueOf(opcion.getSaldoMora() ));
-			credito.setTipoOferta( opcion.getTIPOOFERTA() );
-			credito.setTotalCostosOperacionAnterior( BigDecimal.valueOf( opcion.getTotalCostosOperacionAnterior()) );
-			credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( opcion.getTotalGastosNuevaOperacion()));
-			credito.setValorAPagar( BigDecimal.valueOf( opcion.getValorAPagar() ));
-			credito.setValorARecibir(BigDecimal.valueOf( opcion.getValorARecibir()));
+			credito.setaPagarCliente( BigDecimal.valueOf( wp.getOpcion().getValorAPagar() ));
+			credito.setMontoFinanciado( BigDecimal.valueOf(wp.getOpcion().getMontoFinanciado()) );
+			credito.setPlazoCredito( Long.valueOf(wp.getOpcion().getPlazo()) );
+			credito.setValorCuota( BigDecimal.valueOf(wp.getOpcion().getCuota() ));
+			credito.setCostoCustodia( BigDecimal.valueOf(wp.getOpcion().getCostoCustodia()));
+			credito.setCostoFideicomiso(BigDecimal.valueOf( wp.getOpcion().getCostoFideicomiso()));
+			credito.setCostoSeguro(BigDecimal.valueOf( wp.getOpcion().getCostoSeguro()));
+			credito.setCostoTasacion( BigDecimal.valueOf( wp.getOpcion().getCostoTasacion() ) );
+			credito.setCostoTransporte( BigDecimal.valueOf( wp.getOpcion().getCostoTransporte()) );
+			credito.setCostoValoracion( BigDecimal.valueOf( wp.getOpcion().getCostoValoracion()) );
+			credito.setCuota( BigDecimal.valueOf(wp.getOpcion().getCuota() ));
+			credito.setCustodiaDevengada( BigDecimal.valueOf(wp.getOpcion().getCustodiaDevengada() ));
+			credito.setDividendoFlujoPlaneado( BigDecimal.valueOf(wp.getOpcion().getDIVIDENDOFLUJOPLANEADO() ));
+			credito.setDividendoProrrateo( BigDecimal.valueOf(wp.getOpcion().getDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO() ));
+			credito.setFormaPagoCapital( wp.getOpcion().getFormaPagoCapital());
+			credito.setFormaPagoCustodia( wp.getOpcion().getFormaPagoCustodia() );
+			credito.setFormaPagoCustodiaDevengada( wp.getOpcion().getFormaPagoCustodiaDevengada() );
+			credito.setFormaPagoFideicomiso( wp.getOpcion().getFormaPagoFideicomiso() );
+			credito.setFormaPagoGastoCobranza( wp.getOpcion().getFormaPagoGastoCobranza() );
+			credito.setFormaPagoImpuestoSolca( wp.getOpcion().getFormaPagoImpuestoSolca() );
+			credito.setFormaPagoInteres( wp.getOpcion().getFormaPagoInteres() );
+			credito.setFormaPagoMora( wp.getOpcion().getFormaPagoMora() );
+			credito.setFormaPagoSeguro( wp.getOpcion().getFormaPagoSeguro() );
+			credito.setFormaPagoTasador( wp.getOpcion().getFormaPagoTasador() );
+			credito.setFormaPagoTransporte( wp.getOpcion().getFormaPagoTransporte() );
+			credito.setFormaPagoValoracion( wp.getOpcion().getFormaPagoValoracion() );
+			credito.setGastoCobranza(  BigDecimal.valueOf(wp.getOpcion().getGastoCobranza()) );
+			credito.setImpuestoSolca(  BigDecimal.valueOf(wp.getOpcion().getImpuestoSolca()) );
+			//credito.setaRecibirCliente( BigDecimal.valueOf( wp.getOpcion().getValorARecibir()) );
+			credito.setMontoPrevioDesembolso(  BigDecimal.valueOf(wp.getOpcion().getMontoPrevioDesembolso() ));
+			credito.setPeriodicidadPlazo( wp.getOpcion().getPeriodicidadPlazo() );
+			credito.setPeriodoPlazo( wp.getOpcion().getPeriodoPlazo() );
+			credito.setPorcentajeFlujoPlaneado(  BigDecimal.valueOf(wp.getOpcion().getPORCENTAJEFLUJOPLANEADO()) );
+			credito.setSaldoCapitalRenov(  BigDecimal.valueOf(wp.getOpcion().getSaldoCapitalRenov()) );
+			credito.setSaldoInteres(  BigDecimal.valueOf(wp.getOpcion().getSaldoInteres()) );
+			credito.setSaldoMora(  BigDecimal.valueOf(wp.getOpcion().getSaldoMora() ));
+			credito.setTipoOferta( wp.getOpcion().getTIPOOFERTA() );
+			credito.setTotalCostosOperacionAnterior( BigDecimal.valueOf( wp.getOpcion().getTotalCostosOperacionAnterior()) );
+			credito.setTotalGastosNuevaOperacion( BigDecimal.valueOf( wp.getOpcion().getTotalGastosNuevaOperacion()));
+			credito.setValorAPagar( BigDecimal.valueOf( wp.getOpcion().getValorAPagar() ));
+			credito.setValorARecibir(BigDecimal.valueOf( wp.getOpcion().getValorARecibir()));
 			List<CatalogoTablaAmortizacionWrapper>  listTablas =  SoftBankApiClient.callCatalogoTablaAmortizacionRest( this.parametroRepository.findByNombre(QuskiOroConstantes.CATALOGO_TABLA_AMOTIZACION).getValor(), autorizacion);
 //			if(listTablas == null || listTablas.isEmpty()) { throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL CATALOGO DE TABLA DE AMORTIZACION SOFTBANK"); }
 //			log.info("<<<<<<<================================= VALIDADOR TABLA==========================>>>>>");
@@ -8113,13 +8113,13 @@ public class QuskiOroService {
 //			});
 			if(listTablas != null && !listTablas.isEmpty()) {
 				listTablas.forEach(e->{
-					if(e.getCodigo().equalsIgnoreCase(opcion.getCodigoTabla())) {
+					if(e.getCodigo().equalsIgnoreCase(wp.getOpcion().getCodigoTabla())) {
 						credito.setNumeroCuotas(e.getNumeroCuotas());
 					}
 					
 				});
 			}
-			credito.setTablaAmortizacion( opcion.getCodigoTabla() );
+			credito.setTablaAmortizacion( wp.getOpcion().getCodigoTabla() );
   			//credito.setNumeroCuotas(e.getNumeroCuotas());
 //			if(StringUtils.isBlank(credito.getTablaAmortizacion())) {
 //				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR UN CODIGO DE TABLA DE AMORTIZACION PARA LA OPCION DE CREDITO SELECCCIONADA");
@@ -8130,6 +8130,13 @@ public class QuskiOroService {
 		//credito.setpagoDia( );
 		//credito.setmontoSolicitado();
 		//credito.setriesgoTotalCliente( opcion.get);
+		credito.setTipoCliente(wp.getTipoCliente());
+		credito.setNombreCompletoApoderado(wp.getNombreApoderado());
+		credito.setNombreCompletoCodeudor(wp.getNombreCodeudor());
+		credito.setIdentificacionApoderado(wp.getIdentificacionApoderado());
+		credito.setIdentificacionCodeudor(wp.getIdentificacionCodeudor());
+		credito.setFechaNacimientoApoderado(wp.getFechaNacimientoApoderado());
+		credito.setFechaNacimientoCodeudor(wp.getFechaNacimientoCodeudor());
 		credito.setEstado( EstadoEnum.ACT );
 		credito.setNumeroOperacionMadre(numeroOperacionMadre);
 		credito.setNumeroOperacionAnterior( numeroOperacionAnterior );
