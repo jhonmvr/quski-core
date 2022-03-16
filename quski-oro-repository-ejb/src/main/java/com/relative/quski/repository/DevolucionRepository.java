@@ -42,6 +42,16 @@ public interface DevolucionRepository extends CrudRepository<Long, TbQoDevolucio
 
 
 	public Integer countDevolucionReporte(DevolucionParamsWrapper wp) throws RelativeException;
+
+
+	public List<DevolucionReporteWrapper> findDevolucionProceso(int startRecord, Integer pageSize, String sortFields,
+			String sortDirections, DevolucionParamsWrapper wp) throws RelativeException;
+
+
+	public List<DevolucionReporteWrapper> findDevolucionProceso(DevolucionParamsWrapper wp) throws RelativeException;
+
+
+	public Integer countDevolucionProceso(DevolucionParamsWrapper wp) throws RelativeException;
 	
 
 }

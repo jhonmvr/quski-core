@@ -506,6 +506,30 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	}
 	
 	@POST
+	@Path("/procesoEntrega")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<DevolucionReporteWrapper> procesoEntrega(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, DevolucionParamsWrapper wp
+			) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<DevolucionReporteWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<DevolucionReporteWrapper> actions = this.dos.findDevolucionProceso(pw, wp );
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.dos.countDevolucionProceso(wp));
+			plw.setList(actions);
+		}
+		return plw;
+		
+	}
+	
+	@POST
 	@Path("/descargarReporte")
 	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
 	@ApiResponses(value = {

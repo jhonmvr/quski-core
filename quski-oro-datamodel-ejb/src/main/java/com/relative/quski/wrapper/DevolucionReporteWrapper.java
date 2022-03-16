@@ -21,8 +21,13 @@ public class DevolucionReporteWrapper implements Serializable {
 	private String fechaCreacion;
 	private String fechaArribo;
 	private String fechaEngrega;
+	private String fundaMadre;
+	private String fundaActual;
+	private String asesor;
+	private String fechaAprobacion;
+	private String fechaAnulacion;
 	
-	
+
 	// (java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.math.BigDecimal, java.sql.String, java.sql.String, java.sql.String)
 	public DevolucionReporteWrapper(String codigoOperacion, String codigoBpm, String nombreCliente,
 			String cedulaCliente, String estadoProceso, String proceso, BigDecimal idAgencia, BigDecimal igAgenciaEntrega,
@@ -39,6 +44,64 @@ public class DevolucionReporteWrapper implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaArribo = fechaArribo;
 		this.fechaEngrega = fechaEngrega;
+	}
+	
+	
+	
+	public DevolucionReporteWrapper(String codigoOperacion, String codigoBpm, String nombreCliente,
+			String cedulaCliente, String estadoProceso, String proceso, BigDecimal idAgencia,
+			BigDecimal igAgenciaEntrega, String fechaCreacion, String fechaArribo, String fechaEngrega,
+			String fundaMadre, String fundaActual, String asesor, String fechaAprobacion, String fechaAnulacion) {
+		super();
+		this.codigoOperacion = codigoOperacion;
+		this.codigoBpm = codigoBpm;
+		this.nombreCliente = nombreCliente;
+		this.cedulaCliente = cedulaCliente;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
+		this.idAgencia = idAgencia;
+		this.igAgenciaEntrega = igAgenciaEntrega;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaArribo = fechaArribo;
+		this.fechaEngrega = fechaEngrega;
+		this.fundaMadre = fundaMadre;
+		this.fundaActual = fundaActual;
+		this.asesor = asesor;
+		this.fechaAprobacion = fechaAprobacion;
+		this.fechaAnulacion = fechaAnulacion;
+	}
+
+
+
+	public String getFundaMadre() {
+		return fundaMadre;
+	}
+	public void setFundaMadre(String fundaMadre) {
+		this.fundaMadre = fundaMadre;
+	}
+	public String getFundaActual() {
+		return fundaActual;
+	}
+	public void setFundaActual(String fundaActual) {
+		this.fundaActual = fundaActual;
+	}
+	public String getAsesor() {
+		return asesor;
+	}
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
+	}
+	public String getFechaAprobacion() {
+		return fechaAprobacion;
+	}
+	public void setFechaAprobacion(String fechaAprobacion) {
+		this.fechaAprobacion = fechaAprobacion;
+	}
+	public String getFechaAnulacion() {
+		return fechaAnulacion;
+	}
+	public void setFechaAnulacion(String fechaAnulacion) {
+		this.fechaAnulacion = fechaAnulacion;
 	}
 	public String getCodigoOperacion() {
 		return codigoOperacion;

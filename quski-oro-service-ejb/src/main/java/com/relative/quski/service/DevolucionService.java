@@ -1349,4 +1349,16 @@ public class DevolucionService {
 		return result;
 	}
 
+	public List<DevolucionReporteWrapper> findDevolucionProceso(PaginatedWrapper pw, DevolucionParamsWrapper wp) throws RelativeException {
+		if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.devolucionRepository.findDevolucionProceso(pw.getStartRecord(), pw.getPageSize(),pw.getSortFields(), pw.getSortDirections(),wp);
+		} else {
+			return this.devolucionRepository.findDevolucionProceso(wp);
+		}
+	}
+
+	public Integer countDevolucionProceso(DevolucionParamsWrapper wp) throws RelativeException {
+		return this.devolucionRepository.countDevolucionProceso(wp);
+	}
+
 }
