@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -737,6 +738,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			if (wp.getFechaEntregaHasta() != null) {
 				strQry.append(" and dev.fecha_entrega <=:fehasta ");
 			}
+			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
+				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
+			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
@@ -795,6 +800,7 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DevolucionReporteWrapper> findDevolucionProceso(DevolucionParamsWrapper wp) throws RelativeException {
 		try {
@@ -852,6 +858,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}	
 			if (wp.getFechaEntregaHasta() != null) {
 				strQry.append(" and dev.fecha_entrega <=:fehasta ");
+			}
+			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
+				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
 			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -953,6 +963,10 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}	
 			if (wp.getFechaEntregaHasta() != null) {
 				strQry.append(" and dev.fecha_entrega <=:fehasta ");
+			}
+			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
+				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
 			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());

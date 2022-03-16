@@ -23,6 +23,7 @@ public class OperacionesWrapper implements Serializable {
     private String asesor;
     private String usuarioEjecutor;
     private String actividad;
+    private String motivo;
     
 	public OperacionesWrapper(BigDecimal id, String codigoBpm, String codigoOperacion,String codigoOperacionant, String nombreCliente, String cedulaCliente,
 			BigDecimal montoFinanciado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
@@ -42,6 +43,27 @@ public class OperacionesWrapper implements Serializable {
 		this.usuarioEjecutor = usuarioEjecutor;
 		this.actividad = actividad;
 		this.codigoOperacionant= codigoOperacionant;
+	}
+	
+	public OperacionesWrapper(BigDecimal id, String codigoBpm, String codigoOperacion,String codigoOperacionant, String nombreCliente, String cedulaCliente,
+			BigDecimal montoFinanciado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
+			String asesor, String usuarioEjecutor, String actividad, String motivo) {
+		super();
+		this.id = id;
+		this.codigoBpm = codigoBpm;
+		this.codigoOperacion = codigoOperacion;
+		this.nombreCliente = nombreCliente;
+		this.cedulaCliente = cedulaCliente;
+		this.montoFinanciado = montoFinanciado;
+		this.fechaCreacion = fechaCreacion;
+		this.idAgencia = idAgencia;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
+		this.asesor = asesor;
+		this.usuarioEjecutor = usuarioEjecutor;
+		this.actividad = actividad;
+		this.codigoOperacionant= codigoOperacionant;
+		this.motivo = motivo;
 	}
 	
 	public BigDecimal getId() {
@@ -130,6 +152,14 @@ public class OperacionesWrapper implements Serializable {
 
 	public void setCodigoOperacionant(String codigoOperacionant) {
 		this.codigoOperacionant = codigoOperacionant;
+	}
+
+	public String getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
 	}
 
 }

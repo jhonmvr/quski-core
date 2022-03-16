@@ -26,6 +26,7 @@ public class DevolucionReporteWrapper implements Serializable {
 	private String asesor;
 	private String fechaAprobacion;
 	private String fechaAnulacion;
+	private BigDecimal id;
 	
 
 	// (java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.math.BigDecimal, java.sql.String, java.sql.String, java.sql.String)
@@ -47,12 +48,13 @@ public class DevolucionReporteWrapper implements Serializable {
 	}
 	
 	
-	
-	public DevolucionReporteWrapper(String codigoOperacion, String codigoBpm, String nombreCliente,
+	//(java.math.BigDecimal, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.math.BigDecimal, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	public DevolucionReporteWrapper(BigDecimal id, String codigoOperacion, String codigoBpm, String nombreCliente,
 			String cedulaCliente, String estadoProceso, String proceso, BigDecimal idAgencia,
 			BigDecimal igAgenciaEntrega, String fechaCreacion, String fechaArribo, String fechaEngrega,
 			String fundaMadre, String fundaActual, String asesor, String fechaAprobacion, String fechaAnulacion) {
 		super();
+		this.id = id;
 		this.codigoOperacion = codigoOperacion;
 		this.codigoBpm = codigoBpm;
 		this.nombreCliente = nombreCliente;
@@ -168,6 +170,16 @@ public class DevolucionReporteWrapper implements Serializable {
 	}
 	public void setFechaEngrega(String fechaEngrega) {
 		this.fechaEngrega = fechaEngrega;
+	}
+
+
+	public BigDecimal getId() {
+		return id;
+	}
+
+
+	public void setId(BigDecimal id) {
+		this.id = id;
 	}
 	
 	

@@ -3,6 +3,9 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import com.relative.quski.enums.EstadoProcesoEnum;
 
 public class DevolucionParamsWrapper implements Serializable{
 
@@ -25,6 +28,7 @@ public class DevolucionParamsWrapper implements Serializable{
 	private Date  fechaArriboHasta;
 	private Date  fechaEntregaDesde;
 	private Date  fechaEntregaHasta;
+	private List<EstadoProcesoEnum> estados; 
 	public String getCodigoOperacion() {
 		return codigoOperacion;
 	}
@@ -102,6 +106,12 @@ public class DevolucionParamsWrapper implements Serializable{
 	}
 	public void setFechaEntregaHasta(Date fechaEntregaHasta) {
 		this.fechaEntregaHasta = fechaEntregaHasta;
+	}
+	public List<EstadoProcesoEnum> getEstados() {
+		return estados;
+	}
+	public void setEstados(List<EstadoProcesoEnum> estados) {
+		this.estados = estados;
 	}
 	
 	
