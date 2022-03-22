@@ -195,14 +195,15 @@ public class RegistrarPagoRestController extends BaseRestController
 			@QueryParam("isAprobar")  String isAprobar,			
 			@QueryParam("nombreAprobador")  String nombreAprobador,
 			@QueryParam("correoAprobador")  String correoAprobador,
-			@QueryParam("valorAprobador")  String valorAprobador
+			@QueryParam("valorAprobador")  String valorAprobador,
+			@QueryParam("observacionAprobador")  String observacionAprobador
 			) throws RelativeException {
 		GenericWrapper<TbQoProceso> loc = new GenericWrapper<TbQoProceso>();
 		if( Boolean.valueOf( isAprobar )) {
 			loc.setEntidad( this.ps.aprobarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador,correoAprobador, 
-					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null, autorizacion) );
+					StringUtils.isNotBlank(valorAprobador)? Double.valueOf(valorAprobador) : null, observacionAprobador, autorizacion) );
 		} else if(  !Boolean.valueOf( isAprobar ) ) {
-			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador) );
+			loc.setEntidad( this.ps.rechazarPago(Long.valueOf(id), Boolean.valueOf( isRegistro ), nombreAprobador, observacionAprobador) );
 			
 		}else {
 			throw new RelativeException( Constantes.ERROR_CODE_READ, " AL LEER BOLLEANO DE ENTRADA.");

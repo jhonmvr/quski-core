@@ -77,6 +77,7 @@ public class PagoService {
 			clienteCast.setPlazoCredito(wrapper.getPlazoCredito());
 			clienteCast.setNumeroCuentaCliente(wrapper.getNumeroCuentaCliente());
 			clienteCast.setNombreAsesor(wrapper.getNombreAsesor());
+			clienteCast.setCodigoOperacionMupi(wrapper.getCodigoOperacionMupi());
 			clienteCast = qos.manageClientePago( clienteCast );
 			RespuestaProcesoPagoBloqueoWrapper result = new RespuestaProcesoPagoBloqueoWrapper();
 			result.setCliente( clienteCast );
@@ -279,7 +280,7 @@ public class PagoService {
 	}
 
 	
-	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, Double valorAprobador, String autorizacion) throws RelativeException {
+	public TbQoProceso aprobarPago(Long id, Boolean isRegistro, String nombreAprobador, String mailAprobador, Double valorAprobador, String observacionAprobador, String autorizacion) throws RelativeException {
 		TbQoClientePago clientePago = null;
 		TbQoProceso proceso = null;
 		try {
@@ -290,6 +291,7 @@ public class PagoService {
 			}
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
+			clientePago.setObservacionAprobador(observacionAprobador);
 			if(valorAprobador != null) {
 				clientePago.setValorDepositado( BigDecimal.valueOf( valorAprobador ));
 			}
@@ -343,7 +345,7 @@ public class PagoService {
 					.replace("--asesor--", clientePago.getNombreAsesor())
 					.replace("--valorPago--", String.valueOf(clientePago.getValorDepositado().doubleValue()) )
 					.replace("--observacionAsesor--", clientePago.getObservacion())
-					.replace("--observacionAprobador--"," ");
+					.replace("--observacionAprobador--", StringUtils.isNotBlank(clientePago.getObservacionAprobador())? clientePago.getObservacionAprobador() : " ");
 			String[] para= {mailAsesor};
 			qos.mailNotificacion(para, asunto, textoContenido, null);
 		}else { 	//bloqueo
@@ -355,7 +357,7 @@ public class PagoService {
 					.replace("--asesor--", clientePago.getNombreAsesor())
 					.replace("--valorPago--", String.valueOf(clientePago.getValorDepositado().doubleValue()) )
 					.replace("--observacionAsesor--", clientePago.getObservacion())
-					.replace("--observacionAprobador--"," ");
+					.replace("--observacionAprobador--", StringUtils.isNotBlank(clientePago.getObservacionAprobador())? clientePago.getObservacionAprobador() : " ");
 			ArrayMap<java.lang.String,byte[]> adjunto = new ArrayMap<java.lang.String,byte[]>();
 			String[] para= {mailAsesor};
 			log.info("CONTENIDO ENVIA "+para+"--"+asunto+"--"+textoContenido+"--"+adjunto);
@@ -363,7 +365,7 @@ public class PagoService {
 		}
 	}
 
-	public TbQoProceso rechazarPago(Long id, Boolean isRegistro, String nombreAprobador) throws RelativeException {
+	public TbQoProceso rechazarPago(Long id, Boolean isRegistro, String nombreAprobador, String observacionAprobador) throws RelativeException {
 		try {
 			TbQoClientePago clientePago = clientePagoRepository.findById(id);
 			if(clientePago == null) {
@@ -372,6 +374,7 @@ public class PagoService {
 			clientePago.setUsuarioActualizacion(nombreAprobador);
 			clientePago.setAprobador(nombreAprobador);
 			clientePago.setEstado(EstadoEnum.ACT);
+			clientePago.setObservacionAprobador(observacionAprobador);
 			TbQoProceso proceso = qos.cambiarEstado( clientePago.getId(),  ProcesoEnum.PAGO, EstadoProcesoEnum.RECHAZADO, null);
 			if(proceso == null) {
 				throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
@@ -395,7 +398,7 @@ public class PagoService {
 					.replace("--asesor--", clientePago.getAsesor())
 					.replace("--valorPago--", String.valueOf(clientePago.getValorDepositado().doubleValue()) )
 					.replace("--observacionAsesor--", clientePago.getObservacion())
-					.replace("--observacionAprobador--"," ");
+					.replace("--observacionAprobador--", StringUtils.isNotBlank(observacionAprobador)? observacionAprobador : " ");
 				
 				
 				qos.mailNotificacion(para, asunto, textoContenido, null);
@@ -407,7 +410,7 @@ public class PagoService {
 							.replace("--nombreCliente--", clientePago.getNombreCliente())
 							.replace("--asesor--", clientePago.getAsesor())
 							.replace("--observacionAsesor--", clientePago.getObservacion())
-							.replace("--observacionAprobador--"," ");
+							.replace("--observacionAprobador--", StringUtils.isNotBlank(observacionAprobador)? observacionAprobador : " ");
 					qos.mailNotificacion(para, asunto, textoContenido, null);
 				}	
 			return proceso;

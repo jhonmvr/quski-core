@@ -47,6 +47,24 @@ public class DevolucionReporteWrapper implements Serializable {
 		this.fechaEngrega = fechaEngrega;
 	}
 	
+	public DevolucionReporteWrapper(String codigoOperacion, String codigoBpm, String nombreCliente,
+			String cedulaCliente, String estadoProceso, String proceso, BigDecimal idAgencia, BigDecimal igAgenciaEntrega,
+			String fechaCreacion, String fechaArribo, String fechaEngrega, String fundaActual) {
+		super();
+		this.codigoOperacion = codigoOperacion;
+		this.codigoBpm = codigoBpm;
+		this.nombreCliente = nombreCliente;
+		this.cedulaCliente = cedulaCliente;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
+		this.idAgencia = idAgencia;
+		this.igAgenciaEntrega = igAgenciaEntrega;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaArribo = fechaArribo;
+		this.fechaEngrega = fechaEngrega;
+		this.fundaActual = fundaActual;
+	}
+	
 	
 	//(java.math.BigDecimal, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.math.BigDecimal, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	public DevolucionReporteWrapper(BigDecimal id, String codigoOperacion, String codigoBpm, String nombreCliente,

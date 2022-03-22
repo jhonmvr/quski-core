@@ -51,7 +51,11 @@ public class TbQoClientePago implements Serializable {
 
 	@Column(name="nombre_cliente")
 	private String nombreCliente;
+	
 
+	@Column(name="observacion_aprobador")
+	private String observacionAprobador;
+	
 	private String observacion;
 
 	private String tipo;
@@ -96,6 +100,17 @@ public class TbQoClientePago implements Serializable {
 	@Column(name="nombre_asesor")
 	private String nombreAsesor;
 	
+	@Column(name="codigo_operacion_mupi")
+	private String codigoOperacionMupi;
+	
+	public String getCodigoOperacionMupi() {
+		return codigoOperacionMupi;
+	}
+
+	public void setCodigoOperacionMupi(String codigoOperacionMupi) {
+		this.codigoOperacionMupi = codigoOperacionMupi;
+	}
+
 	public TbQoClientePago() {
 	}
 
@@ -161,6 +176,14 @@ public class TbQoClientePago implements Serializable {
 
 	public void setNombreCliente(String nombreCliente) {
 		this.nombreCliente = nombreCliente;
+	}
+
+	public String getObservacionAprobador() {
+		return observacionAprobador;
+	}
+
+	public void setObservacionAprobador(String observacionAprobador) {
+		this.observacionAprobador = observacionAprobador;
 	}
 
 	public String getObservacion() {

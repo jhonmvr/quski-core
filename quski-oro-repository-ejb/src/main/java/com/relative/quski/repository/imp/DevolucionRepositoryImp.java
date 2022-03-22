@@ -372,7 +372,8 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			String querySelect = "select codigo_operacion, codigo, nombre_cliente, cedula_cliente, pro.estado_proceso, pro.proceso, id_agencia, id_agencia_entrega, " + 
 					"coalesce(to_char(dev.fecha_creacion at time zone 'utc', 'YYYY-MM-dd'),' ') as fc, " + 
 					"coalesce(to_char(dev.fecha_arribo at time zone 'utc', 'YYYY-MM-dd'),' ') as fa, " + 
-					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe " + 
+					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe, " + 
+					"dev.funda_actual " + 
 					"from tb_qo_devolucion dev inner join tb_qo_proceso pro on pro.id_referencia = dev.id and proceso = 'DEVOLUCION' where 1=1";
 
 
@@ -482,7 +483,8 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			String querySelect = "select codigo_operacion, codigo, nombre_cliente, cedula_cliente, pro.estado_proceso, pro.proceso, id_agencia, id_agencia_entrega, " + 
 					"coalesce(to_char(dev.fecha_creacion at time zone 'utc', 'YYYY-MM-dd'),' ') as fc, " + 
 					"coalesce(to_char(dev.fecha_arribo at time zone 'utc', 'YYYY-MM-dd'),' ') as fa, " + 
-					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe " + 
+					"coalesce(to_char(dev.fecha_entrega at time zone 'utc', 'YYYY-MM-dd'),' ') as fe, " + 
+					"dev.funda_actual " + 
 					"from tb_qo_devolucion dev inner join tb_qo_proceso pro on pro.id_referencia = dev.id and proceso = 'DEVOLUCION' where 1=1";
 
 

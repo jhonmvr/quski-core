@@ -29,6 +29,7 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	private String plazoCredito;
 	private String numeroCuentaCliente;
 	private String nombreAsesor;
+	private String codigoOperacionMupi;
 	
 	
 	
@@ -133,6 +134,12 @@ public class InicioProcesoPagoWrapper implements Serializable {
 	}
 	public void setMailAsesor(String mailAsesor) {
 		this.mailAsesor = mailAsesor;
+	}
+	public String getCodigoOperacionMupi() {
+		return codigoOperacionMupi;
+	}
+	public void setCodigoOperacionMupi(String codigoOperacionMupi) {
+		this.codigoOperacionMupi = codigoOperacionMupi;
 	}
 
 }
