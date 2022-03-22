@@ -403,20 +403,20 @@ public class DevolucionService {
 			traking.setNombreAsesor(usuario);
 			traking.setUsuarioCreacion(usuario);
 			traking.setObservacion(devolucion.getObservacionAprobador());
-			traking.setProceso(ProcesoEnum.NUEVO);
+			traking.setProceso(ProcesoEnum.DEVOLUCION);
 			
 			if (aprobado) {
 				proceso = this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, usuario);
 				result.setProceso(proceso);
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE, autorizacion);
-				traking.setActividad("PENDIENTE DE FECHA DE ARRIBO");
-				traking.setSeccion("PENDIENTE DE FECHA DE ARRIBO");
+				traking.setActividad("PENDIENTE_DE_FECHA_DE_ARRIBO");
+				traking.setSeccion("PENDIENTE_DE_FECHA_DE_ARRIBO");
 				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			} else {
 				result.setProceso(this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, usuario));
 				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_F,Boolean.FALSE, autorizacion);
-				traking.setActividad("RECHAZO DE SOLICITUD DE DEVOLUCION");
-				traking.setSeccion("RECHAZO DE SOLICITUD DE DEVOLUCION");
+				traking.setActividad("RECHAZO_DE_SOLICITUD_DE_DEVOLUCION");
+				traking.setSeccion("RECHAZO_DE_SOLICITUD_DE_DEVOLUCION");
 				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			}
 			this.mailSolicitudEntregaNegada(devolucion, proceso);
@@ -631,10 +631,8 @@ public class DevolucionService {
 				if (devolucion.getFechaArribo() == null && proceso != null && proceso.getEstadoProceso().equals(EstadoProcesoEnum.PENDIENTE_FECHA)) {
 					devolucion.setFechaArribo(QuskiOroUtil.formatSringToDate(rfaw.getFechaArribo()));
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_ARRIBO, QuskiOroConstantes.EN_COLA);
-					devolucion = manageDevolucion(devolucion);
-					devoluciones.add(devolucion);
 					TbQoTracking traking = new TbQoTracking();
-					traking.setActividad("PENDIENTE DE ARRIBO");
+					traking.setActividad("PENDIENTE_DE_ARRIBO");
 					traking.setCodigoBpm(devolucion.getCodigo());
 					traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
 					traking.setEstado(EstadoEnum.ACT);
@@ -644,9 +642,12 @@ public class DevolucionService {
 					traking.setNombreAsesor(devolucion.getAsesor());
 				//	traking.setUsuarioCreacion(devolucion.getAsesor());
 				//	traking.setObservacion(observacionAsesor);
-					traking.setProceso(ProcesoEnum.NUEVO);
-					traking.setSeccion("PENDIENTE DE ARRIBO");
+					traking.setProceso(ProcesoEnum.DEVOLUCION);
+					traking.setSeccion("PENDIENTE_DE_ARRIBO");
 					qos.registrarTraking(traking);
+					devolucion = manageDevolucion(devolucion);
+					devoluciones.add(devolucion);
+			
 					this.mailFechaArribo(devolucion, proceso);
 					this.mailFechaArriboCliente(devolucion, proceso);
 				}
@@ -679,23 +680,23 @@ public class DevolucionService {
 					qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.ARRIBADO, devolucion.getAsesor() );
 					devolucion.setArribo(Boolean.TRUE);
 					devolucion.setFechaEfectiva(new Timestamp(System.currentTimeMillis()));
-					devolucion = manageDevolucion(devolucion);
-					devoluciones.add(devolucion);
-					bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE, autorizacion);
 					TbQoTracking traking = new TbQoTracking();
-					traking.setActividad("ARRIBADO A AGENCIA");
+					traking.setActividad("ARRIBADO_A_AGENCIA");
 					traking.setCodigoBpm(devolucion.getCodigo());
 					traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
 					traking.setEstado(EstadoEnum.ACT);
 					traking.setFechaActualizacion(new Date());
-					traking.setFechaCreacion(new Date());
 					traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
 					traking.setNombreAsesor(devolucion.getAsesor());
 					traking.setUsuarioCreacion(asesor);
 				//	traking.setObservacion(observacionAsesor);
-					traking.setProceso(ProcesoEnum.NUEVO);
-					traking.setSeccion("ARRIBADO A AGENCIA");
+					traking.setProceso(ProcesoEnum.DEVOLUCION);
+					traking.setSeccion("ARRIBADO_A_AGENCIA");
 					qos.registrarTraking(traking);
+					
+					devolucion = manageDevolucion(devolucion);
+					devoluciones.add(devolucion);
+					bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE, autorizacion);
 					
 				}
 			}
@@ -734,6 +735,21 @@ public class DevolucionService {
 			procesoCancelacion.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 			procesoCancelacion.setUsuario(QuskiOroConstantes.EN_COLA);
 			procesoCancelacion = this.qos.manageProceso(procesoCancelacion);
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("CANCELACION_DEVOLUCION_PENDIENTE_APROBACION");
+			traking.setCodigoBpm(devolucion.getCodigo());
+			traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(devolucion.getAsesor());
+			traking.setUsuarioCreacion(devolucion.getAsesor());
+			traking.setObservacion(motivo);
+			traking.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
+			traking.setSeccion("CANCELACION_DEVOLUCION_PENDIENTE_APROBACION");
+			qos.registrarTraking(traking);
+			
 			devolucion.setObservacionCancelacion(motivo);
 			this.manageDevolucion(devolucion);
 			return procesoCancelacion;
@@ -778,6 +794,20 @@ public class DevolucionService {
 				qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO, usuario);
 				this.notificarCancelacionDevolucion(Boolean.TRUE, devolucion);
 				TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.APROBADO, usuario);
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("APROBADO_CANCELACION_DEVOLUCION");
+				traking.setCodigoBpm(devolucion.getCodigo());
+				traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(devolucion.getAsesor());
+				traking.setUsuarioCreacion(usuario);
+			//	traking.setObservacion(observacionAsesor);
+				traking.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
+				traking.setSeccion("APROBADO_CANCELACION_DEVOLUCION");
+				qos.registrarTraking(traking);
 				return pro;
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DEL BLOQUEO");
@@ -806,6 +836,20 @@ public class DevolucionService {
 			procesoDevolucion.setUsuario(usuario);
 			//bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_D,Boolean.FALSE);
 			this.notificarCancelacionDevolucion(Boolean.FALSE, devolucion);
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("RECHAZADO_CANCELACION_DEVOLUCION");
+			traking.setCodigoBpm(devolucion.getCodigo());
+			traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(devolucion.getAsesor());
+			traking.setUsuarioCreacion(usuario);
+		//	traking.setObservacion(observacionAsesor);
+			traking.setProceso(ProcesoEnum.CANCELACION_DEVOLUCION);
+			traking.setSeccion("RECHAZADO_CANCELACION_DEVOLUCION");
+			qos.registrarTraking(traking);
 			return qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.RECHAZADO, null);
 		} catch ( RelativeException e ) {
 			e.printStackTrace();
@@ -839,7 +883,7 @@ public class DevolucionService {
 			traking.setNombreAsesor(devolucion.getAsesor());
 			traking.setUsuarioCreacion(devolucion.getAsesor());
 		//	traking.setObservacion(observacionAsesor);
-			traking.setProceso(ProcesoEnum.NUEVO);
+			traking.setProceso(ProcesoEnum.DEVOLUCION);
 			traking.setSeccion("ENVIADO A VERIFICACION DE FIRMAS");
 			qos.registrarTraking(traking);
 
@@ -885,7 +929,7 @@ public class DevolucionService {
 			traking.setNombreAsesor(devolucion.getAsesor());
 			traking.setUsuarioCreacion(usuario);
 		//	traking.setObservacion(observacionAsesor);
-			traking.setProceso(ProcesoEnum.NUEVO);
+			traking.setProceso(ProcesoEnum.DEVOLUCION);
 			traking.setSeccion("APROBADO  VERIFICACION DE FIRMAS");
 			qos.registrarTraking(traking);
 			return devolucion;
@@ -915,7 +959,7 @@ public class DevolucionService {
 			this.qos.guardaraObservacionEntrega(devolucion.getObservacionAprobador(), BigDecimal.valueOf(devolucion.getId()), usuario);
 			this.notificarDevolucionVerificacionFirmas(Boolean.FALSE, devolucion);
 			TbQoTracking traking = new TbQoTracking();
-			traking.setActividad("RECHAZADO VERIFICACION DE FIRMAS");
+			traking.setActividad("RECHAZADO_VERIFICACION_DE_FIRMAS");
 			traking.setCodigoBpm(devolucion.getCodigo());
 			traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
 			traking.setEstado(EstadoEnum.ACT);
@@ -925,8 +969,8 @@ public class DevolucionService {
 			traking.setNombreAsesor(devolucion.getAsesor());
 			traking.setUsuarioCreacion(usuario);
 		//	traking.setObservacion(observacionAsesor);
-			traking.setProceso(ProcesoEnum.NUEVO);
-			traking.setSeccion("RECHAZADO  VERIFICACION DE FIRMAS");
+			traking.setProceso(ProcesoEnum.DEVOLUCION);
+			traking.setSeccion("RECHAZADO_VERIFICACION_DE_FIRMAS");
 			qos.registrarTraking(traking);
 			return devolucion;
 		} catch ( RelativeException e ) {
@@ -1025,7 +1069,7 @@ public class DevolucionService {
 				bloquear(pro, devolucion,QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
 				this.mailSolicitudEntrega(devolucion,pro );
 				TbQoTracking traking = new TbQoTracking();
-				traking.setActividad("ENVIADO A APROBAR SOLICITUD DEVOLUCION");
+				traking.setActividad("ENVIADO_A_APROBAR_SOLICITUD_DEVOLUCION");
 				traking.setCodigoBpm(devolucion.getCodigo());
 				traking.setCodigoOperacionSoftbank(devolucion.getCodigoOperacion());
 				traking.setEstado(EstadoEnum.ACT);
@@ -1035,8 +1079,8 @@ public class DevolucionService {
 				//traking.setNombreAsesor(nombreAsesor);
 				traking.setUsuarioCreacion(devolucion.getAsesor());
 			//	traking.setObservacion(observacionAsesor);
-				traking.setProceso(ProcesoEnum.NUEVO);
-				traking.setSeccion("ENVIADO A APROBAR SOLICITUD DEVOLUCION");
+				traking.setProceso(ProcesoEnum.DEVOLUCION);
+				traking.setSeccion("ENVIADO_A_APROBAR_SOLICITUD_DEVOLUCION");
 				qos.registrarTraking(traking);
 				return pro;
 			} else {
