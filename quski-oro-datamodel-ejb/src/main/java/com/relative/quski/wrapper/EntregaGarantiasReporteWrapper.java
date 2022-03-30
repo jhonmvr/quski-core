@@ -15,7 +15,8 @@ public class EntregaGarantiasReporteWrapper implements Serializable {
 	private String agenciaRecepcion;	
 	private String fechaCreacion;
     private String fechaArriboAgencia;
-	private String fechaEntrega;
+	private String fechaEntrega; 
+	private String fundaActual;
 	
 	
 	
@@ -23,7 +24,7 @@ public class EntregaGarantiasReporteWrapper implements Serializable {
 	
 	public EntregaGarantiasReporteWrapper(String codigoOperacion, String codigoBPM, String nombreCliente,
 			String cedulaCliente, String estado, String agenciaEntrega, String agenciaRecepcion, String fechaCreacion,
-			String fechaArriboAgencia, String fechaEntrega) {
+			String fechaArriboAgencia, String fechaEntrega, String fundaActual) {
 		super();
 		this.codigoOperacion = codigoOperacion;
 		this.codigoBPM = codigoBPM;
@@ -35,6 +36,7 @@ public class EntregaGarantiasReporteWrapper implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaArriboAgencia = fechaArriboAgencia;
 		this.fechaEntrega = fechaEntrega;
+		this.fundaActual = fundaActual;
 	}
 	
 
@@ -99,6 +101,20 @@ public class EntregaGarantiasReporteWrapper implements Serializable {
 	}
 	public void setFechaEntrega(String fechaEntrega) {
 		this.fechaEntrega = fechaEntrega;
+	}
+
+
+
+
+	public String getFundaActual() {
+		return fundaActual;
+	}
+
+
+
+
+	public void setFundaActual(String fundaActual) {
+		this.fundaActual = fundaActual;
 	}
 
 	

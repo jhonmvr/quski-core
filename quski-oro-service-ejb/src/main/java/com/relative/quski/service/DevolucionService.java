@@ -1334,14 +1334,14 @@ public class DevolucionService {
 					i.getCedulaCliente(),  i.getEstadoProceso(), 
 					i.getIgAgenciaEntrega() != null?   agencias.stream().filter(p-> p.getId() == i.getIgAgenciaEntrega().longValue() ).findFirst().get().getNombre():"",
 					i.getIdAgencia() != null? agencias.stream().filter(p-> p.getId() == i.getIdAgencia().longValue() ).findFirst().get().getNombre():"",
-					i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega()))
+					i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega(), i.getFundaActual()))
 		    .collect(Collectors.toList());
 		} else if (list != null && !list.isEmpty()) {
 			
 			log.info("=========>=========>MAP TO REPORTE ENTREGA sin agencias");
 			result = list.stream().map(i -> new EntregaGarantiasReporteWrapper(i.getCodigoOperacion() ,  i.getCodigoBpm(),  i.getNombreCliente(),
 					i.getCedulaCliente(),  i.getEstadoProceso(),  i.getIgAgenciaEntrega() != null?   i.getIgAgenciaEntrega().toString():"",  i.getIdAgencia() != null? i.getIdAgencia().toString():"",
-							i.getFechaCreacion(), i.getFechaArribo(),  i.getFechaEngrega()))
+							i.getFechaCreacion(), i.getFechaArribo(), i.getFechaEngrega(), i.getFundaActual()))
 		    .collect(Collectors.toList());
 		
 		}
