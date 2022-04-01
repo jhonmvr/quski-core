@@ -267,6 +267,15 @@ public class QuskiOroUtil {
 		 * numeroDias) * 86400000 ); return fechaNueva;
 		 */
 	}
+	
+
+	public static Date adicionEnAnios(Date fecha, Integer anios) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(fecha);
+		cal.add(Calendar.YEAR, anios ); 
+		return cal.getTime();
+		
+	}
 
 	public static Date formatSringToDate(String date) throws RelativeException {
 		try {

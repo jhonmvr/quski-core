@@ -29,6 +29,7 @@ public class DevolucionParamsWrapper implements Serializable{
 	private Date  fechaEntregaDesde;
 	private Date  fechaEntregaHasta;
 	private List<EstadoProcesoEnum> estados; 
+	private String asesor;
 	public String getCodigoOperacion() {
 		return codigoOperacion;
 	}
@@ -112,6 +113,12 @@ public class DevolucionParamsWrapper implements Serializable{
 	}
 	public void setEstados(List<EstadoProcesoEnum> estados) {
 		this.estados = estados;
+	}
+	public String getAsesor() {
+		return asesor;
+	}
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
 	}
 	
 	

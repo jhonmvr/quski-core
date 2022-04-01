@@ -743,6 +743,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
 				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
+			}else {
+				strQry.append(" and pro.estado_proceso not in ('CANCELADO','APROBADO','RECHAZADO') ");
+			}
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				strQry.append("or dev.asesor  iLIKE :asesor ");
 			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -786,7 +791,9 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			if (wp.getFechaEntregaHasta() != null) {
 				query.setParameter("fehasta", wp.getFechaEntregaHasta());
 			}
-			
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				query.setParameter("asesor", "%"+ wp.getAsesor()+"%");
+			}
 			
 
 			query.setFirstResult(startRecord);
@@ -864,6 +871,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
 				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
+			}else {
+				strQry.append(" and pro.estado_proceso not in ('CANCELADO','APROBADO','RECHAZADO') ");
+			}
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				strQry.append("or dev.asesor  iLIKE :asesor ");
 			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -906,6 +918,9 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}	
 			if (wp.getFechaEntregaHasta() != null) {
 				query.setParameter("fehasta", wp.getFechaEntregaHasta());
+			}
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				query.setParameter("asesor", "%"+ wp.getAsesor()+"%");
 			}
 					
 			return QuskiOroUtil.getResultList(query.getResultList(), DevolucionReporteWrapper.class);
@@ -969,6 +984,11 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			if(wp.getEstados() != null && !wp.getEstados().isEmpty()) {
 				String st = wp.getEstados().stream().map(EstadoProcesoEnum::name).collect(Collectors.joining("','") );
 				strQry.append(" and pro.estado_proceso in ('"+st+"') ");
+			}else {
+				strQry.append(" and pro.estado_proceso not in ('CANCELADO','APROBADO','RECHAZADO') ");
+			}
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				strQry.append("or dev.asesor  iLIKE :asesor ");
 			}
 			
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
@@ -1011,6 +1031,9 @@ public class DevolucionRepositoryImp extends GeneralRepositoryImp<Long, TbQoDevo
 			}	
 			if (wp.getFechaEntregaHasta() != null) {
 				query.setParameter("fehasta", wp.getFechaEntregaHasta());
+			}
+			if (StringUtils.isNotBlank(wp.getAsesor())) {
+				query.setParameter("asesor", "%"+ wp.getAsesor()+"%");
 			}
 
 		
