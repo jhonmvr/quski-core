@@ -75,6 +75,9 @@
 		<field name="cedulaCliente" class="java.lang.String">
 			<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
 		</field>
+		<field name="fundaActual" class="java.lang.String">
+			<fieldDescription><![CDATA[fundaActual]]></fieldDescription>
+		</field>
 	</subDataset>
 	<parameter name="LIST_DS" class="java.util.List"/>
 	<queryString>
@@ -230,18 +233,33 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="150" uuid="4fdef156-c591-4a3c-8824-994f6e31423d">
+					<jr:column width="115" uuid="4fdef156-c591-4a3c-8824-994f6e31423d">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="150" height="30" uuid="3431a740-8ae0-4224-90a9-40bf4a09810f"/>
+								<reportElement x="0" y="0" width="115" height="30" uuid="3431a740-8ae0-4224-90a9-40bf4a09810f"/>
 								<text><![CDATA[Fecha de Entrega]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="150" height="30" uuid="31f84b98-d36e-416f-bd5f-8898c77a375c"/>
+								<reportElement x="0" y="0" width="115" height="30" uuid="31f84b98-d36e-416f-bd5f-8898c77a375c"/>
 								<textFieldExpression><![CDATA[$F{fechaEntrega}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="0e449311-a933-48ec-868e-79360caa1a5d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="30" uuid="b40d966a-5bc6-433f-9a18-c94d8ea35c43"/>
+								<text><![CDATA[Funda Actual]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="75" height="30" uuid="6649a8f2-38d2-4e52-8aa7-bc628760be21"/>
+								<textFieldExpression><![CDATA[$F{fundaActual}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
