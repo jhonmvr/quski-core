@@ -3,10 +3,13 @@
  */
 package com.relative.quski.repository.imp;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,12 +23,15 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.enums.EstadoExcepcionEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.TipoExcepcionEnum;
 import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoExcepcionRol;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.repository.ExcepcionRolRepository;
+import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.DevolucionReporteWrapper;
 import com.relative.quski.wrapper.ExcepcionRolWrapper;
 
 /**
@@ -36,173 +42,128 @@ import com.relative.quski.wrapper.ExcepcionRolWrapper;
 public class ExcepcionRolRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcionRol>
 		implements ExcepcionRolRepository {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExcepcionRolWrapper> findByRolAndIdentificacion(int startRecord, Integer pageSize, String sortFields,
 			String sortDirections, String rol, String identificacion) throws RelativeException {
 		try {
-			List<TbQoExcepcionRol> listRol = null;
-			if (StringUtils.isNotBlank(rol)) {
-				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
-				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
-				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
-				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
-				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
-				listRol = createQue.getResultList();
-			}
-			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
-			// ~~> FROM
-			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
-			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
-			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
 
-			// ~~> WHERE
-			List<Predicate> where = new ArrayList<>();
-			if (listRol != null && !listRol.isEmpty()) {
-				List<String> tipos = new ArrayList<>();
-				for (TbQoExcepcionRol l : listRol) {
-					tipos.add(l.getExcepcion().toString());
-				}
-				where.add(poll.get("tipoExcepcion").in(tipos));
-			}else {
-				return null;
-			}
+			String querySelect = "select ex.id, ex.tipo_excepcion, coalesce(cli.primer_nombre, ' ') as primer_nombre, coalesce(cli.apellido_paterno, ' ') as apellido_paterno, " + 
+					"nego.id as id_negociacion, " + 
+					"cli.cedula_cliente, cli.nombre_completo, ex.observacion_asesor, " + 
+					"ex.estado_excepcion, ex.mensaje_bre, nego.asesor,  " + 
+					"coalesce(cre.numero_operacion,' ') as operacion, " + 
+					"cre.codigo   from tb_qo_excepcion_rol exrol  " + 
+					"inner join tb_qo_excepcion ex on ex.tipo_excepcion = exrol.excepcion  " + 
+					"inner join tb_qo_credito_negociacion cre on cre.id_negociacion = ex.id_negociacion " + 
+					"inner join tb_qo_negociacion nego on nego.id = ex.id_negociacion " + 
+					"inner join tb_qo_cliente cli on cli.id =  nego.id_cliente " + 
+					"where 1=1  and ex.estado_excepcion = 'PENDIENTE' ";
+
+
+			StringBuilder strQry = new StringBuilder(querySelect);
 			if (StringUtils.isNotBlank(identificacion)) {
-				where.add(cb.like(joinCliente.get("cedulaCliente"), "%"+identificacion+"%"));
+				strQry.append(" and cli.cedula_cliente  iLIKE :identificacion ");
 			}
-			where.add(cb.equal(poll.get("estadoExcepcion"), EstadoExcepcionEnum.PENDIENTE));
-
-			query.where(cb.and(where.toArray(new Predicate[] {})));
-
-			// ~~> SELECT
-			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("primerNombre"),
-					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"),joinCliente.get("nombreCompleto"),
-					poll.get("observacionAsesor"),poll.get("estadoExcepcion"), poll.get("mensajeBre"));
-
-			// ~~> ORDER BY
-			if (sortDirections.equals("asc")) {
-				query.orderBy(cb.asc(poll.get(sortFields)));
-			} else {
-				query.orderBy(cb.desc(poll.get(sortFields)));
+			if (StringUtils.isNotBlank(rol)) {
+				strQry.append(" and exrol.rol  = :rol ");
 			}
-			// ~~> EJECUTAR CONSULTA
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
-			TypedQuery<ExcepcionRolWrapper> createQuery = this.getEntityManager().createQuery(query);
-
-			return createQuery.setFirstResult(startRecord).setMaxResults(pageSize).getResultList();
-
-			// ~~> FIN
+			if (StringUtils.isNotBlank(identificacion)) {
+				query.setParameter("identificacion", "%"+ identificacion+"%");
+			}
+			if (StringUtils.isNotBlank(rol)) {
+				query.setParameter("rol", rol);
+			}
+			query.setFirstResult(startRecord);
+			query.setMaxResults(pageSize);	
+			return QuskiOroUtil.getResultList(query.getResultList(), ExcepcionRolWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
 		}
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ExcepcionRolWrapper> findByRolAndIdentificacion(String rol, String identificacion)
 			throws RelativeException {
 		try {
 
-			List<TbQoExcepcionRol> listRol = null;
+			String querySelect = "select ex.id, ex.tipo_excepcion, coalesce(cli.primer_nombre, ' ') as primer_nombre, coalesce(cli.apellido_paterno, ' ') as apellido_paterno, " + 
+					"nego.id as id_negociacion, " + 
+					"cli.cedula_cliente, cli.nombre_completo, ex.observacion_asesor, " + 
+					"ex.estado_excepcion, ex.mensaje_bre, nego.asesor,  " + 
+					"coalesce(cre.numero_operacion,' ') as operacion, " + 
+					"cre.codigo   from tb_qo_excepcion_rol exrol  " + 
+					"inner join tb_qo_excepcion ex on ex.tipo_excepcion = exrol.excepcion  " + 
+					"inner join tb_qo_credito_negociacion cre on cre.id_negociacion = ex.id_negociacion " + 
+					"inner join tb_qo_negociacion nego on nego.id = ex.id_negociacion " + 
+					"inner join tb_qo_cliente cli on cli.id =  nego.id_cliente " + 
+					"where 1=1 and ex.estado_excepcion = 'PENDIENTE' ";
+
+
+			StringBuilder strQry = new StringBuilder(querySelect);
+			if (StringUtils.isNotBlank(identificacion)) {
+				strQry.append(" and cli.cedula_cliente  iLIKE :identificacion ");
+			}
 			if (StringUtils.isNotBlank(rol)) {
-				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
-				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
-				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
-				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
-				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
-				listRol = createQue.getResultList();
+				strQry.append(" and exrol.rol  = :rol ");
 			}
-
-			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-
-			CriteriaQuery<ExcepcionRolWrapper> query = cb.createQuery(ExcepcionRolWrapper.class);
-			// ~~> FROM
-			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
-
-			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
-			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
-
-			// ~~> WHERE
-			List<Predicate> where = new ArrayList<>();
-
-			if (listRol != null && !listRol.isEmpty()) {
-				List<String> tipos = new ArrayList<>();
-				for (TbQoExcepcionRol l : listRol) {
-					tipos.add(l.getExcepcion().toString());
-				}
-				where.add(poll.get("tipoExcepcion").in(tipos));
-			}else {
-				return null;
-			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
 			if (StringUtils.isNotBlank(identificacion)) {
-				where.add(cb.equal(joinCliente.get("cedulaCliente"), identificacion));
+				query.setParameter("identificacion", "%"+ identificacion+"%");
 			}
-			where.add(cb.equal(poll.get("estadoExcepcion"), EstadoExcepcionEnum.PENDIENTE));
-
-			query.where(cb.and(where.toArray(new Predicate[] {})));
-
-			// ~~> SELECT
-			query.multiselect(poll.get("id"), poll.get("tipoExcepcion"), joinCliente.get("primerNombre"),
-					joinCliente.get("apellidoPaterno"), joinNegocia.get("id"), joinCliente.get("cedulaCliente"),joinCliente.get("nombreCompleto"),
-					poll.get("observacionAsesor"),poll.get("estadoExcepcion"), poll.get("mensajeBre"));
-
-			// ~~> EJECUTAR CONSULTA
-
-			TypedQuery<ExcepcionRolWrapper> createQuery = this.getEntityManager().createQuery(query);
-
-			return createQuery.getResultList();
+			if (StringUtils.isNotBlank(rol)) {
+				query.setParameter("rol", rol);
+			}
+			return QuskiOroUtil.getResultList(query.getResultList(), ExcepcionRolWrapper.class);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
 		}
 	}
 
 	@Override
 	public Integer countByRolAndIdentificacion(String rol, String identificacion) throws RelativeException {
 		try {
-			List<TbQoExcepcionRol> listRol = null;
-			if (StringUtils.isNotBlank(rol)) {
-				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
-				CriteriaQuery<TbQoExcepcionRol> queryy = cbb.createQuery(TbQoExcepcionRol.class);
-				Root<TbQoExcepcionRol> pollRol = queryy.from(TbQoExcepcionRol.class);
-				queryy.where(cbb.and(cbb.equal(pollRol.get("rol"), rol)));
-				TypedQuery<TbQoExcepcionRol> createQue = this.getEntityManager().createQuery(queryy);
-				listRol = createQue.getResultList();
-			}
-			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-			CriteriaQuery<Long> query = cb.createQuery(Long.class);
-			// ~~> FROM
-			Root<TbQoExcepcion> poll = query.from(TbQoExcepcion.class);
 
-			Join<TbQoExcepcion, TbQoNegociacion> joinNegocia = poll.join("tbQoNegociacion");
-			Join<TbQoNegociacion, TbQoCliente> joinCliente = joinNegocia.join("tbQoCliente");
+			String querySelect = "select count(*)   from tb_qo_excepcion_rol exrol  " + 
+					"inner join tb_qo_excepcion ex on ex.tipo_excepcion = exrol.excepcion  " + 
+					"inner join tb_qo_credito_negociacion cre on cre.id_negociacion = ex.id_negociacion " + 
+					"inner join tb_qo_negociacion nego on nego.id = ex.id_negociacion " + 
+					"inner join tb_qo_cliente cli on cli.id =  nego.id_cliente " + 
+					"where 1=1  and ex.estado_excepcion = 'PENDIENTE' ";
 
-			// ~~> WHERE
-			List<Predicate> where = new ArrayList<>();
-			if (listRol != null && !listRol.isEmpty()) {
-				List<String> tipos = new ArrayList<>();
-				for (TbQoExcepcionRol l : listRol) {
-					tipos.add(l.getExcepcion().toString());
-				}
-				where.add(poll.get("tipoExcepcion").in(tipos));
-			}
+
+			StringBuilder strQry = new StringBuilder(querySelect);
 			if (StringUtils.isNotBlank(identificacion)) {
-				where.add(cb.equal(joinCliente.get("cedulaCliente"), identificacion));
+				strQry.append(" and cli.cedula_cliente  iLIKE :identificacion ");
 			}
-			where.add(cb.equal(poll.get("estadoExcepcion"), EstadoExcepcionEnum.PENDIENTE));
+			if (StringUtils.isNotBlank(rol)) {
+				strQry.append(" and exrol.rol  = :rol ");
+			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 
-			query.where(cb.and(where.toArray(new Predicate[] {})));
-
-			query.select(cb.count(poll.get("id")));
-			TypedQuery<Long> createQuery = this.getEntityManager().createQuery(query);
-			return createQuery.getSingleResult().intValue();
+			if (StringUtils.isNotBlank(identificacion)) {
+				query.setParameter("identificacion", "%"+ identificacion+"%");
+			}
+			if (StringUtils.isNotBlank(rol)) {
+				query.setParameter("rol", rol);
+			}
+			return ((BigInteger) query.getSingleResult()).intValue();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
+
+			throw new RelativeException(Constantes.ERROR_CODE_READ, "ERROR AL consultar " + e);
 		}
 	}
 

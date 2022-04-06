@@ -4,8 +4,7 @@
 package com.relative.quski.wrapper;
 
 import java.io.Serializable;
-
-import com.relative.quski.enums.EstadoExcepcionEnum;
+import java.math.BigDecimal;
 
 /**
  * @author KLÉBER GUERRA relative Engine
@@ -15,17 +14,23 @@ public class ExcepcionRolWrapper implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private Long id;
+	private static final long serialVersionUID = -3524098047600544935L;
+	/**
+	 * 
+	 */
+	private BigDecimal id;
 	private String tipoExcepcion ;
 	private String nombreCliente;
 	private String apellidoCliente;
-	private Long idNegociacion;
+	private BigDecimal idNegociacion;
 	private String identificacion;
 	private String nombreCompleto;
 	private String observacionAsesor;
-	private EstadoExcepcionEnum estadoExcepcion;
+	private String estadoExcepcion;
 	private String mensajeBre;
+	private String asesor;
+	private String numeroOperacion;
+	private String codigoBpm;
 	
 	
 	public String getObservacionAsesor() {
@@ -34,15 +39,17 @@ public class ExcepcionRolWrapper implements Serializable {
 	public void setObservacionAsesor(String observacionAsesor) {
 		this.observacionAsesor = observacionAsesor;
 	}
-	public EstadoExcepcionEnum getEstadoExcepcion() {
+	public String getEstadoExcepcion() {
 		return estadoExcepcion;
 	}
-	public void setEstadoExcepcion(EstadoExcepcionEnum estadoExcepcion) {
+	public void setEstadoExcepcion(String estadoExcepcion) {
 		this.estadoExcepcion = estadoExcepcion;
 	}
-	public ExcepcionRolWrapper(Long id, String tipoExcepcion, String nombreCliente, String apellidoCliente,
-			Long idNegociacion, String identificacion, String nombreCompleto,  String observacionAsesor,
-			EstadoExcepcionEnum estadoExcepcion, String mensajeBre) {
+	
+	
+	public ExcepcionRolWrapper(BigDecimal id, String tipoExcepcion, String nombreCliente, String apellidoCliente,
+			BigDecimal idNegociacion, String identificacion, String nombreCompleto,  String observacionAsesor,
+			String estadoExcepcion, String mensajeBre,String asesor, String numeroOperacion, String codigoBpm) {
 		this.id = id;
 		this.tipoExcepcion = tipoExcepcion;
 		this.nombreCliente = nombreCliente;
@@ -53,11 +60,14 @@ public class ExcepcionRolWrapper implements Serializable {
 		this.observacionAsesor = observacionAsesor;
 		this.estadoExcepcion = estadoExcepcion;
 		this.mensajeBre = mensajeBre;
+		this.asesor = asesor;
+		this.numeroOperacion = numeroOperacion;
+		this.codigoBpm = codigoBpm;
 	}
-	public Long getId() {
+	public BigDecimal getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(BigDecimal id) {
 		this.id = id;
 	}
 	public String getTipoExcepcion() {
@@ -78,10 +88,10 @@ public class ExcepcionRolWrapper implements Serializable {
 	public void setApellidoCliente(String apellidoCliente) {
 		this.apellidoCliente = apellidoCliente;
 	}
-	public Long getIdNegociacion() {
+	public BigDecimal getIdNegociacion() {
 		return idNegociacion;
 	}
-	public void setIdNegociacion(Long idNegociacion) {
+	public void setIdNegociacion(BigDecimal idNegociacion) {
 		this.idNegociacion = idNegociacion;
 	}
 	public String getIdentificacion() {
@@ -101,6 +111,24 @@ public class ExcepcionRolWrapper implements Serializable {
 	}
 	public void setMensajeBre(String mensajeBre) {
 		this.mensajeBre = mensajeBre;
+	}
+	public String getAsesor() {
+		return asesor;
+	}
+	public void setAsesor(String asesor) {
+		this.asesor = asesor;
+	}
+	public String getNumeroOperacion() {
+		return numeroOperacion;
+	}
+	public void setNumeroOperacion(String numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
+	}
+	public String getCodigoBpm() {
+		return codigoBpm;
+	}
+	public void setCodigoBpm(String codigoBpm) {
+		this.codigoBpm = codigoBpm;
 	}
 	
 	
