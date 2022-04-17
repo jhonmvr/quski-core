@@ -2409,20 +2409,16 @@ public class QuskiOroService {
 	private ClienteCompletoWrapper mapearClienteCompleto( SoftbankClienteWrapper s) throws RelativeException {
 		if (s == null) {return null;}
 		TbQoCliente  cliente = this.mapearCliente( s );
-		List<TbQoTelefonoCliente> telefonos;
-		List<TbQoDireccionCliente> direcciones;
+		List<TbQoTelefonoCliente> telefonos = this.telefonoClienteRepository.findAllByIdCliente(cliente.getId());
+		List<TbQoDireccionCliente> direcciones = this.direccionClienteRepository.findAllByIdCliente(cliente.getId());
 		List<TbQoReferenciaPersonal> referencias;
 		List<TbQoDatoTrabajoCliente> trabajos;
 		List<TbQoCuentaBancariaCliente> cuentas;
 		if(s.getTelefonos() != null && !s.getTelefonos().isEmpty()) {
-			telefonos =  this.mapearTelefonos(   s.getTelefonos() ); 
-		}else {
-			telefonos = this.telefonoClienteRepository.findAllByIdCliente(cliente.getId());
+			telefonos =  this.mapearTelefonos(   s.getTelefonos(), telefonos ); 
 		}
 		if(s.getDirecciones() != null && !s.getDirecciones().isEmpty()) {
-			direcciones =  this.mapearDirecciones(   s.getDirecciones() ); 
-		}else {
-			direcciones = this.direccionClienteRepository.findAllByIdCliente(cliente.getId());
+			direcciones =  this.mapearDirecciones(   s.getDirecciones(), direcciones ); 
 		}
 		if(s.getContactosCliente() != null && !s.getContactosCliente().isEmpty()) {
 			referencias =  this.mapearReferencias(   s.getContactosCliente() ); 
@@ -2500,8 +2496,12 @@ public class QuskiOroService {
 		});
 		return listCreate.isEmpty() ? null : listCreate;
 	}
-	private List<TbQoTelefonoCliente> mapearTelefonos(List<SoftbankTelefonosWrapper> telefonos ) {
+	private List<TbQoTelefonoCliente> mapearTelefonos(List<SoftbankTelefonosWrapper> telefonos, List<TbQoTelefonoCliente> telefonos2 ) {
+		
 		List<TbQoTelefonoCliente> listCreate = new ArrayList<>();
+		TbQoTelefonoCliente celular = telefonos2.stream().filter( var -> "CEL".equals(var.getTipoTelefono())).findAny().orElse( null);
+
+		TbQoTelefonoCliente domicilio = telefonos2.stream().filter( var -> "DOM".equals(var.getTipoTelefono())).findAny().orElse( null);
 		telefonos.forEach(e ->{
 			TbQoTelefonoCliente tele = new TbQoTelefonoCliente();
 			tele.setEstado( EstadoEnum.ACT );
@@ -2509,11 +2509,18 @@ public class QuskiOroService {
 			tele.setNumero( e.getNumero() );
 			tele.setTipoTelefono( e.getCodigoTipoTelefono() );
 			tele.setEstado( e.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA );
+			if( e.getCodigoTipoTelefono().equals("CEL") && celular != null ) {
+				tele.setNumero(celular.getNumero());
+			}
+			if( e.getCodigoTipoTelefono().equals("DOM") && domicilio != null ) {
+				tele.setNumero(domicilio.getNumero());
+			}
+			
 			listCreate.add( tele );	
 		});
 		return listCreate.isEmpty() ? null : listCreate;
 	}
-	private List<TbQoDireccionCliente> mapearDirecciones(List<SoftbankDireccionWrapper> direcciones) {
+	private List<TbQoDireccionCliente> mapearDirecciones(List<SoftbankDireccionWrapper> direcciones, List<TbQoDireccionCliente> direcciones2) {
 		List<TbQoDireccionCliente> listCreate = new ArrayList<>();
 		direcciones.forEach( e ->{
 			TbQoDireccionCliente direccion = new TbQoDireccionCliente();
@@ -2537,8 +2544,12 @@ public class QuskiOroService {
 	private TbQoCliente mapearCliente(SoftbankClienteWrapper s) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( s.getIdentificacion() );
-			if(cliente == null) { cliente = new TbQoCliente(); }
-			cliente.setCedulaCliente(s.getIdentificacion());
+			if(cliente == null) {
+				cliente = new TbQoCliente();
+			}
+			if( StringUtils.isBlank(cliente.getCedulaCliente())) {
+				cliente.setCedulaCliente(s.getIdentificacion());
+			}
 			cliente.setActividadEconomica( s.getActividadEconomica().getIdActividadEconomica().toString() );
 			cliente.setApellidoMaterno( s.getSegundoApellido() );
 			cliente.setApellidoPaterno( s.getPrimerApellido() );
@@ -2547,14 +2558,20 @@ public class QuskiOroService {
 			cliente.setNombreCompleto( s.getNombreCompleto() );
 			cliente.setCanalContacto( s.getCodigoMotivoVisita() );
 			cliente.setCargasFamiliares( s.getNumeroCargasFamiliares() );
-			if( s.getFechaNacimiento() != null) {
+			if( s.getFechaNacimiento() != null && cliente.getFechaNacimiento() == null) {
 				cliente.setFechaNacimiento(QuskiOroUtil.formatSringToDate(s.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 			}
-			cliente.setEmail( s.getEmail() );
+			if(StringUtils.isBlank(cliente.getEmail())) {
+				cliente.setEmail( s.getEmail() );
+			}
+				cliente.setLugarNacimiento( s.getIdLugarNacimiento().toString() );
+				if(StringUtils.isBlank(cliente.getLugarNacimiento())) {
+			}
 			cliente.setEstadoCivil( s.getCodigoEstadoCivil() );
 			cliente.setGenero( s.getCodigoSexo() );
-			cliente.setLugarNacimiento( s.getIdLugarNacimiento().toString() );
-			cliente.setNacionalidad( s.getIdPaisNacimiento() );
+			if(cliente.getNacionalidad() == null) {
+				cliente.setNacionalidad( s.getIdPaisNacimiento() );
+			}
 			cliente.setNivelEducacion( s.getCodigoEducacion() );
 			cliente.setPrimerNombre( s.getPrimerNombre() );
 			cliente.setSegundoNombre( s.getSegundoNombre() );
