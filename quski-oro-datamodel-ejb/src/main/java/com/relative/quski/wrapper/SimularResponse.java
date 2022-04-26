@@ -1418,7 +1418,10 @@ public class SimularResponse implements Serializable{
                     "tipooferta",
                     "porcentajeflujoplaneado",
                     "dividendoflujoplaneado",
-                    "dividendosprorrateoserviciosdiferido"
+                    "dividendosprorrateoserviciosdiferido",
+                    "abonoCapital",
+                    "formaPagoAbonoCapital"
+                    
                 })
                 public static class Opcion {
 
@@ -1488,7 +1491,11 @@ public class SimularResponse implements Serializable{
                     protected float totalGastosNuevaOperacion;
                     @XmlElement(name = "TotalCostosOperacionAnterior")
                     protected float totalCostosOperacionAnterior;
-                    @XmlElement(name = "CustodiaDevengada")
+                    @XmlElement(name = "AbonoCapital")
+                    protected float abonoCapital;
+                    @XmlElement(name = "FormaPagoAbonoCapital")
+                    protected String formaPagoAbonoCapital;
+					@XmlElement(name = "CustodiaDevengada")
                     protected float custodiaDevengada;
                     @XmlElement(name = "FormaPagoCustodiaDevengada", required = true)
                     protected String formaPagoCustodiaDevengada;
@@ -2244,6 +2251,23 @@ public class SimularResponse implements Serializable{
                     public void setDIVIDENDOSPRORRATEOSERVICIOSDIFERIDO(byte value) {
                         this.dividendosprorrateoserviciosdiferido = value;
                     }
+
+                    public float getAbonoCapital() {
+						return abonoCapital;
+					}
+
+					public void setAbonoCapital(float abonoCapital) {
+						this.abonoCapital = abonoCapital;
+					}
+
+					public String getFormaPagoAbonoCapital() {
+						return formaPagoAbonoCapital;
+					}
+
+					public void setFormaPagoAbonoCapital(String formaPagoAbonoCapital) {
+						this.formaPagoAbonoCapital = formaPagoAbonoCapital;
+					}
+
 
                 }
 
