@@ -173,6 +173,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	@Column(name="costo_transporte")
 	private BigDecimal costoTransporte;
 
+	@Column(name="abono_capital")
+	private BigDecimal abonoCapital;
+
 	@Column(name="costo_valoracion")
 	private BigDecimal costoValoracion;
 
@@ -207,6 +210,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="forma_pago_interes")
 	private String formaPagoInteres;
+	
+	@Column(name="forma_pago_abono_capital")
+	private String formaPagoAbonoCapital;
 
 	@Column(name="forma_pago_mora")
 	private String formaPagoMora;
@@ -1019,6 +1025,22 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setCanalContacto(String canalContacto) {
 		this.canalContacto = canalContacto;
+	}
+
+	public String getFormaPagoAbonoCapital() {
+		return formaPagoAbonoCapital;
+	}
+
+	public void setFormaPagoAbonoCapital(String formaPagoAbonoCapital) {
+		this.formaPagoAbonoCapital = formaPagoAbonoCapital;
+	}
+
+	public BigDecimal getAbonoCapital() {
+		return abonoCapital;
+	}
+
+	public void setAbonoCapital(BigDecimal abonoCapital) {
+		this.abonoCapital = abonoCapital;
 	}
 
 }
