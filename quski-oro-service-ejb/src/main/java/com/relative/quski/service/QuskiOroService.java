@@ -6909,7 +6909,7 @@ public class QuskiOroService {
 
 			listCatalogo.forEach(e->{
 				DatosImpComWrapper item = new DatosImpComWrapper();
-				if( e.getCodigo().equalsIgnoreCase(abonoCapital) && credito.getAbonoCapital().compareTo( new BigDecimal( 0 ) ) > 0 ){
+				if(credito.getAbonoCapital() != null && e.getCodigo().equalsIgnoreCase(abonoCapital) && credito.getAbonoCapital().compareTo( new BigDecimal( 0 ) ) > 0 ){
 					item.setCodigo( e.getCodigo() );
 					item.setCodigoFormaPagoQuski( credito.getFormaPagoAbonoCapital() );
 					item.setValor( credito.getAbonoCapital() );
