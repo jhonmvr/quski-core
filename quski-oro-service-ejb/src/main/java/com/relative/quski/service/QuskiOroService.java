@@ -6905,9 +6905,16 @@ public class QuskiOroService {
 			String gastoCobranza = this.parametroRepository.findByNombre(QuskiOroConstantes.GASTO_COBRANZA).getValor();
 			String custodiaDevengada = this.parametroRepository.findByNombre(QuskiOroConstantes.CUSTODIA_DEVENGADA).getValor();
 			String impuestoSolca = this.parametroRepository.findByNombre(QuskiOroConstantes.IMPUESTO_SOLCA).getValor();
+			String abonoCapital = this.parametroRepository.findByNombre(QuskiOroConstantes.ABONO_CAPITAL).getValor();
 
 			listCatalogo.forEach(e->{
 				DatosImpComWrapper item = new DatosImpComWrapper();
+				if( e.getCodigo().equalsIgnoreCase(abonoCapital) && credito.getAbonoCapital().compareTo( new BigDecimal( 0 ) ) > 0 ){
+					item.setCodigo( e.getCodigo() );
+					item.setCodigoFormaPagoQuski( credito.getFormaPagoAbonoCapital() );
+					item.setValor( credito.getAbonoCapital() );
+					listImpCom.add( item );
+				}
 				if( e.getCodigo().equalsIgnoreCase(costoCustodia) && credito.getCostoCustodia().compareTo( new BigDecimal( 0 ) ) > 0 ){
 					item.setCodigo( e.getCodigo() );
 					item.setCodigoFormaPagoQuski( credito.getFormaPagoCustodia() );
