@@ -313,6 +313,8 @@ public class QuskiOroConstantes {
 	public static final String GASTO_COBRANZA      = "GASTO_COBRANZA" ;
 	public static final String CUSTODIA_DEVENGADA  = "CUSTODIA_DEVENGADA" ;
 	public static final String IMPUESTO_SOLCA  	   = "IMPUESTO_SOLCA" ;
+	public static final String ABONO_CAPITAL  	   = "ABONO_CAPITAL" ;
+	
 	
 	// SOFTBANK
 	public static final String SOFT_DATE_FORMAT="yyyy-MM-dd";
