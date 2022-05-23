@@ -475,5 +475,17 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;			
 	}
 	
+	
+	@GET
+	@Path("/guardarEstadoMotivo")
+	public TbQoNegociacion guardarEstadoMotivo(
+			@QueryParam("idNego") String idNego,
+			@QueryParam("estadoCredito") String estadoCredito,
+			@QueryParam("motivo") String motivo) throws RelativeException{
+		
+	
+		return this.qos.guardarEstadoMotivo(StringUtils.isNotBlank(idNego)?Long.valueOf(idNego): null,estadoCredito,motivo);			
+	}
+	
 }
 

@@ -1592,20 +1592,26 @@ public class QuskiOroService {
 	private TbQoNegociacion updateNegociacion(TbQoNegociacion send, TbQoNegociacion persisted)
 			throws RelativeException {
 		try {
-			if (send.getAsesor() != null) {
+			if (StringUtils.isNotBlank(send.getAsesor()) ) {
 				persisted.setAsesor(send.getAsesor());
 			}
-			if (send.getAprobador() != null) {
+			if (StringUtils.isNotBlank(send.getAprobador()) ) {
 				persisted.setAprobador(send.getAprobador());
 			}
-			if (send.getCorreoAsesor() != null) {
+			if (StringUtils.isNotBlank(send.getCorreoAsesor()) ) {
 				persisted.setCorreoAsesor(send.getCorreoAsesor());
 			}
-			if (send.getNombreAsesor() != null) {
+			if (StringUtils.isNotBlank(send.getNombreAsesor()) ) {
 				persisted.setNombreAsesor(send.getNombreAsesor());
 			}
 			if (StringUtils.isNotBlank(send.getObservacionAsesor()) ) {
 				persisted.setObservacionAsesor(send.getObservacionAsesor());
+			}
+			if (StringUtils.isNotBlank(send.getMotivo()) ) {
+				persisted.setMotivo(send.getMotivo());
+			}
+			if (StringUtils.isNotBlank(send.getEstadoCredito()) ) {
+				persisted.setEstadoCredito(send.getEstadoCredito());
 			}
 			persisted.setEstado(EstadoEnum.ACT);
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
@@ -8249,6 +8255,10 @@ public class QuskiOroService {
 				this.manageCreditoNegociacion(credito);
 				persisted =   this.cambiarEstado(credito.getTbQoNegociacion().getId(), ProcesoEnum.NUEVO, EstadoProcesoEnum.DEVUELTO, credito.getTbQoNegociacion().getAsesor() );
 			}
+			credito.getTbQoNegociacion().setMotivo(null);
+
+			credito.getTbQoNegociacion().setEstadoCredito("CREDITO");
+			this.manageNegociacion(credito.getTbQoNegociacion());
 			this.mailSolicitudAprobacion(credito, persisted);
 			return persisted;
 
@@ -8339,6 +8349,10 @@ public class QuskiOroService {
 				
 				
 			}
+			credito.getTbQoNegociacion().setMotivo(null);
+
+			credito.getTbQoNegociacion().setEstadoCredito("CREDITO");
+			this.manageNegociacion(credito.getTbQoNegociacion());
 			this.mailSolicitudAprobacion(credito, persisted);
 			return persisted;
 		} catch( RelativeException e) {
@@ -9462,6 +9476,16 @@ public class QuskiOroService {
 		
 		public List<TbQoHistoricoObservacionEntrega> findHistoricoObservacionEntregaByIdCredito(Long idCredito) throws RelativeException {
 			return this.historicoObservacionEntregaRepository.findByIdCredito(idCredito);
+		}
+
+		public TbQoNegociacion guardarEstadoMotivo(Long idNego, String estadoCredito, String motivo) throws RelativeException {
+			if(idNego == null) {
+				return null;
+			}
+			TbQoNegociacion nego = this.findNegociacionById(idNego);
+			nego.setEstadoCredito(estadoCredito);
+			nego.setMotivo(motivo);
+			return this.manageNegociacion(nego);
 		}
 
 }
