@@ -2,6 +2,7 @@ package com.relative.quski.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -31,6 +32,7 @@ import com.relative.quski.wrapper.DevolucionParamsWrapper;
 import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.DevolucionReporteWrapper;
+import com.relative.quski.wrapper.EnvioTevcolWrapper;
 import com.relative.quski.wrapper.ObjetoHabilitanteWrapper;
 import com.relative.quski.wrapper.ProcesoDevolucionWrapper;
 import com.relative.quski.wrapper.RegistroFechaArriboWrapper;
@@ -541,6 +543,38 @@ public class DevolucionRestController extends BaseRestController implements Crud
 		
 		return  this.dos.descargarReporte( wp, autorizacion );
 		
+	}
+	
+
+	@POST
+	@Path("/envioTevcol")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> envioTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.envioTevcol(wp, usuario, autorizacion);
+	}
+	@POST
+	@Path("/transporteTevcol")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> transporteTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.transporteTevcol(wp, usuario, autorizacion);
+	}
+	@POST
+	@Path("/noEnviadoTevcol")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> noEnviadoTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.noEnviadoTevcol(wp, usuario, autorizacion);
+	}
+	@POST
+	@Path("/reportarTevcol")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> reportarTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.reportarTevcol(wp, usuario, autorizacion);
+	}
+	@POST
+	@Path("/confirmarTevcol")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> confirmarTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.confirmarTevcol(wp, usuario, autorizacion);
 	}
 	
 }

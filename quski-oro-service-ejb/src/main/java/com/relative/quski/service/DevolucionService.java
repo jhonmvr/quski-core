@@ -3,6 +3,8 @@ package com.relative.quski.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -49,6 +51,7 @@ import com.relative.quski.wrapper.DevolucionPendienteArribosWrapper;
 import com.relative.quski.wrapper.DevolucionProcesoWrapper;
 import com.relative.quski.wrapper.DevolucionReporteWrapper;
 import com.relative.quski.wrapper.EntregaGarantiasReporteWrapper;
+import com.relative.quski.wrapper.EnvioTevcolWrapper;
 import com.relative.quski.wrapper.HabilitanteTerminacionContratoWrapper;
 import com.relative.quski.wrapper.HerederoConsolidadoWrapper;
 import com.relative.quski.wrapper.HerederoWrapper;
@@ -408,13 +411,13 @@ public class DevolucionService {
 			if (aprobado) {
 				proceso = this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.PENDIENTE_FECHA, usuario);
 				result.setProceso(proceso);
-				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE, autorizacion);
+				bloquear(proceso.getUsuario(), devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_A,Boolean.TRUE, autorizacion);
 				traking.setActividad("PENDIENTE_DE_FECHA_DE_ARRIBO");
 				traking.setSeccion("PENDIENTE_DE_FECHA_DE_ARRIBO");
 				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
 			} else {
 				result.setProceso(this.qos.cambiarEstado(idDevolucion, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.RECHAZADO, usuario));
-				bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_F,Boolean.FALSE, autorizacion);
+				bloquear(proceso.getUsuario(), devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_F,Boolean.FALSE, autorizacion);
 				traking.setActividad("RECHAZO_DE_SOLICITUD_DE_DEVOLUCION");
 				traking.setSeccion("RECHAZO_DE_SOLICITUD_DE_DEVOLUCION");
 				//this.notificarDevolucionAprobacion(aprobado, result.getDevolucion(), motivo);
@@ -553,15 +556,29 @@ public class DevolucionService {
 		}
 	}
 
-	private void bloquear(TbQoProceso proceso, TbQoDevolucion devolucion, String tipoBloqueo,Boolean esBloqueo, String autorizacion) throws RelativeException {
+	private void bloquear(String usuario, TbQoDevolucion devolucion, String tipoBloqueo,Boolean esBloqueo, String autorizacion) throws RelativeException {
 		BloqueoWrapper bloqueo = new BloqueoWrapper();
 		bloqueo.setCodigoMotivoBloqueo(parametroRepository.findByNombre(tipoBloqueo).getValor());
-		bloqueo.setCodigoUsuario(proceso.getUsuario());
+		bloqueo.setCodigoUsuario(usuario);
 		bloqueo.setEsBloqueo(esBloqueo);
 		bloqueo.setIdentificacion(devolucion.getCedulaCliente());
 		bloqueo.setIdTipoIdentificacion(Long.valueOf("1"));
 		bloqueo.setNumeroOperacion(devolucion.getCodigoOperacion());
 		bloqueo.setReferenciaBpm(devolucion.getCodigo());
+		SoftBankApiClient.procesarBloqueo(bloqueo,parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_PROCESAR_BLOQUEO).getValor(), autorizacion );
+	}
+	
+	private void bloquear(String usuario, EnvioTevcolWrapper tevcol, String tipoBloqueo,Boolean esBloqueo, String autorizacion) throws RelativeException {
+		BloqueoWrapper bloqueo = new BloqueoWrapper();
+		bloqueo.setCodigoMotivoBloqueo(parametroRepository.findByNombre(tipoBloqueo).getValor());
+		bloqueo.setCodigoUsuario(usuario);
+		bloqueo.setEsBloqueo(esBloqueo);
+		bloqueo.setIdentificacion(tevcol.getCedulaCliente());
+		bloqueo.setIdTipoIdentificacion(Long.valueOf("1"));
+		bloqueo.setNumeroOperacion(tevcol.getCodigoOperacion());
+		DateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
+		String date = sdf.format(new Date());
+		bloqueo.setReferenciaBpm("tevcol".concat(date));
 		SoftBankApiClient.procesarBloqueo(bloqueo,parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_PROCESAR_BLOQUEO).getValor(), autorizacion );
 	}
 
@@ -696,7 +713,7 @@ public class DevolucionService {
 					
 					devolucion = manageDevolucion(devolucion);
 					devoluciones.add(devolucion);
-					bloquear(proceso, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE, autorizacion);
+					bloquear(proceso.getUsuario(), devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_B, Boolean.TRUE, autorizacion);
 					
 				}
 			}
@@ -790,7 +807,7 @@ public class DevolucionService {
 			RespuestaConsultaGlobalWrapper bloqueo = SoftBankApiClient.callConsultarOperacionRest(new ConsultaOperacionGlobalWrapper(devolucion.getCodigoOperacion()), autorizacion,this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor());
 			if(bloqueo != null && bloqueo.getOperaciones()  != null && !bloqueo.getOperaciones().isEmpty() && bloqueo.getOperaciones().get(0).getDatosBloqueo() != null ) {
 				procesoDevolucion.setUsuario(usuario);
-				bloquear(procesoDevolucion, devolucion, bloqueo.getOperaciones().get(0).getDatosBloqueo().getCodigoMotivoBloqueo() ,Boolean.FALSE, autorizacion);
+				bloquear(procesoDevolucion.getUsuario(), devolucion, bloqueo.getOperaciones().get(0).getDatosBloqueo().getCodigoMotivoBloqueo() ,Boolean.FALSE, autorizacion);
 				qos.cambiarEstado(id, ProcesoEnum.DEVOLUCION, EstadoProcesoEnum.CANCELADO, usuario);
 				this.notificarCancelacionDevolucion(Boolean.TRUE, devolucion);
 				TbQoProceso pro = qos.cambiarEstado(id, ProcesoEnum.CANCELACION_DEVOLUCION, EstadoProcesoEnum.APROBADO, usuario);
@@ -915,7 +932,7 @@ public class DevolucionService {
 			devolucion.setFechaEntrega(new Date());
 			devolucion.setObservacionAprobador(motivo);
 			devolucion = this.manageDevolucion(devolucion);
-			bloquear(procesoDevolucion, devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE, autorizacion);
+			bloquear(procesoDevolucion.getUsuario(), devolucion, QuskiOroConstantes.CODIGO_BLOQUEO_C, Boolean.TRUE, autorizacion);
 			this.qos.guardaraObservacionEntrega(devolucion.getObservacionAprobador(), BigDecimal.valueOf(devolucion.getId()), usuario);
 			this.notificarDevolucionVerificacionFirmas(Boolean.TRUE, devolucion);
 			TbQoTracking traking = new TbQoTracking();
@@ -1066,7 +1083,7 @@ public class DevolucionService {
 				pro.setUsuario(usuario);
 				TbQoDevolucion devolucion =  this.findDevolucionById(idDevolucion);
 				this.qos.guardaraObservacionEntrega(devolucion.getObservaciones(), BigDecimal.valueOf(devolucion.getId()), devolucion.getAsesor());
-				bloquear(pro, devolucion,QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
+				bloquear(pro.getUsuario(), devolucion,QuskiOroConstantes.CODIGO_BLOQUEO_F, Boolean.TRUE, autorizacion);
 				this.mailSolicitudEntrega(devolucion,pro );
 				TbQoTracking traking = new TbQoTracking();
 				traking.setActividad("ENVIADO_A_APROBAR_SOLICITUD_DEVOLUCION");
@@ -1513,5 +1530,107 @@ public class DevolucionService {
 	public Integer countDevolucionProceso(DevolucionParamsWrapper wp) throws RelativeException {
 		return this.devolucionRepository.countDevolucionProceso(wp);
 	}
+
+	public Map<EnvioTevcolWrapper, String> envioTevcol(List<EnvioTevcolWrapper> wp, String usuario, String autorizacion ) throws RelativeException {
+		
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_ENVIO_TEVCOL, Boolean.TRUE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+		
+	}
+
+	public Map<EnvioTevcolWrapper, String> transporteTevcol(List<EnvioTevcolWrapper> wp, String usuario,
+			String autorizacion) {
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_TRANS_TEVCOL, Boolean.TRUE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+	}
+
+	public Map<EnvioTevcolWrapper, String> reportarTevcol(List<EnvioTevcolWrapper> wp, String usuario,
+			String autorizacion) {
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_NO_CUS, Boolean.FALSE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+	}
+
+	public Map<EnvioTevcolWrapper, String> confirmarTevcol(List<EnvioTevcolWrapper> wp, String usuario,
+			String autorizacion) {
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_TRANS_TEVCOL, Boolean.FALSE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+	}
+
+	public Map<EnvioTevcolWrapper, String> noEnviadoTevcol(List<EnvioTevcolWrapper> wp, String usuario,
+			String autorizacion) {
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_NO_CUS, Boolean.TRUE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+	}
+
 
 }

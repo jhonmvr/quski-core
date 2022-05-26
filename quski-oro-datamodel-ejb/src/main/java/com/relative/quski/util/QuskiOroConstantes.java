@@ -435,6 +435,10 @@ public class QuskiOroConstantes {
 	public static final String CODIGO_BLOQUEO_D = "CODIGO_BLOQUEO_D";
 	public static final String CODIGO_BLOQUEO_E = "CODIGO_BLOQUEO_E";
 	public static final String CODIGO_BLOQUEO_F = "CODIGO_BLOQUEO_F";
+	public static final String CODIGO_BLOQUEO_ENVIO_TEVCOL = "CODIGO_BLOQUEO_ENVIO_TEVCOL";
+	public static final String CODIGO_BLOQUEO_TRANS_TEVCOL = "CODIGO_BLOQUEO_TRANS_TEVCOL";
+	public static final String CODIGO_BLOQUEO_NO_CUS = "CODIGO_BLOQUEO_NO_CUS";
+	public static final String CODIGO_BLOQUEO_CUS_TEVCOL = "CODIGO_BLOQUEO_CUS_TEVCOL";
 	public static final String TIEMPO_APROBACION = "TIEMPO_APROBACION";
 	
 	public static final String PARA_TWELVE = "PARA_TWELVE";
