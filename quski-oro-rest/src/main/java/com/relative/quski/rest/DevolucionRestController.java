@@ -576,5 +576,13 @@ public class DevolucionRestController extends BaseRestController implements Crud
 	public Map<EnvioTevcolWrapper, String> confirmarTevcol(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
 		return this.dos.confirmarTevcol(wp, usuario, autorizacion);
 	}
+
+	@POST
+	@Path("/enviarAgencia")
+	@ApiOperation(value = "GenericWrapper", notes = "Metodo Post persistEntity Retorna GenericWrapper de informacion de paginacion y listado de entidades encontradas GenericWrapper", response = GenericWrapper.class)
+	public Map<EnvioTevcolWrapper, String> enviarAgencia(List<EnvioTevcolWrapper> wp, @QueryParam("autorizacion") String autorizacion, @QueryParam("usuario") String usuario) throws RelativeException {
+		return this.dos.enviarAgencia(wp, usuario, autorizacion);
+	}
+	
 	
 }

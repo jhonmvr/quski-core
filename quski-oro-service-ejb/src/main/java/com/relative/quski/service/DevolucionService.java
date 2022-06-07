@@ -1632,5 +1632,25 @@ public class DevolucionService {
 		return null;
 	}
 
+	public Map<EnvioTevcolWrapper, String> enviarAgencia(List<EnvioTevcolWrapper> wp, String usuario,
+			String autorizacion) {
+		if(wp != null && !wp.isEmpty()) {
+			Map<EnvioTevcolWrapper, String> respuesta = new HashMap<EnvioTevcolWrapper,String>();
+			for (EnvioTevcolWrapper envio : wp) {
+				
+				try {
+					this.bloquear(usuario, envio, QuskiOroConstantes.CODIGO_BLOQUEO_NO_CUS, Boolean.FALSE, autorizacion);
+					respuesta.put(envio, "CORRECTO");
+				}catch (RelativeException e) {
+					respuesta.put(envio, e.getDetalle());
+				}
+			}
+			return respuesta;
+		}else {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE PUEDE LEER INFORMACION DE LAS OPERACIONES");
+		}
+		return null;
+	}
+
 
 }
