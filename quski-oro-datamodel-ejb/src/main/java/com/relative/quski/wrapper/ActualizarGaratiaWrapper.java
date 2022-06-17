@@ -13,6 +13,7 @@ public class ActualizarGaratiaWrapper implements Serializable {
 	private String codigoUsuario;
 	private String fechaAvaluo;
 	private String numeroOperacionMadre;
+	private String numeroOperacion;
 	private List<GaratiaAvaluoWrapper> garantiaAvaluo;
 	public String getCodigoUsuario() {
 		return codigoUsuario;
@@ -37,6 +38,12 @@ public class ActualizarGaratiaWrapper implements Serializable {
 	}
 	public void setGarantiaAvaluo(List<GaratiaAvaluoWrapper> garantiaAvaluo) {
 		this.garantiaAvaluo = garantiaAvaluo;
+	}
+	public String getNumeroOperacion() {
+		return numeroOperacion;
+	}
+	public void setNumeroOperacion(String numeroOperacion) {
+		this.numeroOperacion = numeroOperacion;
 	}
 	
 	

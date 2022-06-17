@@ -14,6 +14,7 @@ public class CreditoCreadoSoftbank  implements Serializable {
 	public CreditoCreadoSoftbank(TbQoCreditoNegociacion credito) {
 		super();
 		this.credito = credito;
+	}public CreditoCreadoSoftbank() {
 	}
 
 	public TbQoCreditoNegociacion getCredito() {

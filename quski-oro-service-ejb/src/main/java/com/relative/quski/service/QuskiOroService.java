@@ -6607,13 +6607,16 @@ public class QuskiOroService {
 			borrarDatosObjectStorageByPagos(this.registrarPagoRepository.findByIdCredito(wp.getCredito().getId()), autorizacion);
 			registrarPagoRepository.borrarPagos(wp.getCredito().getId());
 			List<PagosNovacionSoftWrapper> listPagos = this.ps.crearRegistrarComprobanteRenovacion( wp );
-			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( this.manageCreditoNegociacion( wp.getCredito() ), listPagos, autorizacion  ); 
+			TbQoCreditoNegociacion credito = this.manageCreditoNegociacion( wp.getCredito() );
+			CrearOperacionRenovacionWrapper op = this.convertirCreditoCoreToCreditoSoftbankRenovacion( credito, listPagos, autorizacion  ); 
 			this.manageNegociacion(wp.getCredito().getTbQoNegociacion());
 			this.guardaraObservacion(wp.getCredito().getTbQoNegociacion().getObservacionAsesor(), wp.getCredito(), wp.getCredito().getTbQoNegociacion().getAsesor());
 			if(op != null ) {
 				CrearOperacionRespuestaWrapper operacion = 	SoftBankApiClient.callRenovarOperacionRest(
 						op, autorizacion, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_RENOVAR_OPERACION).getValor());
-				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank( this.guardarOperacion( operacion, wp.getCredito() ) );
+				this.guardarOperacionRenovacion( operacion, wp.getCredito() );
+				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank(  );
+				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), wp.getAsesor(), autorizacion);
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
 				String sinExcepcion = "SIN EXCEPCION";
 				if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
@@ -6679,7 +6682,31 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getMessage());
 		}
 	}
-
+	private void guardarOperacionRenovacion(CrearOperacionRespuestaWrapper operacion, TbQoCreditoNegociacion credito) throws RelativeException {
+		try {
+			credito.setNumeroOperacion( operacion.getNumeroOperacion() );
+			credito.setPlazoCredito( operacion.getPlazo() );
+			credito.setDescripcionProducto( operacion.getProducto() );
+			credito.setEstadoSoftbank( operacion.getEstado() );
+			credito.setDeudaInicial( operacion.getDeudaInicial() );
+			credito.setaRecibirCliente( operacion.getMontoEntregar() );
+			credito.setaPagarCliente( operacion.getaPagarPorCliente() );
+			credito.setValorCuota(  operacion.getValorCuota() );
+			credito.setTotalCostoNuevaOperacion( operacion.getCostosOperacion() );
+			credito.setFechaEfectiva(operacion.getFechaEfectiva());
+			credito.setFechaVencimiento(operacion.getFechaVencimiento());
+			credito.setTotalInteresVencimiento( operacion.getTotalInteresVencimiento() );
+			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
+			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
+			credito.setNumeroFunda( operacion.getNumeroFundaJoya() );
+			credito = this.manageCreditoNegociacion( credito );
+			
+		}catch(RelativeException e) {
+			throw e;
+		}catch(Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
 	private TbQoCreditoNegociacion guardarOperacion(CrearOperacionRespuestaWrapper operacion, TbQoCreditoNegociacion credito) throws RelativeException {
 		try {
 			credito.setNumeroOperacion( operacion.getNumeroOperacion() );
@@ -6697,20 +6724,10 @@ public class QuskiOroService {
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
 			credito.setNumeroFunda( operacion.getNumeroFundaJoya() );
-			
+			credito = this.manageCreditoNegociacion( credito );
 			if(operacion.getGarantias() != null ) {
-				List<TbQoTasacion> list = this.tasacionRepository.findByIdCredito( credito.getId() );
-				if(list != null) { 
-					list.forEach(l->{
-						l.setEstado( EstadoEnum.INA );
-						try {
-							this.tasacionRepository.update( l );
-						} catch (RelativeException e) {
-							e.printStackTrace();
-						}
-					});
-				}
-				operacion.getGarantias().forEach( g ->{
+				this.tasacionRepository.deleteTasacionByNegociacionId(credito.getTbQoNegociacion().getId());
+				for(JoyaWrapper g : operacion.getGarantias()) {
 					TbQoTasacion joya = new TbQoTasacion();
 					joya.setNumeroGarantia( g.getNumeroGarantia() );
 					joya.setNumeroExpediente( g.getNumeroExpediente() );
@@ -6732,21 +6749,15 @@ public class QuskiOroService {
 					joya.setNumeroPiezas( g.getNumeroPiezas() );
 					joya.setDescuentoSuelda( g.getDescuentoSuelda() );
 					joya.setTbQoCreditoNegociacion( credito );
-					try {
-						this.manageTasacion( joya );
-					} catch (RelativeException e) {
-						e.printStackTrace();
-					}
-					
-				});
+					this.manageTasacion( joya );
+				}
+				
 			}
-			return this.manageCreditoNegociacion( credito );
+			return credito;
 			
 		}catch(RelativeException e) {
-			e.printStackTrace();
 			throw e;
 		}catch(Exception e) {
-			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -7902,13 +7913,14 @@ public class QuskiOroService {
 	 * @param asesor
 	 * @throws RelativeException
 	 */
-	private void actualizarGarantiasSoftBank(List<TbQoTasacion> tasacion, String numeroOperacionMadre, String asesor, String autorizacion) throws RelativeException {
+	private void actualizarGarantiasSoftBank(List<TbQoTasacion> tasacion, String numeroOperacionMadre,String numeroOperacion, String asesor, String autorizacion) throws RelativeException {
 		try {
 			if(tasacion != null && !tasacion.isEmpty()) {
 				ActualizarGaratiaWrapper wr = new ActualizarGaratiaWrapper();
 				wr.setCodigoUsuario(asesor);
 				wr.setFechaAvaluo(QuskiOroUtil.dateToString(new Date(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 				wr.setNumeroOperacionMadre(numeroOperacionMadre);
+				wr.setNumeroOperacion(numeroOperacion);
 				List<GaratiaAvaluoWrapper> avaluo = new ArrayList<>();
 				for(TbQoTasacion g : tasacion) {
 					GaratiaAvaluoWrapper garantia = new GaratiaAvaluoWrapper();
@@ -8310,7 +8322,7 @@ public class QuskiOroService {
 					credito.setValorCash(valorCash);
 					this.enviarCodigoCashRenovacion(credito, cash, descripcion, null,valorCash);
 				}
-				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), credito.getNumeroOperacionMadre(), usuario, autorizacion);
+				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), credito.getNumeroOperacionMadre(),credito.getNumeroOperacionAnterior(), usuario, autorizacion);
 				this.enviarCorreoAprobacionBienvenida(credito);
 			}else {
 				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
