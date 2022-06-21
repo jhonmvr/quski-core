@@ -15,6 +15,7 @@ public class ActualizarGaratiaWrapper implements Serializable {
 	private String numeroOperacionMadre;
 	private String numeroOperacion;
 	private List<GaratiaAvaluoWrapper> garantiaAvaluo;
+	private Boolean esAprobacion;
 	public String getCodigoUsuario() {
 		return codigoUsuario;
 	}
@@ -44,6 +45,12 @@ public class ActualizarGaratiaWrapper implements Serializable {
 	}
 	public void setNumeroOperacion(String numeroOperacion) {
 		this.numeroOperacion = numeroOperacion;
+	}
+	public Boolean getEsAprobacion() {
+		return esAprobacion;
+	}
+	public void setEsAprobacion(Boolean esAprobacion) {
+		this.esAprobacion = esAprobacion;
 	}
 	
 	

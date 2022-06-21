@@ -1931,7 +1931,9 @@ public class QuskiOroService {
 					.replace("--valor-aplicable-credito--", "293.02")
 					.replace("--valor-realizacion--", "232.07")
 					.replace("--numero-piezas--", "1")
-					.replace("--descuento-suelda--", "0.00");
+					.replace("--descuento-suelda--", "0.00")
+					.replace("--numero-garantia--", "0")
+					.replace("--numero-expediente--", "0");
 				log.info("==============>>>>> XML garantia");
 			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
 			contentXMLcalculadora = contentXMLcalculadora
@@ -5258,6 +5260,8 @@ public class QuskiOroService {
 						.replace("--valor-realizacion--", "232.07")
 						.replace("--numero-piezas--", "1")
 						.replace("--descuento-suelda--", "0.00")
+						.replace("--numero-garantia--", "0")
+						.replace("--numero-expediente--", "0")
 						);
 			}
 			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
@@ -5354,7 +5358,9 @@ public class QuskiOroService {
 					.replace("--valor-aplicable-credito--", "293.02")
 					.replace("--valor-realizacion--", "232.07")
 					.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-					.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
+					.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ))
+					.replace("--numero-garantia--", "0")
+					.replace("--numero-expediente--", "0");
 				log.info("==============>>>>> XML garantia");
 			String contentXMLcalculadora = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_QUSKI_CALCULADORA).getValor();
 			contentXMLcalculadora = contentXMLcalculadora
@@ -5439,7 +5445,9 @@ public class QuskiOroService {
 						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
 						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ))
+						.replace("--numero-garantia--", "0")
+						.replace("--numero-expediente--", "0");
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5591,7 +5599,9 @@ public class QuskiOroService {
 						.replace("--valor-aplicable-credito--", joya.getValorComercial() != null ?QuskiOroUtil.formatoDecimal( joya.getValorComercial() ): "0.00")
 						.replace("--valor-realizacion--", joya.getValorRealizacion() != null ? QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ): "0.00")
 						.replace("--numero-piezas--", joya.getNumeroPiezas() != null ?joya.getNumeroPiezas().toString():"0")
-						.replace("--descuento-suelda--", joya.getDescuentoSuelda() != null ? QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ): "0.00");
+						.replace("--descuento-suelda--", joya.getDescuentoSuelda() != null ? QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ): "0.00")
+						.replace("--numero-garantia--", "0")
+						.replace("--numero-expediente--", "0");
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -5776,7 +5786,9 @@ public class QuskiOroService {
 							.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
 							.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 							.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-							.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
+							.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ))
+							.replace("--numero-garantia--", "0")
+							.replace("--numero-expediente--", "0");
 					XMLGarantias.append(x);
 				}
 				log.info("==============>>>>> XML garantia");
@@ -5850,7 +5862,9 @@ public class QuskiOroService {
 						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
 						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ))
+						.replace("--numero-garantia--", "0")
+						.replace("--numero-expediente--", "0");
 				XMLGarantias.append(x);
 			}
 				log.info("==============>>>>> XML garantia");
@@ -5914,7 +5928,9 @@ public class QuskiOroService {
 						.replace("--valor-aplicable-credito--", QuskiOroUtil.formatoDecimal( joya.getValorComercial() ))
 						.replace("--valor-realizacion--", QuskiOroUtil.formatoDecimal( joya.getValorRealizacion() ))
 						.replace("--numero-piezas--", joya.getNumeroPiezas().toString())
-						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ));
+						.replace("--descuento-suelda--", QuskiOroUtil.formatoDecimal( joya.getDescuentoSuelda() ))
+						.replace("--numero-garantia--", "0")
+						.replace("--numero-expediente--", "0");
 				XMLGarantias.append(x);
 			}
 			log.info("==============>>>>> XML garantia");
@@ -6616,7 +6632,7 @@ public class QuskiOroService {
 						op, autorizacion, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_RENOVAR_OPERACION).getValor());
 				this.guardarOperacionRenovacion( operacion, wp.getCredito() );
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank(  );
-				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), wp.getAsesor(), autorizacion);
+				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), Boolean.FALSE, wp.getAsesor(), autorizacion);
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
 				String sinExcepcion = "SIN EXCEPCION";
 				if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
@@ -6724,10 +6740,20 @@ public class QuskiOroService {
 			credito.setTablaAmortizacion( operacion.getCodigoTablaAmortizacionQuski() );
 			credito.setTipoCarteraQuski( operacion.getCodigoTipoCarteraQuski() );
 			credito.setNumeroFunda( operacion.getNumeroFundaJoya() );
-			credito = this.manageCreditoNegociacion( credito );
+			
 			if(operacion.getGarantias() != null ) {
-				this.tasacionRepository.deleteTasacionByNegociacionId(credito.getTbQoNegociacion().getId());
-				for(JoyaWrapper g : operacion.getGarantias()) {
+				List<TbQoTasacion> list = this.tasacionRepository.findByIdCredito( credito.getId() );
+				if(list != null) { 
+					list.forEach(l->{
+						l.setEstado( EstadoEnum.INA );
+						try {
+							this.tasacionRepository.update( l );
+						} catch (RelativeException e) {
+							e.printStackTrace();
+						}
+					});
+				}
+				operacion.getGarantias().forEach( g ->{
 					TbQoTasacion joya = new TbQoTasacion();
 					joya.setNumeroGarantia( g.getNumeroGarantia() );
 					joya.setNumeroExpediente( g.getNumeroExpediente() );
@@ -6749,15 +6775,21 @@ public class QuskiOroService {
 					joya.setNumeroPiezas( g.getNumeroPiezas() );
 					joya.setDescuentoSuelda( g.getDescuentoSuelda() );
 					joya.setTbQoCreditoNegociacion( credito );
-					this.manageTasacion( joya );
-				}
-				
+					try {
+						this.manageTasacion( joya );
+					} catch (RelativeException e) {
+						e.printStackTrace();
+					}
+					
+				});
 			}
-			return credito;
+			return this.manageCreditoNegociacion( credito );
 			
 		}catch(RelativeException e) {
+			e.printStackTrace();
 			throw e;
 		}catch(Exception e) {
+			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
@@ -7913,7 +7945,7 @@ public class QuskiOroService {
 	 * @param asesor
 	 * @throws RelativeException
 	 */
-	private void actualizarGarantiasSoftBank(List<TbQoTasacion> tasacion, String numeroOperacionMadre,String numeroOperacion, String asesor, String autorizacion) throws RelativeException {
+	private void actualizarGarantiasSoftBank(List<TbQoTasacion> tasacion, String numeroOperacionMadre,String numeroOperacion,Boolean esAprobacion, String asesor, String autorizacion) throws RelativeException {
 		try {
 			if(tasacion != null && !tasacion.isEmpty()) {
 				ActualizarGaratiaWrapper wr = new ActualizarGaratiaWrapper();
@@ -7921,6 +7953,7 @@ public class QuskiOroService {
 				wr.setFechaAvaluo(QuskiOroUtil.dateToString(new Date(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));
 				wr.setNumeroOperacionMadre(numeroOperacionMadre);
 				wr.setNumeroOperacion(numeroOperacion);
+				wr.setEsAprobacion(esAprobacion);
 				List<GaratiaAvaluoWrapper> avaluo = new ArrayList<>();
 				for(TbQoTasacion g : tasacion) {
 					GaratiaAvaluoWrapper garantia = new GaratiaAvaluoWrapper();
@@ -8322,7 +8355,7 @@ public class QuskiOroService {
 					credito.setValorCash(valorCash);
 					this.enviarCodigoCashRenovacion(credito, cash, descripcion, null,valorCash);
 				}
-				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), credito.getNumeroOperacionMadre(),credito.getNumeroOperacionAnterior(), usuario, autorizacion);
+				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), credito.getNumeroOperacionMadre(),credito.getNumeroOperacionAnterior(), Boolean.TRUE, usuario, autorizacion);
 				this.enviarCorreoAprobacionBienvenida(credito);
 			}else {
 				//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
