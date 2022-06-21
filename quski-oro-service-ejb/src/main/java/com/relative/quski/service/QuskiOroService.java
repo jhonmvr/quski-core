@@ -2394,18 +2394,19 @@ public class QuskiOroService {
 		wr.setDirecciones( this.direccionClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
 		wr.setReferencias( this.referenciaPersonalRepository.findByIdCliente( wr.getCliente().getId() ) );
 		wr.setDatosTrabajos( this.datoTrabajoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
-		TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
-		String codigoCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
-		List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
-		CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cedula);
-		cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
-		cuenta.setCuenta(cuentaWS.getNumeroCuenta());
-		cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
-		cuenta.setEstado(EstadoEnum.ACT);
-		cuenta.setTbQoCliente( wr.getCliente() );
-		cuenta.setEsNueva(cuentaWS.getCuentaNueva().equalsIgnoreCase("S"));
-		listCreate.add( cuenta );
-		wr.setCuentas( listCreate );
+		/*
+		 * TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente(); String
+		 * codigoCuentaMupi =
+		 * parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).
+		 * getValor(); List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
+		 * CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cedula);
+		 * cuenta.setBanco(Long.valueOf(codigoCuentaMupi));
+		 * cuenta.setCuenta(cuentaWS.getNumeroCuenta());
+		 * cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
+		 * cuenta.setEstado(EstadoEnum.ACT); cuenta.setTbQoCliente( wr.getCliente() );
+		 * cuenta.setEsNueva(cuentaWS.getCuentaNueva().equalsIgnoreCase("S"));
+		 * listCreate.add( cuenta ); wr.setCuentas( listCreate );
+		 */
 		wr.setTelefonos( this.telefonoClienteRepository.findByIdCliente( wr.getCliente().getId() ) );
 	}
 	private ClienteCompletoWrapper mapearClienteCompleto( SoftbankClienteWrapper s) throws RelativeException {
@@ -2460,16 +2461,20 @@ public class QuskiOroService {
 	}
 	private List<TbQoCuentaBancariaCliente> mapearCuentas(List<SoftbankCuentasBancariasWrapper> cuentaSoft, TbQoCliente cliente ) throws RelativeException {
 		List<TbQoCuentaBancariaCliente> listCreate = new ArrayList<>();
-		String idCuentaMupi = parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor();
-		CuentaWrapper cuentaWS = consultaCuentaApiGateWay(cliente.getCedulaCliente());
+		/*
+		 * String idCuentaMupi =
+		 * parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).
+		 * getValor(); CuentaWrapper cuentaWS =
+		 * consultaCuentaApiGateWay(cliente.getCedulaCliente());
+		 */
 		cuentaSoft.forEach( c ->{
 			TbQoCuentaBancariaCliente cuenta = new TbQoCuentaBancariaCliente();
 			cuenta.setEstado( c.getActivo() ? EstadoEnum.ACT : EstadoEnum.INA);
-			cuenta.setBanco(Long.valueOf(idCuentaMupi));
-			cuenta.setCuenta(cuentaWS.getNumeroCuenta() );
-			cuenta.setEsAhorros(cuentaWS.getTipoCuenta().equalsIgnoreCase("AH"));
+			cuenta.setBanco(c.getIdBanco());
+			cuenta.setCuenta(c.getCuenta());
+			cuenta.setEsAhorros(c.getEsAhorros());
 			cuenta.setIdSoftbank( c.getId() );
-			cuenta.setEsNueva(cuentaWS.getCuentaNueva().equalsIgnoreCase("S"));
+			cuenta.setEsNueva(c.getEsNueva());
 			listCreate.add( cuenta );				
 		});
 		return listCreate.isEmpty() ? null : listCreate;
@@ -2630,46 +2635,28 @@ public class QuskiOroService {
 	public TbQoCliente guardarClienteLocal(ClienteCompletoWrapper wp)throws RelativeException {
 		try {
 			TbQoCliente cliente = this.manageCliente(wp.getCliente());
-			if(wp.getCuentas() != null && !wp.getCuentas().isEmpty()) {
-				this.cuentaBancariaRepository.deleteAllByIdCliente(cliente.getId());
-				for (TbQoCuentaBancariaCliente cb :wp.getCuentas()) {
-					cb.setId(null);
-					cb.setTbQoCliente(cliente);
-					this.manageCuentaBancariaCliente(cb);
-				}
-			}
-			if(wp.getDatosTrabajos() != null && !wp.getDatosTrabajos().isEmpty()) {
-				this.datoTrabajoClienteRepository.deleteAllByIdCliente(cliente.getId());
-				for(TbQoDatoTrabajoCliente dt :  wp.getDatosTrabajos()){
-					dt.setId(null);
-					dt.setTbQoCliente(cliente);
-					this.manageDatoTrabajoCliente(dt);
-				}
-			}
-			if(wp.getDirecciones() != null && !wp.getDirecciones().isEmpty()) {
-				this.direccionClienteRepository.deleteAllByIdCliente(cliente.getId());
-				for(TbQoDireccionCliente dir :wp.getDirecciones() ) {
-					dir.setId(null);
-					dir.setTbQoCliente(cliente);
-					this.manageDireccionCliente(dir);
-				}
-			}
-			if(wp.getReferencias() != null && !wp.getReferencias().isEmpty()) {
-				this.referenciaPersonalRepository.deleteAllByIdCliente(cliente.getId());
-				for(TbQoReferenciaPersonal ref : wp.getReferencias()) {
-					ref.setId(null);
-					ref.setTbQoCliente(cliente);
-					this.manageReferenciaPersonal(ref);
-				}
-			}
-			if(wp.getTelefonos() != null && !wp.getTelefonos().isEmpty()) {
-				this.telefonoClienteRepository.deleteAllByIdCliente(cliente.getId());
-				for(TbQoTelefonoCliente tel : wp.getTelefonos()) {
-					tel.setId(null);
-					tel.setTbQoCliente(cliente);
-					this.manageTelefonoCliente(tel);
-				}
-			}
+			/*
+			 * if(wp.getCuentas() != null && !wp.getCuentas().isEmpty()) {
+			 * this.cuentaBancariaRepository.deleteAllByIdCliente(cliente.getId()); for
+			 * (TbQoCuentaBancariaCliente cb :wp.getCuentas()) { cb.setId(null);
+			 * cb.setTbQoCliente(cliente); this.manageCuentaBancariaCliente(cb); } }
+			 * if(wp.getDatosTrabajos() != null && !wp.getDatosTrabajos().isEmpty()) {
+			 * this.datoTrabajoClienteRepository.deleteAllByIdCliente(cliente.getId());
+			 * for(TbQoDatoTrabajoCliente dt : wp.getDatosTrabajos()){ dt.setId(null);
+			 * dt.setTbQoCliente(cliente); this.manageDatoTrabajoCliente(dt); } }
+			 * if(wp.getDirecciones() != null && !wp.getDirecciones().isEmpty()) {
+			 * this.direccionClienteRepository.deleteAllByIdCliente(cliente.getId());
+			 * for(TbQoDireccionCliente dir :wp.getDirecciones() ) { dir.setId(null);
+			 * dir.setTbQoCliente(cliente); this.manageDireccionCliente(dir); } }
+			 * if(wp.getReferencias() != null && !wp.getReferencias().isEmpty()) {
+			 * this.referenciaPersonalRepository.deleteAllByIdCliente(cliente.getId());
+			 * for(TbQoReferenciaPersonal ref : wp.getReferencias()) { ref.setId(null);
+			 * ref.setTbQoCliente(cliente); this.manageReferenciaPersonal(ref); } }
+			 * if(wp.getTelefonos() != null && !wp.getTelefonos().isEmpty()) {
+			 * this.telefonoClienteRepository.deleteAllByIdCliente(cliente.getId());
+			 * for(TbQoTelefonoCliente tel : wp.getTelefonos()) { tel.setId(null);
+			 * tel.setTbQoCliente(cliente); this.manageTelefonoCliente(tel); } }
+			 */
 			return cliente;
 		}catch (RelativeException e) {
 			throw e;
