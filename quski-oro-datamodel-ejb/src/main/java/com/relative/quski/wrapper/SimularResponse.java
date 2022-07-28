@@ -777,7 +777,9 @@ public class SimularResponse implements Serializable{
                     "valorAplicable",
                     "valorRealizacion",
                     "numeroPiezas",
-                    "descuentoSuelda"
+                    "descuentoSuelda",
+                    "numeroGarantia",
+                    "numeroExpediente"
                 })
                 public static class Garantia {
 
@@ -811,6 +813,10 @@ public class SimularResponse implements Serializable{
                     protected byte numeroPiezas;
                     @XmlElement(name = "DescuentoSuelda")
                     protected float descuentoSuelda;
+                    @XmlElement(name = "NumeroGarantia")
+                    protected String numeroGarantia;
+                    @XmlElement(name = "NumeroExpediente")
+                    protected String numeroExpediente;
 
                     /**
                      * Gets the value of the tipoJoya property.
@@ -1098,6 +1104,31 @@ public class SimularResponse implements Serializable{
                      */
                     public void setDescuentoSuelda(float value) {
                         this.descuentoSuelda = value;
+                    }
+                    
+                    public String getNumeroGarantia() {
+                        return numeroGarantia;
+                    }
+
+                    /**
+                     * Sets the value of the descuentoSuelda property.
+                     * 
+                     */
+                    public void setNumeroGarantia(String value) {
+                        this.numeroGarantia = value;
+                    }
+                    
+
+                    public String getNumeroExpediente() {
+                        return numeroExpediente;
+                    }
+
+                    /**
+                     * Sets the value of the descuentoSuelda property.
+                     * 
+                     */
+                    public void setNumeroExpediente(String value) {
+                        this.numeroExpediente = value;
                     }
 
                 }
