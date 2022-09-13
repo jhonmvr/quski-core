@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -111,7 +112,7 @@ public class PagoService {
 				pagos.add( qos.manageRegistrarPago(pago) ); 
 			}
 
-		 	//this.enviarCorreoSolicitudPago( clienteCast);
+		 	this.enviarCorreoSolicitudPago( clienteCast);
 			result.setPagos( pagos );
 			return result;
 		} catch (RelativeException e) {
@@ -179,7 +180,7 @@ public class PagoService {
 				pago.setUsuarioCreacion( clienteCast.getAsesor() );
 				pagos.add( qos.manageRegistrarPago(pago) ); 
 			}		
-			//this.enviarCorreoSolicitudBloqueo( clienteCast);
+			this.enviarCorreoSolicitudPago( clienteCast);
 			result.setPagos( pagos );
 			return result;
 		} catch (RelativeException e) {
@@ -427,46 +428,33 @@ public class PagoService {
 	
 	/**
 	 * metodo para enviar mail al solicitar pago
-	
+	*/
+
 	private void enviarCorreoSolicitudPago( TbQoClientePago clientePago) throws RelativeException {
-		
+	
 		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_SOLICITUD_DE_PAGO).getValor();
 		asunto =  asunto
-				.replace("--nombre--", clientePago.getNombreCliente())
+				.replace("--nombreCliente--", clientePago.getNombreCliente())
 				.replace("--cedulaCliente--", clientePago.getCedula())
 				.replace("--codigoBPM--", clientePago.getCodigo())
-				.replace("--numeroOperación--", clientePago.getCodigoOperacion());
+				.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
+				.replace("--tipoPago--", clientePago.getTipoPagoProceso())
+				.replace("--statusAprobada--", "SOLICITUD");
 		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_SOLICITUD_DE_PAGO).getValor();
 		textoContenido=textoContenido
-				.replace("--numeroOperacion--", clientePago.getCodigoOperacion()).replace("--nombre--", clientePago.getNombreCliente())
-				.replace("--asesor--", clientePago.getAsesor()).replace("--valorPago--", clientePago.getValorDepositado().toString())
-				.replace("--observacionesAsesor--", clientePago.getObservacion());
-
-		String[] para= {clientePago.getMailAsesor()};
-		
-		qos.mailNotificacion(para, asunto, textoContenido, null);
-	
-		
-	}
-	private void enviarCorreoSolicitudBloqueo( TbQoClientePago clientePago) throws RelativeException {
-	
-		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_SOLICITUD_DE_PAGO).getValor();
-		asunto =  asunto
-				.replace("--nombre--", clientePago.getNombreCliente())
-				.replace("--cedulaCliente--", clientePago.getCedula())
 				.replace("--codigoBPM--", clientePago.getCodigo())
-				.replace("--numeroOperación--", clientePago.getCodigoOperacion());
-		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.TEXTO_CORREO_SOLICITUD_DE_PAGO).getValor();
-		textoContenido=textoContenido
-				.replace("--numeroOperacion--", clientePago.getCodigoOperacion()).replace("--nombre--", clientePago.getNombreCliente())
-				.replace("--asesor--", clientePago.getAsesor()).replace("--valorPago--", clientePago.getValorDepositado().toString())
+				.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
+				.replace("--nombreCliente--", clientePago.getNombreCliente())
+				.replace("--cedulaCliente--", clientePago.getCedula())
+				.replace("--asesor--", clientePago.getAsesor())
+				.replace("--valorPago--", clientePago.getValorDepositado().toString())
 				.replace("--observacionesAsesor--", clientePago.getObservacion());
 
-		String[] para= {clientePago.getMailAsesor()};
-		
+		String[] para= null;
+		para = Stream.of(this.parametroRepository.findByNombre(QuskiOroConstantes.MAIL_SOLICITUD_CREDITO).getValor()).toArray(String[]::new);
 		qos.mailNotificacion(para, asunto, textoContenido, null);
 	
 	
-	} */
+	} 
 	
 }

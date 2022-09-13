@@ -46,5 +46,6 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public CabeceraWrapper getCabecera(String idReferencia, String proceso)throws RelativeException;
 	public List<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException;
 	public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException;
+	public List<OpPorAprobarWrapper> buscarOperacionesAprobador(Long idProceso) throws RelativeException;
 
 }
