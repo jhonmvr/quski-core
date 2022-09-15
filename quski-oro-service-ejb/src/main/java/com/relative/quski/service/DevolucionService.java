@@ -497,7 +497,8 @@ public class DevolucionService {
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_APROBACION).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_APROBACION).getValor()
 						.replace("--nombreCliente--", dev.getNombreCliente() )
-						.replace("--codigoBpm--",  dev.getCodigo());
+						.replace("--codigoBpm--",  dev.getCodigo())
+						.replace("--motivo--",  dev.getObservacionAprobador());
 				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}else {
 				for (int i = 0; i < paras.size(); ++i) {
@@ -512,7 +513,8 @@ public class DevolucionService {
 				String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.ASUNTO_VERIFICACION_FIRMA_RECHAZO).getValor();
 				String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.CONTENIDO_VERIFICACION_FIRMA_RECHAZO).getValor()
 						.replace("--nombreAsesor--", dev.getAsesor() != null ? dev.getAsesor() : dev.getUsuarioSolicitud() )
-						.replace("--codigoBpm--",  dev.getCodigo());
+						.replace("--codigoBpm--",  dev.getCodigo())
+						.replace("--motivo--",  dev.getObservacionAprobador());
 				this.qos.mailNotificacion(array.toArray(new String[]{}) , asunto, contenido, null);
 			}		
 		} catch (RelativeException e) {

@@ -437,13 +437,13 @@ public class PagoService {
 				.replace("--nombreCliente--", clientePago.getNombreCliente())
 				.replace("--cedulaCliente--", clientePago.getCedula())
 				.replace("--codigoBPM--", clientePago.getCodigo())
-				.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
+				.replace("--numeroOperacion--", StringUtils.isNotBlank( clientePago.getCodigoOperacionMupi()) ? clientePago.getCodigoOperacionMupi() : clientePago.getCodigoOperacion() )
 				.replace("--tipoPago--", clientePago.getTipoPagoProceso())
 				.replace("--statusAprobada--", "SOLICITUD");
 		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CORREO_SOLICITUD_DE_PAGO).getValor();
 		textoContenido=textoContenido
 				.replace("--codigoBPM--", clientePago.getCodigo())
-				.replace("--numeroOperacion--", clientePago.getCodigoOperacion())
+				.replace("--numeroOperacion--", StringUtils.isNotBlank(clientePago.getCodigoOperacionMupi())? clientePago.getCodigoOperacionMupi() : clientePago.getCodigoOperacion())
 				.replace("--nombreCliente--", clientePago.getNombreCliente())
 				.replace("--cedulaCliente--", clientePago.getCedula())
 				.replace("--asesor--", clientePago.getAsesor())
