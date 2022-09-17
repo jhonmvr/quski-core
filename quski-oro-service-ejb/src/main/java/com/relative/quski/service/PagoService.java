@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -25,6 +26,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
+import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegistrarPagoRepository;
@@ -111,7 +113,39 @@ public class PagoService {
 				pago.setUsuarioCreacion( clienteCast.getAsesor() );
 				pagos.add( qos.manageRegistrarPago(pago) ); 
 			}
-
+			
+			//registrar Traking
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("SOLICITUD PAGO");
+			traking.setCodigoBpm(clienteCast.getCodigo());
+			traking.setCodigoOperacionSoftbank(clienteCast.getCodigoOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(clienteCast.getNombreAsesor());
+			traking.setUsuarioCreacion(clienteCast.getAsesor());
+			traking.setObservacion(clienteCast.getObservacion());
+			traking.setProceso(ProcesoEnum.PAGO);
+			traking.setSeccion("ENVIADO A APROBAR");
+			
+			this.qos.registrarTraking(traking);
+			
+			TbQoTracking trakinga = new TbQoTracking();
+			trakinga.setActividad("RESPUESTA PAGO");
+			trakinga.setCodigoBpm(clienteCast.getCodigo());
+			trakinga.setCodigoOperacionSoftbank(clienteCast.getCodigoOperacion());
+			trakinga.setEstado(EstadoEnum.ACT);
+			trakinga.setFechaActualizacion(new Date());
+			trakinga.setFechaCreacion(new Date());
+			trakinga.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			trakinga.setNombreAsesor(clienteCast.getNombreAsesor());
+			trakinga.setUsuarioCreacion(clienteCast.getAsesor());
+			trakinga.setObservacion(clienteCast.getObservacion());
+			trakinga.setProceso(ProcesoEnum.PAGO);
+			trakinga.setSeccion("PENDIENTE APROBACION");
+			
+			this.qos.registrarTraking(trakinga);
 		 	this.enviarCorreoSolicitudPago( clienteCast);
 			result.setPagos( pagos );
 			return result;
@@ -319,6 +353,23 @@ public class PagoService {
 				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION+" EL PROCESO.");
 			}
 			this.enviarCorreoPagoAprobado(isRegistro, clientePago, clientePago.getMailAsesor());
+			//registrar Traking
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("RESPUESTA PAGO");
+			traking.setCodigoBpm(clientePago.getCodigo());
+			traking.setCodigoOperacionSoftbank(clientePago.getCodigoOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(clientePago.getNombreAsesor());
+			traking.setUsuarioCreacion(clientePago.getAsesor());
+			traking.setObservacion(clientePago.getObservacionAprobador());
+			traking.setProceso(ProcesoEnum.PAGO);
+			traking.setTiempoTranscurrido(new Long (0));
+			traking.setSeccion("APROBADO");
+			traking.setFechaFin(new Timestamp(System.currentTimeMillis()));
+			this.qos.registrarTraking(traking);
 			return proceso;
 		} catch (RelativeException e) {
 			//e.printStackTrace();
@@ -414,6 +465,23 @@ public class PagoService {
 							.replace("--observacionAprobador--", StringUtils.isNotBlank(observacionAprobador)? observacionAprobador : " ");
 					qos.mailNotificacion(para, asunto, textoContenido, null);
 				}	
+			//registrar Traking
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("RESPUESTA PAGO");
+			traking.setCodigoBpm(clientePago.getCodigo());
+			traking.setCodigoOperacionSoftbank(clientePago.getCodigoOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(clientePago.getNombreAsesor());
+			traking.setUsuarioCreacion(clientePago.getAsesor());
+			traking.setObservacion(clientePago.getObservacionAprobador());
+			traking.setProceso(ProcesoEnum.PAGO);
+			traking.setTiempoTranscurrido(new Long (0));
+			traking.setSeccion("RECHAZADO");
+			traking.setFechaFin(new Timestamp(System.currentTimeMillis()));
+			this.qos.registrarTraking(traking);
 			return proceso;
 		} catch (RelativeException e) {
 			e.printStackTrace();
