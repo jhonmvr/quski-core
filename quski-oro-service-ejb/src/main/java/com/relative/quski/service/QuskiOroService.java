@@ -7466,6 +7466,65 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	
+	public String asignarAprobadorValidate(Long id, ProcesoEnum proceso, String aprobador, Long idProceso) throws RelativeException {
+		try {
+			TbQoProceso persistedProceso = procesoRepository.findById(idProceso);
+			log.info("entra en persistedProceso ID: " + persistedProceso.getId());
+			if(persistedProceso != null) {
+				persistedProceso.setUsuario( aprobador );
+				persistedProceso.setHoraAprobador( new Timestamp(System.currentTimeMillis()) );
+				TbQoProceso cambioProceso = this.manageProceso(persistedProceso);
+				
+				if(proceso == ProcesoEnum.NUEVO || proceso == ProcesoEnum.RENOVACION) {
+					TbQoNegociacion persistedOperacion = this.findNegociacionById( id );
+					if(persistedOperacion != null) {
+						if(StringUtils.isNotBlank(persistedOperacion.getAprobador()) && !aprobador.equals(persistedOperacion.getAprobador())) {
+							return persistedOperacion.getAprobador();
+						}
+						persistedOperacion.setAprobador(aprobador);
+						this.manageNegociacion(persistedOperacion);
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+								QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+					}
+				}				
+				if(proceso == ProcesoEnum.PAGO) {
+					TbQoClientePago persisted = this.findClientePagoById( id );
+					if(StringUtils.isNotBlank(persisted.getAprobador()) && !aprobador.equals(persisted.getAprobador())) {
+						return persisted.getAprobador();
+					}
+					persisted.setAprobador(aprobador);
+					this.manageClientePago( persisted );
+				}
+				if(proceso == ProcesoEnum.DEVOLUCION || proceso == ProcesoEnum.CANCELACION_DEVOLUCION) {
+					log.info("entra en devolucione");
+					TbQoDevolucion persistedDevolucion  = devolucionRepository.findById(id);
+					if(persistedDevolucion != null) {
+						if(StringUtils.isNotBlank(persistedDevolucion.getAprobador()) && !aprobador.equals(persistedDevolucion.getAprobador())) {
+							return persistedDevolucion.getAprobador();
+						}
+						persistedDevolucion.setAprobador( aprobador );
+						ds.manageDevolucion( persistedDevolucion );
+					}else {
+						throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+								QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION);
+					}
+				}
+				if(proceso == ProcesoEnum.VERIFICACION_TELEFONICA) {}
+				return cambioProceso.getUsuario();
+			}else {
+				return "SIN PROCESO";
+			}
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
+	
 	public TbQoProceso cancelarNegociacion(Long id, String usuario) throws RelativeException {
 		if(id != null && usuario != null){
 			TbQoProceso persisted = this.findProcesoByIdReferencia( id, ProcesoEnum.NUEVO );

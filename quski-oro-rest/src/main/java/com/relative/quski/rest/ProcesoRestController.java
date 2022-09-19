@@ -293,6 +293,18 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		return loc;
 	}	
 	@GET
+	@Path("/asignarAprobadorValidate")
+	@ApiOperation(value = "idReferencia, proceso, aprobador ", notes = "Metodo Get asignarAprobador Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<String> asignarAprobadorValidate(@QueryParam("idReferencia") String idReferencia, @QueryParam("idProceso") String idProceso, 
+			@QueryParam("proceso") ProcesoEnum proceso, @QueryParam("aprobador") String aprobador) throws RelativeException {
+		GenericWrapper<String> loc = new GenericWrapper<>();
+		loc.setEntidad( this.qos.asignarAprobadorValidate( Long.valueOf( idReferencia ),proceso, aprobador , Long.valueOf( idProceso )) );
+		return loc;
+	}	
+	@GET
 	@Path("/asignarAprobadorExcepcion")
 	@ApiOperation(value = "idReferencia, aprobador", notes = "Metodo Get asignarAprobadorExcepcion Retorna GenericWrapper de la entidad encontrada String", response = GenericWrapper.class)
 	@ApiResponses(value = {
