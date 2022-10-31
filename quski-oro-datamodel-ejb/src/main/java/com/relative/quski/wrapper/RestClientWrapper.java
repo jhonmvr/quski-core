@@ -33,6 +33,7 @@ public class RestClientWrapper implements Serializable {
 	private String content;
 	private String contentType;
 	private Boolean transform;
+	private String cookie;
 	/**
 	 * Este debe ir en false si no hay usuario pero si authorizacion
 	 */
@@ -163,9 +164,15 @@ public class RestClientWrapper implements Serializable {
 		sb.append(readTimeout);sb.append("\n");
 		sb.append("content ");
 		sb.append(content);sb.append("\n");
-		sb.append("contentType");
+		sb.append("contentType ");
 		sb.append(contentType);sb.append("\n");
 		return sb.toString();
+	}
+	public String getCookie() {
+		return cookie;
+	}
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
 	}
 	
 	
