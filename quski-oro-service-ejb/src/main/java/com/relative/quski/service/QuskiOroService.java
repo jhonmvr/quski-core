@@ -168,6 +168,7 @@ import com.relative.quski.wrapper.ProcesoCaducadoWrapper;
 import com.relative.quski.wrapper.ProcesoDevoActivoWrapper;
 import com.relative.quski.wrapper.RegistroPagoRenovacionWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
+import com.relative.quski.wrapper.ResponseWebMupi;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaAprobarWrapper;
 import com.relative.quski.wrapper.RespuestaConsultaGlobalWrapper;
@@ -6546,7 +6547,7 @@ public class QuskiOroService {
 		operacionSoftBank.setCodigoTipoPrestamo( tipoPrestamo );
 		operacionSoftBank.setMontoSolicitado( credito.getMontoSolicitado() );
 		operacionSoftBank.setMontoFinanciado( credito.getMontoFinanciado() );
-		operacionSoftBank.setPagoDia(  Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() : 1 )  );
+		operacionSoftBank.setPagoDia(  Long.valueOf( c.getPagoDia() != null ? c.getPagoDia().getDate() : 1 )  );
 		operacionSoftBank.setCodigoGradoInteres( gradoInteres );
 		operacionSoftBank.setDatosRegistro( 
 				new DatosRegistroWrapper(
@@ -9539,6 +9540,42 @@ public class QuskiOroService {
 			nego.setEstadoCredito(estadoCredito);
 			nego.setMotivo(motivo);
 			return this.manageNegociacion(nego);
+		}
+
+		public ResponseWebMupi consultaWebMupi(Long idCliente,String autorizacion) throws RelativeException{
+			TbQoCliente cliente =this.findClienteById(idCliente);
+			if(cliente == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_READ,"No existe un cliente con ID: " + idCliente);
+			}
+			String nombres= "";
+			String apellidos= "";
+			if(StringUtils.isNotBlank(cliente.getPrimerNombre()) && StringUtils.isNotBlank(cliente.getSegundoNombre())
+					&& StringUtils.isNotBlank(cliente.getApellidoMaterno()) && StringUtils.isNotBlank(cliente.getApellidoPaterno())) {
+				nombres = cliente.getPrimerNombre().concat(" ").concat(cliente.getSegundoNombre());
+				apellidos = cliente.getApellidoPaterno().concat(" ").concat(cliente.getApellidoMaterno());
+				
+			}else if ( StringUtils.isNotBlank(cliente.getNombreCompleto())) {
+				String[] nombreCompleto = cliente.getNombreCompleto().split(" ");
+				if(nombreCompleto.length >3 ) {
+					apellidos = nombreCompleto[0] + " " + nombreCompleto[1];
+					nombres = nombreCompleto[2] + " " + nombreCompleto[3];
+				} else if(nombreCompleto.length == 3 ) {
+					apellidos = nombreCompleto[0] + " " + nombreCompleto[1];
+					nombres = nombreCompleto[2];
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"No se puede leer el nombre del cliente");
+				}
+			}
+			ResponseWebMupi res =  ApiGatewayClient.consultaWebMupi(cliente.getNombreCompleto(),nombres,apellidos,cliente.getCedulaCliente(),autorizacion,
+					this.parametroRepository.findByNombre(QuskiOroConstantes.URL_RUN_SERVER_WEB_MUPI_ROBOT).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.USER_ROBOT).getValor(),
+					this.parametroRepository.findByNombre(QuskiOroConstantes.PASS_ROBOT).getValor());
+			cliente.setDetalleWebMupi(res.getDetalle());
+			cliente.setAprobacionMupi(res.getEstado().equalsIgnoreCase(QuskiOroConstantes.RECHAZADO)?"N":"S");
+			this.manageCliente(cliente);
+			
+			return res;
+			
 		}
 
 }

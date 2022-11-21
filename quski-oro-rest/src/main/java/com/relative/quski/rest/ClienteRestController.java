@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.core.web.util.BaseRestController;
@@ -30,6 +31,7 @@ import com.relative.quski.wrapper.CreacionClienteRespuestaCoreWp;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.CrmProspectoWrapper;
 import com.relative.quski.wrapper.CuentaWrapper;
+import com.relative.quski.wrapper.ResponseWebMupi;
 import com.relative.quski.wrapper.RespuestaCrearClienteWrapper;
 
 import io.swagger.annotations.Api;
@@ -279,6 +281,19 @@ public class ClienteRestController extends BaseRestController
 		
 		loc.setEntidad( this.qos.updateCliente(cliente) );
 		return loc;
+	}
+	
+	@GET
+	@Path("/consultaWebMupi")
+	@ApiOperation(value = "cedula", notes = "Metodo GET consultarCuentaMupi  Retorna GenericWrapper de la entidad encontrada CuentaWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public ResponseWebMupi consultaWebMupi(@QueryParam("autorizacion") String autorizacion,@QueryParam("idCliente") String idCliente) throws RelativeException {
+		if(StringUtils.isBlank(idCliente)) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"No se puede leer id_cliente");
+		}
+		return this.qos.consultaWebMupi( Long.valueOf(idCliente), autorizacion );
 	}
 	
 }

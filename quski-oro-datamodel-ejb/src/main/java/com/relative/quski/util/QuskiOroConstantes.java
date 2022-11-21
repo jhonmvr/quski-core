@@ -20,6 +20,7 @@ public class QuskiOroConstantes {
 	public static final String PATH_REPORTE="PATH_REPORTE";
 	public static final String REPORT_MAIN_PATH="PATH_REPORTE";
 	public static final String REPORT_TIEMPO_TRANSCURRIDO="REPORT_TIEMPO_TRANSCURRIDO";
+	public static final String RECHAZADO="RECHAZADO";
 	/**
 	 * Varible en sistema correspondiente al home de widlfly
 	 */
@@ -486,7 +487,11 @@ public class QuskiOroConstantes {
 	public static final String MAIL_JEFE_OPERACIONES = "MAIL_JEFE_OPERACIONES";
 	
 	
-	
+	//ROBOT
+
+	public static final String URL_RUN_SERVER_WEB_MUPI_ROBOT = "URL_RUN_SERVER_WEB_MUPI_ROBOT";
+	public static final String USER_ROBOT = "USER_ROBOT";
+	public static final String PASS_ROBOT = "PASS_ROBOT";
 	
 
 	

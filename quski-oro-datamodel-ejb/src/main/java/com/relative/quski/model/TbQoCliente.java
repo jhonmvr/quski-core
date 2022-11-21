@@ -99,6 +99,9 @@ public class TbQoCliente implements Serializable {
 	@Column(name = "aprobado_web_mupi")
 	private String aprobacionMupi;
 	
+	@Column(name = "detalle_web_mupi")
+	private String detalleWebMupi;
+	
 	private BigDecimal ingresos;
 	private BigDecimal egresos;
 	private BigDecimal pasivos;
@@ -578,6 +581,14 @@ public class TbQoCliente implements Serializable {
 
 	public void setActivos(BigDecimal activos) {
 		this.activos = activos;
+	}
+
+	public String getDetalleWebMupi() {
+		return detalleWebMupi;
+	}
+
+	public void setDetalleWebMupi(String detalleWebMupi) {
+		this.detalleWebMupi = detalleWebMupi;
 	}
 
  
