@@ -6547,7 +6547,7 @@ public class QuskiOroService {
 		operacionSoftBank.setCodigoTipoPrestamo( tipoPrestamo );
 		operacionSoftBank.setMontoSolicitado( credito.getMontoSolicitado() );
 		operacionSoftBank.setMontoFinanciado( credito.getMontoFinanciado() );
-		operacionSoftBank.setPagoDia(  Long.valueOf( c.getPagoDia() != null ? c.getPagoDia().getDate() : 1 )  );
+		operacionSoftBank.setPagoDia(  Long.valueOf( credito.getPagoDia() != null ? credito.getPagoDia().getDate() :  c.getPagoDia() != null ? c.getPagoDia().getDate() : 1  )  );
 		operacionSoftBank.setCodigoGradoInteres( gradoInteres );
 		operacionSoftBank.setDatosRegistro( 
 				new DatosRegistroWrapper(
