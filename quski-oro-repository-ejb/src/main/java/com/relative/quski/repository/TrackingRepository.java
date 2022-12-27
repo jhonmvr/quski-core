@@ -61,6 +61,8 @@ public interface TrackingRepository extends CrudRepository<Long, TbQoTracking>{
 
 	public Long trakingAreaByCodigoBpm(String codigoBpm) throws RelativeException;
 
+	public TbQoTracking verActividad(String codigoBpm) throws RelativeException;
+
 	
 	
 }

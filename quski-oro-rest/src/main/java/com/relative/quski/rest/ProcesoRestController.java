@@ -30,6 +30,7 @@ import com.relative.quski.enums.ActividadEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
@@ -361,5 +362,15 @@ public class ProcesoRestController extends BaseRestController implements CrudRes
 		}
 		
 		return this.qos.getCabecera(idReferencia, proceso);		
+	}
+	@GET
+	@Path("/verActividad")
+	public TbQoTracking verActividad( @QueryParam("codigoBpm") String codigoBpm) throws RelativeException{
+		
+		if(StringUtils.isBlank(codigoBpm) ) {
+			return null;
+		}
+		
+		return this.qos.verActividad(codigoBpm);		
 	}
 }

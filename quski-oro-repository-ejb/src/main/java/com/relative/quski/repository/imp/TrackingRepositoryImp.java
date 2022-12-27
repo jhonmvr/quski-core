@@ -547,4 +547,23 @@ public class TrackingRepositoryImp extends GeneralRepositoryImp<Long, TbQoTracki
 			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
 		}
 	}
+
+
+	@Override
+	public TbQoTracking verActividad(String codigoBpm) throws RelativeException {
+		try {
+			TrackingWrapper wp = new TrackingWrapper();
+			wp.setCodigoBpm(codigoBpm);
+			List<TbQoTracking> tmp;
+			tmp = this.findAllBySpecificationPaged(new TrackingByParamsSpec(wp), 0, 1, "id", "DESC");
+			if (tmp != null && !tmp.isEmpty()) {
+				return tmp.get(0);
+			}
+
+			return null;            
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
+	}
 }

@@ -9578,4 +9578,9 @@ public class QuskiOroService {
 			
 		}
 
+		public TbQoTracking verActividad(String codigoBpm) throws RelativeException {
+			// TODO Auto-generated method stub
+			return trackingRepository.verActividad(codigoBpm);
+		}
+
 }
