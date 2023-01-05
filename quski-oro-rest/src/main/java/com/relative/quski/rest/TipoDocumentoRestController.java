@@ -29,6 +29,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.TipoPlantillaEnum;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoDevolucion;
 import com.relative.quski.model.TbQoTipoDocumento;
 import com.relative.quski.repository.DevolucionRepository;
@@ -306,6 +307,50 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		return this.generateReport(map, path, formato, td);
 	}
 	
+	@GET
+	@Path("/getPlantillaAutorizacion")
+	@ApiOperation(value = "idTipoDocumento, format, idReferencia, nombreAsesor, identificacionAsesor", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en ObjetoHabilitanteWrapper", 
+	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+		public ObjetoHabilitanteWrapper getPlantillaAutorizacion(
+			@QueryParam("idTipoDocumento") String id,
+			@QueryParam("format") String formato,
+		    @QueryParam("idReferencia") String idNego,
+		    @QueryParam("nombreAsesor") String nombreAsesor,
+		    @QueryParam("identificacionAsesor") String identificacionAsesor
+		  
+		    ) throws RelativeException {
+		log.info("===================> getPlantilla");
+		log.info("===================> getPlantilla id " + id );
+		log.info("===================> getPlantilla idDevolucion " + idNego );
+		
+		log.info("================s===> getPlantilla format " + formato );
+		Map<String, Object> map = new HashMap<>();
+		//CAMBIAR PARA PONER EL PARAMETRO
+		
+
+		//String path= "C:\\WORKSPACE\\quski-oro-core\\quski-oro-rest\\src\\main\\resources\\reportes\\";
+		//String path= "/home/relative/workspace/QUSKI/Quski-Oro/quski-oro-core/quski-oro-rest/src/main/resources/reportes/";
+
+		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
+		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
+		//log.info("================PATH===> P" +path);
+		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
+		TbQoCreditoNegociacion nego = this.qos.findCreditoByIdNegociacion(Long.valueOf(idNego));
+		if(nego == null) {
+			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE ENCONTRO EL CREDITO ID: " + idNego);
+		}
+		
+		map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(nego.getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), nego.getTbQoNegociacion().getTbQoCliente().getNombreCompleto()) );
+		map.put("subReportOneName",  td.getPlantillaUno() );
+		map.put("subReportTwoName", td.getPlantillaDos() );
+		map.put("subReportThreeName", td.getPlantillaTres());
+		map.put("mainReportName", td.getPlantilla());
+		map.put("REPORT_PATH", path );
+		return this.generateReport(map, path, formato, td);
+	}
 	
 	private void setParametersDevolucion(Map<String, Object> map,String path, 
 		 String idDevolucion, TbQoTipoDocumento td){

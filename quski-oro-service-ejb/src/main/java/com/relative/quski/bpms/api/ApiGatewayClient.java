@@ -87,37 +87,35 @@ public class ApiGatewayClient {
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, service, EquifaxConsultaPersonaWrapper.class);
 			//log.info("===> Respuesta de servicio " + response);
 			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
-			if(status>=200 && status < 300) {
-				String respuesta = String.valueOf(response.get(ReRestClient.RETURN_OBJECT));
-				//log.info("nuevo resp " + respuesta);
-				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				ByteArrayInputStream input =  new ByteArrayInputStream(respuesta.getBytes("UTF-8"));
-				Document doc = builder.parse(input);
-				Element root = doc.getDocumentElement();
-				//log.info( "mensaje x " + root.getElementsByTagName("ConsultaNuevoClienteResult") );
-				NodeList chn=root.getElementsByTagName("ConsultaNuevoClienteResult");
-				for( int i=0; i<chn.getLength();i++) {
-					log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
-					return ReRestClient.fromXml( chn.item(i).getTextContent(), Informacion.class);
+			
+				try {
+					String respuesta = String.valueOf(response.get(ReRestClient.RETURN_OBJECT));
+					//log.info("nuevo resp " + respuesta);
+					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					ByteArrayInputStream input =  new ByteArrayInputStream(respuesta.getBytes("UTF-8"));
+					Document doc = builder.parse(input);
+					Element root = doc.getDocumentElement();
+					//log.info( "mensaje x " + root.getElementsByTagName("ConsultaNuevoClienteResult") );
+					NodeList chn=root.getElementsByTagName("ConsultaNuevoClienteResult");
+					for( int i=0; i<chn.getLength();i++) {
+						log.info( "mensaje ConsultaNuevoClienteResult=====>>>>>>>>" + i + " - " + chn.item(i).getNodeName() + " " + chn.item(i).getTextContent()  );
+						return ReRestClient.fromXml( chn.item(i).getTextContent(), Informacion.class);
+					}
+					return null;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO Equifax:"+ String.valueOf(response.get(ReRestClient.RETURN_OBJECT)));
 				}
-				return null;
 				
-			}else {
-				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:"+ String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
-		} catch (RelativeException e) {
+		
+		}  catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO Equifax:");
 		}
 	}
 	@SuppressWarnings("unused")

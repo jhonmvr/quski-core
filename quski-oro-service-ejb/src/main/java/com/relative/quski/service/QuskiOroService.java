@@ -1107,7 +1107,7 @@ public class QuskiOroService {
 	 ************************************ @Cliente
 	 */
 
-	private TbQoCliente createCliente(String cedula, String autorizacion) throws RelativeException {
+	private TbQoCliente createCliente(String cedula, String autorizacion, Informacion data) throws RelativeException {
 		try {
 			TbQoCliente cliente = this.findClienteByIdentifiacion(cedula);
 			if (cliente != null) {
@@ -1121,7 +1121,7 @@ public class QuskiOroService {
 			if (cliente != null) { 
 				return this.manageCliente(cliente); 
 			}
-			return null;			
+			return this.createClienteFromEquifax(data.getDATOSCLIENTE());
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -1843,14 +1843,21 @@ public class QuskiOroService {
 	public NegociacionWrapper iniciarNegociacion(String cedula, String asesor, Long idAgencia, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
 			log.info("<<=================ENTRAR A INICIAR NEGOCIACION=============>>>");
-			TbQoCliente cliente = this.createCliente(cedula, autorizacion);
 			
-			if (cliente != null) {
-				Informacion data = informacionCliente(cedula);
-				return generarTablasIniciales(cliente, asesor, idAgencia, data,autorizacion, nombreAgencia, telefonoAsesor);
-			} else {
-				return new NegociacionWrapper(false);
+			Informacion data = informacionCliente(cedula);
+			if( data == null || data.getDATOSCLIENTE() == null ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," NO SE PUDO ENCONTRAR INFORMACION DEL CLIENTE");
 			}
+			TbQoCliente cliente = this.createCliente(cedula, autorizacion, data);
+			if (cliente != null) {
+				
+				TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia, nombreAgencia, telefonoAsesor);
+				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
+				return generarTablasIniciales(proceso, credito, cliente, asesor, idAgencia, data,autorizacion, nombreAgencia, telefonoAsesor);
+			} 
+			
+			return new NegociacionWrapper(false);
+			
 		} catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;
@@ -1860,13 +1867,17 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 					QuskiOroConstantes.ERROR_NEGOCIACION + e.getMessage());
 		}
+		
 	}
 	public CotizacionWrapper iniciarCotizacion(String cedula, String asesor, Long idAgencia, String autorizacion) throws RelativeException {
 		try {
 			log.info("<<=================ENTRAR A INICIAR COTIZACION=============>>>");
-			TbQoCliente cliente = this.createCliente(cedula,autorizacion);
+			Informacion data = informacionCliente(cedula);
+			if( data == null || data.getDATOSCLIENTE() == null ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," NO SE PUDO ENCONTRAR INFORMACION DEL CLIENTE");
+			}
+			TbQoCliente cliente = this.createCliente(cedula,autorizacion, data);
 			if (cliente != null) {
-				Informacion data = informacionCliente(cedula);
 				return generarTablasInicialesCotizacion(cliente, asesor, idAgencia, data, autorizacion);
 			} else {
 				return null;
@@ -2224,7 +2235,9 @@ public class QuskiOroService {
 			
 			TbQoCliente cliente = this.createClienteFromEquifax(data.getDATOSCLIENTE());
 			if (cliente != null) {
-				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
+				TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia, nombreAgencia, telefonoAsesor);
+				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
+				return generarTablasIniciales(proceso, credito, cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2259,8 +2272,10 @@ public class QuskiOroService {
 		try {
 			TbQoCliente cliente = this.findClienteByCotizador(id);
 			if (cliente != null) {
+				TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia, nombreAgencia, telefonoAsesor);
+				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
 				Informacion data = informacionCliente(cliente.getCedulaCliente());
-				return generarTablasIniciales(cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
+				return generarTablasIniciales(proceso, credito, cliente, asesor, idAgencia, data, autorizacion, nombreAgencia, telefonoAsesor);
 			} else {
 				return new NegociacionWrapper(false);
 			}
@@ -2771,13 +2786,13 @@ public class QuskiOroService {
 	
 	
 	
-	private NegociacionWrapper generarTablasIniciales(TbQoCliente cliente, String asesor, Long idAgencia, Informacion data, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
+	private NegociacionWrapper generarTablasIniciales(TbQoProceso proceso, TbQoCreditoNegociacion credito, TbQoCliente cliente, String asesor, Long idAgencia, Informacion data, String autorizacion, String nombreAgencia, String telefonoAsesor) throws RelativeException {
 		try {
-			TbQoCreditoNegociacion credito = this.createCredito(cliente, asesor, idAgencia, nombreAgencia, telefonoAsesor);
+			
 			this.guardarProspectoCrm(cliente, autorizacion);
 			if (credito != null) {
 				NegociacionWrapper wrapper = new NegociacionWrapper();
-				TbQoProceso proceso = this.createProcesoNegociacion( credito.getTbQoNegociacion().getId(), asesor);
+				
 				List<TbQoRiesgoAcumulado> riesgosTb = this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank(cliente.getCedulaCliente(),autorizacion), credito.getTbQoNegociacion(), null ));
 				wrapper.setRiesgos( riesgosTb );
 				wrapper.setCredito(credito);
@@ -2925,7 +2940,7 @@ public class QuskiOroService {
 			}
 			CrmGuardarProspectoWrapper tmp = new CrmGuardarProspectoWrapper(entidad);
 			CrmProspectoWrapper pro = CrmApiClient.callPersistProspectoRest(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_CRM_PERSIST).getValor(),tmp, autorizacion);
-			log.info( " GUARDANDO EN CRM =====================================> " + pro.getCedulaC() );
+			log.info( " GUARDANDO EN CRM =====================================> " + cliente.getCedulaCliente() );
 			return pro;
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -8487,6 +8502,11 @@ public class QuskiOroService {
 				if(docCliente == null || StringUtils.isBlank(docCliente.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
 				}
+				TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("18"),
+						ProcessEnum.NUEVO, String.valueOf(wp.getTbQoNegociacion().getId()));
+				if(docAutorizacion == null || StringUtils.isBlank(docCliente.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO");
+				}
 				TbQoNegociacion nego = wp.getTbQoNegociacion();
 				nego.setCorreoAsesor(correoAsesor);
 				nego.setNombreAsesor( nombreAsesor );
@@ -8546,6 +8566,12 @@ public class QuskiOroService {
 						ProcessEnum.CLIENTE, credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
 				if(docCliente == null || StringUtils.isBlank(docCliente.getObjectId())) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
+				}
+
+				TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("18"),
+						ProcessEnum.NOVACION, String.valueOf(idNegociacion));
+				if(docAutorizacion == null || StringUtils.isBlank(docCliente.getObjectId())) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO");
 				}
 				TbQoNegociacion nego = credito.getTbQoNegociacion();
 				
