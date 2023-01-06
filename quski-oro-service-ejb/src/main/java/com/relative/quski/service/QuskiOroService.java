@@ -2956,13 +2956,15 @@ public class QuskiOroService {
 	/**
 	 * * * * * * * * * * * @HABILITANTES
 	 */
-	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente, String nombreCliente)
+	public AutorizacionBuroWrapper setAutorizacionBuroWrapper(String identificacionCliente, String nombreCliente, String ciudad, String codigo)
 			throws RelativeException {
 
 		AutorizacionBuroWrapper autorizacion = new AutorizacionBuroWrapper();
 		autorizacion.setCedulaCliente(identificacionCliente);
 		autorizacion.setNombreCliente(nombreCliente);
 		autorizacion.setFechaActual(QuskiOroUtil.dateToFullString(new Date()));
+		autorizacion.setCiudad(ciudad);
+		autorizacion.setCodigo(codigo);
 		return autorizacion;
 	}
 
@@ -3017,6 +3019,7 @@ public class QuskiOroService {
 				return this.updateDocumentoHabilitante(send, persisted);
 			} else if (send != null && send.getId() == null) {
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return documentoHabilitanteRepository.add(send);
 			} else {
 				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
@@ -8282,6 +8285,28 @@ public class QuskiOroService {
 				}else {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
 				}
+				
+				TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("18"),
+						ProcessEnum.NUEVO, String.valueOf(credito.getTbQoNegociacion().getId()));
+				if(docAutorizacion != null && StringUtils.isNotBlank(docAutorizacion.getObjectId())) {
+					TbQoDocumentoHabilitante docAut = new TbQoDocumentoHabilitante();
+					TbQoTipoDocumento tipoDoc = new TbQoTipoDocumento();
+					tipoDoc.setId(Long.valueOf("19"));
+					docAut.setId(null);
+					docAut.setIdReferencia(credito.getNumeroOperacion());
+					docAut.setTbQoTipoDocumento(tipoDoc);
+					docAut.setProceso(ProcessEnum.AUTORIZACION);
+					docAut.setArchivo(docAutorizacion.getArchivo());
+					docAut.setEstado(docAutorizacion.getEstado());
+					docAut.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+					docAut.setNombreArchivo(docAutorizacion.getNombreArchivo());
+					docAut.setObjectId(docAutorizacion.getObjectId());
+					this.manageDocumentoHabilitante(docAut);
+					
+					
+				}else {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO");
+				}
 				ap.setDatosRegistro( new DatosRegistroWrapper( usuario, agencia, QuskiOroUtil.dateToString(new Timestamp(System.currentTimeMillis()), QuskiOroConstantes.SOFT_DATE_FORMAT), null, credito.getCodigo() ) );
 				credito.setCodigoCash(cash);
 				
@@ -8568,10 +8593,10 @@ public class QuskiOroService {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
 				}
 
-				TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("18"),
-						ProcessEnum.NOVACION, String.valueOf(idNegociacion));
-				if(docAutorizacion == null || StringUtils.isBlank(docCliente.getObjectId())) {
-					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO");
+				TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(Long.valueOf("19"),
+						ProcessEnum.AUTORIZACION, credito.getNumeroOperacionMadre());
+				if(docAutorizacion == null || StringUtils.isBlank(docCliente.getObjectId()) ||  QuskiOroUtil.diasFecha(docAutorizacion.getFechaActualizacion(), new Date()) > 360) {
+					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO o ESTA CADUCADO");
 				}
 				TbQoNegociacion nego = credito.getTbQoNegociacion();
 				
@@ -9608,5 +9633,17 @@ public class QuskiOroService {
 			// TODO Auto-generated method stub
 			return trackingRepository.verActividad(codigoBpm);
 		}
+
+		public TbQoCreditoNegociacion findCreditoByOperacionMadre(String operacionMadre) throws RelativeException {
+			// TODO Auto-generated method stub
+			return this.creditoNegociacionRepository.findCreditoByNumeroOperacionMadre(operacionMadre);
+		}
+
+		public TbQoCreditoNegociacion findCreditoByOperacionYOperacionMadre(String operacion) throws RelativeException {
+			// TODO Auto-generated method stub
+			return this.creditoNegociacionRepository.findCreditoByNumeroOperacion(operacion);
+		}
+
+		
 
 }

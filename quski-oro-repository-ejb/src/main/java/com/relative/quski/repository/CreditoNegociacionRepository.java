@@ -25,6 +25,7 @@ public interface CreditoNegociacionRepository extends CrudRepository<Long, TbQoC
 	
 	public TbQoCreditoNegociacion findCreditoByNumeroOperacionMadre(String numeroOperacion) throws RelativeException;
 	public TbQoCreditoNegociacion findCreditoByCodigoBpm(String codigoBpm)throws RelativeException;
+	public TbQoCreditoNegociacion findCreditoByNumeroOperacion(String operacion)throws RelativeException;
 
 }
 

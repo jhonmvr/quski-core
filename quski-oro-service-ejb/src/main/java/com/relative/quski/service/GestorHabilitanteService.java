@@ -217,6 +217,7 @@ public class GestorHabilitanteService {
 			} else if (send != null && send.getId() == null) {
 				log.info("INGRESO AL ELSE");
 				send.setFechaCreacion(new Timestamp(System.currentTimeMillis()));
+				send.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 				return dh.add(send);
 			} else {
 				log.info("INGRESA AL ERRRORRRRR");

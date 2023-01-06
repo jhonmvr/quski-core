@@ -207,7 +207,7 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		
 		if( !StringUtils.isEmpty( identificacionCliente )  ) {
 			if(  td.getTipoPlantilla().compareTo( TipoPlantillaEnum.AB )==0  )  {
-				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente) );
+				map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(identificacionCliente, nombreCliente, null, null) );
 			} 
 			
 			
@@ -307,6 +307,8 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		return this.generateReport(map, path, formato, td);
 	}
 	
+
+	
 	@GET
 	@Path("/getPlantillaAutorizacion")
 	@ApiOperation(value = "idTipoDocumento, format, idReferencia, nombreAsesor, identificacionAsesor", notes = "Metodo getEntityByTipoAndContrato Retorna wrapper de entidades encontradas en ObjetoHabilitanteWrapper", 
@@ -317,14 +319,17 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		public ObjetoHabilitanteWrapper getPlantillaAutorizacion(
 			@QueryParam("idTipoDocumento") String id,
 			@QueryParam("format") String formato,
-		    @QueryParam("idReferencia") String idNego,
+		    @QueryParam("idReferencia") String idReferencia,
 		    @QueryParam("nombreAsesor") String nombreAsesor,
-		    @QueryParam("identificacionAsesor") String identificacionAsesor
+		    @QueryParam("identificacionAsesor") String identificacionAsesor,
+		    @QueryParam("autorizacion") String autorizacion,
+		    @QueryParam("ciudadAgencia") String ciudadAgencia,
+		    @QueryParam("proceso") String proceso
 		  
 		    ) throws RelativeException {
 		log.info("===================> getPlantilla");
 		log.info("===================> getPlantilla id " + id );
-		log.info("===================> getPlantilla idDevolucion " + idNego );
+		log.info("===================> getPlantilla idReferencia " + idReferencia );
 		
 		log.info("================s===> getPlantilla format " + formato );
 		Map<String, Object> map = new HashMap<>();
@@ -337,13 +342,24 @@ implements CrudRestControllerInterface<TbQoTipoDocumento, GenericWrapper<TbQoTip
 		String path= this.parametroRepository.findByNombre(QuskiOroConstantes.PATH_REPORTE).getValor();
 		//String path = "C:/Users/jukis/JaspersoftWorkspace/DevolucionQuski/";
 		//log.info("================PATH===> P" +path);
+		TbQoCreditoNegociacion credito = null;
 		TbQoTipoDocumento td= this.qos.findTipoDocumentoById(Long.valueOf( id ) );
-		TbQoCreditoNegociacion nego = this.qos.findCreditoByIdNegociacion(Long.valueOf(idNego));
-		if(nego == null) {
-			new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE ENCONTRO EL CREDITO ID: " + idNego);
+		if(proceso.equals("AUTORIZACION")) {
+			credito = this.qos.findCreditoByOperacionYOperacionMadre(idReferencia);
+		}else {
+			credito = this.qos.findCreditoByIdNegociacion(Long.valueOf(idReferencia));			
+		}
+		if(credito == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "NO SE ENCONTRO EL CREDITO ID: " + idReferencia);
+		}
+		String codigo = credito.getNumeroOperacion();
+		if(StringUtils.isNotBlank(credito.getNumeroOperacionMadre())) {
+			codigo = credito.getNumeroOperacionMadre();
 		}
 		
-		map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(nego.getTbQoNegociacion().getTbQoCliente().getCedulaCliente(), nego.getTbQoNegociacion().getTbQoCliente().getNombreCompleto()) );
+		map.put("BEAN_DS", qos.setAutorizacionBuroWrapper(credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente(),
+				credito.getTbQoNegociacion().getTbQoCliente().getNombreCompleto(), ciudadAgencia,
+				td.getProceso().equals(ProcessEnum.AUTORIZACION)? codigo : credito.getCodigo()) );
 		map.put("subReportOneName",  td.getPlantillaUno() );
 		map.put("subReportTwoName", td.getPlantillaDos() );
 		map.put("subReportThreeName", td.getPlantillaTres());

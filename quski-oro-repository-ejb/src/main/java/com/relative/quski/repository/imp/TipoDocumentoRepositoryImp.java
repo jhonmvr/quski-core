@@ -43,7 +43,7 @@ public class TipoDocumentoRepositoryImp extends GeneralRepositoryImp<Long, TbQoT
 			if( idReferencia != null ) {
 				queryStr.append("inner join td.tbQoDocumentoHabilitantes dh "); 
 			}
-			queryStr.append("where 1=1 ");
+			queryStr.append("where 1=1 and td.estado = 'ACT' ");
 			if( proceso != null ) {
 				queryStr.append(" and td.proceso in :proceso ");
 			}

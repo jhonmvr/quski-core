@@ -17,6 +17,7 @@ import com.relative.quski.repository.CreditoNegociacionRepository;
 import com.relative.quski.repository.spec.CreditoByCodigoBpmSpec;
 import com.relative.quski.repository.spec.CreditoByIdNegociacionSpec;
 import com.relative.quski.repository.spec.CreditoByNumeroOperacionMadre;
+import com.relative.quski.repository.spec.CreditoByNumeroOperacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.util.QuskiOroConstantes;
 
@@ -100,6 +101,19 @@ public class CreditoNegociacionImp extends GeneralRepositoryImp<Long, TbQoCredit
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"NO SE PUEDO ENCONTRAR CREDITO POR ID_NEGOCIACION");
+		}
+	}
+
+	@Override
+	public TbQoCreditoNegociacion findCreditoByNumeroOperacion(String operacion) throws RelativeException {
+		try {
+			List<TbQoCreditoNegociacion> list = this.findAllBySpecification( new CreditoByNumeroOperacionSpec( operacion ) );
+			if(list != null && !list.isEmpty() ) {
+				return list.get(0);
+			}
+			return null;
+		}catch(Exception e) {
+			throw new RelativeException( Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
 		}
 	}
 }
