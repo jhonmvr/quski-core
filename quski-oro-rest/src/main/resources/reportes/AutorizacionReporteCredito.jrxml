@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizacionBuro" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="56" bottomMargin="56" uuid="e9104228-bc97-4a9c-9043-a6fbd33bad01">
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AutorizacionBuro" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="1" bottomMargin="56" uuid="e9104228-bc97-4a9c-9043-a6fbd33bad01">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="BEAN_DS" class="com.relative.quski.wrapper.AutorizacionBuroWrapper"/>
 	<queryString>
 		<![CDATA[]]>
@@ -18,56 +19,66 @@
 		<fieldDescription><![CDATA[cedulaCliente]]></fieldDescription>
 	</field>
 	<title>
-		<band height="487" splitType="Stretch">
+		<band height="531" splitType="Stretch">
 			<staticText>
-				<reportElement x="56" y="4" width="380" height="20" uuid="a565b226-57b1-4e30-855f-c7e70689d4d2"/>
+				<reportElement x="56" y="81" width="380" height="20" uuid="a565b226-57b1-4e30-855f-c7e70689d4d2"/>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" isBold="false" isUnderline="true"/>
+					<font fontName="Arial" isBold="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[AUTORIZACIÓN PARA SOLICITAR REPORTE DE CRÉDITO]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="130" width="483" height="90" uuid="3262b2b2-606f-4d2c-82ac-72f08dabffd9"/>
+				<reportElement positionType="Float" x="0" y="207" width="483" height="90" uuid="3262b2b2-606f-4d2c-82ac-72f08dabffd9"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Yo " + $P{BEAN_DS}.getNombreCliente()   + " con CI "+ $P{BEAN_DS}.getCedulaCliente() + " por medio de la presente autorizo de manera voluntaria, previa, explícita, informada e inequívoca a Quski C.A., o a quien en el futuro actué en calidad de acreedor, para que a través de sus funcionarios debidamente facultados revisen la información sobre mi comportamiento crediticio, manejo de cuentas, tarjetas de crédito, inversiones y en general sobre el cumplimiento de mis obligaciones, información de mis activos y pasivos, en todas las entidades de información crediticia que se estimen convenientes, debidamente constituidas y autorizadas por autoridad competente."]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="Float" x="131" y="425" width="230" height="1" uuid="238eb198-2796-4bab-8fb2-fa3aa04ca3eb"/>
+				<reportElement positionType="Float" x="131" y="479" width="230" height="1" uuid="238eb198-2796-4bab-8fb2-fa3aa04ca3eb"/>
 			</line>
-			<textField>
-				<reportElement x="0" y="30" width="100" height="20" uuid="47b7aea6-7535-4668-a4fe-ca16bbda7d75"/>
-				<textFieldExpression><![CDATA["Quito " + $P{BEAN_DS}.getFechaActual()]]></textFieldExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="107" width="483" height="20" uuid="47b7aea6-7535-4668-a4fe-ca16bbda7d75"/>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCiudad()+" " + $P{BEAN_DS}.getFechaActual()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="50" width="170" height="20" uuid="253edce6-2b85-405c-a401-2478141ace45"/>
+				<reportElement x="0" y="127" width="170" height="20" uuid="253edce6-2b85-405c-a401-2478141ace45"/>
 				<textElement>
-					<font fontName="Arial" isBold="false" isUnderline="true"/>
+					<font fontName="Arial" isBold="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Señores:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="68" width="170" height="20" uuid="1b909e1f-0f56-4b80-b35f-d4e193401ffd"/>
+				<reportElement x="0" y="145" width="170" height="20" uuid="1b909e1f-0f56-4b80-b35f-d4e193401ffd"/>
 				<textElement>
-					<font fontName="Arial" isBold="false" isUnderline="true"/>
+					<font fontName="Arial" isBold="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Quski C.A.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="85" width="170" height="20" uuid="40d0bc3f-c0d3-4940-b9a9-862f3491b153"/>
+				<reportElement x="0" y="162" width="170" height="20" uuid="40d0bc3f-c0d3-4940-b9a9-862f3491b153"/>
 				<textElement>
-					<font fontName="Arial" isBold="false" isUnderline="true"/>
+					<font fontName="Arial" isBold="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Presente]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="0" y="240" width="483" height="90" uuid="34f70ce0-6b4f-444d-89f3-4fab6f5fb2d0"/>
+				<reportElement positionType="Float" x="0" y="317" width="483" height="90" uuid="34f70ce0-6b4f-444d-89f3-4fab6f5fb2d0"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Autorizo expresamente a Quski C.A. en calidad de responsable de tratamiento de datos personales, para que realice el tratamiento de mis datos personales y datos de categoría especial, para que los use, conserve y los transfiera a terceros determinados, para cumplir con las finalidades que fundamentaron su recopilación. Quski C.A. me ha garantizado que la información será tratada de manera lícita, transparente, oportuna y limitada a lo necesario en relación con los fines pertinentes.  <br><br><br>"+
 "Así mismo, declaro que conozco el alcance de la información que se solicitará, y de su uso. Quski C.A. podrá realizar consultas periódicas de mi historial crediticio, consintiendo que esta autorización estará vigente durante el tiempo que mantengamos la relación contractual. Quski C.A. retendrá la información en la medida necesaria para cumplir con sus obligaciones legales, resolver controversias y hacer cumplir con sus políticas.  <br><br><br> Me han informado que puedo hacer ejercicio de mis derechos sobre dichos datos personales, de así convenir a mis intereses, a través del proceso implementado por la compañía para tal efecto. "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="47" width="240" height="20" uuid="6acb0e21-effa-4a08-bdbb-5a3afe54a26e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getCodigo()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="110" y="491" width="260" height="29" uuid="444052ed-8002-4a43-a95a-a3282008d1eb"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA[$P{BEAN_DS}.getNombreCliente()+"<br><br>CI: "+$P{BEAN_DS}.getCedulaCliente()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
