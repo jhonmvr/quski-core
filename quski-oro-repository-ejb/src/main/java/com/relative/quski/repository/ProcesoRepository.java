@@ -9,6 +9,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.wrapper.BusquedaOperacionesWrapper;
 import com.relative.quski.wrapper.BusquedaPorAprobarWrapper;
@@ -47,5 +48,7 @@ public interface ProcesoRepository extends CrudRepository<Long, TbQoProceso> {
 	public List<EstadoProcesoEnum> getEstadosProceso(List<ProcesoEnum> proceso) throws RelativeException;
 	public BigDecimal getMontoFinanciado(BusquedaOperacionesWrapper wp) throws RelativeException;
 	public List<OpPorAprobarWrapper> buscarOperacionesAprobador(Long idProceso) throws RelativeException;
+	public TbQoCreditoNegociacion findRenovacionByNumeroOperacionMadreAndEstado(String numeroOperacionMadre,
+			List<EstadoProcesoEnum> estados)throws RelativeException;
 
 }

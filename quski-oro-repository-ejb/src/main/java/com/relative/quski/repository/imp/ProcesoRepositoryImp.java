@@ -32,6 +32,7 @@ import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.model.TbQoVerificacionTelefonica;
 import com.relative.quski.repository.ProcesoRepository;
 import com.relative.quski.repository.spec.CreditoByListIdsAndAprobadoresSpec;
+import com.relative.quski.repository.spec.CreditoNegociacionSpec;
 import com.relative.quski.repository.spec.DevolucionByListIdsAndAprobadoresSpec;
 import com.relative.quski.repository.spec.PagoByListIdsAndAprobadoresSpec;
 import com.relative.quski.repository.spec.ProcesoByAsesorSpec;
@@ -889,6 +890,60 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA);
+		}
+	}
+	@Override
+	public TbQoCreditoNegociacion findRenovacionByNumeroOperacionMadreAndEstado(String numeroOperacionMadre,
+			List<EstadoProcesoEnum> estados) throws RelativeException {
+		try {
+			List<Long> creditos = null;
+			if (StringUtils.isBlank(numeroOperacionMadre)) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL NUMERO DE OPERACION MADRE");
+			}
+				CriteriaBuilder cbb = getEntityManager().getCriteriaBuilder();
+				CriteriaQuery<Long> queryy = cbb.createQuery(Long.class);
+				Root<TbQoCreditoNegociacion> pollRol = queryy.from(TbQoCreditoNegociacion.class);
+				//Join<TbQoNegociacion,TbQoCreditoNegociacion> joinNegociacion = pollRol.join("tbQoNegociacion");
+				queryy.where(cbb.equal(pollRol.get("numeroOperacionMadre"), numeroOperacionMadre));
+				queryy.select(pollRol.get("tbQoNegociacion").get("id"));
+				TypedQuery<Long> createQue = this.getEntityManager().createQuery(queryy);
+				creditos = createQue.getResultList();
+			if(creditos == null || creditos.isEmpty() ) {
+				return null;
+			}
+			CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+			CriteriaQuery<Long> query = cb.createQuery(Long.class);
+			Root<TbQoProceso> poll = query.from(TbQoProceso.class);
+			List<Predicate> where = new ArrayList<>();
+			where.add(poll.get("idReferencia").in(creditos));
+			if (estados != null && !estados.isEmpty()) {
+				where.add(poll.get("estadoProceso").in(estados));
+			}
+			where.add(cb.equal(poll.get("proceso"), ProcesoEnum.RENOVACION));
+			
+
+			query.where(cb.and(where.toArray(new Predicate[] {})));
+
+			query.select(poll.get("idReferencia"));
+			TypedQuery<Long> createQuery = this.getEntityManager().createQuery(query);
+			
+			List<Long> procesos = createQuery.getResultList();
+			
+			if(procesos == null || procesos.isEmpty() ) {
+				return null;
+			}
+			
+			List<TbQoCreditoNegociacion> tmp = this.findAllBySpecification(new CreditoNegociacionSpec(procesos));
+			
+			if(tmp == null || tmp.isEmpty() ) {
+				return null;
+			}
+			
+			return tmp.get(0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"AL BUSCAR EXCEPCIONES");
 		}
 	}
 

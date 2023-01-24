@@ -6264,6 +6264,30 @@ public class QuskiOroService {
 					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
 		}
 
+	}/** ********************************************** @CREDITONEGOCIACION */
+
+	public TbQoCreditoNegociacion manageCreditoNegociacionApp(TbQoCreditoNegociacion send) throws RelativeException {
+		try {
+			TbQoCreditoNegociacion persisted = null;
+			if (send.getId() != null) {
+				persisted = this.creditoNegociacionRepository.findById(send.getId());
+				return this.updateCreditoNegociacion(send, persisted);
+			} else if (send.getId() == null) {
+				send.setFechaCreacion(new Date(System.currentTimeMillis()));
+				send.setEstado(EstadoEnum.ACT);
+				return crearCodigoRenovacion(this.creditoNegociacionRepository.add(send));
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+
 	}
 	private TbQoCreditoNegociacion crearCodigoCreditoNuevo(TbQoCreditoNegociacion persisted) throws RelativeException {
 		try {
@@ -8017,6 +8041,80 @@ public class QuskiOroService {
 		}
 		
 	}
+	
+	public RenovacionWrapper crearRenovacionApp(OpcionAndGarantiasWrapper wp, String numeroOperacion, 
+			String asesor, Long idAgencia, String numeroOperacionMadre, String autorizacion,
+			String nombreAgencia, String telefonoAsesor, String nombreAsesor, String correoAsesor) throws RelativeException {
+		List<EstadoProcesoEnum> estados = new ArrayList<>();
+		//estados.add( EstadoProcesoEnum.CREADO );
+		estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+		estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+		//estados.add( EstadoProcesoEnum.EXCEPCIONADO );
+		//estados.add( EstadoProcesoEnum.PENDIENTE_EXCEPCION );
+		//estados.add( EstadoProcesoEnum.DEVUELTO );
+		if(this.procesoRepository.findByNumeroOperacionMadreAndProcesoAndEstado(numeroOperacionMadre,  ProcesoEnum.RENOVACION, estados) > 0 ) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"LA RENOVACION ESTA PENDIENTE DE APROBACION"+ numeroOperacionMadre);
+		}
+		estados = new ArrayList<>();
+		estados.add( EstadoProcesoEnum.CREADO );
+		//estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION );
+		//estados.add( EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO );
+		estados.add( EstadoProcesoEnum.EXCEPCIONADO );
+		//estados.add( EstadoProcesoEnum.PENDIENTE_EXCEPCION );
+		estados.add( EstadoProcesoEnum.DEVUELTO );
+		TbQoCreditoNegociacion credito = this.procesoRepository.findRenovacionByNumeroOperacionMadreAndEstado( numeroOperacionMadre, estados);
+
+		log.info("==================>>>>>> valido operacion " + credito);
+		DetalleCreditoWrapper detalle = this.traerCreditoVigente( numeroOperacion, autorizacion );
+		RenovacionWrapper novacion  = new RenovacionWrapper(detalle);		
+		TbQoCliente cliente = this.clienteRepository.findClienteByIdentificacion( novacion.getOperacionAnterior().getCliente().getIdentificacion());
+		if( cliente == null) {
+			cliente = this.clienteSoftToTbQoCliente( novacion.getOperacionAnterior().getCliente() );
+			cliente = this.manageCliente(cliente);
+		}
+		
+		TbQoNegociacion negociacion = null;
+		if( credito == null) {
+			credito = new TbQoCreditoNegociacion();
+			negociacion = new TbQoNegociacion();
+		
+		}else {
+			negociacion = credito.getTbQoNegociacion();
+		}
+		negociacion.setAsesor(asesor);
+		negociacion.setEstado( EstadoEnum.ACT);
+		negociacion.setTbQoCliente( cliente );
+		negociacion.setTelefonoAsesor(telefonoAsesor);
+		negociacion.setNombreAsesor(nombreAsesor);
+		negociacion.setCorreoAsesor(correoAsesor);
+		negociacion = this.manageNegociacion(negociacion);
+		credito = mapOpcionCredito(wp, numeroOperacion, numeroOperacionMadre, idAgencia, autorizacion,
+				nombreAgencia, credito);
+		credito.setTbQoNegociacion( negociacion );
+		credito = this.manageCreditoNegociacionApp(credito);
+		
+		
+		novacion.setCredito( credito );
+		TbQoProceso proceso = this.findProcesoByIdReferencia(negociacion.getId(), ProcesoEnum.RENOVACION);
+		if( proceso == null) {
+			proceso =this.createProcesoNovacion(negociacion.getId(), asesor);
+		
+		}
+		novacion.setProceso( proceso );
+		
+		if( novacion.getOperacionAnterior().getGarantias() != null ) {
+			List<TbQoTasacion> tasacion =  this.createTasacionByVigente( novacion.getOperacionAnterior().getGarantias(), credito);
+			//actualizarGarantiasSoftBank( tasacion, credito.getNumeroOperacionMadre(),asesor, autorizacion);
+			novacion.setTasacion(tasacion);					
+		}
+		
+		novacion.setVariables(this.createVariablesFromEquifax(wp.getVariablesInternas(), negociacion));
+		novacion.setRiesgos( this.manageListRiesgoAcumulados( this.createRiesgoFrontSoftBank(consultarRiesgoSoftbank( cliente.getCedulaCliente() , autorizacion), negociacion, null) ) );
+	
+		
+		
+		return novacion;
+	}
 	public RenovacionWrapper crearCreditoRenovacion(OpcionAndGarantiasWrapper wp, String numeroOperacion, Long idNego,
 			String asesor, Long idAgencia, String numeroOperacionMadre, String autorizacion,
 			String nombreAgencia, String telefonoAsesor, String nombreAsesor, String correoAsesor) throws RelativeException {
@@ -8090,7 +8188,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_NOVACION );
 		}
 	}
-	
+
 	private List<TbQoTasacion> createTasacionByGarantia(List<Garantia> garantias, List<GarantiaOperacionWrapper> asd, TbQoCreditoNegociacion credito) throws RelativeException {
 		List<TbQoTasacion> listTasacion = new ArrayList<>();
 		try {
@@ -8135,6 +8233,49 @@ public class QuskiOroService {
 		return listTasacion;
 		
 	}
+	private List<TbQoTasacion> createTasacionByVigente(List<GarantiaOperacionWrapper> garantias, TbQoCreditoNegociacion credito) throws RelativeException {
+		List<TbQoTasacion> listTasacion = new ArrayList<>();
+		try {
+			this.tasacionRepository.deleteTasacionByNegociacionId(credito.getId());
+			log.info( "============> DELETE JOYA <============");
+
+		} catch(RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+		for(GarantiaOperacionWrapper s : garantias) {
+			TbQoTasacion tasacion = new TbQoTasacion();
+			tasacion.setNumeroGarantia( Long.valueOf(s.getNumeroGarantia() ) );
+			tasacion.setNumeroExpediente( Long.valueOf(s.getNumeroExpediente() ) );
+			//tasacion.setTipoGarantia( s.getTipoJoya() );
+			//tasacion.setSubTipoGarantia( s.tipo );
+			tasacion.setEstado(EstadoEnum.ACT );
+			tasacion.setDescripcion( s.getDescripcion() );
+			tasacion.setDescuentoPesoPiedra( s.getDescuentoPiedras()  );
+			tasacion.setDescuentoSuelda(s.getDescuentoSuelda() );
+			tasacion.setEstadoJoya( s.getCodigoEstadoJoya() );
+			tasacion.setNumeroPiezas( s.getNumeroPiezas()  );
+			tasacion.setPesoBruto(s.getPesoBruto() );
+			tasacion.setPesoNeto( s.getPesoNeto() );
+			tasacion.setTipoJoya( s.getCodigoTipoGarantia() );
+			tasacion.setValorAvaluo(  s.getValorAvaluo()  );
+			tasacion.setValorComercial( s.getValorComercial()  );
+			tasacion.setValorOro(  s.getValorOro()  );
+			tasacion.setValorRealizacion(s.getValorRealizacion()  );
+			tasacion.setTipoOro( s.getCodigoTipoOro() );
+			tasacion.setTienePiedras(s.getTienePiedras());
+			tasacion.setDetallePiedras( s.getDetallePiedras() );
+			tasacion.setTbQoCreditoNegociacion(credito);
+			listTasacion.add( this.manageTasacion(tasacion) );
+			
+		}
+		
+		return listTasacion;
+		
+	}
 	private TbQoCreditoNegociacion createCreditoNovacion(OpcionAndGarantiasWrapper wp, String numeroOperacionAnterior, String numeroOperacionMadre, 
 			Long idAgencia, Long id, String autorizacion, String nombreAgencia) throws RelativeException {
 		TbQoCreditoNegociacion credito;						
@@ -8147,6 +8288,24 @@ public class QuskiOroService {
 		}else {
 			credito = new TbQoCreditoNegociacion();
 		}
+		return mapOpcionCredito(wp, numeroOperacionAnterior, numeroOperacionMadre, idAgencia, autorizacion,
+				nombreAgencia, credito);
+	}
+
+	/**
+	 * @param wp
+	 * @param numeroOperacionAnterior
+	 * @param numeroOperacionMadre
+	 * @param idAgencia
+	 * @param autorizacion
+	 * @param nombreAgencia
+	 * @param credito
+	 * @return
+	 * @throws RelativeException
+	 */
+	private TbQoCreditoNegociacion mapOpcionCredito(OpcionAndGarantiasWrapper wp, String numeroOperacionAnterior,
+			String numeroOperacionMadre, Long idAgencia, String autorizacion, String nombreAgencia,
+			TbQoCreditoNegociacion credito) throws RelativeException {
 		if(wp.getOpcion() != null) {
 			credito.setNombreAgencia(nombreAgencia);
 			credito.setaPagarCliente( BigDecimal.valueOf( wp.getOpcion().getValorAPagar() ));

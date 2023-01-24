@@ -373,6 +373,22 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;			
 	}
+	@POST
+	@Path("/crearCreditoRenovacionApp")
+	@ApiOperation(value = "numeroOperacion, numeroOperacionMadre, asesor, idAgencia, idNegociacion", notes = "Metodo Post crearCreditoRenovacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<RenovacionWrapper> crearCreditoRenovacionApp( @QueryParam("autorizacion") String autorizacion,@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("nombreAgencia") String nombreAgencia, @QueryParam("telefonoAsesor") String telefonoAsesor,
+			OpcionAndGarantiasWrapper wp, @QueryParam("numeroOperacion") String numeroOperacion,  @QueryParam("numeroOperacionMadre") String numeroOperacionMadre,
+			 @QueryParam("correoAsesor") String correoAsesor, @QueryParam("asesor") String asesor, @QueryParam("idAgencia") String idAgencia, @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+		GenericWrapper<RenovacionWrapper> loc = new GenericWrapper<>();
+		RenovacionWrapper a = this.qos.crearRenovacionApp( wp, numeroOperacion, asesor, StringUtils.isNotBlank(idAgencia)? Long.valueOf(idAgencia): null,
+				numeroOperacionMadre, autorizacion,nombreAgencia, telefonoAsesor,nombreAsesor, correoAsesor);
+		loc.setEntidad(a);
+		return loc;			
+	}
 	@GET
 	@Path("/buscarRenovacionByIdNegociacion")
 	@ApiOperation(value = "idNegociacion", notes = "Metodo Get buscarRenovacionByIdNegociacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)

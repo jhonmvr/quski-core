@@ -29,10 +29,13 @@ public class RenovacionWrapper implements Serializable {
 	private List<TbQoCuentaBancariaCliente> cuentas;
 	private List<RegistroPagoRenovacionWrapper> pagos;
 
-	
+
 	public RenovacionWrapper(DetalleCreditoWrapper operacionAnterior) {
 		super();
 		this.operacionAnterior = operacionAnterior;
+	}
+	public RenovacionWrapper() {
+		
 	}
 	
 	public TbQoCreditoNegociacion getCredito() {
