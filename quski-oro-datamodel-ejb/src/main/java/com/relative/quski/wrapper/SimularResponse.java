@@ -1457,7 +1457,7 @@ public class SimularResponse implements Serializable{
                 public static class Opcion {
 
                     @XmlElement(name = "Plazo")
-                    protected byte plazo;
+                    protected int plazo;
                     @XmlElement(name = "PeriodoPlazo", required = true)
                     protected String periodoPlazo;
                     @XmlElement(name = "PeriodicidadPlazo", required = true)
@@ -1543,7 +1543,7 @@ public class SimularResponse implements Serializable{
                      * Gets the value of the plazo property.
                      * 
                      */
-                    public byte getPlazo() {
+                    public int getPlazo() {
                         return plazo;
                     }
 
@@ -1551,7 +1551,7 @@ public class SimularResponse implements Serializable{
                      * Sets the value of the plazo property.
                      * 
                      */
-                    public void setPlazo(byte value) {
+                    public void setPlazo(int value) {
                         this.plazo = value;
                     }
 
