@@ -1451,7 +1451,8 @@ public class SimularResponse implements Serializable{
                     "dividendoflujoplaneado",
                     "dividendosprorrateoserviciosdiferido",
                     "abonoCapital",
-                    "formaPagoAbonoCapital"
+                    "formaPagoAbonoCapital",
+                    "descripcion"
                     
                 })
                 public static class Opcion {
@@ -1526,6 +1527,8 @@ public class SimularResponse implements Serializable{
                     protected float abonoCapital;
                     @XmlElement(name = "FormaPagoAbonoCapital")
                     protected String formaPagoAbonoCapital;
+                    @XmlElement(name = "Descripcion")
+                    protected String descripcion;
 					@XmlElement(name = "CustodiaDevengada")
                     protected float custodiaDevengada;
                     @XmlElement(name = "FormaPagoCustodiaDevengada", required = true)
@@ -2298,8 +2301,15 @@ public class SimularResponse implements Serializable{
 					public void setFormaPagoAbonoCapital(String formaPagoAbonoCapital) {
 						this.formaPagoAbonoCapital = formaPagoAbonoCapital;
 					}
+					public String getDescripcion() {
+						return descripcion;
+					}
 
+					public void setDescripcion(String descripcion) {
+						this.descripcion = descripcion;
+					}
 
+					
                 }
 
             }
