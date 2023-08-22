@@ -52,6 +52,7 @@ public class CalculadoraOpcionWrapper implements Serializable {
     private BigDecimal dividendosprorrateoserviciosdiferido;
     private BigDecimal abonoCapital;
     private String formaPagoAbonoCapital;
+    private String descripcion;
     
     
 	public Long getPlazo() {
@@ -305,6 +306,12 @@ public class CalculadoraOpcionWrapper implements Serializable {
 	}
 	public void setAbonoCapital(BigDecimal abonoCapital) {
 		this.abonoCapital = abonoCapital;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 
