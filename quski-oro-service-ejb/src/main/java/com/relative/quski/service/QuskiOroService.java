@@ -2,7 +2,6 @@ package com.relative.quski.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,6 +136,7 @@ import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
 import com.relative.quski.wrapper.CrmProspectoCortoWrapper;
 import com.relative.quski.wrapper.CrmProspectoWrapper;
+import com.relative.quski.wrapper.CuentaSoftBankResponseWrapper;
 import com.relative.quski.wrapper.CuentaWrapper;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DatosCuentaClienteWrapper;
@@ -156,7 +156,6 @@ import com.relative.quski.wrapper.HistoricoOperativaWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.Informacion.DATOSCLIENTE;
 import com.relative.quski.wrapper.Informacion.XmlVariablesInternas.VariablesInternas.Variable;
-import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.JoyaWrapper;
 import com.relative.quski.wrapper.NegociacionWrapper;
 import com.relative.quski.wrapper.OpPorAprobarWrapper;
@@ -5318,26 +5317,22 @@ public class QuskiOroService {
 	
 	public CuentaWrapper consultaCuentaApiGateWay(String cedula) throws RelativeException {		
 			try {
-				String contentXMLcuenta = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENT_XML_CUENTA_MUPI ).getValor();
-				contentXMLcuenta = contentXMLcuenta.replace("--tipo-cliente--", "C").replace("--identificacion--", cedula).replace("--tipo-consulta--", "IF");
-				TokenWrapper token = ApiGatewayClient.getToken(this.parametroRepository.findByNombre(QuskiOroConstantes.URL_APIGW).getValor(),this.parametroRepository.findByNombre(QuskiOroConstantes.AUTH_APIGW).getValor());
-				InformacionWrapper response = ApiGatewayClient.callCuentaRest(
-						this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CUENTA_MUPI).getValor(),
-						token.getToken_type() +" "+ token.getAccess_token(),
-						contentXMLcuenta
+				CuentaSoftBankResponseWrapper response = SoftBankApiClient.callCuentaSoftBankRest(
+						this.parametroRepository.findByNombre(QuskiOroConstantes.URL_WS_QUSKI_CUENTA_SOFTBANK).getValor(),
+						cedula
 				);		
-				if(response != null && response.getCodigoError() == 0 && response.getINFOFINAN() != null) {
-					CuentaWrapper retorno = new CuentaWrapper( String.valueOf( response.getIdentificacion() )  );
-					retorno.setTipoPago( response.getINFOFINAN().getTIPOPAGO() );
+				if(response != null && response.getCuentasBancariasCliente() != null && !response.getCuentasBancariasCliente().isEmpty()) {
+					CuentaWrapper retorno = new CuentaWrapper( response.getIdentificacion()   );
+					//retorno.setTipoPago( response.getINFOFINAN().getTIPOPAGO() );
 					retorno.setInstitucionFinanciera( parametroRepository.findByNombre(QuskiOroConstantes.CODIGO_BANCO_MUPI).getValor());
 //					if( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()) == "15") {
 //					}else {
 //						retorno.setInstitucionFinanciera( String.valueOf( response.getINFOFINAN().getINSTITUCIONFINANCIERA()) );
 //					}
-					retorno.setTipoCuenta( response.getINFOFINAN().getTIPOCUENTA() );
-					retorno.setNumeroCuenta( String.valueOf( response.getINFOFINAN().getNUMEROCUENTA() ) );
-					retorno.setFirmaRegularizada( response.getINFOFINAN().getFIRMAREGULARIZADA());
-					retorno.setCuentaNueva(response.getINFOFINAN().getCUENTANUEVA());
+					//retorno.setTipoCuenta( response.getINFOFINAN().getTIPOCUENTA() );
+					retorno.setNumeroCuenta( response.getCuentasBancariasCliente().get(0).getCuenta());
+					//retorno.setFirmaRegularizada( response.getINFOFINAN().getFIRMAREGULARIZADA());
+					//retorno.setCuentaNueva(response.getINFOFINAN().getCUENTANUEVA());
 					return retorno;
 				}
 				return null;
@@ -6438,6 +6433,12 @@ public class QuskiOroService {
 			}
 			if(StringUtils.isNotBlank(send.getCanalContacto()) ) {
 				persisted.setCanalContacto(send.getCanalContacto());
+			}
+			if( StringUtils.isNotBlank(send.getMensajeBotDocumento())) {
+				persisted.setMensajeBotDocumento(send.getMensajeBotDocumento());
+			}
+			if(StringUtils.isNotBlank(send.getAciertosBotDocumento()) ) {
+				persisted.setAciertosBotDocumento(send.getAciertosBotDocumento());
 			}
 						
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));

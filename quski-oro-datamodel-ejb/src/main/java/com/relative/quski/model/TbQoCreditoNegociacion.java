@@ -306,6 +306,10 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	@Column(name="valor_cash")
 	private BigDecimal valorCash;
+	@Column(name="mensaje_bot_documento")
+	private String mensajeBotDocumento;
+	@Column(name="aciertos_bot_documento")
+	private String aciertosBotDocumento;
 
 	
 	public TbQoCreditoNegociacion() {
@@ -1041,6 +1045,22 @@ public class TbQoCreditoNegociacion implements Serializable {
 
 	public void setAbonoCapital(BigDecimal abonoCapital) {
 		this.abonoCapital = abonoCapital;
+	}
+
+	public String getMensajeBotDocumento() {
+		return mensajeBotDocumento;
+	}
+
+	public void setMensajeBotDocumento(String mensajeBotDocumento) {
+		this.mensajeBotDocumento = mensajeBotDocumento;
+	}
+
+	public String getAciertosBotDocumento() {
+		return aciertosBotDocumento;
+	}
+
+	public void setAciertosBotDocumento(String aciertosBotDocumento) {
+		this.aciertosBotDocumento = aciertosBotDocumento;
 	}
 
 }

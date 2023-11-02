@@ -19,10 +19,12 @@ import org.olap4j.impl.ArrayMap;
 import com.google.gson.Gson;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.bpms.api.ApiGatewayClient;
 import com.relative.quski.bpms.api.LocalStorageClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCliente;
 import com.relative.quski.model.TbQoClientePago;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegistrarPago;
@@ -39,6 +41,8 @@ import com.relative.quski.wrapper.InicioProcesoBloqueoWrapper;
 import com.relative.quski.wrapper.InicioProcesoPagoWrapper;
 import com.relative.quski.wrapper.PagosNovacionSoftWrapper;
 import com.relative.quski.wrapper.RegistroPagoRenovacionWrapper;
+import com.relative.quski.wrapper.ResponsePagoMupi;
+import com.relative.quski.wrapper.ResponseWebMupi;
 import com.relative.quski.wrapper.RespuestaAbonoWrapper;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
 import com.relative.quski.wrapper.RespuestaProcesoPagoBloqueoWrapper;
@@ -114,6 +118,8 @@ public class PagoService {
 				pagos.add( qos.manageRegistrarPago(pago) ); 
 			}
 			
+		
+			
 			//registrar Traking
 			TbQoTracking traking = new TbQoTracking();
 			traking.setActividad("SOLICITUD PAGO");
@@ -148,6 +154,9 @@ public class PagoService {
 			this.qos.registrarTraking(trakinga);
 		 	this.enviarCorreoSolicitudPago( clienteCast);
 			result.setPagos( pagos );
+			
+			
+			
 			return result;
 		} catch (RelativeException e) {
 			e.printStackTrace();
@@ -157,6 +166,7 @@ public class PagoService {
 			throw new RelativeException( QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION, " EN METODO, crearRegistrarPago FALLO. ");
 		}
 	}
+	
 	public RespuestaProcesoPagoBloqueoWrapper crearRegistrarBloqueo(InicioProcesoBloqueoWrapper wrapper, String autorizacion )throws RelativeException {
 		try {
 			if (wrapper.getPagos() == null || wrapper.getPagos().size() < 0) {
@@ -524,5 +534,38 @@ public class PagoService {
 	
 	
 	} 
+	/**
+	 * @param clienteCast 
+	 * @param wrapper
+	 * @param autorizacion
+	 * @param pagos
+	 * @return 
+	 * @throws RelativeException 
+	 */
+	public TbQoProceso aplicarPago(TbQoClientePago clienteCast, String autorizacion, List<TbQoRegistrarPago> pagos) throws RelativeException {
+		
+			Double valorDepositado =  pagos.stream().map(TbQoRegistrarPago::getValorPagado).mapToDouble(p->p.doubleValue()).sum(); 
+			List<ResponsePagoMupi> resp=new ArrayList<>();
+			for(TbQoRegistrarPago pago : pagos) {
+				resp.add(this.aplicarPago(clienteCast.getCodigoOperacion(), QuskiOroConstantes.SECUENCIAL_BOT_PAGOS, pago.getNumeroDeposito(), pago.getValorPagado(), autorizacion));	
+				
+			}
+			
+			if(resp.stream().anyMatch(response -> response.getExisteError() || !response.getPagoAplicado())) {
+				return null;
+			}
+			return aprobarPago(clienteCast.getId(), true, QuskiOroConstantes.NOMBRE_BOT_PAGOS, this.parametroRepository.findByNombre(QuskiOroConstantes.MAIL_SOLICITUD_CREDITO).getValor(),
+					valorDepositado,"PAGO APLICADO", autorizacion);
+			
+		
+	}
+	
+	public ResponsePagoMupi aplicarPago(String numeroPrestamo, String secuencial, String numeroTransaccion , BigDecimal valorDepositado,String autorizacion) throws RelativeException{
+		
+		return ApiGatewayClient.aplicarPago(numeroPrestamo, secuencial,numeroTransaccion,valorDepositado,autorizacion,
+				this.parametroRepository.findByNombre(QuskiOroConstantes.URL_RUN_SERVER_WEB_MUPI_PAGO_ROBOT).getValor());
+		
+		
+	}
 	
 }

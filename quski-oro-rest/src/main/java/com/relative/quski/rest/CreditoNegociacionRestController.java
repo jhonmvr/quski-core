@@ -26,15 +26,17 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.ResponseValidarDocumentoWrapper;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
+import com.relative.quski.model.TbQoValidacionDocumento;
 import com.relative.quski.service.QuskiOroService;
+import com.relative.quski.service.ValidacionCreditoService;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
-import com.relative.quski.wrapper.CabeceraWrapper;
 import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
@@ -43,6 +45,7 @@ import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
+import com.relative.quski.wrapper.ValidarDocumentoWrapper;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,6 +64,8 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 	SoftBankApiClient sbac;
 	@Inject
 	Logger log;
+	@Inject
+	ValidacionCreditoService validacionCreditoService;
 	
 	public CreditoNegociacionRestController() throws RelativeException {
 		super();
@@ -501,6 +506,38 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		
 	
 		return this.qos.guardarEstadoMotivo(StringUtils.isNotBlank(idNego)?Long.valueOf(idNego): null,estadoCredito,motivo);			
+	}
+
+	@GET
+	@Path("/solicitarValidarDocumento")
+	@ApiOperation(value = "idNegociacion, correoAsesor, nombreAsesor, observacionAsesor", notes = "Metodo Get solicitarValidarDocumento Retorna un  GenericWrapper de la entidad encontrda TbQoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public ResponseValidarDocumentoWrapper solicitarValidarDocumento(
+			@QueryParam("idNegociacion") String idNegociacion,
+			@QueryParam("autorizacion") String autorizacion) throws RelativeException {
+		if(StringUtils.isBlank(idNegociacion)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
+		}
+		return this.validacionCreditoService.validarDocumento( Long.valueOf(idNegociacion), autorizacion);
+				
+	}
+
+	@GET
+	@Path("/listValidacionDocumento")
+	@ApiOperation(value = "idNegociacion, correoAsesor, nombreAsesor, observacionAsesor", notes = "Metodo Get solicitarValidarDocumento Retorna un  GenericWrapper de la entidad encontrda TbQoNegociacion", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public List<TbQoValidacionDocumento> listValidacionDocumento(
+			@QueryParam("idNegociacion") String idNegociacion,
+			@QueryParam("autorizacion") String autorizacion) throws RelativeException {
+		if(StringUtils.isBlank(idNegociacion)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
+		}
+		return this.validacionCreditoService.listValidacionDocumento( Long.valueOf(idNegociacion));
+				
 	}
 	
 }

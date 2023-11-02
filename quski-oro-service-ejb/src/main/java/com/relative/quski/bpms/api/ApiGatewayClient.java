@@ -3,6 +3,7 @@ package com.relative.quski.bpms.api;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,18 +22,22 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.model.ResponseValidarDocumentoWrapper;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.CatalogoResponseWrapper;
+import com.relative.quski.wrapper.CuentaSoftBankResponseWrapper;
 import com.relative.quski.wrapper.EquifaxConsultaPersonaWrapper;
 import com.relative.quski.wrapper.Informacion;
 import com.relative.quski.wrapper.InformacionWrapper;
 import com.relative.quski.wrapper.IntegracionRespuestaWrapper;
+import com.relative.quski.wrapper.ResponsePagoMupi;
 import com.relative.quski.wrapper.ResponseWebMupi;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.SimularResponse;
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
 import com.relative.quski.wrapper.TokenWrapper;
+import com.relative.quski.wrapper.ValidarDocumentoWrapper;
 
 public class ApiGatewayClient {
 
@@ -204,18 +209,18 @@ public class ApiGatewayClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
 		} 
 	}
-	
+/*
 	@SuppressWarnings("unused")
-	public static InformacionWrapper callCuentaRest(String urlService,String authorization, String content)
+	public static InformacionWrapper callCuentaRest(String urlService, String cedula)
 			throws RelativeException {
 		try {
 			log.info("<================>  CONTENT  <================>"); 
-			log.info(""+content); 
+			
 			//Gson gson = new Gson();
 			//String jsonString = gson.toJson(wrapper);
 		
 			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_TEXT_XML,
-					RestClientWrapper.CONTENT_TYPE_TEXT_XML, authorization, content, RestClientWrapper.METHOD_POST, null, null,
+					RestClientWrapper.CONTENT_TYPE_TEXT_XML, empty, empty, RestClientWrapper.METHOD_GET, null, null,
 					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
 					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, urlService, String.class);
 	        
@@ -251,6 +256,8 @@ public class ApiGatewayClient {
 			return null;
 		}
 	}
+*/
+
 	public static TokenWrapper getToken(String urlService,String autorizacion) throws RelativeException{		
        
         String service = urlService;
@@ -333,6 +340,68 @@ public class ApiGatewayClient {
 					Gson gsons = new GsonBuilder().create();
 					ResponseWebMupi tmp = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ResponseWebMupi.class);
 					if(tmp.getExisteError()) {
+						throw new RelativeException(tmp.getMensaje() );
+					}
+					return tmp;     
+				} else {
+					throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, response.get(ReRestClient.RETURN_OBJECT).toString() );
+				}
+			} catch (JsonSyntaxException e) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR LEER JSON");
+			} catch (RelativeException e) {
+				throw e;
+			}
+	}
+	
+
+
+	public static ResponsePagoMupi aplicarPago(String numeroPrestamo, String secuencial, String numeroTransaccion,
+			BigDecimal valorDepositado, String autorizacion, String urlService) throws RelativeException {
+		 try {
+	        	StringBuilder body = new StringBuilder();
+	        	body.append("{ "
+	        			+ "   \"numero_prestamo\":\""+numeroPrestamo+"\", "
+	        			+ "   \"secuencial\":\""+secuencial+"\",  "
+	        			+ "   \"numero_transaccion\":\""+numeroTransaccion+"\", "
+	        			+ "	 \"valor_depositado\":"+valorDepositado
+	        			+ "}");
+				Map<String,Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+						RestClientWrapper.CONTENT_TYPE_JSON, null, 
+						body.toString(), RestClientWrapper.METHOD_POST, 
+					   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+					   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+					   Boolean.FALSE,Boolean.TRUE, urlService,  String.class );
+				if( response != null && response.get("error") == null) {
+					Gson gsons = new GsonBuilder().create();
+					ResponsePagoMupi tmp = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ResponsePagoMupi.class);
+					if(tmp.getExisteError()) {
+						throw new RelativeException(tmp.getMensaje() );
+					}
+					return tmp;     
+				} else {
+					throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, response.get(ReRestClient.RETURN_OBJECT).toString() );
+				}
+			} catch (JsonSyntaxException e) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM," AL INTENTAR LEER JSON");
+			} catch (RelativeException e) {
+				throw e;
+			}
+	}
+
+	public static ResponseValidarDocumentoWrapper validarDocumentoBot(ValidarDocumentoWrapper wrapper, String autorizacion, String urlService) throws RelativeException {
+		 try {
+			 Gson gson = new Gson();
+			 String jsonString = gson.toJson(wrapper);
+				Map<String,Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+						RestClientWrapper.CONTENT_TYPE_JSON, null, 
+						jsonString, RestClientWrapper.METHOD_POST, 
+					   null, null, null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+					   QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+					   Boolean.FALSE,Boolean.TRUE, urlService,  String.class );
+				if( response != null && response.get("error") == null) {
+					Gson gsons = new GsonBuilder().create();
+					ResponseValidarDocumentoWrapper tmp = gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), ResponseValidarDocumentoWrapper.class);
+					if(tmp.getStatus_code()>299) {
 						throw new RelativeException(tmp.getMensaje() );
 					}
 					return tmp;     

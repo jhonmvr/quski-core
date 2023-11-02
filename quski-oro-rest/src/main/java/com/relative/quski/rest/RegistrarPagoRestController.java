@@ -130,8 +130,21 @@ public class RegistrarPagoRestController extends BaseRestController
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
 	public GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> iniciarProcesoRegistrarPago(@QueryParam("autorizacion") String autorizacion,InicioProcesoPagoWrapper wrapper) throws RelativeException {
 		GenericWrapper<RespuestaProcesoPagoBloqueoWrapper> loc = new GenericWrapper<>();
-		loc.setEntidad( this.ps.crearRegistrarPago( wrapper,autorizacion ) );
+		RespuestaProcesoPagoBloqueoWrapper wp  = this.ps.crearRegistrarPago( wrapper,autorizacion ); 
+		loc.setEntidad( wp );
 		return loc;
+	}
+	@POST
+	@Path("/aprobarBotPago")
+	@ApiOperation(value = "GenericWrapper<InicioProcesoPagoWrapper>", 
+	notes = "Metodo Post iniciarProcesoRegistrarPago Retorna GenericWrapper de la entidad encontrada RespuestaProcesoPagoBloqueoWrapper", 
+	response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public TbQoProceso aprobarBotPago(@QueryParam("autorizacion") String autorizacion,RespuestaProcesoPagoBloqueoWrapper wp) throws RelativeException {
+		
+		return this.ps.aplicarPago(wp.getCliente(), autorizacion, wp.getPagos());
 	}
 	@POST
 	@Path("/iniciarProcesoRegistrarBloqueo")

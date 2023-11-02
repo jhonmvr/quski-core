@@ -383,6 +383,7 @@ public class QuskiOroConstantes {
 	public static final String URL_WS_PERSONA = "URL_WS_PERSONA";
 	public static final String URL_WS_QUSKI_CALCULADORA = "URL_WS_QUSKI_CALCULADORA";
 	public static final String URL_WS_QUSKI_CUENTA_MUPI = "URL_WS_QUSKI_CUENTA_MUPI";
+	public static final String URL_WS_QUSKI_CUENTA_SOFTBANK = "URL_WS_QUSKI_CUENTA_SOFTBANK";
 	public static final String CONTENT_XML_PERSONA = "CONTENT_XML_PERSONA";
 	public static final String CONTENT_XML_QUSKI_CALCULADORA = "CONTENT_XML_QUSKI_CALCULADORA";
 	public static final String CONTENT_XML_QUSKI_CALCULADORA_RENOVAR = "CONTENT_XML_QUSKI_CALCULADORA_RENOVAR";
@@ -492,6 +493,10 @@ public class QuskiOroConstantes {
 	public static final String URL_RUN_SERVER_WEB_MUPI_ROBOT = "URL_RUN_SERVER_WEB_MUPI_ROBOT";
 	public static final String USER_ROBOT = "USER_ROBOT";
 	public static final String PASS_ROBOT = "PASS_ROBOT";
+	public static final String URL_RUN_SERVER_WEB_MUPI_PAGO_ROBOT = "URL_RUN_SERVER_WEB_MUPI_PAGO_ROBOT";
+	public static final String SECUENCIAL_BOT_PAGOS = "1";
+	public static final String NOMBRE_BOT_PAGOS = "BOT DE PAGOS";
+	public static final String URL_WS_VALIDACION_DOCUMENTO = "URL_WS_VALIDACION_DOCUMENTO";
 	
 
 	

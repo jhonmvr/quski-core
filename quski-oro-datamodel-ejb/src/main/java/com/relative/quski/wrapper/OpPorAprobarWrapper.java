@@ -24,7 +24,32 @@ public class OpPorAprobarWrapper implements Serializable {
 	private String actividad;
 	private String aprobador;
 	private Date fechaActualizacion;
+	private String aciertos;
 	private Integer orden;
+	public OpPorAprobarWrapper(BigDecimal id, BigDecimal idReferencia, String codigo, String operacion,
+			String nombreCompleto, String cedulaCliente, BigDecimal monto, Date fechaCreacion, BigDecimal idAgencia,
+			String estadoProceso, String proceso, String asesor, String usuario, String actividad, String aprobador,
+			Date fechaActualizacion,String aciertos, Integer orden) {
+		super();
+		this.id = id;
+		this.idReferencia = idReferencia;
+		this.codigo = codigo;
+		this.operacion = operacion;
+		this.nombreCompleto = nombreCompleto;
+		this.cedulaCliente = cedulaCliente;
+		this.monto = monto;
+		this.fechaCreacion = fechaCreacion;
+		this.idAgencia = idAgencia;
+		this.estadoProceso = estadoProceso;
+		this.proceso = proceso;
+		this.asesor = asesor;
+		this.usuario = usuario;
+		this.actividad = actividad;
+		this.aprobador = aprobador;
+		this.fechaActualizacion = fechaActualizacion;
+		this.aciertos = aciertos;
+		this.orden = orden;
+	}
 	public OpPorAprobarWrapper(BigDecimal id, BigDecimal idReferencia, String codigo, String operacion,
 			String nombreCompleto, String cedulaCliente, BigDecimal monto, Date fechaCreacion, BigDecimal idAgencia,
 			String estadoProceso, String proceso, String asesor, String usuario, String actividad, String aprobador,
@@ -149,6 +174,12 @@ public class OpPorAprobarWrapper implements Serializable {
 	}
 	public void setOrden(Integer orden) {
 		this.orden = orden;
+	}
+	public String getAciertos() {
+		return aciertos;
+	}
+	public void setAciertos(String aciertos) {
+		this.aciertos = aciertos;
 	}
 	
 	

@@ -341,56 +341,57 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			String querySelect = "select TABL.id, TABL.id_referencia, TABL.codigo, TABL.operacion, TABL.nombre_completo, TABL.cedula_cliente, TABL.monto, TABL.fecha_creacion, TABL.id_agencia, TABL.estado_proceso, TABL.proceso, TABL.asesor, TABL.usuario, TABL.actividad, TABL.aprobador, TABL.fecha_actualizacion,CASE WHEN (TABL.proceso ='NUEVO') THEN " + 
-					"			CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN " + 
-					"				CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
-					"					then 1  " + 
-					"					ELSE 8  " + 
-					"				end " + 
-					"			ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN " + 
-					"				CASE WHEN  (APROBADOR= 'NULL' or TABL.APROBADOR = '')  " + 
-					"					then 2  " + 
-					"					ELSE 9  " + 
-					"				end " + 
-					"			ELSE 100 END END " + 
-					"		ELSE CASE WHEN (TABL.proceso ='RENOVACION') THEN  " + 
-					"				CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN " + 
-					"					CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR= '')  " + 
-					"					then 3  " + 
-					"					ELSE 10  " + 
-					"					end " + 
-					"				ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN " + 
-					"					CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
-					"					then 4  " + 
-					"					ELSE 11  " + 
-					"					end " + 
-					"				ELSE 100 END END " + 
-					"		ELSE CASE WHEN (TABL.proceso ='PAGO') THEN  " + 
-					"				CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR = '')  " + 
-					"					then 5   " + 
-					"					ELSE 12  " + 
-					"				end " + 
-					"		ELSE CASE WHEN (TABL.proceso ='DEVOLUCION' or TABL.proceso ='CANCELACION_DEVOLUCION') THEN  " + 
-					"				CASE WHEN  (TABL.APROBADOR= 'NULL'  or TABL.APROBADOR = '' )  " + 
-					"					then 6   " + 
-					"					ELSE 13  " + 
-					"				end " + 
-					"		ELSE CASE WHEN (TABL.proceso ='VERIFICACION_TELEFONICA') THEN  " + 
-					"				CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  " + 
-					"					then 7   " + 
-					"					ELSE 14  " + 
-					"				end " + 
-					"		ELSE 100 END END END END END AS orden  from (select  pro.id, cre.id_negociacion  as ID_REFERENCIA , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto,  pro.FECHA_CREACION, cre.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, nego.asesor, COALESCE( pro.USUARIO, 'NULL') USUARIO,'SIN ACTIVIDAD' as actividad , coalesce( nego.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso pro on  pro.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') " + 
-					"union  " + 
-					"select  pro.id, devo.id as ID_REFERENCIA, devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, devo.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, devo.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( devo.aprobador, 'NULL')  as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION  " + 
-					"	from tb_qo_devolucion devo inner join tb_qo_proceso pro on  pro.id_referencia = devo.id and  pro.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
-					"union  " + 
-					"select  pro.id, pago.id  as ID_REFERENCIA, pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, pago.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, pago.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( pago.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
-					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso pro on  pro.id_referencia = pago.id and  pro.proceso ='PAGO'  " + 
-					"union  " + 
-					"select  pro.id, veri.id  as ID_REFERENCIA, veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, veri.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, veri.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( veri.aprobador, 'NULL')   as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION " + 
-					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso pro on  pro.id_referencia = veri.id and  pro.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
+			String querySelect = "select TABL.id, TABL.id_referencia, TABL.codigo, TABL.operacion, TABL.nombre_completo, TABL.cedula_cliente, TABL.monto, TABL.fecha_creacion, TABL.id_agencia, TABL.estado_proceso, TABL.proceso, TABL.asesor, TABL.usuario, TABL.actividad, TABL.aprobador, TABL.fecha_actualizacion, TABL.aciertos, CASE WHEN (TABL.proceso ='NUEVO') THEN "
+					+ "								CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN "
+					+ "									CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
+					+ "										then 1  "
+					+ "										ELSE 8  "
+					+ "									end "
+					+ "								ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN "
+					+ "									CASE WHEN  (APROBADOR= 'NULL' or TABL.APROBADOR = '')  "
+					+ "										then 2  "
+					+ "										ELSE 9  "
+					+ "									end "
+					+ "								ELSE 100 END END "
+					+ "							ELSE CASE WHEN (TABL.proceso ='RENOVACION') THEN  "
+					+ "									CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN "
+					+ "										CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR= '')  "
+					+ "										then 3  "
+					+ "										ELSE 10  "
+					+ "										end "
+					+ "									ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN "
+					+ "										CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
+					+ "										then 4  "
+					+ "										ELSE 11  "
+					+ "										end "
+					+ "									ELSE 100 END END "
+					+ "							ELSE CASE WHEN (TABL.proceso ='PAGO') THEN  "
+					+ "									CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR = '')  "
+					+ "										then 5   "
+					+ "										ELSE 12  "
+					+ "									end "
+					+ "							ELSE CASE WHEN (TABL.proceso ='DEVOLUCION' or TABL.proceso ='CANCELACION_DEVOLUCION') THEN  "
+					+ "									CASE WHEN  (TABL.APROBADOR= 'NULL'  or TABL.APROBADOR = '' )  "
+					+ "										then 6   "
+					+ "										ELSE 13  "
+					+ "									end "
+					+ "							ELSE CASE WHEN (TABL.proceso ='VERIFICACION_TELEFONICA') THEN  "
+					+ "									CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
+					+ "										then 7   "
+					+ "										ELSE 14  "
+					+ "									end "
+					+ "							ELSE 100 END END END END END AS orden  from (select  pro.id, cre.id_negociacion  as ID_REFERENCIA , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto,  pro.FECHA_CREACION, cre.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, nego.asesor, COALESCE( pro.USUARIO, 'NULL') USUARIO,'SIN ACTIVIDAD' as actividad , coalesce( nego.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION, coalesce( cre.aciertos_bot_documento , 'NULL') as aciertos "
+					+ "						from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso pro on  pro.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') "
+					+ "					union  "
+					+ "					select  pro.id, devo.id as ID_REFERENCIA, devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, devo.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, devo.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( devo.aprobador, 'NULL')  as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION  , 'NULL' as aciertos "
+					+ "						from tb_qo_devolucion devo inner join tb_qo_proceso pro on  pro.id_referencia = devo.id and  pro.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  "
+					+ "					union  "
+					+ "					select  pro.id, pago.id  as ID_REFERENCIA, pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, pago.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, pago.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( pago.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION ,'NULL' as aciertos "
+					+ "						from tb_qo_cliente_pago pago inner join tb_qo_proceso pro on  pro.id_referencia = pago.id and  pro.proceso ='PAGO'  "
+					+ "					union  "
+					+ "					select  pro.id, veri.id  as ID_REFERENCIA, veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, veri.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, veri.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( veri.aprobador, 'NULL')   as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION ,'NULL' as aciertos "
+					+ "						from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso pro on  pro.id_referencia = veri.id and  pro.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1  "
+					+ "";
 			
 			StringBuilder strQry = new StringBuilder(querySelect).append(" and (ESTADO_PROCESO =:primerEstado or ESTADO_PROCESO =:segundoEstado or ESTADO_PROCESO =:tercerEstado ) ");
 			if (StringUtils.isNotBlank(wp.getCodigo())) {
