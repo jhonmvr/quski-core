@@ -436,6 +436,9 @@ public class QuskiOroService {
 			if( !StringUtils.isBlank( send.getPublicidad() ) ) {
 				persisted.setPublicidad(  send.getPublicidad() ); 
 			}
+			if( send.getEtnia() != null ) {
+				persisted.setEtnia(  send.getEtnia() );
+			}
 			if( !StringUtils.isBlank( send.getSegundoNombre() ) ) {
 				persisted.setSegundoNombre(  send.getSegundoNombre() ); 
 			}
@@ -5022,7 +5025,8 @@ public class QuskiOroService {
 			sof.setEsCliente( true );                                        
 			sof.setFechaIngreso(QuskiOroUtil.dateToString(cli.getFechaActualizacion(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));                                  
 			sof.setIdPaisNacimiento( cli.getNacionalidad() );                            
-			sof.setIdPais( cli.getNacionalidad() );                                      
+			sof.setIdPais( cli.getNacionalidad() );
+			sof.setIdEtnia( cli.getEtnia());
 			sof.setIdLugarNacimiento( Long.valueOf( cli.getLugarNacimiento() ) ); 
 			sof.setFechaNacimiento(QuskiOroUtil.dateToString(cli.getFechaNacimiento(), QuskiOroUtil.DATE_FORMAT_SOFTBANK));                            
 			sof.setCodigoSexo( cli.getGenero() );                               

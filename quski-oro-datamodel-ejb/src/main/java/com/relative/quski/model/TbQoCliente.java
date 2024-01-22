@@ -89,6 +89,7 @@ public class TbQoCliente implements Serializable {
 	private String profesion;
 
 	private String publicidad;
+	private Long etnia;
 
 	@Column(name = "segundo_nombre")
 	private String segundoNombre;
@@ -257,6 +258,10 @@ public class TbQoCliente implements Serializable {
 	public EstadoEnum getEstado() {
 		return estado;
 	}
+
+	public Long getEtnia() { return etnia; }
+
+	public void setEtnia(Long etnia) { this.etnia = etnia; }
 
 	public void setEstado(EstadoEnum estado) {
 		this.estado = estado;

@@ -23,7 +23,8 @@ public class SoftbankClienteWrapper implements Serializable{
 		private String fechaIngreso;                              
 		private Long idAgencia;                              
 		private Long idPaisNacimiento;                        
-		private Long idPais;                                  
+		private Long idPais;
+		private Long idEtnia;
 		private Long idLugarNacimiento;                       
 		private SoftbankActividadEconomicaWrapper actividadEconomica; 
 		private String fechaNacimiento;                        
@@ -129,7 +130,10 @@ public class SoftbankClienteWrapper implements Serializable{
 		public void setIdPais(Long idPais) {
 			this.idPais = idPais;
 		}
-		public Long getIdLugarNacimiento() {
+		public Long getIdEtnia() { return idEtnia; }
+		public void setIdEtnia( Long idEtnia ) { this.idEtnia = idEtnia; }
+
+	public Long getIdLugarNacimiento() {
 			return idLugarNacimiento;
 		}
 		public void setIdLugarNacimiento(Long idLugarNacimiento) {
