@@ -407,7 +407,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
 				strQry.append(" and id_agencia in :idAgencia ");
 			}
-			strQry.append(" ORDER BY ORDEN LIMIT :limite OFFSET :salto ");
+			strQry.append(" ORDER BY fecha_creacion LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
 			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
 			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );			
