@@ -6444,7 +6444,15 @@ public class QuskiOroService {
 			if(StringUtils.isNotBlank(send.getAciertosBotDocumento()) ) {
 				persisted.setAciertosBotDocumento(send.getAciertosBotDocumento());
 			}
-						
+			if(send.getDesembolsoInstitucionFinanciera() != null){
+				persisted.setDesembolsoInstitucionFinanciera(send.getDesembolsoInstitucionFinanciera());
+			}
+			if(StringUtils.isNotBlank(send.getDesembolsoTipoCuenta())){
+				persisted.setDesembolsoTipoCuenta(send.getDesembolsoTipoCuenta());
+			}
+			if(StringUtils.isNotBlank(send.getDesembolsoNumeroCuenta())){
+				persisted.setDesembolsoNumeroCuenta(send.getDesembolsoNumeroCuenta());
+			}
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );
 			return this.creditoNegociacionRepository.update(persisted);

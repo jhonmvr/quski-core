@@ -310,7 +310,12 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private String mensajeBotDocumento;
 	@Column(name="aciertos_bot_documento")
 	private String aciertosBotDocumento;
-
+	@Column(name="desembolso_institucion_financiera")
+	private Long desembolsoInstitucionFinanciera;
+	@Column(name="desembolso_tipo_cuenta")
+	private String desembolsoTipoCuenta;
+	@Column(name="desembolso_numero_cuenta")
+	private String desembolsoNumeroCuenta;
 	
 	public TbQoCreditoNegociacion() {
 	}
@@ -1063,4 +1068,27 @@ public class TbQoCreditoNegociacion implements Serializable {
 		this.aciertosBotDocumento = aciertosBotDocumento;
 	}
 
+	public Long getDesembolsoInstitucionFinanciera() {
+		return desembolsoInstitucionFinanciera;
+	}
+
+	public void setDesembolsoInstitucionFinanciera(Long desembolsoInstitucionFinanciera) {
+		this.desembolsoInstitucionFinanciera = desembolsoInstitucionFinanciera;
+	}
+
+	public String getDesembolsoTipoCuenta() {
+		return desembolsoTipoCuenta;
+	}
+
+	public void setDesembolsoTipoCuenta(String desembolsoTipoCuenta) {
+		this.desembolsoTipoCuenta = desembolsoTipoCuenta;
+	}
+
+	public String getDesembolsoNumeroCuenta() {
+		return desembolsoNumeroCuenta;
+	}
+
+	public void setDesembolsoNumeroCuenta(String desembolsoNumeroCuenta) {
+		this.desembolsoNumeroCuenta = desembolsoNumeroCuenta;
+	}
 }
