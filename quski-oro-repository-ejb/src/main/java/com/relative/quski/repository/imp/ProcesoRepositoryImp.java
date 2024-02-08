@@ -341,90 +341,111 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OpPorAprobarWrapper> findOperacionPorAprobar(BusquedaPorAprobarWrapper wp) throws RelativeException {
 		try {
-			String querySelect = "select TABL.id, TABL.id_referencia, TABL.codigo, TABL.operacion, TABL.nombre_completo, TABL.cedula_cliente, TABL.monto, TABL.fecha_creacion, TABL.id_agencia, TABL.estado_proceso, TABL.proceso, TABL.asesor, TABL.usuario, TABL.actividad, TABL.aprobador, TABL.fecha_actualizacion, TABL.aciertos, CASE WHEN (TABL.proceso ='NUEVO') THEN "
-					+ "								CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN "
-					+ "									CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
-					+ "										then 1  "
-					+ "										ELSE 8  "
-					+ "									end "
-					+ "								ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN "
-					+ "									CASE WHEN  (APROBADOR= 'NULL' or TABL.APROBADOR = '')  "
-					+ "										then 2  "
-					+ "										ELSE 9  "
-					+ "									end "
-					+ "								ELSE 100 END END "
-					+ "							ELSE CASE WHEN (TABL.proceso ='RENOVACION') THEN  "
-					+ "									CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION') THEN "
-					+ "										CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR= '')  "
-					+ "										then 3  "
-					+ "										ELSE 10  "
-					+ "										end "
-					+ "									ELSE CASE WHEN (TABL.ESTADO_PROCESO = 'PENDIENTE_APROBACION_DEVUELTO') THEN "
-					+ "										CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
-					+ "										then 4  "
-					+ "										ELSE 11  "
-					+ "										end "
-					+ "									ELSE 100 END END "
-					+ "							ELSE CASE WHEN (TABL.proceso ='PAGO') THEN  "
-					+ "									CASE WHEN  (TABL.APROBADOR= 'NULL' or TABL.APROBADOR = '')  "
-					+ "										then 5   "
-					+ "										ELSE 12  "
-					+ "									end "
-					+ "							ELSE CASE WHEN (TABL.proceso ='DEVOLUCION' or TABL.proceso ='CANCELACION_DEVOLUCION') THEN  "
-					+ "									CASE WHEN  (TABL.APROBADOR= 'NULL'  or TABL.APROBADOR = '' )  "
-					+ "										then 6   "
-					+ "										ELSE 13  "
-					+ "									end "
-					+ "							ELSE CASE WHEN (TABL.proceso ='VERIFICACION_TELEFONICA') THEN  "
-					+ "									CASE WHEN  (TABL.APROBADOR = 'NULL' or TABL.APROBADOR = '')  "
-					+ "										then 7   "
-					+ "										ELSE 14  "
-					+ "									end "
-					+ "							ELSE 100 END END END END END AS orden  from (select  pro.id, cre.id_negociacion  as ID_REFERENCIA , cre.codigo, coalesce(cre.numero_operacion,'NULL') as operacion, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto,  pro.FECHA_CREACION, cre.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, nego.asesor, COALESCE( pro.USUARIO, 'NULL') USUARIO,'SIN ACTIVIDAD' as actividad , coalesce( nego.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION, coalesce( cre.aciertos_bot_documento , 'NULL') as aciertos "
-					+ "						from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso pro on  pro.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION') "
-					+ "					union  "
-					+ "					select  pro.id, devo.id as ID_REFERENCIA, devo.codigo,coalesce(devo.CODIGO_OPERACION,'NULL') as operacion, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, devo.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, devo.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( devo.aprobador, 'NULL')  as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION  , 'NULL' as aciertos "
-					+ "						from tb_qo_devolucion devo inner join tb_qo_proceso pro on  pro.id_referencia = devo.id and  pro.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  "
-					+ "					union  "
-					+ "					select  pro.id, pago.id  as ID_REFERENCIA, pago.codigo,coalesce(pago.CODIGO_OPERACION,'NULL') as operacion, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, pago.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, pago.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( pago.aprobador, 'NULL')    as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION ,'NULL' as aciertos "
-					+ "						from tb_qo_cliente_pago pago inner join tb_qo_proceso pro on  pro.id_referencia = pago.id and  pro.proceso ='PAGO'  "
-					+ "					union  "
-					+ "					select  pro.id, veri.id  as ID_REFERENCIA, veri.codigo,coalesce(veri.CODIGO_OPERACION,'NULL') as operacion, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto,  pro.FECHA_CREACION, veri.ID_AGENCIA,  pro.ESTADO_PROCESO,  pro.PROCESO, veri.ASESOR, COALESCE( pro.USUARIO, 'NULL') USUARIO, 'SIN ACTIVIDAD' as actividad , coalesce( veri.aprobador, 'NULL')   as APROBADOR, coalesce(  pro.FECHA_ACTUALIZACION, '0001-01-01') FECHA_ACTUALIZACION ,'NULL' as aciertos "
-					+ "						from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso pro on  pro.id_referencia = veri.id and  pro.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1  "
-					+ "";
-			
-			StringBuilder strQry = new StringBuilder(querySelect).append(" and (ESTADO_PROCESO =:primerEstado or ESTADO_PROCESO =:segundoEstado or ESTADO_PROCESO =:tercerEstado ) ");
+			String querySelect = "SELECT " +
+					"TABL.id, TABL.id_referencia, TABL.codigo, TABL.operacion, TABL.nombre_completo, TABL.cedula_cliente, " +
+					"TABL.monto, TABL.fecha_creacion, TABL.id_agencia, TABL.estado_proceso, TABL.proceso, TABL.asesor, " +
+					"TABL.usuario, TABL.actividad, TABL.aprobador, TABL.fecha_actualizacion, TABL.aciertos, " +
+					"CASE " +
+					"WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN 1 " +
+					"WHEN TABL.proceso = 'NUEVO' THEN 2 " +
+					"WHEN TABL.proceso = 'RENOVACION' AND TABL.estado_proceso = 'DEVUELTO' THEN 3 " +
+					"WHEN TABL.proceso = 'RENOVACION' THEN 4 " +
+					"WHEN TABL.proceso = 'PAGO' THEN 5 " +
+					"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
+					"ELSE 7 " +
+					"END AS orden " +
+					"FROM (" +
+					"SELECT pro.id, cre.id_negociacion AS ID_REFERENCIA, cre.codigo, COALESCE(cre.numero_operacion,'NULL') AS operacion, " +
+					"cli.nombre_completo, cli.cedula_cliente, COALESCE(cre.monto_financiado,0) AS monto, pro.FECHA_CREACION, " +
+					"cre.ID_AGENCIA, pro.ESTADO_PROCESO, pro.PROCESO, nego.asesor, COALESCE(pro.USUARIO, 'NULL') AS USUARIO, " +
+					"'SIN ACTIVIDAD' AS actividad, COALESCE(nego.aprobador, 'NULL') AS APROBADOR, " +
+					"COALESCE(pro.FECHA_ACTUALIZACION, '0001-01-01') AS fecha_actualizacion, " +
+					"COALESCE(cre.aciertos_bot_documento, 'NULL') AS aciertos " +
+					"FROM tb_qo_credito_negociacion cre INNER JOIN tb_qo_negociacion nego ON nego.id = cre.id_negociacion " +
+					"INNER JOIN tb_qo_cliente cli ON cli.id = nego.id_cliente INNER JOIN tb_qo_proceso pro ON " +
+					"pro.id_referencia = cre.id_negociacion AND (cre.numero_operacion_madre IS NULL AND proceso = 'NUEVO' OR " +
+					"cre.numero_operacion_madre IS NOT NULL AND proceso = 'RENOVACION') " +
+					"UNION " +
+					"SELECT pro.id, devo.id AS ID_REFERENCIA, devo.codigo, COALESCE(devo.CODIGO_OPERACION,'NULL') AS operacion, " +
+					"devo.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 AS monto, pro.FECHA_CREACION, devo.ID_AGENCIA, " +
+					"pro.ESTADO_PROCESO, pro.PROCESO, devo.ASESOR, COALESCE(pro.USUARIO, 'NULL') AS USUARIO, " +
+					"'SIN ACTIVIDAD' AS actividad, COALESCE(devo.aprobador, 'NULL') AS APROBADOR, " +
+					"COALESCE(pro.FECHA_ACTUALIZACION, '0001-01-01') AS fecha_actualizacion, 'NULL' AS aciertos " +
+					"FROM tb_qo_devolucion devo INNER JOIN tb_qo_proceso pro ON pro.id_referencia = devo.id AND " +
+					"pro.proceso IN ('DEVOLUCION', 'CANCELACION_DEVOLUCION') " +
+					"UNION " +
+					"SELECT pro.id, pago.id AS ID_REFERENCIA, pago.codigo, COALESCE(pago.CODIGO_OPERACION,'NULL') AS operacion, " +
+					"pago.NOMBRE_CLIENTE, pago.CEDULA AS CEDULA_CLIENTE, 0 AS monto, pro.FECHA_CREACION, pago.ID_AGENCIA, " +
+					"pro.ESTADO_PROCESO, pro.PROCESO, pago.ASESOR, COALESCE(pro.USUARIO, 'NULL') AS USUARIO, " +
+					"'SIN ACTIVIDAD' AS actividad, COALESCE(pago.aprobador, 'NULL') AS APROBADOR, " +
+					"COALESCE(pro.FECHA_ACTUALIZACION, '0001-01-01') AS fecha_actualizacion, 'NULL' AS aciertos " +
+					"FROM tb_qo_cliente_pago pago INNER JOIN tb_qo_proceso pro ON pro.id_referencia = pago.id AND " +
+					"pro.proceso = 'PAGO' " +
+					"UNION " +
+					"SELECT pro.id, veri.id AS ID_REFERENCIA, veri.codigo, COALESCE(veri.CODIGO_OPERACION,'NULL') AS operacion, " +
+					"veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 AS monto, pro.FECHA_CREACION, veri.ID_AGENCIA, " +
+					"pro.ESTADO_PROCESO, pro.PROCESO, veri.ASESOR, COALESCE(pro.USUARIO, 'NULL') AS USUARIO, " +
+					"'SIN ACTIVIDAD' AS actividad, COALESCE(veri.aprobador, 'NULL') AS APROBADOR, " +
+					"COALESCE(pro.FECHA_ACTUALIZACION, '0001-01-01') AS fecha_actualizacion, 'NULL' AS aciertos " +
+					"FROM TB_QO_VERIFICACION_TELEFONICA veri INNER JOIN tb_qo_proceso pro ON pro.id_referencia = veri.id AND " +
+					"pro.proceso = 'VERIFICACION_TELEFONICA') AS TABL " +
+					"WHERE 1=1 ";
+
+			StringBuilder strQry = new StringBuilder(querySelect)
+					.append("AND (ESTADO_PROCESO = :primerEstado OR ESTADO_PROCESO = :segundoEstado OR ESTADO_PROCESO = :tercerEstado) ");
+
 			if (StringUtils.isNotBlank(wp.getCodigo())) {
-				strQry.append(" and codigo iLIKE :codigo");
+				strQry.append("AND codigo ILIKE :codigo ");
 			}
-			if (StringUtils.isNotBlank(wp.getCedula() )) {
-				strQry.append(" and  cedula_cliente =:cedula");
+
+			if (StringUtils.isNotBlank(wp.getCedula())) {
+				strQry.append("AND cedula_cliente = :cedula ");
 			}
-			if(wp.getProceso() != null) {
-				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
-				strQry.append(" and PROCESO in ('"+st+"') ");
+
+			if (wp.getProceso() != null) {
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','"));
+				strQry.append("AND PROCESO IN ('" + st + "') ");
 			}
-			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
-				strQry.append(" and id_agencia in :idAgencia ");
+
+			if (wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
+				strQry.append("AND id_agencia IN :idAgencia ");
 			}
-			strQry.append(" ORDER BY fecha_actualizacion DESC LIMIT :limite OFFSET :salto ");
+
+			strQry.append("ORDER BY " +
+					"CASE " +
+					"WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN 1 " +
+					"WHEN TABL.proceso = 'NUEVO' THEN 2 " +
+					"WHEN TABL.proceso = 'RENOVACION' AND TABL.estado_proceso = 'DEVUELTO' THEN 3 " +
+					"WHEN TABL.proceso = 'RENOVACION' THEN 4 " +
+					"WHEN TABL.proceso = 'PAGO' THEN 5 " +
+					"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
+					"ELSE 7 " +
+					"END, " +
+					"TABL.fecha_actualizacion DESC " +
+					"LIMIT :limite OFFSET :salto");
+
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
-			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );			
-			query.setParameter("tercerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString() );			
-			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
-				query.setParameter("codigo",  "%"+wp.getCodigo().trim()+"%" );
+
+			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString());
+			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString());
+			query.setParameter("tercerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString());
+
+			if (StringUtils.isNotBlank(wp.getCodigo())) {
+				query.setParameter("codigo", "%" + wp.getCodigo().trim() + "%");
 			}
-			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
-				query.setParameter("cedula", wp.getCedula() );
+
+			if (StringUtils.isNotBlank(wp.getCedula())) {
+				query.setParameter("cedula", wp.getCedula());
 			}
-			
-			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
-				query.setParameter("idAgencia", wp.getIdAgencia() );
+
+			if (wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
+				query.setParameter("idAgencia", wp.getIdAgencia());
 			}
-			query.setParameter("limite", wp.getNumberItems() );
+
+			query.setParameter("limite", wp.getNumberItems());
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());
-			query.setParameter("salto", salto );
+			query.setParameter("salto", salto);
+
 			return QuskiOroUtil.getResultList(query.getResultList(), OpPorAprobarWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
