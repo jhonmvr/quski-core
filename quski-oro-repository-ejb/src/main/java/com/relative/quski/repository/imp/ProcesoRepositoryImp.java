@@ -390,62 +390,58 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 					"FROM TB_QO_VERIFICACION_TELEFONICA veri INNER JOIN tb_qo_proceso pro ON pro.id_referencia = veri.id AND " +
 					"pro.proceso = 'VERIFICACION_TELEFONICA') AS TABL " +
 					"WHERE 1=1 ";
-
-			StringBuilder strQry = new StringBuilder(querySelect)
-					.append("AND (ESTADO_PROCESO = :primerEstado OR ESTADO_PROCESO = :segundoEstado OR ESTADO_PROCESO = :tercerEstado) ");
-
+			
+			StringBuilder strQry = new StringBuilder(querySelect).append(" and (ESTADO_PROCESO =:primerEstado or ESTADO_PROCESO =:segundoEstado or ESTADO_PROCESO =:tercerEstado ) ");
 			if (StringUtils.isNotBlank(wp.getCodigo())) {
-				strQry.append("AND codigo ILIKE :codigo ");
+				strQry.append(" and codigo iLIKE :codigo");
 			}
-
-			if (StringUtils.isNotBlank(wp.getCedula())) {
-				strQry.append("AND cedula_cliente = :cedula ");
+			if (StringUtils.isNotBlank(wp.getCedula() )) {
+				strQry.append(" and  cedula_cliente =:cedula");
 			}
-
-			if (wp.getProceso() != null) {
-				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','"));
-				strQry.append("AND PROCESO IN ('" + st + "') ");
+			if(wp.getProceso() != null) {
+				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
+				strQry.append(" and PROCESO in ('"+st+"') ");
 			}
-
-			if (wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
-				strQry.append("AND id_agencia IN :idAgencia ");
+			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
+				strQry.append(" and id_agencia in :idAgencia ");
 			}
-
 			strQry.append("ORDER BY " +
-					"CASE " +
-					"WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN 1 " +
-					"WHEN TABL.proceso = 'NUEVO' THEN 2 " +
-					"WHEN TABL.proceso = 'RENOVACION' AND TABL.estado_proceso = 'DEVUELTO' THEN 3 " +
-					"WHEN TABL.proceso = 'RENOVACION' THEN 4 " +
-					"WHEN TABL.proceso = 'PAGO' THEN 5 " +
-					"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
-					"ELSE 7 " +
-					"END, " +
-					"TABL.fecha_actualizacion DESC " +
-					"LIMIT :limite OFFSET :salto");
-
+							"CASE " +
+							"WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN 1 " +
+							"WHEN TABL.proceso = 'NUEVO' THEN 2 " +
+							"WHEN TABL.proceso = 'RENOVACION' AND TABL.estado_proceso = 'DEVUELTO' THEN 3 " +
+							"WHEN TABL.proceso = 'RENOVACION' THEN 4 " +
+							"WHEN TABL.proceso = 'PAGO' THEN 5 " +
+							"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
+							"ELSE 7 " +
+							"END, " +
+							"CASE " +
+							"        WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN TABL.fecha_actualizacion " +
+							"        ELSE NULL " +
+							"END DESC, " +
+							"CASE " +
+							"        WHEN TABL.proceso != 'NUEVO' OR TABL.estado_proceso != 'DEVUELTO' THEN TABL.fecha_actualizacion " +
+							"        ELSE NULL " +
+							"END DESC ")
+					.append("LIMIT :limite OFFSET :salto");
+//			strQry.append(" ORDER BY fecha_actualizacion DESC LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-
-			query.setParameter("primerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION.toString());
-			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString());
-			query.setParameter("tercerEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString());
-
-			if (StringUtils.isNotBlank(wp.getCodigo())) {
-				query.setParameter("codigo", "%" + wp.getCodigo().trim() + "%");
+			query.setParameter("primerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION.toString() );
+			query.setParameter("segundoEstado", EstadoProcesoEnum.PENDIENTE_APROBACION_FIRMA.toString() );			
+			query.setParameter("tercerEstado",  EstadoProcesoEnum.PENDIENTE_APROBACION_DEVUELTO.toString() );			
+			if (wp.getCodigo() != null && !wp.getCodigo().equalsIgnoreCase("")) {
+				query.setParameter("codigo",  "%"+wp.getCodigo().trim()+"%" );
 			}
-
-			if (StringUtils.isNotBlank(wp.getCedula())) {
-				query.setParameter("cedula", wp.getCedula());
+			if (wp.getCedula() != null && !wp.getCedula().equalsIgnoreCase("")) {
+				query.setParameter("cedula", wp.getCedula() );
 			}
-
-			if (wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
-				query.setParameter("idAgencia", wp.getIdAgencia());
+			
+			if(wp.getIdAgencia() != null && !wp.getIdAgencia().isEmpty()) {
+				query.setParameter("idAgencia", wp.getIdAgencia() );
 			}
-
-			query.setParameter("limite", wp.getNumberItems());
+			query.setParameter("limite", wp.getNumberItems() );
 			Long salto = wp.getNumberItems() * (wp.getNumberPage());
-			query.setParameter("salto", salto);
-
+			query.setParameter("salto", salto );
 			return QuskiOroUtil.getResultList(query.getResultList(), OpPorAprobarWrapper.class);
 		} catch (Exception e) {
 			e.printStackTrace();
