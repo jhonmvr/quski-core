@@ -393,10 +393,10 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 			
 			StringBuilder strQry = new StringBuilder(querySelect).append(" and (ESTADO_PROCESO =:primerEstado or ESTADO_PROCESO =:segundoEstado or ESTADO_PROCESO =:tercerEstado ) ");
 			if (StringUtils.isNotBlank(wp.getCodigo())) {
-				strQry.append(" and codigo iLIKE :codigo");
+				strQry.append(" and codigo iLIKE :codigo ");
 			}
 			if (StringUtils.isNotBlank(wp.getCedula() )) {
-				strQry.append(" and  cedula_cliente =:cedula");
+				strQry.append(" and  cedula_cliente =:cedula ");
 			}
 			if(wp.getProceso() != null) {
 				String st = wp.getProceso().stream().map(ProcesoEnum::name).collect(Collectors.joining("','") );
@@ -414,15 +414,15 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 							"WHEN TABL.proceso = 'PAGO' THEN 5 " +
 							"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
 							"ELSE 7 " +
-							"END, " +
+							"END ASC, " +
 							"CASE " +
 							"        WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN TABL.fecha_actualizacion " +
 							"        ELSE NULL " +
-							"END DESC, " +
+							"END ASC, " +
 							"CASE " +
 							"        WHEN TABL.proceso != 'NUEVO' OR TABL.estado_proceso != 'DEVUELTO' THEN TABL.fecha_actualizacion " +
 							"        ELSE NULL " +
-							"END DESC ")
+							"END ASC ")
 					.append("LIMIT :limite OFFSET :salto");
 //			strQry.append(" ORDER BY fecha_actualizacion DESC LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
