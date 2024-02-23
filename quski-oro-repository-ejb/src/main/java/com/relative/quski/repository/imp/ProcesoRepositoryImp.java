@@ -414,16 +414,7 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 							"WHEN TABL.proceso = 'RENOVACION' THEN 4 " +
 							"WHEN TABL.proceso = 'PAGO' THEN 5 " +
 							"WHEN TABL.proceso = 'DEVOLUCION' THEN 6 " +
-							"ELSE 7 " +
-							"END ASC, " +
-							"CASE " +
-							"        WHEN TABL.proceso = 'NUEVO' AND TABL.estado_proceso = 'DEVUELTO' THEN TABL.fecha_actualizacion " +
-							"        ELSE NULL " +
-							"END ASC, " +
-							"CASE " +
-							"        WHEN TABL.proceso != 'NUEVO' OR TABL.estado_proceso != 'DEVUELTO' THEN TABL.fecha_actualizacion " +
-							"        ELSE NULL " +
-							"END ASC ")
+							"END, (SELECT MAX(tb_qo_tracking.fecha_inicio) FROM tb_qo_tracking WHERE tb_qo_tracking.codigo_bpm = TABL.codigo) ASC ")
 					.append("LIMIT :limite OFFSET :salto");
 //			strQry.append(" ORDER BY fecha_actualizacion DESC LIMIT :limite OFFSET :salto ");
 			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
