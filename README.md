@@ -33,3 +33,6 @@ Branch 'lt/merge-master/documentacion' set up to track remote branch 'lt/merge-m
 
 ```
  Al hacer click en el link abrira gitlab para que creen el Merge request
+ 
+
+La branch master esta protegida solo pueden hacer commit en esa branch lider tecnico
