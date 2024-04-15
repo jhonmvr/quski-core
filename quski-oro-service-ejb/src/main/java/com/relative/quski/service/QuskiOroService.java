@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.relative.quski.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
@@ -37,36 +38,6 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.enums.TipoExcepcionEnum;
-import com.relative.quski.model.TbMiParametro;
-import com.relative.quski.model.TbQoArchivoCliente;
-import com.relative.quski.model.TbQoCliente;
-import com.relative.quski.model.TbQoClientePago;
-import com.relative.quski.model.TbQoCotizador;
-import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoCuentaBancariaCliente;
-import com.relative.quski.model.TbQoDatoTrabajoCliente;
-import com.relative.quski.model.TbQoDetalleCredito;
-import com.relative.quski.model.TbQoDevolucion;
-import com.relative.quski.model.TbQoDireccionCliente;
-import com.relative.quski.model.TbQoDocumentoHabilitante;
-import com.relative.quski.model.TbQoExcepcion;
-import com.relative.quski.model.TbQoExcepcionRol;
-import com.relative.quski.model.TbQoHistoricoObservacion;
-import com.relative.quski.model.TbQoHistoricoObservacionEntrega;
-import com.relative.quski.model.TbQoHistoricoOperativa;
-import com.relative.quski.model.TbQoNegociacion;
-import com.relative.quski.model.TbQoProceso;
-import com.relative.quski.model.TbQoPublicidad;
-import com.relative.quski.model.TbQoReferenciaPersonal;
-import com.relative.quski.model.TbQoReferido;
-import com.relative.quski.model.TbQoRegistrarPago;
-import com.relative.quski.model.TbQoRiesgoAcumulado;
-import com.relative.quski.model.TbQoTasacion;
-import com.relative.quski.model.TbQoTelefonoCliente;
-import com.relative.quski.model.TbQoTipoArchivo;
-import com.relative.quski.model.TbQoTipoDocumento;
-import com.relative.quski.model.TbQoTracking;
-import com.relative.quski.model.TbQoVariablesCrediticia;
 import com.relative.quski.repository.ArchivoClienteRepository;
 import com.relative.quski.repository.ClientePagoRepository;
 import com.relative.quski.repository.ClienteRepository;
@@ -9816,6 +9787,44 @@ public class QuskiOroService {
 			return this.creditoNegociacionRepository.findCreditoByNumeroOperacion(operacion);
 		}
 
-		
 
+	public List<TbQoExcepcionOperativa> findAllExcepcionOperativa(PaginatedWrapper pw) {
+		//TODO
+		return  null;
+	}
+
+	public Number countExcepcionOperativa() {
+		//TODO
+		return null;
+	}
+
+	public TbQoExcepcionOperativa findExcepcionOperativaById(Long aLong) {
+		//TODO
+		return null;
+	}
+
+	public TbQoExcepcionOperativa manageExcepcionOperativa(TbQoExcepcionOperativa entidad) {
+		//TODO
+		return null;
+	}
+
+	public TbQoRegularizacionDocumento findRegularizacionDocumentosById(Long aLong) {
+		//TODO
+		return null;
+	}
+
+	public List<TbQoRegularizacionDocumento> findAllRegularizacionDocumentos(PaginatedWrapper pw) {
+		//TODO
+		return null;
+	}
+
+	public Number countRegularizacionDocumentos() {
+		//TODO
+		return null;
+	}
+
+	public TbQoRegularizacionDocumento manageRegularizacionDocumentos(TbQoRegularizacionDocumento entidad) {
+		//TODO
+		return null;
+	}
 }
