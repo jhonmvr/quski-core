@@ -4,6 +4,7 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
+import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.repository.ExcepcionOperativaRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -97,5 +98,36 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             throw new RelativeException(Constantes.ERROR_CODE_READ, "listAllByParams " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public TbQoExcepcionOperativa findByNegociacionAndTipo(Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum pendiente) throws RelativeException {
+        try {
+            EntityManager em = getEntityManager();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TbQoExcepcionOperativa> cq = cb.createQuery(TbQoExcepcionOperativa.class);
+            Root<TbQoExcepcionOperativa> excepcion = cq.from(TbQoExcepcionOperativa.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (idNegociacion != null) {
+                predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), idNegociacion));
+            }
+            if (StringUtils.isNotBlank(tipoExcepcion)) {
+                predicates.add(cb.equal(excepcion.get("tipoExcepcion"), tipoExcepcion));
+            }
+            if (pendiente != null) {
+                predicates.add(cb.equal(excepcion.get("estadoExcepcion"), pendiente.toString()));
+            }
+            cq.where(predicates.toArray(new Predicate[0]));
+            List<TbQoExcepcionOperativa>  rest = em.createQuery(cq).getResultList();
+            if(rest == null || rest.isEmpty()){
+                return null;
+            }
+            return rest.get(0);
+        } catch (IllegalArgumentException  e) {
+
+            throw new RelativeException(Constantes.ERROR_CODE_READ, "findByNegociacionAndTipo " + e.getMessage());
+        }
     }
 }

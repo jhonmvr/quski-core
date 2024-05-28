@@ -6,13 +6,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoExcepcion;
-import com.relative.quski.model.TbQoProceso;
-import com.relative.quski.model.TbQoRiesgoAcumulado;
-import com.relative.quski.model.TbQoTasacion;
-import com.relative.quski.model.TbQoTelefonoCliente;
-import com.relative.quski.model.TbQoVariablesCrediticia;
+import com.relative.quski.model.*;
 
 /**
  * @author KLÉBER GUERRA relative Engine
@@ -30,6 +24,10 @@ public class DetalleCreditoEnProcesoWrapper implements Serializable {
 	private List<TbQoTasacion> joyas;
 	private Boolean existeError;
 	private String mensaje;
+
+	private TbQoExcepcionOperativa excepcionOperativa;
+
+	private TbQoRegularizacionDocumento tbQoRegularizacionDocumento;
 	
 	
 	
@@ -103,5 +101,19 @@ public class DetalleCreditoEnProcesoWrapper implements Serializable {
 		this.mensaje = mensaje;
 	}
 
+	public TbQoExcepcionOperativa getExcepcionOperativa() {
+		return excepcionOperativa;
+	}
 
+	public void setExcepcionOperativa(TbQoExcepcionOperativa excepcionOperativa) {
+		this.excepcionOperativa = excepcionOperativa;
+	}
+
+	public TbQoRegularizacionDocumento getTbQoRegularizacionDocumento() {
+		return tbQoRegularizacionDocumento;
+	}
+
+	public void setTbQoRegularizacionDocumento(TbQoRegularizacionDocumento tbQoRegularizacionDocumento) {
+		this.tbQoRegularizacionDocumento = tbQoRegularizacionDocumento;
+	}
 }

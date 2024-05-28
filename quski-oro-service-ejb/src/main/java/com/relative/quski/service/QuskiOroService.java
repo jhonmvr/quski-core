@@ -17,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.relative.quski.model.*;
+import com.relative.quski.repository.*;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
@@ -38,36 +39,6 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.enums.SeccionEnum;
 import com.relative.quski.enums.TipoExcepcionEnum;
-import com.relative.quski.repository.ArchivoClienteRepository;
-import com.relative.quski.repository.ClientePagoRepository;
-import com.relative.quski.repository.ClienteRepository;
-import com.relative.quski.repository.CotizadorRepository;
-import com.relative.quski.repository.CreditoNegociacionRepository;
-import com.relative.quski.repository.CuentaBancariaRepository;
-import com.relative.quski.repository.DatoTrabajoClienteRepository;
-import com.relative.quski.repository.DetalleCreditoRepository;
-import com.relative.quski.repository.DevolucionRepository;
-import com.relative.quski.repository.DireccionClienteRepository;
-import com.relative.quski.repository.DocumentoHabilitanteRepository;
-import com.relative.quski.repository.ExcepcionRolRepository;
-import com.relative.quski.repository.ExcepcionesRepository;
-import com.relative.quski.repository.HistoricoObservacionEntregaRepository;
-import com.relative.quski.repository.HistoricoObservacionRepository;
-import com.relative.quski.repository.HistoricoOperativaRepository;
-import com.relative.quski.repository.NegociacionRepository;
-import com.relative.quski.repository.ParametroRepository;
-import com.relative.quski.repository.ProcesoRepository;
-import com.relative.quski.repository.PublicidadRepository;
-import com.relative.quski.repository.ReferenciaPersonalRepository;
-import com.relative.quski.repository.ReferidoRepository;
-import com.relative.quski.repository.RegistrarPagoRepository;
-import com.relative.quski.repository.RiesgoAcumuladoRepository;
-import com.relative.quski.repository.TasacionRepository;
-import com.relative.quski.repository.TelefonoClienteRepository;
-import com.relative.quski.repository.TipoArchivoRepository;
-import com.relative.quski.repository.TipoDocumentoRepository;
-import com.relative.quski.repository.TrackingRepository;
-import com.relative.quski.repository.VariablesCrediticiaRepository;
 import com.relative.quski.repository.spec.ClienteByIdentificacionSpec;
 import com.relative.quski.repository.spec.CreditoNegociacionByParamsSpec;
 import com.relative.quski.util.EmailUtil;
@@ -236,6 +207,8 @@ public class QuskiOroService {
 	private HistoricoOperativaRepository historicoOperativaRepository;
 	@Inject
 	private HistoricoObservacionEntregaRepository historicoObservacionEntregaRepository;
+	@Inject
+	private ExcepcionOperativaRepository excepcionOperativaRepository;
 	
 	
 	@Inject
@@ -6424,6 +6397,9 @@ public class QuskiOroService {
 			if(StringUtils.isNotBlank(send.getDesembolsoNumeroCuenta())){
 				persisted.setDesembolsoNumeroCuenta(send.getDesembolsoNumeroCuenta());
 			}
+			if(send.getDescuentoServicios() != null){
+				persisted.setDescuentoServicios(send.getDescuentoServicios());
+			}
 			persisted.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
 			persisted.setEstado( EstadoEnum.ACT );
 			return this.creditoNegociacionRepository.update(persisted);
@@ -8652,8 +8628,9 @@ public class QuskiOroService {
 		try {
 			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.NUEVO);
 			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
-					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
-					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 ||
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0 ||
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA)==0) {
 				TbQoCreditoNegociacion wp = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
 				if(wp == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
@@ -8717,7 +8694,8 @@ public class QuskiOroService {
 			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.RENOVACION);
 			
 			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
-					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 ||
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA)==0 ||
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
 				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
@@ -8781,7 +8759,8 @@ public class QuskiOroService {
 			TbQoProceso proceso =this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.NUEVO);
 			if(proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO)==0 || 
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO)==0 || 
-					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0||
+					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA)==0) {
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
 				manageProceso(proceso);
@@ -9798,9 +9777,9 @@ public class QuskiOroService {
 		return null;
 	}
 
-	public TbQoExcepcionOperativa findExcepcionOperativaById(Long aLong) {
+	public TbQoExcepcionOperativa findExcepcionOperativaById(Long aLong) throws RelativeException {
 		//TODO
-		return null;
+		return excepcionOperativaRepository.findById(aLong);
 	}
 
 	public TbQoExcepcionOperativa manageExcepcionOperativa(TbQoExcepcionOperativa entidad) {

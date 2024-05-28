@@ -316,7 +316,9 @@ public class TbQoCreditoNegociacion implements Serializable {
 	private String desembolsoTipoCuenta;
 	@Column(name="desembolso_numero_cuenta")
 	private String desembolsoNumeroCuenta;
-	
+
+	@Column(name="descuento_servicios")
+	private BigDecimal descuentoServicios;
 	public TbQoCreditoNegociacion() {
 	}
 
@@ -1091,4 +1093,13 @@ public class TbQoCreditoNegociacion implements Serializable {
 	public void setDesembolsoNumeroCuenta(String desembolsoNumeroCuenta) {
 		this.desembolsoNumeroCuenta = desembolsoNumeroCuenta;
 	}
+
+	public BigDecimal getDescuentoServicios() {
+		return descuentoServicios;
+	}
+
+	public void setDescuentoServicios(BigDecimal descuentoServicios) {
+		this.descuentoServicios = descuentoServicios;
+	}
+
 }
