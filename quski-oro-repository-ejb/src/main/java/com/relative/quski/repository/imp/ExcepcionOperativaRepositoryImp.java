@@ -119,7 +119,9 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             if (pendiente != null) {
                 predicates.add(cb.equal(excepcion.get("estadoExcepcion"), pendiente.toString()));
             }
+
             cq.where(predicates.toArray(new Predicate[0]));
+            cq.orderBy(cb.desc(excepcion.get("id")));
             List<TbQoExcepcionOperativa>  rest = em.createQuery(cq).getResultList();
             if(rest == null || rest.isEmpty()){
                 return null;

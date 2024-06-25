@@ -53,4 +53,16 @@ public class ComprobanteRestController extends BaseRestController implements Cru
     public List<TbQoComprobante> listAllByIdNegociacion(@QueryParam("idNegociacion") Long idNegociacion)  throws RelativeException{
         return comprobanteService.findAllByIdNegociacion(idNegociacion);
     }
+
+    @POST
+    @Path("/agregarComprobante")
+    public TbQoComprobante agregarComprobante(TbQoComprobante comprobante)  throws RelativeException{
+        return comprobanteService.agregarComprobante(comprobante);
+    }
+
+    @DELETE
+    @Path("/eliminarComprobante")
+    public void eliminarComprobante(@QueryParam("id")Long id)  throws RelativeException{
+        comprobanteService.eliminarComprobante(id);
+    }
 }
