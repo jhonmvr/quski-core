@@ -38,12 +38,16 @@ public class TbQoComprobante implements Serializable {
     private String numeroCuenta;
 
     @Size(max = 50)
-    @Column(name = "identificacion", length = 50)
-    private String identificacion;
+    @Column(name = "tipo_cuenta", length = 50)
+    private String tipoCuenta;
 
-    @Size(max = 100)
-    @Column(name = "nombre", length = 100)
-    private String nombre;
+//    @Size(max = 50)
+//    @Column(name = "identificacion", length = 50)
+//    private String identificacion;
+//
+//    @Size(max = 100)
+//    @Column(name = "nombre", length = 100)
+//    private String nombre;
 
     @NotNull
     @Column(name = "valor", nullable = false, precision = 10, scale = 2)
