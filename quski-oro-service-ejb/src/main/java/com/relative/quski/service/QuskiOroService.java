@@ -6629,7 +6629,7 @@ public class QuskiOroService {
 						op, autorizacion, this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_RENOVAR_OPERACION).getValor());
 				this.guardarOperacionRenovacion( operacion, wp.getCredito() );
 				CreditoCreadoSoftbank result = new CreditoCreadoSoftbank(  );
-				result.setCredito(credito);
+				//result.setCredito(credito); da error al parsear el json por que es muy grande
 				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), Boolean.FALSE, wp.getAsesor(), autorizacion);
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
 				String sinExcepcion = "SIN EXCEPCION";
