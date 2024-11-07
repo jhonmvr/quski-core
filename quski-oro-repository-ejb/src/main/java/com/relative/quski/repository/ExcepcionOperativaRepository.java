@@ -9,10 +9,12 @@ import com.relative.quski.model.TbQoExcepcionOperativa;
 import java.util.List;
 
 public interface ExcepcionOperativaRepository extends CrudRepository<Long, TbQoExcepcionOperativa> {
-    List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException;
+    List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException;
 
 
-    Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException;
+    Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException;
 
     TbQoExcepcionOperativa findByNegociacionAndTipo(Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum pendiente) throws RelativeException;
+    List<TbQoExcepcionOperativa> findByNegociacion(Long idNegociacion) throws RelativeException;
+
 }

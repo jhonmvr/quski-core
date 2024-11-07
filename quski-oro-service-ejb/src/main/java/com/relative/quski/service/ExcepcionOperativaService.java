@@ -4,21 +4,30 @@ import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoRegularizacionDocumento;
+import com.relative.quski.model.TbQoTracking;
 import com.relative.quski.repository.ExcepcionOperativaRepository;
+import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,19 +46,25 @@ public class ExcepcionOperativaService {
     private QuskiOroService qos;
     @Inject
     private RegularizacionDocumentosRepository regularizacionDocumentosRepository;
-
+	@Inject
+	private ParametroRepository parametroRepository;
+	
     public PaginatedListWrapper<TbQoExcepcionOperativa> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
         PaginatedListWrapper<TbQoExcepcionOperativa> plw = new PaginatedListWrapper<>(new PaginatedWrapper(firstItem, pageSize, sortFields, sortDirections, isPaginated));
         plw.setIsPaginated(isPaginated);
-        List<TbQoExcepcionOperativa> actions = this.excepcionOperativaRepository.listAllByParams(plw, usuario, estado,codigo,codigoOperacion,idNegociacion);
+        String rol = this.parametroRepository.findByNombreAndTipo(usuario, QuskiOroConstantes.TIPO_ROL).getValor();
+        if(rol == null) {
+        	return null;
+        }
+        List<TbQoExcepcionOperativa> actions = this.excepcionOperativaRepository.listAllByParams(plw, usuario, estado,codigo,codigoOperacion,idNegociacion, rol);
         if (actions != null && !actions.isEmpty()) {
-            plw.setTotalResults(this.excepcionOperativaRepository.countListAllByParams(usuario, estado,codigo,codigoOperacion,idNegociacion));
+            plw.setTotalResults(this.excepcionOperativaRepository.countListAllByParams(usuario, estado,codigo,codigoOperacion,idNegociacion, rol));
             plw.setList(actions);
         }
         return plw;
     }
 
-    public TbQoExcepcionOperativa solicitarExcepcionServicios(TbQoExcepcionOperativa ex, ProcesoEnum pro) throws RelativeException {
+    public TbQoExcepcionOperativa solicitarExcepcionServicios(TbQoExcepcionOperativa ex, ProcesoEnum pro, String asesor) throws RelativeException {
         TbQoProceso proceso =  this.qos.findProcesoByIdReferencia(ex.getIdNegociacion().getId(),pro);
         if(proceso == null){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO PROCESO ACTIVO");
@@ -64,15 +79,55 @@ public class ExcepcionOperativaService {
         } else if(ex.getMontoInvolucrado().compareTo(COBRANZAS_NIVEL2)>0){
             ex.setNivelAprobacion(4);
         }
+        
+        DetalleCreditoEnProcesoWrapper wp = this.qos.traerCreditoNegociacion(ex.getIdNegociacion().getId());
+        TbQoTracking traking = new TbQoTracking();
+		traking.setActividad("EXCEPCION OPERATIVA");
+		traking.setCodigoBpm(wp.getCredito().getCodigo());
+		traking.setCodigoOperacionSoftbank(wp.getCredito().getNumeroOperacion());
+		traking.setEstado(EstadoEnum.ACT);
+		traking.setFechaActualizacion(new Date());
+		traking.setFechaCreacion(new Date());
+		traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+		traking.setNombreAsesor(wp.getCredito().getTbQoNegociacion().getNombreAsesor());
+		traking.setUsuarioCreacion(asesor);
+		traking.setObservacion(ex.getObservacionAsesor());
+		traking.setProceso(ProcesoEnum.RENOVACION);
+		traking.setSeccion("Enviado a excepcion operativa");
+		this.qos.registrarTraking(traking);
+		this.qos.notificarExcepcionServicio( wp.getCredito(), ex, Boolean.FALSE );
+
         return this.excepcionOperativaRepository.add(ex);
     }
 
     public TbQoExcepcionOperativa findByNegociacionAndTipo(Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estado ) throws RelativeException {
         return excepcionOperativaRepository.findByNegociacionAndTipo(idNegociacion, tipoExcepcion, estado);
     }
-
-    public TbQoExcepcionOperativa resolverExcepcion(TbQoExcepcionOperativa ex, ProcesoEnum proceso) throws RelativeException {
+    public List<TbQoExcepcionOperativa> findByNegociacion(Long idNegociacion ) throws RelativeException {
+        return excepcionOperativaRepository.findByNegociacion(idNegociacion);
+    }
+    public TbQoExcepcionOperativa cancelarExcepcion(TbQoExcepcionOperativa ex, ProcesoEnum proceso, String nombreAsesor) throws RelativeException {
         TbQoExcepcionOperativa excepcion = this.excepcionOperativaRepository.findById(ex.getId());
+        TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion(excepcion.getIdNegociacion().getId());
+		if(credito == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+excepcion.getIdNegociacion().getId());
+		}
+        if(!excepcion.getEstadoExcepcion().equals(EstadoExcepcionEnum.APROBADO.toString())){
+            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ESTA EXCEPCION YA FUE PROCESADA");
+        }
+        excepcion.setEstadoExcepcion("NEGADO");
+        excepcion.setFechaRespuesta(new Timestamp(System.currentTimeMillis()));
+        excepcion.setObservacionAprobador(ex.getObservacionAprobador());
+        excepcion.setUsuarioAprobador(ex.getUsuarioAprobador());
+        
+        return  this.excepcionOperativaRepository.update(excepcion);
+    }
+    public TbQoExcepcionOperativa resolverExcepcion(TbQoExcepcionOperativa ex, ProcesoEnum proceso, String nombreAsesor) throws RelativeException {
+        TbQoExcepcionOperativa excepcion = this.excepcionOperativaRepository.findById(ex.getId());
+        TbQoCreditoNegociacion credito = this.qos.findCreditoByIdNegociacion(excepcion.getIdNegociacion().getId());
+		if(credito == null) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+excepcion.getIdNegociacion().getId());
+		}
         if(!excepcion.getEstadoExcepcion().equals(EstadoExcepcionEnum.PENDIENTE.toString())){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ESTA EXCEPCION YA FUE PROCESADA");
         }
@@ -100,7 +155,20 @@ public class ExcepcionOperativaService {
                 proce.setEstadoProceso(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA);
             }
         }
-
+        TbQoTracking traking = new TbQoTracking();
+		traking.setActividad("EXCEPCION OPERATIVA");
+		traking.setCodigoBpm(credito.getCodigo());
+		traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+		traking.setEstado(EstadoEnum.ACT);
+		traking.setFechaActualizacion(new Date());
+		traking.setFechaCreacion(new Date());
+		traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+		traking.setNombreAsesor(nombreAsesor);
+		traking.setUsuarioCreacion(excepcion.getIdNegociacion().getAsesor());
+		traking.setObservacion(ex.getObservacionAprobador());
+		traking.setProceso(proce.getProceso());
+		traking.setSeccion("Revisión Enviada");
+		this.qos.registrarTraking(traking);
         this.qos.manageProceso(proce);
         return  this.excepcionOperativaRepository.update(excepcion);
     }
@@ -134,6 +202,21 @@ public class ExcepcionOperativaService {
         ex.setFechaSolicitud(new Timestamp(System.currentTimeMillis()));
         ex.setNivelAprobacion(1);
 
+        DetalleCreditoEnProcesoWrapper wp = this.qos.traerCreditoNegociacion(ex.getIdNegociacion().getId());
+        TbQoTracking traking = new TbQoTracking();
+		traking.setActividad("EXCEPCION OPERATIVA");
+		traking.setCodigoBpm(wp.getCredito().getCodigo());
+		traking.setCodigoOperacionSoftbank(wp.getCredito().getNumeroOperacion());
+		traking.setEstado(EstadoEnum.ACT);
+		traking.setFechaActualizacion(new Date());
+		traking.setFechaCreacion(new Date());
+		traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+		traking.setNombreAsesor(wp.getCredito().getTbQoNegociacion().getNombreAsesor());
+		traking.setUsuarioCreacion(ex.getUsuarioSolicitante());
+		traking.setObservacion(ex.getObservacionAsesor());
+		traking.setProceso(pro);
+		traking.setSeccion("Enviado a excepcion operativa");
+		this.qos.registrarTraking(traking);
         return this.excepcionOperativaRepository.add(ex);
     }
 

@@ -45,8 +45,6 @@ import com.relative.quski.wrapper.DetalleCreditoWrapper;
 import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
-import com.relative.quski.wrapper.ValidarDocumentoWrapper;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

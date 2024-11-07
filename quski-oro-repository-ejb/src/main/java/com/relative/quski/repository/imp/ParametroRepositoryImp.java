@@ -69,6 +69,20 @@ public class ParametroRepositoryImp extends GeneralRepositoryImp<Long, TbMiParam
 			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL LISTAR PARAMETROS POR TIPO Y ORDEN" + e);
 		}
 	}
+	public TbMiParametro findByNombreAndTipo(String nombre, String tipo)
+			throws RelativeException {
+		try {
+			List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreTipoOrderedSpec(nombre, tipo));
+			if (p != null && !p.isEmpty()) {
+				return p.get(0);
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ,"AL LISTAR PARAMETROS POR TIPO Y ORDEN" + e);
+		}
+	}
 
 	public List<TbMiParametro> findByParamPaged(String nombre, String tipo, EstadoEnum estado, String caracteriticaUno,
 			String caracteristicaDos, int page, int pageSize, String order, String direction) throws RelativeException {

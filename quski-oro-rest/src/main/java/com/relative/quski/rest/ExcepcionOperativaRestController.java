@@ -13,6 +13,9 @@ import com.relative.quski.service.ExcepcionOperativaService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.ExcepcionServiciosFlujoVariableWrapper;
+import com.relative.quski.wrapper.RenovacionWrapper;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -130,7 +133,34 @@ public class ExcepcionOperativaRestController extends BaseRestController
             @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
             @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
     public TbQoExcepcionOperativa solicitarExcepcionServicios(@QueryParam("proceso") ProcesoEnum proceso, TbQoExcepcionOperativa ex) throws RelativeException {
-        return  this.excepcionOperativaService.solicitarExcepcionServicios(ex,proceso);
+        return  this.excepcionOperativaService.solicitarExcepcionServicios(ex,proceso,ex.getUsuarioSolicitante());
+
+    }
+    @POST
+    @Path("/excepcionServiciosFlujoVariable")
+    @ApiOperation(value = "TbQoExcepcionOperativa", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = TbQoExcepcionOperativa.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+            @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
+    public TbQoExcepcionOperativa excepcionServiciosFlujoVariable(@QueryParam("proceso") ProcesoEnum proceso, ExcepcionServiciosFlujoVariableWrapper wp) throws RelativeException {
+    	
+    	RenovacionWrapper rw = this.qos.crearCreditoRenovacion( 
+    			wp.getOpcionAndGarantiasWrapper(), 
+    			wp.getNumeroOperacion(), 
+    			wp.getIdNegociacion() != null ? Long.valueOf( wp.getIdNegociacion() ): null,
+				wp.getAsesor(), 
+				Long.valueOf(wp.getIdAgencia()), 
+				wp.getNumeroOperacionMadre(), 
+				wp.getAutorizacion(),
+				wp.getNombreAgencia(), 
+				wp.getTelefonoAsesor(),
+				wp.getNombreAsesor(), 
+				wp.getCorreoAsesor());
+    	TbQoExcepcionOperativa eo = wp.getEx();
+    	eo.setIdNegociacion(rw.getCredito().getTbQoNegociacion());
+    	eo.setCodigoOperacion(rw.getCredito().getCodigo());
+    	
+        return  this.excepcionOperativaService.solicitarExcepcionServicios(eo,proceso,wp.getAsesor());
 
     }
     @POST
@@ -155,6 +185,17 @@ public class ExcepcionOperativaRestController extends BaseRestController
                                                             @QueryParam("estado") EstadoExcepcionEnum estado) throws RelativeException {
         return this.excepcionOperativaService.findByNegociacionAndTipo(idNegociacion,tipoExcepcion, estado);
     }
+    @GET
+    @Path("/findByNegociacion")
+    @ApiOperation(value = "TbQoExcepcionOperativa", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = TbQoExcepcionOperativa.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+            @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
+    public  GenericWrapper<TbQoExcepcionOperativa> findByNegociacionAndTipo(@QueryParam("idNegociacion") Long idNegociacion) throws RelativeException {
+    	GenericWrapper<TbQoExcepcionOperativa> loc = new GenericWrapper<>();
+        loc.setEntidades(this.excepcionOperativaService.findByNegociacion(idNegociacion));
+        return loc;
+    }
 
     @POST
     @Path("/resolverExcepcion")
@@ -162,11 +203,21 @@ public class ExcepcionOperativaRestController extends BaseRestController
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
             @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
-    public TbQoExcepcionOperativa resolverExcepcion(@QueryParam("proceso") ProcesoEnum proceso, TbQoExcepcionOperativa ex) throws RelativeException {
-        return  this.excepcionOperativaService.resolverExcepcion(ex,proceso);
+    public TbQoExcepcionOperativa resolverExcepcion(@QueryParam("proceso") ProcesoEnum proceso,@QueryParam("nombreAsesor") String nombreAsesor, TbQoExcepcionOperativa ex) throws RelativeException {
+        return  this.excepcionOperativaService.resolverExcepcion(ex,proceso, nombreAsesor);
 
     }
+    @POST
+    @Path("/cancelarExcepcion")
+    @ApiOperation(value = "TbQoExcepcionOperativa", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = TbQoExcepcionOperativa.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+            @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
+    public TbQoExcepcionOperativa cancelarExcepcion(@QueryParam("proceso") ProcesoEnum proceso,@QueryParam("nombreAsesor") String nombreAsesor, TbQoExcepcionOperativa ex) throws RelativeException {
+        return  this.excepcionOperativaService.cancelarExcepcion(ex,proceso, nombreAsesor);
 
+    }
+    
 
     @GET
     @Path("/traerCreditoNegociacionByExcepcionOperativa")

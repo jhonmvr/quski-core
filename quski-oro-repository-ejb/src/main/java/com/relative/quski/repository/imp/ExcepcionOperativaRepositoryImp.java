@@ -21,7 +21,7 @@ import java.util.List;
 @Stateless(mappedName = "excepcionOperativaRepository")
 public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcionOperativa> implements ExcepcionOperativaRepository {
     @Override
-    public List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
+    public List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException {
         try {
 
             EntityManager em = getEntityManager();
@@ -46,6 +46,9 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             if (StringUtils.isNotBlank(idNegociacion)) {
                 predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), Long.parseLong(idNegociacion)));
             }
+            if (StringUtils.isNotBlank(nivelAprobacion)) {
+                predicates.add(cb.equal(excepcion.get("nivelAprobacion"), Long.parseLong(nivelAprobacion)));
+            }
 
             cq.where(predicates.toArray(new Predicate[0]));
 
@@ -65,7 +68,7 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
 
 
     @Override
-    public Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
+    public Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException {
         try {
             EntityManager em = getEntityManager();
             CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -88,6 +91,9 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             }
             if (StringUtils.isNotBlank(idNegociacion)) {
                 predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), Long.parseLong(idNegociacion)));
+            }
+            if (StringUtils.isNotBlank(nivelAprobacion)) {
+                predicates.add(cb.equal(excepcion.get("nivelAprobacion"), Long.parseLong(nivelAprobacion)));
             }
 
             cq.select(cb.count(excepcion)).where(predicates.toArray(new Predicate[0]));
@@ -127,6 +133,30 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
                 return null;
             }
             return rest.get(0);
+        } catch (IllegalArgumentException  e) {
+
+            throw new RelativeException(Constantes.ERROR_CODE_READ, "findByNegociacionAndTipo " + e.getMessage());
+        }
+    }
+    @Override
+    public List<TbQoExcepcionOperativa> findByNegociacion(Long idNegociacion) throws RelativeException {
+        try {
+            EntityManager em = getEntityManager();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TbQoExcepcionOperativa> cq = cb.createQuery(TbQoExcepcionOperativa.class);
+            Root<TbQoExcepcionOperativa> excepcion = cq.from(TbQoExcepcionOperativa.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+            if (idNegociacion != null) {
+                predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), idNegociacion));
+            }
+            cq.where(predicates.toArray(new Predicate[0]));
+            cq.orderBy(cb.desc(excepcion.get("id")));
+            List<TbQoExcepcionOperativa>  rest = em.createQuery(cq).getResultList();
+            if(rest == null || rest.isEmpty()){
+                return null;
+            }
+            return rest;
         } catch (IllegalArgumentException  e) {
 
             throw new RelativeException(Constantes.ERROR_CODE_READ, "findByNegociacionAndTipo " + e.getMessage());

@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -18,7 +17,12 @@ import java.time.Instant;
 @Entity
 @Table(name = "tb_qo_excepcion_operativa")
 public class TbQoExcepcionOperativa implements Serializable {
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -67,5 +71,120 @@ public class TbQoExcepcionOperativa implements Serializable {
 
     @Column(name = "usuario_aprobador")
     private String usuarioAprobador;
+
+    
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public TbQoNegociacion getIdNegociacion() {
+		return idNegociacion;
+	}
+
+	public void setIdNegociacion(TbQoNegociacion idNegociacion) {
+		this.idNegociacion = idNegociacion;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getCodigoOperacion() {
+		return codigoOperacion;
+	}
+
+	public void setCodigoOperacion(String codigoOperacion) {
+		this.codigoOperacion = codigoOperacion;
+	}
+
+	public String getTipoExcepcion() {
+		return tipoExcepcion;
+	}
+
+	public void setTipoExcepcion(String tipoExcepcion) {
+		this.tipoExcepcion = tipoExcepcion;
+	}
+
+	public Integer getNivelAprobacion() {
+		return nivelAprobacion;
+	}
+
+	public void setNivelAprobacion(Integer nivelAprobacion) {
+		this.nivelAprobacion = nivelAprobacion;
+	}
+
+	public String getEstadoExcepcion() {
+		return estadoExcepcion;
+	}
+
+	public void setEstadoExcepcion(String estadoExcepcion) {
+		this.estadoExcepcion = estadoExcepcion;
+	}
+
+	public BigDecimal getMontoInvolucrado() {
+		return montoInvolucrado;
+	}
+
+	public void setMontoInvolucrado(BigDecimal montoInvolucrado) {
+		this.montoInvolucrado = montoInvolucrado;
+	}
+
+	public String getUsuarioSolicitante() {
+		return usuarioSolicitante;
+	}
+
+	public void setUsuarioSolicitante(String usuarioSolicitante) {
+		this.usuarioSolicitante = usuarioSolicitante;
+	}
+
+	public Timestamp getFechaSolicitud() {
+		return fechaSolicitud;
+	}
+
+	public void setFechaSolicitud(Timestamp fechaSolicitud) {
+		this.fechaSolicitud = fechaSolicitud;
+	}
+
+	public Timestamp getFechaRespuesta() {
+		return fechaRespuesta;
+	}
+
+	public void setFechaRespuesta(Timestamp fechaRespuesta) {
+		this.fechaRespuesta = fechaRespuesta;
+	}
+
+	public String getObservacionAsesor() {
+		return observacionAsesor;
+	}
+
+	public void setObservacionAsesor(String observacionAsesor) {
+		this.observacionAsesor = observacionAsesor;
+	}
+
+	public String getObservacionAprobador() {
+		return observacionAprobador;
+	}
+
+	public void setObservacionAprobador(String observacionAprobador) {
+		this.observacionAprobador = observacionAprobador;
+	}
+
+	public String getUsuarioAprobador() {
+		return usuarioAprobador;
+	}
+
+	public void setUsuarioAprobador(String usuarioAprobador) {
+		this.usuarioAprobador = usuarioAprobador;
+	}
+    
+    
 
 }

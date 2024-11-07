@@ -41,6 +41,7 @@ public class QuskiOroConstantes {
 	public static final String MAIL_PARA_EXC = "MAIL-PARA-EXC";
 	public static final String M_ASUNTO = "M_ASUNTO";
 	public static final String M_CONTENIDO = "M_CONTENIDO";
+	public static final String M_CONTENIDO_SERVICIO = "M_CONTENIDO_SERVICIO";
 	
 	public static final String APROBACION_ASUNTO = "APROBACION_ASUNTO";
 	public static final String APROBACION_CONTENIDO = "APROBACION_CONTENIDO";
@@ -499,7 +500,9 @@ public class QuskiOroConstantes {
 	public static final String URL_WS_VALIDACION_DOCUMENTO = "URL_WS_VALIDACION_DOCUMENTO";
 	
 
-	
+	// EXCEPCION OPERATIVA
+	public static final String TIPO_ROL = "EXCOPV-ROL";
+
 	
 
   

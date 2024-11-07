@@ -16,7 +16,9 @@ public interface ParametroRepository extends CrudRepository<Long, TbMiParametro>
 
 	public List<TbMiParametro> findByNombreAndTipoOrdered(String nombre, String tipo, Boolean ordered)
 			throws RelativeException;
-
+	public TbMiParametro findByNombreAndTipo(String nombre, String tipo)
+			throws RelativeException;
+	
 	public List<TbMiParametro> findByParamPaged(String nombre, String tipo, EstadoEnum estado, String caracteriticaUno,
 			String caracteristicaDos, int page, int pageSize, String order, String direction) throws RelativeException;
 

@@ -6595,11 +6595,12 @@ public class QuskiOroService {
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(), autorizacion)  );
 				this.manageNegociacion(wp.getTbQoNegociacion());
 				this.guardaraObservacion(wp.getTbQoNegociacion().getObservacionAsesor(), wp, wp.getTbQoNegociacion().getAsesor());
-				String sinExcepcion = "SIN EXCEPCION";
-				if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-					this.notificarExcepcionOperativa( wp, Boolean.FALSE );
-					this.guardaraOperativa(wp.getExcepcionOperativa(), wp.getFechaRegularizacion(),  wp.getTbQoNegociacion(), wp.getTbQoNegociacion().getAsesor());
-				}
+				//Jero: cambiar a nuevo flujo
+				//String sinExcepcion = "SIN EXCEPCION";
+				//if(StringUtils.isNotBlank(wp.getExcepcionOperativa()) && !wp.getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+				//	this.notificarExcepcionOperativa( wp, Boolean.FALSE );
+				//	this.guardaraOperativa(wp.getExcepcionOperativa(), wp.getFechaRegularizacion(),  wp.getTbQoNegociacion(), wp.getTbQoNegociacion().getAsesor());
+				//}
 				return result; 
 			}
 
@@ -6633,10 +6634,11 @@ public class QuskiOroService {
 				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), Boolean.FALSE, wp.getAsesor(), autorizacion);
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
 				String sinExcepcion = "SIN EXCEPCION";
-				if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
-					this.notificarExcepcionOperativa( wp.getCredito(), Boolean.TRUE );
-					this.guardaraOperativa(wp.getCredito().getExcepcionOperativa(), wp.getCredito().getFechaRegularizacion(), wp.getCredito().getTbQoNegociacion(), wp.getAsesor());
-				}
+				//Jero: cambiar a nuevo flujo
+				//if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
+				//	this.notificarExcepcionOperativa( wp.getCredito(), Boolean.TRUE ); 
+				//	this.guardaraOperativa(wp.getCredito().getExcepcionOperativa(), wp.getCredito().getFechaRegularizacion(), wp.getCredito().getTbQoNegociacion(), wp.getAsesor());
+				//}
 				return result; 
 			}
 			return null;
@@ -7173,6 +7175,46 @@ public class QuskiOroService {
 					.replace("--gastoCobranza--", String.valueOf(wrapper.getGastoCobranza().doubleValue() ) )
 					.replace("--mora--", String.valueOf(wrapper.getSaldoMora().doubleValue() ) )
 					.replace("--fechaExcepcion--", wrapper.getFechaRegularizacion() != null ?QuskiOroUtil.dateToString(wrapper.getFechaRegularizacion(), QuskiOroUtil.DATE_FORMAT_QUSKI): " ")
+					.replace("--Observaciones--", StringUtils.isNotBlank(wrapper.getTbQoNegociacion().getObservacionAsesor())?wrapper.getTbQoNegociacion().getObservacionAsesor() :" ");
+			this.mailNotificacion(array, asunto, contenido, null);
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			log.info("ERROR ========>" + QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getDetalle());
+			//throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, QuskiOroConstantes.ERROR_AL_CONSUMIR_SERVICIOS + e.getMessage());
+		}
+	}
+	public void notificarExcepcionServicio(TbQoCreditoNegociacion wrapper,TbQoExcepcionOperativa ex, Boolean novacion) {
+		try {
+			List<TbMiParametro> paras = this.parametroRepository.findByNombreAndTipoOrdered(null, QuskiOroConstantes.MAIL_PARA_EXC, false);
+			String[] array = new String[paras.size()];
+			for (int i = 0; i < paras.size(); ++i) {
+				array[i] = paras.get(i).getValor().replace("--Correo asesor--", wrapper.getTbQoNegociacion().getCorreoAsesor() );
+				log.info(" ESTE ES UN PARA DEL CORREO ===========> "+ array[i]);
+			}
+					
+			String asunto = this.parametroRepository.findByNombre( QuskiOroConstantes.M_ASUNTO).getValor()
+					.replace("--nombreCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+					.replace("--cedulaCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getCedulaCliente() )
+					.replace("--codigoBpm--", wrapper.getCodigo() )
+					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion() != null ?wrapper.getNumeroOperacion() :" ")
+					.replace("--numeroOperacionAnterior--", novacion ? wrapper.getNumeroOperacionAnterior() : " ");
+
+			String contenido = this.parametroRepository.findByNombre( QuskiOroConstantes.M_CONTENIDO_SERVICIO).getValor()
+					.replace("--nombreAsesor--", StringUtils.isNotBlank(wrapper.getTbQoNegociacion().getNombreAsesor())?wrapper.getTbQoNegociacion().getNombreAsesor():" " )
+					.replace("--codigoBpm--", wrapper.getCodigo())
+					.replace("--nombreCliente--", wrapper.getTbQoNegociacion().getTbQoCliente().getNombreCompleto() )
+					.replace("--monto--", wrapper.getMontoFinanciado() != null ?wrapper.getMontoFinanciado().toString() :" " )
+					.replace("--numeroSoftbank--", wrapper.getNumeroOperacion() != null ?wrapper.getNumeroOperacion() :" ")
+					.replace("--plazo--", wrapper.getPlazoCredito() != null? String.valueOf(wrapper.getPlazoCredito()) : " ")
+					.replace("--fechaVencimiento--", wrapper.getFechaVencimiento() != null ? QuskiOroUtil.dateToString(wrapper.getFechaVencimiento(), QuskiOroUtil.DATE_FORMAT_QUSKI) : " " )
+					.replace("--numeroOperacionSoftbank--", novacion ? wrapper.getNumeroOperacionMadre() : " ")
+					.replace("--excepcionOperativa--", ex.getTipoExcepcion() )
+					.replace("--observacionServicio--", ex.getObservacionAsesor() )
+					.replace("--montoInvolucrado--", ex.getMontoInvolucrado().toString() )
+					.replace("--nivelAprobacion--", ex.getNivelAprobacion().toString() )
+					.replace("--totalCostos--", wrapper.getTotalGastosNuevaOperacion() != null ? String.valueOf(wrapper.getTotalGastosNuevaOperacion().doubleValue()) : " ")
+					.replace("--gastoCobranza--", wrapper.getGastoCobranza() != null ? String.valueOf(wrapper.getGastoCobranza().doubleValue() ) : " " )
+					.replace("--mora--", wrapper.getSaldoMora() != null ? String.valueOf(wrapper.getSaldoMora().doubleValue() ) : " ")
 					.replace("--Observaciones--", StringUtils.isNotBlank(wrapper.getTbQoNegociacion().getObservacionAsesor())?wrapper.getTbQoNegociacion().getObservacionAsesor() :" ");
 			this.mailNotificacion(array, asunto, contenido, null);
 		} catch (RelativeException e) {
@@ -8741,7 +8783,7 @@ public class QuskiOroService {
 				traking.setSeccion("ENVIADO A APROBAR");
 				this.registrarTraking(traking);
 				this.manageNegociacion( nego );
-
+				
 				this.mailSolicitudAprobacion(credito, proceso);
 				return this.manageProceso(proceso);
 			}else {
