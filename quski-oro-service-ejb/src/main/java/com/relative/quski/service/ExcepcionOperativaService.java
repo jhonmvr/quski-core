@@ -19,11 +19,10 @@ import com.relative.quski.repository.RegularizacionDocumentosRepository;
 import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.ExcepcionOperativaClienteWrapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -62,6 +61,13 @@ public class ExcepcionOperativaService {
             plw.setList(actions);
         }
         return plw;
+    }
+    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient( String usuario, String cedula) throws RelativeException {
+        String rol = this.parametroRepository.findByNombreAndTipo(usuario, QuskiOroConstantes.TIPO_ROL).getValor();
+        if(rol == null) {
+        	return null;
+        }
+        return this.excepcionOperativaRepository.listAllByParamsClient(cedula, rol);
     }
 
     public TbQoExcepcionOperativa solicitarExcepcionServicios(TbQoExcepcionOperativa ex, ProcesoEnum pro, String asesor) throws RelativeException {
@@ -167,7 +173,11 @@ public class ExcepcionOperativaService {
 		traking.setUsuarioCreacion(excepcion.getIdNegociacion().getAsesor());
 		traking.setObservacion(ex.getObservacionAprobador());
 		traking.setProceso(proce.getProceso());
-		traking.setSeccion("Revisión Enviada");
+		if(excepcion.getNivelAprobacion() == 1){
+			traking.setSeccion("Excepcion tipo regularizacion revisada");
+		}else{
+			traking.setSeccion("Excepcion operativa revisada");
+		}
 		this.qos.registrarTraking(traking);
         this.qos.manageProceso(proce);
         return  this.excepcionOperativaRepository.update(excepcion);
@@ -195,10 +205,11 @@ public class ExcepcionOperativaService {
         return detalle;
     }
 
-    public TbQoExcepcionOperativa solicitarExcepcionFabrica(TbQoExcepcionOperativa ex, ProcesoEnum pro) throws RelativeException {
+    public TbQoProceso solicitarExcepcionFabrica(TbQoExcepcionOperativa ex, ProcesoEnum pro) throws RelativeException {
         TbQoProceso proceso =  this.qos.findProcesoByIdReferencia(ex.getIdNegociacion().getId(),pro);
         proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_EXCEPCION_OPERATIVA);
-        this.qos.manageProceso(proceso);
+        proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+        
         ex.setFechaSolicitud(new Timestamp(System.currentTimeMillis()));
         ex.setNivelAprobacion(1);
 
@@ -215,9 +226,11 @@ public class ExcepcionOperativaService {
 		traking.setUsuarioCreacion(ex.getUsuarioSolicitante());
 		traking.setObservacion(ex.getObservacionAsesor());
 		traking.setProceso(pro);
-		traking.setSeccion("Enviado a excepcion operativa");
+		traking.setSeccion("Enviado a excepcion operativa tipo regularizacion");
 		this.qos.registrarTraking(traking);
-        return this.excepcionOperativaRepository.add(ex);
+		this.excepcionOperativaRepository.add(ex);
+		this.qos.notificarExcepcionServicio( wp.getCredito(), ex, pro.compareTo(ProcesoEnum.NUEVO) == 0 ? Boolean.FALSE : Boolean.TRUE );
+        return this.qos.manageProceso(proceso);
     }
 
     public AprobacionWrapper traerCreditoNegociacionExistenteByExcepcionOperativa(Long idExcepcionOperativa, String autorizacion) throws RelativeException {

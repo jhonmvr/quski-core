@@ -11,6 +11,8 @@ import com.relative.quski.model.TbQoRegularizacionDocumento;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.RegularizacionDocumentosService;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.RegularizacionClienteWrapper;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -118,8 +120,17 @@ public class RegularizacionDocumentosRestController extends BaseRestController
                                                                         @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
         Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
         return this.regularizacionDocumentosService.listAllByParams(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated, usuario, estado,codigo,codigoOperacion,idNegociacion);
-
-
+    }
+    @GET
+    @Path("/findAllByParamsWithClient")
+    @ApiOperation(value = "PaginatedListWrapper<TbQoExcepcionOperativa>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = PaginatedListWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+            @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
+    public List<RegularizacionClienteWrapper> findAllByParamsWithClient(
+                                                                        @QueryParam("usuario") String usuario,
+                                                                        @QueryParam("cedula") String cedula) throws RelativeException {
+        return this.regularizacionDocumentosService.listAllByParamsClient(usuario, cedula);
     }
 
     @GET

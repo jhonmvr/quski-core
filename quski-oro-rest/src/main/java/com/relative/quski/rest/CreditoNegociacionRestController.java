@@ -29,6 +29,7 @@ import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.ResponseValidarDocumentoWrapper;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
+import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.model.TbQoNegociacion;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoValidacionDocumento;
@@ -447,7 +448,28 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;			
 	}
-	
+	@POST
+	@Path("/aprobacionDeFlujo")
+	@ApiOperation(value = "idNegociacion, correoAsesor, nombreAsesor, observacionAsesor", notes = "Metodo Get solicitarAprobacionRenovacion Retorna un  GenericWrapper TbQoProceso", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<TbQoProceso> aprobacionDeFlujo(
+			@QueryParam("idNegociacion") String idNegociacion,
+			@QueryParam("correoAsesor") String correoAsesor,
+			@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("observacionAsesor") String observacionAsesor,
+			@QueryParam("tipoProceso") ProcesoEnum tipoProceso,
+			TbQoExcepcionOperativa ex
+			) throws RelativeException {
+		GenericWrapper<TbQoProceso> loc = new GenericWrapper<>();
+		if(StringUtils.isBlank(idNegociacion)) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER EL ID NEGOCIACION");
+		}
+		TbQoProceso a = this.qos.aprobacionDeFlujo(Long.valueOf(idNegociacion),nombreAsesor,correoAsesor,observacionAsesor,tipoProceso,ex);
+		loc.setEntidad(a);
+		return loc;			
+	}
 	
 	
 	

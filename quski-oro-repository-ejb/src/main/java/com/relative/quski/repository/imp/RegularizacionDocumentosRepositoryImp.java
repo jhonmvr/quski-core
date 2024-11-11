@@ -5,12 +5,15 @@ import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.quski.model.TbQoRegularizacionDocumento;
-import com.relative.quski.model.TbQoRegularizacionDocumento;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
+import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.RegularizacionClienteWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -96,5 +99,42 @@ public class RegularizacionDocumentosRepositoryImp extends GeneralRepositoryImp<
 
             throw new RelativeException(Constantes.ERROR_CODE_READ, "listAllByParams " + e.getMessage());
         }
+    }
+    @SuppressWarnings("unchecked")
+	@Override
+    public List<RegularizacionClienteWrapper> listAllByParamsClient(String cedula) throws RelativeException {
+    	try {
+			String querySelect = "select o.id							as id, "
+					+ "	CAST(o.id_negociacion as int) 					as id_negociacion, "
+					+ "	o.codigo_operacion								as codigo_operacion, "
+					+ "	o.tipo_excepcion								as tipo_excepcion, "
+					+ "	coalesce(o.usuario_solicitante,'')				as usuario_solicitante, "
+					+ "	coalesce(o.usuario_aprobador,'') 				as usuario_aprobador, "
+					+ "	coalesce(cast(o.fecha_solicitud as varchar),'')	as fecha_solicitud, "
+					+ "	o.identificacion_cliente						as identificacion_cliente, "
+					+ "	coalesce(o.estado_regularizacion, '') 			as estado_regularizacion, "
+					+ "	c.nombre_completo								as nombre_completo, "
+					+ "	coalesce(r.numero_operacion,'') 				as numero_operacion "
+					+ "from tb_qo_regularizacion_documentos o "
+					+ "left join tb_qo_credito_negociacion r on r.id_negociacion = o.id_negociacion "
+					+ "left join tb_qo_cliente c on c.cedula_cliente  = o.identificacion_cliente "
+					+ "where o.estado_regularizacion = 'PENDIENTE' ";
+			StringBuilder strQry = new StringBuilder( querySelect );
+		
+			if(StringUtils.isNotBlank(cedula)) {
+				strQry.append(" and c.cedula_cliente iLIKE :cedula ");
+			}
+			
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			
+			if(StringUtils.isNotBlank(cedula)){
+				query.setParameter("cedula", "%"+cedula+"%");
+			}
+		
+			return QuskiOroUtil.getResultList(query.getResultList(), RegularizacionClienteWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
     }
 }

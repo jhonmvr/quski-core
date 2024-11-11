@@ -9,10 +9,12 @@ import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.TbQoExcepcionOperativa;
+import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.ExcepcionOperativaService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.AprobacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.ExcepcionOperativaClienteWrapper;
 import com.relative.quski.wrapper.ExcepcionServiciosFlujoVariableWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 
@@ -125,7 +127,17 @@ public class ExcepcionOperativaRestController extends BaseRestController
 
 
     }
-
+    @GET
+    @Path("/findAllByParamsWithClient")
+    @ApiOperation(value = "PaginatedListWrapper<TbQoExcepcionOperativa>", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = PaginatedListWrapper.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+            @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
+    public List<ExcepcionOperativaClienteWrapper> findAllByParamsWithClient(
+                                                                        @QueryParam("usuario") String usuario,
+                                                                        @QueryParam("cedula") String cedula) throws RelativeException {
+        return this.excepcionOperativaService.listAllByParamsClient(usuario, cedula);
+    }
     @POST
     @Path("/solicitarExcepcionServicios")
     @ApiOperation(value = "TbQoExcepcionOperativa", notes = "Metodo Get listAllEntities Retorna wrapper de informacion de paginacion y entidades encontradas en TbQoExcepcionOperativa", response = TbQoExcepcionOperativa.class)
@@ -169,7 +181,7 @@ public class ExcepcionOperativaRestController extends BaseRestController
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
             @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
-    public TbQoExcepcionOperativa solicitarExcepcionFabrica(@QueryParam("proceso") ProcesoEnum proceso, TbQoExcepcionOperativa ex) throws RelativeException {
+    public TbQoProceso solicitarExcepcionFabrica(@QueryParam("proceso") ProcesoEnum proceso, TbQoExcepcionOperativa ex) throws RelativeException {
         return  this.excepcionOperativaService.solicitarExcepcionFabrica(ex,proceso);
 
     }

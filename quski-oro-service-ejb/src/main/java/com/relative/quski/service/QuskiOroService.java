@@ -209,7 +209,8 @@ public class QuskiOroService {
 	private HistoricoObservacionEntregaRepository historicoObservacionEntregaRepository;
 	@Inject
 	private ExcepcionOperativaRepository excepcionOperativaRepository;
-	
+    @Inject
+    private ExcepcionOperativaService eos;
 	
 	@Inject
 	HistoricoObservacionRepository historicoObservacionRepository;
@@ -6633,7 +6634,7 @@ public class QuskiOroService {
 				//result.setCredito(credito); da error al parsear el json por que es muy grande
 				this.actualizarGarantiasSoftBank(credito.getTbQoTasacions(), wp.getCredito().getNumeroOperacionMadre(),wp.getCredito().getNumeroOperacionAnterior(), Boolean.FALSE, wp.getAsesor(), autorizacion);
 				result.setCuotasAmortizacion( this.consultarTablaAmortizacion( operacion.getNumeroOperacion(), operacion.getUriHabilitantes(),  op.getDatosRegistro(),autorizacion)  );
-				String sinExcepcion = "SIN EXCEPCION";
+				//String sinExcepcion = "SIN EXCEPCION";
 				//Jero: cambiar a nuevo flujo
 				//if(StringUtils.isNotBlank(wp.getCredito().getExcepcionOperativa()) && !wp.getCredito().getExcepcionOperativa().equalsIgnoreCase( sinExcepcion )) {
 				//	this.notificarExcepcionOperativa( wp.getCredito(), Boolean.TRUE ); 
@@ -8666,7 +8667,81 @@ public class QuskiOroService {
 		}
 		
 	}
+	public TbQoProceso aprobacionDeFlujo(Long idNegociacion,String nombreAsesor,String correoAsesor, String observacionAsesor, ProcesoEnum tipoProceso, TbQoExcepcionOperativa ex) throws RelativeException{
+		try {
+			
+			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, tipoProceso);
+			TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
 
+			if(
+				proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) != 0 &&
+				proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO) != 0 &&
+				proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA) != 0 &&
+				proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO) != 0 
+			){
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR EN ESTADO CREADO, DEVUELTO, EXCEPCIONADO O EXCEPCIONADO_OPERATIVA");
+			}
+			if(credito == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
+			}
+			TbQoDocumentoHabilitante doc = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(
+					tipoProceso.compareTo(ProcesoEnum.NUEVO) == 0 ? Long.valueOf("16") : Long.valueOf("10"), 
+					tipoProceso.compareTo(ProcesoEnum.NUEVO) == 0 ? ProcessEnum.NUEVO : ProcessEnum.NOVACION, 
+					String.valueOf(idNegociacion));
+			if(doc == null || StringUtils.isBlank(doc.getObjectId())) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS FIRMADOS");
+			}
+			TbQoDocumentoHabilitante docCliente = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(
+					Long.valueOf("2"),
+					ProcessEnum.CLIENTE, 
+					credito.getTbQoNegociacion().getTbQoCliente().getCedulaCliente());
+			if(docCliente == null || StringUtils.isBlank(docCliente.getObjectId())) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER DOCUMENTOS DEL CLIENTE");
+			}
+			TbQoDocumentoHabilitante docAutorizacion = this.documentoHabilitanteRepository.findByTipoDocumentoAndReferenciaAndProceso(
+					tipoProceso.compareTo(ProcesoEnum.NUEVO) == 0 ? Long.valueOf("18") : Long.valueOf("19"),
+					tipoProceso.compareTo(ProcesoEnum.NUEVO) == 0 ? ProcessEnum.NUEVO : ProcessEnum.AUTORIZACION, 
+					tipoProceso.compareTo(ProcesoEnum.NUEVO) == 0 ? String.valueOf(credito.getTbQoNegociacion().getId()) : credito.getNumeroOperacionMadre());
+			if(docAutorizacion == null || StringUtils.isBlank(docCliente.getObjectId()) ||  QuskiOroUtil.diasFecha(docAutorizacion.getFechaActualizacion(), new Date()) > 360) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER AUTORIZACION DE BURO o ESTA CADUCADO");
+			}
+			TbQoNegociacion nego = credito.getTbQoNegociacion();
+			nego.setCorreoAsesor(correoAsesor);
+			nego.setNombreAsesor( nombreAsesor );
+			nego.setObservacionAsesor(observacionAsesor);
+			nego.setAprobador(null);
+			this.manageNegociacion( nego );
+			
+			if(ex != null){
+				return this.eos.solicitarExcepcionFabrica(ex, tipoProceso);
+			}else {
+				TbQoTracking traking = new TbQoTracking();
+				traking.setActividad("ENVIADO A APROBAR");
+				traking.setCodigoBpm(credito.getCodigo());
+				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+				traking.setEstado(EstadoEnum.ACT);
+				traking.setFechaActualizacion(new Date());
+				traking.setFechaCreacion(new Date());
+				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+				traking.setNombreAsesor(nombreAsesor);
+				traking.setUsuarioCreacion(nego.getAsesor());
+				traking.setObservacion(observacionAsesor);
+				traking.setProceso(tipoProceso);
+				traking.setSeccion("ENVIADO A APROBAR");
+				this.registrarTraking(traking);
+				this.mailSolicitudAprobacion(credito, proceso);
+		        proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+		        proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+				return this.manageProceso(proceso);
+			}
+		}catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
+		}
+	}
 	public TbQoNegociacion solicitarAprobacionNuevo(Long idNegociacion, String correoAsesor, String nombreAsesor, String observacionAsesor) throws RelativeException {
 		try {
 			TbQoProceso proceso = this.procesoRepository.findByIdReferencia(idNegociacion, ProcesoEnum.NUEVO);
@@ -8741,8 +8816,11 @@ public class QuskiOroService {
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA)==0 ||
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.DEVUELTO)==0) {
 				
+				
+				
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+				
 				TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findCreditoByIdNegociacion(idNegociacion);
 				if(credito == null) {
 					throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCUENTRA NEGOCIACION ID:"+idNegociacion);
@@ -8806,6 +8884,7 @@ public class QuskiOroService {
 					proceso.getEstadoProceso().compareTo(EstadoProcesoEnum.EXCEPCIONADO_OPERATIVA)==0) {
 				proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
 				proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+				
 				manageProceso(proceso);
 			}else {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PARA SOLICITAR APROBACION DEBE ESTAR CREADO O DEVUELTO");
@@ -8818,6 +8897,7 @@ public class QuskiOroService {
 			throw new RelativeException(Constantes.ERROR_CODE_CREATE, e.getMessage());
 		}
 	}
+	
 	public Long caducarCreditos() throws RelativeException {
 		try {
 			return this.procesoRepository.caducarProcesos();

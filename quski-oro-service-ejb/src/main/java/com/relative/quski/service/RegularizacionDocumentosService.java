@@ -5,11 +5,10 @@ import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoExcepcionEnum;
-import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.model.TbQoRegularizacionDocumento;
-import com.relative.quski.repository.ExcepcionOperativaRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.RegularizacionClienteWrapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,6 +24,7 @@ public class RegularizacionDocumentosService {
     private RegularizacionDocumentosRepository regularizacionDocumentosRepository;
     @Inject
     private QuskiOroService qos;
+
 
     public PaginatedListWrapper<TbQoRegularizacionDocumento> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
         PaginatedListWrapper<TbQoRegularizacionDocumento> plw = new PaginatedListWrapper<>(new PaginatedWrapper(firstItem, pageSize, sortFields, sortDirections, isPaginated));
@@ -72,5 +72,8 @@ public class RegularizacionDocumentosService {
         regu.setUsuarioAprobador(regularizacion.getUsuarioAprobador());
         regu.setFechaRespuesta(new Timestamp(System.currentTimeMillis()));
         return this.regularizacionDocumentosRepository.update(regu);
+    }
+    public List<RegularizacionClienteWrapper> listAllByParamsClient( String usuario, String cedula) throws RelativeException {
+        return this.regularizacionDocumentosRepository.listAllByParamsClient(cedula);
     }
 }

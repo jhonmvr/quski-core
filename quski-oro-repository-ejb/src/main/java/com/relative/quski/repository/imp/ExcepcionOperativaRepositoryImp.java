@@ -7,10 +7,14 @@ import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.repository.ExcepcionOperativaRepository;
+import com.relative.quski.util.QuskiOroUtil;
+import com.relative.quski.wrapper.ExcepcionOperativaClienteWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -64,6 +68,35 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
 
             throw new RelativeException(Constantes.ERROR_CODE_READ, "listAllByParams " + e.getMessage());
         }
+    }
+    @SuppressWarnings("unchecked")
+	@Override
+    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient(String cedula, String nivelAprobacion) throws RelativeException {
+    	try {
+			String querySelect = "select o.id, CAST(o.id_negociacion as int) id_negociacion, o.codigo, o.codigo_operacion, o.tipo_excepcion, o.nivel_aprobacion, coalesce(o.monto_involucrado, 0) monto_involucrado, o.usuario_solicitante, coalesce(cast(o.fecha_solicitud as varchar),'') fecha_solicitud, coalesce(o.observacion_asesor,'') observacion_asesor, coalesce(o.observacion_aprobador,'') observacion_aprobador, coalesce(o.usuario_aprobador,'') usuario_aprobador, c.nombre_completo, c.cedula_cliente, coalesce(r.numero_operacion,'') numero_operacion from tb_qo_excepcion_operativa o left join tb_qo_negociacion n on o.id_negociacion = n.id left join tb_qo_credito_negociacion r on r.id_negociacion = n.id left join tb_qo_cliente c on c.id = n.id_cliente where estado_excepcion = 'PENDIENTE' ";
+			StringBuilder strQry = new StringBuilder( querySelect );
+		
+			if(StringUtils.isNotBlank(cedula)) {
+				strQry.append(" and c.cedula_cliente iLIKE :cedula ");
+			}
+			
+			if(StringUtils.isNotBlank(nivelAprobacion)) {
+				strQry.append(" and o.nivel_aprobacion =:nivelAprobacion ");
+			}
+			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+			
+			if(StringUtils.isNotBlank(cedula)){
+				query.setParameter("cedula", "%"+cedula+"%");
+			}
+			if(StringUtils.isNotBlank(nivelAprobacion)) {
+				query.setParameter("nivelAprobacion", Long.valueOf(nivelAprobacion));
+			}			
+
+			return QuskiOroUtil.getResultList(query.getResultList(), ExcepcionOperativaClienteWrapper.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
+		}
     }
 
 
