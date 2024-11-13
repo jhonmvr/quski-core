@@ -2,7 +2,7 @@
 */*.settings
 */*.classpath
 */target
-
+.idea
 /*.project
 /.settings
 .metadata/
