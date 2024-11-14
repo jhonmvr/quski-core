@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.relative.quski.wrapper.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,10 +16,7 @@ import com.google.gson.JsonSyntaxException;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.quski.util.QuskiOroConstantes;
-import com.relative.quski.wrapper.FileObjectStorage;
-import com.relative.quski.wrapper.RespuestaObjectWrapper;
-import com.relative.quski.wrapper.RestClientWrapper;
-import com.relative.quski.wrapper.TokenWrapper;
+
 public class LocalStorageClient {
 
 	private static final Log log = LogFactory.getLog(LocalStorageClient.class);
@@ -44,6 +42,61 @@ public class LocalStorageClient {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static RespuestaObjectWrapper updateObjectBigZ(String urlService, String databaseName, String collectionName, String objectId, NodoWrapper wrapper, String authorization)
+			throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(wrapper);
+
+			// Construir la URL del servicio con parámetros
+			String service = urlService.concat("mongoRestController/updateObjectBigZ?")
+					.concat("databaseName=").concat(databaseName)
+					.concat("&collectionName=").concat(collectionName)
+					.concat("&objectId=").concat(objectId);
+
+			// Preparar el contenido JSON con el objeto encriptado
+			byte[] content = new String("{ \r\n" +
+					"  \"objectEncripted\":\"" + Base64.getEncoder().encodeToString(jsonString.getBytes()) + "\"\r\n" +
+					"}").getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+
+			log.info("===> call updateObjectBigZ con servicio " + service);
+
+			// Realizar la llamada REST
+			Map<String, Object> response = com.relative.migracion.api.ReRestClient.callRestApi(
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					authorization,
+					new String(content),
+					RestClientWrapper.METHOD_POST,
+					null,
+					null,
+					null,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					Boolean.FALSE,
+					Boolean.FALSE,
+					service,
+					String.class
+			);
+
+			log.info("===> Respuesta de servicio " + response);
+
+			// Verificar el estado de la respuesta
+			Long status = Long.valueOf(String.valueOf(response.get(com.relative.migracion.api.ReRestClient.RETURN_STATUS)));
+
+			if (status >= 200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				return gsons.fromJson((String) response.get(com.relative.migracion.api.ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR AL LLAMAR SERVICIO DE ACTUALIZACIÓN: " +
+						String.valueOf(response.get(com.relative.migracion.api.ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR AL LLAMAR SERVICIO DE updateObjectBigZ:");
+		}
 	}
 
 	public static RespuestaObjectWrapper createObject(String urlService,String databaseName, String collectionName,FileObjectStorage wrapper,

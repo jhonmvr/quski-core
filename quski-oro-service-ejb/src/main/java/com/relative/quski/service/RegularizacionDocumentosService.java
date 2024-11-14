@@ -1,19 +1,35 @@
 package com.relative.quski.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.util.main.Constantes;
 import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
+import com.relative.quski.bpms.api.LocalStorageClient;
+import com.relative.quski.bpms.api.ReRestClient;
+import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoExcepcionEnum;
+import com.relative.quski.enums.EstadoOperacionEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
+import com.relative.quski.enums.ProcessEnum;
+import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.model.TbQoRegularizacionDocumento;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
+import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
+import com.relative.quski.wrapper.NodoWrapper;
 import com.relative.quski.wrapper.RegularizacionClienteWrapper;
+import com.relative.quski.wrapper.RespuestaObjectWrapper;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,6 +43,8 @@ public class RegularizacionDocumentosService {
     private QuskiOroService qos;
     @Inject
     private DocumentoHabilitanteRepository documentoHabilitanteRepository;
+    @Inject
+    private ParametroRepository parametroRepository;
 
 
     public PaginatedListWrapper<TbQoRegularizacionDocumento> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
@@ -80,11 +98,51 @@ public class RegularizacionDocumentosService {
         return this.regularizacionDocumentosRepository.listAllByParamsClient(cedula);
     }
 
-    private void actualizarDocumentosHabilitantestemporales(Long idRegularizacion) throws RelativeException{
+    private void actualizarDocumentosHabilitantestemporales(Long idRegularizacion, String autorizacion) throws RelativeException{
         try{
             DetalleCreditoEnProcesoWrapper detalle = traerCreditoNegociacionByRegularizacion(idRegularizacion);
-            detalle
-            this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso()
+            //documentos Regularizacion
+            List<TbQoDocumentoHabilitante> documentoCreditoR = this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Arrays.asList(ProcessEnum.NOVACION, ProcessEnum.NUEVO, ProcessEnum.FUNDA),
+                    detalle.getCredito().getTbQoNegociacion().getId().toString(),
+                    Collections.singletonList(EstadoOperacionEnum.REGULARIZACION_DOCUMENTOS)
+            );
+
+            List<TbQoDocumentoHabilitante> documentoClienteR =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Collections.singletonList(ProcessEnum.CLIENTE),
+                    detalle.getCredito().getTbQoNegociacion().getId().toString(),
+                    Collections.singletonList(EstadoOperacionEnum.REGULARIZACION_DOCUMENTOS)
+            );
+
+            List<TbQoDocumentoHabilitante> documentoAutorizacionR =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Collections.singletonList(ProcessEnum.AUTORIZACION),
+                    detalle.getCredito().getNumeroOperacion(),
+                    Collections.singletonList(EstadoOperacionEnum.REGULARIZACION_DOCUMENTOS)
+            );
+
+            //documentosCredito
+            List<TbQoDocumentoHabilitante> documentoCredito = this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Arrays.asList(ProcessEnum.NOVACION, ProcessEnum.NUEVO, ProcessEnum.FUNDA),
+                    detalle.getCredito().getTbQoNegociacion().getId().toString(),null
+            );
+
+            List<TbQoDocumentoHabilitante> documentoCliente =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Collections.singletonList(ProcessEnum.CLIENTE),
+                    detalle.getCredito().getTbQoNegociacion().getId().toString(),null
+            );
+
+            List<TbQoDocumentoHabilitante> documentoAutorizacion =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
+                    Collections.singletonList(ProcessEnum.AUTORIZACION),
+                    detalle.getCredito().getNumeroOperacion(),null
+            );
+            // Comparación y actualización de documentos de Credito
+            comparacionDocumento(autorizacion, documentoCreditoR, documentoCredito);
+            // Comparación y actualización de documentos de Cliente
+            comparacionDocumento(autorizacion, documentoClienteR, documentoCliente);
+
+            // Comparación y actualización de documentos de Autorización
+            comparacionDocumento(autorizacion, documentoAutorizacionR, documentoAutorizacion);
+
         }catch (RelativeException ex){
             throw ex;
         }catch (Exception e){
@@ -92,6 +150,36 @@ public class RegularizacionDocumentosService {
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,e.getMessage());
         }
 
+    }
+
+    private void comparacionDocumento(String autorizacion, List<TbQoDocumentoHabilitante> documentoR, List<TbQoDocumentoHabilitante> documentos) throws RelativeException {
+        if (documentos != null && !documentos.isEmpty() && documentoR != null && !documentoR.isEmpty()) {
+            for (TbQoDocumentoHabilitante documento : documentos) {
+                for (TbQoDocumentoHabilitante documentR : documentoR) {
+                    if (documento.getProceso().equals(documentR.getProceso()) && documento.getIdReferencia().equals(documentR.getIdReferencia())) {
+                        actualizarObject(documento, documentR, autorizacion);
+                    }
+                }
+            }
+        }
+    }
+
+    private void actualizarObject(TbQoDocumentoHabilitante habilitanteCredito, TbQoDocumentoHabilitante habilitanteRegularizacion,String autorizacion) throws  RelativeException{
+
+        RespuestaObjectWrapper repuesta = LocalStorageClient.findObjectById(
+                parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+                parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+                parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
+                habilitanteCredito.getObjectId(), autorizacion);
+        Gson gsons = new GsonBuilder().create();
+        NodoWrapper wrapper = gsons.fromJson((String) repuesta.getEntidad(), NodoWrapper.class);
+        wrapper.setReferenceObjectId(habilitanteCredito.getObjectId());
+
+        LocalStorageClient.updateObjectBigZ(
+                parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+                parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+                parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
+                habilitanteCredito.getObjectId(), wrapper, autorizacion);
     }
 
 }

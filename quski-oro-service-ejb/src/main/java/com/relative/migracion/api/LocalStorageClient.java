@@ -115,7 +115,61 @@ public class LocalStorageClient {
 			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO DE updateObject:");
 		} 
 	}
-	
+	public static RespuestaObjectWrapper updateObjectBigZ(String urlService, String databaseName, String collectionName, String objectId, NodoWrapper wrapper, String authorization)
+			throws RelativeException {
+		try {
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(wrapper);
+
+			// Construir la URL del servicio con parámetros
+			String service = urlService.concat("mongoRestController/updateObjectBigZ?")
+					.concat("databaseName=").concat(databaseName)
+					.concat("&collectionName=").concat(collectionName)
+					.concat("&objectId=").concat(objectId);
+
+			// Preparar el contenido JSON con el objeto encriptado
+			byte[] content = new String("{ \r\n" +
+					"  \"objectEncripted\":\"" + Base64.getEncoder().encodeToString(jsonString.getBytes()) + "\"\r\n" +
+					"}").getBytes(QuskiOroConstantes.BPMS_REST_DEFAULT_CHARSET);
+
+			log.info("===> call updateObjectBigZ con servicio " + service);
+
+			// Realizar la llamada REST
+			Map<String, Object> response = ReRestClient.callRestApi(
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					authorization,
+					new String(content),
+					RestClientWrapper.METHOD_POST,
+					null,
+					null,
+					null,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					Boolean.FALSE,
+					Boolean.FALSE,
+					service,
+					String.class
+			);
+
+			log.info("===> Respuesta de servicio " + response);
+
+			// Verificar el estado de la respuesta
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+
+			if (status >= 200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+				return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), RespuestaObjectWrapper.class);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR AL LLAMAR SERVICIO DE ACTUALIZACIÓN: " +
+						String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR AL LLAMAR SERVICIO DE updateObjectBigZ:");
+		}
+	}
+
 	public static RespuestaObjectWrapper createObjectBig(String urlService,String databaseName, String collectionName,NodoWrapper wrapper,
 			String authorization)
 			throws RelativeException {
