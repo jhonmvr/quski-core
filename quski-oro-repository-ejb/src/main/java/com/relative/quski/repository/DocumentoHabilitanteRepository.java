@@ -7,6 +7,7 @@ import javax.ejb.Local;
 
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.CrudRepository;
+import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.wrapper.WrapperMetadatosHabilitante;
@@ -20,6 +21,10 @@ public interface DocumentoHabilitanteRepository extends CrudRepository<Long, TbQ
 
 	public TbQoDocumentoHabilitante findByTipoDocumentoAndReferenciaAndProceso(Long idTipoDocumento,
 			ProcessEnum proceso, String referencia);
+	public List<TbQoDocumentoHabilitante> findByProcesoAndReferenciaAndEstadoProceso(List<ProcessEnum> proceso, String referencia, List<EstadoOperacionEnum> estadoOperacion);
+
+	List<TbQoDocumentoHabilitante> findByEstadoProceso(List<EstadoOperacionEnum> estadoOperacion);
+
 	public TbQoDocumentoHabilitante findByIdCreditoNegociacion(Long idCreditoNegociacion);
 
 	public List<WrapperMetadatosHabilitanteOperaciones> listAllMetadataDocumentNuevosNovaciones() throws RelativeException;

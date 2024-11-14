@@ -20,10 +20,12 @@ import com.relative.quski.model.TbQoTipoDocumento;
 public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecification<TbQoDocumentoHabilitante> {
 	
 	
- private Long idTipoDocumento;
- private String idReferencia;	
- private ProcessEnum proceso;
- private EstadoOperacionEnum estadoOperacion;
+	private Long idTipoDocumento;
+	private String idReferencia;
+	private ProcessEnum proceso;
+	private List<ProcessEnum> procesoEnumList;
+ 	private EstadoOperacionEnum estadoOperacion;
+ 	private List<EstadoOperacionEnum> estadoOperacionEnumList;
  
 
 	public DocumentoByTipoDocumentoAndProRefEstOpSpec(Long idTipoDocumento, String idReferencia, ProcessEnum proceso,
@@ -36,8 +38,19 @@ public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecifi
 	}
 
 	public DocumentoByTipoDocumentoAndProRefEstOpSpec() {}
-	 
-		@Override
+
+	public DocumentoByTipoDocumentoAndProRefEstOpSpec(List<EstadoOperacionEnum> estadoOperacionEnumList) {
+		this.estadoOperacionEnumList = estadoOperacionEnumList;
+	}
+
+	public DocumentoByTipoDocumentoAndProRefEstOpSpec(List<ProcessEnum> procesoEnumList, String idReferencia, List<EstadoOperacionEnum> estadoOperacionEnumList) {
+		this.procesoEnumList = procesoEnumList;
+		this.idReferencia = idReferencia;
+		this.estadoOperacionEnumList = estadoOperacionEnumList;
+
+	}
+
+	@Override
 		public boolean isSatisfiedBy(TbQoDocumentoHabilitante arg0) {
 			return false;
 		}
@@ -56,6 +69,12 @@ public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecifi
 			}
 			if(this.estadoOperacion != null) {
 				where.add(cb.equal(poll.<EstadoOperacionEnum>get("estadoOperacion"), estadoOperacion));
+			}
+			if (estadoOperacionEnumList != null && !estadoOperacionEnumList.isEmpty()) {
+				where.add(poll.<EstadoOperacionEnum>get("estadoOperacion").in(estadoOperacionEnumList));
+			}
+			if (estadoOperacionEnumList != null && !estadoOperacionEnumList.isEmpty()) {
+				where.add(poll.<ProcessEnum>get("proceso").in(estadoOperacionEnumList));
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}

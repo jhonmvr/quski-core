@@ -6,6 +6,7 @@ import com.relative.core.util.main.PaginatedListWrapper;
 import com.relative.core.util.main.PaginatedWrapper;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.model.TbQoRegularizacionDocumento;
+import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.RegularizacionClienteWrapper;
@@ -24,6 +25,8 @@ public class RegularizacionDocumentosService {
     private RegularizacionDocumentosRepository regularizacionDocumentosRepository;
     @Inject
     private QuskiOroService qos;
+    @Inject
+    private DocumentoHabilitanteRepository documentoHabilitanteRepository;
 
 
     public PaginatedListWrapper<TbQoRegularizacionDocumento> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
@@ -76,4 +79,19 @@ public class RegularizacionDocumentosService {
     public List<RegularizacionClienteWrapper> listAllByParamsClient( String usuario, String cedula) throws RelativeException {
         return this.regularizacionDocumentosRepository.listAllByParamsClient(cedula);
     }
+
+    private void actualizarDocumentosHabilitantestemporales(Long idRegularizacion) throws RelativeException{
+        try{
+            DetalleCreditoEnProcesoWrapper detalle = traerCreditoNegociacionByRegularizacion(idRegularizacion);
+            detalle
+            this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso()
+        }catch (RelativeException ex){
+            throw ex;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,e.getMessage());
+        }
+
+    }
+
 }

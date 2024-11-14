@@ -1,6 +1,7 @@
 package com.relative.quski.repository.imp;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,6 +10,7 @@ import javax.persistence.Query;
 import com.relative.core.exception.RelativeException;
 import com.relative.core.persistence.GeneralRepositoryImp;
 import com.relative.core.util.main.Constantes;
+import com.relative.quski.enums.EstadoOperacionEnum;
 import com.relative.quski.enums.ProcessEnum;
 import com.relative.quski.model.TbQoDocumentoHabilitante;
 import com.relative.quski.repository.DocumentoHabilitanteRepository;
@@ -51,6 +53,27 @@ public class DocumentoHabilitanteRepositoryImp extends GeneralRepositoryImp<Long
 		}
 	}
 
+	@Override
+	public List<TbQoDocumentoHabilitante> findByProcesoAndReferenciaAndEstadoProceso(List<ProcessEnum> proceso, String referencia, List<EstadoOperacionEnum> estadoOperacion) {
+		List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(
+				(new DocumentoByTipoDocumentoAndProRefEstOpSpec(proceso, referencia, estadoOperacion)));
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List<TbQoDocumentoHabilitante> findByEstadoProceso(List<EstadoOperacionEnum> estadoOperacion) {
+		List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(
+				(new DocumentoByTipoDocumentoAndProRefEstOpSpec( estadoOperacion)));
+		if (tmp != null && !tmp.isEmpty()) {
+			return tmp;
+		} else {
+			return null;
+		}
+	}
 	@Override
 	public TbQoDocumentoHabilitante findByIdCreditoNegociacion(Long idCreditoNegociacion) {
 		// List<TbQoDocumentoHabilitante> tmp = this.findAllBySpecification(new DocumentoById(idCreditoNegociacion));

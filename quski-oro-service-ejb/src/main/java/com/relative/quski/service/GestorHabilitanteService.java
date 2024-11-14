@@ -146,6 +146,7 @@ public class GestorHabilitanteService {
 					tdsw.add( td) ;
 				});
 			}
+			tdsw.removeIf(td -> td.getRoles() == null || td.getRoles().isEmpty());
 			return tdsw;
 		}
 		return Collections.emptyList();
