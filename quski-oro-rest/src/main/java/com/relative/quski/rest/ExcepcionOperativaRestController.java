@@ -8,13 +8,16 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.ProcesoEnum;
+import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcionOperativa;
 import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.service.ExcepcionOperativaService;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.ClienteYReferidoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.ExcepcionOperativaClienteWrapper;
+import com.relative.quski.wrapper.ExcepcionOperativaNegociacionWrapper;
 import com.relative.quski.wrapper.ExcepcionServiciosFlujoVariableWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
 
@@ -144,8 +147,15 @@ public class ExcepcionOperativaRestController extends BaseRestController
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
             @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
-    public TbQoExcepcionOperativa solicitarExcepcionServicios(@QueryParam("proceso") ProcesoEnum proceso, TbQoExcepcionOperativa ex) throws RelativeException {
-        return  this.excepcionOperativaService.solicitarExcepcionServicios(ex,proceso,ex.getUsuarioSolicitante());
+    public TbQoExcepcionOperativa solicitarExcepcionServicios(
+    		@QueryParam("autorizacion") String autorizacion,
+    		@QueryParam("asesor") String asesor,
+			@QueryParam("nombreAsesor") String nombreAsesor, 
+			@QueryParam("correoAsesor") String correoAsesor,
+			ExcepcionOperativaNegociacionWrapper wp ) throws RelativeException {
+    	
+		this.qos.guardarOpcionCredito(wp.getOpcionCredito(), asesor, wp.getOpcionCredito().getIdCreditoNegociacion() , autorizacion,nombreAsesor, correoAsesor);
+        return  this.excepcionOperativaService.solicitarExcepcionServicios(wp.getEx(),ProcesoEnum.NUEVO,wp.getEx().getUsuarioSolicitante());
 
     }
     @POST

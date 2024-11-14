@@ -73,7 +73,7 @@ public class RegularizacionDocumentosService {
         if(regu == null){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION");
         }
-        if(!regu.getEstadoRegularizacion().equals(EstadoExcepcionEnum.PENDIENTE)){
+        if(!regu.getEstadoRegularizacion().equals(EstadoExcepcionEnum.PENDIENTE.toString())){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION PENDIENTE");
         }
         //regu.setUsuarioAprobador(regularizacion.getUsuarioAprobador());
@@ -86,7 +86,7 @@ public class RegularizacionDocumentosService {
         if(regu == null){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION");
         }
-        if(!regu.getEstadoRegularizacion().equals(EstadoExcepcionEnum.PENDIENTE)){
+        if(!regu.getEstadoRegularizacion().equals(EstadoExcepcionEnum.PENDIENTE.toString())){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION PENDIENTE");
         }
         regu.setEstadoRegularizacion(regularizacion.getEstadoRegularizacion());
