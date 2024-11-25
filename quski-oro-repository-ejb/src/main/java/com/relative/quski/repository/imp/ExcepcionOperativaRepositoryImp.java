@@ -25,7 +25,7 @@ import java.util.List;
 @Stateless(mappedName = "excepcionOperativaRepository")
 public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, TbQoExcepcionOperativa> implements ExcepcionOperativaRepository {
     @Override
-    public List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException {
+    public List<TbQoExcepcionOperativa> listAllByParams(PaginatedListWrapper<TbQoExcepcionOperativa> plw, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, List<Long> nivelAprobacion) throws RelativeException {
         try {
 
             EntityManager em = getEntityManager();
@@ -50,8 +50,8 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             if (StringUtils.isNotBlank(idNegociacion)) {
                 predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), Long.parseLong(idNegociacion)));
             }
-            if (StringUtils.isNotBlank(nivelAprobacion)) {
-                predicates.add(cb.equal(excepcion.get("nivelAprobacion"), Long.parseLong(nivelAprobacion)));
+            if (nivelAprobacion != null && !nivelAprobacion.isEmpty()) {
+                predicates.add(excepcion.get("nivelAprobacion").in(nivelAprobacion));
             }
 
             cq.where(predicates.toArray(new Predicate[0]));
@@ -71,37 +71,59 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
     }
     @SuppressWarnings("unchecked")
 	@Override
-    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient(String cedula, String nivelAprobacion) throws RelativeException {
-    	try {
-			String querySelect = "select o.id, CAST(o.id_negociacion as int) id_negociacion, o.codigo, o.codigo_operacion, o.tipo_excepcion, o.nivel_aprobacion, coalesce(o.monto_involucrado, 0) monto_involucrado, o.usuario_solicitante, coalesce(cast(o.fecha_solicitud as varchar),'') fecha_solicitud, coalesce(o.observacion_asesor,'') observacion_asesor, coalesce(o.observacion_aprobador,'') observacion_aprobador, coalesce(o.usuario_aprobador,'') usuario_aprobador, c.nombre_completo, c.cedula_cliente, coalesce(r.numero_operacion,'') numero_operacion from tb_qo_excepcion_operativa o left join tb_qo_negociacion n on o.id_negociacion = n.id left join tb_qo_credito_negociacion r on r.id_negociacion = n.id left join tb_qo_cliente c on c.id = n.id_cliente where estado_excepcion = 'PENDIENTE' ";
-			StringBuilder strQry = new StringBuilder( querySelect );
-		
-			if(StringUtils.isNotBlank(cedula)) {
-				strQry.append(" and c.cedula_cliente iLIKE :cedula ");
-			}
-			
-			if(StringUtils.isNotBlank(nivelAprobacion)) {
-				strQry.append(" and o.nivel_aprobacion =:nivelAprobacion ");
-			}
-			Query query = this.getEntityManager().createNativeQuery(strQry.toString());
-			
-			if(StringUtils.isNotBlank(cedula)){
-				query.setParameter("cedula", "%"+cedula+"%");
-			}
-			if(StringUtils.isNotBlank(nivelAprobacion)) {
-				query.setParameter("nivelAprobacion", Long.valueOf(nivelAprobacion));
-			}			
+    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient(String cedula, List<Long> nivelAprobacion) throws RelativeException {
+        try {
+            // Consulta base
+            String querySelect = "SELECT o.id, "
+                    + "CAST(o.id_negociacion AS int) AS id_negociacion, "
+                    + "o.codigo, o.codigo_operacion, o.tipo_excepcion, o.nivel_aprobacion, "
+                    + "COALESCE(o.monto_involucrado, 0) AS monto_involucrado, "
+                    + "o.usuario_solicitante, "
+                    + "COALESCE(CAST(o.fecha_solicitud AS varchar), '') AS fecha_solicitud, "
+                    + "COALESCE(o.observacion_asesor, '') AS observacion_asesor, "
+                    + "COALESCE(o.observacion_aprobador, '') AS observacion_aprobador, "
+                    + "COALESCE(o.usuario_aprobador, '') AS usuario_aprobador, "
+                    + "c.nombre_completo, c.cedula_cliente, "
+                    + "COALESCE(r.numero_operacion, '') AS numero_operacion "
+                    + "FROM tb_qo_excepcion_operativa o "
+                    + "LEFT JOIN tb_qo_negociacion n ON o.id_negociacion = n.id "
+                    + "LEFT JOIN tb_qo_credito_negociacion r ON r.id_negociacion = n.id "
+                    + "LEFT JOIN tb_qo_cliente c ON c.id = n.id_cliente "
+                    + "WHERE estado_excepcion = 'PENDIENTE'";
 
-			return QuskiOroUtil.getResultList(query.getResultList(), ExcepcionOperativaClienteWrapper.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_READ, e.getMessage());
-		}
+            // Construcción dinámica del query
+            StringBuilder strQry = new StringBuilder(querySelect);
+
+            if (StringUtils.isNotBlank(cedula)) {
+                strQry.append(" AND c.cedula_cliente ILIKE :cedula");
+            }
+
+            if (nivelAprobacion != null && !nivelAprobacion.isEmpty()) {
+                strQry.append(" AND o.nivel_aprobacion IN (:nivelAprobacion)");
+            }
+
+            // Crear y configurar query
+            Query query = this.getEntityManager().createNativeQuery(strQry.toString());
+
+            if (StringUtils.isNotBlank(cedula)) {
+                query.setParameter("cedula", "%" + cedula + "%");
+            }
+
+            if (nivelAprobacion != null && !nivelAprobacion.isEmpty()) {
+                query.setParameter("nivelAprobacion", nivelAprobacion);
+            }
+
+
+            return QuskiOroUtil.getResultList(query.getResultList(), ExcepcionOperativaClienteWrapper.class);
+        } catch (Exception e) {
+
+            throw new RelativeException(Constantes.ERROR_CODE_READ, "Error al listar excepciones operativas por parámetros: " + e.getMessage());
+        }
     }
 
 
     @Override
-    public Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String nivelAprobacion) throws RelativeException {
+    public Integer countListAllByParams(String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, List<Long> nivelAprobacion) throws RelativeException {
         try {
             EntityManager em = getEntityManager();
             CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -125,8 +147,8 @@ public class ExcepcionOperativaRepositoryImp extends GeneralRepositoryImp<Long, 
             if (StringUtils.isNotBlank(idNegociacion)) {
                 predicates.add(cb.equal(excepcion.get("idNegociacion").get("id"), Long.parseLong(idNegociacion)));
             }
-            if (StringUtils.isNotBlank(nivelAprobacion)) {
-                predicates.add(cb.equal(excepcion.get("nivelAprobacion"), Long.parseLong(nivelAprobacion)));
+            if (nivelAprobacion != null && !nivelAprobacion.isEmpty()) {
+                predicates.add(excepcion.get("nivelAprobacion").in(nivelAprobacion));
             }
 
             cq.select(cb.count(excepcion)).where(predicates.toArray(new Predicate[0]));

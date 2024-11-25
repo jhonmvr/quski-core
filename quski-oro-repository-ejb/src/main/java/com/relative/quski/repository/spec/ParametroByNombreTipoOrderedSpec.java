@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 
 import com.relative.core.persistence.AbstractSpecification;
 import com.relative.quski.model.TbMiParametro;
+import org.apache.commons.lang3.StringUtils;
 
 public class ParametroByNombreTipoOrderedSpec extends AbstractSpecification<TbMiParametro> {
 	private String nombre;
@@ -32,10 +33,10 @@ public class ParametroByNombreTipoOrderedSpec extends AbstractSpecification<TbMi
 	@Override
 	public Predicate toPredicate(Root<TbMiParametro> poll, CriteriaBuilder cb) {
 		List<Predicate> patientLevelPredicates = new ArrayList<Predicate>();
-		if (this.nombre != null && !this.nombre.isEmpty()) {
+		if (StringUtils.isNotBlank(this.nombre)) {
 			patientLevelPredicates.add(cb.like(poll.<String>get("nombre"), "%" + this.nombre + "%"));
 		}
-		if (this.tipo != null && !this.tipo.isEmpty()) {
+		if (StringUtils.isNotBlank(this.tipo)) {
 			patientLevelPredicates.add(cb.like(poll.<String>get("tipo"), "%" + this.tipo + "%"));
 		}
 		return cb.and(patientLevelPredicates.toArray(new Predicate[] {}));

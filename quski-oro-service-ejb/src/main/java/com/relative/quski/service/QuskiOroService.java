@@ -8711,29 +8711,30 @@ public class QuskiOroService {
 			nego.setObservacionAsesor(observacionAsesor);
 			nego.setAprobador(null);
 			this.manageNegociacion( nego );
-			
+			//validacion para no poder pedir mas excepciones si tienes excepciones pendientes de aprobar
+			//validacion para ver si no existen mas excepciones de documentos pendientes
 			if(ex != null){
 				return this.eos.solicitarExcepcionFabrica(ex, tipoProceso);
-			}else {
-				TbQoTracking traking = new TbQoTracking();
-				traking.setActividad("ENVIADO A APROBAR");
-				traking.setCodigoBpm(credito.getCodigo());
-				traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
-				traking.setEstado(EstadoEnum.ACT);
-				traking.setFechaActualizacion(new Date());
-				traking.setFechaCreacion(new Date());
-				traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
-				traking.setNombreAsesor(nombreAsesor);
-				traking.setUsuarioCreacion(nego.getAsesor());
-				traking.setObservacion(observacionAsesor);
-				traking.setProceso(tipoProceso);
-				traking.setSeccion("ENVIADO A APROBAR");
-				this.registrarTraking(traking);
-				this.mailSolicitudAprobacion(credito, proceso);
-		        proceso.setUsuario( QuskiOroConstantes.EN_COLA);
-		        proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
-				return this.manageProceso(proceso);
 			}
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("ENVIADO A APROBAR");
+			traking.setCodigoBpm(credito.getCodigo());
+			traking.setCodigoOperacionSoftbank(credito.getNumeroOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(nombreAsesor);
+			traking.setUsuarioCreacion(nego.getAsesor());
+			traking.setObservacion(observacionAsesor);
+			traking.setProceso(tipoProceso);
+			traking.setSeccion("ENVIADO A APROBAR");
+			this.registrarTraking(traking);
+			this.mailSolicitudAprobacion(credito, proceso);
+			proceso.setUsuario( QuskiOroConstantes.EN_COLA);
+			proceso.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_APROBACION);
+			return this.manageProceso(proceso);
+
 		}catch (RelativeException e) {
 			e.printStackTrace();
 			throw e;

@@ -57,7 +57,7 @@ public class ParametroRepositoryImp extends GeneralRepositoryImp<Long, TbMiParam
 		try {
 			List<TbMiParametro> p = this.findAllBySpecification(new ParametroByNombreTipoOrderedSpec(nombre, tipo));
 			if (p != null && !p.isEmpty()) {
-				if (ordered) {
+				if (ordered != null && ordered) {
 					p.sort((p1, p2) -> p1.getOrden().compareTo(p2.getOrden()));
 				}
 				return p;

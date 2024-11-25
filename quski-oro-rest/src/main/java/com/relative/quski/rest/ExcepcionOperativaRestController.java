@@ -124,9 +124,10 @@ public class ExcepcionOperativaRestController extends BaseRestController
                                                                         @QueryParam("estado") String estado,
                                                                         @QueryParam("codigo") String codigo,
                                                                         @QueryParam("codigoOperacion") String codigoOperacion,
-                                                                        @QueryParam("idNegociacion") String idNegociacion) throws RelativeException {
+                                                                        @QueryParam("idNegociacion") String idNegociacion,
+                                                                        @QueryParam("rol") String rol) throws RelativeException {
         Integer firstItem = Integer.valueOf(page) * Integer.valueOf(pageSize);
-        return this.excepcionOperativaService.listAllByParams(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated, usuario, estado,codigo,codigoOperacion,idNegociacion);
+        return this.excepcionOperativaService.listAllByParams(firstItem, Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated, usuario, estado,codigo,codigoOperacion,idNegociacion, rol);
 
 
     }

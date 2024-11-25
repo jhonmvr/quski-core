@@ -8,11 +8,7 @@ import com.relative.quski.enums.EstadoEnum;
 import com.relative.quski.enums.EstadoExcepcionEnum;
 import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
-import com.relative.quski.model.TbQoCreditoNegociacion;
-import com.relative.quski.model.TbQoExcepcionOperativa;
-import com.relative.quski.model.TbQoProceso;
-import com.relative.quski.model.TbQoRegularizacionDocumento;
-import com.relative.quski.model.TbQoTracking;
+import com.relative.quski.model.*;
 import com.relative.quski.repository.ExcepcionOperativaRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
@@ -29,7 +25,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-
+import java.util.stream.Collectors;
 
 
 @Stateless
@@ -48,27 +44,63 @@ public class ExcepcionOperativaService {
 	@Inject
 	private ParametroRepository parametroRepository;
 	
-    public PaginatedListWrapper<TbQoExcepcionOperativa> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion) throws RelativeException {
+    public PaginatedListWrapper<TbQoExcepcionOperativa> listAllByParams(Integer firstItem, Integer pageSize, String sortFields, String sortDirections, String isPaginated, String usuario, String estado, String codigo, String codigoOperacion, String idNegociacion, String rol) throws RelativeException {
         PaginatedListWrapper<TbQoExcepcionOperativa> plw = new PaginatedListWrapper<>(new PaginatedWrapper(firstItem, pageSize, sortFields, sortDirections, isPaginated));
         plw.setIsPaginated(isPaginated);
-        String rol = this.parametroRepository.findByNombreAndTipo(usuario, QuskiOroConstantes.TIPO_ROL).getValor();
-        if(rol == null) {
-        	return null;
+        List<TbMiParametro> parametroNivel = this.parametroRepository.findByNombreAndTipoOrdered(rol, QuskiOroConstantes.TIPO_ROL, null);
+        if (parametroNivel == null || parametroNivel.isEmpty()) {
+            throw new RelativeException(
+                    Constantes.ERROR_CODE_CUSTOM,
+                    "No se puede encontrar un nivel de aprobación para el rol: " + rol
+            );
         }
-        List<TbQoExcepcionOperativa> actions = this.excepcionOperativaRepository.listAllByParams(plw, usuario, estado,codigo,codigoOperacion,idNegociacion, rol);
+        List<Long> nivelesAprobacion = parametroNivel.stream()
+                .map(parametro -> {
+                    try {
+                        return Long.parseLong(parametro.getValor());
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException(
+                                "El valor del parámetro no es convertible a Long: " + parametro.getValor(), e);
+                    }
+                })
+                .collect(Collectors.toList());
+        List<TbQoExcepcionOperativa> actions = this.excepcionOperativaRepository.listAllByParams(plw, usuario, estado,codigo,codigoOperacion,idNegociacion, nivelesAprobacion);
         if (actions != null && !actions.isEmpty()) {
-            plw.setTotalResults(this.excepcionOperativaRepository.countListAllByParams(usuario, estado,codigo,codigoOperacion,idNegociacion, rol));
+            plw.setTotalResults(this.excepcionOperativaRepository.countListAllByParams(usuario, estado,codigo,codigoOperacion,idNegociacion, nivelesAprobacion));
             plw.setList(actions);
         }
         return plw;
     }
-    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient( String usuario, String cedula) throws RelativeException {
-        String rol = this.parametroRepository.findByNombreAndTipo(usuario, QuskiOroConstantes.TIPO_ROL).getValor();
-        if(rol == null) {
-        	return null;
+    public List<ExcepcionOperativaClienteWrapper> listAllByParamsClient(String rol, String cedula) throws RelativeException {
+        try {
+            List<TbMiParametro> parametroNivel = this.parametroRepository.findByNombreAndTipoOrdered(rol, QuskiOroConstantes.TIPO_ROL, null);
+            if (parametroNivel == null || parametroNivel.isEmpty()) {
+                throw new RelativeException(
+                        Constantes.ERROR_CODE_CUSTOM,
+                        "No se puede encontrar un nivel de aprobación para el rol: " + rol
+                );
+            }
+            List<Long> nivelesAprobacion = parametroNivel.stream()
+                    .map(parametro -> {
+                        try {
+                            return Long.parseLong(parametro.getValor());
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException(
+                                    "El valor del parámetro no es convertible a Long: " + parametro.getValor(), e);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            return this.excepcionOperativaRepository.listAllByParamsClient(cedula, nivelesAprobacion);
+        } catch (RelativeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RelativeException(
+                    Constantes.ERROR_CODE_CUSTOM,
+                    "Error al listar excepciones operativas por parámetros: " + e.getMessage()
+            );
         }
-        return this.excepcionOperativaRepository.listAllByParamsClient(cedula, rol);
     }
+
 
     public TbQoExcepcionOperativa solicitarExcepcionServicios(TbQoExcepcionOperativa ex, ProcesoEnum pro, String asesor) throws RelativeException {
         TbQoProceso proceso =  this.qos.findProcesoByIdReferencia(ex.getIdNegociacion().getId(),pro);
