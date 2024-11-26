@@ -3,6 +3,10 @@ package com.relative.quski.service;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -211,6 +215,8 @@ public class QuskiOroService {
 	private ExcepcionOperativaRepository excepcionOperativaRepository;
     @Inject
     private ExcepcionOperativaService eos;
+	@Inject
+	private RegularizacionDocumentosRepository regularizacionDocumentosRepository;
 	
 	@Inject
 	HistoricoObservacionRepository historicoObservacionRepository;
@@ -8667,6 +8673,58 @@ public class QuskiOroService {
 		}
 		
 	}
+	/*
+	Valida si existe una excepcion aprobada previamente para no volver a generar una excepcion operativa por documentos
+	valida que se cumpla la regla de negocio de no superar el numero limite de excepciones por documentos
+	 */
+	private boolean validarExcepcionOperativa(Long idNegociacion, TbQoExcepcionOperativa ex) throws RelativeException{
+		List<TbQoExcepcionOperativa> excepciones = this.excepcionOperativaRepository.findByNegociacion(idNegociacion);
+		List<TbQoRegularizacionDocumento> documentos = this.regularizacionDocumentosRepository.listAllByParams(null,
+				ex.getUsuarioSolicitante(),EstadoExcepcionEnum.PENDIENTE.toString(),null,null, null);
+		// Validación: No más de un NIP pendiente de más de 2 días laborables
+		if (documentos != null && !documentos.isEmpty()) {
+			long nipPendienteMasDe2Dias = documentos.stream()
+					.filter(doc -> doc.getFechaSolicitud() != null &&
+							"PENDIENTE".equals(doc.getEstadoRegularizacion()) &&
+							this.esMayorADosDiasLaborables(doc.getFechaSolicitud()))
+					.count();
+
+			if (nipPendienteMasDe2Dias > 1) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+						"NO SE PUEDE TENER MÁS DE UN NIP PENDIENTE DE MÁS DE 2 DÍAS LABORABLES");
+			}
+		}
+
+		if(excepciones == null || excepciones.isEmpty()){
+			return true;
+		}
+		return excepciones.stream()
+				.anyMatch(excepcion -> excepcion.getNivelAprobacion() == 1 &&
+						"APROBADO".equals(excepcion.getEstadoExcepcion()));
+
+	}
+	// Método auxiliar para calcular si una fecha es mayor a 2 días laborables
+	private boolean esMayorADosDiasLaborables(Timestamp fechaSolicitud) {
+		LocalDateTime fechaSolicitudLocal = fechaSolicitud.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime fechaActual = LocalDateTime.now();
+		long diasLaborables = calcularDiasLaborables(fechaSolicitudLocal, fechaActual);
+		return diasLaborables > 2;
+	}
+
+	private long calcularDiasLaborables(LocalDateTime inicio, LocalDateTime fin) {
+		long diasTotales = ChronoUnit.DAYS.between(inicio, fin);
+		long diasLaborables = 0;
+
+		for (int i = 0; i <= diasTotales; i++) {
+			LocalDateTime dia = inicio.plusDays(i);
+			DayOfWeek diaSemana = dia.getDayOfWeek();
+			if (diaSemana != DayOfWeek.SATURDAY && diaSemana != DayOfWeek.SUNDAY) {
+				diasLaborables++;
+			}
+		}
+		return diasLaborables;
+	}
+
 	public TbQoProceso aprobacionDeFlujo(Long idNegociacion,String nombreAsesor,String correoAsesor, String observacionAsesor, ProcesoEnum tipoProceso, TbQoExcepcionOperativa ex) throws RelativeException{
 		try {
 			
@@ -8713,7 +8771,7 @@ public class QuskiOroService {
 			this.manageNegociacion( nego );
 			//validacion para no poder pedir mas excepciones si tienes excepciones pendientes de aprobar
 			//validacion para ver si no existen mas excepciones de documentos pendientes
-			if(ex != null){
+			if(ex != null && !validarExcepcionOperativa(idNegociacion, ex)){
 				return this.eos.solicitarExcepcionFabrica(ex, tipoProceso);
 			}
 			TbQoTracking traking = new TbQoTracking();

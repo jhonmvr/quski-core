@@ -52,7 +52,7 @@ public class RegularizacionDocumentosRepositoryImp extends GeneralRepositoryImp<
 
             cq.where(predicates.toArray(new Predicate[0]));
 
-            if (plw.getIsPaginated() !=null && plw.getIsPaginated().equals(PaginatedListWrapper.YES)) {
+            if (plw != null && plw.getIsPaginated() !=null && plw.getIsPaginated().equals(PaginatedListWrapper.YES)) {
                 return em.createQuery(cq)
                         .setFirstResult(plw.getCurrentPage())
                         .setMaxResults(plw.getPageSize())
