@@ -19,19 +19,19 @@ import com.relative.quski.repository.DocumentoHabilitanteRepository;
 import com.relative.quski.repository.ParametroRepository;
 import com.relative.quski.repository.RegularizacionDocumentosRepository;
 import com.relative.quski.util.QuskiOroConstantes;
+import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.NodoWrapper;
 import com.relative.quski.wrapper.RegularizacionClienteWrapper;
 import com.relative.quski.wrapper.RespuestaObjectWrapper;
+import com.relative.quski.wrapper.mongo.DocumentoMongo;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Stateless
 public class RegularizacionDocumentosService {
@@ -81,17 +81,20 @@ public class RegularizacionDocumentosService {
         return this.regularizacionDocumentosRepository.update(regu);
     }
 
-    public TbQoRegularizacionDocumento enviarRespuesta(TbQoRegularizacionDocumento regularizacion) throws RelativeException {
+    public TbQoRegularizacionDocumento enviarRespuesta(TbQoRegularizacionDocumento regularizacion, String autorizacion) throws RelativeException {
         TbQoRegularizacionDocumento regu = this.regularizacionDocumentosRepository.findById(regularizacion.getId());
         if(regu == null){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION");
         }
-        if(!regu.getEstadoRegularizacion().equals(EstadoExcepcionEnum.PENDIENTE.toString())){
+        if(!regu.getEstadoRegularizacion().equals(EstadoOperacionEnum.PENDIENTE_APROBACION.toString())){
             throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE ENCONTRAR REGULARIZQACION PENDIENTE");
         }
         regu.setEstadoRegularizacion(regularizacion.getEstadoRegularizacion());
         regu.setUsuarioAprobador(regularizacion.getUsuarioAprobador());
         regu.setFechaRespuesta(new Timestamp(System.currentTimeMillis()));
+        if(regularizacion.getEstadoRegularizacion().equals(EstadoOperacionEnum.APROBADO.toString())){
+            actualizarDocumentosHabilitantestemporales(regu.getId(),autorizacion);
+        }
         return this.regularizacionDocumentosRepository.update(regu);
     }
     public List<RegularizacionClienteWrapper> listAllByParamsClient( String usuario, String cedula) throws RelativeException {
@@ -110,7 +113,7 @@ public class RegularizacionDocumentosService {
 
             List<TbQoDocumentoHabilitante> documentoClienteR =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
                     Collections.singletonList(ProcessEnum.CLIENTE),
-                    detalle.getCredito().getTbQoNegociacion().getId().toString(),
+                    detalle.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(),
                     Collections.singletonList(EstadoOperacionEnum.REGULARIZACION_DOCUMENTOS)
             );
 
@@ -125,16 +128,34 @@ public class RegularizacionDocumentosService {
                     Arrays.asList(ProcessEnum.NOVACION, ProcessEnum.NUEVO, ProcessEnum.FUNDA),
                     detalle.getCredito().getTbQoNegociacion().getId().toString(),null
             );
+            if(documentoCredito != null){
+                documentoCredito = documentoCredito.stream()
+                        .filter(doc -> doc.getTbQoTipoDocumento().getEstadoOperacion() == null)
+                        .collect(Collectors.toList());
+            }
+
 
             List<TbQoDocumentoHabilitante> documentoCliente =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
                     Collections.singletonList(ProcessEnum.CLIENTE),
-                    detalle.getCredito().getTbQoNegociacion().getId().toString(),null
+                    detalle.getCredito().getTbQoNegociacion().getTbQoCliente().getCedulaCliente(),null
             );
+            if(documentoCliente != null){
+                documentoCliente = documentoCliente.stream()
+                        .filter(doc -> doc.getTbQoTipoDocumento().getEstadoOperacion() == null)
+                        .collect(Collectors.toList());
+            }
+
 
             List<TbQoDocumentoHabilitante> documentoAutorizacion =  this.documentoHabilitanteRepository.findByProcesoAndReferenciaAndEstadoProceso(
                     Collections.singletonList(ProcessEnum.AUTORIZACION),
                     detalle.getCredito().getNumeroOperacion(),null
             );
+            if(documentoAutorizacion != null){
+                documentoAutorizacion = documentoAutorizacion.stream()
+                        .filter(doc -> doc.getTbQoTipoDocumento().getEstadoOperacion() == null)
+                        .collect(Collectors.toList());
+            }
+
             // Comparación y actualización de documentos de Credito
             comparacionDocumento(autorizacion, documentoCreditoR, documentoCredito);
             // Comparación y actualización de documentos de Cliente
@@ -152,11 +173,38 @@ public class RegularizacionDocumentosService {
 
     }
 
-    private void comparacionDocumento(String autorizacion, List<TbQoDocumentoHabilitante> documentoR, List<TbQoDocumentoHabilitante> documentos) throws RelativeException {
+    private void comparacionDocumento(
+            String autorizacion,
+            List<TbQoDocumentoHabilitante> documentoR,
+            List<TbQoDocumentoHabilitante> documentos
+    ) throws RelativeException {
+        // Definir las relaciones de equivalencia entre los IDs de tipo de documento
+        Map<Long, Long> idTipoDocumentoMap = new HashMap<>();
+        idTipoDocumentoMap.put(2L, 31L);
+        idTipoDocumentoMap.put(3L, 32L);
+        idTipoDocumentoMap.put(4L, 33L);
+        idTipoDocumentoMap.put(6L, 34L);
+        idTipoDocumentoMap.put(7L, 35L);
+        idTipoDocumentoMap.put(8L, 36L);
+        idTipoDocumentoMap.put(9L, 37L);
+        idTipoDocumentoMap.put(10L, 38L);
+        idTipoDocumentoMap.put(11L, 39L);
+        idTipoDocumentoMap.put(16L, 40L);
+        idTipoDocumentoMap.put(17L, 41L);
+        idTipoDocumentoMap.put(18L, 42L);
+        idTipoDocumentoMap.put(19L, 43L);
+        idTipoDocumentoMap.put(1L, 44L);
+        idTipoDocumentoMap.put(20L, 45L);
+
         if (documentos != null && !documentos.isEmpty() && documentoR != null && !documentoR.isEmpty()) {
-            for (TbQoDocumentoHabilitante documento : documentos) {
-                for (TbQoDocumentoHabilitante documentR : documentoR) {
-                    if (documento.getProceso().equals(documentR.getProceso()) && documento.getIdReferencia().equals(documentR.getIdReferencia())) {
+            for (TbQoDocumentoHabilitante documentR : documentoR) {
+                for (TbQoDocumentoHabilitante documento : documentos) {
+                    Long idDocumento = documento.getTbQoTipoDocumento().getId();
+                    Long idReferencia = documentR.getTbQoTipoDocumento().getId();
+                    Long idDocumentoMapeado = idTipoDocumentoMap.getOrDefault(idDocumento, idDocumento);
+                    if (documento.getProceso().equals(documentR.getProceso()) &&
+                            documento.getIdReferencia().equals(documentR.getIdReferencia()) &&
+                            idDocumentoMapeado.equals(idReferencia)) {
                         actualizarObject(documento, documentR, autorizacion);
                     }
                 }
@@ -164,22 +212,32 @@ public class RegularizacionDocumentosService {
         }
     }
 
+
     private void actualizarObject(TbQoDocumentoHabilitante habilitanteCredito, TbQoDocumentoHabilitante habilitanteRegularizacion,String autorizacion) throws  RelativeException{
+        try{
+            RespuestaObjectWrapper repuesta = LocalStorageClient.findObjectById(
+                    parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+                    parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+                    parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
+                    habilitanteRegularizacion.getObjectId(), autorizacion);
 
-        RespuestaObjectWrapper repuesta = LocalStorageClient.findObjectById(
-                parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
-                parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-                parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
-                habilitanteCredito.getObjectId(), autorizacion);
-        Gson gsons = new GsonBuilder().create();
-        NodoWrapper wrapper = gsons.fromJson((String) repuesta.getEntidad(), NodoWrapper.class);
-        wrapper.setReferenceObjectId(habilitanteCredito.getObjectId());
+            Gson gsons = new GsonBuilder().create();
+            DocumentoMongo wrapper = gsons.fromJson((String) QuskiOroUtil.decodeBase64(repuesta.getEntidad()), DocumentoMongo.class);
+            wrapper.setObjectId(habilitanteCredito.getObjectId());
 
-        LocalStorageClient.updateObjectBigZ(
-                parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
-                parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
-                parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
-                habilitanteCredito.getObjectId(), wrapper, autorizacion);
+            LocalStorageClient.updateObjectBigZ(
+                    parametroRepository.findByNombre(QuskiOroConstantes.URL_STORAGE).getValor(),
+                    wrapper,
+                    parametroRepository.findByNombre(QuskiOroConstantes.DATA_BASE_NAME).getValor(),
+                    parametroRepository.findByNombre(QuskiOroConstantes.COLLECTION_NAME).getValor(),
+                    habilitanteCredito.getObjectId(),
+                    autorizacion);
+        }catch (RelativeException e){
+            throw e;
+        }catch (Exception e){
+            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,e.getMessage());
+        }
+
     }
 
 }

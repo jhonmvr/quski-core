@@ -68,13 +68,13 @@ public class DocumentoByTipoDocumentoAndProRefEstOpSpec  extends AbstractSpecifi
 				where.add(cb.equal(poll.<ProcessEnum>get("proceso"), proceso));
 			}
 			if(this.estadoOperacion != null) {
-				where.add(cb.equal(poll.<EstadoOperacionEnum>get("estadoOperacion"), estadoOperacion));
+				where.add(cb.equal(poll.<TbQoTipoDocumento>get("tbQoTipoDocumento").<EstadoOperacionEnum>get("estadoOperacion"), estadoOperacion));
 			}
 			if (estadoOperacionEnumList != null && !estadoOperacionEnumList.isEmpty()) {
-				where.add(poll.<EstadoOperacionEnum>get("estadoOperacion").in(estadoOperacionEnumList));
+				where.add(poll.<TbQoTipoDocumento>get("tbQoTipoDocumento").get("estadoOperacion").in(estadoOperacionEnumList));
 			}
-			if (estadoOperacionEnumList != null && !estadoOperacionEnumList.isEmpty()) {
-				where.add(poll.<ProcessEnum>get("proceso").in(estadoOperacionEnumList));
+			if (procesoEnumList != null && !procesoEnumList.isEmpty()) {
+				where.add(poll.<ProcessEnum>get("proceso").in(procesoEnumList));
 			}
 			return cb.and(where.toArray(new Predicate[]{}));
 		}

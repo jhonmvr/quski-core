@@ -43,8 +43,12 @@ public class QuskiOroUtil {
 		String y = "oso@gamil.com";
 		x = encodeBase64(x);
 		System.out.println("encoded: " + x);
-		x = decodeBase64(x);
-		System.out.println("deencoded: " + x);
+        try {
+            x = decodeBase64(x);
+        } catch (RelativeException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("deencoded: " + x);
 		y = encodeId(y);
 		System.out.println("encoded id: " + y);
 
@@ -61,9 +65,13 @@ public class QuskiOroUtil {
 		return Base64.getEncoder().encodeToString(origin.getBytes());
 	}
 
-	public static String decodeBase64(String encodedString) {
-		byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
-		return new String(decodedBytes);
+	public static String decodeBase64(String encodedString) throws RelativeException{
+		try{
+			byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+			return new String(decodedBytes);
+		}catch(Exception e){
+			throw new RelativeException(e.getMessage());
+		}
 	}
 
 	public static String encodeId(String id) {
