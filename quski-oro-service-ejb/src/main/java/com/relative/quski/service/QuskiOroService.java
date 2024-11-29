@@ -3,6 +3,7 @@ package com.relative.quski.service;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -77,6 +78,7 @@ import com.relative.quski.wrapper.CrearOperacionEntradaWrapper;
 import com.relative.quski.wrapper.CrearOperacionRenovacionWrapper;
 import com.relative.quski.wrapper.CrearOperacionRespuestaWrapper;
 import com.relative.quski.wrapper.CrearRenovacionWrapper;
+import com.relative.quski.wrapper.CreditoCompromisoWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CrmEntidadWrapper;
 import com.relative.quski.wrapper.CrmGuardarProspectoWrapper;
@@ -126,6 +128,7 @@ import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Gar
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaPagMedWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankContactosWrapper;
 import com.relative.quski.wrapper.SoftbankCuentasBancariasWrapper;
@@ -217,7 +220,8 @@ public class QuskiOroService {
     private ExcepcionOperativaService eos;
 	@Inject
 	private RegularizacionDocumentosRepository regularizacionDocumentosRepository;
-	
+	@Inject
+	private CompromisoPagoRepository compromisoPagoRepository;
 	@Inject
 	HistoricoObservacionRepository historicoObservacionRepository;
 	/**
@@ -6540,6 +6544,7 @@ public class QuskiOroService {
 		}
 	}
 	
+	
 	public TbQoCreditoNegociacion optenerNumeroDeFunda(TbQoCreditoNegociacion c, String autorizacion) throws RelativeException {
 		TbQoCreditoNegociacion credito = this.creditoNegociacionRepository.findById(c.getId());
 		CrearOperacionEntradaWrapper operacionSoftBank = 
@@ -9988,4 +9993,325 @@ public class QuskiOroService {
 		//TODO
 		return null;
 	}
+	public CreditoCompromisoWrapper traerCreditoCompromiso( String numeroOperacion,ProcesoEnum procesoCompromiso, String usuario, String autorizacion ) throws RelativeException{
+		try {
+			CreditoCompromisoWrapper creditoCompromiso = new CreditoCompromisoWrapper();
+			String urlCredito  = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GLOBAL).getValor();
+			String urlCliente  = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_CLIENTE).getValor();
+			String urlGarantia = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_GARANTIA).getValor();
+			String urlPagmed   = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_CONSULTA_PAGMEG).getValor();
+			
+			RespuestaConsultaGlobalWrapper creditosSoft = SoftBankApiClient.callConsultarOperacionRest( new ConsultaOperacionGlobalWrapper( numeroOperacion ),autorizacion, urlCredito); 
+			TbQoCreditoNegociacion creditoBpm =  this.creditoNegociacionRepository.findCreditoByNumeroOperacion(numeroOperacion);
+			
+			if( creditosSoft.getNumeroTotalRegistros() != Long.valueOf( 1 ) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE PUEDE LEER LA INFORMACION DE SOFTBANK");
+			}
+			if( creditoBpm != null ) {
+				creditoCompromiso.setVariables( this.variablesCrediticiaRepository.findByIdNegociacion(creditoBpm.getTbQoNegociacion().getId()));
+				creditoCompromiso.setRiesgos(this.riesgoAcumuladoRepository.findByIdNegociacion(creditoBpm.getTbQoNegociacion().getId()));
+			}
+
+			creditoCompromiso.setCredito( creditosSoft.getOperaciones().get( 0 ));
+			creditoCompromiso.setCliente( SoftBankApiClient.callConsultaClienteRest(urlCliente, autorizacion, creditosSoft.getOperaciones().get( 0 ).getIdentificacion() ) );
+			creditoCompromiso.setGarantias( SoftBankApiClient.callConsultarGarantiasRest( new ConsultaGarantiaWrapper(  
+					StringUtils.isNotBlank(creditosSoft.getOperaciones().get( 0 ).getNumeroOperacionMadre())? creditosSoft.getOperaciones().get( 0 ).getNumeroOperacionMadre() :numeroOperacion), autorizacion,urlGarantia ) );
+			creditoCompromiso.setPagMed(SoftBankApiClient.callConsultaPagMed(urlPagmed, creditosSoft.getOperaciones().get( 0 ).getNumeroOperacionMupi()));
+
+			List<TbQoCompromisoPago> comps = new ArrayList<TbQoCompromisoPago>();
+			List<TbQoCompromisoPago> compsRemv = new ArrayList<TbQoCompromisoPago>();
+			List<TbQoProceso> procesos = new ArrayList<TbQoProceso>();
+			comps = this.compromisoPagoRepository.findByNumeroOperacion(numeroOperacion);
+			if(comps != null && comps.size() > 0 ){
+				log.info("==== COMPROMISO IF comps ========> " + comps.size());
+				for (TbQoCompromisoPago compromiso : comps) { 
+					log.info("==== COMPROMISO FOR ========> " + compromiso.getId());
+					TbQoProceso pro = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), procesoCompromiso);
+					if(pro != null ) {
+						procesos.add( pro );
+					}else {
+						compsRemv.add(compromiso);
+					}
+				}
+				comps.removeAll(compsRemv);
+				if(procesos == null || procesos.size() < 1 ){
+					log.info("==== CREAR PESADO ========> ");
+					TbQoCompromisoPago comp = new TbQoCompromisoPago();
+					comp.setCodigoOperacion(creditoCompromiso.getPagMed() != null ? creditoCompromiso.getPagMed().getNipMediacion() : null);
+					comp.setIdNegociacion(creditoBpm != null ? creditoBpm.getTbQoNegociacion() : null);
+					comp.setEstadoCompromiso(EstadoProcesoEnum.CREADO);
+					comp.setNumeroOperacion(numeroOperacion);
+					comp.setUsuarioSolicitud(usuario);
+					comp.setNombreCliente(creditoCompromiso.getCliente().getNombreCompleto());
+					comp.setFechaCompromisoPagoAnterior((Timestamp) creditoCompromiso.getPagMed().getFechaCompromisoPago());
+					comp = this.compromisoPagoRepository.add(comp);
+					log.info("==== CREAR PESADO ========> " + comp.getId());
+					comps.add(comp);
+					TbQoProceso proceso = new TbQoProceso( comp.getId() );
+					proceso.setProceso( procesoCompromiso );
+					proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );
+					proceso.setUsuario( usuario );
+					proceso = this.manageProceso( proceso );
+					procesos.add(proceso);
+				}
+			}else{
+				log.info("==== COMPROMISO ELSE ========> " + comps.size());
+				TbQoCompromisoPago comp = new TbQoCompromisoPago();
+				comp.setCodigoOperacion(creditoCompromiso.getPagMed() != null ? creditoCompromiso.getPagMed().getNipMediacion() : null);
+				comp.setIdNegociacion(creditoBpm != null ? creditoBpm.getTbQoNegociacion() : null);
+				comp.setEstadoCompromiso(EstadoProcesoEnum.CREADO);
+				comp.setNumeroOperacion(numeroOperacion);
+				comp.setUsuarioSolicitud(usuario);
+				comp.setNombreCliente(creditoCompromiso.getCliente().getNombreCompleto());
+				comp.setFechaCompromisoPagoAnterior((Timestamp) creditoCompromiso.getPagMed().getFechaCompromisoPago());
+				comp = this.compromisoPagoRepository.add(comp);
+				log.info("==== COMPROMISO ID 1 ========> "+ comp.getId());
+				comps.add(comp);
+				log.info("==== COMPROMISO ID 2 ========> "+ comp.getId());
+				TbQoProceso proceso = new TbQoProceso( comp.getId() );
+				proceso.setProceso( procesoCompromiso );
+				proceso.setEstadoProceso( EstadoProcesoEnum.CREADO );
+				proceso.setUsuario( usuario );
+				proceso = this.manageProceso( proceso );
+				procesos.add(proceso);
+			}
+			creditoCompromiso.setProcesos(procesos);
+			creditoCompromiso.setCompromisos(comps);
+
+			return creditoCompromiso;
+		}catch(RelativeException e ){
+			throw e;
+		}catch(Exception e ){
+			log.info("Error al obtener los compromisos: " + e.toString());
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getStackTrace());
+		}
+	}
+	public TbQoCompromisoPago solicitarCompromiso(ProcesoEnum proceso,String usuario, String nombreAsesor, TbQoCompromisoPago compromiso,String autorizacion) throws RelativeException {
+		try {
+			
+			TbQoProceso procesoBpm = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), proceso);
+			if(procesoBpm == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO UN PROCESO PARA ESTE FLUJO: " + compromiso.getCodigo());
+			}
+			log.info("==== ESTADO ID 2 ========> "+ procesoBpm.getEstadoProceso().toString());
+			if(!(procesoBpm.getEstadoProceso().compareTo(EstadoProcesoEnum.CREADO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL PROCESO NO SE ENCUENTRA EN UN ESTADO VALIDO PARA SOLICITAR LA APROBACION" + compromiso.getCodigo());
+			}
+			if(!(proceso.compareTo(ProcesoEnum.COMPROMISO_PAGO) == 0) && !(proceso.compareTo(ProcesoEnum.CAMBIO_COMPROMISO_PAGO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PROCESO NO VALIDO PARA SOLICITUD DE COMPROMISO DE PAGO: " + compromiso.getCodigo());
+			}
+			if(!(compromiso.getEstadoCompromiso().compareTo(EstadoProcesoEnum.CREADO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL COMPROMISO NO SE ENCUENTRA EN UN ESTADO VALIDO PARA SOLICITAR LA APROBACION" + compromiso.getCodigo());
+			}
+			//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("SOLICITUD DE COMPROMISO ENVIADO");
+			traking.setCodigoBpm(compromiso.getCodigo());
+			traking.setCodigoOperacionSoftbank(compromiso.getNumeroOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(nombreAsesor);
+			traking.setUsuarioCreacion(usuario);
+			traking.setObservacion(compromiso.getObservacionSolicitud());
+			traking.setProceso(proceso);
+			traking.setSeccion("En espera");
+			this.registrarTraking(traking);
+			
+			procesoBpm.setEstadoProceso(EstadoProcesoEnum.PENDIENTE_COMPROMISO);
+			procesoBpm.setUsuario(usuario);	
+			procesoBpm.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			this.manageProceso(procesoBpm);
+			compromiso.setEstadoCompromiso(EstadoProcesoEnum.PENDIENTE_COMPROMISO);
+			compromiso.setFechaSolicitud(new Timestamp(System.currentTimeMillis()));
+			compromiso.setUsuarioSolicitud(usuario);
+			compromiso = this.manageCompromisoPago(compromiso);
+			this.mailSolicitudCompromiso(compromiso,procesoBpm, nombreAsesor);
+			return compromiso;
+			
+		}catch(RelativeException e) {
+			//e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_NOVACION );
+		}
+	}
+	public TbQoCompromisoPago resolucionCompromiso(ProcesoEnum proceso, Boolean aprobado, String usuario, String nombreAsesor, TbQoCompromisoPago compromiso,String autorizacion) throws RelativeException {
+		try {
+			
+			TbQoProceso procesoBpm = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), proceso);
+			if(procesoBpm == null) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"NO SE ENCONTRO UN PROCESO PARA ESTE FLUJO: " + compromiso.getCodigo());
+			}
+			log.info("==== ESTADO ID 2 ========> "+ procesoBpm.getEstadoProceso().toString());
+			if(!(procesoBpm.getEstadoProceso().compareTo(EstadoProcesoEnum.PENDIENTE_COMPROMISO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL PROCESO NO SE ENCUENTRA EN UN ESTADO VALIDO PARA SOLICITAR LA APROBACION" + compromiso.getCodigo());
+			}
+			if(!(proceso.compareTo(ProcesoEnum.COMPROMISO_PAGO) == 0) && !(proceso.compareTo(ProcesoEnum.CAMBIO_COMPROMISO_PAGO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"PROCESO NO VALIDO PARA SOLICITUD DE COMPROMISO DE PAGO: " + compromiso.getCodigo());
+			}
+			if(!(compromiso.getEstadoCompromiso().compareTo(EstadoProcesoEnum.PENDIENTE_COMPROMISO) == 0) ) {
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"EL COMPROMISO NO SE ENCUENTRA EN UN ESTADO VALIDO PARA SOLICITAR LA APROBACION" + compromiso.getCodigo());
+			}
+			//this.devolverAprobarCreditoRenovacion(credito, null, descripcion, codigoMotivo); 
+			TbQoTracking traking = new TbQoTracking();
+			traking.setActividad("APROBACION COMPROMISO PAGO ENVIADO");
+			traking.setCodigoBpm(compromiso.getCodigo());
+			traking.setCodigoOperacionSoftbank(compromiso.getNumeroOperacion());
+			traking.setEstado(EstadoEnum.ACT);
+			traking.setFechaActualizacion(new Date());
+			traking.setFechaCreacion(new Date());
+			traking.setFechaInicio(new Timestamp(System.currentTimeMillis()));
+			traking.setNombreAsesor(nombreAsesor);
+			traking.setUsuarioCreacion(usuario);
+			traking.setObservacion(compromiso.getObservacionAprobador());
+			traking.setProceso(proceso);
+			traking.setSeccion("Finalizado");
+			this.registrarTraking(traking);
+			// JERO PENDIENTE DE CAMBIO
+			procesoBpm.setEstadoProceso(aprobado ? EstadoProcesoEnum.APROBADO : EstadoProcesoEnum.RECHAZADO);
+			procesoBpm.setUsuario(usuario);	
+			procesoBpm.setFechaActualizacion(new Timestamp(System.currentTimeMillis()));
+			procesoBpm = this.manageProceso(procesoBpm);
+			compromiso.setEstadoCompromiso(aprobado ? EstadoProcesoEnum.APROBADO : EstadoProcesoEnum.RECHAZADO);
+			compromiso.setFechaAprobador(new Timestamp(System.currentTimeMillis()));
+			compromiso.setUsuarioAprobador(usuario);
+			compromiso = this.manageCompromisoPago(compromiso);
+			if(aprobado && proceso.compareTo(ProcesoEnum.CAMBIO_COMPROMISO_PAGO) == 0 ) {
+				String urlPagmed   = this.parametroRepository.findByNombre(QuskiOroConstantes.SOFTBANK_UPDATE_PAGMEG).getValor();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			    String fechaFormateada = sdf.format(compromiso.getFechaCompromisoPago());
+				String  mensaje = SoftBankApiClient.callActualizarFechaCompromisoPago(urlPagmed, compromiso.getCodigoOperacion(),fechaFormateada );
+				// ESTE MENSAJE NO ESTOY USANDO
+			}
+			this.mailSolicitudCompromiso(compromiso,procesoBpm, nombreAsesor);
+			
+			return compromiso;
+			
+		}catch(RelativeException e) {
+			//e.printStackTrace();
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CREATE, QuskiOroConstantes.ERROR_CREATE_NOVACION );
+		}
+	}
+	public TbQoCompromisoPago manageCompromisoPago(TbQoCompromisoPago send) throws RelativeException {
+		try {
+			if (send != null && send.getId() != null) {
+				TbQoCompromisoPago persisted = this.findCompromisoPagoById(send.getId());
+				return this.updateCompromisoPago(send, persisted);
+			} else if (send.getId() == null) {
+		
+				return this.compromisoPagoRepository.add(send);
+			} else {
+				throw new RelativeException(Constantes.ERROR_CODE_CREATE,
+						QuskiOroConstantes.ERROR_AL_REALIZAR_CREACION);
+			}
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw e;
+		}catch (Exception e) {
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION_O_CREACION + e.getMessage());
+		}
+	}
+	public TbQoCompromisoPago updateCompromisoPago(TbQoCompromisoPago send, TbQoCompromisoPago persisted) throws RelativeException {
+		try {
+	
+	        // Actualizamos los campos mapeados según la tabla
+	        if (send.getCodigo() != null) {
+	            persisted.setCodigo(send.getCodigo());
+	        }
+	        if (send.getCodigoOperacion() != null) {
+	            persisted.setCodigoOperacion(send.getCodigoOperacion());
+	        }
+	        if (send.getIdNegociacion() != null) {
+	            persisted.setIdNegociacion(send.getIdNegociacion());
+	        }
+	        if (send.getTipoCompromiso() != null) {
+	            persisted.setTipoCompromiso(send.getTipoCompromiso());
+	        }
+	        if (send.getEstadoCompromiso() != null) {
+	            persisted.setEstadoCompromiso(send.getEstadoCompromiso());
+	        }
+	        if (send.getFechaCompromisoPago() != null) {
+	            persisted.setFechaCompromisoPago(send.getFechaCompromisoPago());
+	        }
+	        if (send.getUsuarioSolicitud() != null) {
+	            persisted.setUsuarioSolicitud(send.getUsuarioSolicitud());
+	        }
+	        if (send.getUsuarioAprobador() != null) {
+	            persisted.setUsuarioAprobador(send.getUsuarioAprobador());
+	        }
+	        if (send.getObservacionSolicitud() != null) {
+	            persisted.setObservacionSolicitud(send.getObservacionSolicitud());
+	        }
+	        if (send.getObservacionAprobador() != null) {
+	            persisted.setObservacionAprobador(send.getObservacionAprobador());
+	        }
+	        if (send.getFechaSolicitud() != null) {
+	            persisted.setFechaSolicitud(send.getFechaSolicitud());
+	        }
+	        if (send.getFechaAprobador() != null) {
+	            persisted.setFechaAprobador(send.getFechaAprobador());
+	        }
+	        if (send.getNumeroOperacion() != null) {
+	            persisted.setNumeroOperacion(send.getNumeroOperacion());
+	        }
+	        if (send.getNombreCliente() != null) {
+	            persisted.setNombreCliente(send.getNombreCliente());
+	        }
+	        if (send.getFechaCompromisoPagoAnterior() != null) {
+	            persisted.setFechaCompromisoPagoAnterior(send.getFechaCompromisoPagoAnterior());
+	        }
+	        if (send.getCorreoSolicitud() != null) {
+	            persisted.setCorreoSolicitud(send.getCorreoSolicitud());
+	        }
+	        return compromisoPagoRepository.update(persisted);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_UPDATE,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_ACTUALIZACION + e.getMessage());
+		}
+	}
+	public TbQoCompromisoPago findCompromisoPagoById(Long id) throws RelativeException {
+		try {
+			return compromisoPagoRepository.findById(id);
+		} catch (RelativeException e) {
+			throw new RelativeException(Constantes.ERROR_CODE_READ,
+					QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getDetalle());
+		}
+	}
+	private void mailSolicitudCompromiso(TbQoCompromisoPago comp, TbQoProceso proceso, String nombreAsesor) throws RelativeException {
+		String asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_COMPROMISO_PAGO).getValor();
+		String textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENIDO_COMPROMISO_PAGO).getValor();
+		
+		if(proceso.getEstadoProceso().equals(EstadoProcesoEnum.APROBADO) || proceso.getEstadoProceso().equals(EstadoProcesoEnum.RECHAZADO)) {
+			textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENIDO_COMPROMISO_PAGO).getValor();
+			asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_COMPROMISO_PAGO).getValor();
+		}
+		textoContenido = textoContenido
+				.replace("--nombreAsesor--", nombreAsesor)
+				.replace("--codigoBpm--", comp.getCodigo())
+				.replace("--numeroOperacion--", comp.getNumeroOperacion())
+				.replace("--nombreCliente--", comp.getNombreCliente())
+				.replace("--asesor--", comp.getUsuarioSolicitud())
+				.replace("--fechaCompromisoPagoAnterior--", comp.getFechaCompromisoPagoAnterior() != null ? comp.getFechaCompromisoPagoAnterior().toString():"")
+				.replace("--fechaCompromisoPagoActual--", comp.getFechaCompromisoPago() != null ? comp.getFechaCompromisoPago().toString():"")
+				.replace("--tipoCompromiso--", StringUtils.isNotBlank(comp.getTipoCompromiso()) ? comp.getTipoCompromiso() : "")
+				.replace("--Observaciones--", StringUtils.isNotBlank(comp.getObservacionSolicitud()) ? comp.getObservacionSolicitud() : "");
+				String[] para = null;
+		if(proceso.getEstadoProceso().equals(EstadoProcesoEnum.APROBADO) || proceso.getEstadoProceso().equals(EstadoProcesoEnum.RECHAZADO)) {
+			para = Stream.of(comp.getCorreoSolicitud()).toArray(String[]::new);
+		}else {
+			para = Stream.of(this.parametroRepository.findByNombre(QuskiOroConstantes.PARA_COMPROMISO_PAGO).getValor()).toArray(String[]::new);
+		}
+		mailNotificacion(para, asunto, textoContenido, null);
+
+	}
+	
+	
+	
 }

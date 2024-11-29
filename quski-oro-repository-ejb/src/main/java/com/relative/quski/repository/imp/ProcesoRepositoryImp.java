@@ -38,6 +38,7 @@ import com.relative.quski.repository.spec.PagoByListIdsAndAprobadoresSpec;
 import com.relative.quski.repository.spec.ProcesoByAsesorSpec;
 import com.relative.quski.repository.spec.ProcesoByIdNegociacion;
 import com.relative.quski.repository.spec.ProcesoByIdNovacion;
+import com.relative.quski.repository.spec.ProcesoByIdReferenciaCompSpec;
 import com.relative.quski.repository.spec.ProcesoByIdReferenciaSpec;
 import com.relative.quski.repository.spec.ProcesoByIdSpec;
 import com.relative.quski.repository.spec.ProcesoByProcesosEstadosAndTimeDiferenceSpec;
@@ -95,6 +96,21 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 				return null;
 			}
 		
+	}
+	@Override
+	public TbQoProceso findByIdReferenciaCompromiso(Long id, ProcesoEnum proceso) throws RelativeException {
+		
+			List<TbQoProceso> list = this.findAllBySpecification(new ProcesoByIdReferenciaCompSpec(id, proceso));
+			if (list != null && !list.isEmpty()) {
+				if (list.size() == 1) {
+					return list.get(0);
+				} else {
+					throw new RelativeException(Constantes.ERROR_CODE_READ,
+							QuskiOroConstantes.ERROR_MAS_DE_UN_REGISTRO);
+				}
+			} else {
+				return null;
+			}
 	}
 
 	@Override

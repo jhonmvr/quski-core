@@ -1,5 +1,6 @@
 package com.relative.quski.bpms.api;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ import com.relative.quski.wrapper.RespuestaRubroWrapper;
 import com.relative.quski.wrapper.RestClientWrapper;
 import com.relative.quski.wrapper.RubroOperacionWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
+import com.relative.quski.wrapper.SoftbankConsultaPagMedWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankResponseWrapper;
 import com.relative.quski.wrapper.SoftbankRespuestaWrapper;
@@ -243,6 +245,7 @@ public class SoftBankApiClient {
 			throw new RelativeException( Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO: " + service );
 		}
 	}
+
 	public static SoftbankRiesgoWrapper callConsultaRiesgoRest(SoftbankConsultaWrapper consulta,String authorization, String service) throws RelativeException, Exception {
 		try {
 			Gson gson = new Gson();
@@ -843,6 +846,101 @@ public class SoftBankApiClient {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	// JERO
+	public static SoftbankConsultaPagMedWrapper callConsultaPagMed(String urlService, String numeroPrestamo) throws RelativeException {
+		try {
+			log.info("<================>  CONTENT  <================>"); 
+			log.info(""+numeroPrestamo); 
+
+			urlService = urlService.concat("?numeroPrestamo=").concat(numeroPrestamo);
+			Map<String, Object> response = ReRestClient.callRestApi(RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON, null, null, RestClientWrapper.METHOD_GET, null, null,
+					null, QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, Boolean.FALSE, Boolean.FALSE, urlService, String.class);
+	        
+			log.info("==========>  RESPONSE =================> " + response + " <==================="); 
+			Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+			if(status>=200 && status < 300) {
+				Gson gsons = new GsonBuilder().create();
+	        	return gsons.fromJson((String) response.get(ReRestClient.RETURN_OBJECT), SoftbankConsultaPagMedWrapper.class);
+			}else {
+				return null;
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (RelativeException e) {
+			e.printStackTrace();
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	// JERO
+	public static String callActualizarFechaCompromisoPago(String urlService, String nipMediacion, String fechaCompromisoPago) throws RelativeException {
+	    try {
+	        log.info("<================>  INICIANDO LLAMADA PUT <================>");
+	        log.info("NIP Mediación: " + nipMediacion);
+	        log.info("Fecha Compromiso Pago: " + fechaCompromisoPago);
+
+	        urlService = urlService.concat("/actualizar").concat("?nipMediacion=").concat(nipMediacion).concat("&fechaCompromisoPago=").concat(fechaCompromisoPago);
+
+	        // Construcción del cuerpo del request
+	        //Map<String, String> requestBody = new HashMap<>();
+	        //requestBody.put("nipMediacion", nipMediacion);
+	        //requestBody.put("fechaCompromisoPago", fechaCompromisoPago);
+
+	        //Gson gson = new GsonBuilder().create();
+	        //String jsonRequestBody = gson.toJson(requestBody);
+
+	        Map<String, Object> response = ReRestClient.callRestApi(
+	                RestClientWrapper.CONTENT_TYPE_JSON, 
+	                RestClientWrapper.CONTENT_TYPE_JSON,
+	                null, null, 
+	                RestClientWrapper.METHOD_PUT, 
+	                null, null,
+	                null, 
+	                QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+	                QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT, 
+	                Boolean.FALSE, Boolean.FALSE, 
+	                urlService, String.class
+	        );
+
+	        log.info("==========>  RESPONSE =================> " + response + " <===================");
+
+	        Long status = Long.valueOf(String.valueOf(response.get(ReRestClient.RETURN_STATUS)));
+	        if (status >= 200 && status < 300) {
+	            log.info("Actualizado correctamente: " + response.get(ReRestClient.RETURN_MESSAGE));
+	            return String.valueOf(response.get(ReRestClient.RETURN_MESSAGE));
+	        } else {
+	            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, 
+	                "ERROR AL ACTUALIZAR: " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+	        }
+	    } catch (JsonSyntaxException e) {
+	        e.printStackTrace();
+	        throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR EN EL FORMATO DEL JSON DE RESPUESTA");
+	    } catch (NumberFormatException e) {
+	        e.printStackTrace();
+	        throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR EN EL FORMATO DE ESTADO DE RESPUESTA");
+	    } catch (RelativeException e) {
+	        e.printStackTrace();
+	        throw e; // Relanza la excepción para manejarla en el nivel superior si es necesario
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR GENERAL EN LA LLAMADA AL SERVICIO");
+	    }
+	    //String mensajeRespuesta = callActualizarFechaCompromisoPago(
+	    //	    "http://10.37.10.180:8282/quskicompagmed",
+	    //	    "123456", // nipMediacion
+	    //	    "2024-11-30" // fechaCompromisoPago
+	    //	);
+	    //	log.info("Respuesta del servicio: " + mensajeRespuesta);
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
+
 public class DetalleCreditoWrapper implements Serializable {
 
 	/**
@@ -15,8 +16,8 @@ public class DetalleCreditoWrapper implements Serializable {
 	private List<RubroOperacionWrapper> rubros;
 	private List<GarantiaOperacionWrapper> garantias;
 	private String habilitantes;
-	
-	
+
+
 	public SoftbankClienteWrapper getCliente() {
 		return cliente;
 	}
