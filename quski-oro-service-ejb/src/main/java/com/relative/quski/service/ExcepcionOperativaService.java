@@ -134,10 +134,30 @@ public class ExcepcionOperativaService {
 		traking.setSeccion("Enviado a excepcion operativa");
 		this.qos.registrarTraking(traking);
 		this.qos.notificarExcepcionServicio( wp.getCredito(), ex, Boolean.FALSE );
-
+        validarExcepcionServicios(ex.getIdNegociacion().getId());
         return this.excepcionOperativaRepository.add(ex);
     }
+    private void validarExcepcionServicios(Long idNegociacion) throws RelativeException{
+        List<TbQoExcepcionOperativa> excepciones = this.excepcionOperativaRepository.findByNegociacion(idNegociacion);
+        if(excepciones == null){
+            return;
+        }
+        List<TbQoExcepcionOperativa> excepcionesFiltradas = excepciones.stream()
+                .filter(excepcion -> excepcion.getNivelAprobacion() > 1 && excepcion.getEstadoExcepcion().equals(EstadoExcepcionEnum.APROBADO.toString()))
+                .collect(Collectors.toList());
+        if (!excepcionesFiltradas.isEmpty()) {
+            for (TbQoExcepcionOperativa excepcion : excepcionesFiltradas) {
+                try {
+                    excepcion.setEstadoExcepcion(EstadoExcepcionEnum.NEGADO.toString());
+                    excepcion.setObservacionAprobador("SE NEGO AUTOMATICAMENTE POR NUEVA EXCEPCION");
+                    this.excepcionOperativaRepository.update(excepcion);
+                } catch (RelativeException e) {
+                    throw new RelativeException("Error al eliminar la excepción operativa: " + excepcion.getId());
+                }
+            }
+        }
 
+    }
     public TbQoExcepcionOperativa findByNegociacionAndTipo(Long idNegociacion, String tipoExcepcion, EstadoExcepcionEnum estado ) throws RelativeException {
         return excepcionOperativaRepository.findByNegociacionAndTipo(idNegociacion, tipoExcepcion, estado);
     }
