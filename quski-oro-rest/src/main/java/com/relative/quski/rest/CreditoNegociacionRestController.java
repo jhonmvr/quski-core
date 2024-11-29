@@ -46,6 +46,7 @@ import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
+import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
@@ -622,6 +623,19 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;			
 	}
+	@GET
+	@Path("/findCompromisoByIdentificacion")
+	@ApiOperation(value = "PaginatedListWrapper<ExcepcionRolWrapper>", notes = "Metodo Get indByRolAndIdentificacion Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<CreditoCompromisoWrapper> findCompromisoByIdentificacion( @QueryParam("numeroOperacion" )  String numeroOperacion) throws RelativeException {
+		GenericWrapper<CreditoCompromisoWrapper> loc = new GenericWrapper<>();
+		CreditoCompromisoWrapper a = this.qos.findCompromisoByIdentificacion(numeroOperacion);
+		loc.setEntidad(a);
+		return loc;	
+	}
+	
 	
 }
 

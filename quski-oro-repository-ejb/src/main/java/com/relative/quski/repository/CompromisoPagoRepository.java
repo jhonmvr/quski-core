@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CompromisoPagoRepository extends CrudRepository<Long, TbQoCompromisoPago> {
     List<TbQoCompromisoPago> findByNumeroOperacion(String numeroOperacion) throws RelativeException;
+    List<TbQoCompromisoPago> findByNumeroOperacionPendiente(String numeroOperacion) throws RelativeException;
 }

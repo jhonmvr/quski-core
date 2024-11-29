@@ -10311,6 +10311,35 @@ public class QuskiOroService {
 		mailNotificacion(para, asunto, textoContenido, null);
 
 	}
+	public CreditoCompromisoWrapper findCompromisoByIdentificacion(String numeroOperacion) throws RelativeException {
+		try {
+			List<TbQoCompromisoPago> comps = new ArrayList<TbQoCompromisoPago>();
+			List<TbQoProceso> procesos = new ArrayList<TbQoProceso>();
+			comps = this.compromisoPagoRepository.findByNumeroOperacionPendiente(numeroOperacion);
+
+			if(comps != null && comps.size() > 0 ){
+				for (TbQoCompromisoPago compromiso : comps) { 
+					log.info("==== COMPROMISO FOR ========> " + compromiso.getId());
+					TbQoProceso pro = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), ProcesoEnum.COMPROMISO_PAGO);
+					if(pro != null ) {
+						procesos.add( pro );
+					}else {
+						TbQoProceso pro2 = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), ProcesoEnum.CAMBIO_COMPROMISO_PAGO);
+						procesos.add( pro2 );
+					}
+				}
+			}else {
+				return null;
+			}
+			CreditoCompromisoWrapper r = new CreditoCompromisoWrapper();
+			r.setProcesos(procesos);
+			r.setCompromisos(comps);
+			return r;
+
+		} catch (RelativeException e) {
+			throw e;
+		}
+	}
 	
 	
 	
