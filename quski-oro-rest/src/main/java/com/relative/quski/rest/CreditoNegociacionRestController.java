@@ -25,6 +25,7 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.ResponseValidarDocumentoWrapper;
 import com.relative.quski.model.TbQoCompromisoPago;
@@ -624,14 +625,14 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return loc;			
 	}
 	@GET
-	@Path("/findCompromisoByIdentificacion")
+	@Path("/findCompromisoByNumeroOperacionEstado")
 	@ApiOperation(value = "PaginatedListWrapper<ExcepcionRolWrapper>", notes = "Metodo Get indByRolAndIdentificacion Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = PaginatedListWrapper.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
 			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
-	public GenericWrapper<CreditoCompromisoWrapper> findCompromisoByIdentificacion( @QueryParam("numeroOperacion" )  String numeroOperacion) throws RelativeException {
+	public GenericWrapper<CreditoCompromisoWrapper> findCompromisoByNumeroOperacionEstado( @QueryParam("numeroOperacion" )  String numeroOperacion, @QueryParam("estado" )  EstadoProcesoEnum estado, @QueryParam("autorizacion") String autorizacion) throws RelativeException {
 		GenericWrapper<CreditoCompromisoWrapper> loc = new GenericWrapper<>();
-		CreditoCompromisoWrapper a = this.qos.findCompromisoByIdentificacion(numeroOperacion);
+		CreditoCompromisoWrapper a = this.qos.findCompromisoByNumeroOperacionEstado(numeroOperacion, estado);
 		loc.setEntidad(a);
 		return loc;	
 	}

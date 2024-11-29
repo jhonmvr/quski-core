@@ -10311,25 +10311,28 @@ public class QuskiOroService {
 		mailNotificacion(para, asunto, textoContenido, null);
 
 	}
-	public CreditoCompromisoWrapper findCompromisoByIdentificacion(String numeroOperacion) throws RelativeException {
+	public CreditoCompromisoWrapper findCompromisoByNumeroOperacionEstado(String numeroOperacion, EstadoProcesoEnum estado) throws RelativeException {
 		try {
 			List<TbQoCompromisoPago> comps = new ArrayList<TbQoCompromisoPago>();
 			List<TbQoProceso> procesos = new ArrayList<TbQoProceso>();
-			comps = this.compromisoPagoRepository.findByNumeroOperacionPendiente(numeroOperacion);
-
+			log.info("==== findCompromisoByIdentificacion 1 ========> ");
+			comps = this.compromisoPagoRepository.findByNumeroOperacionEstado(numeroOperacion, estado);
+			log.info("==== findCompromisoByIdentificacion 2 ========> " + comps.size());
 			if(comps != null && comps.size() > 0 ){
+				log.info("==== findCompromisoByIdentificacion if ========> " + comps.size());
 				for (TbQoCompromisoPago compromiso : comps) { 
-					log.info("==== COMPROMISO FOR ========> " + compromiso.getId());
+					log.info("==== findCompromisoByIdentificacion for ========> " + compromiso.getId());
 					TbQoProceso pro = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), ProcesoEnum.COMPROMISO_PAGO);
 					if(pro != null ) {
+						log.info("==== findCompromisoByIdentificacion for COMPROMISO_PAGO ========> " + compromiso.getId());
 						procesos.add( pro );
-					}else {
-						TbQoProceso pro2 = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), ProcesoEnum.CAMBIO_COMPROMISO_PAGO);
-						procesos.add( pro2 );
+					}
+					pro = this.procesoRepository.findByIdReferenciaCompromiso(compromiso.getId(), ProcesoEnum.CAMBIO_COMPROMISO_PAGO);
+					if(pro != null ) {
+						log.info("==== findCompromisoByIdentificacion for CAMBIO_COMPROMISO_PAGO ========> " + compromiso.getId());
+						procesos.add( pro );
 					}
 				}
-			}else {
-				return null;
 			}
 			CreditoCompromisoWrapper r = new CreditoCompromisoWrapper();
 			r.setProcesos(procesos);
