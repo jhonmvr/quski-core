@@ -78,7 +78,18 @@ public class TbQoCompromisoPago implements Serializable {
     @Column(name = "correo_solicitud")
     private String correoSolicitud;
     
+    @Column(name = "identificacion_cliente")
+    private String identificacionCliente;
     
+    
+	public String getIdentificacionCliente() {
+		return identificacionCliente;
+	}
+
+	public void setIdentificacionCliente(String identificacionCliente) {
+		this.identificacionCliente = identificacionCliente;
+	}
+
 	public String getCorreoSolicitud() {
 		return correoSolicitud;
 	}

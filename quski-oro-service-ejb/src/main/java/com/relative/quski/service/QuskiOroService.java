@@ -66,6 +66,8 @@ import com.relative.quski.wrapper.CatalogoWrapper;
 import com.relative.quski.wrapper.CatalogosSoftbankWrapper;
 import com.relative.quski.wrapper.ClienteCompletoWrapper;
 import com.relative.quski.wrapper.ClienteYReferidoWrapper;
+import com.relative.quski.wrapper.CompromisoParamsWrapper;
+import com.relative.quski.wrapper.CompromisoReporteWrapper;
 import com.relative.quski.wrapper.ConsultaGarantiaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalRespuestaWrapper;
 import com.relative.quski.wrapper.ConsultaGlobalWrapper;
@@ -128,7 +130,6 @@ import com.relative.quski.wrapper.SimularResponse.SimularResult.XmlGarantias.Gar
 import com.relative.quski.wrapper.SimularResponseExcepcion;
 import com.relative.quski.wrapper.SoftbankActividadEconomicaWrapper;
 import com.relative.quski.wrapper.SoftbankClienteWrapper;
-import com.relative.quski.wrapper.SoftbankConsultaPagMedWrapper;
 import com.relative.quski.wrapper.SoftbankConsultaWrapper;
 import com.relative.quski.wrapper.SoftbankContactosWrapper;
 import com.relative.quski.wrapper.SoftbankCuentasBancariasWrapper;
@@ -10038,6 +10039,7 @@ public class QuskiOroService {
 					log.info("==== CREAR PESADO ========> ");
 					TbQoCompromisoPago comp = new TbQoCompromisoPago();
 					comp.setCodigoOperacion(creditoCompromiso.getPagMed() != null ? creditoCompromiso.getPagMed().getNipMediacion() : null);
+					comp.setIdentificacionCliente(creditoCompromiso.getCliente().getIdentificacion());
 					comp.setIdNegociacion(creditoBpm != null ? creditoBpm.getTbQoNegociacion() : null);
 					comp.setEstadoCompromiso(EstadoProcesoEnum.CREADO);
 					comp.setNumeroOperacion(numeroOperacion);
@@ -10058,6 +10060,7 @@ public class QuskiOroService {
 				log.info("==== COMPROMISO ELSE ========> " + comps.size());
 				TbQoCompromisoPago comp = new TbQoCompromisoPago();
 				comp.setCodigoOperacion(creditoCompromiso.getPagMed() != null ? creditoCompromiso.getPagMed().getNipMediacion() : null);
+				comp.setIdentificacionCliente(creditoCompromiso.getCliente().getIdentificacion());
 				comp.setIdNegociacion(creditoBpm != null ? creditoBpm.getTbQoNegociacion() : null);
 				comp.setEstadoCompromiso(EstadoProcesoEnum.CREADO);
 				comp.setNumeroOperacion(numeroOperacion);
@@ -10225,6 +10228,9 @@ public class QuskiOroService {
 	        if (send.getCodigo() != null) {
 	            persisted.setCodigo(send.getCodigo());
 	        }
+	        if (send.getIdentificacionCliente() != null) {
+	            persisted.setIdentificacionCliente(send.getIdentificacionCliente());
+	        }
 	        if (send.getCodigoOperacion() != null) {
 	            persisted.setCodigoOperacion(send.getCodigoOperacion());
 	        }
@@ -10342,6 +10348,19 @@ public class QuskiOroService {
 		} catch (RelativeException e) {
 			throw e;
 		}
+	}
+	public List<CompromisoReporteWrapper> findCompromisoReporte(PaginatedWrapper pw,
+			CompromisoParamsWrapper wp) throws RelativeException {
+		if (pw.getIsPaginated() != null && pw.getIsPaginated().equalsIgnoreCase(PaginatedWrapper.YES)) {
+			return this.compromisoPagoRepository.findCompromisoReporte(pw.getStartRecord(), pw.getPageSize(),pw.getSortFields(), pw.getSortDirections(),wp);
+		} else {
+			return this.compromisoPagoRepository.findCompromisoReporte(wp);
+		}
+		
+	}
+
+	public Integer countCompromisoReporte(CompromisoParamsWrapper wp) throws RelativeException {
+		return this.compromisoPagoRepository.countCompromisoReporte(wp);
 	}
 	
 	

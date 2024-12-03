@@ -41,13 +41,14 @@ import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.CompromisoParamsWrapper;
+import com.relative.quski.wrapper.CompromisoReporteWrapper;
 import com.relative.quski.wrapper.CrearRenovacionWrapper;
 import com.relative.quski.wrapper.CreditoCompromisoWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
 import com.relative.quski.wrapper.DetalleCreditoWrapper;
-import com.relative.quski.wrapper.ExcepcionRolWrapper;
 import com.relative.quski.wrapper.OpcionAndGarantiasWrapper;
 import com.relative.quski.wrapper.OperacionCreditoNuevoWrapper;
 import com.relative.quski.wrapper.RenovacionWrapper;
@@ -636,7 +637,28 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(a);
 		return loc;	
 	}
-	
-	
+	@POST
+	@Path("/reporteCompromiso")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<CompromisoReporteWrapper> reporteCompromiso(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, CompromisoParamsWrapper wp
+			) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<CompromisoReporteWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<CompromisoReporteWrapper> actions = this.qos.findCompromisoReporte(pw, wp );
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countCompromisoReporte(wp));
+			plw.setList(actions);
+		}
+		return plw;
+		
+	}
 }
 
