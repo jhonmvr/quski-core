@@ -8689,7 +8689,7 @@ public class QuskiOroService {
 							this.esMayorADosDiasLaborables(doc.getFechaSolicitud()))
 					.count();
 
-			if (nipPendienteMasDe2Dias > 1) {
+			if (nipPendienteMasDe2Dias > 0) {
 				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,
 						"NO SE PUEDE TENER MÁS DE UN NIP PENDIENTE DE MÁS DE 2 DÍAS LABORABLES");
 			}
@@ -8771,8 +8771,10 @@ public class QuskiOroService {
 			this.manageNegociacion( nego );
 			//validacion para no poder pedir mas excepciones si tienes excepciones pendientes de aprobar
 			//validacion para ver si no existen mas excepciones de documentos pendientes
-			if(ex != null && !validarExcepcionOperativa(idNegociacion, ex)){
-				return this.eos.solicitarExcepcionFabrica(ex, tipoProceso);
+			if(ex != null ){
+				if(!validarExcepcionOperativa(idNegociacion, ex)){
+					return this.eos.solicitarExcepcionFabrica(ex, tipoProceso);
+				}
 			}
 			TbQoTracking traking = new TbQoTracking();
 			traking.setActividad("ENVIADO A APROBAR");

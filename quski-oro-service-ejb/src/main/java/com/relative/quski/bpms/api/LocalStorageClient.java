@@ -110,6 +110,70 @@ public class LocalStorageClient {
 
 
 
+	public static RespuestaObjectWrapper createObjectBigZ(
+			String url,
+			DocumentoMongo wrapper,
+			String databaseName,
+			String collectionName,
+			String objectId,
+			String authorization
+	) throws RelativeException {
+		try {
+			// Serializar el objeto DocumentoMongo a JSON
+			String objectEncripted = new Gson().toJson(wrapper);
+
+			// Construir el contenido del cuerpo de la solicitud
+			Map<String, String> requestBodyMap = new HashMap<>();
+			requestBodyMap.put("objectEncripted", objectEncripted);
+			String requestBody = new Gson().toJson(requestBodyMap);
+
+			// Construir la URL del servicio
+			String serviceUrl = String.format(
+					"%s%s?databaseName=%s&collectionName=%s&objectId=%s",
+					url,
+					"createObjectBigZ",
+					databaseName,
+					collectionName,
+					objectId
+			);
+
+			log.info("===> Llamando a updateObjectBigZ con URL: " + serviceUrl);
+
+			// Realizar la llamada al servicio REST usando callRestApi
+			Map<String, Object> response = ReRestClient.callRestApi(
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					RestClientWrapper.CONTENT_TYPE_JSON,
+					authorization,
+					requestBody,
+					RestClientWrapper.METHOD_POST,
+					null, // No se pasan headers adicionales
+					null, // Sin usuario
+					null, // Sin contraseña
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					QuskiOroConstantes.BPMS_REST_TIMEOUT_DEFAULT,
+					Boolean.FALSE,
+					Boolean.FALSE,
+					serviceUrl,
+					String.class
+			);
+
+			// Verificar la respuesta
+			Long status = Long.parseLong(String.valueOf(response.get(com.relative.migracion.api.ReRestClient.RETURN_STATUS)));
+			if (status >= 200 && status < 300) {
+				String responseBody = (String) response.get(com.relative.migracion.api.ReRestClient.RETURN_OBJECT);
+				return new GsonBuilder().create().fromJson(responseBody, RespuestaObjectWrapper.class);
+			} else {
+				String errorMessage = String.valueOf(response.get(com.relative.migracion.api.ReRestClient.RETURN_MESSAGE));
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error en el servicio de actualización: " + errorMessage);
+			}
+		} catch (Exception e) {
+			log.error("Error al llamar al servicio updateObjectBigZ", e);
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "Error al llamar al servicio updateObjectBigZ: " + e.getMessage());
+		}
+	}
+
+
+
 
 
 
