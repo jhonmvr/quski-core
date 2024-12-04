@@ -920,7 +920,7 @@ public class SoftBankApiClient {
 	            return String.valueOf(response.get(ReRestClient.RETURN_MESSAGE));
 	        } else {
 	            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, 
-	                "ERROR AL ACTUALIZAR: " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+	                "AL ACTUALIZAR EL BPM DE MEDIACIONES. CONSULTE SISTEMAS - " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
 	        }
 	    } catch (JsonSyntaxException e) {
 	        e.printStackTrace();
