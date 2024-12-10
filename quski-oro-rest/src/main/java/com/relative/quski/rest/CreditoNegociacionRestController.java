@@ -25,8 +25,10 @@ import com.relative.core.web.util.CrudRestControllerInterface;
 import com.relative.core.web.util.GenericWrapper;
 import com.relative.quski.bpms.api.SoftBankApiClient;
 import com.relative.quski.enums.EstadoEnum;
+import com.relative.quski.enums.EstadoProcesoEnum;
 import com.relative.quski.enums.ProcesoEnum;
 import com.relative.quski.model.ResponseValidarDocumentoWrapper;
+import com.relative.quski.model.TbQoCompromisoPago;
 import com.relative.quski.model.TbQoCreditoNegociacion;
 import com.relative.quski.model.TbQoExcepcion;
 import com.relative.quski.model.TbQoExcepcionOperativa;
@@ -35,10 +37,14 @@ import com.relative.quski.model.TbQoProceso;
 import com.relative.quski.model.TbQoValidacionDocumento;
 import com.relative.quski.service.QuskiOroService;
 import com.relative.quski.service.ValidacionCreditoService;
+import com.relative.quski.util.QuskiOroConstantes;
 import com.relative.quski.util.QuskiOroUtil;
 import com.relative.quski.wrapper.AprobacionNovacionWrapper;
 import com.relative.quski.wrapper.AprobacionWrapper;
+import com.relative.quski.wrapper.CompromisoParamsWrapper;
+import com.relative.quski.wrapper.CompromisoReporteWrapper;
 import com.relative.quski.wrapper.CrearRenovacionWrapper;
+import com.relative.quski.wrapper.CreditoCompromisoWrapper;
 import com.relative.quski.wrapper.CreditoCreadoSoftbank;
 import com.relative.quski.wrapper.CuotasAmortizacionWrapper;
 import com.relative.quski.wrapper.DetalleCreditoEnProcesoWrapper;
@@ -332,6 +338,7 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		loc.setEntidad(null);
 		return loc;
 	}
+
 	@GET
 	@Path("/buscarRenovacionByNumeroOperacionMadre")
 	@ApiOperation(value = "numeroOperacion", notes = "Metodo Get buscarRenovacionByNumeroOperacionMadre Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
@@ -559,6 +566,99 @@ public class CreditoNegociacionRestController extends BaseRestController impleme
 		return this.validacionCreditoService.listValidacionDocumento( Long.valueOf(idNegociacion));
 				
 	}
+	@GET
+	@Path("/traerCreditoCompromiso")
+	@ApiOperation(value = "numeroOperacion", notes = "Metodo Get traerCreditoVigente Retorna un  GenericWrapper DetalleCreditoWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<CreditoCompromisoWrapper> traerCreditoCompromiso(
+			@QueryParam("numeroOperacion") String numeroOperacion,
+			@QueryParam("procesoCompromiso") ProcesoEnum procesoCompromiso,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("autorizacion") String autorizacion
+			) throws RelativeException {
+		GenericWrapper<CreditoCompromisoWrapper> loc = new GenericWrapper<>();
+		try {
+			CreditoCompromisoWrapper a = this.qos.traerCreditoCompromiso( numeroOperacion, procesoCompromiso, usuario, autorizacion);
+			loc.setEntidad(a);			
+		}catch( RelativeException e) {
+			throw e;
+		}catch(Exception e ){
+			throw new RelativeException(Constantes.ERROR_CODE_READ, QuskiOroConstantes.ERROR_AL_REALIZAR_BUSQUEDA + e.getStackTrace());
+		}
+		return loc;
+	}
 	
+	@POST
+	@Path("/solicitarCompromiso")
+	@ApiOperation(value = "numeroOperacion, numeroOperacionMadre, asesor, idAgencia, idNegociacion", notes = "Metodo Post crearCreditoRenovacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<TbQoCompromisoPago> solicitarCompromiso( 
+			@QueryParam("proceso") ProcesoEnum proceso,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("autorizacion") String autorizacion,
+			TbQoCompromisoPago compromiso) throws RelativeException {
+		GenericWrapper<TbQoCompromisoPago> loc = new GenericWrapper<>();
+		TbQoCompromisoPago a = this.qos.solicitarCompromiso( proceso, usuario, nombreAsesor, compromiso, autorizacion);
+		loc.setEntidad(a);
+		return loc;			
+	}
+	@POST
+	@Path("/resolucionCompromiso")
+	@ApiOperation(value = "numeroOperacion, numeroOperacionMadre, asesor, idAgencia, idNegociacion", notes = "Metodo Post crearCreditoRenovacion Retorna un  GenericWrapper RenovacionWrapper", response = GenericWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<TbQoCompromisoPago> solicitarCompromiso( 
+			@QueryParam("proceso") ProcesoEnum proceso,
+			@QueryParam("aprobado") Boolean aprobado,
+			@QueryParam("usuario") String usuario,
+			@QueryParam("nombreAsesor") String nombreAsesor,
+			@QueryParam("autorizacion") String autorizacion,
+			TbQoCompromisoPago compromiso) throws RelativeException {
+		GenericWrapper<TbQoCompromisoPago> loc = new GenericWrapper<>();
+		TbQoCompromisoPago a = this.qos.resolucionCompromiso( proceso, aprobado, usuario, nombreAsesor, compromiso, autorizacion);
+		loc.setEntidad(a);
+		return loc;			
+	}
+	@GET
+	@Path("/findCompromisoByNumeroOperacionEstado")
+	@ApiOperation(value = "PaginatedListWrapper<ExcepcionRolWrapper>", notes = "Metodo Get indByRolAndIdentificacion Retorna entidades encontradas en TbQoExcepcion por id de Negociacion", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public GenericWrapper<CreditoCompromisoWrapper> findCompromisoByNumeroOperacionEstado( @QueryParam("numeroOperacion" )  String numeroOperacion, @QueryParam("estado" )  EstadoProcesoEnum estado, @QueryParam("autorizacion") String autorizacion) throws RelativeException {
+		GenericWrapper<CreditoCompromisoWrapper> loc = new GenericWrapper<>();
+		CreditoCompromisoWrapper a = this.qos.findCompromisoByNumeroOperacionEstado(numeroOperacion, estado);
+		loc.setEntidad(a);
+		return loc;	
+	}
+	@POST
+	@Path("/reporteCompromiso")
+	@ApiOperation(value = "PaginatedListWrapper<DevolucionReporteWrapper>", notes = "Metodo Get reporteDevolucion Retorna wrapper de informacion de paginacion y entidades encontradas en DevolucionPendienteArribosWrapper", response = PaginatedListWrapper.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
+			@ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class) })
+	public PaginatedListWrapper<CompromisoReporteWrapper> reporteCompromiso(
+			@QueryParam("page") @DefaultValue("1") String page,
+			@QueryParam("pageSize") @DefaultValue("10") String pageSize,
+			@QueryParam("sortFields") @DefaultValue("id") String sortFields,
+			@QueryParam("sortDirections") @DefaultValue("asc") String sortDirections,
+			@QueryParam("isPaginated") @DefaultValue("N") String isPaginated, CompromisoParamsWrapper wp
+			) throws RelativeException {
+		PaginatedWrapper pw = new PaginatedWrapper(Integer.valueOf(page), Integer.valueOf(pageSize), sortFields, sortDirections, isPaginated);
+		PaginatedListWrapper<CompromisoReporteWrapper> plw = new PaginatedListWrapper<>(pw);
+		List<CompromisoReporteWrapper> actions = this.qos.findCompromisoReporte(pw, wp );
+		if (actions != null && !actions.isEmpty()) {
+			plw.setTotalResults(this.qos.countCompromisoReporte(wp));
+			plw.setList(actions);
+		}
+		return plw;
+		
+	}
 }
 
