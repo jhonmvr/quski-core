@@ -8696,7 +8696,7 @@ public class QuskiOroService {
 		}
 
 		if(excepciones == null || excepciones.isEmpty()){
-			return true;
+			return false;
 		}
 		return excepciones.stream()
 				.anyMatch(excepcion -> excepcion.getNivelAprobacion() == 1 &&
