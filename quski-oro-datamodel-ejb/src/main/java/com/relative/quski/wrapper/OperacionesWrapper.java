@@ -3,6 +3,7 @@ package com.relative.quski.wrapper;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class OperacionesWrapper implements Serializable {
 
@@ -16,7 +17,7 @@ public class OperacionesWrapper implements Serializable {
     private String cedulaCliente;
 
 	private BigDecimal montoFinanciado;
-    private Date fechaCreacion;
+    private Timestamp fechaCreacion;
     private BigDecimal idAgencia;
     private String estadoProceso;
     private String proceso;
@@ -26,7 +27,7 @@ public class OperacionesWrapper implements Serializable {
     private String motivo;
     
 	public OperacionesWrapper(BigDecimal id, String codigoBpm, String codigoOperacion,String codigoOperacionant, String nombreCliente, String cedulaCliente,
-			BigDecimal montoFinanciado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
+			BigDecimal montoFinanciado, Timestamp fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
 			String asesor, String usuarioEjecutor, String actividad) {
 		super();
 		this.id = id;
@@ -46,7 +47,7 @@ public class OperacionesWrapper implements Serializable {
 	}
 	
 	public OperacionesWrapper(BigDecimal id, String codigoBpm, String codigoOperacion,String codigoOperacionant, String nombreCliente, String cedulaCliente,
-			BigDecimal montoFinanciado, Date fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
+			BigDecimal montoFinanciado, Timestamp fechaCreacion, BigDecimal idAgencia, String estadoProceso, String proceso,
 			String asesor, String usuarioEjecutor, String actividad, String motivo) {
 		super();
 		this.id = id;
@@ -96,10 +97,10 @@ public class OperacionesWrapper implements Serializable {
 	public void setMontoFinanciado(BigDecimal montoFinanciado) {
 		this.montoFinanciado = montoFinanciado;
 	}
-	public Date getFechaCreacion() {
+	public Timestamp getFechaCreacion() {
 		return fechaCreacion;
 	}
-	public void setFechaCreacion(Date fechaCreacion) {
+	public void setFechaCreacion(Timestamp fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 	public BigDecimal getIdAgencia() {

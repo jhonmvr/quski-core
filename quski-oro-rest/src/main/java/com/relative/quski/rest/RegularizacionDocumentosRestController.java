@@ -159,7 +159,7 @@ public class RegularizacionDocumentosRestController extends BaseRestController
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorno existoso de informacion", response = GenericWrapper.class),
             @ApiResponse(code = 500, message = "Retorno con ERROR en la carga de acciones", response = RelativeException.class)})
-    public TbQoRegularizacionDocumento enviarRespuesta( TbQoRegularizacionDocumento regularizacion) throws RelativeException {
-        return this.regularizacionDocumentosService.enviarRespuesta(regularizacion);
+    public TbQoRegularizacionDocumento enviarRespuesta(@QueryParam("autorizacion") String autorizacion, TbQoRegularizacionDocumento regularizacion) throws RelativeException {
+        return this.regularizacionDocumentosService.enviarRespuesta(regularizacion,autorizacion);
     }
 }

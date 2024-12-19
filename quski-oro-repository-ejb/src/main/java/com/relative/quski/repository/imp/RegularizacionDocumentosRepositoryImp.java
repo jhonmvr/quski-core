@@ -118,7 +118,7 @@ public class RegularizacionDocumentosRepositoryImp extends GeneralRepositoryImp<
 					+ "from tb_qo_regularizacion_documentos o "
 					+ "left join tb_qo_credito_negociacion r on r.id_negociacion = o.id_negociacion "
 					+ "left join tb_qo_cliente c on c.cedula_cliente  = o.identificacion_cliente "
-					+ "where o.estado_regularizacion = 'PENDIENTE' ";
+					+ "where o.estado_regularizacion = 'PENDIENTE_APROBACION' ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
 			if(StringUtils.isNotBlank(cedula)) {

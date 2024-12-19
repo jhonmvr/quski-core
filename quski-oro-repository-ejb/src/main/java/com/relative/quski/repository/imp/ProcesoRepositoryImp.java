@@ -135,7 +135,30 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'  " + 
 					"union  " + 
 					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad  " + 
-					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1 ";
+					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA'" +
+					" UNION  " +
+					"    SELECT  " +
+					"        reg.id AS id,  " +
+					"        COALESCE(reg.codigo, ' ') AS codigo,  " +
+					"        COALESCE(reg.codigo_operacion, ' ') AS operacion,  " +
+					"        ' ' AS operacion_ant,  " +
+					"        cli.nombre_completo AS nombreCliente,  " +
+					"        reg.identificacion_cliente AS cedulaCliente,  " +
+					"        0 AS montoFinanciado,  " +
+					"        reg.fecha_solicitud AS fechaCreacion,  " +
+					"        0 AS idAgencia,  " +
+					"        reg.estado_regularizacion AS estadoProceso,  " +
+					"        'REGULARIZACION_DOCUMENTOS' AS proceso,  " +
+					"        COALESCE(reg.usuario_solicitante, ' ') AS asesor,  " +
+					"        COALESCE(reg.usuario_solicitante, ' ') AS usuarioEjecutor,  " +
+					"        'REGULARIZACION' AS actividad  " +
+					"    FROM  " +
+					"        tb_qo_regularizacion_documentos reg  " +
+					"    INNER JOIN  " +
+					"        tb_qo_negociacion nego ON nego.id = reg.id_negociacion  " +
+					"    INNER JOIN  " +
+					"        tb_qo_cliente cli ON cli.id = nego.id_cliente " +
+					") as TABL where 1=1 ";
 			StringBuilder strQry = new StringBuilder( querySelect );
 		
 			
@@ -220,18 +243,43 @@ public class ProcesoRepositoryImp extends GeneralRepositoryImp<Long, TbQoProceso
 	@Override
 	public List<OperacionesWrapper> findOperacion( BusquedaOperacionesWrapper wp ) throws RelativeException {
 		try {
-			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,' ') as operacion,coalesce(cre.numero_operacion_anterior,' ') as operacion_ant, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, coalesce(cre.codigo_devuelto,' ')  as motivo   " + 
-					"	from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')  " + 
-					"union  " + 
-					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo  " + 
-					"	from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')  " + 
-					"union  " + 
-					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo  " + 
-					"	from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'  " + 
-					"union  " + 
-					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo  " + 
-					"	from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA') as TABL where 1=1  ";
-			StringBuilder strQry = new StringBuilder( querySelect );
+			String querySelect = "select * from (select cre.id_negociacion as id , cre.codigo, coalesce(cre.numero_operacion,' ') as operacion,coalesce(cre.numero_operacion_anterior,' ') as operacion_ant, cli.nombre_completo, cli.cedula_cliente, coalesce(cre.monto_financiado,0) as monto, proceso.FECHA_CREACION, cre.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, nego.asesor, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, coalesce(cre.codigo_devuelto,' ')  as motivo     " +
+					"from tb_qo_credito_negociacion cre inner join  tb_qo_negociacion nego on nego.id=cre.id_negociacion inner join tb_qo_cliente cli on cli.id = nego.id_cliente inner join tb_qo_proceso proceso on proceso.id_referencia = cre.id_negociacion and (cre.numero_operacion_madre is null and proceso = 'NUEVO' or cre.numero_operacion_madre is not null and proceso = 'RENOVACION')    " +
+					"union    " +
+					"select devo.id,devo.codigo,coalesce(devo.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, DEVO.NOMBRE_CLIENTE, devo.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, devo.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, devo.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo    " +
+					"from tb_qo_devolucion devo inner join tb_qo_proceso proceso on proceso.id_referencia = devo.id and proceso.proceso in('DEVOLUCION','CANCELACION_DEVOLUCION')    " +
+					"union    " +
+					"select pago.id,pago.codigo,coalesce(pago.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, pago.NOMBRE_CLIENTE, pago.CEDULA as CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, pago.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, pago.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo    " +
+					"from tb_qo_cliente_pago pago inner join tb_qo_proceso proceso on proceso.id_referencia = pago.id and proceso.proceso ='PAGO'    " +
+					"union    " +
+					"select veri.id,veri.codigo,coalesce(veri.CODIGO_OPERACION,' ') as operacion,' ' as operacion_ant, veri.NOMBRE_CLIENTE, veri.CEDULA_CLIENTE, 0 as monto, proceso.FECHA_CREACION, veri.ID_AGENCIA, PROCESO.ESTADO_PROCESO, PROCESO.PROCESO, veri.ASESOR, COALESCE(PROCESO.USUARIO, ' ') USUARIO, 'SIN ACTIVIDAD' as actividad, '' as motivo    " +
+					"from TB_QO_VERIFICACION_TELEFONICA veri inner join tb_qo_proceso proceso on proceso.id_referencia = veri.id and proceso.proceso ='VERIFICACION_TELEFONICA' " +
+					" UNION  " +
+					"    SELECT  " +
+					"        reg.id AS id,  " +
+					"        COALESCE(reg.codigo, ' ') AS codigo,  " +
+					"        COALESCE(reg.codigo_operacion, ' ') AS operacion,  " +
+					"        ' ' AS operacion_ant,  " +
+					"        cli.nombre_completo AS nombreCliente,  " +
+					"        reg.identificacion_cliente AS cedulaCliente,  " +
+					"        0 AS montoFinanciado,  " +
+					"        reg.fecha_solicitud AS fechaCreacion,  " +
+					"        0 AS idAgencia,  " +
+					"        reg.estado_regularizacion AS estadoProceso,  " +
+					"        'REGULARIZACION_DOCUMENTOS' AS proceso,  " +
+					"        COALESCE(reg.usuario_solicitante, ' ') AS asesor,  " +
+					"        COALESCE(reg.usuario_solicitante, ' ') AS usuarioEjecutor,  " +
+					"        'REGULARIZACION' AS actividad,  " +
+					"        '' AS motivo  " +
+					"    FROM  " +
+					"        tb_qo_regularizacion_documentos reg  " +
+					"    INNER JOIN  " +
+					"        tb_qo_negociacion nego ON nego.id = reg.id_negociacion  " +
+					"    INNER JOIN  " +
+					"        tb_qo_cliente cli ON cli.id = nego.id_cliente " +
+					") as TABL where 1=1  ";
+					
+					StringBuilder strQry = new StringBuilder( querySelect );
 		
 			
 			if (wp.getEstado() == null || wp.getEstado().isEmpty()) {
