@@ -10045,7 +10045,11 @@ public class QuskiOroService {
 					comp.setNumeroOperacion(numeroOperacion);
 					comp.setUsuarioSolicitud(usuario);
 					comp.setNombreCliente(creditoCompromiso.getCliente().getNombreCompleto());
-					comp.setFechaCompromisoPagoAnterior((Timestamp) creditoCompromiso.getPagMed().getFechaCompromisoPago());
+					comp.setFechaCompromisoPagoAnterior(
+							creditoCompromiso.getPagMed() != null && creditoCompromiso.getPagMed().getFechaCompromisoPago() != null
+									? new Timestamp(creditoCompromiso.getPagMed().getFechaCompromisoPago().getTime())
+									: null
+					);
 					comp = this.compromisoPagoRepository.add(comp);
 					log.info("==== CREAR PESADO ========> " + comp.getId());
 					comps.add(comp);
@@ -10066,7 +10070,11 @@ public class QuskiOroService {
 				comp.setNumeroOperacion(numeroOperacion);
 				comp.setUsuarioSolicitud(usuario);
 				comp.setNombreCliente(creditoCompromiso.getCliente().getNombreCompleto());
-				comp.setFechaCompromisoPagoAnterior((Timestamp) creditoCompromiso.getPagMed().getFechaCompromisoPago());
+				comp.setFechaCompromisoPagoAnterior(
+						creditoCompromiso.getPagMed() != null && creditoCompromiso.getPagMed().getFechaCompromisoPago() != null
+								? new Timestamp(creditoCompromiso.getPagMed().getFechaCompromisoPago().getTime())
+								: null
+				);
 				comp = this.compromisoPagoRepository.add(comp);
 				log.info("==== COMPROMISO ID 1 ========> "+ comp.getId());
 				comps.add(comp);
@@ -10298,17 +10306,19 @@ public class QuskiOroService {
 			textoContenido = this.parametroRepository.findByNombre(QuskiOroConstantes.CONTENIDO_COMPROMISO_PAGO).getValor();
 			asunto = this.parametroRepository.findByNombre(QuskiOroConstantes.ASUNTO_COMPROMISO_PAGO).getValor();
 		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 		textoContenido = textoContenido
 				.replace("--nombreAsesor--", nombreAsesor)
 				.replace("--codigoBpm--", comp.getCodigo())
 				.replace("--numeroOperacion--", comp.getNumeroOperacion())
 				.replace("--nombreCliente--", comp.getNombreCliente())
 				.replace("--asesor--", comp.getUsuarioSolicitud())
-				.replace("--fechaCompromisoPagoAnterior--", comp.getFechaCompromisoPagoAnterior() != null ? comp.getFechaCompromisoPagoAnterior().toString():"")
-				.replace("--fechaCompromisoPagoActual--", comp.getFechaCompromisoPago() != null ? comp.getFechaCompromisoPago().toString():"")
+				.replace("--fechaCompromisoPagoAnterior--", comp.getFechaCompromisoPagoAnterior() != null ? dateFormat.format(comp.getFechaCompromisoPagoAnterior()) : "")
+				.replace("--fechaCompromisoPagoActual--", comp.getFechaCompromisoPago() != null ? dateFormat.format(comp.getFechaCompromisoPago()) : "")
 				.replace("--tipoCompromiso--", StringUtils.isNotBlank(comp.getTipoCompromiso()) ? comp.getTipoCompromiso() : "")
 				.replace("--Observaciones--", StringUtils.isNotBlank(comp.getObservacionSolicitud()) ? comp.getObservacionSolicitud() : "");
-				String[] para = null;
+		String[] para = null;
 		if(proceso.getEstadoProceso().equals(EstadoProcesoEnum.APROBADO) || proceso.getEstadoProceso().equals(EstadoProcesoEnum.RECHAZADO)) {
 			para = Stream.of(comp.getCorreoSolicitud()).toArray(String[]::new);
 		}else {

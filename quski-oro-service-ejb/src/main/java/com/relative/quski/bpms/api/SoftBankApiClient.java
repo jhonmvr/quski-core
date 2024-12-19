@@ -869,13 +869,13 @@ public class SoftBankApiClient {
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO MEDIACION:");
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO MEDIACION:");
 		} catch (RelativeException e) {
 			e.printStackTrace();
-			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO wrapper:");
+			throw new RelativeException(Constantes.ERROR_CODE_CUSTOM,"ERROR AL LLAMAR SERVICIO MEDIACION:");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -920,7 +920,7 @@ public class SoftBankApiClient {
 	            return String.valueOf(response.get(ReRestClient.RETURN_MESSAGE));
 	        } else {
 	            throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, 
-	                "AL ACTUALIZAR EL BPM DE MEDIACIONES. CONSULTE SISTEMAS - " + String.valueOf(response.get(ReRestClient.RETURN_MESSAGE)));
+	                "NO SE PUEDE ACTUALIZAR - ERROR API "+ urlService);
 	        }
 	    } catch (JsonSyntaxException e) {
 	        e.printStackTrace();
